@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- Unique name for this background job -->
+  <key>Label</key>
+  <string>com.graydavis.emailagent</string>
+
+  <!-- Command to run: python3 main.py from the email-agent folder -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/graydavis28/Desktop/my-project/python-scripts/email-agent/main.py</string>
+  </array>
+
+  <!-- Working directory so relative paths (.env, token.json) resolve correctly -->
+  <key>WorkingDirectory</key>
+  <string>/Users/graydavis28/Desktop/my-project/python-scripts/email-agent</string>
+
+  <!-- Start automatically when you log in -->
+  <key>RunAtLoad</key>
+  <true/>
+
+  <!-- Restart automatically if it crashes -->
+  <key>KeepAlive</key>
+  <true/>
+
+  <!-- Log output so you can debug if needed -->
+  <key>StandardOutPath</key>
+  <string>/Users/graydavis28/Desktop/my-project/python-scripts/email-agent/agent.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/graydavis28/Desktop/my-project/python-scripts/email-agent/agent-error.log</string>
+</dict>
+</plist>
