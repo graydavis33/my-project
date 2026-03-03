@@ -120,6 +120,16 @@ def extract_body(payload):
     return ""
 
 
+def apply_category_label(service, message_id, label_name):
+    """Apply a category label (e.g. 'Agent/Needs Reply') to an email, creating it if needed."""
+    label_id = get_or_create_label(service, label_name)
+    service.users().messages().modify(
+        userId="me",
+        id=message_id,
+        body={"addLabelIds": [label_id]},
+    ).execute()
+
+
 def mark_as_processed(service, message_id, label_id):
     """Apply the agent-processed label so this email won't be processed again."""
     service.users().messages().modify(

@@ -33,3 +33,8 @@ END_HOUR = 20
 CATEGORY_NEEDS_REPLY = "needs_reply"
 CATEGORY_FYI_ONLY = "fyi_only"
 CATEGORY_IGNORE = "ignore"
+
+# Gmail labels applied per category (shows as nested "Agent/..." labels in Gmail)
+LABEL_NEEDS_REPLY = "Agent/Needs Reply"
+LABEL_FYI_ONLY = "Agent/FYI Only"
+LABEL_IGNORE = "Agent/Ignore"

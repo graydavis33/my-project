@@ -21,6 +21,7 @@ from gmail_client import (
     get_gmail_service,
     get_or_create_label,
     fetch_unprocessed_emails,
+    apply_category_label,
     mark_as_processed,
     send_email,
 )
@@ -31,6 +32,11 @@ from voice_analyzer import load_voice_profile, build_voice_profile
 from config import (
     PROCESSED_LABEL,
     CATEGORY_NEEDS_REPLY,
+    CATEGORY_FYI_ONLY,
+    CATEGORY_IGNORE,
+    LABEL_NEEDS_REPLY,
+    LABEL_FYI_ONLY,
+    LABEL_IGNORE,
     START_HOUR,
     END_HOUR,
 )
@@ -58,7 +64,16 @@ def run_email_check():
             category = classify_email(email)
             print(f"    → Category: {category}")
 
-            # Label immediately so it won't be processed again even if something fails below
+            # Apply category label so email is organized in Gmail
+            category_label_map = {
+                CATEGORY_NEEDS_REPLY: LABEL_NEEDS_REPLY,
+                CATEGORY_FYI_ONLY: LABEL_FYI_ONLY,
+                CATEGORY_IGNORE: LABEL_IGNORE,
+            }
+            if category in category_label_map:
+                apply_category_label(service, email["id"], category_label_map[category])
+
+            # Mark as processed so it won't be picked up again
             mark_as_processed(service, email["id"], label_id)
 
             if category == CATEGORY_NEEDS_REPLY:
