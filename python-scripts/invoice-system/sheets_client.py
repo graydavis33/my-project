@@ -60,6 +60,22 @@ def get_sheet():
     return client.open_by_key(GOOGLE_SHEET_ID)
 
 
+def _auto_resize(spreadsheet, ws):
+    """Auto-fit all columns in a worksheet to match content width."""
+    spreadsheet.batch_update({
+        "requests": [{
+            "autoResizeDimensions": {
+                "dimensions": {
+                    "sheetId": ws.id,
+                    "dimension": "COLUMNS",
+                    "startIndex": 0,
+                    "endIndex": ws.col_count,
+                }
+            }
+        }]
+    })
+
+
 def get_or_create_worksheet(sheet, title, headers):
     """Return the worksheet with the given title, creating it with headers if it doesn't exist."""
     try:
@@ -109,6 +125,9 @@ def setup_sheet():
         for row in rows:
             ws_tax.append_row(row)
 
+    for ws in sheet.worksheets():
+        _auto_resize(sheet, ws)
+
     print(f"  Sheet setup complete. Tabs: {TAB_TRANSACTIONS}, {TAB_INVOICES}, {TAB_LINE_ITEMS}, {TAB_TAX_SUMMARY}")
 
 
@@ -125,6 +144,7 @@ def append_transactions(rows):
     ws = sheet.worksheet(TAB_TRANSACTIONS)
     for row in rows:
         ws.append_row(row)
+    _auto_resize(sheet, ws)
 
 
 def get_next_invoice_number():
@@ -142,6 +162,7 @@ def append_invoice(invoice_num, client, client_email, date, due_date, status, to
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_INVOICES)
     ws.append_row([invoice_num, client, client_email, date, due_date, status, total])
+    _auto_resize(sheet, ws)
 
 
 def append_line_items(invoice_num, line_items):
@@ -160,6 +181,7 @@ def append_line_items(invoice_num, line_items):
             item.get("flat_fee", ""),
             item["subtotal"],
         ])
+    _auto_resize(sheet, ws)
 
 
 def update_invoice_status(invoice_num, new_status):

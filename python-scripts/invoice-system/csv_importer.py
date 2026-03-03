@@ -145,11 +145,12 @@ def parse_bank_csv(filepath):
             continue
 
         category = "Income" if tx_type == "Income" else _guess_category(description)
+        source = "Zelle" if "zelle" in description.lower() else "Bank"
 
         transactions.append({
             "date": date_str,
             "description": description,
-            "source": "Bank",
+            "source": source,
             "category": category,
             "amount": amount,
             "type": tx_type,
