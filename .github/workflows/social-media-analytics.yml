@@ -2,7 +2,7 @@ name: Social Media Analytics
 
 on:
   schedule:
-    - cron: '0 14 * * *'  # 9 AM EST (UTC-5) daily
+    - cron: '0 14 * * 0'  # 9 AM EST (UTC-5) every Sunday
   workflow_dispatch:       # allow manual runs from GitHub UI
 
 jobs:
