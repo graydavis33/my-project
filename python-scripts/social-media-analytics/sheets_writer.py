@@ -139,7 +139,7 @@ def get_or_create_worksheet(spreadsheet, tab_name, headers):
     try:
         ws = spreadsheet.worksheet(tab_name)
         if ws.row_values(1) != headers:
-            ws.insert_row(headers, index=1)
+            ws.update('A1', [headers])  # overwrite header row (not insert, which duplicates it)
         return ws, False
     except gspread.WorksheetNotFound:
         ws = spreadsheet.add_worksheet(tab_name, rows=2000, cols=max(len(headers), 10))
@@ -415,6 +415,18 @@ def write_dashboard_tab(spreadsheet, videos, ai_summary=''):
     ws.update('A1', rows)
     _bold_rows(spreadsheet, ws, bold_idxs, num_cols)
     _autoresize(spreadsheet, ws, num_cols)
+
+    # Move Dashboard to the first tab position
+    try:
+        spreadsheet.batch_update({'requests': [{
+            'updateSheetProperties': {
+                'properties': {'sheetId': ws.id, 'index': 0},
+                'fields': 'index'
+            }
+        }]})
+    except Exception:
+        pass
+
     print("Dashboard tab updated.")
 
 
