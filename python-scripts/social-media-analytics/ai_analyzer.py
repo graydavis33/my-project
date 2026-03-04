@@ -1,9 +1,27 @@
 import os
+import json
 import anthropic
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 
 load_dotenv()
+
+ANALYSIS_CACHE_FILE = os.path.join(os.path.dirname(__file__), '.analysis_cache.json')
+
+
+def _load_analysis_cache():
+    if os.path.exists(ANALYSIS_CACHE_FILE):
+        try:
+            with open(ANALYSIS_CACHE_FILE, 'r') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def _save_analysis_cache(cache):
+    with open(ANALYSIS_CACHE_FILE, 'w') as f:
+        json.dump(cache, f)
 
 # Set to True once NOTION_TOKEN and NOTION_PAGE_ID are in .env
 NOTION_ENABLED = False
@@ -99,7 +117,8 @@ def write_to_notion(analysis):
 
 
 def analyze_and_write(spreadsheet, videos):
-    """Run Claude analysis. Writes to Notion if enabled, otherwise skips."""
+    """Run Claude analysis. Writes to Notion if enabled, otherwise skips.
+    Skips the Claude call if analysis was already run today (saves tokens)."""
     api_key = os.getenv('ANTHROPIC_API_KEY', '').strip()
     if not api_key:
         print("Skipping AI analysis — ANTHROPIC_API_KEY not set in .env.")
@@ -107,6 +126,13 @@ def analyze_and_write(spreadsheet, videos):
 
     if not NOTION_ENABLED:
         print("Notion insights ready but not yet activated. (Set NOTION_ENABLED=True in ai_analyzer.py when ready)")
+        return
+
+    # Skip if already analyzed today
+    today = datetime.now().strftime('%Y-%m-%d')
+    cache = _load_analysis_cache()
+    if cache.get('last_run_date') == today:
+        print(f"AI analysis already ran today ({today}). Skipping Claude call.")
         return
 
     print("Sending data to Claude for analysis...")
@@ -117,5 +143,8 @@ def analyze_and_write(spreadsheet, videos):
         messages=[{'role': 'user', 'content': build_prompt(videos)}]
     )
     analysis = response.content[0].text
+
+    # Cache the run date so we don't re-analyze today
+    _save_analysis_cache({'last_run_date': today})
 
     write_to_notion(analysis)

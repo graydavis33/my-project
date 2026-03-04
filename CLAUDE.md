@@ -150,3 +150,13 @@ python main.py          # fetch YouTube data → Sheets → AI analysis
 - Language: Python
 - AI model: claude-sonnet-4-6
 - Keep things simple and practical
+
+## Efficiency & Token Optimization
+When building or modifying any feature that calls Claude:
+- **Minimize Claude calls** — only invoke Claude when no simpler/cheaper solution exists (regex, string matching, caching, etc.)
+- **Cache aggressively** — cache Claude outputs (voice profiles, classifications, analyses) to disk so repeated runs don't re-call the API
+- **Batch where possible** — send multiple items in one prompt instead of one call per item
+- **Trim prompts** — keep system prompts and context tight; avoid redundant instructions or padding
+- **Use cheaper models for simple tasks** — if a task is classification or extraction with low complexity, prefer haiku-class models where appropriate
+- **Skip Claude entirely when possible** — if logic can be handled with code (keyword matching, rules, conditionals), do it in code
+- **Short-circuit early** — filter out irrelevant data (e.g. `ignore`-class emails, already-processed items) before sending anything to Claude

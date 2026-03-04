@@ -4,6 +4,7 @@ Run: python comment_summarizer.py
 Pick a video, Claude summarizes the comments and saves to the sheet.
 """
 import os
+import json
 import gspread
 import anthropic
 from dotenv import load_dotenv
@@ -14,6 +15,22 @@ from auth import get_credentials
 load_dotenv()
 
 MAX_COMMENTS = 100
+SUMMARY_CACHE_FILE = os.path.join(os.path.dirname(__file__), '.comment_summary_cache.json')
+
+
+def _load_summary_cache():
+    if os.path.exists(SUMMARY_CACHE_FILE):
+        try:
+            with open(SUMMARY_CACHE_FILE, 'r') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def _save_summary_cache(cache):
+    with open(SUMMARY_CACHE_FILE, 'w') as f:
+        json.dump(cache, f)
 
 
 def fetch_comments(youtube, video_id):
@@ -148,6 +165,18 @@ def main():
         return
 
     video = videos[choice]
+
+    # Check disk cache before calling Claude
+    cache = _load_summary_cache()
+    if video['video_id'] in cache:
+        print(f"\nLoaded cached summary for: {video['title']}")
+        summary = cache[video['video_id']]['summary']
+        print("\n" + "=" * 50)
+        print(summary)
+        print("=" * 50 + "\n")
+        save_to_sheet(summary, video['title'], video['video_id'])
+        return
+
     print(f"\nFetching up to {MAX_COMMENTS} comments for: {video['title']}")
     comments = fetch_comments(youtube, video['video_id'])
 
@@ -157,6 +186,10 @@ def main():
 
     print(f"Got {len(comments)} comments. Generating summary...")
     summary = summarize_with_claude(video['title'], comments)
+
+    # Cache result to disk
+    cache[video['video_id']] = {'summary': summary, 'title': video['title'], 'cached_at': datetime.now().strftime('%Y-%m-%d')}
+    _save_summary_cache(cache)
 
     print("\n" + "=" * 50)
     print(summary)

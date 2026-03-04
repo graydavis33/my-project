@@ -5,8 +5,26 @@ Determines: date, vendor/description, amount, and tax category.
 """
 
 import json
+import os
 import anthropic
 from config import ANTHROPIC_API_KEY, CATEGORIES
+
+SCANNED_IDS_FILE = os.path.join(os.path.dirname(__file__), '.scanned_receipt_ids.json')
+
+
+def _load_scanned_ids():
+    if os.path.exists(SCANNED_IDS_FILE):
+        try:
+            with open(SCANNED_IDS_FILE, 'r') as f:
+                return set(json.load(f))
+        except Exception:
+            pass
+    return set()
+
+
+def _save_scanned_ids(ids):
+    with open(SCANNED_IDS_FILE, 'w') as f:
+        json.dump(list(ids), f)
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
@@ -89,13 +107,23 @@ def extract_transaction(email):
 def scan_receipts(emails):
     """
     Run extraction on a list of Gmail emails.
+    Skips emails already processed in a previous run (deduplication via ID cache).
     Returns a list of transaction dicts ready to append to Google Sheets.
     Each dict has: date, description, source, category, amount, type, notes
     """
+    scanned_ids = _load_scanned_ids()
     transactions = []
+    newly_scanned = set()
+
     for email in emails:
+        if email['id'] in scanned_ids:
+            print(f"  Already scanned: \"{email['subject']}\" — skipping")
+            continue
+
         print(f"  Scanning: \"{email['subject']}\" from {email['from'][:40]}")
         result = extract_transaction(email)
+        newly_scanned.add(email['id'])
+
         if result:
             transactions.append({
                 "date": result["date"],
@@ -109,5 +137,9 @@ def scan_receipts(emails):
             print(f"    → ${result['amount']} | {result['category']}")
         else:
             print(f"    → Skipped (not a receipt)")
+
+    # Persist all newly seen IDs so they're skipped next time
+    if newly_scanned:
+        _save_scanned_ids(scanned_ids | newly_scanned)
 
     return transactions

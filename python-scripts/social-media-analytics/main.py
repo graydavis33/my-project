@@ -1,3 +1,16 @@
+import os
+import sys
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+_REQUIRED = ["ANTHROPIC_API_KEY"]
+_missing = [k for k in _REQUIRED if not os.getenv(k)]
+if _missing:
+    print(f"ERROR: Missing required env vars in .env: {', '.join(_missing)}")
+    print(f"  Add them to: {os.path.join(os.path.dirname(__file__), '.env')}")
+    sys.exit(1)
+
 from youtube_fetcher import get_youtube_data
 from sheets_writer import write_youtube_data
 from ai_analyzer import analyze_and_write

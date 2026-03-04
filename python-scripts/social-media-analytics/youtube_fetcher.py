@@ -80,10 +80,15 @@ def get_youtube_data():
             snippet = item['snippet']
             stats = item.get('statistics', {})
             duration_sec = parse_duration(item['contentDetails'].get('duration', 'PT0S'))
+            description = snippet.get('description', '')
+            # Shorts: #shorts hashtag OR duration <= 3 minutes (covers older untagged Shorts)
+            is_short = '#shorts' in (snippet['title'] + ' ' + description).lower() or duration_sec <= 180
             videos_map[vid_id] = {
                 'platform': 'YouTube',
                 'video_id': vid_id,
                 'title': snippet['title'],
+                'description': description,
+                'is_short': is_short,
                 'published_date': snippet['publishedAt'][:10],
                 'duration': format_duration(duration_sec),
                 'duration_seconds': duration_sec,

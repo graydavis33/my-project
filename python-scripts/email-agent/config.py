@@ -1,9 +1,18 @@
 import os
+import sys
 from dotenv import load_dotenv
 
 # Always load .env from the email-agent folder, regardless of where the script is run from
 _DIR = os.path.dirname(__file__)
 load_dotenv(os.path.join(_DIR, ".env"))
+
+# Validate required env vars before anything else runs
+_REQUIRED = ["ANTHROPIC_API_KEY", "SLACK_BOT_TOKEN", "SLACK_APP_TOKEN", "SLACK_USER_ID"]
+_missing = [k for k in _REQUIRED if not os.getenv(k)]
+if _missing:
+    print(f"ERROR: Missing required env vars in .env: {', '.join(_missing)}")
+    print(f"  Add them to: {os.path.join(_DIR, '.env')}")
+    sys.exit(1)
 
 # Claude API
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
