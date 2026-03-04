@@ -52,27 +52,42 @@ A CLI tool for managing business finances.
 ---
 
 ### Social Media Scraper (`python-scripts/social-media-analytics/`)
-A YouTube analytics dashboard that pulls channel data and generates AI-powered insights.
+A multi-platform analytics dashboard. Currently YouTube; designed to add TikTok/Instagram without changing Sheets logic.
 
 **What it does:**
 - Fetches all public videos from the authenticated YouTube channel
 - Pulls analytics: views, watch time, avg view %, CTR, likes, comments, shares, subscribers gained
-- Writes everything to a Google Sheet
-- Sends data to Claude for deep analysis (top/bottom performers, retention, CTR, recommendations)
-- Writes the AI analysis to an "AI Insights" tab in the sheet
-- Runs daily via `run_daily.bat`
+- Computes derived metrics: engagement rate, views gained since last run, growth %
+- Writes to 6 Google Sheets tabs: Dashboard, YouTube Shorts, YouTube Longform, Comments, Best Posting Day, Title Analysis
+- Generates AI insights via Claude Haiku (dashboard summary + title patterns, batched, cached daily)
+- Optionally writes deep Sonnet analysis to Notion (if NOTION_TOKEN configured)
+- Runs weekly via GitHub Actions (every Sunday 9 AM EST) — also triggerable manually
 
 **Key files:**
-- `main.py` — orchestrates fetch → sheets → AI analysis
+- `main.py` — orchestrates fetch → AI insights → Sheets → Notion
 - `youtube_fetcher.py` — YouTube Data API + Analytics API (OAuth2)
-- `ai_analyzer.py` — Claude-powered channel analysis, writes to Google Sheets
-- `comment_summarizer.py` — summarizes video comments
-- `sheets_writer.py` — Google Sheets output
+- `ai_analyzer.py` — Claude-powered analysis: `get_sheet_insights()` (Haiku, cached) + `analyze_and_write()` (Sonnet → Notion)
+- `comment_summarizer.py` — on-demand comment summarizer (run separately)
+- `sheets_writer.py` — Google Sheets output; `write_video_data(videos, ai_insights)` is platform-agnostic
 - `auth.py` — Google OAuth2 credentials
+- `.github/workflows/social-media-analytics.yml` — GitHub Actions weekly schedule
 
-**Stack:** Python, Claude (claude-sonnet-4-6), YouTube Data API v3, YouTube Analytics API v2, Google Sheets API (gspread), python-dotenv
+**Multi-platform architecture:**
+- Each video dict has a `platform` field (e.g. `'YouTube'`)
+- `write_video_data()` handles all platforms; YouTube-specific tabs filter by `platform == 'YouTube'`
+- To add TikTok/Instagram: write a new fetcher, call it in `main.py`, pass results to `write_video_data()` — no changes to Sheets logic needed
 
-**Runs as:** Windows scheduled task via `run_daily.bat`
+**Google Sheets tabs:**
+- `Dashboard` — channel overview per platform + top/bottom 5 videos + AI summary
+- `YouTube Shorts` — per-video metrics for Shorts
+- `YouTube Longform` — per-video metrics for long-form
+- `Comments` — comment counts + AI summaries (via comment_summarizer.py)
+- `Best Posting Day` — avg performance by day of week per platform
+- `Title Analysis` — word frequency for top vs bottom performers + AI title insights
+
+**Stack:** Python, Claude (claude-haiku-4-5 for Sheets insights, claude-sonnet-4-6 for Notion), YouTube Data API v3, YouTube Analytics API v2, Google Sheets API (gspread), python-dotenv
+
+**Runs as:** GitHub Actions weekly (Sunday 9 AM EST)
 
 ---
 

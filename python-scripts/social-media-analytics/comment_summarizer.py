@@ -33,6 +33,13 @@ def _save_summary_cache(cache):
         json.dump(cache, f)
 
 
+def _safe_text(text, max_len=300):
+    """Sanitize user-controlled text before inserting into Claude prompts."""
+    if not isinstance(text, str):
+        return ''
+    return text.replace('\n', ' ').replace('\r', ' ')[:max_len]
+
+
 def fetch_comments(youtube, video_id):
     """Fetch top-level comments ordered by relevance."""
     comments = []
@@ -46,12 +53,14 @@ def fetch_comments(youtube, video_id):
                 pageToken=page_token,
                 order='relevance'
             ).execute()
-            for item in resp['items']:
-                s = item['snippet']['topLevelComment']['snippet']
+            for item in resp.get('items', []):
+                snippet = item.get('snippet', {}).get('topLevelComment', {}).get('snippet', {})
+                if not snippet:
+                    continue
                 comments.append({
-                    'text': s['textDisplay'][:300],
-                    'likes': s['likeCount'],
-                    'author': s['authorDisplayName']
+                    'text': snippet.get('textDisplay', '')[:300],
+                    'likes': snippet.get('likeCount', 0),
+                    'author': snippet.get('authorDisplayName', 'Anonymous'),
                 })
             page_token = resp.get('nextPageToken')
             if not page_token:
@@ -60,7 +69,7 @@ def fetch_comments(youtube, video_id):
         if 'disabled' in str(e).lower():
             print("Comments are disabled for this video.")
         else:
-            print(f"Error fetching comments: {e}")
+            print(f"Error fetching comments: {type(e).__name__}")
     return comments
 
 
@@ -68,15 +77,19 @@ def summarize_with_claude(video_title, comments):
     """Send comments to Claude and get a structured summary."""
     client = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY', ''))
 
+    safe_title = _safe_text(video_title, 120)
     comment_block = '\n'.join(
-        f"[{c['likes']} likes] {c['author']}: {c['text']}"
+        f"[{c['likes']} likes] {_safe_text(c['author'], 50)}: {_safe_text(c['text'], 300)}"
         for c in comments
     )
 
-    prompt = f"""Analyze the audience comments for the YouTube video: "{video_title}"
+    prompt = f"""Analyze the audience comments for this YouTube video.
+<video_title>{safe_title}</video_title>
 
 Top {len(comments)} comments:
+<comments>
 {comment_block}
+</comments>
 
 Provide a structured analysis:
 1. **Overall Sentiment** — Positive / Negative / Mixed and why
@@ -87,7 +100,7 @@ Provide a structured analysis:
 
 Be concise and specific. Reference actual comments where relevant."""
 
-    response = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_API_KEY', '')).messages.create(
+    response = client.messages.create(
         model='claude-sonnet-4-6',
         max_tokens=1000,
         messages=[{'role': 'user', 'content': prompt}]
@@ -96,7 +109,7 @@ Be concise and specific. Reference actual comments where relevant."""
 
 
 def save_to_sheet(summary, video_title, video_id):
-    """Save the summary to the Comment Summaries tab."""
+    """Update the AI Summary columns in the Comments tab for this video."""
     creds = get_credentials()
     gc = gspread.authorize(creds)
     sheet_id = os.getenv('SHEET_ID', '').strip()
@@ -105,26 +118,33 @@ def save_to_sheet(summary, video_title, video_id):
         return
 
     spreadsheet = gc.open_by_key(sheet_id)
-    headers = ['Video Title', 'Video ID', 'Summary', 'Generated At']
-
     try:
-        ws = spreadsheet.worksheet('Comment Summaries')
+        ws = spreadsheet.worksheet('Comments')
     except gspread.WorksheetNotFound:
-        ws = spreadsheet.add_worksheet('Comment Summaries', rows=500, cols=4)
-        ws.update('A1', [headers])
+        print("'Comments' tab not found. Run main.py first to create it.")
+        return
 
+    headers = ws.row_values(1)
+    try:
+        url_col     = headers.index('URL') + 1
+        summary_col = headers.index('AI Summary') + 1
+        date_col    = headers.index('Summary Generated At') + 1
+    except ValueError:
+        print("'Comments' tab is missing expected columns. Run main.py first.")
+        return
+
+    url = f"https://youtu.be/{video_id}"
     now = datetime.now().strftime('%Y-%m-%d %H:%M')
 
-    # Update existing row if video already has a summary
-    existing = ws.get_all_values()
-    for i, row in enumerate(existing[1:], start=2):
-        if len(row) > 1 and row[1] == video_id:
-            ws.update(f'A{i}', [[video_title, video_id, summary, now]])
-            print("Updated existing summary in sheet.")
+    all_urls = ws.col_values(url_col)
+    for i, row_url in enumerate(all_urls[1:], start=2):  # skip header row
+        if row_url == url:
+            ws.update_cell(i, summary_col, summary)
+            ws.update_cell(i, date_col, now)
+            print(f"Summary saved to Comments tab for: {video_title}")
             return
 
-    ws.append_row([video_title, video_id, summary, now])
-    print("Summary saved to 'Comment Summaries' tab.")
+    print("Video not found in Comments tab. Run main.py to refresh the tab first.")
 
 
 def main():

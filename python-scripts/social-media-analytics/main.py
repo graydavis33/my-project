@@ -12,8 +12,8 @@ if _missing:
     sys.exit(1)
 
 from youtube_fetcher import get_youtube_data
-from sheets_writer import write_youtube_data
-from ai_analyzer import analyze_and_write
+from sheets_writer import write_video_data
+from ai_analyzer import analyze_and_write, get_sheet_insights
 
 
 def main():
@@ -22,18 +22,22 @@ def main():
     print("=" * 55)
 
     # 1. Fetch YouTube data
-    print("\n[1/3] Fetching YouTube data...")
+    print("\n[1/4] Fetching YouTube data...")
     videos = get_youtube_data()
     if not videos:
         print("No data fetched. Exiting.")
         return
 
-    # 2. Write to Google Sheets
-    print("\n[2/3] Writing to Google Sheets...")
-    spreadsheet = write_youtube_data(videos)
+    # 2. Get AI insights for Sheets (single Haiku call, cached daily)
+    print("\n[2/4] Generating AI sheet insights...")
+    ai_insights = get_sheet_insights(videos)
 
-    # 3. AI Analysis
-    print("\n[3/3] Running AI analysis...")
+    # 3. Write to Google Sheets (all tabs)
+    print("\n[3/4] Writing to Google Sheets...")
+    spreadsheet = write_video_data(videos, ai_insights=ai_insights)
+
+    # 4. Deep AI analysis → Notion (Sonnet, only if Notion is configured)
+    print("\n[4/4] Running deep AI analysis...")
     analyze_and_write(spreadsheet, videos)
 
     print("\n" + "=" * 55)

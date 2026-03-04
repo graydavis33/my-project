@@ -107,6 +107,8 @@ def get_youtube_data():
 
     # Get analytics data for all videos at once
     print("Fetching analytics (views, watch time, CTR, etc.)...")
+    a_resp = None
+    has_impressions = False
     try:
         end_date = datetime.now().strftime('%Y-%m-%d')
 
@@ -138,26 +140,30 @@ def get_youtube_data():
             has_impressions = False
             print("Note: Impressions/CTR not available for this account — other metrics will still be fetched.")
 
-        for row in a_resp.get('rows', []):
-            vid_id = row[0]
-            if vid_id in videos_map:
-                update = {
-                    'views': int(row[1]),
-                    'watch_time_minutes': round(float(row[2]), 1),
-                    'avg_view_duration_sec': int(row[3]),
-                    'avg_view_pct': round(float(row[4]), 1),
-                    'likes': int(row[5]),
-                    'comments': int(row[6]),
-                    'shares': int(row[7]),
-                    'subscribers_gained': int(row[8]),
-                }
-                if has_impressions:
-                    update['impressions'] = int(row[9])
-                    update['ctr_pct'] = round(float(row[10]) * 100, 2)
-                videos_map[vid_id].update(update)
+        if a_resp:
+            min_cols = 11 if has_impressions else 9
+            for row in a_resp.get('rows', []):
+                if len(row) < min_cols:
+                    continue
+                vid_id = row[0]
+                if vid_id in videos_map:
+                    update = {
+                        'views': int(row[1]),
+                        'watch_time_minutes': round(float(row[2]), 1),
+                        'avg_view_duration_sec': int(row[3]),
+                        'avg_view_pct': round(float(row[4]), 1),
+                        'likes': int(row[5]),
+                        'comments': int(row[6]),
+                        'shares': int(row[7]),
+                        'subscribers_gained': int(row[8]),
+                    }
+                    if has_impressions:
+                        update['impressions'] = int(row[9])
+                        update['ctr_pct'] = round(float(row[10]) * 100, 2)
+                    videos_map[vid_id].update(update)
 
     except Exception as e:
-        print(f"Warning: Analytics API error: {e}")
+        print(f"Warning: Analytics API error: {type(e).__name__}")
         print("Proceeding with basic stats only (views, likes, comments).")
 
     videos = sorted(videos_map.values(), key=lambda x: x['published_date'], reverse=True)
