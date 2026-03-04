@@ -15,10 +15,18 @@ DEFAULT_STYLE = """Write in a tone that is friendly and warm, but professional a
 Conversational — not stiff or corporate. Genuine — sounds like a real person, not a robot.
 Keep replies focused and on-topic."""
 
+# Cache the voice profile so the file is only read once per process run
+_voice_profile_cache = None
+_voice_profile_loaded = False
+
 
 def get_system_prompt():
     """Build the system prompt using Gray's voice profile if available."""
-    voice_profile = load_voice_profile()
+    global _voice_profile_cache, _voice_profile_loaded
+    if not _voice_profile_loaded:
+        _voice_profile_cache = load_voice_profile()
+        _voice_profile_loaded = True
+    voice_profile = _voice_profile_cache
 
     if voice_profile:
         style_instructions = f"""You have analyzed Gray's past emails and learned his exact writing style.

@@ -1,0 +1,55 @@
+# ============================================================
+# SECRETS & CREDENTIALS — NEVER COMMIT THESE
+# ============================================================
+.env
+.env.*
+*.env
+
+# Google OAuth tokens (live access to your Google account)
+token.json
+token*.json
+
+# Google API client secrets (your app's credentials)
+client_secret*.json
+credentials.json
+
+# ============================================================
+# PYTHON
+# ============================================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+*.egg
+
+# ============================================================
+# LOGS & TEMP FILES
+# ============================================================
+logs/
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# EDITOR / IDE
+# ============================================================
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ============================================================
+# PROJECT-SPECIFIC
+# ============================================================
+# Add any output files you don't want tracked
+test.txt

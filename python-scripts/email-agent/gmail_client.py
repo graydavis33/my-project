@@ -24,6 +24,9 @@ from config import (
     PROCESSED_LABEL,
 )
 
+# Cache label IDs so we only hit the labels.list() API once per process run
+_label_cache: dict = {}
+
 
 def get_gmail_service():
     """Authenticate and return a Gmail API service object."""
@@ -47,18 +50,27 @@ def get_gmail_service():
 
 
 def get_or_create_label(service, label_name):
-    """Return the label ID for agent-processed, creating it if it doesn't exist."""
+    """Return the label ID, creating the label if it doesn't exist.
+    Caches all label IDs after the first API call to avoid repeated list requests."""
+    if label_name in _label_cache:
+        return _label_cache[label_name]
+
+    # Populate cache from a single labels.list() call
     existing = service.users().labels().list(userId="me").execute()
     for label in existing.get("labels", []):
-        if label["name"] == label_name:
-            return label["id"]
+        _label_cache[label["name"]] = label["id"]
 
+    if label_name in _label_cache:
+        return _label_cache[label_name]
+
+    # Label doesn't exist yet — create it
     new_label = (
         service.users()
         .labels()
         .create(userId="me", body={"name": label_name})
         .execute()
     )
+    _label_cache[label_name] = new_label["id"]
     return new_label["id"]
 
 
@@ -66,15 +78,21 @@ def fetch_unprocessed_emails(service, label_id):
     """
     Fetch emails from the last 24 hours that have NOT been labeled agent-processed yet.
     Only looks at INBOX emails to avoid drafts/sent/spam.
+    Handles pagination so more than 50 emails are never silently missed.
     """
     query = f"newer_than:1d -label:{PROCESSED_LABEL}"
-    result = (
-        service.users()
-        .messages()
-        .list(userId="me", q=query, labelIds=["INBOX"], maxResults=50)
-        .execute()
-    )
-    messages = result.get("messages", [])
+    messages = []
+    page_token = None
+
+    while True:
+        kwargs = {"userId": "me", "q": query, "labelIds": ["INBOX"], "maxResults": 50}
+        if page_token:
+            kwargs["pageToken"] = page_token
+        result = service.users().messages().list(**kwargs).execute()
+        messages.extend(result.get("messages", []))
+        page_token = result.get("nextPageToken")
+        if not page_token:
+            break
 
     emails = []
     for msg in messages:

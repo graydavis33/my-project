@@ -7,6 +7,8 @@ Handles all Slack interactions:
 """
 
 import json
+import os
+import time
 import threading
 from slack_sdk import WebClient
 from slack_sdk.socket_mode import SocketModeClient
@@ -17,8 +19,45 @@ from config import SLACK_BOT_TOKEN, SLACK_APP_TOKEN, SLACK_USER_ID
 
 web_client = WebClient(token=SLACK_BOT_TOKEN)
 
-# Stores pending drafts in memory: { action_id -> { email, draft, send_callback } }
+# Stores pending drafts in memory: { email_id -> { email, draft, send_callback, created_at } }
 pending_drafts = {}
+
+_DRAFTS_FILE = os.path.join(os.path.dirname(__file__), "pending_drafts.json")
+_DRAFT_TTL_SECONDS = 7 * 24 * 3600  # drop drafts older than 7 days
+
+
+def _save_pending_drafts():
+    """Persist email+draft data to disk. Callbacks can't be serialized so they're excluded."""
+    serializable = {
+        k: {"email": v["email"], "draft": v["draft"], "created_at": v["created_at"]}
+        for k, v in pending_drafts.items()
+    }
+    with open(_DRAFTS_FILE, "w") as f:
+        json.dump(serializable, f, indent=2)
+
+
+def load_persisted_drafts():
+    """Return drafts saved from a previous run, dropping any older than 7 days."""
+    if not os.path.exists(_DRAFTS_FILE):
+        return {}
+    try:
+        with open(_DRAFTS_FILE) as f:
+            data = json.load(f)
+        cutoff = time.time() - _DRAFT_TTL_SECONDS
+        return {k: v for k, v in data.items() if v.get("created_at", 0) > cutoff}
+    except Exception:
+        return {}
+
+
+def register_draft(email, draft, send_callback):
+    """Add a draft to pending_drafts without posting to Slack (used when restoring on startup)."""
+    pending_drafts[email["id"]] = {
+        "email": email,
+        "draft": draft,
+        "send_callback": send_callback,
+        "created_at": time.time(),
+    }
+    _save_pending_drafts()
 
 
 def send_draft_notification(email, draft, send_callback):
@@ -31,7 +70,9 @@ def send_draft_notification(email, draft, send_callback):
         "email": email,
         "draft": draft,
         "send_callback": send_callback,
+        "created_at": time.time(),
     }
+    _save_pending_drafts()
 
     sender_name = email["from"].split("<")[0].strip() or email["from"]
 
@@ -109,6 +150,7 @@ def handle_action(client: SocketModeClient, req: SocketModeRequest):
 
     if action_id_full.startswith("send_"):
         entry["send_callback"](entry["draft"])
+        _save_pending_drafts()
         web_client.chat_update(
             channel=channel,
             ts=message_ts,
@@ -151,8 +193,10 @@ def handle_action(client: SocketModeClient, req: SocketModeRequest):
         )
         # Re-add to pending so modal submit can find it
         pending_drafts[email_id] = entry
+        _save_pending_drafts()
 
     elif action_id_full.startswith("skip_"):
+        _save_pending_drafts()
         web_client.chat_update(
             channel=channel,
             ts=message_ts,
@@ -188,6 +232,7 @@ def handle_view_submission(client: SocketModeClient, req: SocketModeRequest):
     if email_id in pending_drafts:
         entry = pending_drafts.pop(email_id)
         entry["send_callback"](edited_text)
+        _save_pending_drafts()
         web_client.chat_update(
             channel=channel,
             ts=message_ts,
