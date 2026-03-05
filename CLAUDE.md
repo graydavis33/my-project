@@ -103,6 +103,41 @@ A multi-platform analytics dashboard supporting YouTube, TikTok, Instagram, and 
 
 ---
 
+## Current Work in Progress — Multi-Platform Analytics Setup
+
+**Status (paused 2026-03-04):** All code is written and committed. Waiting on user to complete
+developer account setup for Instagram/Facebook and TikTok before testing.
+
+### What's done (code complete, committed, pushed):
+- `meta_fetcher.py` — Instagram + Facebook via Meta Graph API
+- `tiktok_fetcher.py` — TikTok Display API with cursor pagination + auto token refresh
+- `tiktok_auth.py` — one-time PKCE OAuth2 browser flow for TikTok
+- `sheets_writer.py` — TikTok, Instagram, Facebook tabs + platform-specific headers
+- `main.py` — fetches all 4 platforms, silently skips any not configured
+- `requirements.txt` — added `requests>=2.31.0`
+
+### What user still needs to do:
+
+**Instagram + Facebook:**
+1. Create Meta Developer App at developers.facebook.com (was blocked by email verification error — try again or use incognito)
+2. Add products: Instagram Graph API + Facebook Login for Business
+3. Get long-lived token from Graph API Explorer with permissions: `instagram_basic`, `instagram_manage_insights`, `pages_read_engagement`, `pages_show_list`, `read_insights`
+4. Exchange for 60-day token via: `GET /oauth/access_token?grant_type=fb_exchange_token&client_id=APP_ID&client_secret=APP_SECRET&fb_exchange_token=SHORT_TOKEN`
+5. Get Facebook Page ID: `GET /me/accounts`
+6. Get Instagram Business Account ID: `GET /{PAGE_ID}?fields=instagram_business_account`
+7. Add to `.env`: `META_ACCESS_TOKEN`, `INSTAGRAM_BUSINESS_ACCOUNT_ID`, `FACEBOOK_PAGE_ID`
+
+**TikTok:**
+1. Create app at developers.tiktok.com → add Login Kit + Video Kit products
+2. Set redirect URI to: `http://localhost:8888/callback`
+3. Add own TikTok account as test user (required before app review)
+4. Add to `.env`: `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`
+5. Run once: `cd python-scripts/social-media-analytics && python tiktok_auth.py`
+
+**After setup:** Run `python main.py` — new platform tabs will appear in the Google Sheet automatically.
+
+---
+
 ## Planned / Empty Folders
 - `web-apps/` — future web projects
 - `mobile-apps/` — future mobile projects
