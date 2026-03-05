@@ -50,6 +50,28 @@ HEADER_NOTE  = {h: d for h, _, d in HEADER_DEFS}
 ALL_HEADERS  = [h for h, _, _ in HEADER_DEFS]
 SHORTS_HEADERS = [h for h in ALL_HEADERS if h not in ('Impressions', 'CTR (%)')]
 
+TIKTOK_HEADERS = [
+    'Platform', 'Title', 'URL', 'Published Date', 'Duration',
+    'Views', 'Likes', 'Comments', 'Shares',
+    'Views Gained', 'Growth (%)', 'Engagement Rate (%)', 'Last Updated',
+]
+
+INSTAGRAM_HEADERS = [
+    'Platform', 'Title', 'URL', 'Published Date',
+    'Views', 'Impressions', 'Likes', 'Comments', 'Shares', 'Saves',
+    'Views Gained', 'Growth (%)', 'Engagement Rate (%)', 'Last Updated',
+]
+
+FACEBOOK_HEADERS = [
+    'Platform', 'Title', 'URL', 'Published Date',
+    'Views', 'Impressions', 'Likes', 'Comments', 'Shares',
+    'Views Gained', 'Growth (%)', 'Engagement Rate (%)', 'Last Updated',
+]
+
+# 'Saves' is Instagram-specific — reuses the subscribers_gained field key
+HEADER_FIELD['Saves'] = 'subscribers_gained'
+HEADER_NOTE['Saves']  = 'Number of times this post was saved by users'
+
 COMMENTS_HEADERS = ['Title', 'URL', 'Comment Count', 'AI Summary', 'Summary Generated At']
 COMMENTS_NOTES = {
     'Title':                'Video title',
@@ -544,6 +566,9 @@ def write_video_data(videos, ai_insights=None):
     prev_views = {
         **_read_existing_views(spreadsheet, 'YouTube Shorts'),
         **_read_existing_views(spreadsheet, 'YouTube Longform'),
+        **_read_existing_views(spreadsheet, 'TikTok'),
+        **_read_existing_views(spreadsheet, 'Instagram'),
+        **_read_existing_views(spreadsheet, 'Facebook'),
     }
 
     # Enrich all video dicts with engagement rate + growth fields
@@ -577,6 +602,33 @@ def write_video_data(videos, ai_insights=None):
         smart_write(spreadsheet, ws_long, longform, ALL_HEADERS, 'YouTube Longform')
     else:
         print("YouTube Longform: tab ready, no longform videos yet.")
+
+    # TikTok
+    tiktok_videos = [v for v in videos if v.get('platform') == 'TikTok']
+    if tiktok_videos:
+        ws_tt, created = get_or_create_worksheet(spreadsheet, 'TikTok', TIKTOK_HEADERS)
+        apply_formatting(spreadsheet, ws_tt, len(TIKTOK_HEADERS))
+        if created:
+            add_header_notes(spreadsheet, ws_tt, TIKTOK_HEADERS)
+        smart_write(spreadsheet, ws_tt, tiktok_videos, TIKTOK_HEADERS, 'TikTok')
+
+    # Instagram
+    ig_videos = [v for v in videos if v.get('platform') == 'Instagram']
+    if ig_videos:
+        ws_ig, created = get_or_create_worksheet(spreadsheet, 'Instagram', INSTAGRAM_HEADERS)
+        apply_formatting(spreadsheet, ws_ig, len(INSTAGRAM_HEADERS))
+        if created:
+            add_header_notes(spreadsheet, ws_ig, INSTAGRAM_HEADERS)
+        smart_write(spreadsheet, ws_ig, ig_videos, INSTAGRAM_HEADERS, 'Instagram')
+
+    # Facebook
+    fb_videos = [v for v in videos if v.get('platform') == 'Facebook']
+    if fb_videos:
+        ws_fb, created = get_or_create_worksheet(spreadsheet, 'Facebook', FACEBOOK_HEADERS)
+        apply_formatting(spreadsheet, ws_fb, len(FACEBOOK_HEADERS))
+        if created:
+            add_header_notes(spreadsheet, ws_fb, FACEBOOK_HEADERS)
+        smart_write(spreadsheet, ws_fb, fb_videos, FACEBOOK_HEADERS, 'Facebook')
 
     # Comments
     write_comments_tab(spreadsheet, videos)

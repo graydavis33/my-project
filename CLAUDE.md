@@ -52,20 +52,23 @@ A CLI tool for managing business finances.
 ---
 
 ### Social Media Scraper (`python-scripts/social-media-analytics/`)
-A multi-platform analytics dashboard. Currently YouTube; designed to add TikTok/Instagram without changing Sheets logic.
+A multi-platform analytics dashboard supporting YouTube, TikTok, Instagram, and Facebook.
 
 **What it does:**
-- Fetches all public videos from the authenticated YouTube channel
-- Pulls analytics: views, watch time, avg view %, CTR, likes, comments, shares, subscribers gained
+- Fetches videos/posts from all configured platforms
+- Pulls analytics: views, likes, comments, shares, watch time, CTR, engagement rate, etc.
 - Computes derived metrics: engagement rate, views gained since last run, growth %
-- Writes to 6 Google Sheets tabs: Dashboard, YouTube Shorts, YouTube Longform, Comments, Best Posting Day, Title Analysis
+- Writes to Google Sheets (one tab per platform + shared tabs)
 - Generates AI insights via Claude Haiku (dashboard summary + title patterns, batched, cached daily)
 - Optionally writes deep Sonnet analysis to Notion (if NOTION_TOKEN configured)
 - Runs weekly via GitHub Actions (every Sunday 9 AM EST) — also triggerable manually
 
 **Key files:**
-- `main.py` — orchestrates fetch → AI insights → Sheets → Notion
-- `youtube_fetcher.py` — YouTube Data API + Analytics API (OAuth2)
+- `main.py` — orchestrates fetch (all platforms) → AI insights → Sheets → Notion
+- `youtube_fetcher.py` — YouTube Data API v3 + Analytics API v2 (Google OAuth2)
+- `meta_fetcher.py` — Instagram + Facebook via Meta Graph API v19.0 (static token in .env)
+- `tiktok_fetcher.py` — TikTok Display API (token from tiktok_token.json)
+- `tiktok_auth.py` — one-time TikTok OAuth2 browser flow; run once to set up
 - `ai_analyzer.py` — Claude-powered analysis: `get_sheet_insights()` (Haiku, cached) + `analyze_and_write()` (Sonnet → Notion)
 - `comment_summarizer.py` — on-demand comment summarizer (run separately)
 - `sheets_writer.py` — Google Sheets output; `write_video_data(videos, ai_insights)` is platform-agnostic
@@ -73,21 +76,30 @@ A multi-platform analytics dashboard. Currently YouTube; designed to add TikTok/
 - `.github/workflows/social-media-analytics.yml` — GitHub Actions weekly schedule
 
 **Multi-platform architecture:**
-- Each video dict has a `platform` field (e.g. `'YouTube'`)
-- `write_video_data()` handles all platforms; YouTube-specific tabs filter by `platform == 'YouTube'`
-- To add TikTok/Instagram: write a new fetcher, call it in `main.py`, pass results to `write_video_data()` — no changes to Sheets logic needed
+- Each video dict has a `platform` field: `'YouTube'`, `'TikTok'`, `'Instagram'`, `'Facebook'`
+- `write_video_data()` handles all platforms; platform-specific tabs filter by `platform` field
+- Missing env vars = that platform is silently skipped (no crash)
+- To add a new platform: write a new fetcher, call it in `main.py` with the same guard pattern
 
 **Google Sheets tabs:**
 - `Dashboard` — channel overview per platform + top/bottom 5 videos + AI summary
-- `YouTube Shorts` — per-video metrics for Shorts
-- `YouTube Longform` — per-video metrics for long-form
+- `YouTube Shorts` — per-video metrics for YouTube Shorts
+- `YouTube Longform` — per-video metrics for YouTube long-form videos
+- `TikTok` — per-video metrics (views, likes, comments, shares; no watch time/CTR via API)
+- `Instagram` — per-post metrics (views, reach, likes, comments, shares, saves)
+- `Facebook` — per-post metrics (impressions, likes, comments, shares, video views)
 - `Comments` — comment counts + AI summaries (via comment_summarizer.py)
 - `Best Posting Day` — avg performance by day of week per platform
 - `Title Analysis` — word frequency for top vs bottom performers + AI title insights
 
-**Stack:** Python, Claude (claude-haiku-4-5 for Sheets insights, claude-sonnet-4-6 for Notion), YouTube Data API v3, YouTube Analytics API v2, Google Sheets API (gspread), python-dotenv
+**Stack:** Python, Claude (claude-haiku-4-5 for Sheets insights, claude-sonnet-4-6 for Notion), YouTube Data API v3, YouTube Analytics API v2, Meta Graph API v19.0, TikTok Display API, Google Sheets API (gspread), requests, python-dotenv
 
 **Runs as:** GitHub Actions weekly (Sunday 9 AM EST)
+
+**Token management:**
+- YouTube: Google OAuth2 token auto-refreshes (token.json)
+- Meta (Instagram + Facebook): 60-day long-lived token in .env — refresh manually every 60 days
+- TikTok: access token (~24h) auto-refreshes on 401; refresh token lasts 365 days (tiktok_token.json)
 
 ---
 
@@ -146,6 +158,11 @@ python main.py          # fetch YouTube data → Sheets → AI analysis
 - `SHEET_ID` — auto-filled on first run
 - `NOTION_TOKEN` — (optional) Notion integration token
 - `NOTION_PAGE_ID` — (optional) parent Notion page for weekly reports
+- `META_ACCESS_TOKEN` — 60-day long-lived Meta Page Access Token (Instagram + Facebook)
+- `INSTAGRAM_BUSINESS_ACCOUNT_ID` — IG business account ID (from Meta Graph API Explorer)
+- `FACEBOOK_PAGE_ID` — Facebook Page ID
+- `TIKTOK_CLIENT_KEY` — TikTok app client key (from developers.tiktok.com)
+- `TIKTOK_CLIENT_SECRET` — TikTok app client secret
 
 ---
 
