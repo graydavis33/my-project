@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gray Davis — Project Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0d0d0d;
+      color: #e8e8e8;
+      min-height: 100vh;
+      padding: 32px 24px 64px;
+    }
+
+    /* ── Header ── */
+    .header {
+      max-width: 960px;
+      margin: 0 auto 40px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px solid #222;
+      padding-bottom: 20px;
+    }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+    .header h1 span { color: #666; font-weight: 400; }
+    .last-updated {
+      font-size: 12px;
+      color: #444;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      gap: 16px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #141414;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 22px 24px 20px;
+      position: relative;
+      transition: border-color 0.15s;
+    }
+    .card:hover { border-color: #333; }
+
+    .card.priority-1 { border-left: 3px solid #f59e0b; }
+    .card.priority-2 { border-left: 3px solid #3b82f6; }
+    .card.priority-3 { border-left: 3px solid #8b5cf6; }
+    .card.priority-4 { border-left: 3px solid #6b7280; }
+    .card.ongoing    { border-left: 3px solid #10b981; }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .priority-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .priority-badge.p1 { background: #451a03; color: #f59e0b; }
+    .priority-badge.p2 { background: #172554; color: #60a5fa; }
+    .priority-badge.p3 { background: #2e1065; color: #a78bfa; }
+    .priority-badge.p4 { background: #1c1c1c; color: #6b7280; }
+    .priority-badge.ongoing { background: #052e16; color: #34d399; }
+
+    .card-meta {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 14px;
+    }
+
+    /* ── Status Pill ── */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .status.blocked  { background: #2d0a0a; color: #f87171; }
+    .status.blocked::before  { background: #ef4444; }
+    .status.in-progress { background: #0c1a2e; color: #60a5fa; }
+    .status.in-progress::before { background: #3b82f6; animation: pulse 1.5s infinite; }
+    .status.running  { background: #052e16; color: #34d399; }
+    .status.running::before  { background: #10b981; animation: pulse 1.5s infinite; }
+    .status.planned  { background: #1a1a1a; color: #9ca3af; }
+    .status.planned::before  { background: #6b7280; }
+    .status.complete { background: #052e16; color: #34d399; }
+    .status.complete::before { background: #10b981; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── Progress Bar ── */
+    .progress-wrap {
+      margin-bottom: 16px;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .progress-bar {
+      height: 4px;
+      background: #1e1e1e;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+    .fill-amber  { background: #f59e0b; }
+    .fill-blue   { background: #3b82f6; }
+    .fill-purple { background: #8b5cf6; }
+    .fill-green  { background: #10b981; }
+    .fill-gray   { background: #4b5563; }
+
+    /* ── Requirements ── */
+    .req-section {
+      margin-top: 14px;
+    }
+    .req-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #444;
+      margin-bottom: 8px;
+    }
+    .req-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .req-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12.5px;
+      color: #bbb;
+      line-height: 1.4;
+    }
+    .req-item.done { color: #4b5563; text-decoration: line-through; }
+    .req-item .check {
+      flex-shrink: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1.5px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      font-size: 9px;
+    }
+    .req-item.done .check {
+      background: #14532d;
+      border-color: #14532d;
+      color: #4ade80;
+    }
+    .req-item .check::after { content: ''; }
+    .req-item.done .check::after { content: '✓'; }
+
+    .req-item .blocker-tag {
+      font-size: 10px;
+      background: #2d0a0a;
+      color: #f87171;
+      padding: 1px 5px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* ── Section Divider ── */
+    .section-title {
+      max-width: 960px;
+      margin: 36px auto 16px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #444;
+      border-bottom: 1px solid #1a1a1a;
+      padding-bottom: 8px;
+    }
+
+    /* ── Score Legend ── */
+    .score-grid {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .score-pill {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: #1a1a1a;
+      color: #666;
+    }
+    .score-pill span { color: #999; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Gray Davis <span>/ Project Dashboard</span></h1>
+    <div class="last-updated">Last updated: 2026-03-05</div>
+  </div>
+
+  <!-- ── ACTIVE PRIORITY PROJECTS ── -->
+  <div class="section-title">Active Priority Projects</div>
+  <div class="grid">
+
+    <!-- PRIORITY 1 -->
+    <div class="card priority-1">
+      <div class="card-header">
+        <div class="card-title">Multi-Platform Analytics</div>
+        <div class="priority-badge p1">#1 PRIORITY</div>
+      </div>
+      <div class="card-meta">Social Media Scraper · python-scripts/social-media-analytics/</div>
+      <div class="status blocked">BLOCKED — Awaiting API Setup</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Completion</span>
+          <span>55%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill fill-amber" style="width:55%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">Requirements</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="check"></div>Code written: meta_fetcher.py, tiktok_fetcher.py, tiktok_auth.py</li>
+          <li class="req-item done"><div class="check"></div>sheets_writer.py updated (TikTok, Instagram, Facebook tabs)</li>
+          <li class="req-item done"><div class="check"></div>main.py updated — silently skips unconfigured platforms</li>
+          <li class="req-item done"><div class="check"></div>requirements.txt — added requests>=2.31.0</li>
+          <li class="req-item done"><div class="check"></div>GitHub Actions scheduled workflow running</li>
+          <li class="req-item"><div class="check"></div>Create Meta Developer App (developers.facebook.com) <span class="blocker-tag">BLOCKER</span></li>
+          <li class="req-item"><div class="check"></div>Get META_ACCESS_TOKEN (60-day long-lived token)</li>
+          <li class="req-item"><div class="check"></div>Get INSTAGRAM_BUSINESS_ACCOUNT_ID</li>
+          <li class="req-item"><div class="check"></div>Get FACEBOOK_PAGE_ID</li>
+          <li class="req-item"><div class="check"></div>Create TikTok Developer App (developers.tiktok.com) <span class="blocker-tag">BLOCKER</span></li>
+          <li class="req-item"><div class="check"></div>Add TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET to .env</li>
+          <li class="req-item"><div class="check"></div>Run python tiktok_auth.py (one-time browser auth)</li>
+          <li class="req-item"><div class="check"></div>Run python main.py — verify all platform tabs appear</li>
+        </ul>
+        <div class="score-grid">
+          <div class="score-pill">Unblocks: <span>3/3</span></div>
+          <div class="score-pill">Revenue: <span>2/3</span></div>
+          <div class="score-pill">Showcase: <span>3/3</span></div>
+          <div class="score-pill">Sellable: <span>3/3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIORITY 2 -->
+    <div class="card priority-2">
+      <div class="card-header">
+        <div class="card-title">Client Onboarding Automation</div>
+        <div class="priority-badge p2">#2 PRIORITY</div>
+      </div>
+      <div class="card-meta">New project · python-scripts/client-onboarding/ (not yet started)</div>
+      <div class="status planned">PLANNED — Not Started</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Completion</span>
+          <span>0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:0%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">Requirements</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Define onboarding steps (intake form, contract, invoice, project brief)</li>
+          <li class="req-item"><div class="check"></div>Build intake form (Typeform or simple web form)</li>
+          <li class="req-item"><div class="check"></div>Auto-generate contract PDF from form responses</li>
+          <li class="req-item"><div class="check"></div>Auto-send contract + invoice via email</li>
+          <li class="req-item"><div class="check"></div>Create project brief from client inputs (Claude-powered)</li>
+          <li class="req-item"><div class="check"></div>Slack notification when new client onboards</li>
+          <li class="req-item"><div class="check"></div>Google Sheet client tracker (status, payment, deliverables)</li>
+        </ul>
+        <div class="score-grid">
+          <div class="score-pill">Unblocks: <span>1/3</span></div>
+          <div class="score-pill">Revenue: <span>3/3</span></div>
+          <div class="score-pill">Showcase: <span>3/3</span></div>
+          <div class="score-pill">Sellable: <span>3/3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIORITY 3 -->
+    <div class="card priority-3">
+      <div class="card-header">
+        <div class="card-title">Web App / Mobile Dashboard</div>
+        <div class="priority-badge p3">#3 PRIORITY</div>
+      </div>
+      <div class="card-meta">Phase 3 of Social Media Analytics · web-apps/ (planned)</div>
+      <div class="status planned">PLANNED — Depends on Phase 1 Completion</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Completion</span>
+          <span>0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill fill-purple" style="width:0%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">Requirements</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Multi-Platform Analytics fully working (Phase 1) <span class="blocker-tag">DEP</span></li>
+          <li class="req-item"><div class="check"></div>FastAPI backend (serve analytics data as JSON API)</li>
+          <li class="req-item"><div class="check"></div>Deploy to cloud (Railway, Render, or Fly.io)</li>
+          <li class="req-item"><div class="check"></div>Frontend dashboard (React or plain HTML/JS)</li>
+          <li class="req-item"><div class="check"></div>On-demand refresh button (no manual script run needed)</li>
+          <li class="req-item"><div class="check"></div>Mobile-responsive layout (iPhone accessible)</li>
+          <li class="req-item"><div class="check"></div>Optional: auth gate (login to view your dashboard)</li>
+        </ul>
+        <div class="score-grid">
+          <div class="score-pill">Unblocks: <span>2/3</span></div>
+          <div class="score-pill">Revenue: <span>2/3</span></div>
+          <div class="score-pill">Showcase: <span>3/3</span></div>
+          <div class="score-pill">Sellable: <span>3/3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRIORITY 4 -->
+    <div class="card priority-4">
+      <div class="card-header">
+        <div class="card-title">Content Repurposing Pipeline</div>
+        <div class="priority-badge p4">#4 PRIORITY</div>
+      </div>
+      <div class="card-meta">New project · python-scripts/content-pipeline/ (not yet started)</div>
+      <div class="status planned">PLANNED — Not Started</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Completion</span>
+          <span>0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill fill-gray" style="width:0%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">Requirements</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Input: long-form YouTube video (URL or file)</li>
+          <li class="req-item"><div class="check"></div>Auto-transcribe audio (Whisper or AssemblyAI)</li>
+          <li class="req-item"><div class="check"></div>Claude extracts key moments + generates short-form hooks</li>
+          <li class="req-item"><div class="check"></div>Auto-generate captions for each platform (IG, TikTok, Facebook, YouTube)</li>
+          <li class="req-item"><div class="check"></div>Clip timestamps + export cut list</li>
+          <li class="req-item"><div class="check"></div>Optional: auto-post to platforms via API</li>
+          <li class="req-item"><div class="check"></div>Google Sheet tracker (clip name, platform, status, engagement)</li>
+        </ul>
+        <div class="score-grid">
+          <div class="score-pill">Unblocks: <span>0/3</span></div>
+          <div class="score-pill">Revenue: <span>2/3</span></div>
+          <div class="score-pill">Showcase: <span>3/3</span></div>
+          <div class="score-pill">Sellable: <span>3/3</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── ONGOING / LIVE PROJECTS ── -->
+  <div class="section-title">Ongoing — Live &amp; Running</div>
+  <div class="grid">
+
+    <div class="card ongoing">
+      <div class="card-header">
+        <div class="card-title">AI Email Agent</div>
+        <div class="priority-badge ongoing">LIVE</div>
+      </div>
+      <div class="card-meta">python-scripts/email-agent/ · Runs hourly 7am–8pm</div>
+      <div class="status running">RUNNING</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:90%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="check"></div>Classifies Gmail emails (needs_reply / fyi_only / ignore)</li>
+          <li class="req-item done"><div class="check"></div>Drafts replies in your writing style</li>
+          <li class="req-item done"><div class="check"></div>Sends to Slack DM with Send / Edit / Skip buttons</li>
+          <li class="req-item done"><div class="check"></div>Sends approved replies via Gmail</li>
+          <li class="req-item done"><div class="check"></div>Runs on schedule via launch agent / Task Scheduler</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Possible Improvements</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Smart follow-up reminders (flag unanswered client emails)</li>
+          <li class="req-item"><div class="check"></div>Attachment handling (read + summarize PDFs, contracts)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card ongoing">
+      <div class="card-header">
+        <div class="card-title">Invoice &amp; Accounting System</div>
+        <div class="priority-badge ongoing">LIVE</div>
+      </div>
+      <div class="card-meta">python-scripts/invoice-system/ · CLI tool</div>
+      <div class="status running">RUNNING</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>85%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:85%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="check"></div>Imports Venmo + bank CSV transactions</li>
+          <li class="req-item done"><div class="check"></div>Scans Gmail for receipts (Claude-powered extraction)</li>
+          <li class="req-item done"><div class="check"></div>Generates PDF invoices + emails to clients</li>
+          <li class="req-item done"><div class="check"></div>Tracks everything in Google Sheets (tax, profit)</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Possible Improvements</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Payment status tracking (paid / outstanding / overdue)</li>
+          <li class="req-item"><div class="check"></div>Monthly P&amp;L summary to Slack/email</li>
+          <li class="req-item"><div class="check"></div>Integrate with Client Onboarding (#2) — auto-invoice on project close</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card ongoing">
+      <div class="card-header">
+        <div class="card-title">Social Media Analytics (YouTube)</div>
+        <div class="priority-badge ongoing">LIVE</div>
+      </div>
+      <div class="card-meta">python-scripts/social-media-analytics/ · GitHub Actions every Sunday 9am EST</div>
+      <div class="status running">RUNNING — YouTube only</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>55%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-amber" style="width:55%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">What It Does (YouTube)</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="check"></div>Fetches all YouTube videos (Shorts + Longform)</li>
+          <li class="req-item done"><div class="check"></div>Pulls views, likes, comments, watch time, CTR, etc.</li>
+          <li class="req-item done"><div class="check"></div>Writes to Google Sheets with growth tracking</li>
+          <li class="req-item done"><div class="check"></div>AI insights via Claude Haiku (cached daily)</li>
+          <li class="req-item done"><div class="check"></div>Optional deep analysis → Notion (Sonnet)</li>
+          <li class="req-item"><div class="check"></div>TikTok, Instagram, Facebook data (see Priority #1)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── LEGEND ── -->
+  <div class="section-title">Priority Scoring Framework</div>
+  <div style="max-width:960px;margin:0 auto;background:#141414;border:1px solid #1e1e1e;border-radius:12px;padding:20px 24px;">
+    <p style="font-size:12.5px;color:#666;line-height:1.8;">
+      Each project is scored 0–3 across four dimensions. Highest total = next priority.<br>
+      <strong style="color:#888">Tiebreaker:</strong> simpler/faster project goes first — quick wins build momentum.
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
+      <div style="background:#1a1a1a;border-radius:8px;padding:12px 16px;flex:1;min-width:180px;">
+        <div style="font-size:11px;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Unblocks Something</div>
+        <div style="font-size:13px;color:#bbb">Is another project waiting on this?</div>
+      </div>
+      <div style="background:#1a1a1a;border-radius:8px;padding:12px 16px;flex:1;min-width:180px;">
+        <div style="font-size:11px;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Revenue / Time Impact</div>
+        <div style="font-size:13px;color:#bbb">Faster payments, more clients, hours saved</div>
+      </div>
+      <div style="background:#1a1a1a;border-radius:8px;padding:12px 16px;flex:1;min-width:180px;">
+        <div style="font-size:11px;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Showcase Value</div>
+        <div style="font-size:13px;color:#bbb">Filmable, portfolio-worthy, AI operator proof</div>
+      </div>
+      <div style="background:#1a1a1a;border-radius:8px;padding:12px 16px;flex:1;min-width:180px;">
+        <div style="font-size:11px;color:#555;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.6px">Sellable Product</div>
+        <div style="font-size:13px;color:#bbb">Multi-user potential, other creators would pay</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
