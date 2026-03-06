@@ -5,6 +5,7 @@ A 500k view video on a 10k sub channel is a bigger outlier than
 """
 
 MIN_VIEWS = 1_000
+MAX_DURATION_SECONDS = 180  # 3 minutes — exclude longform videos
 
 
 def score_and_rank(videos: list[dict], top_n: int = 10) -> list[dict]:
@@ -12,11 +13,11 @@ def score_and_rank(videos: list[dict], top_n: int = 10) -> list[dict]:
     Filter, score, and return top_n outlier videos.
     Adds 'outlier_score' field (views / max(subscribers, 1)).
     """
-    # Filter out micro-videos and very long videos (> 60 min, likely streams)
+    # Filter out micro-videos and longform videos
     filtered = [
         v for v in videos
         if v.get('views', 0) >= MIN_VIEWS
-        and v.get('duration_seconds', 0) < 3600
+        and v.get('duration_seconds', 0) <= MAX_DURATION_SECONDS
         and v.get('duration_seconds', 0) > 10
     ]
 
