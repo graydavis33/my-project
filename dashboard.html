@@ -488,8 +488,8 @@
         <div class="card-title">Content Researcher</div>
         <div class="priority-badge setup">BUILT</div>
       </div>
-      <div class="card-meta">python-scripts/content-researcher/ · Built 2026-03-05</div>
-      <div class="status needs-setup">NEEDS SETUP — First-time YouTube OAuth + optional Notion config</div>
+      <div class="card-meta">python-scripts/content-researcher/ · Updated 2026-03-06</div>
+      <div class="status needs-setup">NEEDS SETUP — First-time YouTube OAuth (one-time browser auth)</div>
 
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>90%</span></div>
@@ -501,14 +501,14 @@
         <ul class="req-list">
           <li class="req-item done"><div class="check"></div>Type a video concept → searches YouTube for top outlier videos (views ÷ subscriber ratio)</li>
           <li class="req-item done"><div class="check"></div>Pulls first 90s transcripts from top 10 outliers (hook extraction)</li>
+          <li class="req-item done"><div class="check"></div>Shorts-only outlier filter (≤3 min) — views ÷ subscriber ratio</li>
           <li class="req-item done"><div class="check"></div>One Sonnet call: 9-section report — hooks, keywords, script outline, full draft, pacing notes</li>
-          <li class="req-item done"><div class="check"></div>Writes report to Notion page + saves local .md file · ~$0.05/run, 7-day cache</li>
+          <li class="req-item done"><div class="check"></div>Styled HTML report auto-opens in browser (dark theme, matches dashboard) + .md backup · ~$0.05/run, 7-day cache</li>
           <li class="req-item done"><div class="check"></div>Replaces paid research tools (TubeBuddy, VidIQ-style research)</li>
         </ul>
         <div class="req-label" style="margin-top:12px">Setup Steps</div>
         <ul class="req-list">
           <li class="req-item"><div class="check"></div>Run: python main.py "concept" — browser opens for YouTube OAuth (one-time) <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Add NOTION_TOKEN + NOTION_PAGE_ID to .env for Notion output (optional) <span class="setup-tag">YOU</span></li>
         </ul>
         <div class="req-label" style="margin-top:12px">V2 Roadmap</div>
         <ul class="req-list">

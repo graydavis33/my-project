@@ -117,20 +117,21 @@ CLI: input a video concept → Claude outputs 5 YouTube titles, 5 TikTok titles,
 ---
 
 ### 5. Content Researcher (`python-scripts/content-researcher/`)
-On-demand outlier video research tool. Type a concept → full research report with hooks, script, and performance analysis written to Notion.
+On-demand outlier video research tool. Type a concept → full research report with hooks, script, and performance analysis. Auto-opens as a styled HTML page in the browser.
 
 **What it does:**
 - Generates 4 YouTube search query variants from your concept (Claude Haiku)
 - Searches YouTube, collects ~60 videos, fetches subscriber counts
-- Ranks by views-to-subscriber ratio (surfaces hidden viral gems, not just big channels)
+- Ranks by views-to-subscriber ratio — **Shorts only** (≤3 min), surfaces hidden viral gems
 - Pulls first 90s transcripts from top 10 outliers (hook extraction)
 - One Claude Sonnet call generates a 9-section report: performance data, outlier reasons, top 5 hook patterns, format/length recs, keywords, 5 mini hooks, script outline, full script draft, pacing & sound design notes
-- Writes report to a new Notion page + saves local `.md` file in `results/`
+- Outputs a **styled HTML report** (dark theme, matches dashboard) that auto-opens in the browser
+- Also saves `.md` backup to `results/`
 - Caches results for 7 days — same concept = instant re-run, $0 cost
 
-**Key files:** `main.py`, `searcher.py`, `outlier.py`, `transcript.py`, `analyzer.py`, `notion_writer.py`, `cache.py`
+**Key files:** `main.py`, `searcher.py`, `outlier.py`, `transcript.py`, `analyzer.py`, `html_writer.py`, `notion_writer.py`, `cache.py`
 
-**Stack:** Python, Claude (claude-haiku-4-5 for query gen, claude-sonnet-4-6 for analysis), YouTube Data API v3, youtube-transcript-api, Notion API, python-dotenv
+**Stack:** Python, Claude (claude-haiku-4-5 for query gen, claude-sonnet-4-6 for analysis), YouTube Data API v3, youtube-transcript-api, python-dotenv
 
 **Cost per run:** ~$0.04–0.06. Same concept within 7 days = $0.
 
