@@ -23,7 +23,7 @@ from searcher import generate_queries, search_videos, fetch_subscriber_counts
 from outlier import score_and_rank
 from transcript import enrich_with_hooks
 from analyzer import analyze
-from notion_writer import write_report
+from html_writer import write_html_report
 from cache import get_cached
 
 
@@ -102,20 +102,19 @@ def run(concept: str):
         print("Step 5/5  Running Claude Sonnet analysis...")
         report = analyze(concept, outliers)
 
-    # Save report to file
+    # Write HTML report and open in browser
+    print("\nGenerating HTML report...")
+    html_path = write_html_report(concept, report)
+    import webbrowser
+    webbrowser.open(f'file://{html_path}')
+
+    # Also save .md backup
     filepath = _save_report(concept, report, from_cache)
 
-    # Write to Notion
-    print("\nWriting to Notion...")
-    notion_url = write_report(concept, report)
-
-    # Output
     print(f"\n{'='*60}")
-    if notion_url:
-        print(f"  Notion page: {notion_url}")
-    else:
-        print("  Notion: not configured (add NOTION_TOKEN + NOTION_PAGE_ID to .env)")
-    print(f"  Local file: {filepath}")
+    print(f"  Report opened in browser")
+    print(f"  HTML: {html_path}")
+    print(f"  Markdown backup: {filepath}")
     print(f"{'='*60}\n")
 
     # Print report to terminal

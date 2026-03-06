@@ -6,6 +6,7 @@ Gracefully skips (returns None) if not configured.
 import os
 import re
 from datetime import datetime
+from typing import Optional
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
@@ -67,7 +68,7 @@ def _report_to_blocks(report: str) -> list[dict]:
     return blocks
 
 
-def write_report(concept: str, report: str) -> str | None:
+def write_report(concept: str, report: str) -> Optional[str]:
     """
     Write research report to a new Notion page.
     Returns the Notion page URL, or None if Notion is not configured.
