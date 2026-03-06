@@ -1,3 +1,7 @@
 @echo off
-cd /d "C:\Users\Gray Davis\social-media-analytics"
-python main.py >> "C:\Users\Gray Davis\social-media-analytics\logs\run.log" 2>&1
+cd /d "C:\Users\Gray Davis\my-project\python-scripts\social-media-analytics"
+echo Updating Social Media Analytics Sheet...
+echo.
+python main.py
+echo.
+pause

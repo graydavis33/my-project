@@ -105,8 +105,8 @@ A multi-platform analytics dashboard supporting YouTube, TikTok, Instagram, and 
 
 ## Current Work in Progress — Multi-Platform Analytics Setup
 
-**Status (paused 2026-03-04):** All code is written and committed. Waiting on user to complete
-developer account setup for Instagram/Facebook and TikTok before testing.
+**Status (paused 2026-03-05):** All code is written and committed. User is mid-way through TikTok
+developer app creation and hit a form blocker on the URL validation.
 
 ### What's done (code complete, committed, pushed):
 - `meta_fetcher.py` — Instagram + Facebook via Meta Graph API
@@ -116,10 +116,34 @@ developer account setup for Instagram/Facebook and TikTok before testing.
 - `main.py` — fetches all 4 platforms, silently skips any not configured
 - `requirements.txt` — added `requests>=2.31.0`
 
-### What user still needs to do:
+### TikTok — In Progress (paused mid-form):
+User signed in at developers.tiktok.com, created a developer account (Individual), and reached
+the app creation form. Filled in app name/description/platform (Web). Hit URL validation errors:
 
-**Instagram + Facebook:**
-1. Create Meta Developer App at developers.facebook.com (was blocked by email verification error — try again or use incognito)
+**Known issues with the form:**
+- Terms of Service URL + Privacy Policy URL: form shows "Enter a valid URL beginning with https://"
+  even though URLs do start with https:// — TikTok may be doing live URL verification or requiring
+  a domain they can validate. Tried: GitHub repo root, GitHub Pages URL — both failed.
+- Web/Desktop URL: shows "This URL is not verified. Verify URL properties" — TikTok requires
+  domain ownership verification for this field.
+- App Review section requires a description text + demo video upload — but this is only needed
+  for PUBLIC app submission, NOT for sandbox/test user access.
+
+**Next session — pick up here:**
+1. For ToS + Privacy Policy URLs: try using `https://www.tiktok.com/@[username]` (user's own profile)
+   or any other live HTTPS URL that passes TikTok's validator
+2. For Web/Desktop URL: click "Verify URL properties" — TikTok will give instructions to add a
+   DNS TXT record or meta tag to the domain. Since we don't own a custom domain, the simplest
+   workaround is to use their TikTok profile URL for all three URL fields.
+3. Do NOT fill out the App Review description or upload a demo video — skip those fields entirely
+4. Look for "Save" / "Create App" button (NOT "Submit for Review") at bottom of form
+5. After app created: add Login Kit product, set redirect URI to `http://localhost:8888/callback`
+6. Add own TikTok account as sandbox/test user
+7. Copy Client Key + Client Secret to `python-scripts/social-media-analytics/.env`
+8. Run once: `python tiktok_auth.py`
+
+### Instagram + Facebook — Not yet started:
+1. Create Meta Developer App at developers.facebook.com (was previously blocked by email verification error — try again or use incognito)
 2. Add products: Instagram Graph API + Facebook Login for Business
 3. Get long-lived token from Graph API Explorer with permissions: `instagram_basic`, `instagram_manage_insights`, `pages_read_engagement`, `pages_show_list`, `read_insights`
 4. Exchange for 60-day token via: `GET /oauth/access_token?grant_type=fb_exchange_token&client_id=APP_ID&client_secret=APP_SECRET&fb_exchange_token=SHORT_TOKEN`
@@ -127,14 +151,40 @@ developer account setup for Instagram/Facebook and TikTok before testing.
 6. Get Instagram Business Account ID: `GET /{PAGE_ID}?fields=instagram_business_account`
 7. Add to `.env`: `META_ACCESS_TOKEN`, `INSTAGRAM_BUSINESS_ACCOUNT_ID`, `FACEBOOK_PAGE_ID`
 
-**TikTok:**
-1. Create app at developers.tiktok.com → add Login Kit + Video Kit products
-2. Set redirect URI to: `http://localhost:8888/callback`
-3. Add own TikTok account as test user (required before app review)
-4. Add to `.env`: `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`
-5. Run once: `cd python-scripts/social-media-analytics && python tiktok_auth.py`
+**After all setup complete:** Run `python main.py` — new platform tabs appear in the Google Sheet automatically.
 
-**After setup:** Run `python main.py` — new platform tabs will appear in the Google Sheet automatically.
+---
+
+### Content Researcher (`python-scripts/content-researcher/`)
+An on-demand outlier video research tool. Type a video concept → get a full research report with hooks, script, and performance analysis written to Notion.
+
+**What it does:**
+- Generates 4 YouTube search query variants from your concept (Claude Haiku)
+- Searches YouTube, collects ~60 videos, fetches subscriber counts
+- Ranks by views-to-subscriber ratio (surfaces hidden viral gems, not just big channels)
+- Pulls first 90s transcripts from top 10 outliers (hook extraction)
+- One Claude Sonnet call generates a 9-section report: performance data, why each video was an outlier, top 5 hook patterns, format/length recommendations, keywords, 5 mini hooks, script outline, full word-for-word script draft, pacing & sound design notes
+- Writes report to a new Notion page + saves local .md file in `results/`
+- Caches results for 7 days — same concept = instant re-run, $0 cost
+
+**Key files:**
+- `main.py` — CLI orchestrator: `python main.py "your video concept"`
+- `searcher.py` — YouTube search + subscriber count fetching
+- `outlier.py` — views/subscriber ratio scoring + ranking
+- `transcript.py` — youtube-transcript-api hook extraction (first 90s)
+- `analyzer.py` — Claude Sonnet batch analysis (one call, all 9 sections)
+- `notion_writer.py` — writes formatted report to new Notion page
+- `cache.py` — 7-day disk cache (MD5 key by concept)
+
+**Stack:** Python, Claude (claude-haiku-4-5 for query gen, claude-sonnet-4-6 for analysis), YouTube Data API v3, youtube-transcript-api, Notion API, python-dotenv
+
+**Cost per run:** ~$0.04–0.06. Same concept within 7 days = $0.
+
+**Notion setup:** Add `NOTION_TOKEN` + `NOTION_PAGE_ID` to `.env` — report prints to terminal if not set.
+
+**OAuth:** Shares `client_secret.json` from `../social-media-analytics/`. First run opens browser for YouTube auth (saves `token.json` locally).
+
+**V2 roadmap:** Reddit research layer, TikTok (when developer setup done), Google Trends
 
 ---
 
@@ -172,6 +222,14 @@ python main.py          # fetch YouTube data → Sheets → AI analysis
 ```
 - Requires: `.env` with keys below + `client_secret.json` + `token.json`
 
+### Content Researcher
+```bash
+cd python-scripts/content-researcher
+python main.py "your video concept"
+```
+- First run: opens browser for YouTube OAuth (one-time)
+- Requires: `.env` with `ANTHROPIC_API_KEY` + optional `NOTION_TOKEN` + `NOTION_PAGE_ID`
+
 ---
 
 ## Environment Variables (names only — values are in each project's `.env`)
@@ -187,6 +245,11 @@ python main.py          # fetch YouTube data → Sheets → AI analysis
 - `ANTHROPIC_API_KEY` — Claude API key
 - `GOOGLE_SHEET_ID` — ID of your finance Google Sheet
 - `GMAIL_CREDENTIALS_PATH` — path to credentials.json (default: credentials.json)
+
+### Content Researcher (`python-scripts/content-researcher/.env`)
+- `ANTHROPIC_API_KEY` — Claude API key
+- `NOTION_TOKEN` — (optional) Notion integration token
+- `NOTION_PAGE_ID` — (optional) parent Notion page for research reports
 
 ### Social Media Scraper (`python-scripts/social-media-analytics/.env`)
 - `ANTHROPIC_API_KEY` — Claude API key
