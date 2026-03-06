@@ -50,7 +50,9 @@ def fetch_receipt_emails(service, days=30):
     query = (
         f"newer_than:{days}d "
         "(subject:receipt OR subject:\"order confirmation\" OR subject:\"payment confirmation\" "
-        "OR subject:\"invoice\" OR subject:\"billing\" OR subject:\"subscription\") "
+        "OR subject:\"invoice\" OR subject:\"billing\" OR subject:\"subscription\" "
+        "OR subject:\"your order\" OR subject:charge OR subject:statement "
+        "OR subject:renewal OR subject:\"payment receipt\" OR subject:\"order shipped\") "
         "-from:me"
     )
 

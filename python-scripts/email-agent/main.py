@@ -13,9 +13,24 @@ What it does:
 Run this once — it handles its own hourly schedule internally.
 """
 
+import logging
+import os
 import time
 import schedule
 from datetime import datetime
+
+# ─── Logging setup ────────────────────────────────────────────────────────────
+_LOG_FILE = os.path.join(os.path.dirname(__file__), "agent.log")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[
+        logging.FileHandler(_LOG_FILE, encoding="utf-8"),
+        logging.StreamHandler(),
+    ],
+)
+log = logging.getLogger(__name__)
 
 from gmail_client import (
     get_gmail_service,
@@ -28,7 +43,7 @@ from gmail_client import (
 from classifier import classify_email
 from drafter import write_draft
 from slack_bot import send_draft_notification, start_listener, load_persisted_drafts, register_draft
-from voice_analyzer import load_voice_profile, build_voice_profile
+from voice_analyzer import load_voice_profile, build_voice_profile, voice_profile_needs_refresh
 from config import (
     PROCESSED_LABEL,
     CATEGORY_NEEDS_REPLY,
@@ -40,8 +55,7 @@ from config import (
 
 def run_email_check():
     """Main logic: fetch, classify, draft, notify."""
-    now = datetime.now()
-    print(f"\n[{now.strftime('%Y-%m-%d %H:%M')}] Running email check...")
+    log.info("Running email check...")
 
     try:
         service = get_gmail_service()
@@ -49,16 +63,16 @@ def run_email_check():
         emails = fetch_unprocessed_emails(service, label_id)
 
         if not emails:
-            print("  No new emails to process.")
+            log.info("No new emails to process.")
             return
 
-        print(f"  Found {len(emails)} unprocessed email(s).")
+        log.info(f"Found {len(emails)} unprocessed email(s).")
 
         for email in emails:
-            print(f"  Processing: \"{email['subject']}\" from {email['from']}")
+            log.info(f"Processing: \"{email['subject']}\" from {email['from']}")
 
             category = classify_email(email)
-            print(f"    → Category: {category}")
+            log.info(f"  → Category: {category}")
 
             # Mark as processed so it won't be picked up again
             mark_as_processed(service, email["id"], label_id)
@@ -67,7 +81,7 @@ def run_email_check():
                 # Only needs_reply emails get a category label — skip labeling fyi/ignore
                 apply_category_label(service, email["id"], LABEL_NEEDS_REPLY)
                 draft = write_draft(email)
-                print(f"    → Draft written ({len(draft)} chars). Sending to Slack...")
+                log.info(f"  → Draft written ({len(draft)} chars). Sending to Slack...")
 
                 # This callback is called when user taps Send in Slack
                 def make_send_callback(e):
@@ -84,15 +98,15 @@ def run_email_check():
                             body=draft_text,
                             thread_id=e["thread_id"],
                         )
-                        print(f"  ✅ Email sent to {e['from']}")
+                        log.info(f"Email sent to {e['from']}")
                     return send
 
                 send_draft_notification(email, draft, make_send_callback(email))
             else:
-                print(f"    → No action needed.")
+                log.info(f"  → No action needed.")
 
-    except Exception as e:
-        print(f"  ❌ Error during email check: {e}")
+    except Exception:
+        log.exception("Error during email check")
 
 
 def is_within_active_hours():
@@ -105,7 +119,7 @@ def scheduled_check():
     if is_within_active_hours():
         run_email_check()
     else:
-        print(f"[{datetime.now().strftime('%H:%M')}] Outside active hours ({START_HOUR}am–{END_HOUR % 12}pm). Skipping.")
+        log.info(f"Outside active hours ({START_HOUR}am–{END_HOUR % 12}pm). Skipping.")
 
 
 def restore_pending_drafts(service):
@@ -113,7 +127,7 @@ def restore_pending_drafts(service):
     persisted = load_persisted_drafts()
     if not persisted:
         return
-    print(f"  Restoring {len(persisted)} pending draft(s) from previous run...")
+    log.info(f"Restoring {len(persisted)} pending draft(s) from previous run...")
     for entry in persisted.values():
         email = entry["email"]
         draft = entry["draft"]
@@ -127,43 +141,46 @@ def restore_pending_drafts(service):
                 )
                 send_email(service, to=e["from"], subject=reply_subject,
                            body=draft_text, thread_id=e["thread_id"])
-                print(f"  ✅ Email sent to {e['from']}")
+                log.info(f"Email sent to {e['from']}")
             return send
 
         register_draft(email, draft, make_send_callback(email))
-    print(f"  ✅ {len(persisted)} draft(s) restored.")
+    log.info(f"{len(persisted)} draft(s) restored.")
 
 
 if __name__ == "__main__":
-    print("=" * 50)
-    print("  Email Agent — Starting up")
-    print(f"  Active hours: {START_HOUR}am – {END_HOUR % 12}pm")
-    print(f"  Checking every hour for new emails")
-    print("=" * 50)
+    log.info("=" * 50)
+    log.info("Email Agent — Starting up")
+    log.info(f"Active hours: {START_HOUR}am – {END_HOUR % 12}pm")
+    log.info("Checking every hour for new emails")
+    log.info("=" * 50)
 
-    # Build voice profile on first run — wrapped so a network hiccup can't crash the agent
+    # Build or refresh voice profile — wrapped so a network hiccup can't crash the agent
     try:
         if not load_voice_profile():
-            print("\n  No voice profile found. Analyzing your sent emails...")
+            log.info("No voice profile found. Analyzing your sent emails...")
+            build_voice_profile()
+        elif voice_profile_needs_refresh():
+            log.info("Voice profile is >30 days old. Refreshing...")
             build_voice_profile()
         else:
-            print("\n  ✅ Voice profile loaded.")
-    except Exception as e:
-        print(f"\n  ⚠️  Voice profile build failed ({e}). Using default style.")
+            log.info("Voice profile loaded.")
+    except Exception:
+        log.exception("Voice profile build failed. Using default style.")
 
     # Start Slack listener in background
-    print("\n  Starting Slack listener...")
+    log.info("Starting Slack listener...")
     try:
         start_listener()
-        print("  ✅ Slack listener running.\n")
-    except Exception as e:
-        print(f"  ⚠️  Slack listener failed to start ({e}). Continuing without Slack.\n")
+        log.info("Slack listener running.")
+    except Exception:
+        log.exception("Slack listener failed to start. Continuing without Slack.")
 
     # Re-register any drafts that were awaiting action when the agent last stopped
     try:
         restore_pending_drafts(get_gmail_service())
-    except Exception as e:
-        print(f"  ⚠️  Could not restore pending drafts ({e}).")
+    except Exception:
+        log.exception("Could not restore pending drafts.")
 
     # Run once immediately on startup
     if is_within_active_hours():
@@ -172,10 +189,10 @@ if __name__ == "__main__":
     # Then run every 60 minutes
     schedule.every(60).minutes.do(scheduled_check)
 
-    print("\n  Scheduler running. Press Ctrl+C to stop.\n")
+    log.info("Scheduler running. Press Ctrl+C to stop.")
     while True:
         try:
             schedule.run_pending()
-        except Exception as e:
-            print(f"  ❌ Scheduler error: {e}")
+        except Exception:
+            log.exception("Scheduler error")
         time.sleep(30)

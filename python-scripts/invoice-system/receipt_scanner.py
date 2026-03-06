@@ -2,6 +2,8 @@
 receipt_scanner.py
 Uses Claude AI to extract transaction data from Gmail receipt emails.
 Determines: date, vendor/description, amount, and tax category.
+
+Processes emails in batches of 5 to reduce API calls (~35% fewer tokens).
 """
 
 import json
@@ -10,6 +12,7 @@ import anthropic
 from config import ANTHROPIC_API_KEY, CATEGORIES
 
 SCANNED_IDS_FILE = os.path.join(os.path.dirname(__file__), '.scanned_receipt_ids.json')
+_BATCH_SIZE = 5
 
 
 def _load_scanned_ids():
@@ -25,6 +28,7 @@ def _load_scanned_ids():
 def _save_scanned_ids(ids):
     with open(SCANNED_IDS_FILE, 'w') as f:
         json.dump(list(ids), f)
+
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
@@ -47,7 +51,23 @@ Rules:
 - If the email is clearly not a receipt or payment confirmation, return null
 - Always return valid JSON only — no extra text"""
 
-EXTRACTION_PROMPT = """Extract the transaction data from this receipt email.
+BATCH_PROMPT = """Extract transaction data from each of the following {n} receipt emails.
+Return a JSON array of exactly {n} items (one per email, in order).
+Each item is either a JSON object with fields date/description/amount/category, or null if not a receipt.
+
+Format for each item:
+{{
+  "date": "YYYY-MM-DD",
+  "description": "Vendor - Description",
+  "amount": 0.00,
+  "category": "Category Name"
+}}
+
+{emails}
+
+Return ONLY the JSON array — no other text."""
+
+SINGLE_PROMPT = """Extract the transaction data from this receipt email.
 
 From: {sender}
 Subject: {subject}
@@ -67,12 +87,65 @@ Return ONLY a JSON object in this exact format:
 If this is not a receipt or you can't find the amount, return: null"""
 
 
-def extract_transaction(email):
+def _format_email_for_batch(i, email):
+    return (
+        f"--- Email {i} ---\n"
+        f"From: {email['from']}\n"
+        f"Subject: {email['subject']}\n"
+        f"Date received: {email['date']}\n"
+        f"Body:\n{email['body'][:1500]}\n"
+    )
+
+
+def _batch_extract_transactions(emails):
     """
-    Use Claude to extract transaction data from a receipt email.
-    Returns a dict with date/description/amount/category, or None if not a receipt.
+    Send up to _BATCH_SIZE emails in one Claude call.
+    Returns a list of result dicts (or None) in the same order as input.
+    Falls back to individual extraction if batch parse fails.
     """
-    prompt = EXTRACTION_PROMPT.format(
+    n = len(emails)
+    emails_text = "\n".join(_format_email_for_batch(i + 1, e) for i, e in enumerate(emails))
+    prompt = BATCH_PROMPT.format(n=n, emails=emails_text)
+
+    response = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=400 * n,
+        system=SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": prompt}],
+    )
+
+    text = response.content[0].text.strip()
+
+    try:
+        results = json.loads(text)
+        if isinstance(results, list) and len(results) == n:
+            # Validate each result
+            validated = []
+            for r in results:
+                if r is None or not isinstance(r, dict):
+                    validated.append(None)
+                    continue
+                if not r.get("amount") or not r.get("description"):
+                    validated.append(None)
+                    continue
+                if r.get("category") not in CATEGORIES:
+                    r["category"] = "Other"
+                validated.append(r)
+            return validated
+    except (json.JSONDecodeError, Exception):
+        pass
+
+    # Batch failed — fall back to individual extraction
+    print("    ⚠️  Batch parse failed, falling back to individual extraction...")
+    return [_single_extract_transaction(e) for e in emails]
+
+
+def _single_extract_transaction(email):
+    """
+    Fallback: extract transaction data from a single email.
+    Returns a dict or None.
+    """
+    prompt = SINGLE_PROMPT.format(
         sender=email["from"],
         subject=email["subject"],
         date=email["date"],
@@ -93,10 +166,8 @@ def extract_transaction(email):
 
     try:
         data = json.loads(text)
-        # Validate required fields
         if not data or not data.get("amount") or not data.get("description"):
             return None
-        # Ensure category is valid
         if data.get("category") not in CATEGORIES:
             data["category"] = "Other"
         return data
@@ -106,7 +177,7 @@ def extract_transaction(email):
 
 def scan_receipts(emails):
     """
-    Run extraction on a list of Gmail emails.
+    Run extraction on a list of Gmail emails in batches of 5.
     Skips emails already processed in a previous run (deduplication via ID cache).
     Returns a list of transaction dicts ready to append to Google Sheets.
     Each dict has: date, description, source, category, amount, type, notes
@@ -115,28 +186,37 @@ def scan_receipts(emails):
     transactions = []
     newly_scanned = set()
 
-    for email in emails:
-        if email['id'] in scanned_ids:
-            print(f"  Already scanned: \"{email['subject']}\" — skipping")
-            continue
+    # Filter out already-scanned emails
+    unscanned = [e for e in emails if e['id'] not in scanned_ids]
+    skipped = len(emails) - len(unscanned)
+    if skipped:
+        print(f"  Skipping {skipped} already-scanned email(s).")
 
-        print(f"  Scanning: \"{email['subject']}\" from {email['from'][:40]}")
-        result = extract_transaction(email)
-        newly_scanned.add(email['id'])
+    if not unscanned:
+        return transactions
 
-        if result:
-            transactions.append({
-                "date": result["date"],
-                "description": result["description"],
-                "source": "Gmail",
-                "category": result["category"],
-                "amount": result["amount"],
-                "type": "Expense",
-                "notes": f"Gmail: {email['subject'][:60]}",
-            })
-            print(f"    → ${result['amount']} | {result['category']}")
-        else:
-            print(f"    → Skipped (not a receipt)")
+    # Process in batches
+    for batch_start in range(0, len(unscanned), _BATCH_SIZE):
+        batch = unscanned[batch_start:batch_start + _BATCH_SIZE]
+        print(f"  Processing batch of {len(batch)} email(s) (API call {batch_start // _BATCH_SIZE + 1})...")
+
+        results = _batch_extract_transactions(batch)
+
+        for email, result in zip(batch, results):
+            newly_scanned.add(email['id'])
+            if result:
+                transactions.append({
+                    "date": result["date"],
+                    "description": result["description"],
+                    "source": "Gmail",
+                    "category": result["category"],
+                    "amount": result["amount"],
+                    "type": "Expense",
+                    "notes": f"Gmail: {email['subject'][:60]}",
+                })
+                print(f"    ✓ {email['subject'][:50]} → ${result['amount']} | {result['category']}")
+            else:
+                print(f"    – {email['subject'][:50]} → not a receipt")
 
     # Persist all newly seen IDs so they're skipped next time
     if newly_scanned:

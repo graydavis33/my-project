@@ -4,8 +4,53 @@ Builds a PDF invoice using ReportLab, saves it to ~/Desktop/Invoices/,
 emails it to the client, and logs it to Google Sheets.
 """
 
+import json
 import os
 from datetime import datetime, timedelta
+
+_TEMPLATES_FILE = os.path.join(os.path.dirname(__file__), "invoice_templates.json")
+
+
+def _load_templates():
+    if os.path.exists(_TEMPLATES_FILE):
+        try:
+            with open(_TEMPLATES_FILE) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+
+def _offer_template():
+    """Show template menu and return a pre-filled line item, or None to skip."""
+    templates = _load_templates()
+    if not templates:
+        return None
+
+    print("\n  Load a service template? (Enter number or press Enter to skip)\n")
+    for i, t in enumerate(templates, 1):
+        print(f"    {i}. {t['name']}")
+    print()
+
+    choice = input("  Choice: ").strip()
+    if not choice:
+        return None
+    try:
+        t = templates[int(choice) - 1]
+    except (ValueError, IndexError):
+        print("  Invalid choice — skipping template.")
+        return None
+
+    if t["type"] == "hourly":
+        rate = t.get("rate") or float(input(f"  Rate ($/hr) for {t['description']}: ").strip())
+        hours = t.get("hours") or float(input(f"  Hours: ").strip())
+        subtotal = round(hours * rate, 2)
+        print(f"  Added: {hours}h × ${rate}/hr = ${subtotal:.2f}\n")
+        return {"description": t["description"], "hours": hours, "rate": rate, "flat_fee": "", "subtotal": subtotal}
+    else:
+        flat_fee = t.get("flat_fee") or float(input(f"  Flat fee ($) for {t['description']}: ").strip())
+        print(f"  Added: ${flat_fee:.2f}\n")
+        return {"description": t["description"], "hours": "", "rate": "", "flat_fee": flat_fee, "subtotal": flat_fee}
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.units import inch
@@ -42,6 +87,12 @@ def collect_invoice_details():
     print("\n  Add line items. Type 'done' when finished.\n")
 
     line_items = []
+
+    # Offer template for the first line item
+    template_item = _offer_template()
+    if template_item:
+        line_items.append(template_item)
+
     while True:
         description = input("  Service description (or 'done'): ").strip()
         if description.lower() == "done":

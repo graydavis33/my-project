@@ -6,11 +6,21 @@ so every draft sounds like Gray wrote it himself.
 """
 
 import os
+import time
 import anthropic
 from config import ANTHROPIC_API_KEY
 from gmail_client import get_gmail_service, fetch_sent_emails
 
 VOICE_PROFILE_PATH = os.path.join(os.path.dirname(__file__), "voice_profile.txt")
+_VOICE_PROFILE_MAX_AGE_DAYS = 30
+
+
+def voice_profile_needs_refresh():
+    """Return True if voice_profile.txt is missing or older than 30 days."""
+    if not os.path.exists(VOICE_PROFILE_PATH):
+        return True
+    age_seconds = time.time() - os.path.getmtime(VOICE_PROFILE_PATH)
+    return age_seconds > _VOICE_PROFILE_MAX_AGE_DAYS * 86400
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 

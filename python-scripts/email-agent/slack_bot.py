@@ -23,7 +23,24 @@ web_client = WebClient(token=SLACK_BOT_TOKEN)
 pending_drafts = {}
 
 _DRAFTS_FILE = os.path.join(os.path.dirname(__file__), "pending_drafts.json")
+_STATS_FILE = os.path.join(os.path.dirname(__file__), "draft_stats.json")
 _DRAFT_TTL_SECONDS = 7 * 24 * 3600  # drop drafts older than 7 days
+
+
+def _update_stats(action: str):
+    """Increment sent/skipped/edited counter in draft_stats.json."""
+    try:
+        if os.path.exists(_STATS_FILE):
+            with open(_STATS_FILE) as f:
+                stats = json.load(f)
+        else:
+            stats = {"sent": 0, "skipped": 0, "edited": 0, "last_action_at": None}
+        stats[action] = stats.get(action, 0) + 1
+        stats["last_action_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+        with open(_STATS_FILE, "w") as f:
+            json.dump(stats, f, indent=2)
+    except Exception:
+        pass  # stats are non-critical, never crash over them
 
 
 def _save_pending_drafts():
@@ -151,6 +168,7 @@ def handle_action(client: SocketModeClient, req: SocketModeRequest):
     if action_id_full.startswith("send_"):
         entry["send_callback"](entry["draft"])
         _save_pending_drafts()
+        _update_stats("sent")
         web_client.chat_update(
             channel=channel,
             ts=message_ts,
@@ -197,6 +215,7 @@ def handle_action(client: SocketModeClient, req: SocketModeRequest):
 
     elif action_id_full.startswith("skip_"):
         _save_pending_drafts()
+        _update_stats("skipped")
         web_client.chat_update(
             channel=channel,
             ts=message_ts,
@@ -233,6 +252,7 @@ def handle_view_submission(client: SocketModeClient, req: SocketModeRequest):
         entry = pending_drafts.pop(email_id)
         entry["send_callback"](edited_text)
         _save_pending_drafts()
+        _update_stats("edited")
         web_client.chat_update(
             channel=channel,
             ts=message_ts,
