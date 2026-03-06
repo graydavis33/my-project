@@ -62,6 +62,7 @@
     .card.priority-3 { border-left: 3px solid #8b5cf6; }
     .card.priority-4 { border-left: 3px solid #6b7280; }
     .card.ongoing    { border-left: 3px solid #10b981; }
+    .card.setup      { border-left: 3px solid #f97316; }
 
     .card-header {
       display: flex;
@@ -87,11 +88,12 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
-    .priority-badge.p1 { background: #451a03; color: #f59e0b; }
-    .priority-badge.p2 { background: #172554; color: #60a5fa; }
-    .priority-badge.p3 { background: #2e1065; color: #a78bfa; }
-    .priority-badge.p4 { background: #1c1c1c; color: #6b7280; }
-    .priority-badge.ongoing { background: #052e16; color: #34d399; }
+    .priority-badge.p1     { background: #451a03; color: #f59e0b; }
+    .priority-badge.p2     { background: #172554; color: #60a5fa; }
+    .priority-badge.p3     { background: #2e1065; color: #a78bfa; }
+    .priority-badge.p4     { background: #1c1c1c; color: #6b7280; }
+    .priority-badge.ongoing{ background: #052e16; color: #34d399; }
+    .priority-badge.setup  { background: #431407; color: #fb923c; }
 
     .card-meta {
       font-size: 12px;
@@ -117,16 +119,18 @@
       height: 6px;
       border-radius: 50%;
     }
-    .status.blocked  { background: #2d0a0a; color: #f87171; }
-    .status.blocked::before  { background: #ef4444; }
-    .status.in-progress { background: #0c1a2e; color: #60a5fa; }
-    .status.in-progress::before { background: #3b82f6; animation: pulse 1.5s infinite; }
-    .status.running  { background: #052e16; color: #34d399; }
-    .status.running::before  { background: #10b981; animation: pulse 1.5s infinite; }
-    .status.planned  { background: #1a1a1a; color: #9ca3af; }
-    .status.planned::before  { background: #6b7280; }
-    .status.complete { background: #052e16; color: #34d399; }
-    .status.complete::before { background: #10b981; }
+    .status.blocked      { background: #2d0a0a; color: #f87171; }
+    .status.blocked::before      { background: #ef4444; }
+    .status.in-progress  { background: #0c1a2e; color: #60a5fa; }
+    .status.in-progress::before  { background: #3b82f6; animation: pulse 1.5s infinite; }
+    .status.running      { background: #052e16; color: #34d399; }
+    .status.running::before      { background: #10b981; animation: pulse 1.5s infinite; }
+    .status.planned      { background: #1a1a1a; color: #9ca3af; }
+    .status.planned::before      { background: #6b7280; }
+    .status.complete     { background: #052e16; color: #34d399; }
+    .status.complete::before     { background: #10b981; }
+    .status.needs-setup  { background: #1c0f00; color: #fb923c; }
+    .status.needs-setup::before  { background: #f97316; }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; }
@@ -160,6 +164,7 @@
     .fill-purple { background: #8b5cf6; }
     .fill-green  { background: #10b981; }
     .fill-gray   { background: #4b5563; }
+    .fill-orange { background: #f97316; }
 
     /* ── Requirements ── */
     .req-section {
@@ -215,6 +220,22 @@
       border-radius: 3px;
       flex-shrink: 0;
     }
+    .req-item .setup-tag {
+      font-size: 10px;
+      background: #1c0f00;
+      color: #fb923c;
+      padding: 1px 5px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .req-item .new-tag {
+      font-size: 10px;
+      background: #0c2340;
+      color: #60a5fa;
+      padding: 1px 5px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
 
     /* ── Section Divider ── */
     .section-title {
@@ -249,10 +270,10 @@
 
   <div class="header">
     <h1>Gray Davis <span>/ Project Dashboard</span></h1>
-    <div class="last-updated">Last updated: 2026-03-05</div>
+    <div class="last-updated">Last updated: 2026-03-05 · 9 projects total</div>
   </div>
 
-  <!-- ── ACTIVE PRIORITY PROJECTS ── -->
+  <!-- ── BLOCKED / ACTIVE PRIORITIES ── -->
   <div class="section-title">Active Priority Projects</div>
   <div class="grid">
 
@@ -266,10 +287,7 @@
       <div class="status blocked">BLOCKED — Awaiting API Setup</div>
 
       <div class="progress-wrap">
-        <div class="progress-label">
-          <span>Completion</span>
-          <span>55%</span>
-        </div>
+        <div class="progress-label"><span>Completion</span><span>55%</span></div>
         <div class="progress-bar"><div class="progress-fill fill-amber" style="width:55%"></div></div>
       </div>
 
@@ -279,16 +297,13 @@
           <li class="req-item done"><div class="check"></div>Code written: meta_fetcher.py, tiktok_fetcher.py, tiktok_auth.py</li>
           <li class="req-item done"><div class="check"></div>sheets_writer.py updated (TikTok, Instagram, Facebook tabs)</li>
           <li class="req-item done"><div class="check"></div>main.py updated — silently skips unconfigured platforms</li>
-          <li class="req-item done"><div class="check"></div>requirements.txt — added requests>=2.31.0</li>
           <li class="req-item done"><div class="check"></div>GitHub Actions scheduled workflow running</li>
           <li class="req-item"><div class="check"></div>Create Meta Developer App (developers.facebook.com) <span class="blocker-tag">BLOCKER</span></li>
           <li class="req-item"><div class="check"></div>Get META_ACCESS_TOKEN (60-day long-lived token)</li>
-          <li class="req-item"><div class="check"></div>Get INSTAGRAM_BUSINESS_ACCOUNT_ID</li>
-          <li class="req-item"><div class="check"></div>Get FACEBOOK_PAGE_ID</li>
+          <li class="req-item"><div class="check"></div>Get INSTAGRAM_BUSINESS_ACCOUNT_ID + FACEBOOK_PAGE_ID</li>
           <li class="req-item"><div class="check"></div>Create TikTok Developer App (developers.tiktok.com) <span class="blocker-tag">BLOCKER</span></li>
           <li class="req-item"><div class="check"></div>Add TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET to .env</li>
           <li class="req-item"><div class="check"></div>Run python tiktok_auth.py (one-time browser auth)</li>
-          <li class="req-item"><div class="check"></div>Run python main.py — verify all platform tabs appear</li>
         </ul>
         <div class="score-grid">
           <div class="score-pill">Unblocks: <span>3/3</span></div>
@@ -302,55 +317,15 @@
     <!-- PRIORITY 2 -->
     <div class="card priority-2">
       <div class="card-header">
-        <div class="card-title">Client Onboarding Automation</div>
+        <div class="card-title">Web App / Mobile Dashboard</div>
         <div class="priority-badge p2">#2 PRIORITY</div>
       </div>
-      <div class="card-meta">New project · python-scripts/client-onboarding/ (not yet started)</div>
-      <div class="status planned">PLANNED — Not Started</div>
-
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span>Completion</span>
-          <span>0%</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:0%"></div></div>
-      </div>
-
-      <div class="req-section">
-        <div class="req-label">Requirements</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Define onboarding steps (intake form, contract, invoice, project brief)</li>
-          <li class="req-item"><div class="check"></div>Build intake form (Typeform or simple web form)</li>
-          <li class="req-item"><div class="check"></div>Auto-generate contract PDF from form responses</li>
-          <li class="req-item"><div class="check"></div>Auto-send contract + invoice via email</li>
-          <li class="req-item"><div class="check"></div>Create project brief from client inputs (Claude-powered)</li>
-          <li class="req-item"><div class="check"></div>Slack notification when new client onboards</li>
-          <li class="req-item"><div class="check"></div>Google Sheet client tracker (status, payment, deliverables)</li>
-        </ul>
-        <div class="score-grid">
-          <div class="score-pill">Unblocks: <span>1/3</span></div>
-          <div class="score-pill">Revenue: <span>3/3</span></div>
-          <div class="score-pill">Showcase: <span>3/3</span></div>
-          <div class="score-pill">Sellable: <span>3/3</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- PRIORITY 3 -->
-    <div class="card priority-3">
-      <div class="card-header">
-        <div class="card-title">Web App / Mobile Dashboard</div>
-        <div class="priority-badge p3">#3 PRIORITY</div>
-      </div>
       <div class="card-meta">Phase 3 of Social Media Analytics · web-apps/ (planned)</div>
-      <div class="status planned">PLANNED — Depends on Phase 1 Completion</div>
+      <div class="status planned">PLANNED — Depends on Multi-Platform Analytics</div>
 
       <div class="progress-wrap">
-        <div class="progress-label">
-          <span>Completion</span>
-          <span>0%</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill fill-purple" style="width:0%"></div></div>
+        <div class="progress-label"><span>Completion</span><span>0%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:0%"></div></div>
       </div>
 
       <div class="req-section">
@@ -362,7 +337,6 @@
           <li class="req-item"><div class="check"></div>Frontend dashboard (React or plain HTML/JS)</li>
           <li class="req-item"><div class="check"></div>On-demand refresh button (no manual script run needed)</li>
           <li class="req-item"><div class="check"></div>Mobile-responsive layout (iPhone accessible)</li>
-          <li class="req-item"><div class="check"></div>Optional: auth gate (login to view your dashboard)</li>
         </ul>
         <div class="score-grid">
           <div class="score-pill">Unblocks: <span>2/3</span></div>
@@ -373,40 +347,171 @@
       </div>
     </div>
 
-    <!-- PRIORITY 4 -->
-    <div class="card priority-4">
+  </div>
+
+  <!-- ── RECENTLY BUILT — NEEDS SETUP ── -->
+  <div class="section-title">Recently Built — Needs .env Setup to Activate</div>
+  <div class="grid">
+
+    <!-- Client CRM -->
+    <div class="card setup">
       <div class="card-header">
-        <div class="card-title">Content Repurposing Pipeline</div>
-        <div class="priority-badge p4">#4 PRIORITY</div>
+        <div class="card-title">Client CRM + Pipeline Tracker</div>
+        <div class="priority-badge setup">BUILT</div>
       </div>
-      <div class="card-meta">New project · python-scripts/content-pipeline/ (not yet started)</div>
-      <div class="status planned">PLANNED — Not Started</div>
+      <div class="card-meta">python-scripts/client-crm/ · Built 2026-03-05</div>
+      <div class="status needs-setup">NEEDS SETUP — Copy .env.example → .env, run setup</div>
 
       <div class="progress-wrap">
-        <div class="progress-label">
-          <span>Completion</span>
-          <span>0%</span>
-        </div>
-        <div class="progress-bar"><div class="progress-fill fill-gray" style="width:0%"></div></div>
+        <div class="progress-label"><span>Completion</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:90%"></div></div>
       </div>
 
       <div class="req-section">
-        <div class="req-label">Requirements</div>
+        <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Input: long-form YouTube video (URL or file)</li>
-          <li class="req-item"><div class="check"></div>Auto-transcribe audio (Whisper or AssemblyAI)</li>
-          <li class="req-item"><div class="check"></div>Claude extracts key moments + generates short-form hooks</li>
-          <li class="req-item"><div class="check"></div>Auto-generate captions for each platform (IG, TikTok, Facebook, YouTube)</li>
-          <li class="req-item"><div class="check"></div>Clip timestamps + export cut list</li>
-          <li class="req-item"><div class="check"></div>Optional: auto-post to platforms via API</li>
-          <li class="req-item"><div class="check"></div>Google Sheet tracker (clip name, platform, status, engagement)</li>
+          <li class="req-item done"><div class="check"></div>Tracks clients: Lead → Pitched → Contracted → In Production → Delivered → Paid</li>
+          <li class="req-item done"><div class="check"></div>CLI: add, list, update-stage, remind</li>
+          <li class="req-item done"><div class="check"></div>Google Sheets backend — Clients tab + Pipeline Summary with formulas</li>
+          <li class="req-item done"><div class="check"></div>Monday 9am Slack reminder for overdue follow-ups + unpaid invoices</li>
+          <li class="req-item done"><div class="check"></div>install_windows_task.ps1 — auto-registers Task Scheduler entry</li>
         </ul>
-        <div class="score-grid">
-          <div class="score-pill">Unblocks: <span>0/3</span></div>
-          <div class="score-pill">Revenue: <span>2/3</span></div>
-          <div class="score-pill">Showcase: <span>3/3</span></div>
-          <div class="score-pill">Sellable: <span>3/3</span></div>
-        </div>
+        <div class="req-label" style="margin-top:12px">Setup Steps</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add SLACK + Google keys <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Run: python main.py setup (creates Google Sheet) <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Run: python main.py add (add your first client)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Daily Morning Briefing -->
+    <div class="card setup">
+      <div class="card-header">
+        <div class="card-title">Daily Morning Briefing</div>
+        <div class="priority-badge setup">BUILT</div>
+      </div>
+      <div class="card-meta">python-scripts/morning-briefing/ · Built 2026-03-05</div>
+      <div class="status needs-setup">NEEDS SETUP — Copy .env.example → .env</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:90%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="check"></div>8am Slack DM: emails needing reply, outstanding invoices, top video, top 3 priorities</li>
+          <li class="req-item done"><div class="check"></div>Reads pending_drafts.json from Email Agent (no extra API call)</li>
+          <li class="req-item done"><div class="check"></div>Reads Invoice + Analytics Google Sheets</li>
+          <li class="req-item done"><div class="check"></div>DAILY_PRIORITIES list in config.py — edit directly to update your focus</li>
+          <li class="req-item done"><div class="check"></div>run_briefing.bat — double-click to trigger manually</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Setup Steps</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add SLACK + Sheet IDs + EMAIL_AGENT_DIR <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Run: python main.py (test manual run) <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Run: python main.py --schedule (enable 8am daily)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Client Onboarding -->
+    <div class="card setup">
+      <div class="card-header">
+        <div class="card-title">Client Onboarding Automation</div>
+        <div class="priority-badge setup">BUILT</div>
+      </div>
+      <div class="card-meta">python-scripts/client-onboarding/ · Built 2026-03-05</div>
+      <div class="status needs-setup">NEEDS SETUP — Review contract template + add .env</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:90%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="check"></div>CLI intake: name, email, company, project type, scope, timeline, budget</li>
+          <li class="req-item done"><div class="check"></div>Claude generates a project brief from intake data</li>
+          <li class="req-item done"><div class="check"></div>Auto-generates contract PDF (ReportLab) and emails to client</li>
+          <li class="req-item done"><div class="check"></div>Logs to Google Sheets client tracker (auto-creates sheet on first run)</li>
+          <li class="req-item done"><div class="check"></div>Slack DM: "New client onboarded: [Name]"</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Setup Steps</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Edit contract_template.py — update terms, rates, your name <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add SLACK + Gmail + Google keys <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Run: python main.py (test with a dummy client)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Content Pipeline -->
+    <div class="card setup">
+      <div class="card-header">
+        <div class="card-title">Content Repurposing Pipeline</div>
+        <div class="priority-badge setup">BUILT</div>
+      </div>
+      <div class="card-meta">python-scripts/content-pipeline/ · Built 2026-03-05</div>
+      <div class="status needs-setup">NEEDS SETUP — Add ANTHROPIC_API_KEY to .env</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:90%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="check"></div>Input: path to any video file (mp4, mov, etc.)</li>
+          <li class="req-item done"><div class="check"></div>Auto-transcribes via OpenAI Whisper (optional — falls back to manual paste)</li>
+          <li class="req-item done"><div class="check"></div>Claude identifies 3–5 best short-form clip moments + timestamps</li>
+          <li class="req-item done"><div class="check"></div>Writes platform captions: TikTok, Instagram Reels, YouTube Shorts</li>
+          <li class="req-item done"><div class="check"></div>Optional ffmpeg auto-cut — skips gracefully if not installed</li>
+          <li class="req-item done"><div class="check"></div>Saves cut list + captions to output/{video}-results-{timestamp}.txt</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Setup Steps</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add ANTHROPIC_API_KEY <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Optional: add OPENAI_API_KEY for auto-transcription <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Run: python main.py path/to/video.mp4</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Creator Intel -->
+    <div class="card setup">
+      <div class="card-header">
+        <div class="card-title">Niche Creator Intelligence</div>
+        <div class="priority-badge setup">BUILT</div>
+      </div>
+      <div class="card-meta">python-scripts/creator-intel/ · Built 2026-03-05</div>
+      <div class="status needs-setup">NEEDS SETUP — Add .env (reuses YouTube credentials)</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:90%"></div></div>
+      </div>
+
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="check"></div>Monitors 12 pre-loaded creators: McKinnon, Haapoja, Kolder, MKBHD, D'Avella, and more</li>
+          <li class="req-item done"><div class="check"></div>Fetches last 10 videos per creator via YouTube Data API</li>
+          <li class="req-item done"><div class="check"></div>Claude analyzes patterns: trending formats, hook styles, posting days, topic ideas</li>
+          <li class="req-item done"><div class="check"></div>Monday 9:30am Slack report — one immediate action item included</li>
+          <li class="req-item done"><div class="check"></div>6-day cache — won't re-fetch if run within the week</li>
+          <li class="req-item done"><div class="check"></div>creators.json — edit to add/remove channels</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Setup Steps</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add ANTHROPIC_API_KEY + SLACK keys <span class="setup-tag">YOU</span></li>
+          <li class="req-item"><div class="check"></div>Reuses social-media-analytics/client_secret.json (no new credentials)</li>
+          <li class="req-item"><div class="check"></div>Run: python main.py (test manual report)</li>
+        </ul>
       </div>
     </div>
 
@@ -425,18 +530,19 @@
       <div class="status running">RUNNING</div>
 
       <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>90%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-green" style="width:90%"></div></div>
+        <div class="progress-label"><span>Completion</span><span>95%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:95%"></div></div>
       </div>
 
       <div class="req-section">
         <div class="req-label">What It Does</div>
         <ul class="req-list">
           <li class="req-item done"><div class="check"></div>Classifies Gmail emails (needs_reply / fyi_only / ignore)</li>
-          <li class="req-item done"><div class="check"></div>Drafts replies in your writing style</li>
+          <li class="req-item done"><div class="check"></div>Drafts replies in your writing style (voice profile auto-refreshes every 30 days)</li>
           <li class="req-item done"><div class="check"></div>Sends to Slack DM with Send / Edit / Skip buttons</li>
           <li class="req-item done"><div class="check"></div>Sends approved replies via Gmail</li>
-          <li class="req-item done"><div class="check"></div>Runs on schedule via launch agent / Task Scheduler</li>
+          <li class="req-item done"><div class="check"></div>Structured logging → agent.log (file + console) <span class="new-tag">NEW</span></li>
+          <li class="req-item done"><div class="check"></div>Draft action stats tracked → draft_stats.json (sent/skipped/edited) <span class="new-tag">NEW</span></li>
         </ul>
         <div class="req-label" style="margin-top:12px">Possible Improvements</div>
         <ul class="req-list">
@@ -455,23 +561,24 @@
       <div class="status running">RUNNING</div>
 
       <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>85%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-green" style="width:85%"></div></div>
+        <div class="progress-label"><span>Completion</span><span>95%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:95%"></div></div>
       </div>
 
       <div class="req-section">
         <div class="req-label">What It Does</div>
         <ul class="req-list">
           <li class="req-item done"><div class="check"></div>Imports Venmo + bank CSV transactions</li>
-          <li class="req-item done"><div class="check"></div>Scans Gmail for receipts (Claude-powered extraction)</li>
+          <li class="req-item done"><div class="check"></div>Scans Gmail for receipts — batch processing (5/call, ~35% token savings) <span class="new-tag">NEW</span></li>
+          <li class="req-item done"><div class="check"></div>12 receipt keyword types (was 6) — catches more receipts <span class="new-tag">NEW</span></li>
           <li class="req-item done"><div class="check"></div>Generates PDF invoices + emails to clients</li>
+          <li class="req-item done"><div class="check"></div>Invoice templates (5 service types) — select at invoice creation <span class="new-tag">NEW</span></li>
           <li class="req-item done"><div class="check"></div>Tracks everything in Google Sheets (tax, profit)</li>
         </ul>
         <div class="req-label" style="margin-top:12px">Possible Improvements</div>
         <ul class="req-list">
           <li class="req-item"><div class="check"></div>Payment status tracking (paid / outstanding / overdue)</li>
-          <li class="req-item"><div class="check"></div>Monthly P&amp;L summary to Slack/email</li>
-          <li class="req-item"><div class="check"></div>Integrate with Client Onboarding (#2) — auto-invoice on project close</li>
+          <li class="req-item"><div class="check"></div>Monthly P&amp;L summary to Slack</li>
         </ul>
       </div>
     </div>
@@ -482,7 +589,7 @@
         <div class="priority-badge ongoing">LIVE</div>
       </div>
       <div class="card-meta">python-scripts/social-media-analytics/ · GitHub Actions every Sunday 9am EST</div>
-      <div class="status running">RUNNING — YouTube only</div>
+      <div class="status running">RUNNING — YouTube only (TikTok/IG/FB blocked on API setup)</div>
 
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>55%</span></div>
@@ -497,163 +604,35 @@
           <li class="req-item done"><div class="check"></div>Writes to Google Sheets with growth tracking</li>
           <li class="req-item done"><div class="check"></div>AI insights via Claude Haiku (cached daily)</li>
           <li class="req-item done"><div class="check"></div>Optional deep analysis → Notion (Sonnet)</li>
-          <li class="req-item"><div class="check"></div>TikTok, Instagram, Facebook data (see Priority #1)</li>
+          <li class="req-item"><div class="check"></div>TikTok, Instagram, Facebook (see Active Priority #1)</li>
         </ul>
       </div>
     </div>
 
-  </div>
-
-  <!-- ── NEXT UP: TOP 5 BUILD LIST ── -->
-  <div class="section-title">Next Up — Top 5 Projects to Build</div>
-  <div class="grid">
-
-    <!-- NEXT #1 -->
-    <div class="card priority-1">
-      <div class="card-header">
-        <div class="card-title">Client CRM + Pipeline Tracker</div>
-        <div class="priority-badge p1">BUILD #1</div>
-      </div>
-      <div class="card-meta">New project · python-scripts/client-crm/ · Not started</div>
-      <div class="status planned">PLANNED</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>0%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-amber" style="width:0%"></div></div>
-      </div>
-      <div class="req-section">
-        <div class="req-label">Why #1</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Revenue lives or dies on follow-ups — leads are probably in your head right now</li>
-          <li class="req-item"><div class="check"></div>Tracks: Lead → Pitched → Contracted → In Production → Delivered → Paid</li>
-          <li class="req-item"><div class="check"></div>Slack reminders for overdue follow-ups + unpaid invoices</li>
-          <li class="req-item"><div class="check"></div>Google Sheets backend — no app needed, works immediately</li>
-          <li class="req-item"><div class="check"></div>Sellable to other freelance videographers/creators</li>
-        </ul>
-        <div class="score-grid">
-          <div class="score-pill">Unblocks: <span>1/3</span></div>
-          <div class="score-pill">Revenue: <span>3/3</span></div>
-          <div class="score-pill">Showcase: <span>2/3</span></div>
-          <div class="score-pill">Sellable: <span>3/3</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NEXT #2 -->
-    <div class="card priority-2">
-      <div class="card-header">
-        <div class="card-title">Daily Morning Briefing</div>
-        <div class="priority-badge p2">BUILD #2</div>
-      </div>
-      <div class="card-meta">New project · python-scripts/morning-briefing/ · Not started</div>
-      <div class="status planned">PLANNED</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>0%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:0%"></div></div>
-      </div>
-      <div class="req-section">
-        <div class="req-label">Why #2</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>One Slack message every morning at 8am — you wake up knowing exactly what to do</li>
-          <li class="req-item"><div class="check"></div>Summarizes: emails needing reply, outstanding invoices, social media performance, top 3 priorities</li>
-          <li class="req-item"><div class="check"></div>Pulls from existing systems (Email Agent + Invoice System + Analytics Scraper)</li>
-          <li class="req-item"><div class="check"></div>Quick to build — most infrastructure already exists</li>
-          <li class="req-item"><div class="check"></div>This IS the "AI operator" vision — a personal chief of staff</li>
-        </ul>
-        <div class="score-grid">
-          <div class="score-pill">Unblocks: <span>0/3</span></div>
-          <div class="score-pill">Revenue: <span>2/3</span></div>
-          <div class="score-pill">Showcase: <span>3/3</span></div>
-          <div class="score-pill">Sellable: <span>3/3</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NEXT #3 -->
-    <div class="card priority-3">
-      <div class="card-header">
-        <div class="card-title">Content Repurposing Pipeline</div>
-        <div class="priority-badge p3">BUILD #3</div>
-      </div>
-      <div class="card-meta">New project · python-scripts/content-pipeline/ · Not started</div>
-      <div class="status planned">PLANNED</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>0%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-purple" style="width:0%"></div></div>
-      </div>
-      <div class="req-section">
-        <div class="req-label">Why #3</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Film once → auto-generate 3-5 short clips per long-form video</li>
-          <li class="req-item"><div class="check"></div>Claude extracts best moments, writes platform-specific captions + hooks</li>
-          <li class="req-item"><div class="check"></div>Auto-transcribe via Whisper → clip timestamps + cut list</li>
-          <li class="req-item"><div class="check"></div>Multiplies output without extra filming time</li>
-          <li class="req-item"><div class="check"></div>Highly sellable — every creator with long-form content needs this</li>
-        </ul>
-        <div class="score-grid">
-          <div class="score-pill">Unblocks: <span>0/3</span></div>
-          <div class="score-pill">Revenue: <span>2/3</span></div>
-          <div class="score-pill">Showcase: <span>3/3</span></div>
-          <div class="score-pill">Sellable: <span>3/3</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NEXT #4 -->
-    <div class="card priority-4">
-      <div class="card-header">
-        <div class="card-title">Niche Creator Intelligence</div>
-        <div class="priority-badge p4">BUILD #4</div>
-      </div>
-      <div class="card-meta">New project · python-scripts/creator-intel/ · Not started</div>
-      <div class="status planned">PLANNED</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>0%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-gray" style="width:0%"></div></div>
-      </div>
-      <div class="req-section">
-        <div class="req-label">Why #4</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Monitors 15-20 top creators in your niche weekly (videography, AI, content)</li>
-          <li class="req-item"><div class="check"></div>Tracks what went viral: hooks, formats, topics, posting times</li>
-          <li class="req-item"><div class="check"></div>Claude analyzes patterns → Monday morning Slack report</li>
-          <li class="req-item"><div class="check"></div>You start every week knowing what's working before deciding what to film</li>
-          <li class="req-item"><div class="check"></div>Compounds growth by modeling proven patterns instead of guessing</li>
-        </ul>
-        <div class="score-grid">
-          <div class="score-pill">Unblocks: <span>0/3</span></div>
-          <div class="score-pill">Revenue: <span>1/3</span></div>
-          <div class="score-pill">Showcase: <span>3/3</span></div>
-          <div class="score-pill">Sellable: <span>2/3</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- NEXT #5 -->
-    <div class="card priority-4">
+    <div class="card ongoing">
       <div class="card-header">
         <div class="card-title">Hook + Title Optimizer</div>
-        <div class="priority-badge p4">BUILD #5</div>
+        <div class="priority-badge ongoing">LIVE</div>
       </div>
-      <div class="card-meta">python-scripts/hook-optimizer/ · Built 2026-03-05</div>
-      <div class="status in-progress">NEEDS TEST — add API key to .env then run</div>
+      <div class="card-meta">python-scripts/hook-optimizer/ · CLI tool</div>
+      <div class="status running">RUNNING</div>
+
       <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>70%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-green" style="width:70%"></div></div>
+        <div class="progress-label"><span>Completion</span><span>95%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:95%"></div></div>
       </div>
+
       <div class="req-section">
-        <div class="req-label">How to Use</div>
+        <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>main.py written — claude-sonnet-4-6, no extra dependencies</li>
-          <li class="req-item"><div class="check"></div>Add ANTHROPIC_API_KEY to python-scripts/hook-optimizer/.env</li>
-          <li class="req-item"><div class="check"></div>Run: cd python-scripts/hook-optimizer &amp;&amp; python main.py "your concept"</li>
-          <li class="req-item"><div class="check"></div>Outputs: 5 YouTube titles, 5 TikTok titles, 3 hooks, thumbnail concept, best bet pick</li>
+          <li class="req-item done"><div class="check"></div>Input: video concept → Claude generates 5 YouTube titles, 5 TikTok titles, 3 hooks, thumbnail concept, best bet</li>
+          <li class="req-item done"><div class="check"></div>Concept cache (MD5 hash, 7-day TTL) — repeat concepts are instant, no API call <span class="new-tag">NEW</span></li>
+          <li class="req-item done"><div class="check"></div>Auto-saves every result to results/{slug}-{timestamp}.txt <span class="new-tag">NEW</span></li>
         </ul>
-        <div class="score-grid">
-          <div class="score-pill">Unblocks: <span>0/3</span></div>
-          <div class="score-pill">Revenue: <span>1/3</span></div>
-          <div class="score-pill">Showcase: <span>2/3</span></div>
-          <div class="score-pill">Sellable: <span>3/3</span></div>
-        </div>
+        <div class="req-label" style="margin-top:12px">Run</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="check"></div>cd python-scripts/hook-optimizer &amp;&amp; python main.py "your concept"</li>
+        </ul>
       </div>
     </div>
 
