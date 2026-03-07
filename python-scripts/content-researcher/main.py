@@ -14,8 +14,13 @@ Results are cached for 7 days — same concept = instant re-run, no API cost.
 import os
 import re
 import sys
+import io
 from datetime import datetime
 from dotenv import load_dotenv
+
+# Fix Windows terminal Unicode issues (emoji in video titles)
+if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -90,7 +95,8 @@ def run(concept: str):
         # Print outlier preview
         print("  Top outliers:")
         for i, v in enumerate(outliers, 1):
-            print(f"  {i:2}. [{v['outlier_score']}x] {v['views']:>8,} views | {v['title'][:55]}")
+            safe_title = v['title'][:55].encode('ascii', 'replace').decode('ascii')
+        print(f"  {i:2}. [{v['outlier_score']}x] {v['views']:>8,} views | {safe_title}")
         print()
 
         # Step 4: Extract hook transcripts

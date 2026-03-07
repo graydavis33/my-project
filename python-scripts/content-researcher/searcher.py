@@ -5,40 +5,22 @@ import os
 import sys
 import re
 from googleapiclient.discovery import build
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
 from dotenv import load_dotenv
 import anthropic
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
-
-_DIR = os.path.dirname(__file__)
-_CLIENT_SECRET = os.path.join(_DIR, '..', 'social-media-analytics', 'client_secret.json')
-_TOKEN_PATH = os.path.join(_DIR, 'token.json')
-_SCOPES = ['https://www.googleapis.com/auth/youtube.readonly']
 
 RESULTS_PER_QUERY = 15
 NUM_QUERIES = 4
 
 
 def _get_youtube():
-    creds = None
-    if os.path.exists(_TOKEN_PATH):
-        creds = Credentials.from_authorized_user_file(_TOKEN_PATH, _SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            if not os.path.exists(_CLIENT_SECRET):
-                print(f"ERROR: client_secret.json not found at {_CLIENT_SECRET}")
-                print("Copy it from python-scripts/social-media-analytics/")
-                sys.exit(1)
-            flow = InstalledAppFlow.from_client_secrets_file(_CLIENT_SECRET, _SCOPES)
-            creds = flow.run_local_server(port=0)
-        with open(_TOKEN_PATH, 'w') as f:
-            f.write(creds.to_json())
-    return build('youtube', 'v3', credentials=creds)
+    api_key = os.getenv('YOUTUBE_API_KEY')
+    if not api_key:
+        print("ERROR: YOUTUBE_API_KEY not set in .env")
+        print("Get a free API key at: console.cloud.google.com → APIs & Services → Credentials → + Create Credentials → API Key")
+        sys.exit(1)
+    return build('youtube', 'v3', developerKey=api_key)
 
 
 def generate_queries(concept: str) -> list[str]:
