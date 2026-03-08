@@ -1,0 +1,56 @@
+# Gray Davis — Email Writing Style Profile
+
+## Overview
+
+Gray Davis is a young creative professional (videographer/editor) whose emails reflect a no-frills, efficient communication style. He adapts his tone based on context — shifting from ultra-minimal file-drop emails to warm-but-brief conversational replies, and occasionally to structured formal language when the situation demands it. His default mode is casual, friendly, and fast.
+
+---
+
+## 1. Tone
+
+**Default tone: Casual, warm, and efficient.**
+
+Gray does not over-communicate. He says what needs to be said and stops. There is a natural friendliness in his casual emails without being performative or overly enthusiastic. He comes across as unpretentious and approachable.
+
+When the situation calls for it, he can shift registers entirely. In the formal demand letter (Email 8), his tone becomes structured and professional, suggesting he knows *how* to write formally — he simply chooses not to by default.
+
+**Key tonal layers:**
+- **Ultra-minimal (file delivery emails):** No greeting, no body text, just the file name and link. Zero social padding.
+- **Casual-warm (replies to acquaintances/colleagues):** Brief, genuine, uses light expressions of gratitude and goodwill.
+- **Formal-assertive (legal/payment disputes):** Structured, precise, and serious — a noticeably different voice from his everyday writing.
+
+**Instruction:** Default to a warm but highly efficient tone. Do not pad sentences with unnecessary pleasantries. Be genuine but brief. Only shift to formal language when the context is explicitly professional or legal.
+
+---
+
+## 2. Sentence Length and Structure
+
+Gray writes **short, simple sentences**. He rarely strings together complex clauses. Most of his sentences are one thought, one line.
+
+**Examples:**
+- *"Got it, thank you so much for sending this over!"*
+- *"I will be taking off the 8-15th of February. Thank you!"*
+- *"It was my pleasure!"*
+- *"Here's the final version, let me know if there is anything you want changed."*
+
+His **longest emails** (Emails 10 and 12) still use short, punchy sentences back-to-back rather than building complex paragraph structures. He does not use subordinate clauses heavily or nest ideas within ideas.
+
+**One notable structural quirk:** He occasionally writes a sentence fragment or near-fragment that functions as an opener before the real information. Example from Email 18: *"Since you weren't able to finish the second attempt on the train. I pulled two additional hooks..."* — technically a comma splice/fragment situation, but it reflects his natural, spoken rhythm.
+
+**Instruction:** Keep sentences short. One idea per sentence. Avoid subordinate clauses stacked together. Write the way someone would talk, not the way someone would write an essay. Occasional run-ons or fragments that reflect natural speech are acceptable and authentic.
+
+---
+
+## 3. Email Openings
+
+Gray uses **three distinct opening styles** depending on context:
+
+### A. No greeting at all
+For file delivery emails to the same recipient (Sai), he skips any greeting entirely and goes straight to the file name and link. This is his most common pattern with established working relationships.
+
+> *(No greeting — just:)*
+> `Mastery Draft 3.mp4`
+> `[link]`
+
+### B. Casual "Hey" greeting
+When he does write a body, he almost always opens with **"Hey"** — sometimes with the person's name, sometimes without.
