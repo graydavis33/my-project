@@ -69,7 +69,24 @@
       letter-spacing: 1.2px;
       color: #555;
       margin: 28px 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
+    .section-reset-btn {
+      background: none;
+      border: none;
+      color: #3a3a3a;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+    .section-reset-btn:hover { color: #f87171; }
 
     /* Checklist steps */
     .step {
@@ -449,7 +466,6 @@
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('checklist')">Checklist</button>
     <button class="tab-btn" onclick="switchTab('history')">History</button>
-    <button class="tab-btn" onclick="switchTab('reset')">Reset</button>
   </div>
 
   <!-- ── CHECKLIST TAB ── -->
@@ -464,7 +480,7 @@
       </div>
     </div>
 
-    <div class="section-label">Steps — do these in order</div>
+    <div class="section-label">Steps — do these in order <button class="section-reset-btn" onclick="resetSteps()">Reset</button></div>
 
     <div class="step" id="step-0" onclick="toggleStep(0)">
       <div class="checkbox"><span class="checkmark">✓</span></div>
@@ -539,7 +555,7 @@
     </div>
 
     <!-- Emergency Fund -->
-    <div class="section-label">Emergency Fund</div>
+    <div class="section-label">Emergency Fund <button class="section-reset-btn" onclick="resetFund()">Reset</button></div>
     <div class="fund-card">
       <div class="fund-top">
         <div>
@@ -561,7 +577,7 @@
     </div>
 
     <!-- Variable Expenses -->
-    <div class="section-label">Monthly Expense Budget — $1,100</div>
+    <div class="section-label">Monthly Expense Budget — $1,100 <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
     <div class="fund-card">
 
       <div class="expense-row">
@@ -627,76 +643,23 @@
     </div>
 
     <!-- Notes -->
-    <div class="section-label">Notes</div>
+    <div class="section-label">Notes <button class="section-reset-btn" onclick="resetNotes()">Reset</button></div>
     <textarea class="notes-input" id="notes" placeholder="Anything to note this payday..." oninput="saveNotes()"></textarea>
 
     <!-- Buttons -->
     <div class="btn-row">
       <button class="submit-btn" onclick="submitPayday()">Save to History</button>
-      <button class="reset-btn" onclick="resetAll()">Reset</button>
+      <button class="reset-btn" onclick="resetEverything()">Reset Everything</button>
     </div>
 
   </div>
 
   <!-- ── HISTORY TAB ── -->
   <div class="tab-pane" id="tab-history">
-    <div class="section-label" style="margin-top:0">Past Paychecks</div>
+    <div class="section-label" style="margin-top:0">Past Paychecks <button class="section-reset-btn" onclick="resetHistory()">Clear All</button></div>
     <div id="history-list"></div>
   </div>
 
-  <!-- ── RESET TAB ── -->
-  <div class="tab-pane" id="tab-reset">
-    <div class="section-label" style="margin-top:0">Reset by Section</div>
-
-    <div class="reset-section-card">
-      <div class="reset-section-info">
-        <div class="reset-section-title">Checklist Steps</div>
-        <div class="reset-section-sub">Unchecks all 6 steps</div>
-      </div>
-      <button class="reset-section-btn" onclick="resetSteps()">Reset</button>
-    </div>
-
-    <div class="reset-section-card">
-      <div class="reset-section-info">
-        <div class="reset-section-title">Emergency Fund Balance</div>
-        <div class="reset-section-sub">Clears the saved dollar amount</div>
-      </div>
-      <button class="reset-section-btn" onclick="resetFund()">Reset</button>
-    </div>
-
-    <div class="reset-section-card">
-      <div class="reset-section-info">
-        <div class="reset-section-title">Expense Tracker</div>
-        <div class="reset-section-sub">Clears all spending inputs</div>
-      </div>
-      <button class="reset-section-btn" onclick="resetExpenses()">Reset</button>
-    </div>
-
-    <div class="reset-section-card">
-      <div class="reset-section-info">
-        <div class="reset-section-title">Notes</div>
-        <div class="reset-section-sub">Clears the notes field</div>
-      </div>
-      <button class="reset-section-btn" onclick="resetNotes()">Reset</button>
-    </div>
-
-    <div class="reset-section-card">
-      <div class="reset-section-info">
-        <div class="reset-section-title">History Log</div>
-        <div class="reset-section-sub">Deletes all saved payday entries</div>
-      </div>
-      <button class="reset-section-btn danger" onclick="resetHistory()">Reset</button>
-    </div>
-
-    <div class="reset-section-card">
-      <div class="reset-section-info">
-        <div class="reset-section-title">Reset Everything</div>
-        <div class="reset-section-sub">Clears all data including history</div>
-      </div>
-      <button class="reset-section-btn danger" onclick="resetEverything()">Reset All</button>
-    </div>
-
-  </div>
 
 </div>
 
@@ -908,7 +871,8 @@
   }
 
   function resetEverything() {
-    if (!confirm('Clear ALL data including history? This cannot be undone.')) return;
+    if (!confirm('Reset everything? This will clear all sections including history.')) return;
+    if (!confirm('Are you sure? This cannot be undone.')) return;
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(HISTORY_KEY);
     document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
@@ -919,23 +883,6 @@
     document.getElementById('fund-pct').textContent = '0% there';
     document.getElementById('fund-months').textContent = '';
     updateExpenses();
-  }
-
-  // Reset (old full reset kept for the checklist tab button)
-  function resetAll() {
-    if (!confirm('Reset checklist? This clears steps, expenses, and notes. Emergency fund balance is kept.')) return;
-    const data = load();
-    const fundBalance = data.fundBalance;
-    localStorage.removeItem(STORAGE_KEY);
-    save({ fundBalance });
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
-    document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
-    document.getElementById('notes').value = '';
-    updateExpenses();
-    if (fundBalance != null) {
-      document.getElementById('fund-balance').value = fundBalance;
-      updateFund();
-    }
   }
 
   // Render history
