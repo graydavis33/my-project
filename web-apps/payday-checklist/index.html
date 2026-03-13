@@ -17,6 +17,32 @@
 
     .container { max-width: 480px; margin: 0 auto; }
 
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 28px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 9px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: #666;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .tab-btn.active { background: #2a2a2a; color: #e8e8e8; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
     /* Header */
     .header { text-align: center; margin-bottom: 32px; }
     .header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
@@ -82,9 +108,10 @@
     .step-right { text-align: right; flex-shrink: 0; }
     .step-amount { font-size: 16px; font-weight: 700; color: #f87171; }
     .step-amount.positive { color: #4ade80; }
+    .step-amount.neutral { color: #facc15; }
     .step-balance { font-size: 11px; color: #555; margin-top: 2px; }
 
-    /* Progress bar (emergency fund) */
+    /* Cards */
     .fund-card {
       background: #1a1a1a;
       border: 1px solid #2a2a2a;
@@ -124,7 +151,7 @@
     .fund-stats { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
     .fund-stats .highlight { color: #4ade80; font-weight: 600; }
 
-    /* Variable expense tracker */
+    /* Expense tracker */
     .expense-row {
       display: flex;
       align-items: center;
@@ -150,7 +177,6 @@
     .expense-remaining { font-size: 12px; width: 52px; text-align: right; font-weight: 600; }
     .ok { color: #4ade80; }
     .over { color: #f87171; }
-
     .expense-total-row {
       display: flex;
       justify-content: space-between;
@@ -160,11 +186,23 @@
       color: #888;
     }
 
-    /* Reset button */
+    /* Buttons */
+    .btn-row { display: flex; gap: 8px; margin-top: 28px; }
+    .submit-btn {
+      flex: 1;
+      padding: 14px;
+      background: #4ade80;
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .submit-btn:hover { background: #22c55e; }
     .reset-btn {
-      display: block;
-      width: 100%;
-      margin-top: 28px;
+      flex: 1;
       padding: 14px;
       background: #1a1a1a;
       border: 1px solid #2a2a2a;
@@ -174,7 +212,6 @@
       font-weight: 500;
       cursor: pointer;
       transition: border-color 0.15s, color 0.15s;
-      letter-spacing: 0.3px;
     }
     .reset-btn:hover { border-color: #f87171; color: #f87171; }
 
@@ -193,202 +230,297 @@
     }
     .notes-input:focus { outline: none; border-color: #555; }
     .notes-input::placeholder { color: #444; }
+
+    /* History tab */
+    .history-empty {
+      text-align: center;
+      padding: 48px 0;
+      color: #444;
+      font-size: 14px;
+    }
+    .history-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .history-date { font-size: 14px; font-weight: 600; }
+    .history-paycheck { font-size: 13px; color: #4ade80; font-weight: 700; }
+    .history-steps {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .history-step-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 99px;
+      font-weight: 500;
+    }
+    .history-step-pill.done { background: #14532d; color: #4ade80; }
+    .history-step-pill.skip { background: #1f1f1f; color: #555; }
+    .history-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #888;
+      padding: 3px 0;
+    }
+    .history-row span:last-child { color: #ccc; font-weight: 500; }
+    .history-notes {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #666;
+      font-style: italic;
+      border-top: 1px solid #222;
+      padding-top: 10px;
+    }
+    .history-delete {
+      background: none;
+      border: none;
+      color: #3a3a3a;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+      transition: color 0.15s;
+    }
+    .history-delete:hover { color: #f87171; }
   </style>
 </head>
 <body>
 <div class="container">
 
-  <!-- Header -->
-  <div class="header">
-    <h1>Payday Checklist</h1>
-    <div class="date" id="today-date"></div>
-    <div class="paycheck">
-      <span>Bi-weekly paycheck</span>
-      $3,250
-    </div>
+  <!-- Tab nav -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('checklist')">Checklist</button>
+    <button class="tab-btn" onclick="switchTab('history')">History</button>
   </div>
 
-  <!-- Steps -->
-  <div class="section-label">Steps — do these in order</div>
+  <!-- ── CHECKLIST TAB ── -->
+  <div class="tab-pane active" id="tab-checklist">
 
-  <div class="step" id="step-0" onclick="toggleStep(0)">
-    <div class="checkbox"><span class="checkmark">✓</span></div>
-    <div class="step-body">
-      <div class="step-label">Move taxes to PrimeSouth</div>
-      <div class="step-sub">30% set-aside — do NOT touch this money</div>
+    <div class="header">
+      <h1>Payday Checklist</h1>
+      <div class="date" id="today-date"></div>
+      <div class="paycheck">
+        <span>Bi-weekly paycheck</span>
+        $3,250
+      </div>
     </div>
-    <div class="step-right">
-      <div class="step-amount">-$975</div>
-      <div class="step-balance">Balance: $2,275</div>
+
+    <div class="section-label">Steps — do these in order</div>
+
+    <div class="step" id="step-0" onclick="toggleStep(0)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-label">Move taxes to PrimeSouth</div>
+        <div class="step-sub">30% set-aside — do NOT touch this money</div>
+      </div>
+      <div class="step-right">
+        <div class="step-amount">-$975</div>
+        <div class="step-balance">Balance: $2,275</div>
+      </div>
     </div>
+
+    <div class="step" id="step-1" onclick="toggleStep(1)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-label">Pay rent</div>
+        <div class="step-sub">Full month — auto-pay or manual</div>
+      </div>
+      <div class="step-right">
+        <div class="step-amount">-$1,500</div>
+        <div class="step-balance">Balance: $775</div>
+      </div>
+    </div>
+
+    <div class="step" id="step-2" onclick="toggleStep(2)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-label">Pay student loans</div>
+        <div class="step-sub">Full month — auto-pay or manual</div>
+      </div>
+      <div class="step-right">
+        <div class="step-amount">-$318</div>
+        <div class="step-balance">Balance: $457</div>
+      </div>
+    </div>
+
+    <div class="step" id="step-3" onclick="toggleStep(3)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-label">Buy MetroCard</div>
+        <div class="step-sub">Unlimited monthly — buy at start of each month</div>
+      </div>
+      <div class="step-right">
+        <div class="step-amount">-$132</div>
+        <div class="step-balance">Balance: $325</div>
+      </div>
+    </div>
+
+    <div class="step" id="step-4" onclick="toggleStep(4)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-label">Set aside expense budget</div>
+        <div class="step-sub">Monthly — groceries, dining, misc (track below)</div>
+      </div>
+      <div class="step-right">
+        <div class="step-amount neutral">$1,100</div>
+        <div class="step-balance">Monthly budget</div>
+      </div>
+    </div>
+
+    <div class="step" id="step-5" onclick="toggleStep(5)">
+      <div class="checkbox"><span class="checkmark">✓</span></div>
+      <div class="step-body">
+        <div class="step-label">Transfer to emergency fund</div>
+        <div class="step-sub">$1,500/mo goal — update tracker below</div>
+      </div>
+      <div class="step-right">
+        <div class="step-amount positive">+$1,500</div>
+        <div class="step-balance">Monthly savings</div>
+      </div>
+    </div>
+
+    <!-- Emergency Fund -->
+    <div class="section-label">Emergency Fund</div>
+    <div class="fund-card">
+      <div class="fund-top">
+        <div>
+          <div class="fund-title">Savings Balance</div>
+          <div class="fund-goal">Goal: $9,000 (6 months)</div>
+        </div>
+        <div class="fund-input-wrap">
+          <span>$</span>
+          <input class="fund-input" type="number" id="fund-balance" placeholder="0" oninput="updateFund()" />
+        </div>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="fund-bar" style="width:0%"></div>
+      </div>
+      <div class="fund-stats">
+        <span id="fund-pct">0% there</span>
+        <span id="fund-months" class="highlight"></span>
+      </div>
+    </div>
+
+    <!-- Variable Expenses -->
+    <div class="section-label">Monthly Expense Budget — $1,100</div>
+    <div class="fund-card">
+
+      <div class="expense-row">
+        <div>
+          <div class="expense-name">Groceries</div>
+          <div class="expense-budget">Budget: $300</div>
+        </div>
+        <div class="expense-right">
+          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="300" oninput="updateExpenses()" />
+          <div class="expense-remaining ok" id="rem-0">$300</div>
+        </div>
+      </div>
+
+      <div class="expense-row">
+        <div>
+          <div class="expense-name">Dining Out</div>
+          <div class="expense-budget">Budget: $200</div>
+        </div>
+        <div class="expense-right">
+          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="200" oninput="updateExpenses()" />
+          <div class="expense-remaining ok" id="rem-1">$200</div>
+        </div>
+      </div>
+
+      <div class="expense-row">
+        <div>
+          <div class="expense-name">Utilities / Internet</div>
+          <div class="expense-budget">Budget: $60</div>
+        </div>
+        <div class="expense-right">
+          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="60" oninput="updateExpenses()" />
+          <div class="expense-remaining ok" id="rem-2">$60</div>
+        </div>
+      </div>
+
+      <div class="expense-row">
+        <div>
+          <div class="expense-name">Streaming</div>
+          <div class="expense-budget">Budget: $40</div>
+        </div>
+        <div class="expense-right">
+          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="40" oninput="updateExpenses()" />
+          <div class="expense-remaining ok" id="rem-3">$40</div>
+        </div>
+      </div>
+
+      <div class="expense-row">
+        <div>
+          <div class="expense-name">Misc / Buffer</div>
+          <div class="expense-budget">Budget: $500</div>
+        </div>
+        <div class="expense-right">
+          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="500" oninput="updateExpenses()" />
+          <div class="expense-remaining ok" id="rem-4">$500</div>
+        </div>
+      </div>
+
+      <div class="expense-total-row">
+        <span>Total remaining</span>
+        <span id="expense-total-remaining" class="ok">$1,100</span>
+      </div>
+
+    </div>
+
+    <!-- Notes -->
+    <div class="section-label">Notes</div>
+    <textarea class="notes-input" id="notes" placeholder="Anything to note this payday..." oninput="saveNotes()"></textarea>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="submit-btn" onclick="submitPayday()">Save to History</button>
+      <button class="reset-btn" onclick="resetAll()">Reset</button>
+    </div>
+
   </div>
 
-  <div class="step" id="step-1" onclick="toggleStep(1)">
-    <div class="checkbox"><span class="checkmark">✓</span></div>
-    <div class="step-body">
-      <div class="step-label">Pay rent (half)</div>
-      <div class="step-sub">$750 toward $1,500/mo — auto-pay or manual</div>
-    </div>
-    <div class="step-right">
-      <div class="step-amount">-$750</div>
-      <div class="step-balance">Balance: $1,525</div>
-    </div>
+  <!-- ── HISTORY TAB ── -->
+  <div class="tab-pane" id="tab-history">
+    <div class="section-label" style="margin-top:0">Past Paychecks</div>
+    <div id="history-list"></div>
   </div>
-
-  <div class="step" id="step-2" onclick="toggleStep(2)">
-    <div class="checkbox"><span class="checkmark">✓</span></div>
-    <div class="step-body">
-      <div class="step-label">Pay student loans (half)</div>
-      <div class="step-sub">$159 toward $318/mo — auto-pay or manual</div>
-    </div>
-    <div class="step-right">
-      <div class="step-amount">-$159</div>
-      <div class="step-balance">Balance: $1,366</div>
-    </div>
-  </div>
-
-  <div class="step" id="step-3" onclick="toggleStep(3)">
-    <div class="checkbox"><span class="checkmark">✓</span></div>
-    <div class="step-body">
-      <div class="step-label">MetroCard — buy if needed</div>
-      <div class="step-sub">$132 unlimited monthly — buy on 1st paycheck of month</div>
-    </div>
-    <div class="step-right">
-      <div class="step-amount">-$66</div>
-      <div class="step-balance">Balance: $1,300</div>
-    </div>
-  </div>
-
-  <div class="step" id="step-4" onclick="toggleStep(4)">
-    <div class="checkbox"><span class="checkmark">✓</span></div>
-    <div class="step-body">
-      <div class="step-label">Set aside expense budget</div>
-      <div class="step-sub">Groceries, dining, misc — track below</div>
-    </div>
-    <div class="step-right">
-      <div class="step-amount">-$550</div>
-      <div class="step-balance">Balance: $750</div>
-    </div>
-  </div>
-
-  <div class="step" id="step-5" onclick="toggleStep(5)">
-    <div class="checkbox"><span class="checkmark">✓</span></div>
-    <div class="step-body">
-      <div class="step-label">Move $750 to emergency fund</div>
-      <div class="step-sub">$1,500/mo savings goal — update tracker below</div>
-    </div>
-    <div class="step-right">
-      <div class="step-amount positive">+$750</div>
-      <div class="step-balance">Balance: $0</div>
-    </div>
-  </div>
-
-  <!-- Emergency Fund -->
-  <div class="section-label">Emergency Fund</div>
-  <div class="fund-card">
-    <div class="fund-top">
-      <div>
-        <div class="fund-title">Savings Balance</div>
-        <div class="fund-goal">Goal: $9,000 (6 months)</div>
-      </div>
-      <div class="fund-input-wrap">
-        <span>$</span>
-        <input class="fund-input" type="number" id="fund-balance" placeholder="0" oninput="updateFund()" />
-      </div>
-    </div>
-    <div class="progress-bar-bg">
-      <div class="progress-bar-fill" id="fund-bar" style="width:0%"></div>
-    </div>
-    <div class="fund-stats">
-      <span id="fund-pct">0% there</span>
-      <span id="fund-months" class="highlight"></span>
-    </div>
-  </div>
-
-  <!-- Variable Expenses -->
-  <div class="section-label">Bi-Weekly Expense Budget — $550</div>
-  <div class="fund-card">
-
-    <div class="expense-row">
-      <div>
-        <div class="expense-name">Groceries</div>
-        <div class="expense-budget">Budget: $150</div>
-      </div>
-      <div class="expense-right">
-        <input class="expense-spent-input" type="number" placeholder="$0" data-budget="150" oninput="updateExpenses()" />
-        <div class="expense-remaining ok" id="rem-0">$150</div>
-      </div>
-    </div>
-
-    <div class="expense-row">
-      <div>
-        <div class="expense-name">Dining Out</div>
-        <div class="expense-budget">Budget: $100</div>
-      </div>
-      <div class="expense-right">
-        <input class="expense-spent-input" type="number" placeholder="$0" data-budget="100" oninput="updateExpenses()" />
-        <div class="expense-remaining ok" id="rem-1">$100</div>
-      </div>
-    </div>
-
-    <div class="expense-row">
-      <div>
-        <div class="expense-name">Utilities / Internet</div>
-        <div class="expense-budget">Budget: $60</div>
-      </div>
-      <div class="expense-right">
-        <input class="expense-spent-input" type="number" placeholder="$0" data-budget="60" oninput="updateExpenses()" />
-        <div class="expense-remaining ok" id="rem-2">$60</div>
-      </div>
-    </div>
-
-    <div class="expense-row">
-      <div>
-        <div class="expense-name">Streaming</div>
-        <div class="expense-budget">Budget: $40</div>
-      </div>
-      <div class="expense-right">
-        <input class="expense-spent-input" type="number" placeholder="$0" data-budget="40" oninput="updateExpenses()" />
-        <div class="expense-remaining ok" id="rem-3">$40</div>
-      </div>
-    </div>
-
-    <div class="expense-row">
-      <div>
-        <div class="expense-name">Misc / Buffer</div>
-        <div class="expense-budget">Budget: $200</div>
-      </div>
-      <div class="expense-right">
-        <input class="expense-spent-input" type="number" placeholder="$0" data-budget="200" oninput="updateExpenses()" />
-        <div class="expense-remaining ok" id="rem-4">$200</div>
-      </div>
-    </div>
-
-    <div class="expense-total-row">
-      <span>Total remaining</span>
-      <span id="expense-total-remaining" class="ok">$550</span>
-    </div>
-
-  </div>
-
-  <!-- Notes -->
-  <div class="section-label">Notes</div>
-  <textarea class="notes-input" id="notes" placeholder="Anything to note this payday..." oninput="saveNotes()"></textarea>
-
-  <!-- Reset -->
-  <button class="reset-btn" onclick="resetAll()">Reset for next payday</button>
 
 </div>
 
 <script>
   const STORAGE_KEY = 'payday_v1';
+  const HISTORY_KEY = 'payday_history_v1';
 
-  function save(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }
+  const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'MetroCard', 'Expense Budget', 'Emergency Fund'];
+  const EXPENSE_NAMES = ['Groceries', 'Dining Out', 'Utilities', 'Streaming', 'Misc'];
+  const EXPENSE_BUDGETS = [300, 200, 60, 40, 500];
+  const TOTAL_EXPENSE_BUDGET = 1100;
 
-  function load() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+  function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+  function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+  function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
+  function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; } }
+
+  // Tabs
+  function switchTab(name) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      if (b.textContent.toLowerCase().startsWith(name === 'checklist' ? 'check' : 'hist')) b.classList.add('active');
+    });
+    if (name === 'history') renderHistory();
   }
 
   // Date
@@ -441,9 +573,9 @@
   // Expenses
   function updateExpenses() {
     const inputs = document.querySelectorAll('.expense-spent-input');
-    let totalBudget = 550, totalSpent = 0;
+    let totalSpent = 0;
     inputs.forEach((input, i) => {
-      const budget = parseInt(input.dataset.budget);
+      const budget = EXPENSE_BUDGETS[i];
       const spent = parseFloat(input.value) || 0;
       totalSpent += spent;
       const rem = budget - spent;
@@ -451,7 +583,7 @@
       el.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0);
       el.className = 'expense-remaining ' + (rem < 0 ? 'over' : 'ok');
     });
-    const totalRem = totalBudget - totalSpent;
+    const totalRem = TOTAL_EXPENSE_BUDGET - totalSpent;
     const totalEl = document.getElementById('expense-total-remaining');
     totalEl.textContent = (totalRem < 0 ? '-$' : '$') + Math.abs(totalRem).toFixed(0);
     totalEl.className = totalRem < 0 ? 'over' : 'ok';
@@ -464,9 +596,7 @@
     const data = load();
     if (!data.expenses) return;
     const inputs = document.querySelectorAll('.expense-spent-input');
-    inputs.forEach((input, i) => {
-      if (data.expenses[i] != null) input.value = data.expenses[i];
-    });
+    inputs.forEach((input, i) => { if (data.expenses[i] != null) input.value = data.expenses[i]; });
     updateExpenses();
   }
 
@@ -482,14 +612,36 @@
     if (data.notes) document.getElementById('notes').value = data.notes;
   }
 
+  // Submit to history
+  function submitPayday() {
+    const data = load();
+    const inputs = document.querySelectorAll('.expense-spent-input');
+    const expenseSpent = Array.from(inputs).map((inp, i) => ({
+      name: EXPENSE_NAMES[i],
+      budget: EXPENSE_BUDGETS[i],
+      spent: parseFloat(inp.value) || 0
+    }));
+    const entry = {
+      id: Date.now(),
+      date: new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }),
+      steps: data.steps || {},
+      fundBalance: data.fundBalance || 0,
+      expenses: expenseSpent,
+      notes: data.notes || ''
+    };
+    const history = loadHistory();
+    history.unshift(entry);
+    saveHistory(history);
+    alert('Saved to history!');
+  }
+
   // Reset
   function resetAll() {
-    if (!confirm('Reset checklist for next payday? (Emergency fund balance will be kept)')) return;
+    if (!confirm('Reset checklist? This clears steps, expenses, and notes. Emergency fund balance is kept.')) return;
     const data = load();
     const fundBalance = data.fundBalance;
     localStorage.removeItem(STORAGE_KEY);
-    const newData = { fundBalance };
-    save(newData);
+    save({ fundBalance });
     document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
     document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
     document.getElementById('notes').value = '';
@@ -498,6 +650,54 @@
       document.getElementById('fund-balance').value = fundBalance;
       updateFund();
     }
+  }
+
+  // Render history
+  function renderHistory() {
+    const history = loadHistory();
+    const el = document.getElementById('history-list');
+    if (!history.length) {
+      el.innerHTML = '<div class="history-empty">No history yet.<br>Complete a payday and tap "Save to History".</div>';
+      return;
+    }
+    el.innerHTML = history.map((entry, idx) => {
+      const stepsHtml = STEP_NAMES.map((name, i) =>
+        `<span class="history-step-pill ${entry.steps[i] ? 'done' : 'skip'}">${name}</span>`
+      ).join('');
+
+      const expensesHtml = entry.expenses.map(e =>
+        `<div class="history-row"><span>${e.name}</span><span>$${e.spent} / $${e.budget}</span></div>`
+      ).join('');
+
+      const totalSpent = entry.expenses.reduce((s, e) => s + e.spent, 0);
+
+      return `
+        <div class="history-card">
+          <div class="history-header">
+            <div>
+              <div class="history-date">${entry.date}</div>
+              <div class="history-paycheck">$3,250 paycheck</div>
+            </div>
+            <button class="history-delete" onclick="deleteEntry(${entry.id})" title="Delete">✕</button>
+          </div>
+          <div class="history-steps">${stepsHtml}</div>
+          ${expensesHtml}
+          <div class="history-row" style="margin-top:6px;font-weight:600">
+            <span>Total spent</span><span>$${totalSpent} / $${TOTAL_EXPENSE_BUDGET}</span>
+          </div>
+          <div class="history-row">
+            <span>Emergency fund at time</span><span>$${entry.fundBalance.toLocaleString()}</span>
+          </div>
+          ${entry.notes ? `<div class="history-notes">"${entry.notes}"</div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  function deleteEntry(id) {
+    if (!confirm('Delete this entry?')) return;
+    const history = loadHistory().filter(e => e.id !== id);
+    saveHistory(history);
+    renderHistory();
   }
 
   // Init
