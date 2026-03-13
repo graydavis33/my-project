@@ -293,6 +293,123 @@
       transition: color 0.15s;
     }
     .history-delete:hover { color: #f87171; }
+    .history-edit {
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0 6px;
+      transition: color 0.15s;
+    }
+    .history-edit:hover { color: #4ade80; }
+
+    /* Edit modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+      max-width: 480px;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 24px 16px 40px;
+    }
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+    .modal-section { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: #555; margin: 18px 0 8px; }
+    .modal-step-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1f1f1f;
+      cursor: pointer;
+      user-select: none;
+    }
+    .modal-step-row:last-child { border-bottom: none; }
+    .modal-step-check {
+      width: 20px; height: 20px;
+      border-radius: 5px;
+      border: 2px solid #444;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; color: #000;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .modal-step-check.on { background: #4ade80; border-color: #4ade80; }
+    .modal-step-label { font-size: 14px; color: #ccc; }
+    .modal-expense-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #1f1f1f;
+    }
+    .modal-expense-row:last-child { border-bottom: none; }
+    .modal-expense-name { font-size: 14px; color: #ccc; }
+    .modal-input {
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      color: #e8e8e8;
+      font-size: 14px;
+      width: 80px;
+      padding: 6px 10px;
+      text-align: right;
+    }
+    .modal-input:focus { outline: none; border-color: #4ade80; }
+    .modal-notes {
+      width: 100%;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      color: #ccc;
+      font-size: 14px;
+      padding: 10px 12px;
+      resize: none;
+      min-height: 70px;
+      font-family: inherit;
+    }
+    .modal-notes:focus { outline: none; border-color: #555; }
+    .modal-save {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      background: #4ade80;
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .modal-save:hover { background: #22c55e; }
 
     /* Reset tab */
     .reset-section-card {
@@ -583,6 +700,33 @@
 
 </div>
 
+<!-- Edit Modal -->
+<div class="modal-overlay" id="edit-modal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-title">
+      <span>Edit Entry</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-section">Steps Completed</div>
+    <div id="modal-steps"></div>
+
+    <div class="modal-section">Expenses Spent</div>
+    <div id="modal-expenses"></div>
+
+    <div class="modal-section">Emergency Fund Balance</div>
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+      <span style="color:#888;font-size:14px">$</span>
+      <input class="modal-input" type="number" id="modal-fund" style="width:120px" placeholder="0" />
+    </div>
+
+    <div class="modal-section">Notes</div>
+    <textarea class="modal-notes" id="modal-notes" placeholder="Notes..."></textarea>
+
+    <button class="modal-save" onclick="saveEdit()">Save Changes</button>
+  </div>
+</div>
+
 <script>
   const STORAGE_KEY = 'payday_v1';
   const HISTORY_KEY = 'payday_history_v1';
@@ -820,7 +964,10 @@
               <div class="history-date">${entry.date}</div>
               <div class="history-paycheck">$3,250 paycheck</div>
             </div>
-            <button class="history-delete" onclick="deleteEntry(${entry.id})" title="Delete">✕</button>
+            <div style="display:flex;gap:4px">
+              <button class="history-edit" onclick="openEditModal(${entry.id})">Edit</button>
+              <button class="history-delete" onclick="deleteEntry(${entry.id})" title="Delete">✕</button>
+            </div>
           </div>
           <div class="history-steps">${stepsHtml}</div>
           ${expensesHtml}
@@ -839,6 +986,77 @@
     if (!confirm('Delete this entry?')) return;
     const history = loadHistory().filter(e => e.id !== id);
     saveHistory(history);
+    renderHistory();
+  }
+
+  let editingId = null;
+
+  function openEditModal(id) {
+    editingId = id;
+    const entry = loadHistory().find(e => e.id === id);
+    if (!entry) return;
+
+    // Steps
+    document.getElementById('modal-steps').innerHTML = STEP_NAMES.map((name, i) => `
+      <div class="modal-step-row" onclick="toggleModalStep(${i})">
+        <div class="modal-step-check ${entry.steps[i] ? 'on' : ''}" id="mstep-${i}">${entry.steps[i] ? '✓' : ''}</div>
+        <div class="modal-step-label">${name}</div>
+      </div>`).join('');
+
+    // Expenses
+    document.getElementById('modal-expenses').innerHTML = entry.expenses.map((e, i) => `
+      <div class="modal-expense-row">
+        <div class="modal-expense-name">${e.name} <span style="color:#555;font-size:11px">/ $${e.budget}</span></div>
+        <input class="modal-input" type="number" id="mexp-${i}" value="${e.spent}" placeholder="0" />
+      </div>`).join('');
+
+    document.getElementById('modal-fund').value = entry.fundBalance || '';
+    document.getElementById('modal-notes').value = entry.notes || '';
+    document.getElementById('edit-modal').classList.add('open');
+  }
+
+  function toggleModalStep(i) {
+    const el = document.getElementById('mstep-' + i);
+    const on = el.classList.toggle('on');
+    el.textContent = on ? '✓' : '';
+  }
+
+  function closeModal() {
+    document.getElementById('edit-modal').classList.remove('open');
+    editingId = null;
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('edit-modal')) closeModal();
+  }
+
+  function saveEdit() {
+    const history = loadHistory();
+    const idx = history.findIndex(e => e.id === editingId);
+    if (idx === -1) return;
+
+    // Steps
+    const steps = {};
+    STEP_NAMES.forEach((_, i) => {
+      steps[i] = document.getElementById('mstep-' + i).classList.contains('on');
+    });
+
+    // Expenses
+    const expenses = history[idx].expenses.map((e, i) => ({
+      ...e,
+      spent: parseFloat(document.getElementById('mexp-' + i).value) || 0
+    }));
+
+    history[idx] = {
+      ...history[idx],
+      steps,
+      expenses,
+      fundBalance: parseFloat(document.getElementById('modal-fund').value) || 0,
+      notes: document.getElementById('modal-notes').value
+    };
+
+    saveHistory(history);
+    closeModal();
     renderHistory();
   }
 
