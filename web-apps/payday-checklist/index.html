@@ -293,6 +293,36 @@
       transition: color 0.15s;
     }
     .history-delete:hover { color: #f87171; }
+
+    /* Reset tab */
+    .reset-section-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .reset-section-title { font-size: 15px; font-weight: 500; }
+    .reset-section-sub { font-size: 12px; color: #555; margin-top: 3px; }
+    .reset-section-btn {
+      flex-shrink: 0;
+      padding: 8px 18px;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #aaa;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .reset-section-btn:hover { border-color: #f87171; color: #f87171; }
+    .reset-section-btn.danger { border-color: #3a1a1a; color: #f87171; }
+    .reset-section-btn.danger:hover { background: #2a0f0f; border-color: #f87171; }
   </style>
 </head>
 <body>
@@ -302,6 +332,7 @@
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('checklist')">Checklist</button>
     <button class="tab-btn" onclick="switchTab('history')">History</button>
+    <button class="tab-btn" onclick="switchTab('reset')">Reset</button>
   </div>
 
   <!-- ── CHECKLIST TAB ── -->
@@ -496,6 +527,60 @@
     <div id="history-list"></div>
   </div>
 
+  <!-- ── RESET TAB ── -->
+  <div class="tab-pane" id="tab-reset">
+    <div class="section-label" style="margin-top:0">Reset by Section</div>
+
+    <div class="reset-section-card">
+      <div class="reset-section-info">
+        <div class="reset-section-title">Checklist Steps</div>
+        <div class="reset-section-sub">Unchecks all 6 steps</div>
+      </div>
+      <button class="reset-section-btn" onclick="resetSteps()">Reset</button>
+    </div>
+
+    <div class="reset-section-card">
+      <div class="reset-section-info">
+        <div class="reset-section-title">Emergency Fund Balance</div>
+        <div class="reset-section-sub">Clears the saved dollar amount</div>
+      </div>
+      <button class="reset-section-btn" onclick="resetFund()">Reset</button>
+    </div>
+
+    <div class="reset-section-card">
+      <div class="reset-section-info">
+        <div class="reset-section-title">Expense Tracker</div>
+        <div class="reset-section-sub">Clears all spending inputs</div>
+      </div>
+      <button class="reset-section-btn" onclick="resetExpenses()">Reset</button>
+    </div>
+
+    <div class="reset-section-card">
+      <div class="reset-section-info">
+        <div class="reset-section-title">Notes</div>
+        <div class="reset-section-sub">Clears the notes field</div>
+      </div>
+      <button class="reset-section-btn" onclick="resetNotes()">Reset</button>
+    </div>
+
+    <div class="reset-section-card">
+      <div class="reset-section-info">
+        <div class="reset-section-title">History Log</div>
+        <div class="reset-section-sub">Deletes all saved payday entries</div>
+      </div>
+      <button class="reset-section-btn danger" onclick="resetHistory()">Reset</button>
+    </div>
+
+    <div class="reset-section-card">
+      <div class="reset-section-info">
+        <div class="reset-section-title">Reset Everything</div>
+        <div class="reset-section-sub">Clears all data including history</div>
+      </div>
+      <button class="reset-section-btn danger" onclick="resetEverything()">Reset All</button>
+    </div>
+
+  </div>
+
 </div>
 
 <script>
@@ -517,8 +602,9 @@
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
+    const map = { checklist: 'check', history: 'hist', reset: 'reset' };
     document.querySelectorAll('.tab-btn').forEach(b => {
-      if (b.textContent.toLowerCase().startsWith(name === 'checklist' ? 'check' : 'hist')) b.classList.add('active');
+      if (b.textContent.toLowerCase().startsWith(map[name])) b.classList.add('active');
     });
     if (name === 'history') renderHistory();
   }
@@ -635,7 +721,63 @@
     alert('Saved to history!');
   }
 
-  // Reset
+  // Reset individual sections
+  function resetSteps() {
+    if (!confirm('Uncheck all steps?')) return;
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
+    const data = load();
+    delete data.steps;
+    save(data);
+  }
+
+  function resetFund() {
+    if (!confirm('Clear emergency fund balance?')) return;
+    document.getElementById('fund-balance').value = '';
+    document.getElementById('fund-bar').style.width = '0%';
+    document.getElementById('fund-pct').textContent = '0% there';
+    document.getElementById('fund-months').textContent = '';
+    const data = load();
+    delete data.fundBalance;
+    save(data);
+  }
+
+  function resetExpenses() {
+    if (!confirm('Clear all expense inputs?')) return;
+    document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
+    updateExpenses();
+    const data = load();
+    delete data.expenses;
+    save(data);
+  }
+
+  function resetNotes() {
+    if (!confirm('Clear notes?')) return;
+    document.getElementById('notes').value = '';
+    const data = load();
+    delete data.notes;
+    save(data);
+  }
+
+  function resetHistory() {
+    if (!confirm('Delete all history entries? This cannot be undone.')) return;
+    localStorage.removeItem(HISTORY_KEY);
+  }
+
+  function resetEverything() {
+    if (!confirm('Clear ALL data including history? This cannot be undone.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(HISTORY_KEY);
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
+    document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
+    document.getElementById('notes').value = '';
+    document.getElementById('fund-balance').value = '';
+    document.getElementById('fund-bar').style.width = '0%';
+    document.getElementById('fund-pct').textContent = '0% there';
+    document.getElementById('fund-months').textContent = '';
+    updateExpenses();
+  }
+
+  // Reset (old full reset kept for the checklist tab button)
   function resetAll() {
     if (!confirm('Reset checklist? This clears steps, expenses, and notes. Emergency fund balance is kept.')) return;
     const data = load();
