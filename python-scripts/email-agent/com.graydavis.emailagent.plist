@@ -22,9 +22,12 @@
   <key>RunAtLoad</key>
   <true/>
 
-  <!-- Restart automatically if it crashes -->
+  <!-- Restart if the script crashes, but NOT if it exits cleanly -->
   <key>KeepAlive</key>
-  <true/>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
 
   <!-- Log output so you can debug if needed -->
   <key>StandardOutPath</key>
