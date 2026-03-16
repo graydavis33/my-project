@@ -34,3 +34,7 @@ def get_credentials():
             f.write(creds.to_json())
 
     return creds
+
+if __name__ == "__main__":
+    creds = get_credentials()
+    print("Google auth successful! token.json saved.")
