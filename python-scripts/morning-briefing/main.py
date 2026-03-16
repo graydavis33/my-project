@@ -18,7 +18,7 @@ import os
 import schedule
 from slack_sdk import WebClient
 
-from config import SLACK_BOT_TOKEN, SLACK_USER_ID
+from config import SLACK_BOT_TOKEN, SLACK_USER_ID, BRIEFING_CHANNEL_ID
 from gmail_summary import get_pending_emails
 from sheets_summary import get_outstanding_invoices, get_top_video_this_week
 from briefing import build_briefing_blocks
@@ -55,7 +55,7 @@ def send_briefing():
     blocks = build_briefing_blocks(pending_emails, outstanding_invoices, top_video)
 
     slack.chat_postMessage(
-        channel=SLACK_USER_ID,
+        channel=BRIEFING_CHANNEL_ID,
         blocks=blocks,
         text="☀️ Good morning! Here's your daily briefing.",
     )

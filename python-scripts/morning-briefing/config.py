@@ -20,6 +20,7 @@ def _require(key):
 ANTHROPIC_API_KEY = _require("ANTHROPIC_API_KEY")
 SLACK_BOT_TOKEN = _require("SLACK_BOT_TOKEN")
 SLACK_USER_ID = _require("SLACK_USER_ID")
+BRIEFING_CHANNEL_ID = os.getenv("BRIEFING_CHANNEL_ID", "") or _require("SLACK_USER_ID")
 
 # Optional — sections are skipped if not set
 INVOICE_SHEET_ID = os.getenv("INVOICE_SHEET_ID", "")
