@@ -310,6 +310,42 @@
       transition: color 0.15s;
     }
     .history-delete:hover { color: #f87171; }
+
+    /* Rent input */
+    .rent-input-wrap { display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
+    .rent-input-wrap .step-amount { margin-bottom: 0; }
+    .rent-input {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 6px;
+      color: #f87171;
+      font-size: 16px;
+      font-weight: 700;
+      width: 80px;
+      padding: 4px 6px;
+      text-align: right;
+    }
+    .rent-input:focus { outline: none; border-color: #f87171; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4ade80;
+      color: #000;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
     .history-edit {
       background: none;
       border: none;
@@ -498,11 +534,14 @@
       <div class="checkbox"><span class="checkmark">✓</span></div>
       <div class="step-body">
         <div class="step-label">Pay rent</div>
-        <div class="step-sub">Full month — auto-pay or manual</div>
+        <div class="step-sub">Full month — adjust if you move</div>
       </div>
       <div class="step-right">
-        <div class="step-amount">-$1,500</div>
-        <div class="step-balance">Balance: $775</div>
+        <div class="rent-input-wrap">
+          <span class="step-amount" style="font-size:13px">-$</span>
+          <input class="rent-input" type="number" id="rent-amount" value="1500" onclick="event.stopPropagation()" oninput="updateRent()" />
+        </div>
+        <div class="step-balance" id="balance-1">Balance: $775</div>
       </div>
     </div>
 
@@ -514,7 +553,7 @@
       </div>
       <div class="step-right">
         <div class="step-amount">-$318</div>
-        <div class="step-balance">Balance: $457</div>
+        <div class="step-balance" id="balance-2">Balance: $457</div>
       </div>
     </div>
 
@@ -526,7 +565,7 @@
       </div>
       <div class="step-right">
         <div class="step-amount">-$132</div>
-        <div class="step-balance">Balance: $325</div>
+        <div class="step-balance" id="balance-3">Balance: $325</div>
       </div>
     </div>
 
@@ -534,7 +573,7 @@
       <div class="checkbox"><span class="checkmark">✓</span></div>
       <div class="step-body">
         <div class="step-label">Set aside expense budget</div>
-        <div class="step-sub">Monthly — groceries, dining, misc (track below)</div>
+        <div class="step-sub">Monthly total across both paychecks — track spending below</div>
       </div>
       <div class="step-right">
         <div class="step-amount neutral">$1,100</div>
@@ -663,6 +702,8 @@
 
 </div>
 
+<div class="toast" id="toast"></div>
+
 <!-- Edit Modal -->
 <div class="modal-overlay" id="edit-modal" onclick="handleOverlayClick(event)">
   <div class="modal">
@@ -701,6 +742,36 @@
 
   function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
   function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+
+  // Toast
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // Rent — adjustable, recalculates cascading balances
+  function updateRent() {
+    const rent = parseFloat(document.getElementById('rent-amount').value) || 0;
+    const afterTax = 3250 - 975;
+    const afterRent = afterTax - rent;
+    const afterLoans = afterRent - 318;
+    const afterMetro = afterLoans - 132;
+    const fmt = n => (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString();
+    document.getElementById('balance-1').textContent = 'Balance: ' + fmt(afterRent);
+    document.getElementById('balance-2').textContent = 'Balance: ' + fmt(afterLoans);
+    document.getElementById('balance-3').textContent = 'Balance: ' + fmt(afterMetro);
+    const data = load();
+    data.rent = rent;
+    save(data);
+  }
+
+  function loadRent() {
+    const data = load();
+    if (data.rent != null) document.getElementById('rent-amount').value = data.rent;
+    updateRent();
+  }
   function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
   function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; } }
 
@@ -825,7 +896,7 @@
     const history = loadHistory();
     history.unshift(entry);
     saveHistory(history);
-    alert('Saved to history!');
+    showToast('✓ Saved to history');
   }
 
   // Reset individual sections
@@ -1008,6 +1079,7 @@
   }
 
   // Init
+  loadRent();
   loadSteps();
   loadFund();
   loadExpenses();
