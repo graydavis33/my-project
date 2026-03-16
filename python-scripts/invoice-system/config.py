@@ -62,8 +62,12 @@ CATEGORIES = [
     "Income",
 ]
 
+# Slack (optional — for payment notifications)
+SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN", "")
+SLACK_PAYMENTS_CHANNEL_ID = os.getenv("SLACK_PAYMENTS_CHANNEL_ID", "")
+
 # Transaction sources
-SOURCES = ["Venmo", "Bank", "Gmail", "Cash"]
+SOURCES = ["Venmo", "Bank", "Gmail", "Cash", "Stripe", "Zelle", "QuickBooks", "PayPal", "Direct Deposit"]
 
 # Column headers for each tab
 TRANSACTION_HEADERS = ["Date", "Description", "Source", "Category", "Amount", "Type", "Notes"]
