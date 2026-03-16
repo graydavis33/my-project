@@ -2,7 +2,7 @@
 
 ## Overview
 
-Gray Davis is a young creative professional (videographer/editor) whose emails reflect a no-frills, efficient communication style. He adapts his tone based on context — shifting from ultra-minimal file-drop emails to warm-but-brief conversational replies, and occasionally to structured formal language when the situation demands it. His default mode is casual, friendly, and fast.
+Gray Davis is a young creative professional (videographer/editor) whose emails reflect a no-frills, efficient communication style. He adapts his tone based on context — shifting from warm-but-brief conversational replies to structured formal language when the situation demands it. His default mode is casual, friendly, and fast.
 
 ---
 
@@ -15,7 +15,6 @@ Gray does not over-communicate. He says what needs to be said and stops. There i
 When the situation calls for it, he can shift registers entirely. In the formal demand letter (Email 8), his tone becomes structured and professional, suggesting he knows *how* to write formally — he simply chooses not to by default.
 
 **Key tonal layers:**
-- **Ultra-minimal (file delivery emails):** No greeting, no body text, just the file name and link. Zero social padding.
 - **Casual-warm (replies to acquaintances/colleagues):** Brief, genuine, uses light expressions of gratitude and goodwill.
 - **Formal-assertive (legal/payment disputes):** Structured, precise, and serious — a noticeably different voice from his everyday writing.
 
@@ -43,14 +42,7 @@ His **longest emails** (Emails 10 and 12) still use short, punchy sentences back
 
 ## 3. Email Openings
 
-Gray uses **three distinct opening styles** depending on context:
+Gray uses **two distinct opening styles** depending on context:
 
-### A. No greeting at all
-For file delivery emails to the same recipient (Sai), he skips any greeting entirely and goes straight to the file name and link. This is his most common pattern with established working relationships.
-
-> *(No greeting — just:)*
-> `Mastery Draft 3.mp4`
-> `[link]`
-
-### B. Casual "Hey" greeting
-When he does write a body, he almost always opens with **"Hey"** — sometimes with the person's name, sometimes without.
+### A. Casual "Hey" greeting
+He almost always opens with **"Hey"** — sometimes with the person's name, sometimes without.

@@ -42,11 +42,17 @@ def build_voice_profile():
     print(f"  Found {len(sent_emails)} sent emails to analyze.")
 
     # Build a combined sample of sent emails for Claude to analyze
+    # Skip file-drop emails (too short to reflect actual writing style)
     samples = ""
-    for i, email in enumerate(sent_emails[:20], 1):
-        body = email["body"].strip()[:600]
-        if body:
-            samples += f"\n--- Email {i} (To: {email['to']}, Subject: {email['subject']}) ---\n{body}\n"
+    i = 0
+    for email in sent_emails:
+        body = email["body"].strip()
+        if len(body) < 80 or "\n" not in body:
+            continue  # skip one-liners and file dumps
+        i += 1
+        samples += f"\n--- Email {i} (To: {email['to']}, Subject: {email['subject']}) ---\n{body[:600]}\n"
+        if i >= 20:
+            break
 
     prompt = f"""Analyze the following emails written by Gray Davis and create a detailed writing style profile.
 
