@@ -1,14 +1,15 @@
 """
 main.py
-Daily Morning Briefing — sends one Slack DM at 8am with:
+Daily Morning Briefing — sends one Slack message at 8am to #morning-briefing with:
+  - NYC weather
+  - Today's Google Calendar events
   - Emails needing reply (from Email Agent's pending_drafts.json)
   - Outstanding invoices (from Invoice System Google Sheet)
-  - Top video this week (from Analytics Google Sheet)
-  - Top 3 priorities for the day (configured in config.py)
+  - Inspirational quote of the day
 
 Run:
-  python main.py          # send briefing immediately (for testing)
-  python main.py --schedule  # run scheduler (sends at 8am daily)
+  python3 main.py          # send briefing immediately (for testing)
+  python3 main.py --schedule  # run scheduler (sends at 8am daily)
 """
 
 import sys
@@ -18,9 +19,12 @@ import os
 import schedule
 from slack_sdk import WebClient
 
-from config import SLACK_BOT_TOKEN, SLACK_USER_ID, BRIEFING_CHANNEL_ID
+from config import SLACK_BOT_TOKEN, BRIEFING_CHANNEL_ID
+from calendar_summary import get_todays_events
 from gmail_summary import get_pending_emails
-from sheets_summary import get_outstanding_invoices, get_top_video_this_week
+from sheets_summary import get_outstanding_invoices
+from weather_summary import get_weather
+from quote_summary import get_daily_quote
 from briefing import build_briefing_blocks
 
 # ─── Logging ────────────────────────────────────────────────────────────────
@@ -43,16 +47,22 @@ def send_briefing():
     """Collect all data and send the morning briefing to Slack."""
     log.info("Assembling morning briefing...")
 
+    events = get_todays_events()
+    log.info(f"  Calendar events today: {len(events)}")
+
     pending_emails = get_pending_emails()
     log.info(f"  Pending emails: {len(pending_emails)}")
 
     outstanding_invoices = get_outstanding_invoices()
     log.info(f"  Outstanding invoices: {len(outstanding_invoices)}")
 
-    top_video = get_top_video_this_week()
-    log.info(f"  Top video: {top_video['title'] if top_video else 'N/A'}")
+    weather = get_weather()
+    log.info(f"  Weather: {weather['temp']}°F {weather['description'] if weather else 'N/A'}")
 
-    blocks = build_briefing_blocks(pending_emails, outstanding_invoices, top_video)
+    quote = get_daily_quote()
+    log.info(f"  Quote: {quote['author'] if quote else 'N/A'}")
+
+    blocks = build_briefing_blocks(events, pending_emails, outstanding_invoices, weather, quote)
 
     slack.chat_postMessage(
         channel=BRIEFING_CHANNEL_ID,
@@ -75,7 +85,6 @@ if __name__ == "__main__":
                 log.exception("Scheduler error")
             time.sleep(30)
     else:
-        # Send immediately (manual run or test)
         try:
             send_briefing()
         except Exception:

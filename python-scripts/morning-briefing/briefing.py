@@ -4,15 +4,10 @@ Assembles all data sections into a single Slack message blocks payload.
 """
 
 from datetime import datetime
-from config import DAILY_PRIORITIES
 
 
-def build_briefing_blocks(pending_emails, outstanding_invoices, top_video):
-    """
-    Build Slack blocks for the morning briefing message.
-    Returns a list of Slack block objects.
-    """
-    today = datetime.now().strftime("%A, %B %-d")  # e.g. "Monday, March 5"
+def build_briefing_blocks(events, pending_emails, outstanding_invoices, weather, quote):
+    today = datetime.now().strftime("%A, %B %-d")
     blocks = []
 
     # ── Header ──────────────────────────────────────────────────────────────
@@ -22,7 +17,27 @@ def build_briefing_blocks(pending_emails, outstanding_invoices, top_video):
     })
     blocks.append({"type": "divider"})
 
-    # ── Emails Section ───────────────────────────────────────────────────────
+    # ── Weather ──────────────────────────────────────────────────────────────
+    if weather:
+        precip_note = f" — {weather['precip']}% chance of rain" if weather["precip"] >= 30 else ""
+        weather_text = f"*🌤️ NYC Weather*\n{weather['description']} — {weather['temp']}°F{precip_note}"
+    else:
+        weather_text = "*🌤️ NYC Weather*\n_Unable to fetch weather._"
+
+    blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": weather_text}})
+    blocks.append({"type": "divider"})
+
+    # ── Calendar ─────────────────────────────────────────────────────────────
+    if events:
+        event_lines = "\n".join(f"• {e['time']} — {e['title']}" for e in events)
+        calendar_text = f"*📅 Today's Schedule ({len(events)} event{'s' if len(events) != 1 else ''})*\n{event_lines}"
+    else:
+        calendar_text = "*📅 Today's Schedule*\n_Nothing on the calendar — wide open day._"
+
+    blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": calendar_text}})
+    blocks.append({"type": "divider"})
+
+    # ── Emails ───────────────────────────────────────────────────────────────
     if pending_emails:
         email_lines = "\n".join(
             f"• *{e['subject']}* — _{e['from'].split('<')[0].strip()}_"
@@ -37,7 +52,7 @@ def build_briefing_blocks(pending_emails, outstanding_invoices, top_video):
     blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": email_text}})
     blocks.append({"type": "divider"})
 
-    # ── Invoices Section ─────────────────────────────────────────────────────
+    # ── Invoices ─────────────────────────────────────────────────────────────
     if outstanding_invoices:
         inv_lines = "\n".join(
             f"• Invoice #{i['invoice_num']} — *{i['client']}* — ${i['total']} (due {i['due_date']}) — _{i['status']}_"
@@ -46,30 +61,18 @@ def build_briefing_blocks(pending_emails, outstanding_invoices, top_video):
         if len(outstanding_invoices) > 5:
             inv_lines += f"\n_+{len(outstanding_invoices) - 5} more_"
         inv_text = f"*💸 Outstanding Invoices ({len(outstanding_invoices)})*\n{inv_lines}"
-    elif outstanding_invoices is not None:
-        inv_text = "*💸 Outstanding Invoices*\n_All invoices paid. You're clear._"
     else:
-        inv_text = "*💸 Outstanding Invoices*\n_Invoice sheet not connected._"
+        inv_text = "*💸 Outstanding Invoices*\n_All invoices paid. You're clear._"
 
     blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": inv_text}})
     blocks.append({"type": "divider"})
 
-    # ── Top Video Section ────────────────────────────────────────────────────
-    if top_video:
-        video_text = (
-            f"*📈 Top Video This Week*\n"
-            f"• \"{top_video['title']}\" — {top_video['views']} views ({top_video['tab']})"
-        )
+    # ── Quote ────────────────────────────────────────────────────────────────
+    if quote:
+        quote_text = f"*💭 Quote of the Day*\n\"{quote['quote']}\"\n— _{quote['author']}_"
     else:
-        video_text = "*📈 Top Video This Week*\n_Analytics sheet not connected._"
+        quote_text = "*💭 Quote of the Day*\n_Stay focused. Make it count._"
 
-    blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": video_text}})
-    blocks.append({"type": "divider"})
-
-    # ── Priorities Section ───────────────────────────────────────────────────
-    priorities_text = "*✅ Today's Priorities*\n" + "\n".join(
-        f"{i + 1}. {p}" for i, p in enumerate(DAILY_PRIORITIES)
-    )
-    blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": priorities_text}})
+    blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": quote_text}})
 
     return blocks

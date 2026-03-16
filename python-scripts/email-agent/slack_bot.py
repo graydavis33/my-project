@@ -15,7 +15,7 @@ from slack_sdk.socket_mode import SocketModeClient
 from slack_sdk.socket_mode.response import SocketModeResponse
 from slack_sdk.socket_mode.request import SocketModeRequest
 
-from config import SLACK_BOT_TOKEN, SLACK_APP_TOKEN, SLACK_USER_ID
+from config import SLACK_BOT_TOKEN, SLACK_APP_TOKEN, SLACK_USER_ID, EMAIL_ALERTS_CHANNEL_ID
 
 web_client = WebClient(token=SLACK_BOT_TOKEN)
 
@@ -142,7 +142,7 @@ def send_draft_notification(email, draft, send_callback):
         },
     ]
 
-    web_client.chat_postMessage(channel=SLACK_USER_ID, blocks=blocks, text="New email draft ready")
+    web_client.chat_postMessage(channel=EMAIL_ALERTS_CHANNEL_ID, blocks=blocks, text="New email draft ready")
 
 
 def handle_action(client: SocketModeClient, req: SocketModeRequest):
