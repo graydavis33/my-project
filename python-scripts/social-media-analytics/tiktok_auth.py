@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 TOKEN_FILE = os.path.join(os.path.dirname(__file__), 'tiktok_token.json')
-REDIRECT_URI = 'http://localhost:8888/callback'
+REDIRECT_URI = 'https://graydavis33.github.io/my-project/tiktok-callback.html'
 
 
 def _make_code_verifier():
@@ -108,32 +108,13 @@ def _browser_auth():
         })
     )
 
-    captured = {}
-
-    class Handler(BaseHTTPRequestHandler):
-        def log_message(self, *args):
-            pass  # suppress server logs
-
-        def do_GET(self):
-            params = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
-            captured['code']  = params.get('code',  [''])[0]
-            captured['state'] = params.get('state', [''])[0]
-            self.send_response(200)
-            self.end_headers()
-            self.wfile.write(b'<h2>TikTok auth complete. You can close this tab.</h2>')
-
     print(f"\nOpening TikTok authorization in your browser...")
     print(f"If it doesn't open, go to:\n{auth_url}\n")
     webbrowser.open(auth_url)
 
-    server = HTTPServer(('localhost', 8888), Handler)
-    server.handle_request()  # blocks until one request arrives
+    print("\nAfter you approve, you'll be redirected to a page showing your auth code.")
+    code = input("Paste the code here and press Enter: ").strip()
 
-    if captured.get('state') != state:
-        print("ERROR: State mismatch — possible CSRF. Re-run tiktok_auth.py.")
-        return
-
-    code = captured.get('code', '')
     if not code:
         print("ERROR: No authorization code received.")
         return
