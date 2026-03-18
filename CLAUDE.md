@@ -24,6 +24,20 @@ Goals: AI operator, automate business/life, monetize tools, grow social media.
 - All `.env`, `token.json`, `client_secret*.json` are gitignored — never commit them
 - API keys live only in `.env` files, never hardcoded
 
+## Current Priority List (as of 2026-03-18)
+Scored 0–3 across: Unblocks others / Revenue+Time / Showcase / Sellable
+
+| # | Project | Score | Status | Next Action |
+|---|---------|-------|--------|-------------|
+| 1 | Content Pipeline | 9/12 | Built on Windows | Set up on Mac, test with real video |
+| 2 | Content Researcher | 9/12 | LIVE on Mac | V2: add Reddit layer, improvements |
+| 3 | Client CRM | 7/12 | Built on Windows | Run setup, configure Google Sheet |
+| 4 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
+| — | Social Media Analytics | 9/12 | BLOCKED (TikTok + Meta API) | Unblock APIs first |
+| 5 | Hook Optimizer | 6/12 | Built on Windows | Add .env on Mac |
+| 6 | Creator Intel | 5/12 | Built on Windows | Needs YouTube OAuth |
+| 7 | Morning Briefing | 4/12 | Built on Windows | Needs full .env setup |
+
 ## Project Index
 | Project | Path | Status |
 |---------|------|--------|
