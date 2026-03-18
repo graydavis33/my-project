@@ -69,10 +69,11 @@
       border-radius: 10px;
     }
     .tab-btn.active .cnt { background: #333; color: #aaa; }
-    .tab-btn[data-tab="active"].active  { color: #f59e0b; }
-    .tab-btn[data-tab="running"].active { color: #34d399; }
-    .tab-btn[data-tab="setup"].active   { color: #fb923c; }
-    .tab-btn[data-tab="blocked"].active { color: #f87171; }
+    .tab-btn[data-tab="active"].active   { color: #f59e0b; }
+    .tab-btn[data-tab="running"].active  { color: #34d399; }
+    .tab-btn[data-tab="setup"].active    { color: #fb923c; }
+    .tab-btn[data-tab="blocked"].active  { color: #f87171; }
+    .tab-btn[data-tab="finished"].active { color: #a78bfa; }
 
     /* ── Grid ── */
     .grid {
@@ -182,6 +183,45 @@
     .card.hidden { display: none; }
     .section-title.hidden { display: none; }
     .grid.hidden { display: none; }
+
+    /* ── Usage Stats ── */
+    .usage-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .usage-stat {
+      flex: 1;
+      min-width: 80px;
+      background: #1a1a1a;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .usage-stat .u-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #444;
+      margin-bottom: 5px;
+    }
+    .usage-stat .u-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+    .usage-stat .u-sub {
+      font-size: 10px;
+      color: #555;
+      margin-top: 3px;
+    }
+    .usage-stat.highlight { border-color: #10b981; }
+    .usage-stat.highlight .u-value { color: #34d399; }
+    .usage-stat.stale .u-value { color: #f87171; }
+    .usage-stat.pending .u-value { font-size: 13px; color: #444; }
   </style>
 </head>
 <body>
@@ -207,6 +247,9 @@
     </button>
     <button class="tab-btn" data-tab="blocked" onclick="switchTab('blocked')">
       Blocked <span class="cnt">2</span>
+    </button>
+    <button class="tab-btn" data-tab="finished" onclick="switchTab('finished')">
+      Finished &amp; Live <span class="cnt">4</span>
     </button>
   </div>
 
@@ -570,6 +613,163 @@
           <li class="req-item"><div class="chk"></div>Deploy to cloud (Railway, Render, or Fly.io)</li>
           <li class="req-item"><div class="chk"></div>Frontend dashboard (React or plain HTML/JS)</li>
           <li class="req-item"><div class="chk"></div>On-demand refresh button + mobile-responsive layout</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FINISHED & LIVE -->
+  <div class="section-title" data-section="finished">Finished &amp; Live — Usage Tracking</div>
+  <div class="grid" id="grid-finished">
+
+    <div class="card" data-category="finished" data-tabs="home finished" style="border-left:3px solid #10b981">
+      <div class="card-header">
+        <div class="card-title">AI Email Agent</div>
+        <div class="badge blive">LIVE</div>
+      </div>
+      <div class="card-meta">python-scripts/email-agent/ · Runs hourly 7am–8pm on Mac</div>
+      <div class="status s-running">RUNNING</div>
+      <div class="usage-row">
+        <div class="usage-stat pending">
+          <div class="u-label">Last Used</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">tracker pending</div>
+        </div>
+        <div class="usage-stat pending">
+          <div class="u-label">This Week</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">runs</div>
+        </div>
+        <div class="usage-stat pending">
+          <div class="u-label">All Time</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">total runs</div>
+        </div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="chk"></div>Classifies Gmail emails + drafts replies in your style</li>
+          <li class="req-item done"><div class="chk"></div>Slack DM with Send / Edit / Skip buttons · Runs every hour 7am–8pm</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Improvements Roadmap</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>Smart follow-up reminders (flag unanswered client emails)</li>
+          <li class="req-item"><div class="chk"></div>Attachment handling (read + summarize PDFs, contracts)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-category="finished" data-tabs="home finished" style="border-left:3px solid #10b981">
+      <div class="card-header">
+        <div class="card-title">Invoice &amp; Accounting System</div>
+        <div class="badge blive">LIVE</div>
+      </div>
+      <div class="card-meta">python-scripts/invoice-system/ · CLI tool on Mac</div>
+      <div class="status s-running">RUNNING</div>
+      <div class="usage-row">
+        <div class="usage-stat pending">
+          <div class="u-label">Last Used</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">tracker pending</div>
+        </div>
+        <div class="usage-stat pending">
+          <div class="u-label">This Week</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">runs</div>
+        </div>
+        <div class="usage-stat pending">
+          <div class="u-label">All Time</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">total runs</div>
+        </div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="chk"></div>Imports Venmo + bank CSVs · Scans Gmail for receipts</li>
+          <li class="req-item done"><div class="chk"></div>Generates PDF invoices + emails clients · Tracks in Google Sheets</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Improvements Roadmap</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>Payment status tracking (paid / outstanding / overdue)</li>
+          <li class="req-item"><div class="chk"></div>Monthly P&amp;L summary to Slack</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-category="finished" data-tabs="home finished" style="border-left:3px solid #10b981">
+      <div class="card-header">
+        <div class="card-title">Content Researcher</div>
+        <div class="badge blive">LIVE</div>
+      </div>
+      <div class="card-meta">python-scripts/content-researcher/ · CLI tool on Mac · ~$0.05/run</div>
+      <div class="status s-running">RUNNING — V2 in progress</div>
+      <div class="usage-row">
+        <div class="usage-stat pending">
+          <div class="u-label">Last Used</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">tracker pending</div>
+        </div>
+        <div class="usage-stat pending">
+          <div class="u-label">This Week</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">runs</div>
+        </div>
+        <div class="usage-stat pending">
+          <div class="u-label">All Time</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">total runs</div>
+        </div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="chk"></div>Top outlier YouTube Shorts → 9-section Claude report (hooks, script, keywords)</li>
+          <li class="req-item done"><div class="chk"></div>Styled HTML report auto-opens in browser · 7-day cache</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">V2 Roadmap</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>Reddit research layer <span class="tag t-next">NEXT</span></li>
+          <li class="req-item"><div class="chk"></div>Google Trends · TikTok outlier search</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-category="finished" data-tabs="home finished" style="border-left:3px solid #10b981">
+      <div class="card-header">
+        <div class="card-title">Social Media Analytics (YouTube)</div>
+        <div class="badge blive">LIVE</div>
+      </div>
+      <div class="card-meta">python-scripts/social-media-analytics/ · Auto-runs every Sunday 9am EST</div>
+      <div class="status s-running">RUNNING — GitHub Actions (no manual runs needed)</div>
+      <div class="usage-row">
+        <div class="usage-stat highlight">
+          <div class="u-label">Schedule</div>
+          <div class="u-value">Auto</div>
+          <div class="u-sub">every Sunday</div>
+        </div>
+        <div class="usage-stat pending">
+          <div class="u-label">Last Run</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">tracker pending</div>
+        </div>
+        <div class="usage-stat pending">
+          <div class="u-label">All Time</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">total runs</div>
+        </div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="chk"></div>Fetches YouTube Shorts + Longform — views, likes, comments, CTR</li>
+          <li class="req-item done"><div class="chk"></div>Writes to Google Sheets · AI insights via Claude Haiku (cached)</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Expansion Roadmap</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>TikTok + Instagram + Facebook — see Blocked tab</li>
         </ul>
       </div>
     </div>
