@@ -27,7 +27,7 @@ For each email, extract:
 - is_payment: true if this is genuinely money received by Gray, false otherwise
 - amount: dollar amount received as a number (no $ sign, digits and decimal only)
 - payer_name: the name of the person or company who sent the money
-- platform: one of: Venmo, Stripe, Zelle, QuickBooks, PayPal, Direct Deposit, Other
+- platform: one of: Venmo, Stripe, Zelle, QuickBooks, PayPal, Cash App, Direct Deposit, Other
 - date: the payment date in YYYY-MM-DD format
 - description: brief description e.g. "Venmo payment from John Smith" or "Stripe invoice paid - $500"
 
@@ -106,6 +106,7 @@ def fetch_payment_emails(service, days=30):
         "(from:venmo.com OR from:stripe.com OR from:paypal.com "
         "OR from:primesouthbank.com OR from:email.primesouthbank.com "
         "OR from:quickbooks.intuit.com OR from:intuit.com "
+        "OR from:cash.app OR from:square.com "
         "OR subject:zelle) "
         "(subject:\"you received\" OR subject:\"payment received\" "
         "OR subject:\"paid you\" OR subject:\"money received\" "

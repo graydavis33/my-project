@@ -9,6 +9,7 @@ Commands:
   scan-payments    Scan Gmail for income payment emails and import them
   scan-all         Run both scan-receipts and scan-payments in one shot (scheduled daily)
   create-invoice   Interactively create + send an invoice
+  add-expense      Manually log a business expense for tax tracking
 
 Usage examples:
   python3 main.py setup-sheet
@@ -20,6 +21,7 @@ Usage examples:
   python3 main.py scan-payments --days 90
   python3 main.py scan-all
   python3 main.py create-invoice
+  python3 main.py add-expense
 """
 
 import argparse
@@ -164,6 +166,56 @@ def cmd_create_invoice(args):
     create_invoice()
 
 
+def cmd_add_expense(args):
+    import datetime
+    from config import CATEGORIES, SOURCES
+    from sheets_client import append_transaction
+
+    print("\n  Add Business Expense")
+    print("  ─────────────────────")
+
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    date_input = input(f"  Date [{today}]: ").strip()
+    date = date_input if date_input else today
+
+    description = input("  What did you buy? ").strip()
+    if not description:
+        print("  Description is required.")
+        return
+
+    expense_categories = [c for c in CATEGORIES if c != "Income"]
+    print("\n  Category:")
+    for i, cat in enumerate(expense_categories, 1):
+        print(f"    {i}. {cat}")
+    cat_input = input(f"  Pick [1-{len(expense_categories)}]: ").strip()
+    try:
+        category = expense_categories[int(cat_input) - 1]
+    except (ValueError, IndexError):
+        category = "Other"
+
+    amount_input = input("  Amount ($): ").strip().replace("$", "").replace(",", "")
+    try:
+        amount = float(amount_input)
+    except ValueError:
+        print("  Invalid amount.")
+        return
+
+    print("\n  Payment method:")
+    for i, src in enumerate(SOURCES, 1):
+        print(f"    {i}. {src}")
+    src_input = input(f"  Pick [1-{len(SOURCES)}]: ").strip()
+    try:
+        source = SOURCES[int(src_input) - 1]
+    except (ValueError, IndexError):
+        source = "Other"
+
+    notes = input("  Notes (optional, e.g. 'for client shoot'): ").strip()
+
+    print(f"\n  Logging: {description} — ${amount:.2f} | {category} | {source}")
+    append_transaction(date, description, source, category, amount, "Expense", notes)
+    print("  Done. Added to your Business Finance Tracker sheet.")
+
+
 def main():
     parser = argparse.ArgumentParser(
         prog="python3 main.py",
@@ -194,6 +246,9 @@ def main():
     # create-invoice
     subparsers.add_parser("create-invoice", help="Create and send a new invoice")
 
+    # add-expense
+    subparsers.add_parser("add-expense", help="Manually log a business expense for tax tracking")
+
     args = parser.parse_args()
 
     commands = {
@@ -203,6 +258,7 @@ def main():
         "scan-payments": cmd_scan_payments,
         "scan-all": cmd_scan_all,
         "create-invoice": cmd_create_invoice,
+        "add-expense": cmd_add_expense,
     }
     commands[args.command](args)
 
