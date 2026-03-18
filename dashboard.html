@@ -18,24 +18,61 @@
     /* ── Header ── */
     .header {
       max-width: 960px;
-      margin: 0 auto 40px;
+      margin: 0 auto 28px;
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
       border-bottom: 1px solid #222;
       padding-bottom: 20px;
     }
-    .header h1 {
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-      color: #fff;
-    }
+    .header h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.3px; color: #fff; }
     .header h1 span { color: #666; font-weight: 400; }
-    .last-updated {
-      font-size: 12px;
-      color: #444;
+    .last-updated { font-size: 12px; color: #444; }
+
+    /* ── Tab Bar ── */
+    .tab-bar {
+      max-width: 960px;
+      margin: 0 auto 32px;
+      display: flex;
+      gap: 4px;
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 10px;
+      padding: 4px;
     }
+    .tab-btn {
+      flex: 1;
+      padding: 9px 12px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      color: #555;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .tab-btn:hover { color: #999; }
+    .tab-btn.active { background: #1e1e1e; color: #fff; }
+    .tab-btn .cnt {
+      font-size: 10px;
+      font-weight: 700;
+      background: #2a2a2a;
+      color: #666;
+      padding: 1px 5px;
+      border-radius: 10px;
+    }
+    .tab-btn.active .cnt { background: #333; color: #aaa; }
+    .tab-btn[data-tab="active"].active  { color: #f59e0b; }
+    .tab-btn[data-tab="running"].active { color: #34d399; }
+    .tab-btn[data-tab="setup"].active   { color: #fb923c; }
+    .tab-btn[data-tab="blocked"].active { color: #f87171; }
 
     /* ── Grid ── */
     .grid {
@@ -52,18 +89,16 @@
       border: 1px solid #222;
       border-radius: 12px;
       padding: 22px 24px 20px;
-      position: relative;
       transition: border-color 0.15s;
     }
     .card:hover { border-color: #333; }
-
-    .card.priority-1 { border-left: 3px solid #f59e0b; }
-    .card.priority-2 { border-left: 3px solid #3b82f6; }
-    .card.priority-3 { border-left: 3px solid #8b5cf6; }
-    .card.priority-4 { border-left: 3px solid #6b7280; }
-    .card.ongoing    { border-left: 3px solid #10b981; }
-    .card.setup      { border-left: 3px solid #f97316; }
-    .card.blocked    { border-left: 3px solid #ef4444; }
+    .card[data-priority="1"] { border-left: 3px solid #f59e0b; }
+    .card[data-priority="2"] { border-left: 3px solid #3b82f6; }
+    .card[data-priority="3"] { border-left: 3px solid #8b5cf6; }
+    .card[data-priority="4"] { border-left: 3px solid #6b7280; }
+    .card[data-category="running"] { border-left: 3px solid #10b981; }
+    .card[data-category="setup"]   { border-left: 3px solid #f97316; }
+    .card[data-category="blocked"] { border-left: 3px solid #ef4444; }
 
     .card-header {
       display: flex;
@@ -72,233 +107,138 @@
       gap: 12px;
       margin-bottom: 6px;
     }
+    .card-title { font-size: 15px; font-weight: 600; color: #fff; line-height: 1.3; }
 
-    .card-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: #fff;
-      line-height: 1.3;
+    .badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+      padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
     }
+    .bp1   { background: #451a03; color: #f59e0b; }
+    .bp2   { background: #172554; color: #60a5fa; }
+    .bp3   { background: #2e1065; color: #a78bfa; }
+    .bp4   { background: #1c1c1c; color: #6b7280; }
+    .blive { background: #052e16; color: #34d399; }
+    .bset  { background: #431407; color: #fb923c; }
+    .bblk  { background: #2d0a0a; color: #f87171; }
 
-    .priority-badge {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      padding: 3px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .priority-badge.p1      { background: #451a03; color: #f59e0b; }
-    .priority-badge.p2      { background: #172554; color: #60a5fa; }
-    .priority-badge.p3      { background: #2e1065; color: #a78bfa; }
-    .priority-badge.p4      { background: #1c1c1c; color: #6b7280; }
-    .priority-badge.ongoing { background: #052e16; color: #34d399; }
-    .priority-badge.setup   { background: #431407; color: #fb923c; }
-    .priority-badge.blk     { background: #2d0a0a; color: #f87171; }
+    .card-meta { font-size: 12px; color: #555; margin-bottom: 14px; }
 
-    .card-meta {
-      font-size: 12px;
-      color: #555;
-      margin-bottom: 14px;
-    }
-
-    /* ── Status Pill ── */
     .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      padding: 3px 9px;
-      border-radius: 20px;
-      margin-bottom: 16px;
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.3px;
+      padding: 3px 9px; border-radius: 20px; margin-bottom: 16px;
     }
-    .status::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-    .status.blocked-s    { background: #2d0a0a; color: #f87171; }
-    .status.blocked-s::before    { background: #ef4444; }
-    .status.in-progress  { background: #0c1a2e; color: #60a5fa; }
-    .status.in-progress::before  { background: #3b82f6; animation: pulse 1.5s infinite; }
-    .status.running      { background: #052e16; color: #34d399; }
-    .status.running::before      { background: #10b981; animation: pulse 1.5s infinite; }
-    .status.planned      { background: #1a1a1a; color: #9ca3af; }
-    .status.planned::before      { background: #6b7280; }
-    .status.needs-setup  { background: #1c0f00; color: #fb923c; }
-    .status.needs-setup::before  { background: #f97316; }
+    .status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .s-blocked { background: #2d0a0a; color: #f87171; }
+    .s-blocked::before { background: #ef4444; }
+    .s-running { background: #052e16; color: #34d399; }
+    .s-running::before { background: #10b981; animation: pulse 1.5s infinite; }
+    .s-planned { background: #1a1a1a; color: #9ca3af; }
+    .s-planned::before { background: #6b7280; }
+    .s-setup   { background: #1c0f00; color: #fb923c; }
+    .s-setup::before   { background: #f97316; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    /* ── Progress Bar ── */
     .progress-wrap { margin-bottom: 16px; }
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: #555;
-      margin-bottom: 5px;
-    }
-    .progress-bar {
-      height: 4px;
-      background: #1e1e1e;
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      border-radius: 2px;
-      transition: width 0.5s ease;
-    }
-    .fill-amber  { background: #f59e0b; }
-    .fill-blue   { background: #3b82f6; }
-    .fill-purple { background: #8b5cf6; }
-    .fill-green  { background: #10b981; }
-    .fill-gray   { background: #4b5563; }
-    .fill-orange { background: #f97316; }
-    .fill-red    { background: #ef4444; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: #555; margin-bottom: 5px; }
+    .progress-bar { height: 4px; background: #1e1e1e; border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; }
+    .fa { background: #f59e0b; }
+    .fb { background: #3b82f6; }
+    .fp { background: #8b5cf6; }
+    .fg { background: #10b981; }
+    .fgy{ background: #4b5563; }
+    .fo { background: #f97316; }
+    .fr { background: #ef4444; }
 
-    /* ── Requirements ── */
     .req-section { margin-top: 14px; }
-    .req-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #444;
-      margin-bottom: 8px;
-    }
-    .req-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .req-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 12.5px;
-      color: #bbb;
-      line-height: 1.4;
-    }
+    .req-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #444; margin-bottom: 8px; }
+    .req-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .req-item { display: flex; align-items: flex-start; gap: 8px; font-size: 12.5px; color: #bbb; line-height: 1.4; }
     .req-item.done { color: #4b5563; text-decoration: line-through; }
-    .req-item .check {
-      flex-shrink: 0;
-      width: 14px;
-      height: 14px;
-      border-radius: 3px;
-      border: 1.5px solid #333;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 1px;
-      font-size: 9px;
+    .chk {
+      flex-shrink: 0; width: 14px; height: 14px; border-radius: 3px;
+      border: 1.5px solid #333; display: flex; align-items: center;
+      justify-content: center; margin-top: 1px; font-size: 9px;
     }
-    .req-item.done .check { background: #14532d; border-color: #14532d; color: #4ade80; }
-    .req-item .check::after { content: ''; }
-    .req-item.done .check::after { content: '✓'; }
+    .req-item.done .chk { background: #14532d; border-color: #14532d; color: #4ade80; }
+    .chk::after { content: ''; }
+    .req-item.done .chk::after { content: '✓'; }
+    .tag { font-size: 10px; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; }
+    .t-blk  { background: #2d0a0a; color: #f87171; }
+    .t-you  { background: #1c0f00; color: #fb923c; }
+    .t-next { background: #0c2340; color: #60a5fa; }
 
-    .blocker-tag {
-      font-size: 10px;
-      background: #2d0a0a;
-      color: #f87171;
-      padding: 1px 5px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-    .setup-tag {
-      font-size: 10px;
-      background: #1c0f00;
-      color: #fb923c;
-      padding: 1px 5px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-    .new-tag {
-      font-size: 10px;
-      background: #0c2340;
-      color: #60a5fa;
-      padding: 1px 5px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-
-    /* ── Section Divider ── */
     .section-title {
-      max-width: 960px;
-      margin: 36px auto 16px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #444;
-      border-bottom: 1px solid #1a1a1a;
-      padding-bottom: 8px;
+      max-width: 960px; margin: 32px auto 14px;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px;
+      color: #444; border-bottom: 1px solid #1a1a1a; padding-bottom: 8px;
     }
 
-    /* ── Score Pills ── */
-    .score-grid {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-    .score-pill {
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 4px;
-      background: #1a1a1a;
-      color: #666;
-    }
+    .score-grid { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .score-pill { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: #1a1a1a; color: #666; }
     .score-pill span { color: #999; }
+
+    .card.hidden { display: none; }
+    .section-title.hidden { display: none; }
+    .grid.hidden { display: none; }
   </style>
 </head>
 <body>
 
   <div class="header">
     <h1>Gray Davis <span>/ Project Dashboard</span></h1>
-    <div class="last-updated">Last updated: 2026-03-18 · 10 projects total</div>
+    <div class="last-updated">Last updated: 2026-03-18 · 10 projects</div>
   </div>
 
-  <!-- ══ ACTIVE PRIORITIES ══ -->
-  <div class="section-title">Active Priority Projects</div>
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="home" onclick="switchTab('home')">
+      Home <span class="cnt">10</span>
+    </button>
+    <button class="tab-btn" data-tab="active" onclick="switchTab('active')">
+      Active Priorities <span class="cnt">4</span>
+    </button>
+    <button class="tab-btn" data-tab="running" onclick="switchTab('running')">
+      Running <span class="cnt">3</span>
+    </button>
+    <button class="tab-btn" data-tab="setup" onclick="switchTab('setup')">
+      Needs Setup <span class="cnt">5</span>
+    </button>
+    <button class="tab-btn" data-tab="blocked" onclick="switchTab('blocked')">
+      Blocked <span class="cnt">2</span>
+    </button>
+  </div>
+
+  <!-- ACTIVE PRIORITIES -->
+  <div class="section-title" data-section="active">Active Priority Projects</div>
   <div class="grid">
 
-    <!-- #1 Content Pipeline -->
-    <div class="card priority-1">
+    <div class="card" data-priority="1" data-category="active" data-tabs="home active setup">
       <div class="card-header">
         <div class="card-title">Content Repurposing Pipeline</div>
-        <div class="priority-badge p1">#1 PRIORITY</div>
+        <div class="badge bp1">#1 PRIORITY</div>
       </div>
       <div class="card-meta">python-scripts/content-pipeline/ · Score: 9/12</div>
-      <div class="status needs-setup">NEEDS SETUP — Add .env, test with real video</div>
-
+      <div class="status s-setup">NEEDS SETUP — Add .env, test with real video</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>90%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-amber" style="width:90%"></div></div>
+        <div class="progress-bar"><div class="progress-fill fa" style="width:90%"></div></div>
       </div>
-
       <div class="req-section">
         <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>Input: path to any video file (mp4, mov, etc.)</li>
-          <li class="req-item done"><div class="check"></div>Auto-transcribes via OpenAI Whisper (falls back to manual paste)</li>
-          <li class="req-item done"><div class="check"></div>Claude identifies 3–5 best short-form clip moments + timestamps</li>
-          <li class="req-item done"><div class="check"></div>Writes platform captions: TikTok, Instagram Reels, YouTube Shorts</li>
-          <li class="req-item done"><div class="check"></div>Optional ffmpeg auto-cut — skips gracefully if not installed</li>
-          <li class="req-item done"><div class="check"></div>Saves cut list + captions to output/{video}-results-{timestamp}.txt</li>
+          <li class="req-item done"><div class="chk"></div>Input: path to any video file (mp4, mov, etc.)</li>
+          <li class="req-item done"><div class="chk"></div>Auto-transcribes via OpenAI Whisper (falls back to manual paste)</li>
+          <li class="req-item done"><div class="chk"></div>Claude identifies 3–5 best short-form clip moments + timestamps</li>
+          <li class="req-item done"><div class="chk"></div>Platform captions: TikTok, Instagram Reels, YouTube Shorts</li>
+          <li class="req-item done"><div class="chk"></div>Optional ffmpeg auto-cut · Saves results to output/ folder</li>
         </ul>
         <div class="req-label" style="margin-top:12px">Setup Steps</div>
         <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add ANTHROPIC_API_KEY <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Optional: add OPENAI_API_KEY for auto-transcription <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Run: python main.py path/to/video.mp4</li>
+          <li class="req-item"><div class="chk"></div>Copy .env.example → .env, add ANTHROPIC_API_KEY <span class="tag t-you">YOU</span></li>
+          <li class="req-item"><div class="chk"></div>Optional: OPENAI_API_KEY for auto-transcription <span class="tag t-you">YOU</span></li>
+          <li class="req-item"><div class="chk"></div>Run: python main.py path/to/video.mp4</li>
         </ul>
         <div class="score-grid">
           <div class="score-pill">Unblocks: <span>0/3</span></div>
@@ -309,33 +249,30 @@
       </div>
     </div>
 
-    <!-- #2 Content Researcher V2 -->
-    <div class="card priority-2">
+    <div class="card" data-priority="2" data-category="active" data-tabs="home active running">
       <div class="card-header">
         <div class="card-title">Content Researcher V2</div>
-        <div class="priority-badge p2">#2 PRIORITY</div>
+        <div class="badge bp2">#2 PRIORITY</div>
       </div>
       <div class="card-meta">python-scripts/content-researcher/ · Score: 9/12 · LIVE on Mac</div>
-      <div class="status running">RUNNING — V2 Improvements In Progress</div>
-
+      <div class="status s-running">RUNNING — V2 Improvements In Progress</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>95%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:95%"></div></div>
+        <div class="progress-bar"><div class="progress-fill fb" style="width:95%"></div></div>
       </div>
-
       <div class="req-section">
         <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>Type a concept → finds top outlier YouTube Shorts (views ÷ subscriber ratio)</li>
-          <li class="req-item done"><div class="check"></div>Pulls first 90s transcripts from top 10 outliers for hook extraction</li>
-          <li class="req-item done"><div class="check"></div>One Sonnet call: 9-section report — hooks, keywords, script outline, full draft, pacing notes</li>
-          <li class="req-item done"><div class="check"></div>Styled HTML report auto-opens in browser + .md backup · ~$0.05/run, 7-day cache</li>
+          <li class="req-item done"><div class="chk"></div>Type a concept → finds top outlier YouTube Shorts (views ÷ subscriber ratio)</li>
+          <li class="req-item done"><div class="chk"></div>Pulls first 90s transcripts from top 10 outliers for hook extraction</li>
+          <li class="req-item done"><div class="chk"></div>One Sonnet call: 9-section report — hooks, keywords, script, pacing notes</li>
+          <li class="req-item done"><div class="chk"></div>Styled HTML report auto-opens in browser · ~$0.05/run, 7-day cache</li>
         </ul>
         <div class="req-label" style="margin-top:12px">V2 Roadmap</div>
         <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Reddit research layer (audience discussion context) <span class="new-tag">NEXT</span></li>
-          <li class="req-item"><div class="check"></div>Google Trends topic trajectory</li>
-          <li class="req-item"><div class="check"></div>TikTok outlier search (when dev setup done)</li>
+          <li class="req-item"><div class="chk"></div>Reddit research layer (audience discussion context) <span class="tag t-next">NEXT</span></li>
+          <li class="req-item"><div class="chk"></div>Google Trends topic trajectory</li>
+          <li class="req-item"><div class="chk"></div>TikTok outlier search (when dev setup done)</li>
         </ul>
         <div class="score-grid">
           <div class="score-pill">Unblocks: <span>1/3</span></div>
@@ -346,33 +283,30 @@
       </div>
     </div>
 
-    <!-- #3 Client CRM -->
-    <div class="card priority-3">
+    <div class="card" data-priority="3" data-category="active" data-tabs="home active setup">
       <div class="card-header">
         <div class="card-title">Client CRM + Pipeline Tracker</div>
-        <div class="priority-badge p3">#3 PRIORITY</div>
+        <div class="badge bp3">#3 PRIORITY</div>
       </div>
       <div class="card-meta">python-scripts/client-crm/ · Score: 7/12</div>
-      <div class="status needs-setup">NEEDS SETUP — Run python main.py setup first</div>
-
+      <div class="status s-setup">NEEDS SETUP — Run python main.py setup first</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>90%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-purple" style="width:90%"></div></div>
+        <div class="progress-bar"><div class="progress-fill fp" style="width:90%"></div></div>
       </div>
-
       <div class="req-section">
         <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>Tracks clients: Lead → Pitched → Contracted → In Production → Delivered → Paid</li>
-          <li class="req-item done"><div class="check"></div>CLI: add, list, update-stage, remind</li>
-          <li class="req-item done"><div class="check"></div>Google Sheets backend — Clients tab + Pipeline Summary with formulas</li>
-          <li class="req-item done"><div class="check"></div>Monday 9am Slack reminder for overdue follow-ups + unpaid invoices</li>
+          <li class="req-item done"><div class="chk"></div>Tracks clients: Lead → Pitched → Contracted → In Production → Delivered → Paid</li>
+          <li class="req-item done"><div class="chk"></div>CLI: add, list, update-stage, remind</li>
+          <li class="req-item done"><div class="chk"></div>Google Sheets backend — Clients tab + Pipeline Summary</li>
+          <li class="req-item done"><div class="chk"></div>Monday 9am Slack reminder for overdue follow-ups + unpaid invoices</li>
         </ul>
         <div class="req-label" style="margin-top:12px">Setup Steps</div>
         <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add SLACK + Google keys <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Run: python main.py setup (creates Google Sheet) <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Run: python main.py add (add your first client)</li>
+          <li class="req-item"><div class="chk"></div>Copy .env.example → .env, add SLACK + Google keys <span class="tag t-you">YOU</span></li>
+          <li class="req-item"><div class="chk"></div>Run: python main.py setup (creates Google Sheet) <span class="tag t-you">YOU</span></li>
+          <li class="req-item"><div class="chk"></div>Run: python main.py add (add your first client)</li>
         </ul>
         <div class="score-grid">
           <div class="score-pill">Unblocks: <span>1/3</span></div>
@@ -383,34 +317,30 @@
       </div>
     </div>
 
-    <!-- #4 Client Onboarding -->
-    <div class="card priority-4">
+    <div class="card" data-priority="4" data-category="active" data-tabs="home active setup">
       <div class="card-header">
         <div class="card-title">Client Onboarding Automation</div>
-        <div class="priority-badge p4">#4 PRIORITY</div>
+        <div class="badge bp4">#4 PRIORITY</div>
       </div>
       <div class="card-meta">python-scripts/client-onboarding/ · Score: 7/12</div>
-      <div class="status needs-setup">NEEDS SETUP — Review contract template + add .env</div>
-
+      <div class="status s-setup">NEEDS SETUP — Review contract template + add .env</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>90%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-gray" style="width:90%"></div></div>
+        <div class="progress-bar"><div class="progress-fill fgy" style="width:90%"></div></div>
       </div>
-
       <div class="req-section">
         <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>CLI intake: name, email, company, project type, scope, timeline, budget</li>
-          <li class="req-item done"><div class="check"></div>Claude generates a project brief from intake data</li>
-          <li class="req-item done"><div class="check"></div>Auto-generates contract PDF (ReportLab) and emails to client</li>
-          <li class="req-item done"><div class="check"></div>Logs to Google Sheets client tracker (auto-creates sheet on first run)</li>
-          <li class="req-item done"><div class="check"></div>Slack DM: "New client onboarded: [Name]"</li>
+          <li class="req-item done"><div class="chk"></div>CLI intake: name, email, company, project type, scope, timeline, budget</li>
+          <li class="req-item done"><div class="chk"></div>Claude generates a project brief from intake data</li>
+          <li class="req-item done"><div class="chk"></div>Auto-generates contract PDF (ReportLab) and emails to client</li>
+          <li class="req-item done"><div class="chk"></div>Logs to Google Sheets · Slack DM on new client</li>
         </ul>
         <div class="req-label" style="margin-top:12px">Setup Steps</div>
         <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Edit contract_template.py — update terms, rates, your name <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add SLACK + Gmail + Google keys <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Run: python main.py (test with a dummy client)</li>
+          <li class="req-item"><div class="chk"></div>Edit contract_template.py — update terms, rates, your name <span class="tag t-you">YOU</span></li>
+          <li class="req-item"><div class="chk"></div>Copy .env.example → .env, add SLACK + Gmail + Google keys <span class="tag t-you">YOU</span></li>
+          <li class="req-item"><div class="chk"></div>Run: python main.py (test with a dummy client)</li>
         </ul>
         <div class="score-grid">
           <div class="score-pill">Unblocks: <span>0/3</span></div>
@@ -423,257 +353,235 @@
 
   </div>
 
-  <!-- ══ BLOCKED ══ -->
-  <div class="section-title">Blocked — Waiting on External API Setup</div>
+  <!-- LIVE & RUNNING -->
+  <div class="section-title" data-section="running">Live &amp; Running</div>
   <div class="grid">
 
-    <!-- Social Media Analytics - Blocked -->
-    <div class="card blocked">
-      <div class="card-header">
-        <div class="card-title">Multi-Platform Social Media Analytics</div>
-        <div class="priority-badge blk">BLOCKED</div>
-      </div>
-      <div class="card-meta">python-scripts/social-media-analytics/ · Score: 9/12 — would be #1 if unblocked</div>
-      <div class="status blocked-s">BLOCKED — TikTok + Meta Developer API Setup Required</div>
-
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>55%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-red" style="width:55%"></div></div>
-      </div>
-
-      <div class="req-section">
-        <div class="req-label">Done</div>
-        <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>YouTube analytics live — GitHub Actions every Sunday 9am EST</li>
-          <li class="req-item done"><div class="check"></div>Code written: meta_fetcher.py, tiktok_fetcher.py, tiktok_auth.py</li>
-          <li class="req-item done"><div class="check"></div>sheets_writer.py updated (TikTok, Instagram, Facebook tabs)</li>
-          <li class="req-item done"><div class="check"></div>main.py silently skips unconfigured platforms</li>
-        </ul>
-        <div class="req-label" style="margin-top:12px">Blockers</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Create Meta Developer App (developers.facebook.com) <span class="blocker-tag">BLOCKER</span></li>
-          <li class="req-item"><div class="check"></div>Get META_ACCESS_TOKEN, INSTAGRAM_BUSINESS_ACCOUNT_ID, FACEBOOK_PAGE_ID</li>
-          <li class="req-item"><div class="check"></div>Create TikTok Developer App (developers.tiktok.com) <span class="blocker-tag">BLOCKER</span></li>
-          <li class="req-item"><div class="check"></div>Add TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET to .env, run tiktok_auth.py</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Web App Dashboard - Planned -->
-    <div class="card blocked">
-      <div class="card-header">
-        <div class="card-title">Web App / Mobile Dashboard</div>
-        <div class="priority-badge blk">PLANNED</div>
-      </div>
-      <div class="card-meta">Phase 3 of Social Media Analytics · web-apps/ (planned)</div>
-      <div class="status planned">PLANNED — Depends on Multi-Platform Analytics</div>
-
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>0%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-gray" style="width:0%"></div></div>
-      </div>
-
-      <div class="req-section">
-        <div class="req-label">Requirements</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Multi-Platform Analytics fully working <span class="blocker-tag">DEP</span></li>
-          <li class="req-item"><div class="check"></div>FastAPI backend (serve analytics data as JSON API)</li>
-          <li class="req-item"><div class="check"></div>Deploy to cloud (Railway, Render, or Fly.io)</li>
-          <li class="req-item"><div class="check"></div>Frontend dashboard (React or plain HTML/JS)</li>
-          <li class="req-item"><div class="check"></div>On-demand refresh button + mobile-responsive layout</li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ══ BUILT — NEEDS SETUP ══ -->
-  <div class="section-title">Built — Needs .env Setup to Activate</div>
-  <div class="grid">
-
-    <!-- Hook Optimizer -->
-    <div class="card setup">
-      <div class="card-header">
-        <div class="card-title">Hook + Title Optimizer</div>
-        <div class="priority-badge setup">BUILT · #5</div>
-      </div>
-      <div class="card-meta">python-scripts/hook-optimizer/ · Score: 6/12</div>
-      <div class="status needs-setup">NEEDS SETUP — Add .env on Mac</div>
-
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>95%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:95%"></div></div>
-      </div>
-
-      <div class="req-section">
-        <div class="req-label">What It Does</div>
-        <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>Input: video concept → 5 YouTube titles, 5 TikTok titles, 3 hooks, thumbnail concept, best pick</li>
-          <li class="req-item done"><div class="check"></div>Concept cache (MD5 hash, 7-day TTL) — repeat concepts are instant, no API call</li>
-          <li class="req-item done"><div class="check"></div>Auto-saves every result to results/{slug}-{timestamp}.txt</li>
-        </ul>
-        <div class="req-label" style="margin-top:12px">Setup</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Add ANTHROPIC_API_KEY to .env <span class="setup-tag">YOU</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Creator Intel -->
-    <div class="card setup">
-      <div class="card-header">
-        <div class="card-title">Niche Creator Intelligence</div>
-        <div class="priority-badge setup">BUILT · #6</div>
-      </div>
-      <div class="card-meta">python-scripts/creator-intel/ · Score: 5/12</div>
-      <div class="status needs-setup">NEEDS SETUP — Needs YouTube OAuth + .env</div>
-
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>90%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:90%"></div></div>
-      </div>
-
-      <div class="req-section">
-        <div class="req-label">What It Does</div>
-        <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>Monitors 12 pre-loaded creators: McKinnon, Haapoja, Kolder, MKBHD, D'Avella, and more</li>
-          <li class="req-item done"><div class="check"></div>Claude analyzes patterns: trending formats, hook styles, posting days, topic ideas</li>
-          <li class="req-item done"><div class="check"></div>Monday 9:30am Slack report + one immediate action item · 6-day cache</li>
-        </ul>
-        <div class="req-label" style="margin-top:12px">Setup</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add ANTHROPIC_API_KEY + SLACK keys <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Reuses social-media-analytics/client_secret.json (no new credentials)</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Morning Briefing -->
-    <div class="card setup">
-      <div class="card-header">
-        <div class="card-title">Daily Morning Briefing</div>
-        <div class="priority-badge setup">BUILT · #7</div>
-      </div>
-      <div class="card-meta">python-scripts/morning-briefing/ · Score: 4/12</div>
-      <div class="status needs-setup">NEEDS SETUP — Full .env required</div>
-
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>90%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:90%"></div></div>
-      </div>
-
-      <div class="req-section">
-        <div class="req-label">What It Does</div>
-        <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>8am Slack DM: emails needing reply, outstanding invoices, top video, top 3 priorities</li>
-          <li class="req-item done"><div class="check"></div>Reads pending_drafts.json from Email Agent (no extra API call)</li>
-          <li class="req-item done"><div class="check"></div>Reads Invoice + Analytics Google Sheets</li>
-          <li class="req-item done"><div class="check"></div>DAILY_PRIORITIES list in config.py — edit to update your daily focus</li>
-        </ul>
-        <div class="req-label" style="margin-top:12px">Setup</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Copy .env.example → .env, add SLACK + Sheet IDs + EMAIL_AGENT_DIR <span class="setup-tag">YOU</span></li>
-          <li class="req-item"><div class="check"></div>Run: python main.py (test), then python main.py --schedule (8am daily)</li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- ══ LIVE & RUNNING ══ -->
-  <div class="section-title">Ongoing — Live &amp; Running</div>
-  <div class="grid">
-
-    <div class="card ongoing">
+    <div class="card" data-category="running" data-tabs="home running">
       <div class="card-header">
         <div class="card-title">AI Email Agent</div>
-        <div class="priority-badge ongoing">LIVE</div>
+        <div class="badge blive">LIVE</div>
       </div>
-      <div class="card-meta">python-scripts/email-agent/ · Runs hourly 7am–8pm</div>
-      <div class="status running">RUNNING</div>
-
+      <div class="card-meta">python-scripts/email-agent/ · Runs hourly 7am–8pm on Mac</div>
+      <div class="status s-running">RUNNING</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>95%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-green" style="width:95%"></div></div>
+        <div class="progress-bar"><div class="progress-fill fg" style="width:95%"></div></div>
       </div>
-
       <div class="req-section">
         <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>Classifies Gmail emails (needs_reply / fyi_only / ignore)</li>
-          <li class="req-item done"><div class="check"></div>Drafts replies in your writing style (voice profile auto-refreshes every 30 days)</li>
-          <li class="req-item done"><div class="check"></div>Sends to Slack DM with Send / Edit / Skip buttons</li>
-          <li class="req-item done"><div class="check"></div>Structured logging → agent.log · Draft stats tracked → draft_stats.json</li>
+          <li class="req-item done"><div class="chk"></div>Classifies Gmail emails (needs_reply / fyi_only / ignore)</li>
+          <li class="req-item done"><div class="chk"></div>Drafts replies in your writing style (voice profile auto-refreshes every 30 days)</li>
+          <li class="req-item done"><div class="chk"></div>Sends to Slack DM with Send / Edit / Skip buttons</li>
+          <li class="req-item done"><div class="chk"></div>Structured logging → agent.log · Draft stats → draft_stats.json</li>
         </ul>
         <div class="req-label" style="margin-top:12px">Possible Improvements</div>
         <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Smart follow-up reminders (flag unanswered client emails)</li>
-          <li class="req-item"><div class="check"></div>Attachment handling (read + summarize PDFs, contracts)</li>
+          <li class="req-item"><div class="chk"></div>Smart follow-up reminders (flag unanswered client emails)</li>
+          <li class="req-item"><div class="chk"></div>Attachment handling (read + summarize PDFs, contracts)</li>
         </ul>
       </div>
     </div>
 
-    <div class="card ongoing">
+    <div class="card" data-category="running" data-tabs="home running">
       <div class="card-header">
         <div class="card-title">Invoice &amp; Accounting System</div>
-        <div class="priority-badge ongoing">LIVE</div>
+        <div class="badge blive">LIVE</div>
       </div>
-      <div class="card-meta">python-scripts/invoice-system/ · CLI tool</div>
-      <div class="status running">RUNNING</div>
-
+      <div class="card-meta">python-scripts/invoice-system/ · CLI tool on Mac</div>
+      <div class="status s-running">RUNNING</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>95%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-green" style="width:95%"></div></div>
+        <div class="progress-bar"><div class="progress-fill fg" style="width:95%"></div></div>
       </div>
-
       <div class="req-section">
         <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>Imports Venmo + bank CSV transactions</li>
-          <li class="req-item done"><div class="check"></div>Scans Gmail for receipts — batch processing (~35% token savings)</li>
-          <li class="req-item done"><div class="check"></div>Generates PDF invoices + emails to clients</li>
-          <li class="req-item done"><div class="check"></div>Invoice templates (5 service types) · Tracks everything in Google Sheets</li>
+          <li class="req-item done"><div class="chk"></div>Imports Venmo + bank CSV transactions</li>
+          <li class="req-item done"><div class="chk"></div>Scans Gmail for receipts — batch processing (~35% token savings)</li>
+          <li class="req-item done"><div class="chk"></div>Generates PDF invoices + emails to clients</li>
+          <li class="req-item done"><div class="chk"></div>Invoice templates (5 service types) · Tracks everything in Google Sheets</li>
         </ul>
         <div class="req-label" style="margin-top:12px">Possible Improvements</div>
         <ul class="req-list">
-          <li class="req-item"><div class="check"></div>Payment status tracking (paid / outstanding / overdue)</li>
-          <li class="req-item"><div class="check"></div>Monthly P&amp;L summary to Slack</li>
+          <li class="req-item"><div class="chk"></div>Payment status tracking (paid / outstanding / overdue)</li>
+          <li class="req-item"><div class="chk"></div>Monthly P&amp;L summary to Slack</li>
         </ul>
       </div>
     </div>
 
-    <div class="card ongoing">
+    <div class="card" data-category="running" data-tabs="home running">
       <div class="card-header">
         <div class="card-title">Social Media Analytics (YouTube)</div>
-        <div class="priority-badge ongoing">LIVE</div>
+        <div class="badge blive">LIVE</div>
       </div>
       <div class="card-meta">python-scripts/social-media-analytics/ · GitHub Actions every Sunday 9am EST</div>
-      <div class="status running">RUNNING — YouTube only · TikTok/IG/FB blocked on API setup</div>
-
+      <div class="status s-running">RUNNING — YouTube only · TikTok/IG/FB see Blocked tab</div>
       <div class="progress-wrap">
         <div class="progress-label"><span>Completion</span><span>55%</span></div>
-        <div class="progress-bar"><div class="progress-fill fill-amber" style="width:55%"></div></div>
+        <div class="progress-bar"><div class="progress-fill fa" style="width:55%"></div></div>
       </div>
-
       <div class="req-section">
         <div class="req-label">What It Does (YouTube)</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="check"></div>Fetches all YouTube videos (Shorts + Longform) with views, likes, comments, CTR</li>
-          <li class="req-item done"><div class="check"></div>Writes to Google Sheets with growth tracking</li>
-          <li class="req-item done"><div class="check"></div>AI insights via Claude Haiku (cached daily) · Optional deep analysis → Notion</li>
-          <li class="req-item"><div class="check"></div>TikTok, Instagram, Facebook — see Blocked section above</li>
+          <li class="req-item done"><div class="chk"></div>Fetches all YouTube videos (Shorts + Longform) — views, likes, comments, CTR</li>
+          <li class="req-item done"><div class="chk"></div>Writes to Google Sheets with growth tracking</li>
+          <li class="req-item done"><div class="chk"></div>AI insights via Claude Haiku (cached daily) · Optional deep analysis → Notion</li>
+          <li class="req-item"><div class="chk"></div>TikTok, Instagram, Facebook — see Blocked tab</li>
         </ul>
       </div>
     </div>
 
   </div>
 
-  <!-- ══ LEGEND ══ -->
-  <div class="section-title">Priority Scoring Framework</div>
-  <div style="max-width:960px;margin:0 auto;background:#141414;border:1px solid #1e1e1e;border-radius:12px;padding:20px 24px;">
+  <!-- NEEDS SETUP -->
+  <div class="section-title" data-section="setup">Built — Needs .env Setup to Activate</div>
+  <div class="grid">
+
+    <div class="card" data-category="setup" data-tabs="home setup">
+      <div class="card-header">
+        <div class="card-title">Hook + Title Optimizer</div>
+        <div class="badge bset">BUILT · #5</div>
+      </div>
+      <div class="card-meta">python-scripts/hook-optimizer/ · Score: 6/12</div>
+      <div class="status s-setup">NEEDS SETUP — Add .env on Mac</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>95%</span></div>
+        <div class="progress-bar"><div class="progress-fill fo" style="width:95%"></div></div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="chk"></div>Input: video concept → 5 YouTube titles, 5 TikTok titles, 3 hooks, thumbnail concept, best pick</li>
+          <li class="req-item done"><div class="chk"></div>Concept cache (MD5, 7-day TTL) — repeat concepts instant, no API call</li>
+          <li class="req-item done"><div class="chk"></div>Auto-saves every result to results/{slug}-{timestamp}.txt</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Setup</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>Add ANTHROPIC_API_KEY to .env <span class="tag t-you">YOU</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-category="setup" data-tabs="home setup">
+      <div class="card-header">
+        <div class="card-title">Niche Creator Intelligence</div>
+        <div class="badge bset">BUILT · #6</div>
+      </div>
+      <div class="card-meta">python-scripts/creator-intel/ · Score: 5/12</div>
+      <div class="status s-setup">NEEDS SETUP — YouTube OAuth + .env</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill fo" style="width:90%"></div></div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="chk"></div>Monitors 12 pre-loaded creators: McKinnon, Haapoja, Kolder, MKBHD, D'Avella, and more</li>
+          <li class="req-item done"><div class="chk"></div>Claude analyzes: trending formats, hook styles, posting days, topic ideas</li>
+          <li class="req-item done"><div class="chk"></div>Monday 9:30am Slack report + one immediate action item · 6-day cache</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Setup</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>Copy .env.example → .env, add ANTHROPIC_API_KEY + SLACK keys <span class="tag t-you">YOU</span></li>
+          <li class="req-item"><div class="chk"></div>Reuses social-media-analytics/client_secret.json (no new credentials)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-category="setup" data-tabs="home setup">
+      <div class="card-header">
+        <div class="card-title">Daily Morning Briefing</div>
+        <div class="badge bset">BUILT · #7</div>
+      </div>
+      <div class="card-meta">python-scripts/morning-briefing/ · Score: 4/12</div>
+      <div class="status s-setup">NEEDS SETUP — Full .env required</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>90%</span></div>
+        <div class="progress-bar"><div class="progress-fill fo" style="width:90%"></div></div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">What It Does</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="chk"></div>8am Slack DM: emails needing reply, outstanding invoices, top video, top 3 priorities</li>
+          <li class="req-item done"><div class="chk"></div>Reads pending_drafts.json from Email Agent (no extra API call)</li>
+          <li class="req-item done"><div class="chk"></div>Reads Invoice + Analytics Google Sheets</li>
+          <li class="req-item done"><div class="chk"></div>DAILY_PRIORITIES list in config.py — edit to update your daily focus</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Setup</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>Copy .env.example → .env, add SLACK + Sheet IDs + EMAIL_AGENT_DIR <span class="tag t-you">YOU</span></li>
+          <li class="req-item"><div class="chk"></div>Run: python main.py (test), then python main.py --schedule (8am daily)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BLOCKED -->
+  <div class="section-title" data-section="blocked">Blocked — Waiting on External API Setup</div>
+  <div class="grid">
+
+    <div class="card" data-category="blocked" data-tabs="home blocked">
+      <div class="card-header">
+        <div class="card-title">Multi-Platform Analytics (TikTok + Instagram + FB)</div>
+        <div class="badge bblk">BLOCKED</div>
+      </div>
+      <div class="card-meta">python-scripts/social-media-analytics/ · Score: 9/12 — would be #1 if unblocked</div>
+      <div class="status s-blocked">BLOCKED — TikTok + Meta Developer API Setup Required</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>55%</span></div>
+        <div class="progress-bar"><div class="progress-fill fr" style="width:55%"></div></div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">Done</div>
+        <ul class="req-list">
+          <li class="req-item done"><div class="chk"></div>YouTube analytics live — GitHub Actions every Sunday 9am EST</li>
+          <li class="req-item done"><div class="chk"></div>Code written: meta_fetcher.py, tiktok_fetcher.py, tiktok_auth.py</li>
+          <li class="req-item done"><div class="chk"></div>main.py silently skips unconfigured platforms</li>
+        </ul>
+        <div class="req-label" style="margin-top:12px">Blockers</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>Create Meta Developer App (developers.facebook.com) <span class="tag t-blk">BLOCKER</span></li>
+          <li class="req-item"><div class="chk"></div>Get META_ACCESS_TOKEN, INSTAGRAM_BUSINESS_ACCOUNT_ID, FACEBOOK_PAGE_ID</li>
+          <li class="req-item"><div class="chk"></div>Create TikTok Developer App (developers.tiktok.com) <span class="tag t-blk">BLOCKER</span></li>
+          <li class="req-item"><div class="chk"></div>Add TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET to .env, run tiktok_auth.py</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-category="blocked" data-tabs="home blocked">
+      <div class="card-header">
+        <div class="card-title">Web App / Mobile Dashboard</div>
+        <div class="badge bblk">PLANNED</div>
+      </div>
+      <div class="card-meta">Phase 3 of Social Media Analytics · web-apps/ (planned)</div>
+      <div class="status s-planned">PLANNED — Depends on Multi-Platform Analytics</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Completion</span><span>0%</span></div>
+        <div class="progress-bar"><div class="progress-fill fgy" style="width:0%"></div></div>
+      </div>
+      <div class="req-section">
+        <div class="req-label">Requirements</div>
+        <ul class="req-list">
+          <li class="req-item"><div class="chk"></div>Multi-Platform Analytics fully working <span class="tag t-blk">DEP</span></li>
+          <li class="req-item"><div class="chk"></div>FastAPI backend (serve analytics data as JSON API)</li>
+          <li class="req-item"><div class="chk"></div>Deploy to cloud (Railway, Render, or Fly.io)</li>
+          <li class="req-item"><div class="chk"></div>Frontend dashboard (React or plain HTML/JS)</li>
+          <li class="req-item"><div class="chk"></div>On-demand refresh button + mobile-responsive layout</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SCORING LEGEND -->
+  <div class="section-title" data-section="legend">Priority Scoring Framework</div>
+  <div id="legend-box" style="max-width:960px;margin:0 auto;background:#141414;border:1px solid #1e1e1e;border-radius:12px;padding:20px 24px;">
     <p style="font-size:12.5px;color:#666;line-height:1.8;">
-      Each project is scored 0–3 across four dimensions. Highest total = next priority.<br>
-      <strong style="color:#888">Tiebreaker:</strong> simpler/faster project goes first — quick wins build momentum.
+      Each project scored 0–3 across four dimensions. Highest total = next priority.
+      <strong style="color:#888"> Tiebreaker:</strong> simpler/faster project goes first.
     </p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
       <div style="background:#1a1a1a;border-radius:8px;padding:12px 16px;flex:1;min-width:180px;">
@@ -694,6 +602,35 @@
       </div>
     </div>
   </div>
+
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
+      });
+
+      const allCards = document.querySelectorAll('.card');
+      const allSections = document.querySelectorAll('.section-title[data-section]');
+      const legendBox = document.getElementById('legend-box');
+
+      if (tab === 'home') {
+        allCards.forEach(c => c.classList.remove('hidden'));
+        allSections.forEach(s => s.classList.remove('hidden'));
+        legendBox.style.display = '';
+      } else {
+        // Hide section titles on filtered tabs
+        allSections.forEach(s => s.classList.add('hidden'));
+        legendBox.style.display = 'none';
+
+        allCards.forEach(card => {
+          const tabs = (card.dataset.tabs || '').split(' ');
+          card.classList.toggle('hidden', !tabs.includes(tab));
+        });
+      }
+    }
+
+    switchTab('home');
+  </script>
 
 </body>
 </html>
