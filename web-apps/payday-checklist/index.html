@@ -248,6 +248,20 @@
     .notes-input:focus { outline: none; border-color: #555; }
     .notes-input::placeholder { color: #444; }
 
+    /* Editable budget amounts */
+    .budget-edit-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid #2a2a2a;
+      color: #666;
+      font-size: 12px;
+      width: 50px;
+      padding: 0 2px;
+      text-align: right;
+      font-family: inherit;
+    }
+    .budget-edit-input:focus { outline: none; border-bottom-color: #4ade80; color: #aaa; }
+
     /* History tab */
     .history-empty {
       text-align: center;
@@ -463,36 +477,6 @@
       cursor: pointer;
     }
     .modal-save:hover { background: #22c55e; }
-
-    /* Reset tab */
-    .reset-section-card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 14px 16px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .reset-section-title { font-size: 15px; font-weight: 500; }
-    .reset-section-sub { font-size: 12px; color: #555; margin-top: 3px; }
-    .reset-section-btn {
-      flex-shrink: 0;
-      padding: 8px 18px;
-      background: #222;
-      border: 1px solid #333;
-      border-radius: 8px;
-      color: #aaa;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .reset-section-btn:hover { border-color: #f87171; color: #f87171; }
-    .reset-section-btn.danger { border-color: #3a1a1a; color: #f87171; }
-    .reset-section-btn.danger:hover { background: #2a0f0f; border-color: #f87171; }
   </style>
 </head>
 <body>
@@ -576,7 +560,7 @@
         <div class="step-sub">Monthly total across both paychecks — track spending below</div>
       </div>
       <div class="step-right">
-        <div class="step-amount neutral">$975</div>
+        <div class="step-amount neutral" id="step4-amount">$975</div>
         <div class="step-balance">Monthly budget</div>
       </div>
     </div>
@@ -616,16 +600,16 @@
     </div>
 
     <!-- Variable Expenses -->
-    <div class="section-label">Monthly Expense Budget — $975 <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
+    <div class="section-label">Monthly Expense Budget — <span id="expense-budget-total">$975</span> <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
     <div class="fund-card">
 
       <div class="expense-row">
         <div>
           <div class="expense-name">Groceries</div>
-          <div class="expense-budget">Budget: $300</div>
+          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-0" value="300" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" /></div>
         </div>
         <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="300" oninput="updateExpenses()" />
+          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
           <div class="expense-remaining ok" id="rem-0">$300</div>
         </div>
       </div>
@@ -633,10 +617,10 @@
       <div class="expense-row">
         <div>
           <div class="expense-name">Dining Out</div>
-          <div class="expense-budget">Budget: $200</div>
+          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-1" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" /></div>
         </div>
         <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="200" oninput="updateExpenses()" />
+          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
           <div class="expense-remaining ok" id="rem-1">$200</div>
         </div>
       </div>
@@ -644,10 +628,10 @@
       <div class="expense-row">
         <div>
           <div class="expense-name">Utilities / Internet</div>
-          <div class="expense-budget">Budget: $60</div>
+          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-2" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" /></div>
         </div>
         <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="60" oninput="updateExpenses()" />
+          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
           <div class="expense-remaining ok" id="rem-2">$60</div>
         </div>
       </div>
@@ -655,10 +639,10 @@
       <div class="expense-row">
         <div>
           <div class="expense-name">Streaming</div>
-          <div class="expense-budget">Budget: $40</div>
+          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-3" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(3)" /></div>
         </div>
         <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="40" oninput="updateExpenses()" />
+          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
           <div class="expense-remaining ok" id="rem-3">$40</div>
         </div>
       </div>
@@ -666,17 +650,17 @@
       <div class="expense-row">
         <div>
           <div class="expense-name">Misc / Buffer</div>
-          <div class="expense-budget">Budget: $375</div>
+          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-4" value="375" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" /></div>
         </div>
         <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" data-budget="375" oninput="updateExpenses()" />
+          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
           <div class="expense-remaining ok" id="rem-4">$375</div>
         </div>
       </div>
 
       <div class="expense-total-row">
         <span>Total remaining</span>
-        <span id="expense-total-remaining" class="ok">$1,100</span>
+        <span id="expense-total-remaining" class="ok">$975</span>
       </div>
 
     </div>
@@ -698,7 +682,6 @@
     <div class="section-label" style="margin-top:0">Past Paychecks <button class="section-reset-btn" onclick="resetHistory()">Clear All</button></div>
     <div id="history-list"></div>
   </div>
-
 
 </div>
 
@@ -737,8 +720,10 @@
 
   const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'MetroCard', 'Expense Budget', 'Emergency Fund'];
   const EXPENSE_NAMES = ['Groceries', 'Dining Out', 'Utilities', 'Streaming', 'Misc'];
-  const EXPENSE_BUDGETS = [300, 200, 60, 40, 500];
-  const TOTAL_EXPENSE_BUDGET = 1100;
+  const DEFAULT_BUDGETS = [300, 200, 60, 40, 375];
+  let EXPENSE_BUDGETS = [...DEFAULT_BUDGETS];
+
+  function getTotalBudget() { return EXPENSE_BUDGETS.reduce((a, b) => a + b, 0); }
 
   function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
   function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
@@ -772,6 +757,7 @@
     if (data.rent != null) document.getElementById('rent-amount').value = data.rent;
     updateRent();
   }
+
   function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
   function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; } }
 
@@ -780,7 +766,7 @@
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
-    const map = { checklist: 'check', history: 'hist', reset: 'reset' };
+    const map = { checklist: 'check', history: 'hist' };
     document.querySelectorAll('.tab-btn').forEach(b => {
       if (b.textContent.toLowerCase().startsWith(map[name])) b.classList.add('active');
     });
@@ -834,6 +820,27 @@
     }
   }
 
+  // Budget amounts — editable
+  function updateBudgetAmount(i) {
+    const val = parseFloat(document.getElementById('budget-' + i).value) || 0;
+    EXPENSE_BUDGETS[i] = val;
+    const data = load();
+    data.budgets = [...EXPENSE_BUDGETS];
+    save(data);
+    updateExpenses();
+  }
+
+  function loadBudgets() {
+    const data = load();
+    if (data.budgets && data.budgets.length === EXPENSE_BUDGETS.length) {
+      data.budgets.forEach((b, i) => {
+        EXPENSE_BUDGETS[i] = b;
+        const el = document.getElementById('budget-' + i);
+        if (el) el.value = b;
+      });
+    }
+  }
+
   // Expenses
   function updateExpenses() {
     const inputs = document.querySelectorAll('.expense-spent-input');
@@ -847,10 +854,13 @@
       el.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0);
       el.className = 'expense-remaining ' + (rem < 0 ? 'over' : 'ok');
     });
-    const totalRem = TOTAL_EXPENSE_BUDGET - totalSpent;
+    const total = getTotalBudget();
+    const totalRem = total - totalSpent;
     const totalEl = document.getElementById('expense-total-remaining');
     totalEl.textContent = (totalRem < 0 ? '-$' : '$') + Math.abs(totalRem).toFixed(0);
     totalEl.className = totalRem < 0 ? 'over' : 'ok';
+    document.getElementById('expense-budget-total').textContent = '$' + total.toLocaleString();
+    document.getElementById('step4-amount').textContent = '$' + total.toLocaleString();
     const data = load();
     data.expenses = Array.from(inputs).map(i => i.value);
     save(data);
@@ -858,7 +868,7 @@
 
   function loadExpenses() {
     const data = load();
-    if (!data.expenses) return;
+    if (!data.expenses) { updateExpenses(); return; }
     const inputs = document.querySelectorAll('.expense-spent-input');
     inputs.forEach((input, i) => { if (data.expenses[i] != null) input.value = data.expenses[i]; });
     updateExpenses();
@@ -899,7 +909,7 @@
     showToast('✓ Saved to history');
   }
 
-  // Reset individual sections
+  // Reset sections
   function resetSteps() {
     if (!confirm('Uncheck all steps?')) return;
     document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
@@ -939,6 +949,7 @@
   function resetHistory() {
     if (!confirm('Delete all history entries? This cannot be undone.')) return;
     localStorage.removeItem(HISTORY_KEY);
+    renderHistory();
   }
 
   function resetEverything() {
@@ -946,6 +957,11 @@
     if (!confirm('Are you sure? This cannot be undone.')) return;
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(HISTORY_KEY);
+    EXPENSE_BUDGETS = [...DEFAULT_BUDGETS];
+    DEFAULT_BUDGETS.forEach((b, i) => {
+      const el = document.getElementById('budget-' + i);
+      if (el) el.value = b;
+    });
     document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
     document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
     document.getElementById('notes').value = '';
@@ -964,17 +980,15 @@
       el.innerHTML = '<div class="history-empty">No history yet.<br>Complete a payday and tap "Save to History".</div>';
       return;
     }
-    el.innerHTML = history.map((entry, idx) => {
+    el.innerHTML = history.map((entry) => {
       const stepsHtml = STEP_NAMES.map((name, i) =>
         `<span class="history-step-pill ${entry.steps[i] ? 'done' : 'skip'}">${name}</span>`
       ).join('');
-
       const expensesHtml = entry.expenses.map(e =>
         `<div class="history-row"><span>${e.name}</span><span>$${e.spent} / $${e.budget}</span></div>`
       ).join('');
-
       const totalSpent = entry.expenses.reduce((s, e) => s + e.spent, 0);
-
+      const totalBudget = entry.expenses.reduce((s, e) => s + e.budget, 0);
       return `
         <div class="history-card">
           <div class="history-header">
@@ -990,7 +1004,7 @@
           <div class="history-steps">${stepsHtml}</div>
           ${expensesHtml}
           <div class="history-row" style="margin-top:6px;font-weight:600">
-            <span>Total spent</span><span>$${totalSpent} / $${TOTAL_EXPENSE_BUDGET}</span>
+            <span>Total spent</span><span>$${totalSpent} / $${totalBudget}</span>
           </div>
           <div class="history-row">
             <span>Emergency fund at time</span><span>$${entry.fundBalance.toLocaleString()}</span>
@@ -1013,21 +1027,16 @@
     editingId = id;
     const entry = loadHistory().find(e => e.id === id);
     if (!entry) return;
-
-    // Steps
     document.getElementById('modal-steps').innerHTML = STEP_NAMES.map((name, i) => `
       <div class="modal-step-row" onclick="toggleModalStep(${i})">
         <div class="modal-step-check ${entry.steps[i] ? 'on' : ''}" id="mstep-${i}">${entry.steps[i] ? '✓' : ''}</div>
         <div class="modal-step-label">${name}</div>
       </div>`).join('');
-
-    // Expenses
     document.getElementById('modal-expenses').innerHTML = entry.expenses.map((e, i) => `
       <div class="modal-expense-row">
         <div class="modal-expense-name">${e.name} <span style="color:#555;font-size:11px">/ $${e.budget}</span></div>
         <input class="modal-input" type="number" id="mexp-${i}" value="${e.spent}" placeholder="0" />
       </div>`).join('');
-
     document.getElementById('modal-fund').value = entry.fundBalance || '';
     document.getElementById('modal-notes').value = entry.notes || '';
     document.getElementById('edit-modal').classList.add('open');
@@ -1052,19 +1061,14 @@
     const history = loadHistory();
     const idx = history.findIndex(e => e.id === editingId);
     if (idx === -1) return;
-
-    // Steps
     const steps = {};
     STEP_NAMES.forEach((_, i) => {
       steps[i] = document.getElementById('mstep-' + i).classList.contains('on');
     });
-
-    // Expenses
     const expenses = history[idx].expenses.map((e, i) => ({
       ...e,
       spent: parseFloat(document.getElementById('mexp-' + i).value) || 0
     }));
-
     history[idx] = {
       ...history[idx],
       steps,
@@ -1072,13 +1076,13 @@
       fundBalance: parseFloat(document.getElementById('modal-fund').value) || 0,
       notes: document.getElementById('modal-notes').value
     };
-
     saveHistory(history);
     closeModal();
     renderHistory();
   }
 
   // Init
+  loadBudgets();
   loadRent();
   loadSteps();
   loadFund();
