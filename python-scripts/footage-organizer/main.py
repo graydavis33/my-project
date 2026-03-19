@@ -19,7 +19,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
 from usage_logger import log_run
 
-from config import CATEGORIES, VIDEO_EXTENSIONS
+from config import CATEGORIES, VIDEO_EXTENSIONS, FOOTAGE_INBOX
 from extractor import ffmpeg_available, get_duration, extract_frames
 from analyzer import classify_video
 from organizer import organize_file
@@ -32,7 +32,9 @@ def parse_args():
     )
     parser.add_argument(
         "input_folder",
-        help="Path to folder containing raw .mp4 / .mov files"
+        nargs="?",
+        default=None,
+        help="Path to footage folder (default: FOOTAGE_INBOX from .env)"
     )
     parser.add_argument(
         "--output", "-o",
@@ -152,8 +154,16 @@ def _print_summary(results, skipped, output_dir, move):
 if __name__ == "__main__":
     args = parse_args()
 
-    if not os.path.isdir(args.input_folder):
-        print(f"\n  Error: '{args.input_folder}' is not a valid folder.")
+    input_folder = args.input_folder or FOOTAGE_INBOX
+
+    if not input_folder:
+        print("\n  Error: No input folder specified.")
+        print("  Set FOOTAGE_INBOX in your .env file, or pass a folder path as an argument.")
+        print(r"  Example .env entry:  FOOTAGE_INBOX=C:\Users\Gray Davis\Desktop\Footage Inbox")
+        sys.exit(1)
+
+    if not os.path.isdir(input_folder):
+        print(f"\n  Error: '{input_folder}' is not a valid folder.")
         sys.exit(1)
 
     if not ffmpeg_available():
@@ -162,7 +172,7 @@ if __name__ == "__main__":
         print("  Then make sure ffmpeg is in your system PATH.\n")
         sys.exit(1)
 
-    output_dir = args.output or os.path.join(args.input_folder, "organized")
+    output_dir = args.output or os.path.join(input_folder, "organized")
     os.makedirs(output_dir, exist_ok=True)
 
-    run(args.input_folder, output_dir, move=args.move)
+    run(input_folder, output_dir, move=args.move)

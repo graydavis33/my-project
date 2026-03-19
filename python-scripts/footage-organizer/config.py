@@ -30,3 +30,7 @@ CATEGORIES = [
 FRAME_POSITIONS = [0.20, 0.40, 0.60, 0.80]  # % through video to sample
 
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".MP4", ".MOV"}
+
+# Optional: set this in .env once to never need to pass a path argument.
+# The tool will ONLY process this folder by default.
+FOOTAGE_INBOX = os.getenv("FOOTAGE_INBOX", "")
