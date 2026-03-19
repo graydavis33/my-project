@@ -152,28 +152,32 @@
     }
     .expense-row:last-child { border-bottom: none; }
     .expense-name { font-size: 13px; color: var(--color-white); }
-    .expense-budget { font-size: 11px; color: var(--color-gray-mid); margin-top: 1px; }
-    .expense-right { display: flex; align-items: center; gap: 8px; }
+    .expense-right { display: flex; align-items: center; gap: 10px; }
     .expense-spent-input {
       background: rgba(10,10,15,0.7); border: var(--border-input);
       border-radius: var(--radius-sm); color: var(--color-white);
       font-family: var(--font-base); font-size: 13px; width: 68px; padding: 5px 8px; text-align: right;
     }
     .expense-spent-input:focus { outline: none; border-color: var(--color-yellow); }
-    .expense-remaining { font-size: 12px; width: 50px; text-align: right; font-weight: 600; }
+    /* Budget input — replaces the green remaining number, lives on the right */
+    .budget-right-col { text-align: right; }
+    .budget-right-input {
+      background: transparent; border: none;
+      border-bottom: 1px solid transparent;
+      color: var(--color-green); font-size: 14px; font-weight: 700;
+      width: 62px; text-align: right; font-family: var(--font-base);
+      padding: 0; cursor: text;
+    }
+    .budget-right-input:focus { outline: none; border-bottom-color: var(--color-yellow); }
+    .budget-right-input.over { color: var(--color-red); }
+    .expense-rem-sub { font-size: 10px; color: var(--color-gray-mid); margin-top: 2px; }
+    .expense-rem-sub.over { color: var(--color-red); }
     .ok { color: var(--color-green); }
     .over { color: var(--color-red); }
     .expense-total-row {
       display: flex; justify-content: space-between;
       padding: 11px 0 2px; font-size: 12px; font-weight: 600; color: var(--color-gray-light);
     }
-    .budget-edit-input {
-      background: transparent; border: none;
-      border-bottom: 1px solid rgba(255,255,255,0.12);
-      color: var(--color-gray-mid); font-size: 11px; width: 48px;
-      padding: 0 2px; text-align: right; font-family: var(--font-base);
-    }
-    .budget-edit-input:focus { outline: none; border-bottom-color: var(--color-yellow); color: var(--color-gray-light); }
 
     /* ── Rent input ── */
     .rent-input-wrap { display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
@@ -484,57 +488,57 @@
         <div class="gm-card">
 
           <div class="expense-row">
-            <div>
-              <div class="expense-name">Groceries</div>
-              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-0" value="300" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" /></div>
-            </div>
+            <div class="expense-name">Groceries</div>
             <div class="expense-right">
-              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-              <div class="expense-remaining ok" id="rem-0">$300</div>
+              <input class="expense-spent-input" type="number" placeholder="spent" oninput="updateExpenses()" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-0" value="300" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" />
+                <div class="expense-rem-sub" id="rem-0"></div>
+              </div>
             </div>
           </div>
 
           <div class="expense-row">
-            <div>
-              <div class="expense-name">Dining Out</div>
-              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-1" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" /></div>
-            </div>
+            <div class="expense-name">Dining Out</div>
             <div class="expense-right">
-              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-              <div class="expense-remaining ok" id="rem-1">$200</div>
+              <input class="expense-spent-input" type="number" placeholder="spent" oninput="updateExpenses()" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-1" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" />
+                <div class="expense-rem-sub" id="rem-1"></div>
+              </div>
             </div>
           </div>
 
           <div class="expense-row">
-            <div>
-              <div class="expense-name">Utilities / Internet</div>
-              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-2" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" /></div>
-            </div>
+            <div class="expense-name">Utilities / Internet</div>
             <div class="expense-right">
-              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-              <div class="expense-remaining ok" id="rem-2">$60</div>
+              <input class="expense-spent-input" type="number" placeholder="spent" oninput="updateExpenses()" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-2" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" />
+                <div class="expense-rem-sub" id="rem-2"></div>
+              </div>
             </div>
           </div>
 
           <div class="expense-row">
-            <div>
-              <div class="expense-name">Streaming</div>
-              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-3" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(3)" /></div>
-            </div>
+            <div class="expense-name">Streaming</div>
             <div class="expense-right">
-              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-              <div class="expense-remaining ok" id="rem-3">$40</div>
+              <input class="expense-spent-input" type="number" placeholder="spent" oninput="updateExpenses()" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-3" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(3)" />
+                <div class="expense-rem-sub" id="rem-3"></div>
+              </div>
             </div>
           </div>
 
           <div class="expense-row">
-            <div>
-              <div class="expense-name">Misc / Buffer</div>
-              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-4" value="375" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" /></div>
-            </div>
+            <div class="expense-name">Misc / Buffer</div>
             <div class="expense-right">
-              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-              <div class="expense-remaining ok" id="rem-4">$375</div>
+              <input class="expense-spent-input" type="number" placeholder="spent" oninput="updateExpenses()" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-4" value="375" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" />
+                <div class="expense-rem-sub" id="rem-4"></div>
+              </div>
             </div>
           </div>
 
@@ -692,9 +696,19 @@
       const budget = EXPENSE_BUDGETS[i], spent = parseFloat(input.value) || 0;
       totalSpent += spent;
       const rem = budget - spent;
-      const el = document.getElementById('rem-' + i);
-      el.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0);
-      el.className = 'expense-remaining ' + (rem < 0 ? 'over' : 'ok');
+      // Update budget input color
+      const budgetEl = document.getElementById('budget-' + i);
+      if (budgetEl) budgetEl.className = 'budget-right-input' + (rem < 0 ? ' over' : '');
+      // Show remaining sub-text only when something is spent
+      const remEl = document.getElementById('rem-' + i);
+      if (remEl) {
+        if (spent > 0) {
+          remEl.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0) + ' left';
+          remEl.className = 'expense-rem-sub' + (rem < 0 ? ' over' : '');
+        } else {
+          remEl.textContent = '';
+        }
+      }
     });
     const total = getTotalBudget(), totalRem = total - totalSpent;
     const totalEl = document.getElementById('expense-total-remaining');
