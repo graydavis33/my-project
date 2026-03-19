@@ -3,170 +3,122 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Payday Checklist</title>
+  <title>Payday Checklist — Graydient Media</title>
+  <link rel="stylesheet" href="../styles/brand.css" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: #0f0f0f;
-      color: #e8e8e8;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      padding: 24px 16px 48px;
-    }
-
+    body { padding: 28px 16px 56px; }
     .container { max-width: 480px; margin: 0 auto; }
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 4px;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 28px;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 9px;
-      border: none;
-      border-radius: 9px;
-      background: transparent;
-      color: #666;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .tab-btn.active { background: #2a2a2a; color: #e8e8e8; }
+    /* Tab panes */
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
     /* Header */
     .header { text-align: center; margin-bottom: 32px; }
-    .header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-    .header .date { color: #888; font-size: 13px; margin-top: 4px; }
-    .header .paycheck {
-      display: inline-block;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 10px 24px;
-      margin-top: 14px;
-      font-size: 28px;
+    .header h1 {
+      font-size: 24px;
       font-weight: 800;
-      color: #4ade80;
-      letter-spacing: -1px;
+      letter-spacing: -0.5px;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .header .paycheck span { font-size: 14px; color: #888; display: block; font-weight: 400; margin-bottom: 2px; }
+    .header .date { color: var(--color-gray-light); font-size: 12px; margin-top: 5px; }
+    .paycheck-badge {
+      display: inline-block;
+      background: linear-gradient(160deg, rgba(26,45,90,0.5) 0%, rgba(10,10,15,0.7) 100%);
+      border: var(--border-yellow);
+      border-radius: var(--radius-lg);
+      padding: 12px 28px;
+      margin-top: 16px;
+      box-shadow: var(--glow-yellow);
+    }
+    .paycheck-badge span { font-size: 12px; color: var(--color-gray-light); display: block; margin-bottom: 3px; letter-spacing: 0.5px; }
+    .paycheck-amount { font-size: 30px; font-weight: 800; color: var(--color-yellow); letter-spacing: -1px; }
 
-    /* Section labels */
-    .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #555;
-      margin: 28px 0 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    /* Section label reset btn */
     .section-reset-btn {
       background: none;
       border: none;
-      color: #3a3a3a;
-      font-size: 11px;
-      font-weight: 600;
+      color: rgba(255,255,255,0.18);
+      font-size: 10px;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.8px;
       cursor: pointer;
       padding: 2px 6px;
       border-radius: 4px;
       transition: color 0.15s;
+      font-family: var(--font-base);
     }
-    .section-reset-btn:hover { color: #f87171; }
+    .section-reset-btn:hover { color: var(--color-red); }
 
-    /* Checklist steps */
+    /* Steps */
     .step {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
+      background: linear-gradient(160deg, rgba(26,45,90,0.3) 0%, rgba(10,10,15,0.5) 100%);
+      border: var(--border-card);
+      border-radius: var(--radius-md);
       padding: 14px 16px;
       margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 14px;
       cursor: pointer;
-      transition: border-color 0.15s, opacity 0.15s;
+      transition: border-color 0.15s, opacity 0.2s;
       user-select: none;
     }
-    .step:hover { border-color: #3a3a3a; }
-    .step.done { opacity: 0.45; }
-    .step.done .step-label { text-decoration: line-through; color: #666; }
+    .step:hover { border-color: rgba(232, 184, 75, 0.2); }
+    .step.done { opacity: 0.4; }
+    .step.done .step-label { text-decoration: line-through; color: var(--color-gray-mid); }
 
     .checkbox {
       width: 22px; height: 22px;
       border-radius: 6px;
-      border: 2px solid #444;
+      border: 2px solid rgba(255,255,255,0.15);
       flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, border-color 0.15s;
     }
-    .step.done .checkbox { background: #4ade80; border-color: #4ade80; }
-    .checkmark { display: none; color: #000; font-size: 13px; font-weight: 800; }
+    .step.done .checkbox {
+      background: var(--gradient-accent);
+      border-color: transparent;
+      box-shadow: var(--glow-yellow);
+    }
+    .checkmark { display: none; color: var(--color-black); font-size: 12px; font-weight: 900; }
     .step.done .checkmark { display: block; }
 
     .step-body { flex: 1; }
-    .step-label { font-size: 15px; font-weight: 500; }
-    .step-sub { font-size: 12px; color: #666; margin-top: 2px; }
+    .step-label { font-size: 14px; font-weight: 500; color: var(--color-white); }
+    .step-sub { font-size: 11px; color: var(--color-gray-mid); margin-top: 2px; }
 
     .step-right { text-align: right; flex-shrink: 0; }
-    .step-amount { font-size: 16px; font-weight: 700; color: #f87171; }
-    .step-amount.positive { color: #4ade80; }
-    .step-amount.neutral { color: #facc15; }
-    .step-balance { font-size: 11px; color: #555; margin-top: 2px; }
+    .step-amount { font-size: 15px; font-weight: 700; color: var(--color-red); }
+    .step-amount.positive { color: var(--color-green); }
+    .step-amount.neutral { color: var(--color-yellow); }
+    .step-balance { font-size: 10px; color: var(--color-gray-mid); margin-top: 2px; }
 
-    /* Cards */
-    .fund-card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 18px 16px;
-    }
+    /* Fund card internals */
     .fund-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-    .fund-title { font-size: 15px; font-weight: 600; }
-    .fund-goal { font-size: 12px; color: #888; margin-top: 2px; }
+    .fund-title { font-size: 14px; font-weight: 600; color: var(--color-white); }
+    .fund-goal { font-size: 11px; color: var(--color-gray-light); margin-top: 2px; }
     .fund-input-wrap { display: flex; align-items: center; gap: 6px; }
-    .fund-input-wrap span { color: #888; font-size: 14px; }
+    .fund-input-wrap span { color: var(--color-gray-light); font-size: 14px; }
     .fund-input {
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 8px;
-      color: #e8e8e8;
+      background: rgba(10,10,15,0.7);
+      border: var(--border-input);
+      border-radius: var(--radius-sm);
+      color: var(--color-white);
+      font-family: var(--font-base);
       font-size: 16px;
       font-weight: 700;
       width: 110px;
       padding: 6px 10px;
       text-align: right;
     }
-    .fund-input:focus { outline: none; border-color: #4ade80; }
-    .progress-bar-bg {
-      height: 10px;
-      background: #2a2a2a;
-      border-radius: 99px;
-      overflow: hidden;
-      margin-bottom: 8px;
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #22c55e, #4ade80);
-      border-radius: 99px;
-      transition: width 0.5s ease;
-    }
-    .fund-stats { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
-    .fund-stats .highlight { color: #4ade80; font-weight: 600; }
+    .fund-input:focus { outline: none; border-color: var(--color-yellow); }
+    .fund-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-gray-light); }
+    .fund-stats .highlight { color: var(--color-yellow); font-weight: 600; }
 
     /* Expense tracker */
     .expense-row {
@@ -174,318 +126,139 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 0;
-      border-bottom: 1px solid #1f1f1f;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .expense-row:last-child { border-bottom: none; }
-    .expense-name { font-size: 14px; color: #ccc; }
-    .expense-budget { font-size: 12px; color: #555; }
+    .expense-name { font-size: 13px; color: var(--color-white); }
+    .expense-budget { font-size: 11px; color: var(--color-gray-mid); margin-top: 1px; }
     .expense-right { display: flex; align-items: center; gap: 8px; }
     .expense-spent-input {
-      background: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      color: #e8e8e8;
-      font-size: 14px;
+      background: rgba(10,10,15,0.7);
+      border: var(--border-input);
+      border-radius: var(--radius-sm);
+      color: var(--color-white);
+      font-family: var(--font-base);
+      font-size: 13px;
       width: 72px;
       padding: 5px 8px;
       text-align: right;
     }
-    .expense-spent-input:focus { outline: none; border-color: #4ade80; }
+    .expense-spent-input:focus { outline: none; border-color: var(--color-yellow); }
     .expense-remaining { font-size: 12px; width: 52px; text-align: right; font-weight: 600; }
-    .ok { color: #4ade80; }
-    .over { color: #f87171; }
+    .ok { color: var(--color-green); }
+    .over { color: var(--color-red); }
     .expense-total-row {
       display: flex;
       justify-content: space-between;
       padding: 12px 0 2px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
-      color: #888;
+      color: var(--color-gray-light);
     }
 
-    /* Buttons */
-    .btn-row { display: flex; gap: 8px; margin-top: 28px; }
-    .submit-btn {
-      flex: 1;
-      padding: 14px;
-      background: #4ade80;
-      border: none;
-      border-radius: 12px;
-      color: #000;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .submit-btn:hover { background: #22c55e; }
-    .reset-btn {
-      flex: 1;
-      padding: 14px;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      color: #666;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .reset-btn:hover { border-color: #f87171; color: #f87171; }
-
-    /* Notes */
-    .notes-input {
-      width: 100%;
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      color: #ccc;
-      font-size: 14px;
-      padding: 14px 16px;
-      resize: none;
-      min-height: 80px;
-      font-family: inherit;
-    }
-    .notes-input:focus { outline: none; border-color: #555; }
-    .notes-input::placeholder { color: #444; }
-
-    /* Editable budget amounts */
+    /* Budget edit input */
     .budget-edit-input {
       background: transparent;
       border: none;
-      border-bottom: 1px solid #2a2a2a;
-      color: #666;
-      font-size: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      color: var(--color-gray-mid);
+      font-size: 11px;
       width: 50px;
       padding: 0 2px;
       text-align: right;
-      font-family: inherit;
+      font-family: var(--font-base);
     }
-    .budget-edit-input:focus { outline: none; border-bottom-color: #4ade80; color: #aaa; }
-
-    /* History tab */
-    .history-empty {
-      text-align: center;
-      padding: 48px 0;
-      color: #444;
-      font-size: 14px;
-    }
-    .history-card {
-      background: #1a1a1a;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-    }
-    .history-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
-    .history-date { font-size: 14px; font-weight: 600; }
-    .history-paycheck { font-size: 13px; color: #4ade80; font-weight: 700; }
-    .history-steps {
-      display: flex;
-      gap: 4px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-    .history-step-pill {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 99px;
-      font-weight: 500;
-    }
-    .history-step-pill.done { background: #14532d; color: #4ade80; }
-    .history-step-pill.skip { background: #1f1f1f; color: #555; }
-    .history-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: #888;
-      padding: 3px 0;
-    }
-    .history-row span:last-child { color: #ccc; font-weight: 500; }
-    .history-notes {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #666;
-      font-style: italic;
-      border-top: 1px solid #222;
-      padding-top: 10px;
-    }
-    .history-delete {
-      background: none;
-      border: none;
-      color: #3a3a3a;
-      font-size: 16px;
-      cursor: pointer;
-      padding: 0 4px;
-      transition: color 0.15s;
-    }
-    .history-delete:hover { color: #f87171; }
+    .budget-edit-input:focus { outline: none; border-bottom-color: var(--color-yellow); color: var(--color-gray-light); }
 
     /* Rent input */
     .rent-input-wrap { display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
-    .rent-input-wrap .step-amount { margin-bottom: 0; }
     .rent-input {
-      background: #111;
-      border: 1px solid #333;
+      background: rgba(10,10,15,0.7);
+      border: 1px solid rgba(248,113,113,0.25);
       border-radius: 6px;
-      color: #f87171;
-      font-size: 16px;
+      color: var(--color-red);
+      font-family: var(--font-base);
+      font-size: 15px;
       font-weight: 700;
       width: 80px;
       padding: 4px 6px;
       text-align: right;
     }
-    .rent-input:focus { outline: none; border-color: #f87171; }
+    .rent-input:focus { outline: none; border-color: var(--color-red); }
 
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #4ade80;
-      color: #000;
-      font-size: 14px;
-      font-weight: 700;
-      padding: 12px 28px;
-      border-radius: 12px;
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      z-index: 200;
-      white-space: nowrap;
-    }
-    .toast.show { opacity: 1; }
-    .history-edit {
-      background: none;
-      border: none;
-      color: #555;
+    /* Notes */
+    .notes-input {
+      width: 100%;
+      background: linear-gradient(160deg, rgba(26,45,90,0.3) 0%, rgba(10,10,15,0.5) 100%);
+      border: var(--border-card);
+      border-radius: var(--radius-md);
+      color: var(--color-gray-light);
+      font-family: var(--font-base);
       font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      padding: 0 6px;
-      transition: color 0.15s;
-    }
-    .history-edit:hover { color: #4ade80; }
-
-    /* Edit modal */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      z-index: 100;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: #141414;
-      border: 1px solid #2a2a2a;
-      border-radius: 20px 20px 0 0;
-      width: 100%;
-      max-width: 480px;
-      max-height: 88vh;
-      overflow-y: auto;
-      padding: 24px 16px 40px;
-    }
-    .modal-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .modal-close {
-      background: none;
-      border: none;
-      color: #666;
-      font-size: 20px;
-      cursor: pointer;
-      padding: 0 4px;
-    }
-    .modal-section { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: #555; margin: 18px 0 8px; }
-    .modal-step-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 0;
-      border-bottom: 1px solid #1f1f1f;
-      cursor: pointer;
-      user-select: none;
-    }
-    .modal-step-row:last-child { border-bottom: none; }
-    .modal-step-check {
-      width: 20px; height: 20px;
-      border-radius: 5px;
-      border: 2px solid #444;
-      flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 800; color: #000;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .modal-step-check.on { background: #4ade80; border-color: #4ade80; }
-    .modal-step-label { font-size: 14px; color: #ccc; }
-    .modal-expense-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #1f1f1f;
-    }
-    .modal-expense-row:last-child { border-bottom: none; }
-    .modal-expense-name { font-size: 14px; color: #ccc; }
-    .modal-input {
-      background: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 8px;
-      color: #e8e8e8;
-      font-size: 14px;
-      width: 80px;
-      padding: 6px 10px;
-      text-align: right;
-    }
-    .modal-input:focus { outline: none; border-color: #4ade80; }
-    .modal-notes {
-      width: 100%;
-      background: #111;
-      border: 1px solid #2a2a2a;
-      border-radius: 10px;
-      color: #ccc;
-      font-size: 14px;
-      padding: 10px 12px;
+      padding: 14px 16px;
       resize: none;
-      min-height: 70px;
-      font-family: inherit;
+      min-height: 80px;
     }
-    .modal-notes:focus { outline: none; border-color: #555; }
-    .modal-save {
-      width: 100%;
-      margin-top: 20px;
-      padding: 14px;
-      background: #4ade80;
-      border: none;
-      border-radius: 12px;
-      color: #000;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
+    .notes-input:focus { outline: none; border-color: rgba(232,184,75,0.3); }
+    .notes-input::placeholder { color: rgba(255,255,255,0.18); }
+
+    /* Buttons row */
+    .btn-row { display: flex; gap: 8px; margin-top: 28px; }
+    .btn-row .gm-btn-primary { flex: 1; }
+    .btn-row .gm-btn-ghost { flex: 1; }
+
+    /* History */
+    .history-empty { text-align: center; padding: 48px 0; color: var(--color-gray-mid); font-size: 13px; line-height: 1.6; }
+    .history-card {
+      background: linear-gradient(160deg, rgba(26,45,90,0.3) 0%, rgba(10,10,15,0.5) 100%);
+      border: var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 12px;
     }
-    .modal-save:hover { background: #22c55e; }
+    .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .history-date { font-size: 13px; font-weight: 600; color: var(--color-white); }
+    .history-paycheck { font-size: 12px; color: var(--color-yellow); font-weight: 600; margin-top: 2px; }
+    .history-steps { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+    .history-step-pill { font-size: 10px; padding: 3px 8px; border-radius: var(--radius-full); font-weight: 500; }
+    .history-step-pill.done { background: rgba(232,184,75,0.12); color: var(--color-yellow); border: 1px solid rgba(232,184,75,0.2); }
+    .history-step-pill.skip { background: rgba(255,255,255,0.04); color: var(--color-gray-mid); }
+    .history-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-gray-mid); padding: 3px 0; }
+    .history-row span:last-child { color: var(--color-gray-light); font-weight: 500; }
+    .history-notes { margin-top: 10px; font-size: 11px; color: var(--color-gray-mid); font-style: italic; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+    .history-delete { background: none; border: none; color: rgba(255,255,255,0.18); font-size: 15px; cursor: pointer; padding: 0 4px; transition: color 0.15s; }
+    .history-delete:hover { color: var(--color-red); }
+    .history-edit { background: none; border: none; color: var(--color-gray-mid); font-size: 12px; font-weight: 600; cursor: pointer; padding: 0 6px; transition: color 0.15s; font-family: var(--font-base); }
+    .history-edit:hover { color: var(--color-yellow); }
+
+    /* Modal internals */
+    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--color-white); }
+    .modal-close { background: none; border: none; color: var(--color-gray-mid); font-size: 20px; cursor: pointer; padding: 0 4px; }
+    .modal-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--color-gray-mid); margin: 18px 0 8px; }
+    .modal-step-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; user-select: none; }
+    .modal-step-row:last-child { border-bottom: none; }
+    .modal-step-check { width: 20px; height: 20px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--color-black); transition: background 0.15s, border-color 0.15s; }
+    .modal-step-check.on { background: var(--gradient-accent); border-color: transparent; }
+    .modal-step-label { font-size: 13px; color: var(--color-gray-light); }
+    .modal-expense-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .modal-expense-row:last-child { border-bottom: none; }
+    .modal-expense-name { font-size: 13px; color: var(--color-gray-light); }
+    .modal-input { background: rgba(10,10,15,0.8); border: var(--border-input); border-radius: var(--radius-sm); color: var(--color-white); font-family: var(--font-base); font-size: 13px; width: 80px; padding: 6px 10px; text-align: right; }
+    .modal-input:focus { outline: none; border-color: var(--color-yellow); }
+    .modal-notes { width: 100%; background: rgba(10,10,15,0.8); border: var(--border-input); border-radius: var(--radius-sm); color: var(--color-gray-light); font-family: var(--font-base); font-size: 13px; padding: 10px 12px; resize: none; min-height: 70px; }
+    .modal-notes:focus { outline: none; border-color: rgba(255,255,255,0.2); }
   </style>
 </head>
 <body>
 <div class="container">
 
+  <!-- Wordmark -->
+  <div class="gm-wordmark">Graydient Media</div>
+
   <!-- Tab nav -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('checklist')">Checklist</button>
-    <button class="tab-btn" onclick="switchTab('history')">History</button>
+  <div class="gm-tabs">
+    <button class="gm-tab-btn active" onclick="switchTab('checklist')">Checklist</button>
+    <button class="gm-tab-btn" onclick="switchTab('history')">History</button>
   </div>
 
   <!-- ── CHECKLIST TAB ── -->
@@ -494,13 +267,13 @@
     <div class="header">
       <h1>Payday Checklist</h1>
       <div class="date" id="today-date"></div>
-      <div class="paycheck">
+      <div class="paycheck-badge">
         <span>Bi-weekly paycheck</span>
-        $3,250
+        <div class="paycheck-amount">$3,250</div>
       </div>
     </div>
 
-    <div class="section-label">Steps — do these in order <button class="section-reset-btn" onclick="resetSteps()">Reset</button></div>
+    <div class="gm-label">Steps — do these in order <button class="section-reset-btn" onclick="resetSteps()">Reset</button></div>
 
     <div class="step" id="step-0" onclick="toggleStep(0)">
       <div class="checkbox"><span class="checkmark">✓</span></div>
@@ -522,7 +295,7 @@
       </div>
       <div class="step-right">
         <div class="rent-input-wrap">
-          <span class="step-amount" style="font-size:13px">-$</span>
+          <span class="step-amount" style="font-size:12px">-$</span>
           <input class="rent-input" type="number" id="rent-amount" value="1500" onclick="event.stopPropagation()" oninput="updateRent()" />
         </div>
         <div class="step-balance" id="balance-1">Balance: $775</div>
@@ -578,8 +351,8 @@
     </div>
 
     <!-- Emergency Fund -->
-    <div class="section-label">Emergency Fund <button class="section-reset-btn" onclick="resetFund()">Reset</button></div>
-    <div class="fund-card">
+    <div class="gm-label">Emergency Fund <button class="section-reset-btn" onclick="resetFund()">Reset</button></div>
+    <div class="gm-card">
       <div class="fund-top">
         <div>
           <div class="fund-title">Savings Balance</div>
@@ -590,8 +363,8 @@
           <input class="fund-input" type="number" id="fund-balance" placeholder="0" oninput="updateFund()" />
         </div>
       </div>
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="fund-bar" style="width:0%"></div>
+      <div class="gm-progress-bg">
+        <div class="gm-progress-fill" id="fund-bar" style="width:0%"></div>
       </div>
       <div class="fund-stats">
         <span id="fund-pct">0% there</span>
@@ -600,8 +373,8 @@
     </div>
 
     <!-- Variable Expenses -->
-    <div class="section-label">Monthly Expense Budget — <span id="expense-budget-total">$975</span> <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
-    <div class="fund-card">
+    <div class="gm-label">Monthly Expense Budget — <span id="expense-budget-total">$975</span> <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
+    <div class="gm-card">
 
       <div class="expense-row">
         <div>
@@ -666,30 +439,30 @@
     </div>
 
     <!-- Notes -->
-    <div class="section-label">Notes <button class="section-reset-btn" onclick="resetNotes()">Reset</button></div>
+    <div class="gm-label">Notes <button class="section-reset-btn" onclick="resetNotes()">Reset</button></div>
     <textarea class="notes-input" id="notes" placeholder="Anything to note this payday..." oninput="saveNotes()"></textarea>
 
     <!-- Buttons -->
     <div class="btn-row">
-      <button class="submit-btn" onclick="submitPayday()">Save to History</button>
-      <button class="reset-btn" onclick="resetEverything()">Reset Everything</button>
+      <button class="gm-btn-primary" onclick="submitPayday()">Save to History</button>
+      <button class="gm-btn-ghost" onclick="resetEverything()">Reset Everything</button>
     </div>
 
   </div>
 
   <!-- ── HISTORY TAB ── -->
   <div class="tab-pane" id="tab-history">
-    <div class="section-label" style="margin-top:0">Past Paychecks <button class="section-reset-btn" onclick="resetHistory()">Clear All</button></div>
+    <div class="gm-label" style="margin-top:0">Past Paychecks <button class="section-reset-btn" onclick="resetHistory()">Clear All</button></div>
     <div id="history-list"></div>
   </div>
 
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="gm-toast" id="toast"></div>
 
 <!-- Edit Modal -->
-<div class="modal-overlay" id="edit-modal" onclick="handleOverlayClick(event)">
-  <div class="modal">
+<div class="gm-modal-overlay" id="edit-modal" onclick="handleOverlayClick(event)">
+  <div class="gm-modal">
     <div class="modal-title">
       <span>Edit Entry</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
@@ -703,14 +476,14 @@
 
     <div class="modal-section">Emergency Fund Balance</div>
     <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-      <span style="color:#888;font-size:14px">$</span>
+      <span style="color:var(--color-gray-light);font-size:13px">$</span>
       <input class="modal-input" type="number" id="modal-fund" style="width:120px" placeholder="0" />
     </div>
 
     <div class="modal-section">Notes</div>
     <textarea class="modal-notes" id="modal-notes" placeholder="Notes..."></textarea>
 
-    <button class="modal-save" onclick="saveEdit()">Save Changes</button>
+    <button class="gm-btn-primary" style="width:100%;margin-top:20px" onclick="saveEdit()">Save Changes</button>
   </div>
 </div>
 
@@ -724,11 +497,9 @@
   let EXPENSE_BUDGETS = [...DEFAULT_BUDGETS];
 
   function getTotalBudget() { return EXPENSE_BUDGETS.reduce((a, b) => a + b, 0); }
-
   function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
   function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
 
-  // Toast
   function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -736,7 +507,6 @@
     setTimeout(() => t.classList.remove('show'), 2200);
   }
 
-  // Rent — adjustable, recalculates cascading balances
   function updateRent() {
     const rent = parseFloat(document.getElementById('rent-amount').value) || 0;
     const afterTax = 3250 - 975;
@@ -747,9 +517,7 @@
     document.getElementById('balance-1').textContent = 'Balance: ' + fmt(afterRent);
     document.getElementById('balance-2').textContent = 'Balance: ' + fmt(afterLoans);
     document.getElementById('balance-3').textContent = 'Balance: ' + fmt(afterMetro);
-    const data = load();
-    data.rent = rent;
-    save(data);
+    const data = load(); data.rent = rent; save(data);
   }
 
   function loadRent() {
@@ -761,24 +529,20 @@
   function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
   function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; } }
 
-  // Tabs
   function switchTab(name) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.gm-tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
-    const map = { checklist: 'check', history: 'hist' };
-    document.querySelectorAll('.tab-btn').forEach(b => {
-      if (b.textContent.toLowerCase().startsWith(map[name])) b.classList.add('active');
+    document.querySelectorAll('.gm-tab-btn').forEach(b => {
+      if (b.textContent.toLowerCase().startsWith(name.substring(0, 4))) b.classList.add('active');
     });
     if (name === 'history') renderHistory();
   }
 
-  // Date
   document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
 
-  // Steps
   function toggleStep(i) {
     const el = document.getElementById('step-' + i);
     el.classList.toggle('done');
@@ -796,7 +560,6 @@
     }
   }
 
-  // Emergency fund
   function updateFund() {
     const val = parseFloat(document.getElementById('fund-balance').value) || 0;
     const goal = 9000;
@@ -807,26 +570,18 @@
     document.getElementById('fund-months').textContent = val >= goal
       ? 'Goal reached!'
       : monthsLeft + ' month' + (monthsLeft === 1 ? '' : 's') + ' to go';
-    const data = load();
-    data.fundBalance = val;
-    save(data);
+    const data = load(); data.fundBalance = val; save(data);
   }
 
   function loadFund() {
     const data = load();
-    if (data.fundBalance != null) {
-      document.getElementById('fund-balance').value = data.fundBalance;
-      updateFund();
-    }
+    if (data.fundBalance != null) { document.getElementById('fund-balance').value = data.fundBalance; updateFund(); }
   }
 
-  // Budget amounts — editable
   function updateBudgetAmount(i) {
     const val = parseFloat(document.getElementById('budget-' + i).value) || 0;
     EXPENSE_BUDGETS[i] = val;
-    const data = load();
-    data.budgets = [...EXPENSE_BUDGETS];
-    save(data);
+    const data = load(); data.budgets = [...EXPENSE_BUDGETS]; save(data);
     updateExpenses();
   }
 
@@ -841,7 +596,6 @@
     }
   }
 
-  // Expenses
   function updateExpenses() {
     const inputs = document.querySelectorAll('.expense-spent-input');
     let totalSpent = 0;
@@ -861,9 +615,7 @@
     totalEl.className = totalRem < 0 ? 'over' : 'ok';
     document.getElementById('expense-budget-total').textContent = '$' + total.toLocaleString();
     document.getElementById('step4-amount').textContent = '$' + total.toLocaleString();
-    const data = load();
-    data.expenses = Array.from(inputs).map(i => i.value);
-    save(data);
+    const data = load(); data.expenses = Array.from(inputs).map(i => i.value); save(data);
   }
 
   function loadExpenses() {
@@ -874,48 +626,28 @@
     updateExpenses();
   }
 
-  // Notes
-  function saveNotes() {
-    const data = load();
-    data.notes = document.getElementById('notes').value;
-    save(data);
-  }
+  function saveNotes() { const data = load(); data.notes = document.getElementById('notes').value; save(data); }
+  function loadNotes() { const data = load(); if (data.notes) document.getElementById('notes').value = data.notes; }
 
-  function loadNotes() {
-    const data = load();
-    if (data.notes) document.getElementById('notes').value = data.notes;
-  }
-
-  // Submit to history
   function submitPayday() {
     const data = load();
     const inputs = document.querySelectorAll('.expense-spent-input');
     const expenseSpent = Array.from(inputs).map((inp, i) => ({
-      name: EXPENSE_NAMES[i],
-      budget: EXPENSE_BUDGETS[i],
-      spent: parseFloat(inp.value) || 0
+      name: EXPENSE_NAMES[i], budget: EXPENSE_BUDGETS[i], spent: parseFloat(inp.value) || 0
     }));
     const entry = {
       id: Date.now(),
       date: new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }),
-      steps: data.steps || {},
-      fundBalance: data.fundBalance || 0,
-      expenses: expenseSpent,
-      notes: data.notes || ''
+      steps: data.steps || {}, fundBalance: data.fundBalance || 0, expenses: expenseSpent, notes: data.notes || ''
     };
-    const history = loadHistory();
-    history.unshift(entry);
-    saveHistory(history);
+    const history = loadHistory(); history.unshift(entry); saveHistory(history);
     showToast('✓ Saved to history');
   }
 
-  // Reset sections
   function resetSteps() {
     if (!confirm('Uncheck all steps?')) return;
     document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
-    const data = load();
-    delete data.steps;
-    save(data);
+    const data = load(); delete data.steps; save(data);
   }
 
   function resetFund() {
@@ -924,44 +656,33 @@
     document.getElementById('fund-bar').style.width = '0%';
     document.getElementById('fund-pct').textContent = '0% there';
     document.getElementById('fund-months').textContent = '';
-    const data = load();
-    delete data.fundBalance;
-    save(data);
+    const data = load(); delete data.fundBalance; save(data);
   }
 
   function resetExpenses() {
     if (!confirm('Clear all expense inputs?')) return;
     document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
     updateExpenses();
-    const data = load();
-    delete data.expenses;
-    save(data);
+    const data = load(); delete data.expenses; save(data);
   }
 
   function resetNotes() {
     if (!confirm('Clear notes?')) return;
     document.getElementById('notes').value = '';
-    const data = load();
-    delete data.notes;
-    save(data);
+    const data = load(); delete data.notes; save(data);
   }
 
   function resetHistory() {
     if (!confirm('Delete all history entries? This cannot be undone.')) return;
-    localStorage.removeItem(HISTORY_KEY);
-    renderHistory();
+    localStorage.removeItem(HISTORY_KEY); renderHistory();
   }
 
   function resetEverything() {
-    if (!confirm('Reset everything? This will clear all sections including history.')) return;
+    if (!confirm('Reset everything? This will clear all sections.')) return;
     if (!confirm('Are you sure? This cannot be undone.')) return;
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem(HISTORY_KEY);
+    localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(HISTORY_KEY);
     EXPENSE_BUDGETS = [...DEFAULT_BUDGETS];
-    DEFAULT_BUDGETS.forEach((b, i) => {
-      const el = document.getElementById('budget-' + i);
-      if (el) el.value = b;
-    });
+    DEFAULT_BUDGETS.forEach((b, i) => { const el = document.getElementById('budget-' + i); if (el) el.value = b; });
     document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
     document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
     document.getElementById('notes').value = '';
@@ -972,7 +693,6 @@
     updateExpenses();
   }
 
-  // Render history
   function renderHistory() {
     const history = loadHistory();
     const el = document.getElementById('history-list');
@@ -980,7 +700,7 @@
       el.innerHTML = '<div class="history-empty">No history yet.<br>Complete a payday and tap "Save to History".</div>';
       return;
     }
-    el.innerHTML = history.map((entry) => {
+    el.innerHTML = history.map(entry => {
       const stepsHtml = STEP_NAMES.map((name, i) =>
         `<span class="history-step-pill ${entry.steps[i] ? 'done' : 'skip'}">${name}</span>`
       ).join('');
@@ -1017,8 +737,7 @@
   function deleteEntry(id) {
     if (!confirm('Delete this entry?')) return;
     const history = loadHistory().filter(e => e.id !== id);
-    saveHistory(history);
-    renderHistory();
+    saveHistory(history); renderHistory();
   }
 
   let editingId = null;
@@ -1034,7 +753,7 @@
       </div>`).join('');
     document.getElementById('modal-expenses').innerHTML = entry.expenses.map((e, i) => `
       <div class="modal-expense-row">
-        <div class="modal-expense-name">${e.name} <span style="color:#555;font-size:11px">/ $${e.budget}</span></div>
+        <div class="modal-expense-name">${e.name} <span style="color:var(--color-gray-mid);font-size:10px">/ $${e.budget}</span></div>
         <input class="modal-input" type="number" id="mexp-${i}" value="${e.spent}" placeholder="0" />
       </div>`).join('');
     document.getElementById('modal-fund').value = entry.fundBalance || '';
@@ -1048,46 +767,22 @@
     el.textContent = on ? '✓' : '';
   }
 
-  function closeModal() {
-    document.getElementById('edit-modal').classList.remove('open');
-    editingId = null;
-  }
-
-  function handleOverlayClick(e) {
-    if (e.target === document.getElementById('edit-modal')) closeModal();
-  }
+  function closeModal() { document.getElementById('edit-modal').classList.remove('open'); editingId = null; }
+  function handleOverlayClick(e) { if (e.target === document.getElementById('edit-modal')) closeModal(); }
 
   function saveEdit() {
     const history = loadHistory();
     const idx = history.findIndex(e => e.id === editingId);
     if (idx === -1) return;
     const steps = {};
-    STEP_NAMES.forEach((_, i) => {
-      steps[i] = document.getElementById('mstep-' + i).classList.contains('on');
-    });
-    const expenses = history[idx].expenses.map((e, i) => ({
-      ...e,
-      spent: parseFloat(document.getElementById('mexp-' + i).value) || 0
-    }));
-    history[idx] = {
-      ...history[idx],
-      steps,
-      expenses,
-      fundBalance: parseFloat(document.getElementById('modal-fund').value) || 0,
-      notes: document.getElementById('modal-notes').value
-    };
-    saveHistory(history);
-    closeModal();
-    renderHistory();
+    STEP_NAMES.forEach((_, i) => { steps[i] = document.getElementById('mstep-' + i).classList.contains('on'); });
+    const expenses = history[idx].expenses.map((e, i) => ({ ...e, spent: parseFloat(document.getElementById('mexp-' + i).value) || 0 }));
+    history[idx] = { ...history[idx], steps, expenses, fundBalance: parseFloat(document.getElementById('modal-fund').value) || 0, notes: document.getElementById('modal-notes').value };
+    saveHistory(history); closeModal(); renderHistory();
   }
 
   // Init
-  loadBudgets();
-  loadRent();
-  loadSteps();
-  loadFund();
-  loadExpenses();
-  loadNotes();
+  loadBudgets(); loadRent(); loadSteps(); loadFund(); loadExpenses(); loadNotes();
 </script>
 </body>
 </html>
