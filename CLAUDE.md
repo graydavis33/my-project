@@ -51,6 +51,7 @@ Scored 0–3 across: Unblocks others / Revenue+Time / Showcase / Sellable
 | Client CRM | python-scripts/client-crm/ | Built on Windows |
 | Creator Intel | python-scripts/creator-intel/ | Built on Windows |
 | Content Pipeline | python-scripts/content-pipeline/ | Built on Windows |
+| Footage Organizer | python-scripts/footage-organizer/ | Built on Windows |
 | Dashboard | dashboard.html | Live at graydavis33.github.io/my-project/dashboard.html |
 
 > Each project folder has its own CLAUDE.md that loads full details when you're working in that folder.
