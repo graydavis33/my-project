@@ -623,7 +623,7 @@
   <div class="section-title" data-section="finished">Finished &amp; Live — Usage Tracking</div>
   <div class="grid" id="grid-finished">
 
-    <div class="card" data-category="finished" data-tabs="home finished" style="border-left:3px solid #10b981">
+    <div class="card" data-category="finished" data-tabs="home finished" data-project="email-agent" style="border-left:3px solid #10b981">
       <div class="card-header">
         <div class="card-title">AI Email Agent</div>
         <div class="badge blive">LIVE</div>
@@ -661,7 +661,7 @@
       </div>
     </div>
 
-    <div class="card" data-category="finished" data-tabs="home finished" style="border-left:3px solid #10b981">
+    <div class="card" data-category="finished" data-tabs="home finished" data-project="invoice-system" style="border-left:3px solid #10b981">
       <div class="card-header">
         <div class="card-title">Invoice &amp; Accounting System</div>
         <div class="badge blive">LIVE</div>
@@ -699,7 +699,7 @@
       </div>
     </div>
 
-    <div class="card" data-category="finished" data-tabs="home finished" style="border-left:3px solid #10b981">
+    <div class="card" data-category="finished" data-tabs="home finished" data-project="content-researcher" style="border-left:3px solid #10b981">
       <div class="card-header">
         <div class="card-title">Content Researcher</div>
         <div class="badge blive">LIVE</div>
@@ -737,7 +737,7 @@
       </div>
     </div>
 
-    <div class="card" data-category="finished" data-tabs="home finished" style="border-left:3px solid #10b981">
+    <div class="card" data-category="finished" data-tabs="home finished" data-project="social-media-analytics" style="border-left:3px solid #10b981">
       <div class="card-header">
         <div class="card-title">Social Media Analytics (YouTube)</div>
         <div class="badge blive">LIVE</div>
@@ -818,10 +818,8 @@
         allSections.forEach(s => s.classList.remove('hidden'));
         legendBox.style.display = '';
       } else {
-        // Hide section titles on filtered tabs
         allSections.forEach(s => s.classList.add('hidden'));
         legendBox.style.display = 'none';
-
         allCards.forEach(card => {
           const tabs = (card.dataset.tabs || '').split(' ');
           card.classList.toggle('hidden', !tabs.includes(tab));
@@ -829,7 +827,71 @@
       }
     }
 
+    // ── Usage Stats ──────────────────────────────────────────────
+    // Fetches usage-stats.json (committed by sync_usage.py) and fills
+    // in the Last Used / This Week / All Time boxes on finished cards.
+    function loadUsageStats() {
+      fetch('usage-stats.json?t=' + Date.now())
+        .then(r => r.json())
+        .then(data => {
+          const projects = data.projects || {};
+          const now = new Date();
+
+          document.querySelectorAll('.card[data-project]').forEach(card => {
+            const key   = card.dataset.project;
+            const stats = projects[key];
+            if (!stats) return;
+
+            const boxes = card.querySelectorAll('.usage-stat');
+            // box order: Last Used (0), This Week (1), All Time (2)
+            // Social Media Analytics has Schedule (0), Last Run (1), All Time (2)
+            // We handle both by checking u-label text
+
+            boxes.forEach(box => {
+              const label = (box.querySelector('.u-label') || {}).textContent || '';
+              const valEl = box.querySelector('.u-value');
+              const subEl = box.querySelector('.u-sub');
+              if (!valEl) return;
+
+              if (label === 'Last Used' || label === 'Last Run') {
+                const lastLabel = stats.last_used_label;
+                if (lastLabel) {
+                  valEl.textContent = lastLabel;
+                  if (subEl) subEl.textContent = stats.last_used
+                    ? new Date(stats.last_used).toLocaleDateString('en-US', {month:'short', day:'numeric'})
+                    : '';
+                  box.classList.remove('pending');
+                  // Mark stale if not used in 30+ days
+                  if (stats.last_used) {
+                    const diff = (now - new Date(stats.last_used)) / 86400000;
+                    box.classList.toggle('highlight', diff < 7);
+                    box.classList.toggle('stale', diff >= 30);
+                  }
+                } else {
+                  valEl.textContent = 'Never';
+                  if (subEl) subEl.textContent = 'no runs yet';
+                  box.classList.remove('pending');
+                  box.classList.add('stale');
+                }
+              } else if (label === 'This Week') {
+                valEl.textContent = stats.this_week;
+                if (subEl) subEl.textContent = 'runs';
+                box.classList.remove('pending');
+                box.classList.toggle('highlight', stats.this_week > 0);
+              } else if (label === 'All Time') {
+                valEl.textContent = stats.all_time;
+                if (subEl) subEl.textContent = 'total runs';
+                box.classList.remove('pending');
+                box.classList.toggle('highlight', stats.all_time > 0);
+              }
+            });
+          });
+        })
+        .catch(() => {}); // silently skip if file doesn't exist yet
+    }
+
     switchTab('home');
+    loadUsageStats();
   </script>
 
 </body>
