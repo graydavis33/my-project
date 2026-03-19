@@ -631,17 +631,17 @@
       <div class="card-meta">python-scripts/email-agent/ · Runs hourly 7am–8pm on Mac</div>
       <div class="status s-running">RUNNING</div>
       <div class="usage-row">
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="last_used">
           <div class="u-label">Last Used</div>
           <div class="u-value">—</div>
           <div class="u-sub">tracker pending</div>
         </div>
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="this_week">
           <div class="u-label">This Week</div>
           <div class="u-value">—</div>
           <div class="u-sub">runs</div>
         </div>
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="all_time">
           <div class="u-label">All Time</div>
           <div class="u-value">—</div>
           <div class="u-sub">total runs</div>
@@ -669,17 +669,17 @@
       <div class="card-meta">python-scripts/invoice-system/ · CLI tool on Mac</div>
       <div class="status s-running">RUNNING</div>
       <div class="usage-row">
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="last_used">
           <div class="u-label">Last Used</div>
           <div class="u-value">—</div>
           <div class="u-sub">tracker pending</div>
         </div>
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="this_week">
           <div class="u-label">This Week</div>
           <div class="u-value">—</div>
           <div class="u-sub">runs</div>
         </div>
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="all_time">
           <div class="u-label">All Time</div>
           <div class="u-value">—</div>
           <div class="u-sub">total runs</div>
@@ -707,17 +707,17 @@
       <div class="card-meta">python-scripts/content-researcher/ · CLI tool on Mac · ~$0.05/run</div>
       <div class="status s-running">RUNNING — V2 in progress</div>
       <div class="usage-row">
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="last_used">
           <div class="u-label">Last Used</div>
           <div class="u-value">—</div>
           <div class="u-sub">tracker pending</div>
         </div>
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="this_week">
           <div class="u-label">This Week</div>
           <div class="u-value">—</div>
           <div class="u-sub">runs</div>
         </div>
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="all_time">
           <div class="u-label">All Time</div>
           <div class="u-value">—</div>
           <div class="u-sub">total runs</div>
@@ -750,12 +750,12 @@
           <div class="u-value">Auto</div>
           <div class="u-sub">every Sunday</div>
         </div>
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="last_used">
           <div class="u-label">Last Run</div>
           <div class="u-value">—</div>
           <div class="u-sub">tracker pending</div>
         </div>
-        <div class="usage-stat pending">
+        <div class="usage-stat pending" data-stat="all_time">
           <div class="u-label">All Time</div>
           <div class="u-value">—</div>
           <div class="u-sub">total runs</div>
@@ -829,7 +829,7 @@
 
     // ── Usage Stats ──────────────────────────────────────────────
     // Fetches usage-stats.json (committed by sync_usage.py) and fills
-    // in the Last Used / This Week / All Time boxes on finished cards.
+    // in stat boxes keyed by data-stat attribute.
     function loadUsageStats() {
       fetch('usage-stats.json?t=' + Date.now())
         .then(r => r.json())
@@ -838,56 +838,43 @@
           const now = new Date();
 
           document.querySelectorAll('.card[data-project]').forEach(card => {
-            const key   = card.dataset.project;
-            const stats = projects[key];
+            const stats = projects[card.dataset.project];
             if (!stats) return;
 
-            const boxes = card.querySelectorAll('.usage-stat');
-            // box order: Last Used (0), This Week (1), All Time (2)
-            // Social Media Analytics has Schedule (0), Last Run (1), All Time (2)
-            // We handle both by checking u-label text
-
-            boxes.forEach(box => {
-              const label = (box.querySelector('.u-label') || {}).textContent || '';
+            card.querySelectorAll('.usage-stat[data-stat]').forEach(box => {
+              const key   = box.dataset.stat;
               const valEl = box.querySelector('.u-value');
               const subEl = box.querySelector('.u-sub');
               if (!valEl) return;
 
-              if (label === 'Last Used' || label === 'Last Run') {
-                const lastLabel = stats.last_used_label;
-                if (lastLabel) {
-                  valEl.textContent = lastLabel;
-                  if (subEl) subEl.textContent = stats.last_used
-                    ? new Date(stats.last_used).toLocaleDateString('en-US', {month:'short', day:'numeric'})
-                    : '';
-                  box.classList.remove('pending');
-                  // Mark stale if not used in 30+ days
-                  if (stats.last_used) {
-                    const diff = (now - new Date(stats.last_used)) / 86400000;
-                    box.classList.toggle('highlight', diff < 7);
-                    box.classList.toggle('stale', diff >= 30);
-                  }
+              box.classList.remove('pending');
+
+              if (key === 'last_used') {
+                if (stats.last_used_label) {
+                  valEl.textContent = stats.last_used_label;
+                  if (subEl) subEl.textContent = new Date(stats.last_used)
+                    .toLocaleDateString('en-US', {month:'short', day:'numeric'});
+                  const diff = (now - new Date(stats.last_used)) / 86400000;
+                  box.classList.toggle('highlight', diff < 7);
+                  box.classList.toggle('stale', diff >= 30);
                 } else {
                   valEl.textContent = 'Never';
                   if (subEl) subEl.textContent = 'no runs yet';
-                  box.classList.remove('pending');
                   box.classList.add('stale');
                 }
-              } else if (label === 'This Week') {
+              } else if (key === 'this_week') {
                 valEl.textContent = stats.this_week;
                 if (subEl) subEl.textContent = 'runs';
-                box.classList.remove('pending');
                 box.classList.toggle('highlight', stats.this_week > 0);
-              } else if (label === 'All Time') {
+              } else if (key === 'all_time') {
                 valEl.textContent = stats.all_time;
                 if (subEl) subEl.textContent = 'total runs';
-                box.classList.remove('pending');
                 box.classList.toggle('highlight', stats.all_time > 0);
               }
             });
           });
         })
-        .catch(() => {}); // silently skip if file doesn't exist yet
+        .catch(err => { if (!(err instanceof SyntaxError)) console.warn('Usage stats unavailable:', err); });
     }
 
     switchTab('home');

@@ -33,25 +33,27 @@ def _load_log():
 
 
 def _compute_stats(entries):
-    now   = datetime.now(timezone.utc)
-    week  = now - timedelta(days=7)
-    month = now - timedelta(days=30)
+    now  = datetime.now(timezone.utc)
+    week = now - timedelta(days=7)
+
+    # Group entries by project in one pass (O(n) instead of O(n*projects))
+    by_project = {}
+    for e in entries:
+        key = e.get("project")
+        if key:
+            by_project.setdefault(key, []).append(datetime.fromisoformat(e["ts"]))
 
     stats = {}
     for project in _PROJECT_NAMES:
-        runs = [e for e in entries if e.get("project") == project]
-        if not runs:
+        dts = by_project.get(project, [])
+        if not dts:
             stats[project] = {"last_used": None, "this_week": 0, "all_time": 0}
             continue
-
-        timestamps = sorted(e["ts"] for e in runs)
-        last_ts    = timestamps[-1]
-        last_dt    = datetime.fromisoformat(last_ts)
-
+        last_dt = max(dts)
         stats[project] = {
-            "last_used":  last_ts,
-            "this_week":  sum(1 for e in runs if datetime.fromisoformat(e["ts"]) >= week),
-            "all_time":   len(runs),
+            "last_used":  last_dt.isoformat(),
+            "this_week":  sum(1 for dt in dts if dt >= week),
+            "all_time":   len(dts),
         }
 
     return stats
