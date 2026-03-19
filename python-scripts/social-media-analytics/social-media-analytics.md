@@ -34,11 +34,8 @@ cd python-scripts/social-media-analytics && python main.py
 ## Status
 BLOCKED — TikTok and Instagram/Facebook API setup incomplete.
 
-## Pending Setup (TikTok)
-1. App created — add Login Kit, set redirect URI to `http://localhost:8888/callback`
-2. Add own TikTok account as sandbox/test user
-3. Add `TIKTOK_CLIENT_KEY` + `TIKTOK_CLIENT_SECRET` to `.env`
-4. Run once: `python tiktok_auth.py`
+## TikTok — UNBLOCKED (as of 2026-03-19)
+Setup complete. Env vars set, auth flow done.
 
 ## Pending Setup (Instagram + Facebook)
 1. Create Meta Developer App — add Instagram Graph API + Facebook Login for Business
