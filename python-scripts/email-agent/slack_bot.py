@@ -262,19 +262,22 @@ def handle_view_submission(client: SocketModeClient, req: SocketModeRequest):
 
 
 def start_listener():
-    """Start the Slack Socket Mode listener in a background thread."""
-    socket_client = SocketModeClient(app_token=SLACK_APP_TOKEN, web_client=web_client)
-
-    socket_client.socket_mode_request_listeners.append(handle_action)
-    socket_client.socket_mode_request_listeners.append(handle_view_submission)
+    """Start the Slack Socket Mode listener in a background thread with auto-reconnect."""
 
     def run():
-        socket_client.connect()
-        # Keep thread alive
-        import time
         while True:
-            time.sleep(1)
+            try:
+                socket_client = SocketModeClient(app_token=SLACK_APP_TOKEN, web_client=web_client)
+                socket_client.socket_mode_request_listeners.append(handle_action)
+                socket_client.socket_mode_request_listeners.append(handle_view_submission)
+                socket_client.connect()
+                # Check every 30s — reconnect if connection drops
+                while socket_client.is_connected():
+                    time.sleep(30)
+                print("Slack Socket Mode disconnected. Reconnecting in 10s...")
+            except Exception as e:
+                print(f"Slack listener error: {e}. Reconnecting in 10s...")
+            time.sleep(10)
 
     thread = threading.Thread(target=run, daemon=True)
     thread.start()
-    return socket_client
