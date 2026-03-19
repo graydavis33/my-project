@@ -3,7 +3,7 @@ sheets_client.py
 Handles all Google Sheets interactions:
   - Authentication
   - Creating/finding worksheet tabs
-  - Appending rows to Transactions, Invoices, and Line Items tabs
+  - Appending rows to Transactions and Business Expenses tabs
   - Reading data for the Tax Summary tab
 """
 
@@ -20,17 +20,14 @@ from config import (
     GMAIL_SCOPES,
     GOOGLE_SHEET_ID,
     TAB_TRANSACTIONS,
-    TAB_INVOICES,
-    TAB_LINE_ITEMS,
+    TAB_EXPENSES,
     TAB_TAX_SUMMARY,
     TRANSACTION_HEADERS,
-    INVOICE_HEADERS,
-    LINE_ITEM_HEADERS,
+    EXPENSE_HEADERS,
     TAX_SUMMARY_HEADERS,
     CATEGORIES,
 )
 
-# Combined scopes needed for both Gmail and Sheets in one token
 ALL_SCOPES = GMAIL_SCOPES + GSPREAD_SCOPES
 
 
@@ -61,7 +58,7 @@ def get_sheet():
 
 
 def _auto_resize(spreadsheet, ws):
-    """Auto-fit all columns in a worksheet to match content width."""
+    """Auto-fit all columns to match content width."""
     spreadsheet.batch_update({
         "requests": [{
             "autoResizeDimensions": {
@@ -76,6 +73,12 @@ def _auto_resize(spreadsheet, ws):
     })
 
 
+def _auto_resize_all(spreadsheet):
+    """Auto-fit all columns on every worksheet in the spreadsheet."""
+    for ws in spreadsheet.worksheets():
+        _auto_resize(spreadsheet, ws)
+
+
 def get_or_create_worksheet(sheet, title, headers):
     """Return the worksheet with the given title, creating it with headers if it doesn't exist."""
     try:
@@ -87,59 +90,70 @@ def get_or_create_worksheet(sheet, title, headers):
 
 
 def setup_sheet():
-    """Create all tabs with correct headers. Safe to run multiple times — won't duplicate headers."""
+    """
+    Create Transactions, Business Expenses, and Tax Summary tabs with correct headers.
+    Deletes Invoices and Invoice Line Items tabs if they exist (legacy cleanup).
+    Safe to run multiple times — won't duplicate headers.
+    """
     sheet = get_sheet()
 
+    # Remove legacy tabs if present
+    for legacy_tab in ["Invoices", "Invoice Line Items"]:
+        try:
+            ws = sheet.worksheet(legacy_tab)
+            sheet.del_worksheet(ws)
+            print(f"  Removed legacy tab: {legacy_tab}")
+        except gspread.WorksheetNotFound:
+            pass
+
     get_or_create_worksheet(sheet, TAB_TRANSACTIONS, TRANSACTION_HEADERS)
-    get_or_create_worksheet(sheet, TAB_INVOICES, INVOICE_HEADERS)
-    get_or_create_worksheet(sheet, TAB_LINE_ITEMS, LINE_ITEM_HEADERS)
+    get_or_create_worksheet(sheet, TAB_EXPENSES, EXPENSE_HEADERS)
     ws_tax = get_or_create_worksheet(sheet, TAB_TAX_SUMMARY, TAX_SUMMARY_HEADERS)
 
-    # Populate Tax Summary with category rows + formulas if empty
+    # Populate Tax Summary with formulas if empty
     existing = ws_tax.get_all_values()
-    if len(existing) <= 1:  # only header row
-        transactions_tab = TAB_TRANSACTIONS
-        # Row index in Transactions tab: Amount=E (col 5), Type=F (col 6), Category=D (col 4)
+    if len(existing) <= 1:
+        tx = TAB_TRANSACTIONS
+        exp = TAB_EXPENSES
+
         rows = []
-        for i, cat in enumerate(CATEGORIES[:-1], start=2):  # skip "Income" in expense rows
+
+        # Total Income — sum of Amount column (D) in Transactions
+        rows.append(["Total Income", f"=SUM('{tx}'!D2:D1000)"])
+
+        # Expense categories — SUMPRODUCT by Category column (C) in Business Expenses
+        for cat in CATEGORIES:
             formula = (
-                f'=SUMPRODUCT((\'{transactions_tab}\'!D2:D1000="{cat}")*'
-                f'(\'{transactions_tab}\'!F2:F1000="Expense")*'
-                f'(\'{transactions_tab}\'!E2:E1000))'
+                f"=SUMPRODUCT(('{exp}'!C2:C1000=\"{cat}\")*"
+                f"('{exp}'!D2:D1000))"
             )
             rows.append([cat, formula])
 
-        # Income total
-        rows.append([
-            "Total Income",
-            f'=SUMPRODUCT((\'{transactions_tab}\'!F2:F1000="Income")*(\'{transactions_tab}\'!E2:E1000))'
-        ])
-        # Total expenses
-        rows.append([
-            "Total Expenses",
-            f'=SUMPRODUCT((\'{transactions_tab}\'!F2:F1000="Expense")*(\'{transactions_tab}\'!E2:E1000))'
-        ])
-        # Net profit
-        rows.append(["Net Profit", f"={chr(66)}{len(rows)+1}-{chr(66)}{len(rows)+2}"])
+        # Total Expenses — sum of Amount column (D) in Business Expenses
+        rows.append(["Total Expenses", f"=SUM('{exp}'!D2:D1000)"])
+
+        # Net Profit = Total Income - Total Expenses
+        income_row = 2
+        expenses_row = 2 + len(CATEGORIES) + 1
+        rows.append(["Net Profit", f"=B{income_row}-B{expenses_row}"])
 
         for row in rows:
             ws_tax.append_row(row)
 
-    for ws in sheet.worksheets():
-        _auto_resize(sheet, ws)
-
-    print(f"  Sheet setup complete. Tabs: {TAB_TRANSACTIONS}, {TAB_INVOICES}, {TAB_LINE_ITEMS}, {TAB_TAX_SUMMARY}")
+    _auto_resize_all(sheet)
+    print(f"  Sheet setup complete. Tabs: {TAB_TRANSACTIONS}, {TAB_EXPENSES}, {TAB_TAX_SUMMARY}")
 
 
-def append_transaction(date, description, source, category, amount, tx_type, notes=""):
-    """Add one row to the Transactions tab."""
+def append_transaction(date, description, source, amount, notes=""):
+    """Add one income row to the Transactions tab."""
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_TRANSACTIONS)
-    ws.append_row([date, description, source, category, amount, tx_type, notes])
+    ws.append_row([date, description, source, amount, notes])
+    _auto_resize(sheet, ws)
 
 
 def append_transactions(rows):
-    """Add multiple transaction rows at once. Each row is a list matching TRANSACTION_HEADERS."""
+    """Add multiple income rows at once. Each row: [date, description, source, amount, notes]."""
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_TRANSACTIONS)
     for row in rows:
@@ -147,48 +161,18 @@ def append_transactions(rows):
     _auto_resize(sheet, ws)
 
 
-def get_next_invoice_number():
-    """Return the next invoice number as a zero-padded string like '004'."""
+def append_expense(date, vendor, category, amount, notes=""):
+    """Add one row to the Business Expenses tab."""
     sheet = get_sheet()
-    ws = sheet.worksheet(TAB_INVOICES)
-    all_rows = ws.get_all_values()
-    # Subtract 1 for header row; next invoice is count + 1
-    count = len(all_rows)  # includes header
-    return str(count).zfill(3)
-
-
-def append_invoice(invoice_num, client, client_email, date, due_date, status, total):
-    """Add one row to the Invoices tab."""
-    sheet = get_sheet()
-    ws = sheet.worksheet(TAB_INVOICES)
-    ws.append_row([invoice_num, client, client_email, date, due_date, status, total])
+    ws = sheet.worksheet(TAB_EXPENSES)
+    ws.append_row([date, vendor, category, amount, notes])
     _auto_resize(sheet, ws)
 
 
-def append_line_items(invoice_num, line_items):
-    """
-    Add line item rows to the Invoice Line Items tab.
-    line_items: list of dicts with keys: description, hours, rate, flat_fee, subtotal
-    """
+def append_expenses(rows):
+    """Add multiple expense rows at once. Each row: [date, vendor, category, amount, notes]."""
     sheet = get_sheet()
-    ws = sheet.worksheet(TAB_LINE_ITEMS)
-    for item in line_items:
-        ws.append_row([
-            invoice_num,
-            item["description"],
-            item.get("hours", ""),
-            item.get("rate", ""),
-            item.get("flat_fee", ""),
-            item["subtotal"],
-        ])
+    ws = sheet.worksheet(TAB_EXPENSES)
+    for row in rows:
+        ws.append_row(row)
     _auto_resize(sheet, ws)
-
-
-def update_invoice_status(invoice_num, new_status):
-    """Update the Status column for a given invoice number."""
-    sheet = get_sheet()
-    ws = sheet.worksheet(TAB_INVOICES)
-    cell = ws.find(invoice_num)
-    if cell:
-        # Status is column 6 (F)
-        ws.update_cell(cell.row, 6, new_status)

@@ -251,6 +251,14 @@ def main():
 
     args = parser.parse_args()
 
+    try:
+        import sys as _sys, os as _os
+        _sys.path.insert(0, _os.path.join(_os.path.dirname(__file__), '..', 'shared'))
+        from usage_logger import log_run
+        log_run("invoice-system")
+    except Exception:
+        pass
+
     commands = {
         "setup-sheet": cmd_setup_sheet,
         "import-csv": cmd_import_csv,

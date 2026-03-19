@@ -38,6 +38,13 @@ def _fetch_tiktok():
 
 
 def main():
+    try:
+        import sys as _sys, os as _os
+        _sys.path.insert(0, _os.path.join(_os.path.dirname(__file__), '..', 'shared'))
+        from usage_logger import log_run
+        log_run("social-media-analytics")
+    except Exception:
+        pass
     print("=" * 55)
     print("    Social Media Analytics Dashboard")
     print("=" * 55)

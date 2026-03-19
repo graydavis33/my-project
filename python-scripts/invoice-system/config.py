@@ -48,29 +48,29 @@ INVOICE_DUE_DAYS = 14
 
 # Tab names in the Google Sheet
 TAB_TRANSACTIONS = "Transactions"
-TAB_INVOICES = "Invoices"
-TAB_LINE_ITEMS = "Invoice Line Items"
+TAB_EXPENSES = "Business Expenses"
 TAB_TAX_SUMMARY = "Tax Summary"
 
-# Transaction categories
+# Threshold for flagging an income payment as unusual in Notes
+LARGE_PAYMENT_THRESHOLD = 5000
+
+# Business expense categories (used for Schedule C tax filing)
 CATEGORIES = [
     "Software & Subscriptions",
     "Equipment & Gear",
     "Advertising & Marketing",
     "Contractor Payments",
     "Other",
-    "Income",
 ]
 
 # Slack (optional — for payment notifications)
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN", "")
 SLACK_PAYMENTS_CHANNEL_ID = os.getenv("SLACK_PAYMENTS_CHANNEL_ID", "")
 
-# Transaction sources
-SOURCES = ["Venmo", "Bank", "Gmail", "Cash", "Stripe", "Zelle", "QuickBooks", "PayPal", "Direct Deposit"]
+# Payment sources
+SOURCES = ["Venmo", "Bank", "Cash", "Stripe", "Zelle", "Cash App", "QuickBooks", "PayPal", "Direct Deposit"]
 
 # Column headers for each tab
-TRANSACTION_HEADERS = ["Date", "Description", "Source", "Category", "Amount", "Type", "Notes"]
-INVOICE_HEADERS = ["Invoice #", "Client", "Client Email", "Date", "Due Date", "Status", "Total"]
-LINE_ITEM_HEADERS = ["Invoice #", "Description", "Hours", "Hourly Rate", "Flat Fee", "Subtotal"]
+TRANSACTION_HEADERS = ["Date", "Description", "Source", "Amount", "Notes"]
+EXPENSE_HEADERS = ["Date", "Vendor", "Category", "Amount", "Notes"]
 TAX_SUMMARY_HEADERS = ["Category", "Total"]

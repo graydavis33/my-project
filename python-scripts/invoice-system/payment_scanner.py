@@ -1,7 +1,7 @@
 """
 payment_scanner.py
 Uses Claude AI (Haiku) to detect income payments from Gmail notification emails.
-Handles: Venmo, Stripe, Zelle (PrimeSouth Bank), QuickBooks, PayPal, Direct Deposit.
+Handles: Venmo, Stripe, Zelle (PrimeSouth Bank), QuickBooks, PayPal, Cash App, Direct Deposit.
 
 Processes emails in batches of 5 to minimize API calls.
 Sends a Slack notification to #payments for each confirmed payment.
@@ -13,23 +13,23 @@ import anthropic
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-from config import ANTHROPIC_API_KEY, SLACK_BOT_TOKEN, SLACK_PAYMENTS_CHANNEL_ID
+from config import ANTHROPIC_API_KEY, SLACK_BOT_TOKEN, SLACK_PAYMENTS_CHANNEL_ID, LARGE_PAYMENT_THRESHOLD
 
 SCANNED_IDS_FILE = os.path.join(os.path.dirname(__file__), '.scanned_payment_ids.json')
 _BATCH_SIZE = 5
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-SYSTEM_PROMPT = """You are a bookkeeping assistant for Gray Davis, a freelance videographer.
+SYSTEM_PROMPT = f"""You are a bookkeeping assistant for Gray Davis, a freelance videographer.
 Your job is to detect emails where someone sent money TO Gray Davis.
 
 For each email, extract:
 - is_payment: true if this is genuinely money received by Gray, false otherwise
 - amount: dollar amount received as a number (no $ sign, digits and decimal only)
-- payer_name: the name of the person or company who sent the money
+- payer_name: the name of the person or company who sent the money (name only, no extra text)
 - platform: one of: Venmo, Stripe, Zelle, QuickBooks, PayPal, Cash App, Direct Deposit, Other
-- date: the payment date in YYYY-MM-DD format
-- description: brief description e.g. "Venmo payment from John Smith" or "Stripe invoice paid - $500"
+- date: the payment date in MM/DD/YYYY format
+- notes: a short note ONLY if something is unusual — e.g. amount >= ${LARGE_PAYMENT_THRESHOLD:,}, first payment from this person, irregular source, or anything that stands out. Empty string for normal routine payments.
 
 Rules:
 - is_payment must be false for: money Gray sent out, refunds, promotional emails, account alerts
@@ -46,8 +46,8 @@ Format for each item:
   "amount": 0.00,
   "payer_name": "Name Here",
   "platform": "Venmo",
-  "date": "YYYY-MM-DD",
-  "description": "Brief description"
+  "date": "MM/DD/YYYY",
+  "notes": ""
 }}
 
 {emails}
@@ -69,8 +69,8 @@ Return ONLY a JSON object in this exact format if it IS a payment received:
   "amount": 0.00,
   "payer_name": "Name Here",
   "platform": "Venmo",
-  "date": "YYYY-MM-DD",
-  "description": "Brief description"
+  "date": "MM/DD/YYYY",
+  "notes": ""
 }}
 
 If this is NOT a payment received, return: null"""
@@ -98,7 +98,7 @@ def _save_scanned_ids(ids):
 def fetch_payment_emails(service, days=30):
     """
     Search Gmail for payment notification emails from the last N days.
-    Targets Venmo, Stripe, Zelle (PrimeSouth Bank), QuickBooks, PayPal.
+    Targets Venmo, Stripe, Zelle (PrimeSouth Bank), QuickBooks, PayPal, Cash App.
     Returns a list of parsed email dicts.
     """
     query = (
@@ -287,7 +287,6 @@ def _single_extract_payment(email):
 def _post_slack_notification(payment):
     """Post a payment received notification to #payments. Skips silently if Slack not configured."""
     if not SLACK_BOT_TOKEN or not SLACK_PAYMENTS_CHANNEL_ID:
-        print("    ⚠️  Slack not configured — skipping notification")
         return
 
     try:
@@ -353,12 +352,10 @@ def scan_payments(emails):
             if result:
                 transaction = {
                     "date": result["date"],
-                    "description": result["description"],
+                    "description": result["payer_name"],
                     "source": result["platform"],
-                    "category": "Income",
                     "amount": result["amount"],
-                    "type": "Income",
-                    "notes": f"Gmail: {email['subject'][:60]}",
+                    "notes": result.get("notes", ""),
                 }
                 transactions.append(transaction)
                 _post_slack_notification(result)

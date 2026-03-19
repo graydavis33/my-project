@@ -1,0 +1,145 @@
+"""
+sync_usage.py
+Reads ~/.my-project-usage.json, computes stats per project,
+writes usage-stats.json to the repo root, and commits + pushes.
+
+Run from ANYWHERE with the shell alias:  usage
+Or manually:  cd ~/Desktop/my-project && python sync_usage.py
+"""
+import json
+import os
+import subprocess
+import sys
+from datetime import datetime, timezone, timedelta
+
+
+_LOG_PATH  = os.path.expanduser("~/.my-project-usage.json")
+_STATS_OUT = os.path.join(os.path.dirname(__file__), "usage-stats.json")
+
+# Friendly display names for each project key
+_PROJECT_NAMES = {
+    "email-agent":            "AI Email Agent",
+    "invoice-system":         "Invoice & Accounting System",
+    "content-researcher":     "Content Researcher",
+    "social-media-analytics": "Social Media Analytics (YouTube)",
+}
+
+
+def _load_log():
+    if not os.path.exists(_LOG_PATH):
+        return []
+    with open(_LOG_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def _compute_stats(entries):
+    now   = datetime.now(timezone.utc)
+    week  = now - timedelta(days=7)
+    month = now - timedelta(days=30)
+
+    stats = {}
+    for project in _PROJECT_NAMES:
+        runs = [e for e in entries if e.get("project") == project]
+        if not runs:
+            stats[project] = {"last_used": None, "this_week": 0, "all_time": 0}
+            continue
+
+        timestamps = sorted(e["ts"] for e in runs)
+        last_ts    = timestamps[-1]
+        last_dt    = datetime.fromisoformat(last_ts)
+
+        stats[project] = {
+            "last_used":  last_ts,
+            "this_week":  sum(1 for e in runs if datetime.fromisoformat(e["ts"]) >= week),
+            "all_time":   len(runs),
+        }
+
+    return stats
+
+
+def _fmt_last_used(ts):
+    """Return a human-friendly string like '2 days ago' or 'Today'."""
+    if ts is None:
+        return None
+    dt  = datetime.fromisoformat(ts)
+    now = datetime.now(timezone.utc)
+    diff = now - dt
+    days = diff.days
+    if days == 0:
+        return "Today"
+    if days == 1:
+        return "Yesterday"
+    if days < 7:
+        return f"{days}d ago"
+    if days < 30:
+        return f"{days // 7}w ago"
+    return f"{days // 30}mo ago"
+
+
+def main():
+    print("\n  Usage Stats Sync")
+    print("  ─────────────────")
+
+    entries = _load_log()
+    if not entries:
+        print(f"  No log found at {_LOG_PATH}")
+        print("  Run a live script first to generate data.\n")
+        # Still write an empty stats file so the dashboard doesn't fail
+        stats_raw = {p: {"last_used": None, "this_week": 0, "all_time": 0}
+                     for p in _PROJECT_NAMES}
+    else:
+        stats_raw = _compute_stats(entries)
+        print(f"  {len(entries)} total log entries found.\n")
+
+    # Print summary table
+    print(f"  {'Project':<35} {'Last Used':<14} {'This Week':>10} {'All Time':>10}")
+    print(f"  {'─'*35} {'─'*14} {'─'*10} {'─'*10}")
+    for project, s in stats_raw.items():
+        name      = _PROJECT_NAMES.get(project, project)
+        last_str  = _fmt_last_used(s["last_used"]) or "Never"
+        print(f"  {name:<35} {last_str:<14} {s['this_week']:>10} {s['all_time']:>10}")
+
+    # Build the JSON output (add human-friendly last_used_label)
+    output = {
+        "generated": datetime.now(timezone.utc).isoformat(),
+        "projects": {}
+    }
+    for project, s in stats_raw.items():
+        output["projects"][project] = {
+            "last_used":       s["last_used"],
+            "last_used_label": _fmt_last_used(s["last_used"]),
+            "this_week":       s["this_week"],
+            "all_time":        s["all_time"],
+        }
+
+    with open(_STATS_OUT, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2)
+
+    print(f"\n  Wrote {_STATS_OUT}")
+
+    # Git commit + push
+    repo = os.path.dirname(__file__)
+    try:
+        subprocess.run(["git", "add", "usage-stats.json"], cwd=repo, check=True)
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--quiet"],
+            cwd=repo
+        )
+        if result.returncode == 0:
+            print("  No changes to commit — stats already up to date.")
+        else:
+            subprocess.run(
+                ["git", "commit", "-m", "Update usage stats"],
+                cwd=repo, check=True
+            )
+            subprocess.run(["git", "push"], cwd=repo, check=True)
+            print("  Pushed to GitHub — dashboard updates in ~60s.")
+    except subprocess.CalledProcessError as e:
+        print(f"  Git error: {e}")
+        sys.exit(1)
+
+    print()
+
+
+if __name__ == "__main__":
+    main()

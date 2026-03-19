@@ -56,6 +56,13 @@ from config import (
 def run_email_check():
     """Main logic: fetch, classify, draft, notify."""
     log.info("Running email check...")
+    try:
+        import sys as _sys, os as _os
+        _sys.path.insert(0, _os.path.join(_os.path.dirname(__file__), '..', 'shared'))
+        from usage_logger import log_run
+        log_run("email-agent")
+    except Exception:
+        pass
 
     try:
         service = get_gmail_service()
