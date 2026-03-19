@@ -8,6 +8,7 @@ Handles all Gmail API interactions:
 """
 
 import base64
+import io
 import json
 import os
 from email.mime.text import MIMEText
@@ -102,15 +103,19 @@ def fetch_unprocessed_emails(service, label_id):
             .get(userId="me", id=msg["id"], format="full")
             .execute()
         )
-        emails.append(parse_email(detail))
+        emails.append(parse_email(detail, service=service))
 
     return emails
 
 
-def parse_email(raw_message):
-    """Extract the fields we care about from a raw Gmail API message."""
+def parse_email(raw_message, service=None):
+    """Extract the fields we care about from a raw Gmail API message.
+    Pass service to also extract text from any PDF attachments."""
     headers = {h["name"]: h["value"] for h in raw_message["payload"]["headers"]}
     body = extract_body(raw_message["payload"])
+    attachments = []
+    if service:
+        attachments = extract_pdf_attachments(service, raw_message["id"], raw_message["payload"])
 
     return {
         "id": raw_message["id"],
@@ -120,7 +125,47 @@ def parse_email(raw_message):
         "subject": headers.get("Subject", "(no subject)"),
         "date": headers.get("Date", ""),
         "body": body,
+        "attachments": attachments,  # list of {name, text} for each PDF
     }
+
+
+def extract_pdf_attachments(service, message_id, payload):
+    """
+    Recursively walk MIME parts to find PDF attachments.
+    Downloads each one and extracts its text using pypdf.
+    Returns a list of {name, text} dicts (text truncated to 5000 chars each).
+    Silently returns [] if pypdf isn't installed or extraction fails.
+    """
+    try:
+        from pypdf import PdfReader
+    except ImportError:
+        return []
+
+    results = []
+    _collect_pdf_parts(service, message_id, payload, results)
+    return results
+
+
+def _collect_pdf_parts(service, message_id, payload, results):
+    """Walk MIME parts recursively, downloading + reading any PDF found."""
+    filename = payload.get("filename", "")
+    if filename.lower().endswith(".pdf"):
+        attachment_id = payload.get("body", {}).get("attachmentId")
+        if attachment_id:
+            try:
+                from pypdf import PdfReader
+                att = service.users().messages().attachments().get(
+                    userId="me", messageId=message_id, id=attachment_id
+                ).execute()
+                raw = base64.urlsafe_b64decode(att["data"] + "==")
+                reader = PdfReader(io.BytesIO(raw))
+                text = "\n".join(page.extract_text() or "" for page in reader.pages)
+                results.append({"name": filename, "text": text[:5000]})
+            except Exception:
+                pass
+
+    for part in payload.get("parts", []):
+        _collect_pdf_parts(service, message_id, part, results)
 
 
 def extract_body(payload):

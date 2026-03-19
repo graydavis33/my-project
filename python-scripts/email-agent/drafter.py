@@ -60,13 +60,18 @@ def write_draft(email):
     """
     system_prompt = get_system_prompt()
 
+    attachment_section = ""
+    if email.get("attachments"):
+        parts = [f"=== {a['name']} ===\n{a['text']}" for a in email["attachments"]]
+        attachment_section = "\n\nAttachments included with this email:\n" + "\n\n".join(parts)
+
     user_message = f"""Write a reply to this email on behalf of Gray Davis.
 
 Original email:
 From: {email['from']}
 Subject: {email['subject']}
 
-{email['body'][:3000]}
+{email['body'][:3000]}{attachment_section}
 
 Write only the reply body. No subject line. Start directly with the response."""
 

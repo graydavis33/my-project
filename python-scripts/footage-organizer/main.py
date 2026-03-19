@@ -1,0 +1,168 @@
+"""
+Auto Footage Organizer
+Analyzes raw video files visually using Claude AI and organizes them
+into subfolders by content type.
+
+Usage:
+  python main.py /path/to/footage/
+  python main.py /path/to/footage/ --output ~/Desktop/shoot-march19/
+  python main.py /path/to/footage/ --move
+
+Requires:
+  - ANTHROPIC_API_KEY in .env
+  - ffmpeg + ffprobe installed (https://ffmpeg.org/download.html)
+"""
+import argparse
+import os
+import sys
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import log_run
+
+from config import CATEGORIES, VIDEO_EXTENSIONS
+from extractor import ffmpeg_available, get_duration, extract_frames
+from analyzer import classify_video
+from organizer import organize_file
+from cache import get_cached, store_cached
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Organize raw footage by visual content using Claude AI."
+    )
+    parser.add_argument(
+        "input_folder",
+        help="Path to folder containing raw .mp4 / .mov files"
+    )
+    parser.add_argument(
+        "--output", "-o",
+        default=None,
+        help="Output folder (default: input_folder/organized/)"
+    )
+    parser.add_argument(
+        "--move",
+        action="store_true",
+        help="Move files instead of copying (default: copy)"
+    )
+    return parser.parse_args()
+
+
+def find_videos(folder: str) -> list[str]:
+    """Return sorted list of video file paths in folder (non-recursive)."""
+    files = []
+    for name in os.listdir(folder):
+        ext = os.path.splitext(name)[1]
+        if ext in VIDEO_EXTENSIONS:
+            files.append(os.path.join(folder, name))
+    return sorted(files)
+
+
+def run(input_folder: str, output_dir: str, move: bool):
+    log_run("footage-organizer")
+
+    print(f"\n{'=' * 60}")
+    print(f"  Auto Footage Organizer")
+    print(f"{'=' * 60}")
+    print(f"  Input:  {input_folder}")
+    print(f"  Output: {output_dir}")
+    print(f"  Mode:   {'MOVE' if move else 'COPY'}")
+    print()
+
+    videos = find_videos(input_folder)
+    if not videos:
+        print("  No .mp4 or .mov files found in that folder.")
+        sys.exit(0)
+
+    print(f"  Found {len(videos)} video file(s)\n")
+
+    results = []   # (filename, category, dest_path, from_cache)
+    skipped = []   # filenames that failed
+
+    for i, filepath in enumerate(videos, 1):
+        filename = os.path.basename(filepath)
+        print(f"  [{i}/{len(videos)}] {filename}")
+
+        # --- Cache check ---
+        cached_category = get_cached(filepath)
+        if cached_category:
+            print(f"         (cached) -> {cached_category}")
+            dest = organize_file(filepath, output_dir, cached_category, move=move)
+            results.append((filename, cached_category, dest, True))
+            continue
+
+        # --- Extract frames ---
+        try:
+            duration = get_duration(filepath)
+            frames_b64 = extract_frames(filepath, duration)
+        except Exception as e:
+            print(f"         [skip] Frame extraction failed: {e}")
+            skipped.append(filename)
+            continue
+
+        # --- Classify with Claude ---
+        try:
+            category = classify_video(frames_b64, filename)
+        except Exception as e:
+            print(f"         [skip] Claude API error: {e}")
+            skipped.append(filename)
+            continue
+
+        print(f"         -> {category}")
+        store_cached(filepath, category)
+        dest = organize_file(filepath, output_dir, category, move=move)
+        results.append((filename, category, dest, False))
+
+    _print_summary(results, skipped, output_dir, move)
+
+
+def _print_summary(results, skipped, output_dir, move):
+    print(f"\n{'=' * 60}")
+    print(f"  DONE")
+    print(f"{'=' * 60}\n")
+
+    counts = {}
+    for _, category, _, _ in results:
+        counts[category] = counts.get(category, 0) + 1
+
+    action = "Moved" if move else "Copied"
+    total = len(results)
+    cached_count = sum(1 for _, _, _, from_cache in results if from_cache)
+    new_count = total - cached_count
+
+    print(f"  {action} {total} file(s)  ({new_count} analyzed, {cached_count} from cache)\n")
+
+    if counts:
+        print(f"  By category:")
+        for category in CATEGORIES:
+            count = counts.get(category, 0)
+            if count > 0:
+                bar = "#" * count
+                print(f"    {category:<22} {bar}  ({count})")
+
+    if skipped:
+        print(f"\n  Skipped {len(skipped)} file(s):")
+        for name in skipped:
+            print(f"    - {name}")
+
+    estimated_cost = new_count * 0.003
+    print(f"\n  Estimated API cost this run: ~${estimated_cost:.3f}")
+    print(f"  Output: {output_dir}\n")
+
+
+if __name__ == "__main__":
+    args = parse_args()
+
+    if not os.path.isdir(args.input_folder):
+        print(f"\n  Error: '{args.input_folder}' is not a valid folder.")
+        sys.exit(1)
+
+    if not ffmpeg_available():
+        print("\n  Error: ffmpeg and ffprobe are required but not found.")
+        print("  Install from: https://ffmpeg.org/download.html")
+        print("  Then make sure ffmpeg is in your system PATH.\n")
+        sys.exit(1)
+
+    output_dir = args.output or os.path.join(args.input_folder, "organized")
+    os.makedirs(output_dir, exist_ok=True)
+
+    run(args.input_folder, output_dir, move=args.move)

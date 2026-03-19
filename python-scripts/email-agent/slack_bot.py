@@ -261,6 +261,21 @@ def handle_view_submission(client: SocketModeClient, req: SocketModeRequest):
         )
 
 
+def send_followup_alert(entries):
+    """Send a Slack DM listing threads that haven't gotten a reply in 3+ days."""
+    if not entries:
+        return
+    from datetime import datetime
+    lines = ["*⏰ Follow-up reminders — no reply yet:*\n"]
+    for e in entries:
+        sent = datetime.fromtimestamp(e["sent_at"]).strftime("%b %d")
+        lines.append(f"• *{e['subject']}* — {e['recipient']} (your reply sent {sent})")
+    web_client.chat_postMessage(
+        channel=EMAIL_ALERTS_CHANNEL_ID,
+        text="\n".join(lines),
+    )
+
+
 def start_listener():
     """Start the Slack Socket Mode listener in a background thread with auto-reconnect."""
 

@@ -38,13 +38,18 @@ def classify_email(email):
     Pass an email to Claude and get back its category string.
     Returns one of: 'needs_reply', 'fyi_only', 'ignore'
     """
+    attachment_section = ""
+    if email.get("attachments"):
+        parts = [f"=== {a['name']} ===\n{a['text']}" for a in email["attachments"]]
+        attachment_section = "\n\nAttachments:\n" + "\n\n".join(parts)
+
     user_message = f"""
 From: {email['from']}
 Subject: {email['subject']}
 Date: {email['date']}
 
 Body:
-{email['body'][:2000]}
+{email['body'][:2000]}{attachment_section}
 """
 
     response = client.messages.create(

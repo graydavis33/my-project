@@ -42,7 +42,8 @@ from gmail_client import (
 )
 from classifier import classify_email
 from drafter import write_draft
-from slack_bot import send_draft_notification, start_listener, load_persisted_drafts, register_draft
+from slack_bot import send_draft_notification, send_followup_alert, start_listener, load_persisted_drafts, register_draft
+import followup_tracker
 from voice_analyzer import load_voice_profile, build_voice_profile, voice_profile_needs_refresh
 from config import (
     PROCESSED_LABEL,
@@ -106,11 +107,18 @@ def run_email_check():
                             thread_id=e["thread_id"],
                         )
                         log.info(f"Email sent to {e['from']}")
+                        followup_tracker.record_sent_reply(e)
                     return send
 
                 send_draft_notification(email, draft, make_send_callback(email))
             else:
                 log.info(f"  → No action needed.")
+
+        # Check for unanswered replies older than 3 days
+        overdue = followup_tracker.check_followups(service)
+        if overdue:
+            log.info(f"Sending follow-up alert for {len(overdue)} unanswered thread(s).")
+            send_followup_alert(overdue)
 
     except Exception:
         log.exception("Error during email check")
@@ -149,6 +157,7 @@ def restore_pending_drafts(service):
                 send_email(service, to=e["from"], subject=reply_subject,
                            body=draft_text, thread_id=e["thread_id"])
                 log.info(f"Email sent to {e['from']}")
+                followup_tracker.record_sent_reply(e)
             return send
 
         register_draft(email, draft, make_send_callback(email))

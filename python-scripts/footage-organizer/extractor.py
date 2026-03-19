@@ -1,0 +1,68 @@
+"""
+extractor.py
+Uses ffprobe to get video duration, then ffmpeg to extract 4 frames as base64 JPEGs.
+"""
+import base64
+import os
+import shutil
+import subprocess
+import tempfile
+
+from config import FRAME_POSITIONS
+
+
+def ffmpeg_available() -> bool:
+    return shutil.which("ffmpeg") is not None and shutil.which("ffprobe") is not None
+
+
+def get_duration(filepath: str) -> float:
+    """
+    Get video duration in seconds via ffprobe.
+    Raises RuntimeError if ffprobe fails or output can't be parsed.
+    """
+    cmd = [
+        "ffprobe",
+        "-v", "error",
+        "-show_entries", "format=duration",
+        "-of", "default=noprint_wrappers=1:nokey=1",
+        filepath,
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    raw = result.stdout.strip()
+    try:
+        return float(raw)
+    except ValueError:
+        raise RuntimeError(f"Could not parse duration from ffprobe: '{raw}'")
+
+
+def extract_frames(filepath: str, duration: float) -> list[str]:
+    """
+    Extract one JPEG frame at each FRAME_POSITIONS percentage through the video.
+    Returns a list of base64-encoded JPEG strings (one per position).
+
+    -ss before -i = fast seek (keyframe-accurate, ~10x faster for long files)
+    -frames:v 1   = extract exactly one frame
+    -q:v 3        = JPEG quality (2=best, 5=smaller); 3 is a solid balance
+    """
+    frames_b64 = []
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        for i, position in enumerate(FRAME_POSITIONS):
+            seek_time = duration * position
+            out_path = os.path.join(tmpdir, f"frame_{i}.jpg")
+
+            cmd = [
+                "ffmpeg",
+                "-ss", f"{seek_time:.3f}",
+                "-i", filepath,
+                "-frames:v", "1",
+                "-q:v", "3",
+                "-y",
+                out_path,
+            ]
+            subprocess.run(cmd, check=True, capture_output=True)
+
+            with open(out_path, "rb") as f:
+                frames_b64.append(base64.b64encode(f.read()).decode("utf-8"))
+
+    return frames_b64
