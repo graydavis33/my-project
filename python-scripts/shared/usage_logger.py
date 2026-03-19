@@ -12,17 +12,26 @@ Then add track_response() after every client.messages.create() call:
     track_response(response)
 
 The log file lives at ~/.my-project-usage.json and is NEVER committed to git.
-Run sync_usage.py at the repo root to compute stats and push to the dashboard.
+sync_usage.py runs automatically in the background when any script exits — dashboard
+updates ~60s later. Type `usage` anytime to force an immediate manual sync.
 
 Pricing ($/1M tokens) — update if Anthropic changes rates: console.anthropic.com
 """
 import atexit
 import json
 import os
+import subprocess
+import sys
 from datetime import datetime, timezone
 
 
 _LOG_PATH = os.path.expanduser("~/.my-project-usage.json")
+
+# Path to sync_usage.py — 3 levels up from this file (shared/ → python-scripts/ → repo root)
+_SYNC_SCRIPT = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "sync_usage.py"
+)
 
 # Pricing per 1 million tokens (input_rate, output_rate)
 _PRICING = {
@@ -67,6 +76,13 @@ def _flush_cost() -> None:
         })
         with open(_LOG_PATH, "w", encoding="utf-8") as f:
             json.dump(entries, f)
+        # Spawn sync in background — dashboard updates ~60s later without manual `usage` command
+        if os.path.exists(_SYNC_SCRIPT):
+            subprocess.Popen(
+                [sys.executable, _SYNC_SCRIPT],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
     except Exception:
         pass
 
