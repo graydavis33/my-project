@@ -6,17 +6,58 @@
   <title>Payday Checklist — Graydient Media</title>
   <link rel="stylesheet" href="../styles/brand.css" />
   <style>
-    body { padding: 28px 16px 56px; }
-    .container { max-width: 480px; margin: 0 auto; }
 
-    /* Tab panes */
+    /* ── Base ── */
+    body { padding: 24px 16px 56px; }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
-    /* Header */
-    .header { text-align: center; margin-bottom: 32px; }
-    .header h1 {
-      font-size: 24px;
+    /* ── Topbar ── */
+    .topbar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .topbar-logo {
+      height: 36px;
+      width: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: none; /* shown via JS once loaded */
+    }
+    .topbar-wordmark {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.8;
+    }
+    .topbar-paycheck {
+      display: none; /* desktop only */
+      text-align: right;
+      margin-left: auto;
+    }
+    .topbar-paycheck span { font-size: 11px; color: var(--color-gray-light); display: block; letter-spacing: 0.5px; }
+    .topbar-paycheck strong { font-size: 22px; font-weight: 800; color: var(--color-yellow); letter-spacing: -0.5px; }
+
+    /* ── Mobile page header ── */
+    .mobile-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .mobile-header h1 {
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
       background: var(--gradient-text);
@@ -24,436 +65,495 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .header .date { color: var(--color-gray-light); font-size: 12px; margin-top: 5px; }
+    .mobile-header .date { color: var(--color-gray-light); font-size: 12px; margin-top: 4px; }
     .paycheck-badge {
       display: inline-block;
       background: linear-gradient(160deg, rgba(26,45,90,0.5) 0%, rgba(10,10,15,0.7) 100%);
       border: var(--border-yellow);
       border-radius: var(--radius-lg);
-      padding: 12px 28px;
-      margin-top: 16px;
+      padding: 10px 24px;
+      margin-top: 14px;
       box-shadow: var(--glow-yellow);
     }
-    .paycheck-badge span { font-size: 12px; color: var(--color-gray-light); display: block; margin-bottom: 3px; letter-spacing: 0.5px; }
-    .paycheck-amount { font-size: 30px; font-weight: 800; color: var(--color-yellow); letter-spacing: -1px; }
+    .paycheck-badge span { font-size: 11px; color: var(--color-gray-light); display: block; margin-bottom: 2px; }
+    .paycheck-amount { font-size: 28px; font-weight: 800; color: var(--color-yellow); letter-spacing: -1px; }
 
-    /* Section label reset btn */
+    /* ── Section label reset btn ── */
     .section-reset-btn {
-      background: none;
-      border: none;
+      background: none; border: none;
       color: rgba(255,255,255,0.18);
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      cursor: pointer;
-      padding: 2px 6px;
-      border-radius: 4px;
-      transition: color 0.15s;
-      font-family: var(--font-base);
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      cursor: pointer; padding: 2px 6px; border-radius: 4px;
+      transition: color 0.15s; font-family: var(--font-base);
     }
     .section-reset-btn:hover { color: var(--color-red); }
 
-    /* Steps */
+    /* ── Checklist layout (mobile: single col, desktop: 2-col) ── */
+    .checklist-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* ── Steps ── */
     .step {
       background: linear-gradient(160deg, rgba(26,45,90,0.3) 0%, rgba(10,10,15,0.5) 100%);
       border: var(--border-card);
       border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
+      padding: 13px 15px;
+      margin-bottom: 7px;
+      display: flex; align-items: center; gap: 13px;
       cursor: pointer;
       transition: border-color 0.15s, opacity 0.2s;
       user-select: none;
     }
-    .step:hover { border-color: rgba(232, 184, 75, 0.2); }
-    .step.done { opacity: 0.4; }
+    .step:hover { border-color: rgba(232,184,75,0.2); }
+    .step.done { opacity: 0.38; }
     .step.done .step-label { text-decoration: line-through; color: var(--color-gray-mid); }
-
     .checkbox {
-      width: 22px; height: 22px;
-      border-radius: 6px;
-      border: 2px solid rgba(255,255,255,0.15);
-      flex-shrink: 0;
+      width: 21px; height: 21px; border-radius: 6px;
+      border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, border-color 0.15s;
     }
-    .step.done .checkbox {
-      background: var(--gradient-accent);
-      border-color: transparent;
-      box-shadow: var(--glow-yellow);
-    }
-    .checkmark { display: none; color: var(--color-black); font-size: 12px; font-weight: 900; }
+    .step.done .checkbox { background: var(--gradient-accent); border-color: transparent; box-shadow: var(--glow-yellow); }
+    .checkmark { display: none; color: var(--color-black); font-size: 11px; font-weight: 900; }
     .step.done .checkmark { display: block; }
-
     .step-body { flex: 1; }
-    .step-label { font-size: 14px; font-weight: 500; color: var(--color-white); }
-    .step-sub { font-size: 11px; color: var(--color-gray-mid); margin-top: 2px; }
-
+    .step-label { font-size: 13px; font-weight: 500; color: var(--color-white); }
+    .step-sub { font-size: 11px; color: var(--color-gray-mid); margin-top: 1px; }
     .step-right { text-align: right; flex-shrink: 0; }
-    .step-amount { font-size: 15px; font-weight: 700; color: var(--color-red); }
+    .step-amount { font-size: 14px; font-weight: 700; color: var(--color-red); }
     .step-amount.positive { color: var(--color-green); }
     .step-amount.neutral { color: var(--color-yellow); }
     .step-balance { font-size: 10px; color: var(--color-gray-mid); margin-top: 2px; }
 
-    /* Fund card internals */
+    /* ── Fund card internals ── */
     .fund-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
     .fund-title { font-size: 14px; font-weight: 600; color: var(--color-white); }
     .fund-goal { font-size: 11px; color: var(--color-gray-light); margin-top: 2px; }
-    .fund-input-wrap { display: flex; align-items: center; gap: 6px; }
+    .fund-input-wrap { display: flex; align-items: center; gap: 5px; }
     .fund-input-wrap span { color: var(--color-gray-light); font-size: 14px; }
     .fund-input {
-      background: rgba(10,10,15,0.7);
-      border: var(--border-input);
-      border-radius: var(--radius-sm);
-      color: var(--color-white);
-      font-family: var(--font-base);
-      font-size: 16px;
-      font-weight: 700;
-      width: 110px;
-      padding: 6px 10px;
-      text-align: right;
+      background: rgba(10,10,15,0.7); border: var(--border-input);
+      border-radius: var(--radius-sm); color: var(--color-white);
+      font-family: var(--font-base); font-size: 16px; font-weight: 700;
+      width: 110px; padding: 6px 10px; text-align: right;
     }
     .fund-input:focus { outline: none; border-color: var(--color-yellow); }
     .fund-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-gray-light); }
     .fund-stats .highlight { color: var(--color-yellow); font-weight: 600; }
 
-    /* Expense tracker */
+    /* ── Expense tracker ── */
     .expense-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .expense-row:last-child { border-bottom: none; }
     .expense-name { font-size: 13px; color: var(--color-white); }
     .expense-budget { font-size: 11px; color: var(--color-gray-mid); margin-top: 1px; }
     .expense-right { display: flex; align-items: center; gap: 8px; }
     .expense-spent-input {
-      background: rgba(10,10,15,0.7);
-      border: var(--border-input);
-      border-radius: var(--radius-sm);
-      color: var(--color-white);
-      font-family: var(--font-base);
-      font-size: 13px;
-      width: 72px;
-      padding: 5px 8px;
-      text-align: right;
+      background: rgba(10,10,15,0.7); border: var(--border-input);
+      border-radius: var(--radius-sm); color: var(--color-white);
+      font-family: var(--font-base); font-size: 13px; width: 68px; padding: 5px 8px; text-align: right;
     }
     .expense-spent-input:focus { outline: none; border-color: var(--color-yellow); }
-    .expense-remaining { font-size: 12px; width: 52px; text-align: right; font-weight: 600; }
+    .expense-remaining { font-size: 12px; width: 50px; text-align: right; font-weight: 600; }
     .ok { color: var(--color-green); }
     .over { color: var(--color-red); }
     .expense-total-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0 2px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--color-gray-light);
+      display: flex; justify-content: space-between;
+      padding: 11px 0 2px; font-size: 12px; font-weight: 600; color: var(--color-gray-light);
     }
-
-    /* Budget edit input */
     .budget-edit-input {
-      background: transparent;
-      border: none;
+      background: transparent; border: none;
       border-bottom: 1px solid rgba(255,255,255,0.12);
-      color: var(--color-gray-mid);
-      font-size: 11px;
-      width: 50px;
-      padding: 0 2px;
-      text-align: right;
-      font-family: var(--font-base);
+      color: var(--color-gray-mid); font-size: 11px; width: 48px;
+      padding: 0 2px; text-align: right; font-family: var(--font-base);
     }
     .budget-edit-input:focus { outline: none; border-bottom-color: var(--color-yellow); color: var(--color-gray-light); }
 
-    /* Rent input */
+    /* ── Rent input ── */
     .rent-input-wrap { display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
     .rent-input {
-      background: rgba(10,10,15,0.7);
-      border: 1px solid rgba(248,113,113,0.25);
-      border-radius: 6px;
-      color: var(--color-red);
-      font-family: var(--font-base);
-      font-size: 15px;
-      font-weight: 700;
-      width: 80px;
-      padding: 4px 6px;
-      text-align: right;
+      background: rgba(10,10,15,0.7); border: 1px solid rgba(248,113,113,0.25);
+      border-radius: 6px; color: var(--color-red);
+      font-family: var(--font-base); font-size: 14px; font-weight: 700;
+      width: 78px; padding: 4px 6px; text-align: right;
     }
     .rent-input:focus { outline: none; border-color: var(--color-red); }
 
-    /* Notes */
+    /* ── Notes ── */
     .notes-input {
       width: 100%;
       background: linear-gradient(160deg, rgba(26,45,90,0.3) 0%, rgba(10,10,15,0.5) 100%);
-      border: var(--border-card);
-      border-radius: var(--radius-md);
-      color: var(--color-gray-light);
-      font-family: var(--font-base);
-      font-size: 13px;
-      padding: 14px 16px;
-      resize: none;
-      min-height: 80px;
+      border: var(--border-card); border-radius: var(--radius-md);
+      color: var(--color-gray-light); font-family: var(--font-base);
+      font-size: 13px; padding: 13px 15px; resize: none; min-height: 80px;
     }
     .notes-input:focus { outline: none; border-color: rgba(232,184,75,0.3); }
     .notes-input::placeholder { color: rgba(255,255,255,0.18); }
 
-    /* Buttons row */
-    .btn-row { display: flex; gap: 8px; margin-top: 28px; }
+    /* ── Buttons ── */
+    .btn-row { display: flex; gap: 8px; margin-top: 24px; }
     .btn-row .gm-btn-primary { flex: 1; }
     .btn-row .gm-btn-ghost { flex: 1; }
 
-    /* History */
+    /* ── History ── */
+    .history-container { /* wraps header label + list */ }
     .history-empty { text-align: center; padding: 48px 0; color: var(--color-gray-mid); font-size: 13px; line-height: 1.6; }
     .history-card {
       background: linear-gradient(160deg, rgba(26,45,90,0.3) 0%, rgba(10,10,15,0.5) 100%);
-      border: var(--border-card);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 12px;
+      border: var(--border-card); border-radius: var(--radius-md); padding: 15px; margin-bottom: 12px;
     }
-    .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 11px; }
     .history-date { font-size: 13px; font-weight: 600; color: var(--color-white); }
-    .history-paycheck { font-size: 12px; color: var(--color-yellow); font-weight: 600; margin-top: 2px; }
-    .history-steps { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
-    .history-step-pill { font-size: 10px; padding: 3px 8px; border-radius: var(--radius-full); font-weight: 500; }
+    .history-paycheck { font-size: 11px; color: var(--color-yellow); font-weight: 600; margin-top: 2px; }
+    .history-steps { display: flex; gap: 4px; margin-bottom: 11px; flex-wrap: wrap; }
+    .history-step-pill { font-size: 10px; padding: 2px 7px; border-radius: var(--radius-full); font-weight: 500; }
     .history-step-pill.done { background: rgba(232,184,75,0.12); color: var(--color-yellow); border: 1px solid rgba(232,184,75,0.2); }
     .history-step-pill.skip { background: rgba(255,255,255,0.04); color: var(--color-gray-mid); }
-    .history-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-gray-mid); padding: 3px 0; }
+    .history-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-gray-mid); padding: 2px 0; }
     .history-row span:last-child { color: var(--color-gray-light); font-weight: 500; }
-    .history-notes { margin-top: 10px; font-size: 11px; color: var(--color-gray-mid); font-style: italic; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+    .history-notes { margin-top: 9px; font-size: 11px; color: var(--color-gray-mid); font-style: italic; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 9px; }
     .history-delete { background: none; border: none; color: rgba(255,255,255,0.18); font-size: 15px; cursor: pointer; padding: 0 4px; transition: color 0.15s; }
     .history-delete:hover { color: var(--color-red); }
     .history-edit { background: none; border: none; color: var(--color-gray-mid); font-size: 12px; font-weight: 600; cursor: pointer; padding: 0 6px; transition: color 0.15s; font-family: var(--font-base); }
     .history-edit:hover { color: var(--color-yellow); }
 
-    /* Modal internals */
+    /* ── Modal internals ── */
     .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--color-white); }
-    .modal-close { background: none; border: none; color: var(--color-gray-mid); font-size: 20px; cursor: pointer; padding: 0 4px; }
-    .modal-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--color-gray-mid); margin: 18px 0 8px; }
-    .modal-step-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; user-select: none; }
+    .modal-close { background: none; border: none; color: var(--color-gray-mid); font-size: 20px; cursor: pointer; }
+    .modal-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--color-gray-mid); margin: 16px 0 8px; }
+    .modal-step-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; user-select: none; }
     .modal-step-row:last-child { border-bottom: none; }
-    .modal-step-check { width: 20px; height: 20px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--color-black); transition: background 0.15s, border-color 0.15s; }
+    .modal-step-check { width: 19px; height: 19px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--color-black); transition: background 0.15s, border-color 0.15s; }
     .modal-step-check.on { background: var(--gradient-accent); border-color: transparent; }
     .modal-step-label { font-size: 13px; color: var(--color-gray-light); }
-    .modal-expense-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .modal-expense-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .modal-expense-row:last-child { border-bottom: none; }
     .modal-expense-name { font-size: 13px; color: var(--color-gray-light); }
     .modal-input { background: rgba(10,10,15,0.8); border: var(--border-input); border-radius: var(--radius-sm); color: var(--color-white); font-family: var(--font-base); font-size: 13px; width: 80px; padding: 6px 10px; text-align: right; }
     .modal-input:focus { outline: none; border-color: var(--color-yellow); }
     .modal-notes { width: 100%; background: rgba(10,10,15,0.8); border: var(--border-input); border-radius: var(--radius-sm); color: var(--color-gray-light); font-family: var(--font-base); font-size: 13px; padding: 10px 12px; resize: none; min-height: 70px; }
     .modal-notes:focus { outline: none; border-color: rgba(255,255,255,0.2); }
+
+    /* ══════════════════════════════════════════
+       DESKTOP LAYOUT (800px+)
+    ══════════════════════════════════════════ */
+    @media (min-width: 800px) {
+      body {
+        padding: 0;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* Sticky top bar */
+      .topbar {
+        flex-direction: row;
+        align-items: center;
+        padding: 12px 36px;
+        margin-bottom: 0;
+        gap: 20px;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: rgba(10, 10, 20, 0.92);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+      }
+      .topbar-brand { gap: 12px; }
+      .topbar-logo { height: 38px; width: 38px; }
+      .topbar .gm-tabs { margin-bottom: 0; width: auto; min-width: 220px; }
+      .topbar-paycheck { display: block; }
+
+      /* Mobile header: hide on desktop */
+      .mobile-header { display: none; }
+
+      /* Two-column checklist grid */
+      .checklist-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 0 36px;
+        padding: 28px 36px 40px;
+        max-width: 1280px;
+        margin: 0 auto;
+        align-items: start;
+      }
+      .col-left  { grid-column: 1; }
+      .col-right { grid-column: 2; }
+
+      /* Desktop page title (left column top) */
+      .desktop-title {
+        display: block;
+        margin-bottom: 20px;
+      }
+      .desktop-title h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        background: var(--gradient-text);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .desktop-title .date { color: var(--color-gray-light); font-size: 12px; margin-top: 3px; }
+
+      /* History: 2-col card grid */
+      .history-container {
+        padding: 28px 36px 40px;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      #history-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      #history-list .history-card { margin-bottom: 0; }
+    }
+
+    /* Hide desktop-only elements on mobile */
+    .desktop-title { display: none; }
   </style>
 </head>
 <body>
-<div class="container">
+<div class="container" style="max-width:100%">
 
-  <!-- Wordmark -->
-  <div class="gm-wordmark">Graydient Media</div>
+  <!-- ── TOP BAR (mobile: stacked / desktop: horizontal sticky) ── -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <img
+        src="../styles/assets/graydient-media-logo.png"
+        class="topbar-logo"
+        alt="Graydient Media"
+        onload="this.style.display='block'"
+        onerror="this.style.display='none'"
+      />
+      <span class="topbar-wordmark">Graydient Media</span>
+    </div>
 
-  <!-- Tab nav -->
-  <div class="gm-tabs">
-    <button class="gm-tab-btn active" onclick="switchTab('checklist')">Checklist</button>
-    <button class="gm-tab-btn" onclick="switchTab('history')">History</button>
+    <div class="gm-tabs">
+      <button class="gm-tab-btn active" onclick="switchTab('checklist')">Checklist</button>
+      <button class="gm-tab-btn" onclick="switchTab('history')">History</button>
+    </div>
+
+    <!-- Paycheck shown in topbar on desktop, hidden on mobile -->
+    <div class="topbar-paycheck">
+      <span>Bi-weekly paycheck</span>
+      <strong>$3,250</strong>
+    </div>
   </div>
 
   <!-- ── CHECKLIST TAB ── -->
   <div class="tab-pane active" id="tab-checklist">
 
-    <div class="header">
+    <!-- Mobile header (date + paycheck badge) -->
+    <div class="mobile-header">
       <h1>Payday Checklist</h1>
-      <div class="date" id="today-date"></div>
+      <div class="date" id="today-date-mobile"></div>
       <div class="paycheck-badge">
         <span>Bi-weekly paycheck</span>
         <div class="paycheck-amount">$3,250</div>
       </div>
     </div>
 
-    <div class="gm-label">Steps — do these in order <button class="section-reset-btn" onclick="resetSteps()">Reset</button></div>
+    <div class="checklist-layout">
 
-    <div class="step" id="step-0" onclick="toggleStep(0)">
-      <div class="checkbox"><span class="checkmark">✓</span></div>
-      <div class="step-body">
-        <div class="step-label">Move taxes to PrimeSouth</div>
-        <div class="step-sub">30% set-aside — do NOT touch this money</div>
+      <!-- LEFT COLUMN: title (desktop) + steps + notes + buttons -->
+      <div class="col-left">
+        <div class="desktop-title">
+          <h1>Payday Checklist</h1>
+          <div class="date" id="today-date-desktop"></div>
+        </div>
+
+        <div class="gm-label">Steps — do these in order <button class="section-reset-btn" onclick="resetSteps()">Reset</button></div>
+
+        <div class="step" id="step-0" onclick="toggleStep(0)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="step-body">
+            <div class="step-label">Move taxes to PrimeSouth</div>
+            <div class="step-sub">30% set-aside — do NOT touch this money</div>
+          </div>
+          <div class="step-right">
+            <div class="step-amount">-$975</div>
+            <div class="step-balance">Balance: $2,275</div>
+          </div>
+        </div>
+
+        <div class="step" id="step-1" onclick="toggleStep(1)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="step-body">
+            <div class="step-label">Pay rent</div>
+            <div class="step-sub">Full month — adjust if you move</div>
+          </div>
+          <div class="step-right">
+            <div class="rent-input-wrap">
+              <span class="step-amount" style="font-size:12px">-$</span>
+              <input class="rent-input" type="number" id="rent-amount" value="1500" onclick="event.stopPropagation()" oninput="updateRent()" />
+            </div>
+            <div class="step-balance" id="balance-1">Balance: $775</div>
+          </div>
+        </div>
+
+        <div class="step" id="step-2" onclick="toggleStep(2)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="step-body">
+            <div class="step-label">Pay student loans</div>
+            <div class="step-sub">Full month — auto-pay or manual</div>
+          </div>
+          <div class="step-right">
+            <div class="step-amount">-$318</div>
+            <div class="step-balance" id="balance-2">Balance: $457</div>
+          </div>
+        </div>
+
+        <div class="step" id="step-3" onclick="toggleStep(3)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="step-body">
+            <div class="step-label">Buy MetroCard</div>
+            <div class="step-sub">Unlimited monthly — buy at start of each month</div>
+          </div>
+          <div class="step-right">
+            <div class="step-amount">-$132</div>
+            <div class="step-balance" id="balance-3">Balance: $325</div>
+          </div>
+        </div>
+
+        <div class="step" id="step-4" onclick="toggleStep(4)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="step-body">
+            <div class="step-label">Set aside expense budget</div>
+            <div class="step-sub">Monthly total — track spending on the right</div>
+          </div>
+          <div class="step-right">
+            <div class="step-amount neutral" id="step4-amount">$975</div>
+            <div class="step-balance">Monthly budget</div>
+          </div>
+        </div>
+
+        <div class="step" id="step-5" onclick="toggleStep(5)">
+          <div class="checkbox"><span class="checkmark">✓</span></div>
+          <div class="step-body">
+            <div class="step-label">Transfer to emergency fund</div>
+            <div class="step-sub">$1,500/mo goal — update tracker on the right</div>
+          </div>
+          <div class="step-right">
+            <div class="step-amount positive">+$1,500</div>
+            <div class="step-balance">Monthly savings</div>
+          </div>
+        </div>
+
+        <div class="gm-label" style="margin-top:24px">Notes <button class="section-reset-btn" onclick="resetNotes()">Reset</button></div>
+        <textarea class="notes-input" id="notes" placeholder="Anything to note this payday..." oninput="saveNotes()"></textarea>
+
+        <div class="btn-row">
+          <button class="gm-btn-primary" onclick="submitPayday()">Save to History</button>
+          <button class="gm-btn-ghost" onclick="resetEverything()">Reset Everything</button>
+        </div>
       </div>
-      <div class="step-right">
-        <div class="step-amount">-$975</div>
-        <div class="step-balance">Balance: $2,275</div>
+
+      <!-- RIGHT COLUMN: emergency fund + expenses -->
+      <div class="col-right">
+
+        <div class="gm-label">Emergency Fund <button class="section-reset-btn" onclick="resetFund()">Reset</button></div>
+        <div class="gm-card">
+          <div class="fund-top">
+            <div>
+              <div class="fund-title">Savings Balance</div>
+              <div class="fund-goal">Goal: $9,000 (6 months)</div>
+            </div>
+            <div class="fund-input-wrap">
+              <span>$</span>
+              <input class="fund-input" type="number" id="fund-balance" placeholder="0" oninput="updateFund()" />
+            </div>
+          </div>
+          <div class="gm-progress-bg">
+            <div class="gm-progress-fill" id="fund-bar" style="width:0%"></div>
+          </div>
+          <div class="fund-stats">
+            <span id="fund-pct">0% there</span>
+            <span id="fund-months" class="highlight"></span>
+          </div>
+        </div>
+
+        <div class="gm-label" style="margin-top:24px">Monthly Expense Budget — <span id="expense-budget-total">$975</span> <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
+        <div class="gm-card">
+
+          <div class="expense-row">
+            <div>
+              <div class="expense-name">Groceries</div>
+              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-0" value="300" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" /></div>
+            </div>
+            <div class="expense-right">
+              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
+              <div class="expense-remaining ok" id="rem-0">$300</div>
+            </div>
+          </div>
+
+          <div class="expense-row">
+            <div>
+              <div class="expense-name">Dining Out</div>
+              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-1" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" /></div>
+            </div>
+            <div class="expense-right">
+              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
+              <div class="expense-remaining ok" id="rem-1">$200</div>
+            </div>
+          </div>
+
+          <div class="expense-row">
+            <div>
+              <div class="expense-name">Utilities / Internet</div>
+              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-2" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" /></div>
+            </div>
+            <div class="expense-right">
+              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
+              <div class="expense-remaining ok" id="rem-2">$60</div>
+            </div>
+          </div>
+
+          <div class="expense-row">
+            <div>
+              <div class="expense-name">Streaming</div>
+              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-3" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(3)" /></div>
+            </div>
+            <div class="expense-right">
+              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
+              <div class="expense-remaining ok" id="rem-3">$40</div>
+            </div>
+          </div>
+
+          <div class="expense-row">
+            <div>
+              <div class="expense-name">Misc / Buffer</div>
+              <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-4" value="375" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" /></div>
+            </div>
+            <div class="expense-right">
+              <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
+              <div class="expense-remaining ok" id="rem-4">$375</div>
+            </div>
+          </div>
+
+          <div class="expense-total-row">
+            <span>Total remaining</span>
+            <span id="expense-total-remaining" class="ok">$975</span>
+          </div>
+
+        </div>
       </div>
     </div>
-
-    <div class="step" id="step-1" onclick="toggleStep(1)">
-      <div class="checkbox"><span class="checkmark">✓</span></div>
-      <div class="step-body">
-        <div class="step-label">Pay rent</div>
-        <div class="step-sub">Full month — adjust if you move</div>
-      </div>
-      <div class="step-right">
-        <div class="rent-input-wrap">
-          <span class="step-amount" style="font-size:12px">-$</span>
-          <input class="rent-input" type="number" id="rent-amount" value="1500" onclick="event.stopPropagation()" oninput="updateRent()" />
-        </div>
-        <div class="step-balance" id="balance-1">Balance: $775</div>
-      </div>
-    </div>
-
-    <div class="step" id="step-2" onclick="toggleStep(2)">
-      <div class="checkbox"><span class="checkmark">✓</span></div>
-      <div class="step-body">
-        <div class="step-label">Pay student loans</div>
-        <div class="step-sub">Full month — auto-pay or manual</div>
-      </div>
-      <div class="step-right">
-        <div class="step-amount">-$318</div>
-        <div class="step-balance" id="balance-2">Balance: $457</div>
-      </div>
-    </div>
-
-    <div class="step" id="step-3" onclick="toggleStep(3)">
-      <div class="checkbox"><span class="checkmark">✓</span></div>
-      <div class="step-body">
-        <div class="step-label">Buy MetroCard</div>
-        <div class="step-sub">Unlimited monthly — buy at start of each month</div>
-      </div>
-      <div class="step-right">
-        <div class="step-amount">-$132</div>
-        <div class="step-balance" id="balance-3">Balance: $325</div>
-      </div>
-    </div>
-
-    <div class="step" id="step-4" onclick="toggleStep(4)">
-      <div class="checkbox"><span class="checkmark">✓</span></div>
-      <div class="step-body">
-        <div class="step-label">Set aside expense budget</div>
-        <div class="step-sub">Monthly total across both paychecks — track spending below</div>
-      </div>
-      <div class="step-right">
-        <div class="step-amount neutral" id="step4-amount">$975</div>
-        <div class="step-balance">Monthly budget</div>
-      </div>
-    </div>
-
-    <div class="step" id="step-5" onclick="toggleStep(5)">
-      <div class="checkbox"><span class="checkmark">✓</span></div>
-      <div class="step-body">
-        <div class="step-label">Transfer to emergency fund</div>
-        <div class="step-sub">$1,500/mo goal — update tracker below</div>
-      </div>
-      <div class="step-right">
-        <div class="step-amount positive">+$1,500</div>
-        <div class="step-balance">Monthly savings</div>
-      </div>
-    </div>
-
-    <!-- Emergency Fund -->
-    <div class="gm-label">Emergency Fund <button class="section-reset-btn" onclick="resetFund()">Reset</button></div>
-    <div class="gm-card">
-      <div class="fund-top">
-        <div>
-          <div class="fund-title">Savings Balance</div>
-          <div class="fund-goal">Goal: $9,000 (6 months)</div>
-        </div>
-        <div class="fund-input-wrap">
-          <span>$</span>
-          <input class="fund-input" type="number" id="fund-balance" placeholder="0" oninput="updateFund()" />
-        </div>
-      </div>
-      <div class="gm-progress-bg">
-        <div class="gm-progress-fill" id="fund-bar" style="width:0%"></div>
-      </div>
-      <div class="fund-stats">
-        <span id="fund-pct">0% there</span>
-        <span id="fund-months" class="highlight"></span>
-      </div>
-    </div>
-
-    <!-- Variable Expenses -->
-    <div class="gm-label">Monthly Expense Budget — <span id="expense-budget-total">$975</span> <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
-    <div class="gm-card">
-
-      <div class="expense-row">
-        <div>
-          <div class="expense-name">Groceries</div>
-          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-0" value="300" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" /></div>
-        </div>
-        <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-          <div class="expense-remaining ok" id="rem-0">$300</div>
-        </div>
-      </div>
-
-      <div class="expense-row">
-        <div>
-          <div class="expense-name">Dining Out</div>
-          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-1" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" /></div>
-        </div>
-        <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-          <div class="expense-remaining ok" id="rem-1">$200</div>
-        </div>
-      </div>
-
-      <div class="expense-row">
-        <div>
-          <div class="expense-name">Utilities / Internet</div>
-          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-2" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" /></div>
-        </div>
-        <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-          <div class="expense-remaining ok" id="rem-2">$60</div>
-        </div>
-      </div>
-
-      <div class="expense-row">
-        <div>
-          <div class="expense-name">Streaming</div>
-          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-3" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(3)" /></div>
-        </div>
-        <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-          <div class="expense-remaining ok" id="rem-3">$40</div>
-        </div>
-      </div>
-
-      <div class="expense-row">
-        <div>
-          <div class="expense-name">Misc / Buffer</div>
-          <div class="expense-budget">Budget: $<input class="budget-edit-input" type="number" id="budget-4" value="375" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" /></div>
-        </div>
-        <div class="expense-right">
-          <input class="expense-spent-input" type="number" placeholder="$0" oninput="updateExpenses()" />
-          <div class="expense-remaining ok" id="rem-4">$375</div>
-        </div>
-      </div>
-
-      <div class="expense-total-row">
-        <span>Total remaining</span>
-        <span id="expense-total-remaining" class="ok">$975</span>
-      </div>
-
-    </div>
-
-    <!-- Notes -->
-    <div class="gm-label">Notes <button class="section-reset-btn" onclick="resetNotes()">Reset</button></div>
-    <textarea class="notes-input" id="notes" placeholder="Anything to note this payday..." oninput="saveNotes()"></textarea>
-
-    <!-- Buttons -->
-    <div class="btn-row">
-      <button class="gm-btn-primary" onclick="submitPayday()">Save to History</button>
-      <button class="gm-btn-ghost" onclick="resetEverything()">Reset Everything</button>
-    </div>
-
   </div>
 
   <!-- ── HISTORY TAB ── -->
   <div class="tab-pane" id="tab-history">
-    <div class="gm-label" style="margin-top:0">Past Paychecks <button class="section-reset-btn" onclick="resetHistory()">Clear All</button></div>
-    <div id="history-list"></div>
+    <div class="history-container">
+      <div class="gm-label" style="margin-top:0">Past Paychecks <button class="section-reset-btn" onclick="resetHistory()">Clear All</button></div>
+      <div id="history-list"></div>
+    </div>
   </div>
 
 </div>
@@ -467,22 +567,17 @@
       <span>Edit Entry</span>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-
     <div class="modal-section">Steps Completed</div>
     <div id="modal-steps"></div>
-
     <div class="modal-section">Expenses Spent</div>
     <div id="modal-expenses"></div>
-
     <div class="modal-section">Emergency Fund Balance</div>
     <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
       <span style="color:var(--color-gray-light);font-size:13px">$</span>
       <input class="modal-input" type="number" id="modal-fund" style="width:120px" placeholder="0" />
     </div>
-
     <div class="modal-section">Notes</div>
     <textarea class="modal-notes" id="modal-notes" placeholder="Notes..."></textarea>
-
     <button class="gm-btn-primary" style="width:100%;margin-top:20px" onclick="saveEdit()">Save Changes</button>
   </div>
 </div>
@@ -490,7 +585,6 @@
 <script>
   const STORAGE_KEY = 'payday_v1';
   const HISTORY_KEY = 'payday_history_v1';
-
   const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'MetroCard', 'Expense Budget', 'Emergency Fund'];
   const EXPENSE_NAMES = ['Groceries', 'Dining Out', 'Utilities', 'Streaming', 'Misc'];
   const DEFAULT_BUDGETS = [300, 200, 60, 40, 375];
@@ -500,19 +594,21 @@
   function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
   function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
 
+  // Set dates
+  const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('today-date-mobile').textContent = dateStr;
+  document.getElementById('today-date-desktop').textContent = dateStr;
+
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2200);
   }
 
   function updateRent() {
     const rent = parseFloat(document.getElementById('rent-amount').value) || 0;
-    const afterTax = 3250 - 975;
-    const afterRent = afterTax - rent;
-    const afterLoans = afterRent - 318;
-    const afterMetro = afterLoans - 132;
+    const afterTax = 3250 - 975, afterRent = afterTax - rent;
+    const afterLoans = afterRent - 318, afterMetro = afterLoans - 132;
     const fmt = n => (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString();
     document.getElementById('balance-1').textContent = 'Balance: ' + fmt(afterRent);
     document.getElementById('balance-2').textContent = 'Balance: ' + fmt(afterLoans);
@@ -539,10 +635,6 @@
     if (name === 'history') renderHistory();
   }
 
-  document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
-
   function toggleStep(i) {
     const el = document.getElementById('step-' + i);
     el.classList.toggle('done');
@@ -562,14 +654,11 @@
 
   function updateFund() {
     const val = parseFloat(document.getElementById('fund-balance').value) || 0;
-    const goal = 9000;
-    const pct = Math.min(100, (val / goal) * 100);
+    const goal = 9000, pct = Math.min(100, (val / goal) * 100);
     document.getElementById('fund-bar').style.width = pct.toFixed(1) + '%';
     document.getElementById('fund-pct').textContent = pct.toFixed(0) + '% there';
     const monthsLeft = Math.ceil((goal - val) / 1500);
-    document.getElementById('fund-months').textContent = val >= goal
-      ? 'Goal reached!'
-      : monthsLeft + ' month' + (monthsLeft === 1 ? '' : 's') + ' to go';
+    document.getElementById('fund-months').textContent = val >= goal ? 'Goal reached!' : monthsLeft + ' month' + (monthsLeft === 1 ? '' : 's') + ' to go';
     const data = load(); data.fundBalance = val; save(data);
   }
 
@@ -600,16 +689,14 @@
     const inputs = document.querySelectorAll('.expense-spent-input');
     let totalSpent = 0;
     inputs.forEach((input, i) => {
-      const budget = EXPENSE_BUDGETS[i];
-      const spent = parseFloat(input.value) || 0;
+      const budget = EXPENSE_BUDGETS[i], spent = parseFloat(input.value) || 0;
       totalSpent += spent;
       const rem = budget - spent;
       const el = document.getElementById('rem-' + i);
       el.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0);
       el.className = 'expense-remaining ' + (rem < 0 ? 'over' : 'ok');
     });
-    const total = getTotalBudget();
-    const totalRem = total - totalSpent;
+    const total = getTotalBudget(), totalRem = total - totalSpent;
     const totalEl = document.getElementById('expense-total-remaining');
     totalEl.textContent = (totalRem < 0 ? '-$' : '$') + Math.abs(totalRem).toFixed(0);
     totalEl.className = totalRem < 0 ? 'over' : 'ok';
@@ -632,14 +719,8 @@
   function submitPayday() {
     const data = load();
     const inputs = document.querySelectorAll('.expense-spent-input');
-    const expenseSpent = Array.from(inputs).map((inp, i) => ({
-      name: EXPENSE_NAMES[i], budget: EXPENSE_BUDGETS[i], spent: parseFloat(inp.value) || 0
-    }));
-    const entry = {
-      id: Date.now(),
-      date: new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }),
-      steps: data.steps || {}, fundBalance: data.fundBalance || 0, expenses: expenseSpent, notes: data.notes || ''
-    };
+    const expenseSpent = Array.from(inputs).map((inp, i) => ({ name: EXPENSE_NAMES[i], budget: EXPENSE_BUDGETS[i], spent: parseFloat(inp.value) || 0 }));
+    const entry = { id: Date.now(), date: new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }), steps: data.steps || {}, fundBalance: data.fundBalance || 0, expenses: expenseSpent, notes: data.notes || '' };
     const history = loadHistory(); history.unshift(entry); saveHistory(history);
     showToast('✓ Saved to history');
   }
@@ -649,7 +730,6 @@
     document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
     const data = load(); delete data.steps; save(data);
   }
-
   function resetFund() {
     if (!confirm('Clear emergency fund balance?')) return;
     document.getElementById('fund-balance').value = '';
@@ -658,25 +738,20 @@
     document.getElementById('fund-months').textContent = '';
     const data = load(); delete data.fundBalance; save(data);
   }
-
   function resetExpenses() {
     if (!confirm('Clear all expense inputs?')) return;
     document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
-    updateExpenses();
-    const data = load(); delete data.expenses; save(data);
+    updateExpenses(); const data = load(); delete data.expenses; save(data);
   }
-
   function resetNotes() {
     if (!confirm('Clear notes?')) return;
     document.getElementById('notes').value = '';
     const data = load(); delete data.notes; save(data);
   }
-
   function resetHistory() {
     if (!confirm('Delete all history entries? This cannot be undone.')) return;
     localStorage.removeItem(HISTORY_KEY); renderHistory();
   }
-
   function resetEverything() {
     if (!confirm('Reset everything? This will clear all sections.')) return;
     if (!confirm('Are you sure? This cannot be undone.')) return;
@@ -696,52 +771,35 @@
   function renderHistory() {
     const history = loadHistory();
     const el = document.getElementById('history-list');
-    if (!history.length) {
-      el.innerHTML = '<div class="history-empty">No history yet.<br>Complete a payday and tap "Save to History".</div>';
-      return;
-    }
+    if (!history.length) { el.innerHTML = '<div class="history-empty">No history yet.<br>Complete a payday and tap "Save to History".</div>'; return; }
     el.innerHTML = history.map(entry => {
-      const stepsHtml = STEP_NAMES.map((name, i) =>
-        `<span class="history-step-pill ${entry.steps[i] ? 'done' : 'skip'}">${name}</span>`
-      ).join('');
-      const expensesHtml = entry.expenses.map(e =>
-        `<div class="history-row"><span>${e.name}</span><span>$${e.spent} / $${e.budget}</span></div>`
-      ).join('');
+      const stepsHtml = STEP_NAMES.map((name, i) => `<span class="history-step-pill ${entry.steps[i] ? 'done' : 'skip'}">${name}</span>`).join('');
+      const expensesHtml = entry.expenses.map(e => `<div class="history-row"><span>${e.name}</span><span>$${e.spent} / $${e.budget}</span></div>`).join('');
       const totalSpent = entry.expenses.reduce((s, e) => s + e.spent, 0);
       const totalBudget = entry.expenses.reduce((s, e) => s + e.budget, 0);
-      return `
-        <div class="history-card">
-          <div class="history-header">
-            <div>
-              <div class="history-date">${entry.date}</div>
-              <div class="history-paycheck">$3,250 paycheck</div>
-            </div>
-            <div style="display:flex;gap:4px">
-              <button class="history-edit" onclick="openEditModal(${entry.id})">Edit</button>
-              <button class="history-delete" onclick="deleteEntry(${entry.id})" title="Delete">✕</button>
-            </div>
+      return `<div class="history-card">
+        <div class="history-header">
+          <div><div class="history-date">${entry.date}</div><div class="history-paycheck">$3,250 paycheck</div></div>
+          <div style="display:flex;gap:4px">
+            <button class="history-edit" onclick="openEditModal(${entry.id})">Edit</button>
+            <button class="history-delete" onclick="deleteEntry(${entry.id})" title="Delete">✕</button>
           </div>
-          <div class="history-steps">${stepsHtml}</div>
-          ${expensesHtml}
-          <div class="history-row" style="margin-top:6px;font-weight:600">
-            <span>Total spent</span><span>$${totalSpent} / $${totalBudget}</span>
-          </div>
-          <div class="history-row">
-            <span>Emergency fund at time</span><span>$${entry.fundBalance.toLocaleString()}</span>
-          </div>
-          ${entry.notes ? `<div class="history-notes">"${entry.notes}"</div>` : ''}
-        </div>`;
+        </div>
+        <div class="history-steps">${stepsHtml}</div>
+        ${expensesHtml}
+        <div class="history-row" style="margin-top:6px;font-weight:600"><span>Total spent</span><span>$${totalSpent} / $${totalBudget}</span></div>
+        <div class="history-row"><span>Emergency fund at time</span><span>$${entry.fundBalance.toLocaleString()}</span></div>
+        ${entry.notes ? `<div class="history-notes">"${entry.notes}"</div>` : ''}
+      </div>`;
     }).join('');
   }
 
   function deleteEntry(id) {
     if (!confirm('Delete this entry?')) return;
-    const history = loadHistory().filter(e => e.id !== id);
-    saveHistory(history); renderHistory();
+    saveHistory(loadHistory().filter(e => e.id !== id)); renderHistory();
   }
 
   let editingId = null;
-
   function openEditModal(id) {
     editingId = id;
     const entry = loadHistory().find(e => e.id === id);
@@ -760,16 +818,9 @@
     document.getElementById('modal-notes').value = entry.notes || '';
     document.getElementById('edit-modal').classList.add('open');
   }
-
-  function toggleModalStep(i) {
-    const el = document.getElementById('mstep-' + i);
-    const on = el.classList.toggle('on');
-    el.textContent = on ? '✓' : '';
-  }
-
+  function toggleModalStep(i) { const el = document.getElementById('mstep-' + i); const on = el.classList.toggle('on'); el.textContent = on ? '✓' : ''; }
   function closeModal() { document.getElementById('edit-modal').classList.remove('open'); editingId = null; }
   function handleOverlayClick(e) { if (e.target === document.getElementById('edit-modal')) closeModal(); }
-
   function saveEdit() {
     const history = loadHistory();
     const idx = history.findIndex(e => e.id === editingId);
