@@ -6,6 +6,10 @@ Uses Claude AI to read each email and decide:
   - ignore       → newsletter, promo, receipt, social notification
 """
 
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
+
 import anthropic
 from config import ANTHROPIC_API_KEY, CATEGORY_NEEDS_REPLY, CATEGORY_FYI_ONLY, CATEGORY_IGNORE
 
@@ -49,6 +53,7 @@ Body:
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_message}],
     )
+    track_response(response)
 
     category = response.content[0].text.strip().lower()
 

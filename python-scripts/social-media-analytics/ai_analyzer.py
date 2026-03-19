@@ -1,8 +1,12 @@
 import os
+import sys
 import json
 import anthropic
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
 
 load_dotenv()
 
@@ -127,6 +131,7 @@ TITLE_ANALYSIS:
             max_tokens=400,
             messages=[{'role': 'user', 'content': prompt}]
         )
+        track_response(response)
         text = response.content[0].text.strip()
 
         dashboard, title = '', ''
@@ -223,6 +228,7 @@ def analyze_and_write(spreadsheet, videos):
         max_tokens=2000,
         messages=[{'role': 'user', 'content': build_prompt(videos)}]
     )
+    track_response(response)
     analysis = response.content[0].text
 
     cache['last_run_date'] = today

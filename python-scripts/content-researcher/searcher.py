@@ -8,6 +8,9 @@ from googleapiclient.discovery import build
 from dotenv import load_dotenv
 import anthropic
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
+
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 RESULTS_PER_QUERY = 15
@@ -45,6 +48,7 @@ def generate_queries(concept: str) -> list[str]:
             )
         }]
     )
+    track_response(msg)
     lines = [ln.strip() for ln in msg.content[0].text.strip().splitlines() if ln.strip()]
     # Always include the raw concept
     if concept not in lines:

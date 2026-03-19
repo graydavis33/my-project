@@ -3,9 +3,13 @@ Claude Sonnet analysis: one batch call covering all 9 report sections.
 Result is cached for 7 days by concept hash.
 """
 import os
+import sys
 from dotenv import load_dotenv
 import anthropic
 from cache import get_cached, store_cached
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -98,6 +102,7 @@ def analyze(concept: str, videos: list[dict]) -> str:
         ),
         messages=[{"role": "user", "content": prompt}]
     )
+    track_response(msg)
 
     result = msg.content[0].text
     store_cached(concept, result)

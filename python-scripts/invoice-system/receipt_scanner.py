@@ -8,8 +8,12 @@ Processes emails in batches of 5 to reduce API calls (~35% fewer tokens).
 
 import json
 import os
+import sys as _sys
 import anthropic
 from config import ANTHROPIC_API_KEY, CATEGORIES
+
+_sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
 
 SCANNED_IDS_FILE = os.path.join(os.path.dirname(__file__), '.scanned_receipt_ids.json')
 _BATCH_SIZE = 5
@@ -117,6 +121,7 @@ def _batch_extract_transactions(emails):
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": prompt}],
     )
+    track_response(response)
 
     text = response.content[0].text.strip()
 
@@ -162,6 +167,7 @@ def _single_extract_transaction(email):
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": prompt}],
     )
+    track_response(response)
 
     text = response.content[0].text.strip()
 

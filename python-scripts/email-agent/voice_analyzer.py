@@ -6,10 +6,14 @@ so every draft sounds like Gray wrote it himself.
 """
 
 import os
+import sys as _sys
 import time
 import anthropic
 from config import ANTHROPIC_API_KEY
 from gmail_client import get_gmail_service, fetch_sent_emails
+
+_sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
 
 VOICE_PROFILE_PATH = os.path.join(os.path.dirname(__file__), "voice_profile.txt")
 _VOICE_PROFILE_MAX_AGE_DAYS = 30
@@ -79,6 +83,7 @@ Write the style profile now:"""
         max_tokens=800,
         messages=[{"role": "user", "content": prompt}],
     )
+    track_response(response)
 
     profile = response.content[0].text.strip()
 

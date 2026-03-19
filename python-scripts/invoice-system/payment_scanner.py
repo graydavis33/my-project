@@ -9,9 +9,13 @@ Sends a Slack notification to #payments for each confirmed payment.
 
 import json
 import os
+import sys as _sys
 import anthropic
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+
+_sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
 
 from config import ANTHROPIC_API_KEY, SLACK_BOT_TOKEN, SLACK_PAYMENTS_CHANNEL_ID, LARGE_PAYMENT_THRESHOLD
 
@@ -219,6 +223,7 @@ def _batch_extract_payments(emails):
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": prompt}],
     )
+    track_response(response)
 
     text = response.content[0].text.strip()
     if text.startswith("```"):
@@ -262,6 +267,7 @@ def _single_extract_payment(email):
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": prompt}],
     )
+    track_response(response)
 
     text = response.content[0].text.strip()
     if text.startswith("```"):

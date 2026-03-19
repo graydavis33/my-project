@@ -5,6 +5,10 @@ Tone is based on Gray's actual writing style, learned from his sent emails.
 Falls back to a friendly/professional blend if no voice profile exists yet.
 """
 
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
+
 import anthropic
 from config import ANTHROPIC_API_KEY
 from voice_analyzer import load_voice_profile
@@ -72,5 +76,6 @@ Write only the reply body. No subject line. Start directly with the response."""
         system=system_prompt,
         messages=[{"role": "user", "content": user_message}],
     )
+    track_response(response)
 
     return response.content[0].text.strip()
