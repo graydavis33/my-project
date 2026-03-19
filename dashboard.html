@@ -646,6 +646,11 @@
           <div class="u-value">—</div>
           <div class="u-sub">total runs</div>
         </div>
+        <div class="usage-stat pending" data-stat="cost_all_time">
+          <div class="u-label">Total Cost</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">API spend</div>
+        </div>
       </div>
       <div class="req-section">
         <div class="req-label">What It Does</div>
@@ -683,6 +688,11 @@
           <div class="u-label">All Time</div>
           <div class="u-value">—</div>
           <div class="u-sub">total runs</div>
+        </div>
+        <div class="usage-stat pending" data-stat="cost_all_time">
+          <div class="u-label">Total Cost</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">API spend</div>
         </div>
       </div>
       <div class="req-section">
@@ -722,6 +732,11 @@
           <div class="u-value">—</div>
           <div class="u-sub">total runs</div>
         </div>
+        <div class="usage-stat pending" data-stat="cost_all_time">
+          <div class="u-label">Total Cost</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">API spend</div>
+        </div>
       </div>
       <div class="req-section">
         <div class="req-label">What It Does</div>
@@ -759,6 +774,11 @@
           <div class="u-label">All Time</div>
           <div class="u-value">—</div>
           <div class="u-sub">total runs</div>
+        </div>
+        <div class="usage-stat pending" data-stat="cost_all_time">
+          <div class="u-label">Total Cost</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">API spend</div>
         </div>
       </div>
       <div class="req-section">
@@ -870,6 +890,11 @@
                 valEl.textContent = stats.all_time;
                 if (subEl) subEl.textContent = 'total runs';
                 box.classList.toggle('highlight', stats.all_time > 0);
+              } else if (key === 'cost_all_time') {
+                const cost = stats.cost_all_time || 0;
+                valEl.textContent = cost < 0.01 ? (cost > 0 ? '<$0.01' : '$0') : '$' + cost.toFixed(2);
+                if (subEl) subEl.textContent = 'API spend';
+                box.classList.toggle('highlight', cost > 0);
               }
             });
           });
