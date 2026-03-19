@@ -79,6 +79,31 @@ def _auto_resize_all(spreadsheet):
         _auto_resize(spreadsheet, ws)
 
 
+def _format_currency_column(spreadsheet, ws, col_index=3):
+    """Format the Amount column as $ currency (col_index is 0-based, default=3 for column D)."""
+    spreadsheet.batch_update({
+        "requests": [{
+            "repeatCell": {
+                "range": {
+                    "sheetId": ws.id,
+                    "startRowIndex": 1,
+                    "startColumnIndex": col_index,
+                    "endColumnIndex": col_index + 1,
+                },
+                "cell": {
+                    "userEnteredFormat": {
+                        "numberFormat": {
+                            "type": "CURRENCY",
+                            "pattern": "$#,##0.00",
+                        }
+                    }
+                },
+                "fields": "userEnteredFormat.numberFormat",
+            }
+        }]
+    })
+
+
 def get_or_create_worksheet(sheet, title, headers):
     """Return the worksheet with the given title, creating it with headers if it doesn't exist."""
     try:
@@ -106,8 +131,16 @@ def setup_sheet():
         except gspread.WorksheetNotFound:
             pass
 
-    get_or_create_worksheet(sheet, TAB_TRANSACTIONS, TRANSACTION_HEADERS)
-    get_or_create_worksheet(sheet, TAB_EXPENSES, EXPENSE_HEADERS)
+    # Reset Transactions tab if headers are outdated (clears old-format data)
+    try:
+        ws_existing = sheet.worksheet(TAB_TRANSACTIONS)
+        if ws_existing.row_values(1) != TRANSACTION_HEADERS:
+            sheet.del_worksheet(ws_existing)
+            print("  Reset Transactions tab (headers updated, old data cleared)")
+    except gspread.WorksheetNotFound:
+        pass
+    ws_tx = get_or_create_worksheet(sheet, TAB_TRANSACTIONS, TRANSACTION_HEADERS)
+    ws_exp = get_or_create_worksheet(sheet, TAB_EXPENSES, EXPENSE_HEADERS)
     ws_tax = get_or_create_worksheet(sheet, TAB_TAX_SUMMARY, TAX_SUMMARY_HEADERS)
 
     # Populate Tax Summary with formulas if empty
@@ -139,6 +172,10 @@ def setup_sheet():
 
         for row in rows:
             ws_tax.append_row(row)
+
+    # Format Amount column (D, index 3) as $ currency on Transactions and Business Expenses
+    _format_currency_column(sheet, ws_tx, col_index=3)
+    _format_currency_column(sheet, ws_exp, col_index=3)
 
     _auto_resize_all(sheet)
     print(f"  Sheet setup complete. Tabs: {TAB_TRANSACTIONS}, {TAB_EXPENSES}, {TAB_TAX_SUMMARY}")

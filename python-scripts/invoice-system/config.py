@@ -71,6 +71,6 @@ SLACK_PAYMENTS_CHANNEL_ID = os.getenv("SLACK_PAYMENTS_CHANNEL_ID", "")
 SOURCES = ["Venmo", "Bank", "Cash", "Stripe", "Zelle", "Cash App", "QuickBooks", "PayPal", "Direct Deposit"]
 
 # Column headers for each tab
-TRANSACTION_HEADERS = ["Date", "Description", "Source", "Amount", "Notes"]
+TRANSACTION_HEADERS = ["Date", "Payer", "Source", "Amount", "Notes"]
 EXPENSE_HEADERS = ["Date", "Vendor", "Category", "Amount", "Notes"]
 TAX_SUMMARY_HEADERS = ["Category", "Total"]
