@@ -13,6 +13,7 @@ from config import ANTHROPIC_API_KEY, CATEGORIES
 
 SCANNED_IDS_FILE = os.path.join(os.path.dirname(__file__), '.scanned_receipt_ids.json')
 _BATCH_SIZE = 5
+_LARGE_EXPENSE_THRESHOLD = 500
 
 
 def _load_scanned_ids():
@@ -32,12 +33,12 @@ def _save_scanned_ids(ids):
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
-SYSTEM_PROMPT = """You are a bookkeeping assistant. Your job is to extract transaction data
-from receipt and billing emails.
+SYSTEM_PROMPT = f"""You are a bookkeeping assistant. Your job is to extract business expense data
+from receipt and billing emails for Gray Davis, a freelance videographer.
 
 Given an email, extract:
-- date: the transaction or billing date (YYYY-MM-DD format)
-- description: vendor name + brief description (e.g. "Adobe Creative Cloud - Monthly Subscription")
+- date: the transaction or billing date in MM/DD/YYYY format
+- vendor: vendor/company name only (e.g. "Adobe", "Amazon", "B&H Photo")
 - amount: the total charged amount as a number (no $ sign, just digits and decimal)
 - category: one of these exact options:
   - Software & Subscriptions
@@ -45,29 +46,31 @@ Given an email, extract:
   - Advertising & Marketing
   - Contractor Payments
   - Other
+- notes: a short note ONLY if the expense is unusual — e.g. amount >= ${_LARGE_EXPENSE_THRESHOLD:,}, one-time large purchase, anything that stands out. Empty string for normal routine expenses.
 
 Rules:
 - If you cannot determine the amount with confidence, return null for amount
 - If the email is clearly not a receipt or payment confirmation, return null
 - Always return valid JSON only — no extra text"""
 
-BATCH_PROMPT = """Extract transaction data from each of the following {n} receipt emails.
+BATCH_PROMPT = """Extract business expense data from each of the following {n} receipt emails.
 Return a JSON array of exactly {n} items (one per email, in order).
-Each item is either a JSON object with fields date/description/amount/category, or null if not a receipt.
+Each item is either a JSON object with fields date/vendor/amount/category/notes, or null if not a receipt.
 
 Format for each item:
 {{
-  "date": "YYYY-MM-DD",
-  "description": "Vendor - Description",
+  "date": "MM/DD/YYYY",
+  "vendor": "Vendor Name",
   "amount": 0.00,
-  "category": "Category Name"
+  "category": "Category Name",
+  "notes": ""
 }}
 
 {emails}
 
 Return ONLY the JSON array — no other text."""
 
-SINGLE_PROMPT = """Extract the transaction data from this receipt email.
+SINGLE_PROMPT = """Extract the business expense data from this receipt email.
 
 From: {sender}
 Subject: {subject}
@@ -78,10 +81,11 @@ Email body:
 
 Return ONLY a JSON object in this exact format:
 {{
-  "date": "YYYY-MM-DD",
-  "description": "Vendor - Description",
+  "date": "MM/DD/YYYY",
+  "vendor": "Vendor Name",
   "amount": 0.00,
-  "category": "Category Name"
+  "category": "Category Name",
+  "notes": ""
 }}
 
 If this is not a receipt or you can't find the amount, return: null"""
@@ -125,7 +129,7 @@ def _batch_extract_transactions(emails):
                 if r is None or not isinstance(r, dict):
                     validated.append(None)
                     continue
-                if not r.get("amount") or not r.get("description"):
+                if not r.get("amount") or not r.get("vendor"):
                     validated.append(None)
                     continue
                 if r.get("category") not in CATEGORIES:
@@ -166,7 +170,7 @@ def _single_extract_transaction(email):
 
     try:
         data = json.loads(text)
-        if not data or not data.get("amount") or not data.get("description"):
+        if not data or not data.get("amount") or not data.get("vendor"):
             return None
         if data.get("category") not in CATEGORIES:
             data["category"] = "Other"
@@ -179,23 +183,21 @@ def scan_receipts(emails):
     """
     Run extraction on a list of Gmail emails in batches of 5.
     Skips emails already processed in a previous run (deduplication via ID cache).
-    Returns a list of transaction dicts ready to append to Google Sheets.
-    Each dict has: date, description, source, category, amount, type, notes
+    Returns a list of expense dicts ready to append to the Business Expenses tab.
+    Each dict has: date, vendor, category, amount, notes
     """
     scanned_ids = _load_scanned_ids()
-    transactions = []
+    expenses = []
     newly_scanned = set()
 
-    # Filter out already-scanned emails
     unscanned = [e for e in emails if e['id'] not in scanned_ids]
     skipped = len(emails) - len(unscanned)
     if skipped:
         print(f"  Skipping {skipped} already-scanned email(s).")
 
     if not unscanned:
-        return transactions
+        return expenses
 
-    # Process in batches
     for batch_start in range(0, len(unscanned), _BATCH_SIZE):
         batch = unscanned[batch_start:batch_start + _BATCH_SIZE]
         print(f"  Processing batch of {len(batch)} email(s) (API call {batch_start // _BATCH_SIZE + 1})...")
@@ -205,21 +207,18 @@ def scan_receipts(emails):
         for email, result in zip(batch, results):
             newly_scanned.add(email['id'])
             if result:
-                transactions.append({
+                expenses.append({
                     "date": result["date"],
-                    "description": result["description"],
-                    "source": "Gmail",
+                    "vendor": result["vendor"],
                     "category": result["category"],
                     "amount": result["amount"],
-                    "type": "Expense",
-                    "notes": f"Gmail: {email['subject'][:60]}",
+                    "notes": result.get("notes", ""),
                 })
                 print(f"    ✓ {email['subject'][:50]} → ${result['amount']} | {result['category']}")
             else:
                 print(f"    – {email['subject'][:50]} → not a receipt")
 
-    # Persist all newly seen IDs so they're skipped next time
     if newly_scanned:
         _save_scanned_ids(scanned_ids | newly_scanned)
 
-    return transactions
+    return expenses

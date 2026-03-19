@@ -5,8 +5,8 @@ CLI entry point for the Invoice & Tax Tracker.
 Commands:
   setup-sheet      Create Google Sheet tabs and headers (run once)
   import-csv       Import transactions from a Venmo or Bank CSV file
-  scan-receipts    Scan Gmail for expense receipt emails and import them
-  scan-payments    Scan Gmail for income payment emails and import them
+  scan-receipts    Scan Gmail for expense receipt emails → Business Expenses tab
+  scan-payments    Scan Gmail for income payment emails → Transactions tab
   scan-all         Run both scan-receipts and scan-payments in one shot (scheduled daily)
   create-invoice   Interactively create + send an invoice
   add-expense      Manually log a business expense for tax tracking
@@ -46,35 +46,34 @@ def cmd_import_csv(args):
     if source == "venmo":
         from csv_importer import parse_venmo_csv
         print(f"\n  Parsing Venmo CSV: {filepath}")
-        transactions = parse_venmo_csv(filepath)
+        result = parse_venmo_csv(filepath)
     elif source == "bank":
         from csv_importer import parse_bank_csv
         print(f"\n  Parsing Bank CSV: {filepath}")
-        transactions = parse_bank_csv(filepath)
+        result = parse_bank_csv(filepath)
     else:
         print(f"  Unknown source '{source}'. Use: venmo or bank")
         sys.exit(1)
 
-    if not transactions:
-        print("  No transactions found.")
-        return
+    income = result.get("income", [])
+    expenses = result.get("expenses", [])
 
-    print(f"  Found {len(transactions)} transaction(s). Adding to Google Sheets...")
-    from sheets_client import append_transactions
-    rows = [
-        [
-            t["date"],
-            t["description"],
-            t["source"],
-            t["category"],
-            t["amount"],
-            t["type"],
-            t.get("notes", ""),
-        ]
-        for t in transactions
-    ]
-    append_transactions(rows)
-    print(f"  Done. {len(transactions)} transaction(s) added to the Transactions tab.")
+    from sheets_client import append_transactions, append_expenses
+
+    if income:
+        print(f"  Found {len(income)} income transaction(s). Adding to Transactions tab...")
+        rows = [[t["date"], t["description"], t["source"], t["amount"], t.get("notes", "")] for t in income]
+        append_transactions(rows)
+        print(f"  Done. {len(income)} income row(s) added.")
+
+    if expenses:
+        print(f"  Found {len(expenses)} expense(s). Adding to Business Expenses tab...")
+        rows = [[e["date"], e["vendor"], e["category"], e["amount"], e.get("notes", "")] for e in expenses]
+        append_expenses(rows)
+        print(f"  Done. {len(expenses)} expense row(s) added.")
+
+    if not income and not expenses:
+        print("  No transactions found.")
 
 
 def cmd_scan_receipts(args):
@@ -83,7 +82,7 @@ def cmd_scan_receipts(args):
 
     from gmail_client import get_gmail_service, fetch_receipt_emails
     from receipt_scanner import scan_receipts
-    from sheets_client import append_transactions
+    from sheets_client import append_expenses
 
     service = get_gmail_service()
     emails = fetch_receipt_emails(service, days=days)
@@ -93,26 +92,15 @@ def cmd_scan_receipts(args):
         return
 
     print(f"  Found {len(emails)} potential receipt email(s). Analyzing with Claude...\n")
-    transactions = scan_receipts(emails)
+    expenses = scan_receipts(emails)
 
-    if not transactions:
-        print("  No transactions extracted.")
+    if not expenses:
+        print("  No expenses extracted.")
         return
 
-    rows = [
-        [
-            t["date"],
-            t["description"],
-            t["source"],
-            t["category"],
-            t["amount"],
-            t["type"],
-            t.get("notes", ""),
-        ]
-        for t in transactions
-    ]
-    append_transactions(rows)
-    print(f"\n  Done. {len(transactions)} receipt(s) added to the Transactions tab.")
+    rows = [[e["date"], e["vendor"], e["category"], e["amount"], e.get("notes", "")] for e in expenses]
+    append_expenses(rows)
+    print(f"\n  Done. {len(expenses)} expense(s) added to the Business Expenses tab.")
 
 
 def cmd_scan_payments(args):
@@ -137,18 +125,7 @@ def cmd_scan_payments(args):
         print("  No payments detected.")
         return
 
-    rows = [
-        [
-            t["date"],
-            t["description"],
-            t["source"],
-            t["category"],
-            t["amount"],
-            t["type"],
-            t.get("notes", ""),
-        ]
-        for t in transactions
-    ]
+    rows = [[t["date"], t["description"], t["source"], t["amount"], t.get("notes", "")] for t in transactions]
     append_transactions(rows)
     print(f"\n  Done. {len(transactions)} payment(s) added to the Transactions tab.")
 
@@ -168,28 +145,27 @@ def cmd_create_invoice(args):
 
 def cmd_add_expense(args):
     import datetime
-    from config import CATEGORIES, SOURCES
-    from sheets_client import append_transaction
+    from config import CATEGORIES
+    from sheets_client import append_expense
 
     print("\n  Add Business Expense")
     print("  ─────────────────────")
 
-    today = datetime.date.today().strftime("%Y-%m-%d")
+    today = datetime.date.today().strftime("%m/%d/%Y")
     date_input = input(f"  Date [{today}]: ").strip()
     date = date_input if date_input else today
 
-    description = input("  What did you buy? ").strip()
-    if not description:
-        print("  Description is required.")
+    vendor = input("  Vendor / what did you buy? ").strip()
+    if not vendor:
+        print("  Vendor is required.")
         return
 
-    expense_categories = [c for c in CATEGORIES if c != "Income"]
     print("\n  Category:")
-    for i, cat in enumerate(expense_categories, 1):
+    for i, cat in enumerate(CATEGORIES, 1):
         print(f"    {i}. {cat}")
-    cat_input = input(f"  Pick [1-{len(expense_categories)}]: ").strip()
+    cat_input = input(f"  Pick [1-{len(CATEGORIES)}]: ").strip()
     try:
-        category = expense_categories[int(cat_input) - 1]
+        category = CATEGORIES[int(cat_input) - 1]
     except (ValueError, IndexError):
         category = "Other"
 
@@ -200,20 +176,11 @@ def cmd_add_expense(args):
         print("  Invalid amount.")
         return
 
-    print("\n  Payment method:")
-    for i, src in enumerate(SOURCES, 1):
-        print(f"    {i}. {src}")
-    src_input = input(f"  Pick [1-{len(SOURCES)}]: ").strip()
-    try:
-        source = SOURCES[int(src_input) - 1]
-    except (ValueError, IndexError):
-        source = "Other"
+    notes = input("  Notes (optional): ").strip()
 
-    notes = input("  Notes (optional, e.g. 'for client shoot'): ").strip()
-
-    print(f"\n  Logging: {description} — ${amount:.2f} | {category} | {source}")
-    append_transaction(date, description, source, category, amount, "Expense", notes)
-    print("  Done. Added to your Business Finance Tracker sheet.")
+    print(f"\n  Logging: {vendor} — ${amount:.2f} | {category}")
+    append_expense(date, vendor, category, amount, notes)
+    print("  Done. Added to Business Expenses tab.")
 
 
 def main():
@@ -223,41 +190,25 @@ def main():
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # setup-sheet
     subparsers.add_parser("setup-sheet", help="Create Google Sheet tabs and headers (run once)")
 
-    # import-csv
     p_csv = subparsers.add_parser("import-csv", help="Import transactions from a CSV file")
     p_csv.add_argument("--file", required=True, help="Path to the CSV file")
     p_csv.add_argument("--source", required=True, choices=["venmo", "bank"], help="CSV source type")
 
-    # scan-receipts
     p_receipts = subparsers.add_parser("scan-receipts", help="Scan Gmail for expense receipt emails")
     p_receipts.add_argument("--days", type=int, default=30, help="How many days back to scan (default: 30)")
 
-    # scan-payments
     p_payments = subparsers.add_parser("scan-payments", help="Scan Gmail for income payment emails")
     p_payments.add_argument("--days", type=int, default=30, help="How many days back to scan (default: 30)")
 
-    # scan-all
     p_all = subparsers.add_parser("scan-all", help="Run both scan-receipts and scan-payments")
     p_all.add_argument("--days", type=int, default=30, help="How many days back to scan (default: 30)")
 
-    # create-invoice
     subparsers.add_parser("create-invoice", help="Create and send a new invoice")
-
-    # add-expense
     subparsers.add_parser("add-expense", help="Manually log a business expense for tax tracking")
 
     args = parser.parse_args()
-
-    try:
-        import sys as _sys, os as _os
-        _sys.path.insert(0, _os.path.join(_os.path.dirname(__file__), '..', 'shared'))
-        from usage_logger import log_run
-        log_run("invoice-system")
-    except Exception:
-        pass
 
     commands = {
         "setup-sheet": cmd_setup_sheet,

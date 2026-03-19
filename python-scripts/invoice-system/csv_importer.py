@@ -23,16 +23,16 @@ client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
 def parse_venmo_csv(filepath):
     """
-    Parse a Venmo CSV export and return a list of transaction dicts.
+    Parse a Venmo CSV export and return split income/expense dicts.
     Only includes completed transactions (skips pending/failed).
+    Returns: {"income": [...], "expenses": [...]}
     """
-    transactions = []
+    income = []
+    expenses = []
 
     with open(filepath, newline="", encoding="utf-8-sig") as f:
-        # Venmo CSV has some header/intro rows before the actual data
         lines = f.readlines()
 
-    # Find the row that starts with "ID," — that's the actual header
     header_idx = None
     for i, line in enumerate(lines):
         if line.strip().startswith("ID,"):
@@ -41,7 +41,7 @@ def parse_venmo_csv(filepath):
 
     if header_idx is None:
         print("  Could not find Venmo CSV header row. Is this a valid Venmo export?")
-        return []
+        return {"income": [], "expenses": []}
 
     reader = csv.DictReader(lines[header_idx:])
 
@@ -51,50 +51,49 @@ def parse_venmo_csv(filepath):
             continue
 
         raw_amount = row.get("Amount (total)", row.get("Amount", "")).strip()
-        # Venmo amounts look like "+ $25.00" or "- $25.00"
         is_income = raw_amount.startswith("+")
         amount_str = re.sub(r"[^0-9.]", "", raw_amount)
         if not amount_str:
             continue
 
         amount = float(amount_str)
-        tx_type = "Income" if is_income else "Expense"
-
-        # Parse date
         raw_date = row.get("Datetime", "").strip()
-        try:
-            dt = datetime.strptime(raw_date[:10], "%Y-%m-%d")
-            date_str = dt.strftime("%Y-%m-%d")
-        except ValueError:
-            date_str = raw_date[:10]
+        date_str = _normalize_date(raw_date[:10])
 
         note = row.get("Note", "").strip()
         counterparty = row.get("From", "") if is_income else row.get("To", "")
-        description = f"{counterparty.strip()} — {note}" if note else counterparty.strip()
-        if not description:
-            description = "Venmo transaction"
+        name = counterparty.strip() or "Venmo"
 
-        transactions.append({
-            "date": date_str,
-            "description": description,
-            "source": "Venmo",
-            "category": "Income" if is_income else _guess_category(description),
-            "amount": amount,
-            "type": tx_type,
-            "notes": "",
-        })
+        if is_income:
+            income.append({
+                "date": date_str,
+                "description": name,
+                "source": "Venmo",
+                "amount": amount,
+                "notes": note if note else "",
+            })
+        else:
+            expenses.append({
+                "date": date_str,
+                "vendor": name,
+                "category": _guess_category(name),
+                "amount": amount,
+                "notes": "",
+            })
 
-    return transactions
+    return {"income": income, "expenses": expenses}
 
 
 # ─── Bank CSV Parser ───────────────────────────────────────────────────────────
 
 def parse_bank_csv(filepath):
     """
-    Parse a bank CSV export and return a list of transaction dicts.
+    Parse a bank CSV export and return split income/expense dicts.
     Handles common column name patterns from major banks.
+    Returns: {"income": [...], "expenses": [...]}
     """
-    transactions = []
+    income = []
+    expenses = []
 
     with open(filepath, newline="", encoding="utf-8-sig") as f:
         reader = csv.DictReader(f)
@@ -102,27 +101,20 @@ def parse_bank_csv(filepath):
 
     if not rows:
         print("  Bank CSV is empty.")
-        return []
-
-    headers = [h.strip().lower() for h in rows[0].keys()]
+        return {"income": [], "expenses": []}
 
     for row in rows:
-        # Normalize keys to lowercase for matching
         r = {k.strip().lower(): v.strip() for k, v in row.items()}
 
-        # Date field
         date_str = _find_field(r, ["date", "transaction date", "posting date", "posted date"])
         if not date_str:
             continue
         date_str = _normalize_date(date_str)
 
-        # Description field
         description = _find_field(r, ["description", "memo", "transaction description", "details", "payee"])
         if not description:
             description = "Bank transaction"
 
-        # Amount field — banks use different patterns
-        # Some have separate debit/credit columns, some have a single signed amount
         amount = None
         tx_type = None
 
@@ -144,20 +136,26 @@ def parse_bank_csv(filepath):
         if not amount:
             continue
 
-        category = "Income" if tx_type == "Income" else _guess_category(description)
         source = "Zelle" if "zelle" in description.lower() else "Bank"
 
-        transactions.append({
-            "date": date_str,
-            "description": description,
-            "source": source,
-            "category": category,
-            "amount": amount,
-            "type": tx_type,
-            "notes": "",
-        })
+        if tx_type == "Income":
+            income.append({
+                "date": date_str,
+                "description": description,
+                "source": source,
+                "amount": amount,
+                "notes": "",
+            })
+        else:
+            expenses.append({
+                "date": date_str,
+                "vendor": description,
+                "category": _guess_category(description),
+                "amount": amount,
+                "notes": "",
+            })
 
-    return transactions
+    return {"income": income, "expenses": expenses}
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -180,11 +178,11 @@ def _parse_amount(value):
 
 
 def _normalize_date(date_str):
-    """Try to parse various date formats and return YYYY-MM-DD."""
+    """Try to parse various date formats and return MM/DD/YYYY."""
     formats = ["%Y-%m-%d", "%m/%d/%Y", "%m/%d/%y", "%d/%m/%Y", "%B %d, %Y", "%b %d, %Y"]
     for fmt in formats:
         try:
-            return datetime.strptime(date_str.strip(), fmt).strftime("%Y-%m-%d")
+            return datetime.strptime(date_str.strip(), fmt).strftime("%m/%d/%Y")
         except ValueError:
             continue
     return date_str[:10]  # fallback: return as-is
