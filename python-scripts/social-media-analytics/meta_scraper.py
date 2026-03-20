@@ -59,11 +59,11 @@ def _parse_count(text):
 
 def _login_instagram(page):
     """Log into Instagram. Returns True on success."""
-    print("    Navigating to Instagram login...")
-    page.goto('https://www.instagram.com/accounts/login/', timeout=30000)
+    print("    Navigating to Instagram...")
+    page.goto('https://www.instagram.com/', timeout=30000)
     _sleep(2, 3)
 
-    # Dismiss any overlay / cookie dialog before interacting
+    # Dismiss cookie / consent dialogs
     for btn_text in ['Allow all cookies', 'Accept all', 'Allow essential and optional cookies',
                      'Only allow essential cookies', 'Decline optional cookies']:
         try:
@@ -73,17 +73,51 @@ def _login_instagram(page):
         except PlaywrightTimeout:
             pass
 
-    # Wait explicitly for the username field (up to 20s)
-    try:
-        page.wait_for_selector('input[name="username"]', timeout=20000)
-    except PlaywrightTimeout:
-        print(f"    Could not find login form. Current URL: {page.url}")
+    # Check if already logged in — if we're on the home feed URL and there's no login form, we're in
+    if 'accounts/login' not in page.url and not page.query_selector('input[name="username"]'):
+        print("    Already logged in (session active).")
+        return True
+
+    # If login form not visible, navigate directly to login page
+    if not page.query_selector('input[name="username"]') and not page.query_selector('input[type="text"]'):
+        page.goto('https://www.instagram.com/accounts/login/', timeout=30000)
+        _sleep(2, 3)
+        for btn_text in ['Allow all cookies', 'Accept all']:
+            try:
+                page.click(f'button:has-text("{btn_text}")', timeout=3000)
+                _sleep(1, 2)
+                break
+            except PlaywrightTimeout:
+                pass
+
+    # Wait for username field — try multiple selectors Instagram has used
+    username_sel = None
+    for sel in [
+        'input[name="username"]',
+        'input[aria-label="Phone number, username, or email"]',
+        'input[aria-label="Phone number, username, or email address"]',
+        'input[type="text"]',
+    ]:
+        try:
+            page.wait_for_selector(sel, timeout=8000)
+            username_sel = sel
+            break
+        except PlaywrightTimeout:
+            continue
+
+    if not username_sel:
+        print(f"    Could not find login form. URL: {page.url}")
+        # Take a screenshot for debugging
+        page.screenshot(path='ig_login_debug.png')
+        print("    Screenshot saved: ig_login_debug.png")
         return False
 
     # Fill login form
-    page.fill('input[name="username"]', EMAIL)
+    page.fill(username_sel, EMAIL)
     _sleep(0.5, 1)
-    page.fill('input[name="password"]', PASSWORD)
+    # Password field
+    pwd_sel = 'input[name="password"]' if page.query_selector('input[name="password"]') else 'input[type="password"]'
+    page.fill(pwd_sel, PASSWORD)
     _sleep(0.5, 1)
     page.click('button[type="submit"]')
 

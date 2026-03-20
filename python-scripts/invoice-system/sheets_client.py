@@ -151,7 +151,7 @@ def _place_totals_row_at_bottom(spreadsheet, ws):
             last_data_row = i + 1
 
     target_row = last_data_row + 1
-    ws.insert_row(["TOTAL", "", "", f"=SUM(D2:D{last_data_row})", ""], index=target_row)
+    ws.insert_row(["TOTAL", "", "", f"=SUM(D2:D{last_data_row})", ""], index=target_row, value_input_option="USER_ENTERED")
     _format_totals_row(spreadsheet, ws, target_row)
 
 
