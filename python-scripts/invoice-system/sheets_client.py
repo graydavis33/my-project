@@ -104,12 +104,23 @@ def _format_currency_column(spreadsheet, ws, col_index=3):
     })
 
 
+def _expand_sheet_dimensions(spreadsheet, ws, rows=1000, cols=26):
+    """Ensure a worksheet has at least the given number of rows and columns."""
+    requests = []
+    if ws.row_count < rows:
+        requests.append({"appendDimension": {"sheetId": ws.id, "dimension": "ROWS", "length": rows - ws.row_count}})
+    if ws.col_count < cols:
+        requests.append({"appendDimension": {"sheetId": ws.id, "dimension": "COLUMNS", "length": cols - ws.col_count}})
+    if requests:
+        spreadsheet.batch_update({"requests": requests})
+
+
 def get_or_create_worksheet(sheet, title, headers):
     """Return the worksheet with the given title, creating it with headers if it doesn't exist."""
     try:
         ws = sheet.worksheet(title)
     except gspread.WorksheetNotFound:
-        ws = sheet.add_worksheet(title=title, rows=1000, cols=len(headers))
+        ws = sheet.add_worksheet(title=title, rows=1000, cols=26)
         ws.append_row(headers)
     return ws
 
@@ -142,6 +153,10 @@ def setup_sheet():
     ws_tx = get_or_create_worksheet(sheet, TAB_TRANSACTIONS, TRANSACTION_HEADERS)
     ws_exp = get_or_create_worksheet(sheet, TAB_EXPENSES, EXPENSE_HEADERS)
     ws_tax = get_or_create_worksheet(sheet, TAB_TAX_SUMMARY, TAX_SUMMARY_HEADERS)
+
+    # Expand all tabs to full spreadsheet dimensions (1000 rows x 26 cols)
+    for ws in [ws_tx, ws_exp, ws_tax]:
+        _expand_sheet_dimensions(sheet, ws)
 
     # Populate Tax Summary with formulas if empty
     existing = ws_tax.get_all_values()
