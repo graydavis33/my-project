@@ -104,6 +104,45 @@ def _format_currency_column(spreadsheet, ws, col_index=3):
     })
 
 
+def _add_totals_row(spreadsheet, ws):
+    """Insert a bold TOTAL row at row 2 if not already present. Data lives in rows 3+."""
+    row2 = ws.row_values(2)
+    if row2 and row2[0] == "TOTAL":
+        return  # already set up
+    ws.insert_row(["TOTAL", "", "", "=SUM(D3:D1000)", ""], index=2)
+    spreadsheet.batch_update({"requests": [{
+        "repeatCell": {
+            "range": {
+                "sheetId": ws.id,
+                "startRowIndex": 1,
+                "endRowIndex": 2,
+                "startColumnIndex": 0,
+                "endColumnIndex": 26,
+            },
+            "cell": {
+                "userEnteredFormat": {
+                    "backgroundColor": {"red": 0.85, "green": 0.85, "blue": 0.85},
+                    "textFormat": {"bold": True},
+                }
+            },
+            "fields": "userEnteredFormat(backgroundColor,textFormat)",
+        }
+    }]})
+
+
+def _freeze_rows(spreadsheet, ws, count=2):
+    """Freeze the top N rows so header + totals stay visible while scrolling."""
+    spreadsheet.batch_update({"requests": [{
+        "updateSheetProperties": {
+            "properties": {
+                "sheetId": ws.id,
+                "gridProperties": {"frozenRowCount": count},
+            },
+            "fields": "gridProperties.frozenRowCount",
+        }
+    }]})
+
+
 def _expand_sheet_dimensions(spreadsheet, ws, rows=1000, cols=26):
     """Ensure a worksheet has at least the given number of rows and columns."""
     requests = []
@@ -158,27 +197,33 @@ def setup_sheet():
     for ws in [ws_tx, ws_exp, ws_tax]:
         _expand_sheet_dimensions(sheet, ws)
 
-    # Populate Tax Summary with formulas if empty
-    existing = ws_tax.get_all_values()
-    if len(existing) <= 1:
+    # Add pinned TOTAL row (row 2) and freeze header + totals on data tabs
+    for ws in [ws_tx, ws_exp]:
+        _add_totals_row(sheet, ws)
+        _freeze_rows(sheet, ws, count=2)
+
+    # Always rebuild Tax Summary formulas (start at row 3 to skip the TOTAL row)
+    ws_tax.clear()
+    ws_tax.append_row(TAX_SUMMARY_HEADERS)
+    if True:
         tx = TAB_TRANSACTIONS
         exp = TAB_EXPENSES
 
         rows = []
 
-        # Total Income — sum of Amount column (D) in Transactions
-        rows.append(["Total Income", f"=SUM('{tx}'!D2:D1000)"])
+        # Total Income — sum of Amount column (D) in Transactions (row 3+ skips TOTAL row)
+        rows.append(["Total Income", f"=SUM('{tx}'!D3:D1000)"])
 
         # Expense categories — SUMPRODUCT by Category column (C) in Business Expenses
         for cat in CATEGORIES:
             formula = (
-                f"=SUMPRODUCT(('{exp}'!C2:C1000=\"{cat}\")*"
-                f"('{exp}'!D2:D1000))"
+                f"=SUMPRODUCT(('{exp}'!C3:C1000=\"{cat}\")*"
+                f"('{exp}'!D3:D1000))"
             )
             rows.append([cat, formula])
 
         # Total Expenses — sum of Amount column (D) in Business Expenses
-        rows.append(["Total Expenses", f"=SUM('{exp}'!D2:D1000)"])
+        rows.append(["Total Expenses", f"=SUM('{exp}'!D3:D1000)"])
 
         # Net Profit = Total Income - Total Expenses
         income_row = 2
