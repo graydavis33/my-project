@@ -2,6 +2,10 @@ import os
 import sys
 from dotenv import load_dotenv
 
+# Fix Windows terminal encoding so Unicode characters don't crash
+if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
 _REQUIRED = ["ANTHROPIC_API_KEY"]
@@ -53,7 +57,11 @@ def main():
     print("\n[1/4] Fetching data from all platforms...")
 
     print("  → YouTube")
-    yt_videos = get_youtube_data()
+    try:
+        yt_videos = get_youtube_data()
+    except Exception as e:
+        print(f"  YouTube skipped — auth error ({type(e).__name__}). Re-run auth.py to fix.")
+        yt_videos = []
 
     print("  → Instagram")
     ig_videos = _fetch_instagram()

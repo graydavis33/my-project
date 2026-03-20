@@ -311,7 +311,7 @@ def get_facebook_data():
 
         try:
             print("    Navigating to Facebook login...")
-            page.goto('https://www.facebook.com/login', wait_until='networkidle', timeout=30000)
+            page.goto('https://www.facebook.com/login', wait_until='load', timeout=30000)
             _sleep(1, 2)
 
             # Accept cookies
@@ -330,13 +330,8 @@ def get_facebook_data():
             _sleep(0.5, 1)
             page.fill('input[name="pass"]', PASSWORD)
             _sleep(0.5, 1)
-            # Click login — try multiple selectors Facebook has used
-            for btn_sel in ['button[type="submit"]', 'button[name="login"]', 'input[value="Log in"]',
-                            'button:has-text("Log in")']:
-                if page.query_selector(btn_sel):
-                    page.click(btn_sel)
-                    break
-            page.wait_for_load_state('networkidle', timeout=20000)
+            page.press('input[name="pass"]', 'Enter')
+            page.wait_for_load_state('load', timeout=20000)
             _sleep(2, 4)
             print("    Facebook login complete.")
 
@@ -367,18 +362,43 @@ def get_facebook_data():
                                 url = 'https://www.facebook.com' + url
                             break
 
-                    # Published date — Facebook stores Unix timestamp in data-utime
+                    # Published date — try multiple Facebook timestamp formats
                     published = ''
-                    time_el = el.query_selector('abbr[data-utime]')
-                    if time_el:
-                        ts = time_el.get_attribute('data-utime')
-                        if ts:
-                            published = datetime.fromtimestamp(int(ts)).strftime('%Y-%m-%d')
+                    # Modern FB: abbr with title like "Wednesday, March 5, 2025 at 3:00 PM"
+                    for ts_sel in ['abbr[title]', 'abbr[data-utime]']:
+                        ts_el = el.query_selector(ts_sel)
+                        if ts_el:
+                            if ts_sel == 'abbr[data-utime]':
+                                ts = ts_el.get_attribute('data-utime')
+                                if ts:
+                                    try:
+                                        published = datetime.fromtimestamp(int(ts)).strftime('%Y-%m-%d')
+                                    except Exception:
+                                        pass
+                            else:
+                                title_attr = ts_el.get_attribute('title') or ''
+                                try:
+                                    from dateutil import parser as dateparser
+                                    published = dateparser.parse(title_attr).strftime('%Y-%m-%d')
+                                except Exception:
+                                    # Fallback: extract date pattern from title
+                                    m = re.search(r'(\w+ \d+, \d{4})', title_attr)
+                                    if m:
+                                        try:
+                                            published = datetime.strptime(m.group(1), '%B %d, %Y').strftime('%Y-%m-%d')
+                                        except Exception:
+                                            pass
+                            if published:
+                                break
+                    # Last resort: look for date-like text in post body
                     if not published:
-                        # Fallback: try aria-label on timestamp links
-                        ts_link = el.query_selector('a[aria-label]')
-                        if ts_link:
-                            published = ts_link.get_attribute('aria-label') or ''
+                        body_text_el = el.inner_text()
+                        date_match = re.search(r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}', body_text_el)
+                        if date_match:
+                            try:
+                                published = datetime.strptime(date_match.group(0).replace(',', ''), '%B %d %Y').strftime('%Y-%m-%d')
+                            except Exception:
+                                pass
 
                     # Caption → title
                     title = ''
