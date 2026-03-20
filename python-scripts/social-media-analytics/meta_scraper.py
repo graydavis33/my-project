@@ -327,11 +327,18 @@ def get_facebook_data():
                 except PlaywrightTimeout:
                     pass
 
+            # Wait for the email field to appear
+            page.wait_for_selector('input[name="email"], input[id="email"]', timeout=15000)
             page.fill('input[name="email"]', EMAIL)
             _sleep(0.5, 1)
             page.fill('input[name="pass"]', PASSWORD)
             _sleep(0.5, 1)
-            page.click('button[name="login"]')
+            # Click login — try multiple selectors Facebook has used
+            for btn_sel in ['button[type="submit"]', 'button[name="login"]', 'input[value="Log in"]',
+                            'button:has-text("Log in")']:
+                if page.query_selector(btn_sel):
+                    page.click(btn_sel)
+                    break
             page.wait_for_load_state('networkidle', timeout=20000)
             _sleep(2, 4)
             print("    Facebook login complete.")
