@@ -365,7 +365,7 @@ def scan_payments(emails):
                 }
                 transactions.append(transaction)
                 _post_slack_notification(result)
-                print(f"    ✓ {email['subject'][:50]} → ${result['amount']} from {result['payer_name']} via {result['platform']}")
+                print(f"    [OK] {email['subject'][:50]} -> ${result['amount']} from {result['payer_name']} via {result['platform']}")
             else:
                 print(f"    – {email['subject'][:50]} → not a payment")
 
