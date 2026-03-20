@@ -60,17 +60,25 @@ def _parse_count(text):
 def _login_instagram(page):
     """Log into Instagram. Returns True on success."""
     print("    Navigating to Instagram login...")
-    page.goto('https://www.instagram.com/accounts/login/', wait_until='networkidle', timeout=30000)
-    _sleep(1, 2)
+    page.goto('https://www.instagram.com/accounts/login/', timeout=30000)
+    _sleep(2, 3)
 
-    # Accept cookies if prompted (EU/UK users)
-    for btn_text in ['Allow all cookies', 'Accept all', 'Allow essential and optional cookies']:
+    # Dismiss any overlay / cookie dialog before interacting
+    for btn_text in ['Allow all cookies', 'Accept all', 'Allow essential and optional cookies',
+                     'Only allow essential cookies', 'Decline optional cookies']:
         try:
             page.click(f'button:has-text("{btn_text}")', timeout=3000)
-            _sleep()
+            _sleep(1, 2)
             break
         except PlaywrightTimeout:
             pass
+
+    # Wait explicitly for the username field (up to 20s)
+    try:
+        page.wait_for_selector('input[name="username"]', timeout=20000)
+    except PlaywrightTimeout:
+        print(f"    Could not find login form. Current URL: {page.url}")
+        return False
 
     # Fill login form
     page.fill('input[name="username"]', EMAIL)
@@ -294,9 +302,10 @@ def get_facebook_data():
             _sleep(2, 4)
             print("    Facebook login complete.")
 
-            # Navigate to the page
-            print(f"  Loading Facebook page: {FB_PAGE}...")
-            page.goto(f'https://www.facebook.com/{FB_PAGE}', wait_until='networkidle', timeout=20000)
+            # Navigate to the page (FB_PAGE_SLUG can be a slug OR a full URL)
+            fb_url = FB_PAGE if FB_PAGE.startswith('http') else f'https://www.facebook.com/{FB_PAGE}'
+            print(f"  Loading Facebook page: {fb_url}...")
+            page.goto(fb_url, wait_until='networkidle', timeout=20000)
             _sleep(2, 3)
 
             # Scroll to load posts

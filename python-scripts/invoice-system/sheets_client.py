@@ -104,18 +104,23 @@ def _format_currency_column(spreadsheet, ws, col_index=3):
     })
 
 
-def _add_totals_row(spreadsheet, ws):
-    """Insert a bold TOTAL row at row 2 if not already present. Data lives in rows 3+."""
-    row2 = ws.row_values(2)
-    if row2 and row2[0] == "TOTAL":
-        return  # already set up
-    ws.insert_row(["TOTAL", "", "", "=SUM(D3:D1000)", ""], index=2)
+def _find_totals_row(ws):
+    """Return the 1-based row index of the TOTAL row, or None if not found."""
+    col_a = ws.col_values(1)
+    for i, val in enumerate(col_a):
+        if val == "TOTAL":
+            return i + 1
+    return None
+
+
+def _format_totals_row(spreadsheet, ws, row_idx):
+    """Apply bold + gray background to the TOTAL row."""
     spreadsheet.batch_update({"requests": [{
         "repeatCell": {
             "range": {
                 "sheetId": ws.id,
-                "startRowIndex": 1,
-                "endRowIndex": 2,
+                "startRowIndex": row_idx - 1,
+                "endRowIndex": row_idx,
                 "startColumnIndex": 0,
                 "endColumnIndex": 26,
             },
@@ -130,8 +135,37 @@ def _add_totals_row(spreadsheet, ws):
     }]})
 
 
-def _freeze_rows(spreadsheet, ws, count=2):
-    """Freeze the top N rows so header + totals stay visible while scrolling."""
+def _place_totals_row_at_bottom(spreadsheet, ws):
+    """
+    Remove any existing TOTAL row and place a fresh one just below the last data row.
+    New rows are inserted before the TOTAL row, so Google Sheets auto-expands the SUM.
+    """
+    existing = _find_totals_row(ws)
+    if existing:
+        ws.delete_rows(existing)
+
+    all_vals = ws.get_all_values()
+    last_data_row = 1
+    for i, row in enumerate(all_vals):
+        if any(cell.strip() for cell in row):
+            last_data_row = i + 1
+
+    target_row = last_data_row + 1
+    ws.insert_row(["TOTAL", "", "", f"=SUM(D2:D{last_data_row})", ""], index=target_row)
+    _format_totals_row(spreadsheet, ws, target_row)
+
+
+def _insert_before_totals(ws, row_data):
+    """Insert a data row just above the TOTAL row, bumping it down. Falls back to append."""
+    total_row = _find_totals_row(ws)
+    if total_row:
+        ws.insert_row(row_data, index=total_row)
+    else:
+        ws.append_row(row_data)
+
+
+def _freeze_rows(spreadsheet, ws, count=1):
+    """Freeze the top N rows (default: header only)."""
     spreadsheet.batch_update({"requests": [{
         "updateSheetProperties": {
             "properties": {
@@ -197,12 +231,12 @@ def setup_sheet():
     for ws in [ws_tx, ws_exp, ws_tax]:
         _expand_sheet_dimensions(sheet, ws)
 
-    # Add pinned TOTAL row (row 2) and freeze header + totals on data tabs
+    # Place TOTAL row at bottom of data and freeze header row only
     for ws in [ws_tx, ws_exp]:
-        _add_totals_row(sheet, ws)
-        _freeze_rows(sheet, ws, count=2)
+        _place_totals_row_at_bottom(sheet, ws)
+        _freeze_rows(sheet, ws, count=1)
 
-    # Always rebuild Tax Summary formulas (start at row 3 to skip the TOTAL row)
+    # Always rebuild Tax Summary — uses SUMIF to exclude the TOTAL row automatically
     ws_tax.clear()
     ws_tax.append_row(TAX_SUMMARY_HEADERS)
     if True:
@@ -211,19 +245,20 @@ def setup_sheet():
 
         rows = []
 
-        # Total Income — sum of Amount column (D) in Transactions (row 3+ skips TOTAL row)
-        rows.append(["Total Income", f"=SUM('{tx}'!D3:D1000)"])
+        # Total Income — SUMIF excludes the TOTAL row regardless of where it moves
+        rows.append(["Total Income", f"=SUMIF('{tx}'!A:A,\"<>TOTAL\",'{tx}'!D:D)"])
 
-        # Expense categories — SUMPRODUCT by Category column (C) in Business Expenses
+        # Expense categories — SUMPRODUCT filtered to exclude TOTAL row
         for cat in CATEGORIES:
             formula = (
-                f"=SUMPRODUCT(('{exp}'!C3:C1000=\"{cat}\")*"
-                f"('{exp}'!D3:D1000))"
+                f"=SUMPRODUCT(('{exp}'!A2:A1000<>\"TOTAL\")*"
+                f"('{exp}'!C2:C1000=\"{cat}\")*"
+                f"('{exp}'!D2:D1000))"
             )
             rows.append([cat, formula])
 
-        # Total Expenses — sum of Amount column (D) in Business Expenses
-        rows.append(["Total Expenses", f"=SUM('{exp}'!D3:D1000)"])
+        # Total Expenses — SUMIF excludes the TOTAL row
+        rows.append(["Total Expenses", f"=SUMIF('{exp}'!A:A,\"<>TOTAL\",'{exp}'!D:D)"])
 
         # Net Profit = Total Income - Total Expenses
         income_row = 2
@@ -242,10 +277,10 @@ def setup_sheet():
 
 
 def append_transaction(date, description, source, amount, notes=""):
-    """Add one income row to the Transactions tab."""
+    """Add one income row to the Transactions tab (inserted above TOTAL row)."""
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_TRANSACTIONS)
-    ws.append_row([date, description, source, amount, notes])
+    _insert_before_totals(ws, [date, description, source, amount, notes])
     _auto_resize(sheet, ws)
 
 
@@ -254,15 +289,15 @@ def append_transactions(rows):
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_TRANSACTIONS)
     for row in rows:
-        ws.append_row(row)
+        _insert_before_totals(ws, row)
     _auto_resize(sheet, ws)
 
 
 def append_expense(date, vendor, category, amount, notes=""):
-    """Add one row to the Business Expenses tab."""
+    """Add one row to the Business Expenses tab (inserted above TOTAL row)."""
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_EXPENSES)
-    ws.append_row([date, vendor, category, amount, notes])
+    _insert_before_totals(ws, [date, vendor, category, amount, notes])
     _auto_resize(sheet, ws)
 
 
@@ -271,5 +306,5 @@ def append_expenses(rows):
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_EXPENSES)
     for row in rows:
-        ws.append_row(row)
+        _insert_before_totals(ws, row)
     _auto_resize(sheet, ws)
