@@ -73,15 +73,11 @@ def _login_instagram(page):
         except PlaywrightTimeout:
             pass
 
-    # Check if already logged in — if we're on the home feed URL and there's no login form, we're in
-    if 'accounts/login' not in page.url and not page.query_selector('input[name="username"]'):
-        print("    Already logged in (session active).")
-        return True
-
-    # If login form not visible, navigate directly to login page
-    if not page.query_selector('input[name="username"]') and not page.query_selector('input[type="text"]'):
+    # Navigate to the login page if we're not already there
+    if 'accounts/login' not in page.url:
         page.goto('https://www.instagram.com/accounts/login/', timeout=30000)
         _sleep(2, 3)
+        # Dismiss cookie dialogs
         for btn_text in ['Allow all cookies', 'Accept all']:
             try:
                 page.click(f'button:has-text("{btn_text}")', timeout=3000)
@@ -90,36 +86,23 @@ def _login_instagram(page):
             except PlaywrightTimeout:
                 pass
 
-    # Wait for username field — try multiple selectors Instagram has used
-    username_sel = None
-    for sel in [
-        'input[name="username"]',
-        'input[aria-label="Phone number, username, or email"]',
-        'input[aria-label="Phone number, username, or email address"]',
-        'input[type="text"]',
-    ]:
-        try:
-            page.wait_for_selector(sel, timeout=8000)
-            username_sel = sel
-            break
-        except PlaywrightTimeout:
-            continue
-
-    if not username_sel:
+    # Wait for the username/email field
+    try:
+        page.wait_for_selector('input[name="email"], input[name="username"]', timeout=15000)
+    except PlaywrightTimeout:
         print(f"    Could not find login form. URL: {page.url}")
-        # Take a screenshot for debugging
-        page.screenshot(path='ig_login_debug.png')
-        print("    Screenshot saved: ig_login_debug.png")
         return False
 
-    # Fill login form
-    page.fill(username_sel, EMAIL)
+    # Fill login form — Instagram uses name="email" for the username field on web
+    email_sel = 'input[name="email"]' if page.query_selector('input[name="email"]') else 'input[name="username"]'
+    pass_sel  = 'input[name="pass"]'  if page.query_selector('input[name="pass"]')  else 'input[name="password"]'
+
+    page.fill(email_sel, EMAIL)
     _sleep(0.5, 1)
-    # Password field
-    pwd_sel = 'input[name="password"]' if page.query_selector('input[name="password"]') else 'input[type="password"]'
-    page.fill(pwd_sel, PASSWORD)
+    page.fill(pass_sel, PASSWORD)
     _sleep(0.5, 1)
-    page.click('button[type="submit"]')
+    # Submit by pressing Enter (works even when the button isn't visible)
+    page.press(pass_sel, 'Enter')
 
     # Wait for login to complete
     try:
@@ -182,7 +165,7 @@ def get_instagram_data():
 
             # Go to profile
             print(f"  Loading @{IG_USER} profile...")
-            page.goto(f'https://www.instagram.com/{IG_USER}/', wait_until='networkidle', timeout=20000)
+            page.goto(f'https://www.instagram.com/{IG_USER}/', wait_until='load', timeout=30000)
             _sleep(2, 3)
 
             # Scroll to load more posts and collect post links
@@ -214,8 +197,15 @@ def get_instagram_data():
             # Visit each post
             for i, url in enumerate(list(post_links)[:MAX_POSTS]):
                 try:
-                    page.goto(url, wait_until='networkidle', timeout=20000)
+                    page.goto(url, wait_until='load', timeout=30000)
                     _sleep(1, 2)
+
+                    # Dismiss "Sign up / Log in" popup if present
+                    try:
+                        page.click('svg[aria-label="Close"], button:has-text("Close"), [role="dialog"] button:first-child', timeout=3000)
+                        _sleep(0.5)
+                    except PlaywrightTimeout:
+                        pass
 
                     # Published date
                     published = ''
@@ -229,27 +219,34 @@ def get_instagram_data():
                         except Exception:
                             published = dt_str[:10]
 
+                    # Get all page text for extraction
+                    body_text = page.inner_text('body')
+
                     # Caption → title
+                    # When logged in as owner, Instagram shows: username → relative_time → caption
+                    # Pattern: a line matching "Xw", "Xd", "Xh", "Xm" followed by the caption
                     title = ''
-                    for sel in ['h1[dir="auto"]', 'div._a9zs span', 'div[data-testid="post-comment-root"] span']:
-                        el = page.query_selector(sel)
-                        if el:
-                            title = el.inner_text()[:80].replace('\n', ' ').strip()
-                            if title:
-                                break
+                    time_caption = re.search(r'\b\d+[wdhm]\b\n(.{5,})', body_text)
+                    if time_caption:
+                        title = time_caption.group(1).split('\n')[0][:80].strip()
                     if not title:
                         title = f"Post {published or i+1}"
 
-                    # Likes — Instagram shows "X likes" text or a button with count
+                    # Likes — when logged in as owner, Instagram shows:
+                    # "Boost reel\n{count}\n{Month Day}"  — no "likes" label
                     likes = 0
-                    like_text = page.inner_text('body')
-                    like_match = re.search(r'([\d,]+(?:\.\d+)?[KMk]?)\s+likes?', like_text)
-                    if like_match:
-                        likes = _parse_count(like_match.group(1))
+                    boost_match = re.search(r'Boost (?:reel|post)\n([\d,]+(?:\.\d+)?[KMk]?)\n', body_text)
+                    if boost_match:
+                        likes = _parse_count(boost_match.group(1))
+                    else:
+                        # Fallback: labeled like count
+                        like_match = re.search(r'([\d,]+(?:\.\d+)?[KMk]?)\s+likes?', body_text, re.IGNORECASE)
+                        if like_match:
+                            likes = _parse_count(like_match.group(1))
 
-                    # Views (reels/videos)
+                    # Views (reels/videos) — labeled "X views" or "X plays"
                     views = 0
-                    view_match = re.search(r'([\d,]+(?:\.\d+)?[KMk]?)\s+(?:views?|plays?)', like_text)
+                    view_match = re.search(r'([\d,]+(?:\.\d+)?[KMk]?)\s+(?:views?|plays?)', body_text, re.IGNORECASE)
                     if view_match:
                         views = _parse_count(view_match.group(1))
 
@@ -346,7 +343,7 @@ def get_facebook_data():
             # Navigate to the page (FB_PAGE_SLUG can be a slug OR a full URL)
             fb_url = FB_PAGE if FB_PAGE.startswith('http') else f'https://www.facebook.com/{FB_PAGE}'
             print(f"  Loading Facebook page: {fb_url}...")
-            page.goto(fb_url, wait_until='networkidle', timeout=20000)
+            page.goto(fb_url, wait_until='load', timeout=30000)
             _sleep(2, 3)
 
             # Scroll to load posts
