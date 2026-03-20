@@ -17,16 +17,16 @@ from ai_analyzer import analyze_and_write, get_sheet_insights
 
 
 def _fetch_instagram():
-    if not os.getenv('META_ACCESS_TOKEN') or not os.getenv('INSTAGRAM_BUSINESS_ACCOUNT_ID'):
+    if not os.getenv('META_EMAIL') or not os.getenv('IG_USERNAME'):
         return []
-    from meta_fetcher import get_instagram_data
+    from meta_scraper import get_instagram_data
     return get_instagram_data()
 
 
 def _fetch_facebook():
-    if not os.getenv('META_ACCESS_TOKEN') or not os.getenv('FACEBOOK_PAGE_ID'):
+    if not os.getenv('META_EMAIL') or not os.getenv('FB_PAGE_SLUG'):
         return []
-    from meta_fetcher import get_facebook_data
+    from meta_scraper import get_facebook_data
     return get_facebook_data()
 
 
