@@ -26,17 +26,12 @@ $settings = New-ScheduledTaskSettingsSet `
     -RunOnlyIfNetworkAvailable `
     -Hidden
 
-$principal = New-ScheduledTaskPrincipal `
-    -UserId ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name) `
-    -LogonType Interactive `
-    -RunLevel Highest
-
 Register-ScheduledTask `
     -TaskName  $taskName `
     -Action    $action `
     -Trigger   $trigger `
     -Settings  $settings `
-    -Principal $principal `
+    -RunLevel  Limited `
     -Force | Out-Null
 
 Write-Host ""
