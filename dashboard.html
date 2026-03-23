@@ -566,24 +566,43 @@
   <div class="section-title" data-section="blocked">Blocked — Waiting on External API Setup</div>
   <div class="grid">
 
-    <div class="card" data-category="finished" data-tabs="home finished">
+    <div class="card" data-category="finished" data-tabs="home finished" data-project="social-media-analytics" style="border-left:3px solid #10b981">
       <div class="card-header">
-        <div class="card-title">Multi-Platform Analytics (TikTok + Instagram + FB)</div>
+        <div class="card-title">Social Media Analytics (All Platforms)</div>
         <div class="badge blive">LIVE</div>
       </div>
-      <div class="card-meta">python-scripts/social-media-analytics/ · Score: 9/12 · All 4 platforms active</div>
-      <div class="status s-running">RUNNING — All platforms configured and writing to Sheets</div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>100%</span></div>
-        <div class="progress-bar"><div class="progress-fill fg" style="width:100%"></div></div>
+      <div class="card-meta">python-scripts/social-media-analytics/ · YouTube, TikTok, Instagram, Facebook · Auto-runs every Sunday 9am EST</div>
+      <div class="status s-running">RUNNING — All 4 platforms writing to Sheets</div>
+      <div class="usage-row">
+        <div class="usage-stat highlight">
+          <div class="u-label">Schedule</div>
+          <div class="u-value">Auto</div>
+          <div class="u-sub">every Sunday</div>
+        </div>
+        <div class="usage-stat pending" data-stat="last_used">
+          <div class="u-label">Last Run</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">loading...</div>
+        </div>
+        <div class="usage-stat pending" data-stat="all_time">
+          <div class="u-label">All Time</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">total runs</div>
+        </div>
+        <div class="usage-stat pending" data-stat="cost_all_time">
+          <div class="u-label">Total Cost</div>
+          <div class="u-value">—</div>
+          <div class="u-sub">API spend</div>
+        </div>
       </div>
       <div class="req-section">
-        <div class="req-label">Done</div>
+        <div class="req-label">What It Does</div>
         <ul class="req-list">
-          <li class="req-item done"><div class="chk"></div>YouTube analytics live — GitHub Actions every Sunday 9am EST</li>
-          <li class="req-item done"><div class="chk"></div>TikTok — TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET configured</li>
-          <li class="req-item done"><div class="chk"></div>Instagram — Playwright scraper live @graydient_media</li>
-          <li class="req-item done"><div class="chk"></div>Facebook — Playwright scraper live (Graydient Media page)</li>
+          <li class="req-item done"><div class="chk"></div>YouTube Shorts + Longform — views, likes, comments, CTR</li>
+          <li class="req-item done"><div class="chk"></div>TikTok — video performance via API</li>
+          <li class="req-item done"><div class="chk"></div>Instagram @graydient_media — Playwright scraper</li>
+          <li class="req-item done"><div class="chk"></div>Facebook (Graydient Media) — Playwright scraper</li>
+          <li class="req-item done"><div class="chk"></div>Writes to Google Sheets · AI insights via Claude Haiku (cached)</li>
         </ul>
       </div>
     </div>
@@ -746,47 +765,6 @@
       </div>
     </div>
 
-    <div class="card" data-category="finished" data-tabs="home finished" data-project="social-media-analytics" style="border-left:3px solid #10b981">
-      <div class="card-header">
-        <div class="card-title">Social Media Analytics (YouTube)</div>
-        <div class="badge blive">LIVE</div>
-      </div>
-      <div class="card-meta">python-scripts/social-media-analytics/ · Auto-runs every Sunday 9am EST</div>
-      <div class="status s-running">RUNNING — GitHub Actions (no manual runs needed)</div>
-      <div class="usage-row">
-        <div class="usage-stat highlight">
-          <div class="u-label">Schedule</div>
-          <div class="u-value">Auto</div>
-          <div class="u-sub">every Sunday</div>
-        </div>
-        <div class="usage-stat pending" data-stat="last_used">
-          <div class="u-label">Last Run</div>
-          <div class="u-value">—</div>
-          <div class="u-sub">tracker pending</div>
-        </div>
-        <div class="usage-stat pending" data-stat="all_time">
-          <div class="u-label">All Time</div>
-          <div class="u-value">—</div>
-          <div class="u-sub">total runs</div>
-        </div>
-        <div class="usage-stat pending" data-stat="cost_all_time">
-          <div class="u-label">Total Cost</div>
-          <div class="u-value">—</div>
-          <div class="u-sub">API spend</div>
-        </div>
-      </div>
-      <div class="req-section">
-        <div class="req-label">What It Does</div>
-        <ul class="req-list">
-          <li class="req-item done"><div class="chk"></div>Fetches YouTube Shorts + Longform — views, likes, comments, CTR</li>
-          <li class="req-item done"><div class="chk"></div>Writes to Google Sheets · AI insights via Claude Haiku (cached)</li>
-        </ul>
-        <div class="req-label" style="margin-top:12px">Expansion Roadmap</div>
-        <ul class="req-list">
-          <li class="req-item done"><div class="chk"></div>TikTok + Instagram + Facebook — all live</li>
-        </ul>
-      </div>
-    </div>
 
   </div>
 
