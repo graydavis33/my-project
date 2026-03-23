@@ -387,7 +387,11 @@ def get_facebook_data():
             # Navigate to the page (FB_PAGE_SLUG can be a slug OR a full URL)
             fb_url = FB_PAGE if FB_PAGE.startswith('http') else f'https://www.facebook.com/{FB_PAGE}'
             print(f"  Loading Facebook page: {fb_url}...")
-            page.goto(fb_url, wait_until='load', timeout=30000)
+            try:
+                page.goto(fb_url, wait_until='domcontentloaded', timeout=30000)
+            except Exception:
+                # Facebook sometimes aborts the navigation but the page still loads
+                pass
             _sleep(2, 3)
 
             # Scroll to load posts
