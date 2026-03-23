@@ -188,6 +188,23 @@ def _expand_sheet_dimensions(spreadsheet, ws, rows=1000, cols=26):
         spreadsheet.batch_update({"requests": requests})
 
 
+def _expense_cols(category):
+    """
+    Return (vendor_col, amount_col) as 1-based column indices for a given expense category.
+    Business Expenses tab layout: [Cat1 | Amount | Cat2 | Amount | ...]
+    """
+    try:
+        idx = CATEGORIES.index(category)
+    except ValueError:
+        idx = len(CATEGORIES) - 1  # fallback to last category (Other)
+    return idx * 2 + 1, idx * 2 + 2
+
+
+def _col_letter(col_1based):
+    """Convert 1-based column number to a column letter (1→A, 2→B, etc.)"""
+    return chr(ord('A') + col_1based - 1)
+
+
 def get_or_create_worksheet(sheet, title, headers):
     """Return the worksheet with the given title, creating it with headers if it doesn't exist."""
     try:
@@ -223,6 +240,16 @@ def setup_sheet():
             print("  Reset Transactions tab (headers updated, old data cleared)")
     except gspread.WorksheetNotFound:
         pass
+
+    # Reset Business Expenses tab if headers are outdated (old row-based format → new column format)
+    try:
+        ws_existing = sheet.worksheet(TAB_EXPENSES)
+        if ws_existing.row_values(1) != EXPENSE_HEADERS:
+            sheet.del_worksheet(ws_existing)
+            print("  Reset Business Expenses tab (new side-by-side category layout)")
+    except gspread.WorksheetNotFound:
+        pass
+
     ws_tx = get_or_create_worksheet(sheet, TAB_TRANSACTIONS, TRANSACTION_HEADERS)
     ws_exp = get_or_create_worksheet(sheet, TAB_EXPENSES, EXPENSE_HEADERS)
     ws_tax = get_or_create_worksheet(sheet, TAB_TAX_SUMMARY, TAX_SUMMARY_HEADERS)
@@ -231,46 +258,48 @@ def setup_sheet():
     for ws in [ws_tx, ws_exp, ws_tax]:
         _expand_sheet_dimensions(sheet, ws)
 
-    # Place TOTAL row at bottom of data and freeze header row only
-    for ws in [ws_tx, ws_exp]:
-        _place_totals_row_at_bottom(sheet, ws)
-        _freeze_rows(sheet, ws, count=1)
+    # Transactions: place TOTAL row and freeze header
+    _place_totals_row_at_bottom(sheet, ws_tx)
+    _freeze_rows(sheet, ws_tx, count=1)
+    # Business Expenses: just freeze header (no TOTAL row — Tax Summary handles totals)
+    _freeze_rows(sheet, ws_exp, count=1)
 
-    # Always rebuild Tax Summary — uses SUMIF to exclude the TOTAL row automatically
+    # Always rebuild Tax Summary
     ws_tax.clear()
     ws_tax.append_row(TAX_SUMMARY_HEADERS)
-    if True:
-        tx = TAB_TRANSACTIONS
-        exp = TAB_EXPENSES
+    tx = TAB_TRANSACTIONS
+    exp = TAB_EXPENSES
 
-        rows = []
+    tax_rows = []
 
-        # Total Income — SUMIF excludes the TOTAL row regardless of where it moves
-        rows.append(["Total Income", f"=SUMIF('{tx}'!A:A,\"<>TOTAL\",'{tx}'!D:D)"])
+    # Total Income
+    tax_rows.append(["Total Income", f"=SUMIF('{tx}'!A:A,\"<>TOTAL\",'{tx}'!D:D)"])
 
-        # Expense categories — SUMPRODUCT filtered to exclude TOTAL row
-        for cat in CATEGORIES:
-            formula = (
-                f"=SUMPRODUCT(('{exp}'!A2:A1000<>\"TOTAL\")*"
-                f"('{exp}'!C2:C1000=\"{cat}\")*"
-                f"('{exp}'!D2:D1000))"
-            )
-            rows.append([cat, formula])
+    # Each expense category — references its dedicated Amount column
+    for i, cat in enumerate(CATEGORIES):
+        amount_col = _col_letter(i * 2 + 2)  # B, D, F, H, J
+        tax_rows.append([cat, f"=SUM('{exp}'!{amount_col}2:{amount_col}1000)"])
 
-        # Total Expenses — SUMIF excludes the TOTAL row
-        rows.append(["Total Expenses", f"=SUMIF('{exp}'!A:A,\"<>TOTAL\",'{exp}'!D:D)"])
+    # Total Expenses = sum of all category amount columns
+    all_sums = "+".join(
+        [f"SUM('{exp}'!{_col_letter(i * 2 + 2)}2:{_col_letter(i * 2 + 2)}1000)"
+         for i in range(len(CATEGORIES))]
+    )
+    tax_rows.append(["Total Expenses", f"={all_sums}"])
 
-        # Net Profit = Total Income - Total Expenses
-        income_row = 2
-        expenses_row = 2 + len(CATEGORIES) + 1
-        rows.append(["Net Profit", f"=B{income_row}-B{expenses_row}"])
+    # Net Profit
+    income_row = 2
+    expenses_row = 2 + len(CATEGORIES) + 1
+    tax_rows.append(["Net Profit", f"=B{income_row}-B{expenses_row}"])
 
-        for row in rows:
-            ws_tax.append_row(row)
+    for row in tax_rows:
+        ws_tax.append_row(row)
 
-    # Format Amount column (D, index 3) as $ currency on Transactions and Business Expenses
+    # Format Amount column on Transactions
     _format_currency_column(sheet, ws_tx, col_index=3)
-    _format_currency_column(sheet, ws_exp, col_index=3)
+    # Format all Amount columns on Business Expenses (cols B, D, F, H, J → 0-indexed 1, 3, 5, 7, 9)
+    for i in range(len(CATEGORIES)):
+        _format_currency_column(sheet, ws_exp, col_index=i * 2 + 1)
 
     _auto_resize_all(sheet)
     print(f"  Sheet setup complete. Tabs: {TAB_TRANSACTIONS}, {TAB_EXPENSES}, {TAB_TAX_SUMMARY}")
@@ -294,17 +323,28 @@ def append_transactions(rows):
 
 
 def append_expense(date, vendor, category, amount, notes=""):
-    """Add one row to the Business Expenses tab (inserted above TOTAL row)."""
+    """Add one expense to the Business Expenses tab in the correct category column."""
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_EXPENSES)
-    _insert_before_totals(ws, [date, vendor, category, amount, notes])
+    vendor_col, amount_col = _expense_cols(category)
+    col_vals = ws.col_values(vendor_col)
+    next_row = max(len(col_vals) + 1, 2)  # always at least row 2 (below header)
+    col_a = _col_letter(vendor_col)
+    col_b = _col_letter(amount_col)
+    ws.update(f"{col_a}{next_row}:{col_b}{next_row}", [[vendor, amount]])
     _auto_resize(sheet, ws)
 
 
 def append_expenses(rows):
-    """Add multiple expense rows at once. Each row: [date, vendor, category, amount, notes]."""
+    """Add multiple expense rows. Each row: [date, vendor, category, amount, notes]."""
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_EXPENSES)
     for row in rows:
-        _insert_before_totals(ws, row)
+        _date, vendor, category, amount = row[0], row[1], row[2], row[3]
+        vendor_col, amount_col = _expense_cols(category)
+        col_vals = ws.col_values(vendor_col)
+        next_row = max(len(col_vals) + 1, 2)
+        col_a = _col_letter(vendor_col)
+        col_b = _col_letter(amount_col)
+        ws.update(f"{col_a}{next_row}:{col_b}{next_row}", [[vendor, amount]])
     _auto_resize(sheet, ws)
