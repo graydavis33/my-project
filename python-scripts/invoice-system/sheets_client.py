@@ -188,17 +188,18 @@ def _expand_sheet_dimensions(spreadsheet, ws, rows=1000, cols=26):
         spreadsheet.batch_update({"requests": requests})
 
 
-def _expense_cols(category):
+def _get_expense_col_map(ws):
     """
-    Return (vendor_col, amount_col) as 1-based column indices for a given expense category.
-    Layout: [Category | Amount | spacer] per category, then Total.
-    Category i → vendor_col = i*3+1, amount_col = i*3+2.
+    Read row 1 of the Business Expenses tab and return a dict mapping
+    category name → (vendor_col, amount_col) as 1-based column indices.
+    Works regardless of how the user manually arranges the sheet.
     """
-    try:
-        idx = CATEGORIES.index(category)
-    except ValueError:
-        idx = len(CATEGORIES) - 1  # fallback to last category (Other)
-    return idx * 3 + 1, idx * 3 + 2
+    headers = ws.row_values(1)
+    col_map = {}
+    for i, h in enumerate(headers):
+        if h in CATEGORIES and i + 1 < len(headers) and headers[i + 1] == "Amount":
+            col_map[h] = (i + 1, i + 2)  # 1-based vendor_col, amount_col
+    return col_map
 
 
 def _col_letter(col_1based):
@@ -336,9 +337,20 @@ def append_expense(date, vendor, category, amount, notes=""):
     """Add one expense to the Business Expenses tab in the correct category column."""
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_EXPENSES)
-    vendor_col, amount_col = _expense_cols(category)
+    col_map = _get_expense_col_map(ws)
+
+    # Fallback to "Other" if category not found in sheet
+    if category not in col_map:
+        if "Other" in col_map:
+            print(f"  Note: category '{category}' not in sheet — filing under Other.")
+            category = "Other"
+        else:
+            print(f"  Warning: category '{category}' not found in sheet. Skipping.")
+            return
+
+    vendor_col, amount_col = col_map[category]
     col_vals = ws.col_values(vendor_col)
-    next_row = max(len(col_vals) + 1, 2)  # always at least row 2 (below header)
+    next_row = max(len(col_vals) + 1, 2)
     col_a = _col_letter(vendor_col)
     col_b = _col_letter(amount_col)
     ws.update(f"{col_a}{next_row}:{col_b}{next_row}", [[vendor, amount]])
@@ -349,12 +361,22 @@ def append_expenses(rows):
     """Add multiple expense rows. Each row: [date, vendor, category, amount, notes]."""
     sheet = get_sheet()
     ws = sheet.worksheet(TAB_EXPENSES)
+    col_map = _get_expense_col_map(ws)
+
     for row in rows:
         _date, vendor, category, amount = row[0], row[1], row[2], row[3]
-        vendor_col, amount_col = _expense_cols(category)
+        if category not in col_map:
+            if "Other" in col_map:
+                print(f"  Note: category '{category}' not in sheet — filing under Other.")
+                category = "Other"
+            else:
+                print(f"  Warning: category '{category}' not found in sheet. Skipping.")
+                continue
+        vendor_col, amount_col = col_map[category]
         col_vals = ws.col_values(vendor_col)
         next_row = max(len(col_vals) + 1, 2)
         col_a = _col_letter(vendor_col)
         col_b = _col_letter(amount_col)
         ws.update(f"{col_a}{next_row}:{col_b}{next_row}", [[vendor, amount]])
+
     _auto_resize(sheet, ws)
