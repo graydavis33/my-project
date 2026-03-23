@@ -191,13 +191,14 @@ def _expand_sheet_dimensions(spreadsheet, ws, rows=1000, cols=26):
 def _expense_cols(category):
     """
     Return (vendor_col, amount_col) as 1-based column indices for a given expense category.
-    Business Expenses tab layout: [Cat1 | Amount | Cat2 | Amount | ...]
+    Layout: [Category | Amount | spacer] per category, then Total.
+    Category i → vendor_col = i*3+1, amount_col = i*3+2.
     """
     try:
         idx = CATEGORIES.index(category)
     except ValueError:
         idx = len(CATEGORIES) - 1  # fallback to last category (Other)
-    return idx * 2 + 1, idx * 2 + 2
+    return idx * 3 + 1, idx * 3 + 2
 
 
 def _col_letter(col_1based):
@@ -275,14 +276,14 @@ def setup_sheet():
     # Total Income
     tax_rows.append(["Total Income", f"=SUMIF('{tx}'!A:A,\"<>TOTAL\",'{tx}'!D:D)"])
 
-    # Each expense category — references its dedicated Amount column
+    # Each expense category — amount col is i*3+2 (1-based): B, E, H, K, N
     for i, cat in enumerate(CATEGORIES):
-        amount_col = _col_letter(i * 2 + 2)  # B, D, F, H, J
+        amount_col = _col_letter(i * 3 + 2)
         tax_rows.append([cat, f"=SUM('{exp}'!{amount_col}2:{amount_col}1000)"])
 
     # Total Expenses = sum of all category amount columns
     all_sums = "+".join(
-        [f"SUM('{exp}'!{_col_letter(i * 2 + 2)}2:{_col_letter(i * 2 + 2)}1000)"
+        [f"SUM('{exp}'!{_col_letter(i * 3 + 2)}2:{_col_letter(i * 3 + 2)}1000)"
          for i in range(len(CATEGORIES))]
     )
     tax_rows.append(["Total Expenses", f"={all_sums}"])
@@ -295,11 +296,20 @@ def setup_sheet():
     for row in tax_rows:
         ws_tax.append_row(row)
 
+    # Add ARRAYFORMULA to Total column (O2) — sums all category amount cols per row
+    amount_cols = [_col_letter(i * 3 + 2) for i in range(len(CATEGORIES))]
+    ranges = [f"{c}2:{c}1000" for c in amount_cols]
+    sum_expr = "+".join(ranges)
+    total_col_1based = (len(CATEGORIES) - 1) * 3 + 3   # col O
+    array_formula = f'=ARRAYFORMULA(IF(({sum_expr})=0,"",{sum_expr}))'
+    ws_exp.update_cell(2, total_col_1based, array_formula)
+
     # Format Amount column on Transactions
     _format_currency_column(sheet, ws_tx, col_index=3)
-    # Format all Amount columns on Business Expenses (cols B, D, F, H, J → 0-indexed 1, 3, 5, 7, 9)
+    # Format all Amount cols on Business Expenses (0-indexed: 1, 4, 7, 10, 13) and Total col
     for i in range(len(CATEGORIES)):
-        _format_currency_column(sheet, ws_exp, col_index=i * 2 + 1)
+        _format_currency_column(sheet, ws_exp, col_index=i * 3 + 1)
+    _format_currency_column(sheet, ws_exp, col_index=total_col_1based - 1)
 
     _auto_resize_all(sheet)
     print(f"  Sheet setup complete. Tabs: {TAB_TRANSACTIONS}, {TAB_EXPENSES}, {TAB_TAX_SUMMARY}")

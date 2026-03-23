@@ -72,8 +72,11 @@ SOURCES = ["Venmo", "Bank", "Cash", "Stripe", "Zelle", "Cash App", "QuickBooks",
 
 # Column headers for each tab
 TRANSACTION_HEADERS = ["Date", "Payer", "Source", "Amount", "Notes"]
-# Business Expenses tab uses side-by-side category columns: [Category | Amount] x N
+# Business Expenses tab: [Category | Amount | spacer] per category, then Total column
 EXPENSE_HEADERS = []
-for _cat in CATEGORIES:
+for _i, _cat in enumerate(CATEGORIES):
     EXPENSE_HEADERS.extend([_cat, "Amount"])
+    if _i < len(CATEGORIES) - 1:
+        EXPENSE_HEADERS.append("")   # spacer column between categories
+EXPENSE_HEADERS.append("Total")
 TAX_SUMMARY_HEADERS = ["Category", "Total"]
