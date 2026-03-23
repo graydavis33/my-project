@@ -349,7 +349,7 @@ def get_facebook_data():
                 print("    Loading saved Facebook session...")
                 page.goto('https://www.facebook.com/', wait_until='load', timeout=30000)
                 _sleep(2, 3)
-                session_valid = 'login' not in page.url and page.query_selector('[aria-label="Facebook"]') is not None
+                session_valid = 'facebook.com' in page.url and 'login' not in page.url and page.query_selector('div[role="navigation"]') is not None
                 if session_valid:
                     print("    Session valid — skipping login.")
                 else:
