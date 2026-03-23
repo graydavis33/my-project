@@ -33,7 +33,7 @@ Scored 0–3 across: Unblocks others / Revenue+Time / Showcase / Sellable
 | 2 | Content Researcher | 9/12 | LIVE on Mac | V2: add Reddit layer, improvements |
 | 3 | Client CRM | 7/12 | Built on Windows | Run setup, configure Google Sheet |
 | 4 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
-| — | Social Media Analytics | 9/12 | BLOCKED (TikTok + Meta API) | Unblock APIs first |
+| — | Social Media Analytics | 9/12 | LIVE — all 4 platforms active | Schedule via GitHub Actions |
 | 5 | Hook Optimizer | 6/12 | Built on Windows | Add .env on Mac |
 | 6 | Creator Intel | 5/12 | Built on Windows | Needs YouTube OAuth |
 | 7 | Morning Briefing | 4/12 | Built on Windows | Needs full .env setup |
@@ -44,7 +44,7 @@ Scored 0–3 across: Unblocks others / Revenue+Time / Showcase / Sellable
 | Email Agent | python-scripts/email-agent/ | LIVE on Mac |
 | Invoice System | python-scripts/invoice-system/ | LIVE on Mac |
 | Content Researcher | python-scripts/content-researcher/ | LIVE on Mac |
-| Social Media Analytics | python-scripts/social-media-analytics/ | Built — API setup blocked |
+| Social Media Analytics | python-scripts/social-media-analytics/ | LIVE — YouTube, TikTok, Instagram, Facebook |
 | Hook Optimizer | python-scripts/hook-optimizer/ | Built on Windows |
 | Morning Briefing | python-scripts/morning-briefing/ | Built on Windows |
 | Client Onboarding | python-scripts/client-onboarding/ | Built on Windows |
