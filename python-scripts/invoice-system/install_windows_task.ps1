@@ -40,7 +40,7 @@ Register-ScheduledTask `
     -Force | Out-Null
 
 Write-Host ""
-Write-Host "Task '$taskName' registered — runs daily at 8:00 AM." -ForegroundColor Green
+Write-Host "Task '$taskName' registered - runs daily at 8:00 AM." -ForegroundColor Green
 Write-Host ""
 Write-Host "Useful commands:"
 Write-Host "  Start now:   Start-ScheduledTask -TaskName '$taskName'"
