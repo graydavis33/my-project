@@ -566,30 +566,24 @@
   <div class="section-title" data-section="blocked">Blocked — Waiting on External API Setup</div>
   <div class="grid">
 
-    <div class="card" data-category="blocked" data-tabs="home blocked">
+    <div class="card" data-category="finished" data-tabs="home finished">
       <div class="card-header">
         <div class="card-title">Multi-Platform Analytics (TikTok + Instagram + FB)</div>
-        <div class="badge bblk">BLOCKED</div>
+        <div class="badge blive">LIVE</div>
       </div>
-      <div class="card-meta">python-scripts/social-media-analytics/ · Score: 9/12 — would be #1 if unblocked</div>
-      <div class="status s-blocked">BLOCKED — TikTok + Meta Developer API Setup Required</div>
+      <div class="card-meta">python-scripts/social-media-analytics/ · Score: 9/12 · All 4 platforms active</div>
+      <div class="status s-running">RUNNING — All platforms configured and writing to Sheets</div>
       <div class="progress-wrap">
-        <div class="progress-label"><span>Completion</span><span>55%</span></div>
-        <div class="progress-bar"><div class="progress-fill fr" style="width:55%"></div></div>
+        <div class="progress-label"><span>Completion</span><span>100%</span></div>
+        <div class="progress-bar"><div class="progress-fill fg" style="width:100%"></div></div>
       </div>
       <div class="req-section">
         <div class="req-label">Done</div>
         <ul class="req-list">
           <li class="req-item done"><div class="chk"></div>YouTube analytics live — GitHub Actions every Sunday 9am EST</li>
-          <li class="req-item done"><div class="chk"></div>Code written: meta_fetcher.py, tiktok_fetcher.py, tiktok_auth.py</li>
-          <li class="req-item done"><div class="chk"></div>main.py silently skips unconfigured platforms</li>
-        </ul>
-        <div class="req-label" style="margin-top:12px">Blockers</div>
-        <ul class="req-list">
-          <li class="req-item"><div class="chk"></div>Create Meta Developer App (developers.facebook.com) <span class="tag t-blk">BLOCKER</span></li>
-          <li class="req-item"><div class="chk"></div>Get META_ACCESS_TOKEN, INSTAGRAM_BUSINESS_ACCOUNT_ID, FACEBOOK_PAGE_ID</li>
-          <li class="req-item"><div class="chk"></div>Create TikTok Developer App (developers.tiktok.com) <span class="tag t-blk">BLOCKER</span></li>
-          <li class="req-item"><div class="chk"></div>Add TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET to .env, run tiktok_auth.py</li>
+          <li class="req-item done"><div class="chk"></div>TikTok — TIKTOK_CLIENT_KEY + TIKTOK_CLIENT_SECRET configured</li>
+          <li class="req-item done"><div class="chk"></div>Instagram — Playwright scraper live @graydient_media</li>
+          <li class="req-item done"><div class="chk"></div>Facebook — Playwright scraper live (Graydient Media page)</li>
         </ul>
       </div>
     </div>
@@ -608,7 +602,7 @@
       <div class="req-section">
         <div class="req-label">Requirements</div>
         <ul class="req-list">
-          <li class="req-item"><div class="chk"></div>Multi-Platform Analytics fully working <span class="tag t-blk">DEP</span></li>
+          <li class="req-item done"><div class="chk"></div>Multi-Platform Analytics fully working <span class="tag t-blk">DEP</span></li>
           <li class="req-item"><div class="chk"></div>FastAPI backend (serve analytics data as JSON API)</li>
           <li class="req-item"><div class="chk"></div>Deploy to cloud (Railway, Render, or Fly.io)</li>
           <li class="req-item"><div class="chk"></div>Frontend dashboard (React or plain HTML/JS)</li>
@@ -789,7 +783,7 @@
         </ul>
         <div class="req-label" style="margin-top:12px">Expansion Roadmap</div>
         <ul class="req-list">
-          <li class="req-item"><div class="chk"></div>TikTok + Instagram + Facebook — see Blocked tab</li>
+          <li class="req-item done"><div class="chk"></div>TikTok + Instagram + Facebook — all live</li>
         </ul>
       </div>
     </div>
