@@ -98,7 +98,7 @@ def _fmt_last_used(ts):
 
 def main():
     print("\n  Usage Stats Sync")
-    print("  ─────────────────")
+    print("  -----------------")
 
     entries = _load_log()
     if not entries:
@@ -114,7 +114,7 @@ def main():
 
     # Print summary table
     print(f"  {'Project':<35} {'Last Used':<14} {'This Week':>10} {'All Time':>10} {'Cost (All)':>12}")
-    print(f"  {'─'*35} {'─'*14} {'─'*10} {'─'*10} {'─'*12}")
+    print(f"  {'-'*35} {'-'*14} {'-'*10} {'-'*10} {'-'*12}")
     for project, s in stats_raw.items():
         name      = _PROJECT_NAMES.get(project, project)
         last_str  = _fmt_last_used(s["last_used"]) or "Never"
