@@ -31,6 +31,11 @@ FB_PAGE  = os.getenv('FB_PAGE_SLUG', '').strip()
 HEADLESS  = os.getenv('SCRAPER_HEADLESS', 'true').lower() == 'true'
 MAX_POSTS = int(os.getenv('SCRAPER_MAX_POSTS', '50'))
 
+# Session files — saved after first login so future runs skip login entirely
+_DIR = os.path.dirname(os.path.abspath(__file__))
+IG_SESSION = os.path.join(_DIR, 'ig_session.json')
+FB_SESSION = os.path.join(_DIR, 'fb_session.json')
+
 
 def _sleep(lo=1.0, hi=2.5):
     """Random delay to avoid looking like a bot."""
@@ -148,7 +153,9 @@ def get_instagram_data():
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=HEADLESS)
-        context = browser.new_context(
+
+        # Load saved session if it exists — skips login entirely
+        ctx_kwargs = dict(
             viewport={'width': 1280, 'height': 900},
             user_agent=(
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -156,12 +163,32 @@ def get_instagram_data():
                 'Chrome/122.0.0.0 Safari/537.36'
             )
         )
+        if os.path.exists(IG_SESSION):
+            ctx_kwargs['storage_state'] = IG_SESSION
+
+        context = browser.new_context(**ctx_kwargs)
         page = context.new_page()
 
         try:
-            if not _login_instagram(page):
-                print("  Instagram: login failed — skipping.")
-                return []
+            # Check if saved session is still valid
+            session_valid = False
+            if os.path.exists(IG_SESSION):
+                print("    Loading saved Instagram session...")
+                page.goto('https://www.instagram.com/', wait_until='load', timeout=30000)
+                _sleep(2, 3)
+                session_valid = 'login' not in page.url and page.query_selector('svg[aria-label="Home"]') is not None
+                if session_valid:
+                    print("    Session valid — skipping login.")
+                else:
+                    print("    Session expired — logging in fresh...")
+
+            if not session_valid:
+                if not _login_instagram(page):
+                    print("  Instagram: login failed — skipping.")
+                    return []
+                # Save session for future runs
+                context.storage_state(path=IG_SESSION)
+                print("    Session saved — future runs will skip login.")
 
             # Go to profile
             print(f"  Loading @{IG_USER} profile...")
@@ -299,7 +326,9 @@ def get_facebook_data():
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=HEADLESS)
-        context = browser.new_context(
+
+        # Load saved session if it exists — skips login entirely
+        ctx_kwargs = dict(
             viewport={'width': 1280, 'height': 900},
             user_agent=(
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -307,33 +336,53 @@ def get_facebook_data():
                 'Chrome/122.0.0.0 Safari/537.36'
             )
         )
+        if os.path.exists(FB_SESSION):
+            ctx_kwargs['storage_state'] = FB_SESSION
+
+        context = browser.new_context(**ctx_kwargs)
         page = context.new_page()
 
         try:
-            print("    Navigating to Facebook login...")
-            page.goto('https://www.facebook.com/login', wait_until='load', timeout=30000)
-            _sleep(1, 2)
+            # Check if saved session is still valid
+            session_valid = False
+            if os.path.exists(FB_SESSION):
+                print("    Loading saved Facebook session...")
+                page.goto('https://www.facebook.com/', wait_until='load', timeout=30000)
+                _sleep(2, 3)
+                session_valid = 'login' not in page.url and page.query_selector('[aria-label="Facebook"]') is not None
+                if session_valid:
+                    print("    Session valid — skipping login.")
+                else:
+                    print("    Session expired — logging in fresh...")
 
-            # Accept cookies
-            for sel in ['button[data-cookiebanner="accept_button"]', 'button:has-text("Allow all cookies")',
-                        'button:has-text("Accept all")']:
-                try:
-                    page.click(sel, timeout=3000)
-                    _sleep()
-                    break
-                except PlaywrightTimeout:
-                    pass
+            if not session_valid:
+                print("    Navigating to Facebook login...")
+                page.goto('https://www.facebook.com/login', wait_until='load', timeout=30000)
+                _sleep(1, 2)
 
-            # Wait for the email field to appear
-            page.wait_for_selector('input[name="email"], input[id="email"]', timeout=15000)
-            page.fill('input[name="email"]', EMAIL)
-            _sleep(0.5, 1)
-            page.fill('input[name="pass"]', PASSWORD)
-            _sleep(0.5, 1)
-            page.press('input[name="pass"]', 'Enter')
-            page.wait_for_load_state('load', timeout=20000)
-            _sleep(2, 4)
-            print("    Facebook login complete.")
+                # Accept cookies
+                for sel in ['button[data-cookiebanner="accept_button"]', 'button:has-text("Allow all cookies")',
+                            'button:has-text("Accept all")']:
+                    try:
+                        page.click(sel, timeout=3000)
+                        _sleep()
+                        break
+                    except PlaywrightTimeout:
+                        pass
+
+                # Wait for the email field to appear
+                page.wait_for_selector('input[name="email"], input[id="email"]', timeout=15000)
+                page.fill('input[name="email"]', EMAIL)
+                _sleep(0.5, 1)
+                page.fill('input[name="pass"]', PASSWORD)
+                _sleep(0.5, 1)
+                page.press('input[name="pass"]', 'Enter')
+                page.wait_for_load_state('load', timeout=20000)
+                _sleep(2, 4)
+                print("    Facebook login complete.")
+                # Save session for future runs
+                context.storage_state(path=FB_SESSION)
+                print("    Session saved — future runs will skip login.")
 
             # Navigate to the page (FB_PAGE_SLUG can be a slug OR a full URL)
             fb_url = FB_PAGE if FB_PAGE.startswith('http') else f'https://www.facebook.com/{FB_PAGE}'

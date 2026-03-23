@@ -20,13 +20,32 @@ Usage examples:
   python3 main.py scan-payments
   python3 main.py scan-payments --days 90
   python3 main.py scan-all
+  python3 main.py scan-all --schedule
+  python3 main.py scan-all --schedule --time 09:00
   python3 main.py create-invoice
   python3 main.py add-expense
 """
 
 import argparse
+import logging
 import os
 import sys
+import time
+
+import schedule
+
+# ─── Logging ────────────────────────────────────────────────────────────────
+_LOG_FILE = os.path.join(os.path.dirname(__file__), "invoice_scan.log")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    handlers=[
+        logging.FileHandler(_LOG_FILE, encoding="utf-8"),
+        logging.StreamHandler(),
+    ],
+)
+log = logging.getLogger(__name__)
 
 
 def cmd_setup_sheet(args):
@@ -130,12 +149,36 @@ def cmd_scan_payments(args):
     print(f"\n  Done. {len(transactions)} payment(s) added to the Transactions tab.")
 
 
+def _run_scan_all(args):
+    log.info("═══ scan-all starting...")
+    log.info("Scanning Gmail for receipts...")
+    try:
+        cmd_scan_receipts(args)
+    except Exception:
+        log.exception("scan-receipts failed")
+    log.info("Scanning Gmail for payments...")
+    try:
+        cmd_scan_payments(args)
+    except Exception:
+        log.exception("scan-payments failed")
+    log.info("scan-all complete.")
+
+
 def cmd_scan_all(args):
-    print("\n═══ Scanning expenses (receipts)...")
-    cmd_scan_receipts(args)
-    print("\n═══ Scanning income (payments)...")
-    cmd_scan_payments(args)
-    print("\n  scan-all complete.")
+    if args.schedule:
+        run_time = args.time
+        log.info(f"Invoice scan scheduler started. Will run daily at {run_time}.")
+        log.info("Running first scan immediately...")
+        _run_scan_all(args)
+        schedule.every().day.at(run_time).do(_run_scan_all, args)
+        while True:
+            try:
+                schedule.run_pending()
+            except Exception:
+                log.exception("Scheduler loop error")
+            time.sleep(30)
+    else:
+        _run_scan_all(args)
 
 
 def cmd_create_invoice(args):
@@ -204,6 +247,8 @@ def main():
 
     p_all = subparsers.add_parser("scan-all", help="Run both scan-receipts and scan-payments")
     p_all.add_argument("--days", type=int, default=30, help="How many days back to scan (default: 30)")
+    p_all.add_argument("--schedule", action="store_true", help="Run on a daily schedule instead of once")
+    p_all.add_argument("--time", default="08:00", help="Time to run daily in HH:MM format (default: 08:00)")
 
     subparsers.add_parser("create-invoice", help="Create and send a new invoice")
     subparsers.add_parser("add-expense", help="Manually log a business expense for tax tracking")
