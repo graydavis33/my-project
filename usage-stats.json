@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-24T18:46:34.290185+00:00",
+  "generated": "2026-03-24T18:52:31.839429+00:00",
   "projects": {
     "email-agent": {
       "last_used": null,
@@ -26,12 +26,12 @@
       "cost_all_time": 0.0
     },
     "social-media-analytics": {
-      "last_used": null,
-      "last_used_label": null,
-      "this_week": 0,
-      "all_time": 0,
-      "cost_this_week": 0.0,
-      "cost_all_time": 0.0
+      "last_used": "2026-03-24T18:52:15.933190+00:00",
+      "last_used_label": "Today",
+      "this_week": 3,
+      "all_time": 3,
+      "cost_this_week": 0.0015,
+      "cost_all_time": 0.0015
     }
   }
 }
