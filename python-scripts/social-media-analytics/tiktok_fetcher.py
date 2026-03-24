@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API_URL = 'https://open.tiktokapis.com/v2/video/list/'
-FIELDS  = 'id,title,share_url,create_time,duration,play_count,digg_count,comment_count,share_count'
+FIELDS  = 'id,title,share_url,create_time,duration,view_count,like_count,comment_count,share_count'
 
 
 def _format_duration(seconds):
@@ -85,8 +85,8 @@ def get_tiktok_data():
                 'url':                   item.get('share_url', ''),
                 'published_date':        published,
                 'duration':              _format_duration(dur_sec),
-                'views':                 int(item.get('play_count', 0)),
-                'likes':                 int(item.get('digg_count', 0)),  # TikTok's name for likes
+                'views':                 int(item.get('view_count', 0)),
+                'likes':                 int(item.get('like_count', 0)),
                 'comments':              int(item.get('comment_count', 0)),
                 'shares':                int(item.get('share_count', 0)),
                 'impressions':           0,
