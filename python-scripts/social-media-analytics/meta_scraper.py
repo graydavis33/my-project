@@ -313,63 +313,6 @@ def get_instagram_data():
 
 # ─── Facebook ─────────────────────────────────────────────────────────────────
 
-def _login_facebook(page):
-    """Log into Facebook. Returns True on success."""
-    print("    Navigating to Facebook login...")
-    page.goto('https://www.facebook.com/login', wait_until='load', timeout=30000)
-    _sleep(2, 3)
-
-    # Accept cookies if banner appears
-    for sel in ['button[data-cookiebanner="accept_button"]', 'button:has-text("Allow all cookies")',
-                'button:has-text("Accept all")']:
-        try:
-            page.click(sel, timeout=3000)
-            _sleep()
-            break
-        except PlaywrightTimeout:
-            pass
-
-    try:
-        page.wait_for_selector('input[name="email"], input[id="email"]', timeout=15000)
-    except PlaywrightTimeout:
-        print(f"    Could not find Facebook login form. URL: {page.url}")
-        return False
-
-    page.fill('input[name="email"]', EMAIL)
-    _sleep(0.8, 1.5)
-    page.fill('input[name="pass"]', PASSWORD)
-    _sleep(0.8, 1.5)
-
-    # Click the login button (more reliable than pressing Enter)
-    submitted = False
-    for btn_sel in [
-        'button[name="login"]',
-        '[data-testid="royal_login_button"]',
-        'button[type="submit"]',
-    ]:
-        try:
-            page.click(btn_sel, timeout=5000)
-            submitted = True
-            break
-        except PlaywrightTimeout:
-            pass
-    if not submitted:
-        page.press('input[name="pass"]', 'Enter')
-
-    # Wait for the URL to move away from the login page
-    try:
-        page.wait_for_url(lambda url: 'login' not in url, timeout=25000)
-    except PlaywrightTimeout:
-        pass
-    _sleep(3, 5)
-
-    logged_in = 'facebook.com' in page.url and 'login' not in page.url
-    if logged_in:
-        print("    Facebook login complete.")
-    else:
-        print(f"    Facebook login failed. URL: {page.url}")
-    return logged_in
-
 
 def get_facebook_data():
     """Scrape recent posts from the Facebook Page. Returns list of post dicts."""
@@ -401,33 +344,19 @@ def get_facebook_data():
         page = context.new_page()
 
         try:
-            # Check if saved session is still valid
-            session_valid = False
-            if os.path.exists(FB_SESSION):
-                print("    Loading saved Facebook session...")
-                page.goto('https://www.facebook.com/', wait_until='domcontentloaded', timeout=30000)
-                _sleep(2, 3)
-                # Valid if we're on FB and not on a login page
-                session_valid = ('facebook.com' in page.url
-                                 and 'login' not in page.url
-                                 and page.query_selector('input[placeholder="Search Facebook"], [aria-label="Facebook"]') is not None)
-                if session_valid:
-                    print("    Session valid — skipping login.")
-                else:
-                    print("    Session expired — logging in fresh...")
-                    # Close the old context and open a fresh one (no stale cookies)
-                    browser.close()
-                    browser = p.chromium.launch(headless=HEADLESS)
-                    context = browser.new_context(**{k: v for k, v in ctx_kwargs.items() if k != 'storage_state'})
-                    page = context.new_page()
+            if not os.path.exists(FB_SESSION):
+                print("  Facebook: no session found — run python3 fb_setup.py once to log in.")
+                return []
 
+            print("    Loading saved Facebook session...")
+            page.goto('https://www.facebook.com/', wait_until='domcontentloaded', timeout=30000)
+            _sleep(2, 3)
+
+            session_valid = ('facebook.com' in page.url and 'login' not in page.url)
             if not session_valid:
-                if not _login_facebook(page):
-                    print("  Facebook: login failed — skipping.")
-                    return []
-                # Save session so future runs skip login
-                context.storage_state(path=FB_SESSION)
-                print("    Session saved.")
+                print("  Facebook: session expired — run python3 fb_setup.py to refresh it.")
+                return []
+            print("    Session valid.")
 
             # Navigate directly to the /posts tab of the page
             posts_url = fb_base.rstrip('/') + '/posts'
