@@ -313,6 +313,44 @@ def get_instagram_data():
 
 # ─── Facebook ─────────────────────────────────────────────────────────────────
 
+def _login_facebook(page):
+    """Log into Facebook. Returns True on success."""
+    print("    Navigating to Facebook login...")
+    page.goto('https://www.facebook.com/login', wait_until='load', timeout=30000)
+    _sleep(1, 2)
+
+    # Accept cookies
+    for sel in ['button[data-cookiebanner="accept_button"]', 'button:has-text("Allow all cookies")',
+                'button:has-text("Accept all")']:
+        try:
+            page.click(sel, timeout=3000)
+            _sleep()
+            break
+        except PlaywrightTimeout:
+            pass
+
+    try:
+        page.wait_for_selector('input[name="email"], input[id="email"]', timeout=15000)
+    except PlaywrightTimeout:
+        print(f"    Could not find Facebook login form. URL: {page.url}")
+        return False
+
+    page.fill('input[name="email"]', EMAIL)
+    _sleep(0.5, 1)
+    page.fill('input[name="pass"]', PASSWORD)
+    _sleep(0.5, 1)
+    page.press('input[name="pass"]', 'Enter')
+    page.wait_for_load_state('load', timeout=20000)
+    _sleep(3, 5)
+
+    logged_in = 'facebook.com' in page.url and 'login' not in page.url
+    if logged_in:
+        print("    Facebook login complete.")
+    else:
+        print(f"    Facebook login may have failed. Current URL: {page.url}")
+    return logged_in
+
+
 def get_facebook_data():
     """Scrape recent posts from the Facebook Page. Returns list of post dicts."""
     if not EMAIL or not PASSWORD:
@@ -323,12 +361,11 @@ def get_facebook_data():
         return []
 
     posts = []
+    fb_base = FB_PAGE if FB_PAGE.startswith('http') else f'https://www.facebook.com/{FB_PAGE}'
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=HEADLESS)
-
-        # Load saved session if it exists — skips login entirely
-        ctx_kwargs = dict(
+        context = browser.new_context(
             viewport={'width': 1280, 'height': 900},
             user_agent=(
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -336,157 +373,149 @@ def get_facebook_data():
                 'Chrome/122.0.0.0 Safari/537.36'
             )
         )
-        if os.path.exists(FB_SESSION):
-            ctx_kwargs['storage_state'] = FB_SESSION
-
-        context = browser.new_context(**ctx_kwargs)
         page = context.new_page()
 
         try:
-            # Check if saved session is still valid
-            session_valid = False
-            if os.path.exists(FB_SESSION):
-                print("    Loading saved Facebook session...")
-                page.goto('https://www.facebook.com/', wait_until='load', timeout=30000)
-                _sleep(2, 3)
-                session_valid = 'facebook.com' in page.url and 'login' not in page.url and page.query_selector('div[role="navigation"]') is not None
-                if session_valid:
-                    print("    Session valid — skipping login.")
-                else:
-                    print("    Session expired — logging in fresh...")
+            if not _login_facebook(page):
+                print("  Facebook: login failed — skipping.")
+                return []
 
-            if not session_valid:
-                print("    Navigating to Facebook login...")
-                page.goto('https://www.facebook.com/login', wait_until='load', timeout=30000)
-                _sleep(1, 2)
-
-                # Accept cookies
-                for sel in ['button[data-cookiebanner="accept_button"]', 'button:has-text("Allow all cookies")',
-                            'button:has-text("Accept all")']:
-                    try:
-                        page.click(sel, timeout=3000)
-                        _sleep()
-                        break
-                    except PlaywrightTimeout:
-                        pass
-
-                # Wait for the email field to appear
-                page.wait_for_selector('input[name="email"], input[id="email"]', timeout=15000)
-                page.fill('input[name="email"]', EMAIL)
-                _sleep(0.5, 1)
-                page.fill('input[name="pass"]', PASSWORD)
-                _sleep(0.5, 1)
-                page.press('input[name="pass"]', 'Enter')
-                page.wait_for_load_state('load', timeout=20000)
-                _sleep(2, 4)
-                print("    Facebook login complete.")
-                # Save session for future runs
-                context.storage_state(path=FB_SESSION)
-                print("    Session saved — future runs will skip login.")
-
-            # Navigate to the page (FB_PAGE_SLUG can be a slug OR a full URL)
-            fb_url = FB_PAGE if FB_PAGE.startswith('http') else f'https://www.facebook.com/{FB_PAGE}'
-            print(f"  Loading Facebook page: {fb_url}...")
+            # Navigate directly to the /posts tab of the page
+            posts_url = fb_base.rstrip('/') + '/posts'
+            print(f"  Loading Facebook page: {posts_url}...")
             try:
-                page.goto(fb_url, wait_until='domcontentloaded', timeout=30000)
+                page.goto(posts_url, wait_until='domcontentloaded', timeout=30000)
             except Exception:
-                # Facebook sometimes aborts the navigation but the page still loads
                 pass
-            _sleep(2, 3)
+            _sleep(3, 4)
 
-            # Scroll to load posts
-            for _ in range(6):
-                page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
-                _sleep(2, 3)
-
-            # Grab all post article elements
-            post_els = page.query_selector_all('div[role="article"]')
-            print(f"  Found {len(post_els)} post elements — parsing...")
-
-            for el in post_els[:MAX_POSTS]:
+            # If we got redirected away from the page, try the base URL
+            if FB_PAGE.lower() not in page.url.lower():
+                print(f"  Redirected to {page.url} — trying base URL...")
                 try:
-                    # Post URL
-                    url = ''
-                    for link_sel in ['a[href*="/posts/"]', 'a[href*="story_fbid"]', 'a[href*="/videos/"]']:
-                        link_el = el.query_selector(link_sel)
-                        if link_el:
-                            url = link_el.get_attribute('href') or ''
-                            if url and not url.startswith('http'):
-                                url = 'https://www.facebook.com' + url
-                            break
+                    page.goto(fb_base, wait_until='domcontentloaded', timeout=30000)
+                except Exception:
+                    pass
+                _sleep(3, 4)
 
-                    # Published date — try multiple Facebook timestamp formats
+            print(f"  On page: {page.url}")
+
+            # Scroll to trigger lazy-load
+            for _ in range(8):
+                page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
+                _sleep(1.5, 2.5)
+
+            # Collect post links — Facebook Pages use these URL patterns
+            post_links = set()
+            for sel in [
+                'a[href*="/posts/"]',
+                'a[href*="story_fbid"]',
+                'a[href*="/videos/"]',
+                'a[href*="/reel/"]',
+                'a[href*="/photo/"]',
+            ]:
+                for el in page.query_selector_all(sel):
+                    href = el.get_attribute('href') or ''
+                    href = href.split('?')[0]
+                    if not href.startswith('http'):
+                        href = 'https://www.facebook.com' + href
+                    # Filter to links that belong to this page
+                    slug = FB_PAGE.lstrip('https://www.facebook.com/').lower()
+                    if slug in href.lower() or '/posts/' in href or '/reel/' in href or '/videos/' in href:
+                        post_links.add(href)
+
+            print(f"  Found {len(post_links)} post links — scraping metrics...")
+
+            for i, url in enumerate(list(post_links)[:MAX_POSTS]):
+                try:
+                    page.goto(url, wait_until='domcontentloaded', timeout=30000)
+                    _sleep(1.5, 2.5)
+
+                    body_text = page.inner_text('body')
+
+                    # Published date from <time> or text
                     published = ''
-                    # Modern FB: abbr with title like "Wednesday, March 5, 2025 at 3:00 PM"
-                    for ts_sel in ['abbr[title]', 'abbr[data-utime]']:
-                        ts_el = el.query_selector(ts_sel)
-                        if ts_el:
-                            if ts_sel == 'abbr[data-utime]':
-                                ts = ts_el.get_attribute('data-utime')
-                                if ts:
-                                    try:
-                                        published = datetime.fromtimestamp(int(ts)).strftime('%Y-%m-%d')
-                                    except Exception:
-                                        pass
-                            else:
-                                title_attr = ts_el.get_attribute('title') or ''
+                    time_el = page.query_selector('abbr[data-utime], time[datetime], abbr[title]')
+                    if time_el:
+                        utime = time_el.get_attribute('data-utime')
+                        dt_attr = time_el.get_attribute('datetime')
+                        title_attr = time_el.get_attribute('title') or ''
+                        if utime:
+                            try:
+                                published = datetime.fromtimestamp(int(utime)).strftime('%Y-%m-%d')
+                            except Exception:
+                                pass
+                        elif dt_attr:
+                            try:
+                                published = datetime.fromisoformat(
+                                    dt_attr.replace('Z', '+00:00')
+                                ).strftime('%Y-%m-%d')
+                            except Exception:
+                                published = dt_attr[:10]
+                        elif title_attr:
+                            m = re.search(r'(\w+ \d+, \d{4})', title_attr)
+                            if m:
                                 try:
-                                    from dateutil import parser as dateparser
-                                    published = dateparser.parse(title_attr).strftime('%Y-%m-%d')
+                                    published = datetime.strptime(m.group(1), '%B %d, %Y').strftime('%Y-%m-%d')
                                 except Exception:
-                                    # Fallback: extract date pattern from title
-                                    m = re.search(r'(\w+ \d+, \d{4})', title_attr)
-                                    if m:
-                                        try:
-                                            published = datetime.strptime(m.group(1), '%B %d, %Y').strftime('%Y-%m-%d')
-                                        except Exception:
-                                            pass
-                            if published:
-                                break
-                    # Last resort: look for date-like text in post body
+                                    pass
                     if not published:
-                        body_text_el = el.inner_text()
-                        date_match = re.search(r'\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}', body_text_el)
+                        date_match = re.search(
+                            r'\b(January|February|March|April|May|June|July|August'
+                            r'|September|October|November|December)\s+\d{1,2},?\s+\d{4}',
+                            body_text
+                        )
                         if date_match:
                             try:
-                                published = datetime.strptime(date_match.group(0).replace(',', ''), '%B %d %Y').strftime('%Y-%m-%d')
+                                published = datetime.strptime(
+                                    date_match.group(0).replace(',', ''), '%B %d %Y'
+                                ).strftime('%Y-%m-%d')
                             except Exception:
                                 pass
 
-                    # Caption → title
-                    title = ''
-                    for cap_sel in ['div[data-ad-comet-preview="message"] span',
-                                    'div[dir="auto"] span', 'div[data-testid="post_message"] span']:
-                        cap_el = el.query_selector(cap_sel)
-                        if cap_el:
-                            title = cap_el.inner_text()[:80].replace('\n', ' ').strip()
-                            if title:
-                                break
-                    if not title:
-                        title = f"Post {published or 'unknown'}"
+                    # Caption / title — first substantial line of body text after page header
+                    title = f"Post {published or i + 1}"
+                    lines = [ln.strip() for ln in body_text.splitlines() if len(ln.strip()) > 20]
+                    for ln in lines:
+                        # Skip navigation / UI lines
+                        if any(skip in ln for skip in ['Facebook', 'Log in', 'Sign up', 'GraydientMedia', 'Graydient Media']):
+                            continue
+                        title = ln[:80]
+                        break
 
-                    # Reactions (likes equivalent) — try reading text from reaction count
+                    # Reactions / likes
                     likes = 0
-                    body_text = el.inner_text()
-                    react_match = re.search(r'([\d,]+(?:\.\d+)?[KMk]?)\s*(?:reaction|like|people reacted)', body_text, re.IGNORECASE)
+                    react_match = re.search(
+                        r'([\d,]+(?:\.\d+)?[KMk]?)\s*(?:reaction|like|people reacted)',
+                        body_text, re.IGNORECASE
+                    )
                     if react_match:
                         likes = _parse_count(react_match.group(1))
 
+                    # Views (videos/reels)
+                    views = 0
+                    view_match = re.search(
+                        r'([\d,]+(?:\.\d+)?[KMk]?)\s*(?:view|play)',
+                        body_text, re.IGNORECASE
+                    )
+                    if view_match:
+                        views = _parse_count(view_match.group(1))
+
                     # Comments
                     comments = 0
-                    comment_match = re.search(r'([\d,]+(?:\.\d+)?[KMk]?)\s*comment', body_text, re.IGNORECASE)
+                    comment_match = re.search(
+                        r'([\d,]+(?:\.\d+)?[KMk]?)\s*comment', body_text, re.IGNORECASE
+                    )
                     if comment_match:
                         comments = _parse_count(comment_match.group(1))
 
                     # Shares
                     shares = 0
-                    share_match = re.search(r'([\d,]+(?:\.\d+)?[KMk]?)\s*share', body_text, re.IGNORECASE)
+                    share_match = re.search(
+                        r'([\d,]+(?:\.\d+)?[KMk]?)\s*share', body_text, re.IGNORECASE
+                    )
                     if share_match:
                         shares = _parse_count(share_match.group(1))
-
-                    # Skip empty/ad posts with no URL
-                    if not url and not title:
-                        continue
 
                     posts.append({
                         'platform':              'Facebook',
@@ -494,7 +523,7 @@ def get_facebook_data():
                         'url':                   url,
                         'published_date':        published,
                         'duration':              '',
-                        'views':                 likes,
+                        'views':                 views or likes,
                         'likes':                 likes,
                         'comments':              comments,
                         'shares':                shares,
@@ -506,8 +535,11 @@ def get_facebook_data():
                         'subscribers_gained':    0,
                     })
 
+                    if (i + 1) % 5 == 0:
+                        print(f"    Facebook: scraped {i + 1} posts...")
+
                 except Exception as e:
-                    print(f"    Warning: skipped a Facebook post — {e}")
+                    print(f"    Warning: skipped {url} — {e}")
                     continue
 
         except Exception as e:
