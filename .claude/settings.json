@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/user/my-project && git pull origin main --rebase 2>&1 | tail -5"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/user/my-project && git add CLAUDE.md python-scripts/*/CLAUDE.md && git diff --cached --quiet || git commit -m 'Session update: sync CLAUDE.md context' && git push origin main 2>&1 | tail -5"
+          }
+        ]
+      }
+    ]
+  }
+}
