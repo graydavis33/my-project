@@ -33,7 +33,7 @@ All devices stay in sync via GitHub. Claude Code handles this automatically:
 **Devices:**
 - MacBook — primary
 - Windows Desktop — secondary
-- Mobile — Claude.ai (manual git pull until Claude Code mobile supports hooks)
+- iPhone — Claude.ai mobile (manual context paste until Claude Code mobile supports hooks)
 
 ## Security
 - All `.env`, `token.json`, `client_secret*.json` are gitignored — never commit them
