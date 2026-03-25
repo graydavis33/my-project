@@ -358,23 +358,13 @@ def get_facebook_data():
                 return []
             print("    Session valid.")
 
-            # Navigate directly to the /posts tab of the page
-            posts_url = fb_base.rstrip('/') + '/posts'
-            print(f"  Loading Facebook page: {posts_url}...")
+            # Navigate to the main page (the /posts tab is restricted for page admins)
+            print(f"  Loading Facebook page: {fb_base}...")
             try:
-                page.goto(posts_url, wait_until='domcontentloaded', timeout=30000)
+                page.goto(fb_base, wait_until='domcontentloaded', timeout=30000)
             except Exception:
                 pass
             _sleep(3, 4)
-
-            # If we got redirected away from the page, try the base URL
-            if FB_PAGE.lower() not in page.url.lower():
-                print(f"  Redirected to {page.url} — trying base URL...")
-                try:
-                    page.goto(fb_base, wait_until='domcontentloaded', timeout=30000)
-                except Exception:
-                    pass
-                _sleep(3, 4)
 
             print(f"  On page: {page.url}")
 
