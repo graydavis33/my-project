@@ -19,8 +19,7 @@ if not os.path.exists(FB_SESSION):
     print("No fb_session.json found — run python3 fb_setup.py first.")
     exit(1)
 
-fb_base   = FB_PAGE if FB_PAGE.startswith('http') else f'https://www.facebook.com/{FB_PAGE}'
-posts_url = fb_base.rstrip('/') + '/posts'
+fb_base = FB_PAGE if FB_PAGE.startswith('http') else f'https://www.facebook.com/{FB_PAGE}'
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=False)
@@ -35,9 +34,9 @@ with sync_playwright() as p:
     )
     page = context.new_page()
 
-    print(f"Loading {posts_url} ...")
+    print(f"Loading {fb_base} ...")
     try:
-        page.goto(posts_url, wait_until='domcontentloaded', timeout=30000)
+        page.goto(fb_base, wait_until='domcontentloaded', timeout=30000)
     except Exception:
         pass
     _sleep(3, 4)
