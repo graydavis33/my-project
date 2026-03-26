@@ -373,24 +373,41 @@ def get_facebook_data():
                 page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
                 _sleep(1.5, 2.5)
 
-            # Collect post links — Facebook Pages use these URL patterns
-            post_links = set()
-            for sel in [
-                'a[href*="/posts/"]',
-                'a[href*="story_fbid"]',
-                'a[href*="/videos/"]',
-                'a[href*="/reel/"]',
-                'a[href*="/photo/"]',
-            ]:
-                for el in page.query_selector_all(sel):
-                    href = el.get_attribute('href') or ''
-                    href = href.split('?')[0]
-                    if not href.startswith('http'):
-                        href = 'https://www.facebook.com' + href
-                    # Filter to links that belong to this page
-                    slug = FB_PAGE.lstrip('https://www.facebook.com/').lower()
-                    if slug in href.lower() or '/posts/' in href or '/reel/' in href or '/videos/' in href:
-                        post_links.add(href)
+            def _collect_links(pg):
+                """Collect post/video/reel links from the current page."""
+                found = set()
+                slug = FB_PAGE.lstrip('https://www.facebook.com/').lower()
+                for sel in [
+                    'a[href*="/posts/"]',
+                    'a[href*="story_fbid"]',
+                    'a[href*="/videos/"]',
+                    'a[href*="/reel/"]',
+                    'a[href*="/photo/"]',
+                ]:
+                    for el in pg.query_selector_all(sel):
+                        href = el.get_attribute('href') or ''
+                        href = href.split('?')[0]
+                        if not href.startswith('http'):
+                            href = 'https://www.facebook.com' + href
+                        if slug in href.lower() or '/posts/' in href or '/reel/' in href or '/videos/' in href:
+                            found.add(href)
+                return found
+
+            # Collect post links from main page
+            post_links = _collect_links(page)
+
+            # Also visit the /videos tab to pick up video and reel links
+            videos_url = fb_base.rstrip('/') + '/videos'
+            print(f"  Loading Facebook videos tab: {videos_url}...")
+            try:
+                page.goto(videos_url, wait_until='domcontentloaded', timeout=30000)
+                _sleep(3, 4)
+                for _ in range(6):
+                    page.evaluate('window.scrollTo(0, document.body.scrollHeight)')
+                    _sleep(1.5, 2.5)
+                post_links |= _collect_links(page)
+            except Exception as e:
+                print(f"  Warning: Could not load videos tab — {e}")
 
             print(f"  Found {len(post_links)} post links — scraping metrics...")
 
