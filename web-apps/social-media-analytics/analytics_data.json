@@ -1,0 +1,267 @@
+{
+  "generated_at": "2026-03-25T14:00:00Z",
+  "posts": [
+    {
+      "platform": "YouTube",
+      "title": "How I Color Grade My Videos (Cinematic Look in 5 Minutes)",
+      "url": "https://www.youtube.com/watch?v=demo1",
+      "published_date": "2026-03-10",
+      "duration": "5:42",
+      "views": 12400,
+      "likes": 620,
+      "comments": 88,
+      "shares": 34,
+      "impressions": 58000,
+      "ctr_pct": 4.2,
+      "watch_time_minutes": 42800,
+      "avg_view_duration_sec": 207,
+      "avg_view_pct": 60.5,
+      "subscribers_gained": 84,
+      "engagement_rate": 6.0,
+      "views_gained": 3200
+    },
+    {
+      "platform": "YouTube",
+      "title": "My Full Wedding Film Workflow (From Shoot to Delivery)",
+      "url": "https://www.youtube.com/watch?v=demo2",
+      "published_date": "2026-02-22",
+      "duration": "14:18",
+      "views": 5800,
+      "likes": 210,
+      "comments": 41,
+      "shares": 9,
+      "impressions": 31000,
+      "ctr_pct": 1.9,
+      "watch_time_minutes": 39200,
+      "avg_view_duration_sec": 405,
+      "avg_view_pct": 47.1,
+      "subscribers_gained": 22,
+      "engagement_rate": 4.5,
+      "views_gained": 410
+    },
+    {
+      "platform": "YouTube",
+      "title": "3 Mistakes Every New Videographer Makes",
+      "url": "https://www.youtube.com/watch?v=demo3",
+      "published_date": "2026-01-15",
+      "duration": "8:05",
+      "views": 890,
+      "likes": 38,
+      "comments": 7,
+      "shares": 2,
+      "impressions": 9400,
+      "ctr_pct": 1.1,
+      "watch_time_minutes": 3800,
+      "avg_view_duration_sec": 256,
+      "avg_view_pct": 52.8,
+      "subscribers_gained": 4,
+      "engagement_rate": 5.3,
+      "views_gained": 55
+    },
+    {
+      "platform": "TikTok",
+      "title": "POV: You finally nail the floating text effect",
+      "url": "https://www.tiktok.com/@graydient_media/video/demo4",
+      "published_date": "2026-03-18",
+      "duration": "0:28",
+      "views": 31200,
+      "likes": 2140,
+      "comments": 98,
+      "shares": 410,
+      "impressions": 0,
+      "ctr_pct": 0,
+      "watch_time_minutes": 0,
+      "avg_view_duration_sec": 0,
+      "avg_view_pct": 0,
+      "subscribers_gained": 0,
+      "engagement_rate": 8.5,
+      "views_gained": 0
+    },
+    {
+      "platform": "TikTok",
+      "title": "Before vs After color grading #filmmaking",
+      "url": "https://www.tiktok.com/@graydient_media/video/demo5",
+      "published_date": "2026-03-05",
+      "duration": "0:15",
+      "views": 8900,
+      "likes": 540,
+      "comments": 22,
+      "shares": 88,
+      "impressions": 0,
+      "ctr_pct": 0,
+      "watch_time_minutes": 0,
+      "avg_view_duration_sec": 0,
+      "avg_view_pct": 0,
+      "subscribers_gained": 0,
+      "engagement_rate": 7.3,
+      "views_gained": 0
+    },
+    {
+      "platform": "TikTok",
+      "title": "Slowmo + music sync tutorial for beginners",
+      "url": "https://www.tiktok.com/@graydient_media/video/demo6",
+      "published_date": "2026-02-10",
+      "duration": "0:45",
+      "views": 1200,
+      "likes": 62,
+      "comments": 5,
+      "shares": 8,
+      "impressions": 0,
+      "ctr_pct": 0,
+      "watch_time_minutes": 0,
+      "avg_view_duration_sec": 0,
+      "avg_view_pct": 0,
+      "subscribers_gained": 0,
+      "engagement_rate": 6.25,
+      "views_gained": 0
+    },
+    {
+      "platform": "Instagram",
+      "title": "Reel: How I shoot golden hour b-roll on a budget",
+      "url": "https://www.instagram.com/p/demo7",
+      "published_date": "2026-03-20",
+      "duration": "",
+      "views": 9400,
+      "likes": 488,
+      "comments": 0,
+      "shares": 0,
+      "impressions": 0,
+      "ctr_pct": 0,
+      "watch_time_minutes": 0,
+      "avg_view_duration_sec": 0,
+      "avg_view_pct": 0,
+      "subscribers_gained": 0,
+      "engagement_rate": 5.2,
+      "views_gained": 0
+    },
+    {
+      "platform": "Instagram",
+      "title": "5 lens attachments that changed my filmmaking",
+      "url": "https://www.instagram.com/p/demo8",
+      "published_date": "2026-03-01",
+      "duration": "",
+      "views": 3100,
+      "likes": 142,
+      "comments": 0,
+      "shares": 0,
+      "impressions": 0,
+      "ctr_pct": 0,
+      "watch_time_minutes": 0,
+      "avg_view_duration_sec": 0,
+      "avg_view_pct": 0,
+      "subscribers_gained": 0,
+      "engagement_rate": 4.6,
+      "views_gained": 0
+    },
+    {
+      "platform": "Facebook",
+      "title": "Behind the scenes of a corporate shoot",
+      "url": "https://www.facebook.com/GraydientMedia/posts/demo9",
+      "published_date": "2026-03-12",
+      "duration": "",
+      "views": 2200,
+      "likes": 74,
+      "comments": 18,
+      "shares": 11,
+      "impressions": 0,
+      "ctr_pct": 0,
+      "watch_time_minutes": 0,
+      "avg_view_duration_sec": 0,
+      "avg_view_pct": 0,
+      "subscribers_gained": 0,
+      "engagement_rate": 4.7,
+      "views_gained": 0
+    },
+    {
+      "platform": "Facebook",
+      "title": "My camera bag for 2026 — what I actually use",
+      "url": "https://www.facebook.com/GraydientMedia/posts/demo10",
+      "published_date": "2026-02-28",
+      "duration": "",
+      "views": 980,
+      "likes": 31,
+      "comments": 6,
+      "shares": 3,
+      "impressions": 0,
+      "ctr_pct": 0,
+      "watch_time_minutes": 0,
+      "avg_view_duration_sec": 0,
+      "avg_view_pct": 0,
+      "subscribers_gained": 0,
+      "engagement_rate": 4.1,
+      "views_gained": 0
+    }
+  ],
+  "ai_insights": {
+    "dashboard": "Your best performing content this week was a quick color grading tutorial that hit 60% average retention — significantly above your channel average. Short-form tutorials with a clear outcome in the title are driving the most discovery. Focus on replicating that hook-and-payoff structure across platforms.",
+    "title": "• Titles with a specific time promise (\"in 5 minutes\") outperform vague titles by 3x\n• \"How I\" and \"POV:\" framing consistently drives higher click-through on TikTok\n• Titles with numbers (\"3 Mistakes\", \"5 lens attachments\") perform well on YouTube but poorly on TikTok\n• Your lowest performers have generic titles with no clear audience or outcome"
+  },
+  "post_explanations": {
+    "https://www.youtube.com/watch?v=demo1": {
+      "date": "2026-03-25",
+      "type": "best",
+      "reasons": [
+        "60.5% average retention is well above YouTube's average of ~40%, signaling the tutorial format kept viewers engaged throughout",
+        "4.2% CTR indicates the thumbnail and title combination resonated strongly — the specific time promise attracted clicks",
+        "84 subscribers gained shows the content converted casual viewers into followers, a sign the value was clear and credible"
+      ]
+    },
+    "https://www.tiktok.com/@graydient_media/video/demo4": {
+      "date": "2026-03-25",
+      "type": "best",
+      "reasons": [
+        "8.5% engagement rate is exceptional — the relatable POV format invites comments and shares from creators who feel seen",
+        "410 shares suggest the content was forwarded to others as useful or entertaining, dramatically expanding organic reach",
+        "Short 28-second length aligns with TikTok's retention algorithm, likely resulting in broad distribution"
+      ]
+    },
+    "https://www.youtube.com/watch?v=demo3": {
+      "date": "2026-03-25",
+      "type": "worst",
+      "reasons": [
+        "1.1% CTR is below average — the title 'mistakes every new videographer makes' is too broad and doesn't promise a specific outcome",
+        "Only 4 subscribers gained despite decent retention suggests the audience was interested but not compelled enough to follow",
+        "Low view count (890) combined with decent retention (52.8%) means the bottleneck is discovery, not content quality"
+      ]
+    },
+    "https://www.tiktok.com/@graydient_media/video/demo6": {
+      "date": "2026-03-25",
+      "type": "worst",
+      "reasons": [
+        "1,200 views is low for TikTok — the tutorial format works better as YouTube long-form; TikTok rewards emotion and entertainment",
+        "The 45-second length is in a performance dead zone — too long for casual scrollers, too short to fully teach a technique",
+        "Low share count (8) means the content wasn't passed along — adding a clear 'try this yourself' moment can fix this"
+      ]
+    }
+  },
+  "trends": [
+    {
+      "title": "From Chaos to Cinematic: The 'Raw vs Edit' Reveal",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "channel": "Example Filmmaking Channel",
+      "views": 2400000,
+      "what_it_is": "Creators show raw, unedited footage side-by-side with the final polished version — often with a dramatic music drop at the reveal moment. This format works across YouTube long-form, Reels, and TikTok. It makes editing feel like magic and positions the creator as skilled without being preachy.",
+      "why_it_works": "The contrast is immediately satisfying to watch — it triggers the same dopamine response as before-and-after content in any niche. It also demonstrates expertise without explanation, which builds trust faster than tutorials. The reveal moment is inherently shareable.",
+      "how_to_implement": [
+        "Film your next project and save 30–60 seconds of raw, ungraded footage from a challenging scene",
+        "Edit the final version normally, then cut together a split-screen or sequential comparison",
+        "Add a dramatic music build that drops exactly at the reveal — this is the key moment",
+        "Post as a Reel/TikTok with the caption 'What I started with vs what I delivered' and let the contrast do the work"
+      ]
+    },
+    {
+      "title": "The '60-Second Client Film' Challenge",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "channel": "Example Wedding Films",
+      "views": 1800000,
+      "what_it_is": "Creators condense an entire event or project — a wedding, corporate shoot, real estate walkthrough — into exactly 60 seconds with music and tight cuts. The constraint forces quality decisions and the result is both a portfolio piece and a highly watchable social clip.",
+      "why_it_works": "It serves two audiences at once: potential clients who see finished work, and creator peers who want to study the editing style. The 60-second format is optimized for Instagram Reels and TikTok autoplay, so it gets pushed to new audiences organically. It also positions you as efficient and professional.",
+      "how_to_implement": [
+        "Take your most recent completed project and pick only the 8–10 best shots — ruthlessly cut the rest",
+        "Choose a licensed track with a clear 60-second structure (intro, build, drop) from Epidemic Sound or Artlist",
+        "Sync cuts to the music beats and hit exactly 58–62 seconds total",
+        "Add your logo for 2 seconds at the end and post with location tags and client-industry hashtags"
+      ]
+    }
+  ]
+}
