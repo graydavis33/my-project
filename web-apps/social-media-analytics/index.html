@@ -766,6 +766,10 @@ async function init() {
     DATA.posts.forEach(p => {
       if (p.three_sec_view_rate == null) p.three_sec_view_rate = 0;
       if (p.avg_view_duration_sec == null) p.avg_view_duration_sec = 0;
+      if (p.engagement_rate == null) {
+        const eng = p.views > 0 ? ((p.likes + p.comments + p.shares) / p.views * 100) : 0;
+        p.engagement_rate = Math.round(eng * 10) / 10;
+      }
     });
     const d = new Date(DATA.generated_at);
     document.getElementById('lastUpdated').textContent =

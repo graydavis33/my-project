@@ -312,6 +312,15 @@ def main():
 
     videos = yt_videos + ig_videos + fb_videos + tt_videos
 
+    # Compute engagement_rate for every post
+    for v in videos:
+        if v.get('views', 0) > 0:
+            v['engagement_rate'] = round(
+                (v.get('likes', 0) + v.get('comments', 0) + v.get('shares', 0)) / v['views'] * 100, 1
+            )
+        else:
+            v['engagement_rate'] = 0.0
+
     if not videos:
         print("No data fetched from any platform. Exiting.")
         return
