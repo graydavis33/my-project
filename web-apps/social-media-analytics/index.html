@@ -151,7 +151,7 @@
     .pslbl  { font-size:10px; color:var(--color-gray-light); text-transform:uppercase; letter-spacing:1px; }
     .plink  { font-size:13px; color:var(--color-yellow); text-decoration:none; flex-shrink:0; opacity:.7; }
     .plink:hover { opacity:1; }
-    @media(max-width:600px){ .pstats .pstat:nth-child(n+3){ display:none; } .pstats{ gap:10px; } }
+    @media(max-width:600px){ .pstats .pstat:nth-child(n+4){ display:none; } .pstats{ gap:10px; } }
 
     /* ── Best / Worst ── */
     .bw-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
@@ -368,6 +368,13 @@ function fmtDate(d) {
   return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 }
 
+function fmtSec(s) {
+  if (!s || s <= 0) return '—';
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return m > 0 ? `${m}:${String(sec).padStart(2,'0')}` : `${sec}s`;
+}
+
 function filterDays(posts, days, ref) {
   if (days === 'all') return posts;
   const cutoff = new Date(new Date(ref).getTime() - (+days)*86400000);
@@ -516,6 +523,8 @@ function renderPostItems(posts, sortMode) {
         <div class="pstat"><span class="psval">${fmt(p.views)}</span><span class="pslbl">Views</span></div>
         <div class="pstat"><span class="psval">${fmt(p.likes)}</span><span class="pslbl">Likes</span></div>
         <div class="pstat"><span class="psval" style="color:${engColor(p.engagement_rate)}">${p.engagement_rate.toFixed(1)}%</span><span class="pslbl">Eng</span></div>
+        <div class="pstat"><span class="psval">${p.three_sec_view_rate > 0 ? p.three_sec_view_rate.toFixed(0)+'%' : '—'}</span><span class="pslbl">3s %</span></div>
+        <div class="pstat"><span class="psval">${fmtSec(p.avg_view_duration_sec)}</span><span class="pslbl">Avg Hold</span></div>
       </div>
       <a href="${p.url}" target="_blank" class="plink" title="Open post">↗</a>
     </div>`).join('');
@@ -753,6 +762,11 @@ async function init() {
     // To sell as a service later: swap this one line for your API URL
     const res = await fetch('analytics_data.json');
     DATA = await res.json();
+    // Ensure new fields default to 0 for older JSON files
+    DATA.posts.forEach(p => {
+      if (p.three_sec_view_rate == null) p.three_sec_view_rate = 0;
+      if (p.avg_view_duration_sec == null) p.avg_view_duration_sec = 0;
+    });
     const d = new Date(DATA.generated_at);
     document.getElementById('lastUpdated').textContent =
       'Last updated ' + d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) +
