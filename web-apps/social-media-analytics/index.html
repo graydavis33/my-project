@@ -3,761 +3,822 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Social Media Analytics — Graydient Media</title>
+  <title>Analytics — Graydient Media</title>
   <link rel="stylesheet" href="../styles/brand.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    /* ── Layout ── */
-    body { padding: 32px 40px 64px; max-width: 1100px; margin: 0 auto; }
+    /* ── Light mode overrides ── */
+    body.light-mode {
+      background: #f2f4f7;
+      --color-black:      #f2f4f7;
+      --color-navy-deep:  #ffffff;
+      --color-navy:       #f0f4f8;
+      --color-navy-light: #e8edf4;
+      --color-gray-dark:  #e2e8f0;
+      --color-gray-mid:   #718096;
+      --color-gray-light: #4a5568;
+      --color-white:      #0d1b3e;
+      --gradient-bg:      linear-gradient(180deg,#f0f4f8 0%,#e8edf4 100%);
+      --gradient-radial:  none;
+      --gradient-card:    linear-gradient(160deg,#ffffff 0%,#f8fafc 100%);
+      --gradient-text:    linear-gradient(135deg,#0d1b3e 10%,#1a2d5a 100%);
+      --border-card:      1px solid rgba(0,0,0,0.08);
+      --border-subtle:    1px solid rgba(0,0,0,0.06);
+      --shadow-card:      0 2px 12px rgba(0,0,0,0.07);
+    }
+
+    /* ── Base layout ── */
+    body { padding: 0; }
+    .dash-wrap { max-width: 1100px; margin: 0 auto; padding: 28px 24px 80px; }
 
     /* ── Header ── */
-    .dash-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 32px;
-      gap: 16px;
-    }
+    .dash-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; gap:12px; }
     .dash-title {
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 4px;
-      background: var(--gradient-text);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size:22px; font-weight:800; letter-spacing:-0.5px;
+      background:var(--gradient-text); -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent; background-clip:text;
     }
-    .dash-updated { font-size: 12px; margin-top: 4px; }
+    .dash-updated { font-size:11px; color:var(--color-gray-light); margin-top:3px; }
+    .theme-toggle {
+      width:36px; height:36px; border-radius:var(--radius-full);
+      border:var(--border-card); background:var(--gradient-card);
+      color:var(--color-gray-light); cursor:pointer; font-size:16px;
+      display:flex; align-items:center; justify-content:center;
+      transition:border-color .15s;
+    }
+    .theme-toggle:hover { border-color:var(--color-yellow); }
 
-    /* ── Tabs ── */
-    .gm-tabs { margin-bottom: 32px; }
+    /* ── Platform tab bar ── */
+    .platform-tabs {
+      display:flex; gap:0; margin-bottom:22px;
+      border-bottom:1px solid rgba(255,255,255,0.07); overflow-x:auto;
+    }
+    body.light-mode .platform-tabs { border-bottom-color:rgba(0,0,0,0.09); }
+    .ptab {
+      padding:10px 16px; border:none; background:transparent;
+      color:var(--color-gray-mid); font-family:var(--font-base); font-size:13px;
+      font-weight:600; cursor:pointer; border-bottom:2px solid transparent;
+      margin-bottom:-1px; white-space:nowrap; transition:color .15s,border-color .15s;
+      display:flex; align-items:center; gap:6px;
+    }
+    .ptab:hover { color:var(--color-white); }
+    .ptab.active { color:var(--color-white); border-bottom-color:var(--color-yellow); }
+    .ptab.active[data-tab="YouTube"]  { color:#ff4444; border-bottom-color:#ff4444; }
+    .ptab.active[data-tab="TikTok"]   { color:#00f2ea; border-bottom-color:#00f2ea; }
+    .ptab.active[data-tab="Instagram"]{ color:#e4405f; border-bottom-color:#e4405f; }
+    .ptab.active[data-tab="Facebook"] { color:#1877f2; border-bottom-color:#1877f2; }
+    .pdot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 
-    /* ── Summary Cards ── */
-    .dash-summary-row {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
-      margin-bottom: 32px;
+    /* ── Controls row (date pills + simple/adv toggle) ── */
+    .controls-row { display:flex; align-items:center; gap:6px; margin-bottom:18px; flex-wrap:wrap; }
+    .ctrl-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-gray-light); margin-right:2px; }
+    .dpill {
+      padding:5px 13px; border-radius:var(--radius-full); border:var(--border-card);
+      background:transparent; color:var(--color-gray-light);
+      font-family:var(--font-base); font-size:12px; font-weight:600;
+      cursor:pointer; transition:all .15s;
     }
-    .dash-stat-card { text-align: center; padding: 18px 10px; }
-    .dash-stat-label {
-      font-size: 9px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--color-gray-light);
-      margin-bottom: 8px;
+    .dpill:hover { color:var(--color-white); }
+    .dpill.active { background:rgba(232,184,75,.12); border-color:rgba(232,184,75,.3); color:var(--color-yellow); }
+    .view-toggle {
+      margin-left:auto; display:flex;
+      background:rgba(13,27,62,.5); border:var(--border-subtle);
+      border-radius:var(--radius-full); padding:3px; gap:2px;
     }
-    .dash-stat-number {
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--color-yellow);
-      letter-spacing: -1px;
-      line-height: 1;
+    body.light-mode .view-toggle { background:rgba(0,0,0,.05); }
+    .vbtn {
+      padding:4px 13px; border:none; border-radius:var(--radius-full);
+      background:transparent; color:var(--color-gray-mid);
+      font-family:var(--font-base); font-size:11px; font-weight:600;
+      cursor:pointer; transition:all .15s;
     }
-    .dash-stat-na { font-size: 14px; color: var(--color-gray-mid); font-weight: 500; }
+    .vbtn.active { background:rgba(232,184,75,.15); color:var(--color-yellow); }
 
-    /* ── Section label ── */
-    .dash-section-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--color-gray-light);
-      margin: 28px 0 12px;
-    }
+    /* ── Metric cards ── */
+    .metric-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:18px; }
+    @media(max-width:600px){ .metric-grid { grid-template-columns:repeat(2,1fr); } }
+    .mc { padding:16px; display:flex; flex-direction:column; gap:5px; }
+    .mc-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-gray-light); }
+    .mc-value { font-size:28px; font-weight:800; letter-spacing:-1px; line-height:1; color:var(--color-white); }
+    .mc-na    { font-size:14px; color:var(--color-gray-mid); font-weight:500; }
+    .mc-change{ font-size:12px; font-weight:600; display:flex; align-items:center; gap:3px; }
+    .up   { color:var(--color-green); }
+    .down { color:var(--color-red); }
+    .neut { color:var(--color-gray-mid); }
 
-    /* ── Posts Table ── */
-    .dash-table-card { padding: 0; overflow: hidden; margin-bottom: 8px; }
-    .dash-table-wrap { overflow-x: auto; }
-    .dash-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .dash-table thead tr {
-      background: rgba(13,27,62,0.6);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .dash-table th {
-      padding: 11px 14px;
-      text-align: left;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--color-gray-light);
-      white-space: nowrap;
-      cursor: pointer;
-      user-select: none;
-    }
-    .dash-table th:hover { color: var(--color-yellow); }
-    .dash-table th.sorted { color: var(--color-yellow); }
-    .dash-table td {
-      padding: 11px 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      vertical-align: middle;
-    }
-    .dash-table tbody tr:hover { background: rgba(255,255,255,0.02); }
-    .dash-table tbody tr:last-child td { border-bottom: none; }
-    .dash-td-title { max-width: 280px; }
-    .dash-post-title {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--color-white);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 260px;
-    }
-    .dash-post-date { font-size: 11px; display: block; margin-top: 2px; color: var(--color-gray-light); }
-    .dash-td-num { font-size: 13px; font-weight: 600; text-align: right; white-space: nowrap; }
-    .dash-td-na { font-size: 12px; color: var(--color-gray-mid); text-align: right; }
-    .dash-table-empty { text-align: center; padding: 32px; color: var(--color-gray-mid); }
-    .dash-link { font-size: 12px; font-weight: 600; text-decoration: none; color: var(--color-yellow); }
-    .dash-link:hover { text-decoration: underline; }
+    /* ── Chart ── */
+    .chart-card { padding:18px; margin-bottom:18px; }
+    .chart-hdr  { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+    .chart-lbl  { font-size:13px; font-weight:700; }
+    .chart-sub  { font-size:11px; color:var(--color-gray-light); }
+    .chart-wrap { position:relative; height:180px; }
 
-    /* Platform badge overrides */
-    .dash-badge-youtube   { background: rgba(255,0,0,0.12);    color: #ff4444; border-color: rgba(255,0,0,0.2); }
-    .dash-badge-tiktok    { background: rgba(0,242,234,0.10);  color: #00f2ea; border-color: rgba(0,242,234,0.2); }
-    .dash-badge-instagram { background: rgba(228,64,95,0.12);  color: #e4405f; border-color: rgba(228,64,95,0.2); }
-    .dash-badge-facebook  { background: rgba(24,119,242,0.12); color: #1877f2; border-color: rgba(24,119,242,0.2); }
+    /* ── Post list ── */
+    .post-card { padding:0; overflow:hidden; margin-bottom:18px; }
+    .post-hdr {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:13px 16px 10px; border-bottom:1px solid rgba(255,255,255,.05);
+    }
+    body.light-mode .post-hdr { border-bottom-color:rgba(0,0,0,.06); }
+    .post-hdr-title { font-size:13px; font-weight:700; }
+    .sort-pills { display:flex; gap:4px; }
+    .spill {
+      padding:4px 10px; border-radius:var(--radius-full); border:none;
+      background:transparent; color:var(--color-gray-mid);
+      font-family:var(--font-base); font-size:11px; font-weight:600; cursor:pointer;
+      transition:all .15s;
+    }
+    .spill.active { background:rgba(255,255,255,.08); color:var(--color-white); }
+    body.light-mode .spill.active { background:rgba(0,0,0,.07); }
+    .pitem {
+      display:flex; align-items:center; gap:12px; padding:10px 16px;
+      border-bottom:1px solid rgba(255,255,255,.03); transition:background .1s; cursor:default;
+    }
+    body.light-mode .pitem { border-bottom-color:rgba(0,0,0,.04); }
+    .pitem:last-child { border-bottom:none; }
+    .pitem:hover { background:rgba(255,255,255,.02); }
+    body.light-mode .pitem:hover { background:rgba(0,0,0,.02); }
+    .pthumb {
+      width:44px; height:44px; border-radius:var(--radius-sm); flex-shrink:0;
+      display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700;
+    }
+    .pinfo { flex:1; min-width:0; }
+    .ptitle { font-size:13px; font-weight:500; color:var(--color-white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; margin-bottom:2px; }
+    .pdate  { font-size:11px; color:var(--color-gray-light); }
+    .pstats { display:flex; gap:16px; flex-shrink:0; }
+    .pstat  { text-align:right; }
+    .psval  { font-size:13px; font-weight:700; color:var(--color-white); display:block; }
+    .pslbl  { font-size:10px; color:var(--color-gray-light); text-transform:uppercase; letter-spacing:1px; }
+    .plink  { font-size:13px; color:var(--color-yellow); text-decoration:none; flex-shrink:0; opacity:.7; }
+    .plink:hover { opacity:1; }
+    @media(max-width:600px){ .pstats .pstat:nth-child(n+3){ display:none; } .pstats{ gap:10px; } }
 
-    /* ── Best / Worst Posts ── */
-    .dash-bw-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 8px;
-    }
-    .dash-bw-card { padding: 18px; }
-    .dash-bw-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .dash-bw-icon { font-size: 18px; line-height: 1; }
-    .dash-bw-heading { font-size: 13px; font-weight: 700; }
-    .dash-post-item { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .dash-post-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-    .dash-post-item-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--color-white);
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .dash-post-item-meta { font-size: 11px; color: var(--color-gray-light); margin-bottom: 6px; }
-    .dash-reason {
-      font-size: 12px;
-      color: var(--color-white);
-      line-height: 1.55;
-      padding-left: 12px;
-      position: relative;
-      margin-bottom: 4px;
-    }
-    .dash-reason::before {
-      content: '•';
-      position: absolute;
-      left: 0;
-    }
-    .dash-reason-best::before { color: var(--color-green); }
-    .dash-reason-worst::before { color: var(--color-red); }
-    .dash-no-data { font-size: 12px; color: var(--color-gray-mid); font-style: italic; }
+    /* ── Best / Worst ── */
+    .bw-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
+    @media(max-width:700px){ .bw-grid { grid-template-columns:1fr; } }
+    .bw-card { padding:18px; }
+    .bw-hdr  { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+    .bw-icon { font-size:15px; }
+    .bw-heading { font-size:13px; font-weight:700; }
+    .bwp { margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,.05); }
+    body.light-mode .bwp { border-bottom-color:rgba(0,0,0,.06); }
+    .bwp:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+    .bwp-title { font-size:12px; font-weight:600; color:var(--color-white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:2px; }
+    .bwp-meta  { font-size:11px; color:var(--color-gray-light); margin-bottom:5px; }
+    .bwr { font-size:11px; color:var(--color-white); line-height:1.55; padding-left:12px; position:relative; margin-bottom:3px; }
+    .bwr::before { content:'•'; position:absolute; left:0; }
+    .bwr.good::before { color:var(--color-green); }
+    .bwr.bad::before  { color:var(--color-red); }
+    .bwr.muted::before { color:var(--color-gray-mid); }
 
     /* ── AI Insights ── */
-    .dash-insights-card { padding: 22px; }
-    .dash-insight-section { margin-bottom: 16px; }
-    .dash-insight-section:last-child { margin-bottom: 0; }
-    .dash-insight-sublabel {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--color-gray-light);
-      margin-bottom: 8px;
-    }
-    .dash-insight-text { font-size: 14px; line-height: 1.7; color: var(--color-white); }
-    .dash-insight-bullet {
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--color-white);
-      padding-left: 14px;
-      position: relative;
-      margin-bottom: 6px;
-    }
-    .dash-insight-bullet::before { content: '•'; position: absolute; left: 0; color: var(--color-yellow); }
+    .ins-card { padding:20px; margin-bottom:18px; }
+    .ins-sub  { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-gray-light); margin-bottom:7px; }
+    .ins-text { font-size:13px; line-height:1.7; color:var(--color-white); }
+    .ins-bul  { font-size:12px; line-height:1.6; color:var(--color-white); padding-left:14px; position:relative; margin-bottom:5px; }
+    .ins-bul::before { content:'•'; position:absolute; left:0; color:var(--color-yellow); }
 
-    /* ── Trends Tab ── */
-    .dash-trends-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .dash-trend-card { padding: 22px; }
-    .dash-trend-views {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--color-gray-light);
-      margin-bottom: 6px;
-    }
-    .dash-trend-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--color-white);
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-    .dash-trend-channel {
-      font-size: 12px;
-      color: var(--color-yellow);
-      margin-bottom: 16px;
-    }
-    .dash-trend-url {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--color-yellow);
-      text-decoration: none;
-      border: 1px solid rgba(232,184,75,0.3);
-      border-radius: var(--radius-sm);
-      padding: 5px 12px;
-      margin-bottom: 16px;
-      transition: background 0.15s;
-    }
-    .dash-trend-url:hover { background: rgba(232,184,75,0.1); }
-    .dash-trend-section-label {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--color-gray-light);
-      margin: 14px 0 6px;
-    }
-    .dash-trend-text { font-size: 13px; line-height: 1.65; color: var(--color-white); margin-bottom: 8px; }
-    .dash-trend-step {
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--color-white);
-      padding-left: 22px;
-      position: relative;
-      margin-bottom: 6px;
-    }
-    .dash-trend-step-num {
-      position: absolute;
-      left: 0;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--color-yellow);
-    }
-    .dash-no-trends {
-      text-align: center;
-      padding: 48px 24px;
-      color: var(--color-gray-mid);
-      font-size: 14px;
-      line-height: 1.7;
-    }
+    /* ── All tab ── */
+    .all-sec { margin-bottom:26px; }
+    .all-sec-hdr { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+    .all-sec-title { font-size:13px; font-weight:700; color:var(--color-white); }
+    .all-sec-total { font-size:11px; color:var(--color-gray-light); }
+    .plat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+    @media(max-width:700px){ .plat-row { grid-template-columns:repeat(2,1fr); } }
+    .pmc { padding:14px; border-radius:var(--radius-md); }
+    .pmc-name  { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; display:flex; align-items:center; gap:5px; }
+    .pmc-value { font-size:26px; font-weight:800; letter-spacing:-1px; line-height:1; color:var(--color-white); margin-bottom:4px; }
+    .pmc-chg   { font-size:12px; font-weight:600; }
+    .mini-chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px; }
+    @media(max-width:600px){ .mini-chart-grid { grid-template-columns:1fr; } }
+    .mini-chart-card { padding:14px; }
+    .mini-chart-title { font-size:11px; font-weight:700; margin-bottom:10px; }
+    .mini-chart-wrap  { position:relative; height:100px; }
 
-    /* ── Loading / Error ── */
-    .dash-loading, .dash-error {
-      text-align: center;
-      padding: 32px;
-      font-size: 14px;
+    /* ── Trends ── */
+    .trends-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    @media(max-width:700px){ .trends-grid { grid-template-columns:1fr; } }
+    .trend-card  { padding:20px; }
+    .trend-views { font-size:11px; font-weight:600; color:var(--color-gray-light); margin-bottom:4px; }
+    .trend-title { font-size:15px; font-weight:700; color:var(--color-white); margin-bottom:3px; line-height:1.3; }
+    .trend-chan  { font-size:12px; color:var(--color-yellow); margin-bottom:12px; }
+    .trend-url {
+      display:inline-block; font-size:11px; font-weight:600; color:var(--color-yellow);
+      text-decoration:none; border:1px solid rgba(232,184,75,.3); border-radius:var(--radius-sm);
+      padding:4px 10px; margin-bottom:14px; transition:background .15s;
     }
-    .dash-error { color: var(--color-red); }
+    .trend-url:hover { background:rgba(232,184,75,.1); }
+    .trend-sub  { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--color-gray-light); margin:11px 0 5px; }
+    .trend-text { font-size:12px; line-height:1.6; color:var(--color-white); }
+    .trend-step { font-size:12px; line-height:1.6; color:var(--color-white); padding-left:20px; position:relative; margin-bottom:4px; }
+    .trend-stepn{ position:absolute; left:0; font-size:10px; font-weight:700; color:var(--color-yellow); }
 
-    /* ── Hidden ── */
-    .hidden { display: none !important; }
+    /* ── Misc ── */
+    .empty { text-align:center; padding:32px; color:var(--color-gray-mid); font-size:13px; }
+    .adv-only { display:none; }
+    .is-advanced .adv-only { display:block; }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; }
+    .sec-label {
+      font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:2px;
+      color:var(--color-gray-light); margin:0 0 10px;
+      display:flex; align-items:center; justify-content:space-between;
+    }
   </style>
 </head>
 <body>
+<div class="dash-wrap">
 
-  <!-- HEADER -->
+  <!-- Header -->
   <div class="dash-header">
     <div>
-      <p class="gm-wordmark">Graydient Media</p>
-      <h1 class="dash-title">Social Media Analytics</h1>
-      <p class="dash-updated gm-text-muted">Last updated: <span id="last-updated">—</span></p>
+      <div class="dash-title">Graydient Media Analytics</div>
+      <div class="dash-updated" id="lastUpdated">Loading…</div>
     </div>
-    <button class="gm-btn-primary" onclick="loadData()" style="white-space:nowrap;margin-top:6px;">
-      ↻ Refresh
-    </button>
+    <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">🌙</button>
   </div>
 
-  <!-- PLATFORM TABS -->
-  <div class="gm-tabs" id="platform-tabs">
-    <button class="gm-tab-btn active" data-platform="all">All</button>
-    <button class="gm-tab-btn" data-platform="YouTube">YouTube</button>
-    <button class="gm-tab-btn" data-platform="TikTok">TikTok</button>
-    <button class="gm-tab-btn" data-platform="Instagram">Instagram</button>
-    <button class="gm-tab-btn" data-platform="Facebook">Facebook</button>
-    <button class="gm-tab-btn" data-platform="trends">Trends</button>
+  <!-- Platform tabs -->
+  <div class="platform-tabs">
+    <button class="ptab active" data-tab="all">All Platforms</button>
+    <button class="ptab" data-tab="YouTube"><span class="pdot" style="background:#ff4444"></span>YouTube</button>
+    <button class="ptab" data-tab="TikTok"><span class="pdot" style="background:#00f2ea"></span>TikTok</button>
+    <button class="ptab" data-tab="Instagram"><span class="pdot" style="background:#e4405f"></span>Instagram</button>
+    <button class="ptab" data-tab="Facebook"><span class="pdot" style="background:#1877f2"></span>Facebook</button>
+    <button class="ptab" data-tab="trends">Trends</button>
   </div>
 
-  <!-- LOADING / ERROR -->
-  <div id="loading-state" class="dash-loading">Loading analytics data...</div>
-  <div id="error-state" class="dash-error hidden"></div>
-
-  <!-- PLATFORM CONTENT (All, YouTube, TikTok, Instagram, Facebook) -->
-  <div id="platform-content" class="hidden">
-
-    <!-- Summary Cards -->
-    <div class="dash-summary-row">
-      <div class="gm-card dash-stat-card">
-        <div class="dash-stat-label">Posts</div>
-        <div class="dash-stat-number" id="stat-posts">—</div>
-      </div>
-      <div class="gm-card dash-stat-card">
-        <div class="dash-stat-label">Total Views</div>
-        <div class="dash-stat-number" id="stat-views">—</div>
-      </div>
-      <div class="gm-card dash-stat-card">
-        <div class="dash-stat-label">Total Likes</div>
-        <div class="dash-stat-number" id="stat-likes">—</div>
-      </div>
-      <div class="gm-card dash-stat-card">
-        <div class="dash-stat-label">Avg Engagement</div>
-        <div class="dash-stat-number" id="stat-engagement">—</div>
-      </div>
-      <div class="gm-card dash-stat-card">
-        <div class="dash-stat-label">Avg CTR</div>
-        <div class="dash-stat-number" id="stat-ctr">—</div>
-      </div>
-      <div class="gm-card dash-stat-card">
-        <div class="dash-stat-label">Avg Retention</div>
-        <div class="dash-stat-number" id="stat-retention">—</div>
-      </div>
-      <div class="gm-card dash-stat-card">
-        <div class="dash-stat-label">Followers Gained</div>
-        <div class="dash-stat-number" id="stat-followers">—</div>
-      </div>
+  <!-- ALL TAB -->
+  <div class="tab-panel active" id="panel-all">
+    <div class="controls-row" id="allPills">
+      <span class="ctrl-label">Range</span>
+      <button class="dpill" data-d="7">7d</button>
+      <button class="dpill" data-d="28">28d</button>
+      <button class="dpill" data-d="30">30d</button>
+      <button class="dpill" data-d="90">90d</button>
+      <button class="dpill active" data-d="all">All</button>
     </div>
-
-    <!-- Posts Table -->
-    <div class="dash-section-label">All Posts — sorted by views</div>
-    <div class="gm-card dash-table-card">
-      <div class="dash-table-wrap">
-        <table class="dash-table" id="posts-table">
-          <thead>
-            <tr>
-              <th data-col="title">Title</th>
-              <th data-col="platform">Platform</th>
-              <th data-col="views" class="sorted">Views ↓</th>
-              <th data-col="likes">Likes</th>
-              <th data-col="comments">Comments</th>
-              <th data-col="shares">Shares</th>
-              <th data-col="engagement_rate">Eng. Rate</th>
-              <th data-col="ctr_pct">CTR</th>
-              <th data-col="avg_view_pct">Retention</th>
-              <th data-col="subscribers_gained">Followers+</th>
-              <th>Link</th>
-            </tr>
-          </thead>
-          <tbody id="posts-tbody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Best & Worst Posts -->
-    <div class="dash-section-label">Best &amp; Worst Posts</div>
-    <div class="dash-bw-grid">
-      <div class="gm-card dash-bw-card">
-        <div class="dash-bw-header">
-          <span class="dash-bw-icon">🏆</span>
-          <span class="dash-bw-heading gm-text-green">Top Performers</span>
-        </div>
-        <div id="best-posts-list"></div>
-      </div>
-      <div class="gm-card dash-bw-card">
-        <div class="dash-bw-header">
-          <span class="dash-bw-icon">📉</span>
-          <span class="dash-bw-heading gm-text-red">Needs Improvement</span>
-        </div>
-        <div id="worst-posts-list"></div>
-      </div>
-    </div>
-
-    <!-- AI Insights -->
-    <div class="dash-section-label">AI Insights</div>
-    <div class="gm-card dash-insights-card">
-      <div class="dash-insight-section">
-        <div class="dash-insight-sublabel">Channel Health Summary</div>
-        <div class="dash-insight-text" id="insight-dashboard">—</div>
-      </div>
-      <div class="gm-divider"></div>
-      <div class="dash-insight-section">
-        <div class="dash-insight-sublabel">Title Pattern Analysis</div>
-        <div id="insight-title">—</div>
-      </div>
-    </div>
-
+    <div id="allContent"></div>
   </div>
 
-  <!-- TRENDS CONTENT -->
-  <div id="trends-content" class="hidden">
-    <div class="dash-section-label">Trending Formats to Implement</div>
-    <div id="trends-grid"></div>
+  <!-- YOUTUBE TAB -->
+  <div class="tab-panel" id="panel-YouTube">
+    <div class="controls-row" id="ytPills">
+      <span class="ctrl-label">Range</span>
+      <button class="dpill" data-d="7">7d</button>
+      <button class="dpill" data-d="28">28d</button>
+      <button class="dpill" data-d="30">30d</button>
+      <button class="dpill" data-d="90">90d</button>
+      <button class="dpill active" data-d="all">All</button>
+      <div class="view-toggle">
+        <button class="vbtn active" data-m="simple">Simple</button>
+        <button class="vbtn" data-m="advanced">Advanced</button>
+      </div>
+    </div>
+    <div id="ytContent"></div>
   </div>
 
-  <script>
-    // ── State ────────────────────────────────────────────────────────────────
-    let allPosts = [];
-    let postExplanations = {};
-    let trendsData = [];
-    let activePlatform = 'all';
-    let sortCol = 'views';
-    let sortDir = 'desc';
+  <!-- TIKTOK TAB -->
+  <div class="tab-panel" id="panel-TikTok">
+    <div class="controls-row" id="ttPills">
+      <span class="ctrl-label">Range</span>
+      <button class="dpill" data-d="7">7d</button>
+      <button class="dpill" data-d="28">28d</button>
+      <button class="dpill" data-d="30">30d</button>
+      <button class="dpill" data-d="90">90d</button>
+      <button class="dpill active" data-d="all">All</button>
+      <div class="view-toggle">
+        <button class="vbtn active" data-m="simple">Simple</button>
+        <button class="vbtn" data-m="advanced">Advanced</button>
+      </div>
+    </div>
+    <div id="ttContent"></div>
+  </div>
 
-    // ── Data Loading ─────────────────────────────────────────────────────────
-    async function loadData() {
-      show('loading-state');
-      hide('error-state');
-      hide('platform-content');
-      hide('trends-content');
+  <!-- INSTAGRAM TAB -->
+  <div class="tab-panel" id="panel-Instagram">
+    <div class="controls-row" id="igPills">
+      <span class="ctrl-label">Range</span>
+      <button class="dpill" data-d="7">7d</button>
+      <button class="dpill" data-d="28">28d</button>
+      <button class="dpill" data-d="30">30d</button>
+      <button class="dpill" data-d="90">90d</button>
+      <button class="dpill active" data-d="all">All</button>
+      <div class="view-toggle">
+        <button class="vbtn active" data-m="simple">Simple</button>
+        <button class="vbtn" data-m="advanced">Advanced</button>
+      </div>
+    </div>
+    <div id="igContent"></div>
+  </div>
 
-      try {
-        // FUTURE-PROOF: swap this one line for your API endpoint when selling
-        // const res = await fetch('https://api.yourapp.com/analytics');
-        const res = await fetch('analytics_data.json?t=' + Date.now());
-        if (!res.ok) throw new Error('analytics_data.json not found');
+  <!-- FACEBOOK TAB -->
+  <div class="tab-panel" id="panel-Facebook">
+    <div class="controls-row" id="fbPills">
+      <span class="ctrl-label">Range</span>
+      <button class="dpill" data-d="7">7d</button>
+      <button class="dpill" data-d="28">28d</button>
+      <button class="dpill" data-d="30">30d</button>
+      <button class="dpill" data-d="90">90d</button>
+      <button class="dpill active" data-d="all">All</button>
+      <div class="view-toggle">
+        <button class="vbtn active" data-m="simple">Simple</button>
+        <button class="vbtn" data-m="advanced">Advanced</button>
+      </div>
+    </div>
+    <div id="fbContent"></div>
+  </div>
 
-        const data = await res.json();
-        allPosts = data.posts || [];
-        postExplanations = data.post_explanations || {};
-        trendsData = data.trends || [];
+  <!-- TRENDS TAB -->
+  <div class="tab-panel" id="panel-trends">
+    <div id="trendsContent"></div>
+  </div>
 
-        renderLastUpdated(data.generated_at);
-        renderInsights(data.ai_insights || {});
-        renderDashboard();
+</div><!-- /dash-wrap -->
 
-      } catch (err) {
-        showError(
-          'Could not load analytics data. ' +
-          'Make sure you have run the Python script at least once, ' +
-          'or open this file through a local server (python3 -m http.server 8080). ' +
-          '(' + err.message + ')'
-        );
-      } finally {
-        hide('loading-state');
+<script>
+// ─── Config ────────────────────────────────────────────────
+const PLATFORMS = ['YouTube','TikTok','Instagram','Facebook'];
+const PC = { YouTube:'#ff4444', TikTok:'#00f2ea', Instagram:'#e4405f', Facebook:'#1877f2' };
+const PE = { YouTube:'▶', TikTok:'♪', Instagram:'◉', Facebook:'f' };
+const CONTENT_IDS = { YouTube:'ytContent', TikTok:'ttContent', Instagram:'igContent', Facebook:'fbContent' };
+const PILL_IDS    = { YouTube:'ytPills',   TikTok:'ttPills',   Instagram:'igPills',   Facebook:'fbPills' };
+
+// ─── State ─────────────────────────────────────────────────
+let DATA = null;
+let activePlatform = 'all';
+const state = {
+  days:     { all:'all', YouTube:'all', TikTok:'all', Instagram:'all', Facebook:'all' },
+  advanced: { YouTube:false, TikTok:false, Instagram:false, Facebook:false },
+  sort:     { YouTube:'views', TikTok:'views', Instagram:'views', Facebook:'views' },
+};
+const charts = {};
+
+// ─── Helpers ───────────────────────────────────────────────
+function fmt(n) {
+  if (n == null || n === '') return '—';
+  n = +n;
+  if (n >= 1e6)  return (n/1e6).toFixed(1)+'M';
+  if (n >= 10000)return (n/1000).toFixed(0)+'K';
+  if (n >= 1000) return (n/1000).toFixed(1)+'K';
+  return n.toLocaleString();
+}
+
+function fmtDate(d) {
+  return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+
+function filterDays(posts, days, ref) {
+  if (days === 'all') return posts;
+  const cutoff = new Date(new Date(ref).getTime() - (+days)*86400000);
+  return posts.filter(p => new Date(p.published_date) >= cutoff);
+}
+
+function sortPosts(posts, mode) {
+  const s = [...posts];
+  if (mode === 'views')  return s.sort((a,b) => b.views - a.views);
+  if (mode === 'likes')  return s.sort((a,b) => b.likes - a.likes);
+  if (mode === 'latest') return s.sort((a,b) => new Date(b.published_date) - new Date(a.published_date));
+  return s;
+}
+
+function totals(posts) {
+  const n = posts.length || 1;
+  return {
+    posts:      posts.length,
+    views:      posts.reduce((s,p)=>s+p.views,0),
+    likes:      posts.reduce((s,p)=>s+p.likes,0),
+    comments:   posts.reduce((s,p)=>s+p.comments,0),
+    shares:     posts.reduce((s,p)=>s+p.shares,0),
+    engagement: posts.reduce((s,p)=>s+p.engagement_rate,0)/n,
+    ctr:        posts.reduce((s,p)=>s+p.ctr_pct,0)/n,
+    viewPct:    posts.reduce((s,p)=>s+p.avg_view_pct,0)/n,
+    watchTime:  posts.reduce((s,p)=>s+p.watch_time_minutes,0),
+    impressions:posts.reduce((s,p)=>s+p.impressions,0),
+    subs:       posts.reduce((s,p)=>s+p.subscribers_gained,0),
+    gained:     posts.reduce((s,p)=>s+(p.views_gained||0),0),
+  };
+}
+
+function thumb(platform) {
+  const c = PC[platform]||'#888';
+  return `<div class="pthumb" style="background:${c}22;color:${c}">${PE[platform]||'•'}</div>`;
+}
+
+function changeChip(gained) {
+  if (!gained || gained <= 0) return `<span class="mc-change neut">— no change data</span>`;
+  return `<span class="mc-change up">↑ +${fmt(gained)} new views</span>`;
+}
+
+function engColor(r) {
+  return r >= 3 ? 'var(--color-green)' : r >= 1 ? 'var(--color-yellow)' : 'var(--color-red)';
+}
+
+function isLight() { return document.body.classList.contains('light-mode'); }
+
+function chartTheme() {
+  return isLight()
+    ? { grid:'rgba(0,0,0,0.06)', tick:'#4a5568', tipBg:'#ffffff', tipBorder:'rgba(0,0,0,0.1)', tipTitle:'#0d1b3e', tipBody:'#718096' }
+    : { grid:'rgba(255,255,255,0.04)', tick:'#8899aa', tipBg:'#0d1b3e', tipBorder:'rgba(255,255,255,0.1)', tipTitle:'#f0f4f8', tipBody:'#8899aa' };
+}
+
+function destroyChart(id) {
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+// ─── Chart renderers ───────────────────────────────────────
+function drawLineChart(canvasId, posts, color, labelKey) {
+  destroyChart(canvasId);
+  const canvas = document.getElementById(canvasId);
+  if (!canvas || !posts.length) return;
+
+  const sorted = [...posts].sort((a,b)=>new Date(a.published_date)-new Date(b.published_date));
+  const th = chartTheme();
+
+  charts[canvasId] = new Chart(canvas, {
+    type:'line',
+    data:{
+      labels: sorted.map(p => new Date(p.published_date).toLocaleDateString('en-US',{month:'short',day:'numeric'})),
+      datasets:[{
+        label: labelKey||'Views',
+        data: sorted.map(p=>p.views),
+        borderColor: color,
+        backgroundColor: color+'1a',
+        borderWidth:2, pointRadius:4, pointBackgroundColor:color, tension:0.3, fill:true,
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:th.tipBg, borderColor:th.tipBorder, borderWidth:1,
+          titleColor:th.tipTitle, bodyColor:th.tipBody,
+          callbacks:{
+            title: items => { const p=sorted[items[0].dataIndex]; return p.title.length>42?p.title.slice(0,42)+'…':p.title; },
+            label: ctx => ' '+ctx.raw.toLocaleString()+' views'
+          }
+        }
+      },
+      scales:{
+        x:{ grid:{color:th.grid}, ticks:{color:th.tick,font:{size:10}} },
+        y:{ grid:{color:th.grid}, ticks:{color:th.tick,font:{size:10},callback:v=>fmt(v)} }
       }
     }
+  });
+}
 
-    // ── Tab Switching ─────────────────────────────────────────────────────────
-    document.getElementById('platform-tabs').addEventListener('click', function(e) {
-      const btn = e.target.closest('.gm-tab-btn');
-      if (!btn) return;
-      document.querySelectorAll('.gm-tab-btn').forEach(b => b.classList.remove('active'));
+// ─── Render: Metric cards ──────────────────────────────────
+function renderMetricCards(t, platform) {
+  const yt = platform === 'YouTube';
+  const cards = [
+    { label:'Total Views',    val:fmt(t.views),             change: changeChip(t.gained) },
+    { label:'Total Likes',    val:fmt(t.likes),             change:'' },
+    { label:'Comments',       val:fmt(t.comments),          change:'' },
+    { label:'Shares',         val:fmt(t.shares),            change:'' },
+    { label:'Avg Engagement', val:t.engagement.toFixed(1)+'%', change:'' },
+    { label: yt?'Avg CTR':'Total Posts', val: yt?t.ctr.toFixed(1)+'%':t.posts.toString(), change:'' },
+  ];
+  return `<div class="metric-grid">${cards.map(c=>`
+    <div class="gm-card mc">
+      <div class="mc-label">${c.label}</div>
+      <div class="mc-value">${c.val}</div>
+      ${c.change}
+    </div>`).join('')}</div>`;
+}
+
+function renderAdvMetricCards(t, platform) {
+  const yt = platform === 'YouTube';
+  const cards = [
+    { label:'Impressions',     val: yt ? fmt(t.impressions) : null },
+    { label:'Avg View %',      val: yt ? t.viewPct.toFixed(1)+'%' : null },
+    { label:'Watch Time (min)',val: yt ? fmt(t.watchTime) : null },
+    { label:'Subs Gained',     val: yt ? fmt(t.subs) : null },
+  ];
+  return `<div class="metric-grid">${cards.map(c=>`
+    <div class="gm-card mc">
+      <div class="mc-label">${c.label}</div>
+      <div class="mc-value">${c.val != null ? c.val : '<span class="mc-na">N/A</span>'}</div>
+    </div>`).join('')}</div>`;
+}
+
+// ─── Render: Post list ─────────────────────────────────────
+function renderPostItems(posts, sortMode) {
+  if (!posts.length) return `<div class="empty">No posts for this date range.</div>`;
+  return sortPosts(posts, sortMode).map(p => `
+    <div class="pitem">
+      ${thumb(p.platform)}
+      <div class="pinfo">
+        <span class="ptitle">${p.title}</span>
+        <span class="pdate">${fmtDate(p.published_date)}${p.duration?' · '+p.duration:''}</span>
+      </div>
+      <div class="pstats">
+        <div class="pstat"><span class="psval">${fmt(p.views)}</span><span class="pslbl">Views</span></div>
+        <div class="pstat"><span class="psval">${fmt(p.likes)}</span><span class="pslbl">Likes</span></div>
+        <div class="pstat"><span class="psval" style="color:${engColor(p.engagement_rate)}">${p.engagement_rate.toFixed(1)}%</span><span class="pslbl">Eng</span></div>
+      </div>
+      <a href="${p.url}" target="_blank" class="plink" title="Open post">↗</a>
+    </div>`).join('');
+}
+
+function renderPostListCard(posts, sortMode, platform) {
+  return `
+    <div class="gm-card post-card">
+      <div class="post-hdr">
+        <span class="post-hdr-title">Posts</span>
+        <div class="sort-pills">
+          <button class="spill${sortMode==='latest'?' active':''}" data-s="latest">Latest</button>
+          <button class="spill${sortMode==='views'?' active':''}" data-s="views">Most Views</button>
+          <button class="spill${sortMode==='likes'?' active':''}" data-s="likes">Most Likes</button>
+        </div>
+      </div>
+      <div class="post-items-wrap">${renderPostItems(posts, sortMode)}</div>
+    </div>`;
+}
+
+// ─── Render: Best / Worst ──────────────────────────────────
+function renderBestWorst(posts, exps) {
+  if (posts.length < 2) return '';
+  const sorted = [...posts].sort((a,b)=>b.views-a.views);
+  const half = Math.max(1, Math.floor(sorted.length/2));
+  const best  = sorted.slice(0, Math.min(3, half));
+  const worst = sorted.slice(-Math.min(3, half)).reverse();
+
+  function postHtml(p, type) {
+    const exp = exps && exps[p.url];
+    const reasons = exp ? exp.reasons : [];
+    const cls = type==='best'?'good':'bad';
+    return `<div class="bwp">
+      <div class="bwp-title">${p.title}</div>
+      <div class="bwp-meta">${fmt(p.views)} views · ${p.engagement_rate.toFixed(1)}% eng</div>
+      ${reasons.map(r=>`<div class="bwr ${cls}">${r}</div>`).join('')}
+      ${!reasons.length?`<div class="bwr muted" style="color:var(--color-gray-mid)">Run python script to generate AI explanations.</div>`:''}
+    </div>`;
+  }
+
+  return `<div class="bw-grid">
+    <div class="gm-card bw-card">
+      <div class="bw-hdr"><span class="bw-icon">🏆</span><span class="bw-heading">Top Performing</span></div>
+      ${best.map(p=>postHtml(p,'best')).join('')}
+    </div>
+    <div class="gm-card bw-card">
+      <div class="bw-hdr"><span class="bw-icon">📉</span><span class="bw-heading">Needs Improvement</span></div>
+      ${worst.map(p=>postHtml(p,'worst')).join('')}
+    </div>
+  </div>`;
+}
+
+// ─── Render: AI Insights ───────────────────────────────────
+function renderInsights(insights) {
+  if (!insights || (!insights.dashboard && !insights.title)) return '';
+  const bullets = (insights.title||'').split('\n').filter(l=>l.trim());
+  return `<div class="gm-card ins-card">
+    <div class="sec-label" style="margin-bottom:14px">AI Insights</div>
+    ${insights.dashboard?`<div class="ins-sub">Channel Health</div><div class="ins-text">${insights.dashboard}</div>`:''}
+    ${bullets.length?`<div class="gm-divider" style="margin:14px 0"></div>
+      <div class="ins-sub">Title Patterns</div>
+      ${bullets.map(b=>`<div class="ins-bul">${b.replace(/^[•\-]\s*/,'')}</div>`).join('')}`:''}
+  </div>`;
+}
+
+// ─── Render: Platform tab ──────────────────────────────────
+function renderPlatformTab(platform) {
+  const days    = state.days[platform];
+  const advanced= state.advanced[platform];
+  const sortMode= state.sort[platform];
+  const ref     = DATA.generated_at;
+  const posts   = filterDays(DATA.posts.filter(p=>p.platform===platform), days, ref);
+  const t       = totals(posts);
+  const chartId = `chart-${platform.toLowerCase()}`;
+  const color   = PC[platform];
+
+  const el = document.getElementById(CONTENT_IDS[platform]);
+  if (!el) return;
+
+  if (advanced) el.classList.add('is-advanced');
+  else          el.classList.remove('is-advanced');
+
+  el.innerHTML = `
+    ${renderMetricCards(t, platform)}
+    <div class="adv-only">${renderAdvMetricCards(t, platform)}</div>
+
+    <div class="gm-card chart-card">
+      <div class="chart-hdr">
+        <span class="chart-lbl" style="color:${color}">Views Over Time</span>
+        <span class="chart-sub">${posts.length} post${posts.length!==1?'s':''}</span>
+      </div>
+      <div class="chart-wrap"><canvas id="${chartId}"></canvas></div>
+    </div>
+
+    ${renderPostListCard(posts, sortMode, platform)}
+
+    <div class="adv-only">
+      ${renderBestWorst(posts, DATA.post_explanations)}
+      ${renderInsights(DATA.ai_insights)}
+    </div>`;
+
+  // Wire sort pills
+  el.querySelectorAll('.spill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.sort[platform] = btn.dataset.s;
+      el.querySelectorAll('.spill').forEach(b=>b.classList.toggle('active', b.dataset.s===btn.dataset.s));
+      const wrap = el.querySelector('.post-items-wrap');
+      if (wrap) wrap.innerHTML = renderPostItems(posts, btn.dataset.s);
+    });
+  });
+
+  // Draw chart
+  requestAnimationFrame(() => drawLineChart(chartId, posts, color));
+}
+
+// ─── Render: All tab ───────────────────────────────────────
+function renderAllTab() {
+  const days = state.days.all;
+  const ref  = DATA.generated_at;
+
+  const pt = {};
+  PLATFORMS.forEach(p => {
+    pt[p] = totals(filterDays(DATA.posts.filter(x=>x.platform===p), days, ref));
+  });
+  const grand = totals(filterDays(DATA.posts, days, ref));
+
+  function platCards(getVal, getChg) {
+    return PLATFORMS.map(p => {
+      const color = PC[p];
+      const val   = getVal(pt[p]);
+      const chg   = getChg ? getChg(pt[p]) : '';
+      return `<div class="gm-card pmc" style="border-top:2px solid ${color}33">
+        <div class="pmc-name" style="color:${color}">${PE[p]} ${p}</div>
+        <div class="pmc-value">${val}</div>
+        ${chg?`<div class="pmc-chg">${chg}</div>`:''}
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('allContent').innerHTML = `
+    <div class="all-sec">
+      <div class="all-sec-hdr">
+        <span class="all-sec-title">Views</span>
+        <span class="all-sec-total">Total: ${fmt(grand.views)}</span>
+      </div>
+      <div class="plat-row">${platCards(
+        t=>fmt(t.views),
+        t=>t.gained>0?`<span class="up">↑ +${fmt(t.gained)} new</span>`:''
+      )}</div>
+    </div>
+
+    <div class="all-sec">
+      <div class="all-sec-hdr">
+        <span class="all-sec-title">Likes</span>
+        <span class="all-sec-total">Total: ${fmt(grand.likes)}</span>
+      </div>
+      <div class="plat-row">${platCards(t=>fmt(t.likes), null)}</div>
+    </div>
+
+    <div class="all-sec">
+      <div class="all-sec-hdr">
+        <span class="all-sec-title">Avg Engagement Rate</span>
+        <span class="all-sec-total">Overall avg: ${grand.engagement.toFixed(1)}%</span>
+      </div>
+      <div class="plat-row">${platCards(
+        t=>t.engagement.toFixed(1)+'%',
+        t=>{const c=engColor(t.engagement);return `<span style="color:${c}">${t.engagement>=3?'● Good':t.engagement>=1?'● Average':'● Low'}</span>`;}
+      )}</div>
+    </div>
+
+    <div class="all-sec">
+      <div class="all-sec-hdr">
+        <span class="all-sec-title">Posts by Platform</span>
+        <span class="all-sec-total">Total: ${grand.posts} posts</span>
+      </div>
+      <div class="plat-row">${platCards(t=>t.posts.toString(), null)}</div>
+    </div>
+
+    <div class="mini-chart-grid">
+      ${PLATFORMS.map(p=>`
+        <div class="gm-card mini-chart-card">
+          <div class="mini-chart-title" style="color:${PC[p]}">${PE[p]} ${p}</div>
+          <div class="mini-chart-wrap"><canvas id="mini-chart-${p.toLowerCase()}"></canvas></div>
+        </div>`).join('')}
+    </div>`;
+
+  // Draw mini charts
+  requestAnimationFrame(() => {
+    PLATFORMS.forEach(p => {
+      const posts = filterDays(DATA.posts.filter(x=>x.platform===p), days, ref);
+      drawLineChart(`mini-chart-${p.toLowerCase()}`, posts, PC[p]);
+    });
+  });
+}
+
+// ─── Render: Trends ────────────────────────────────────────
+function renderTrends() {
+  const trends = DATA.trends;
+  if (!trends || !trends.length) {
+    document.getElementById('trendsContent').innerHTML =
+      `<div class="gm-card" style="padding:32px;text-align:center"><div class="empty">No trend data yet. Run the Python script to generate trends.</div></div>`;
+    return;
+  }
+  document.getElementById('trendsContent').innerHTML = `<div class="trends-grid">${trends.map(t=>`
+    <div class="gm-card trend-card">
+      <div class="trend-views">${fmt(t.views)} views</div>
+      <div class="trend-title">${t.title}</div>
+      <div class="trend-chan">${t.channel}</div>
+      <a href="${t.url}" target="_blank" class="trend-url">Watch on YouTube ↗</a>
+      ${t.what_it_is?`<div class="trend-sub">What It Is</div><div class="trend-text">${t.what_it_is}</div>`:''}
+      ${t.why_it_works?`<div class="trend-sub">Why It Works</div><div class="trend-text">${t.why_it_works}</div>`:''}
+      ${t.how_to_implement?`<div class="trend-sub">How to Implement</div>${t.how_to_implement.map((s,i)=>`<div class="trend-step"><span class="trend-stepn">${i+1}.</span>${s}</div>`).join('')}`:''}
+    </div>`).join('')}</div>`;
+}
+
+// ─── Main render dispatcher ────────────────────────────────
+function render() {
+  if (!DATA) return;
+  const p = activePlatform;
+  if (p === 'all')    { renderAllTab(); return; }
+  if (p === 'trends') { renderTrends(); return; }
+  renderPlatformTab(p);
+}
+
+// ─── Boot ──────────────────────────────────────────────────
+async function init() {
+  // Restore theme
+  if (localStorage.getItem('gm-theme') === 'light') {
+    document.body.classList.add('light-mode');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+
+  // Load data
+  try {
+    // To sell as a service later: swap this one line for your API URL
+    const res = await fetch('analytics_data.json');
+    DATA = await res.json();
+    const d = new Date(DATA.generated_at);
+    document.getElementById('lastUpdated').textContent =
+      'Last updated ' + d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) +
+      ' at ' + d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    render();
+  } catch(e) {
+    document.getElementById('allContent').innerHTML =
+      `<div class="gm-card" style="padding:32px;text-align:center">
+        <div style="font-size:13px;color:var(--color-red)">Could not load analytics_data.json.<br>Run <code>python3 main.py</code> to generate data.</div>
+      </div>`;
+    document.getElementById('lastUpdated').textContent = 'Data not loaded';
+  }
+
+  // Platform tab clicks
+  document.querySelectorAll('.ptab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
       btn.classList.add('active');
-      activePlatform = btn.dataset.platform;
-      renderDashboard();
+      activePlatform = btn.dataset.tab;
+      const panel = document.getElementById(`panel-${activePlatform}`);
+      if (panel) panel.classList.add('active');
+      render();
+    });
+  });
+
+  // Date pill clicks
+  const pillMap = { allPills:'all', ytPills:'YouTube', ttPills:'TikTok', igPills:'Instagram', fbPills:'Facebook' };
+  Object.entries(pillMap).forEach(([pillsId, platform]) => {
+    const el = document.getElementById(pillsId);
+    if (!el) return;
+
+    el.querySelectorAll('.dpill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        el.querySelectorAll('.dpill').forEach(p=>p.classList.remove('active'));
+        pill.classList.add('active');
+        state.days[platform] = pill.dataset.d === 'all' ? 'all' : +pill.dataset.d;
+        render();
+      });
     });
 
-    // ── Column Sorting ────────────────────────────────────────────────────────
-    document.getElementById('posts-table').querySelector('thead').addEventListener('click', function(e) {
-      const th = e.target.closest('th[data-col]');
-      if (!th) return;
-      const col = th.dataset.col;
-      if (sortCol === col) {
-        sortDir = sortDir === 'desc' ? 'asc' : 'desc';
-      } else {
-        sortCol = col;
-        sortDir = 'desc';
-      }
-      document.querySelectorAll('.dash-table th').forEach(h => {
-        h.classList.remove('sorted');
-        if (h.dataset.col === col) {
-          h.classList.add('sorted');
-          h.textContent = colLabel(col) + (sortDir === 'desc' ? ' ↓' : ' ↑');
-        } else {
-          h.textContent = colLabel(h.dataset.col) || h.textContent.replace(/ [↑↓]$/, '');
+    el.querySelectorAll('.vbtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        el.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        if (platform !== 'all') {
+          state.advanced[platform] = btn.dataset.m === 'advanced';
+          render();
         }
       });
-      renderPostsTable(getFilteredPosts());
     });
+  });
 
-    // ── Render Master ─────────────────────────────────────────────────────────
-    function renderDashboard() {
-      if (activePlatform === 'trends') {
-        hide('platform-content');
-        show('trends-content');
-        renderTrends();
-        return;
-      }
-      hide('trends-content');
-      show('platform-content');
+  // Theme toggle
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const light = document.body.classList.toggle('light-mode');
+    document.getElementById('themeToggle').textContent = light ? '☀️' : '🌙';
+    localStorage.setItem('gm-theme', light ? 'light' : 'dark');
+    // Redraw charts for new theme colors
+    PLATFORMS.forEach(p=>destroyChart(`chart-${p.toLowerCase()}`));
+    PLATFORMS.forEach(p=>destroyChart(`mini-chart-${p.toLowerCase()}`));
+    render();
+  });
+}
 
-      const posts = getFilteredPosts();
-      renderSummaryCards(posts);
-      renderPostsTable(posts);
-      renderBestWorst(posts);
-    }
-
-    // ── Filter ────────────────────────────────────────────────────────────────
-    function getFilteredPosts() {
-      if (activePlatform === 'all') return allPosts;
-      return allPosts.filter(p => p.platform === activePlatform);
-    }
-
-    // ── Summary Cards ─────────────────────────────────────────────────────────
-    function renderSummaryCards(posts) {
-      el('stat-posts').textContent = posts.length || '0';
-
-      const totalViews = sum(posts, 'views');
-      el('stat-views').textContent = fmt(totalViews);
-
-      const totalLikes = sum(posts, 'likes');
-      el('stat-likes').textContent = fmt(totalLikes);
-
-      const avgEng = avg(posts, 'engagement_rate');
-      el('stat-engagement').textContent = posts.length ? avgEng.toFixed(1) + '%' : '—';
-
-      // CTR: only show for platforms that have it
-      const ctrPosts = posts.filter(p => p.ctr_pct > 0);
-      if (ctrPosts.length) {
-        const avgCtr = avg(ctrPosts, 'ctr_pct');
-        el('stat-ctr').innerHTML = avgCtr.toFixed(1) + '%';
-        el('stat-ctr').className = 'dash-stat-number';
-      } else {
-        el('stat-ctr').innerHTML = '<span class="dash-stat-na">N/A</span>';
-        el('stat-ctr').className = 'dash-stat-number';
-      }
-
-      // Retention: YouTube only
-      const retPosts = posts.filter(p => p.avg_view_pct > 0);
-      if (retPosts.length) {
-        const avgRet = avg(retPosts, 'avg_view_pct');
-        el('stat-retention').innerHTML = avgRet.toFixed(1) + '%';
-        el('stat-retention').className = 'dash-stat-number';
-      } else {
-        el('stat-retention').innerHTML = '<span class="dash-stat-na">N/A</span>';
-        el('stat-retention').className = 'dash-stat-number';
-      }
-
-      // Followers/subs gained
-      const totalFollowers = sum(posts, 'subscribers_gained');
-      if (totalFollowers > 0) {
-        el('stat-followers').textContent = '+' + fmt(totalFollowers);
-      } else {
-        el('stat-followers').innerHTML = '<span class="dash-stat-na">N/A</span>';
-      }
-    }
-
-    // ── Posts Table ───────────────────────────────────────────────────────────
-    function renderPostsTable(posts) {
-      const sorted = [...posts].sort((a, b) => {
-        let av = a[sortCol], bv = b[sortCol];
-        if (typeof av === 'string') av = av.toLowerCase();
-        if (typeof bv === 'string') bv = bv.toLowerCase();
-        if (av < bv) return sortDir === 'desc' ? 1 : -1;
-        if (av > bv) return sortDir === 'desc' ? -1 : 1;
-        return 0;
-      });
-
-      const tbody = el('posts-tbody');
-      tbody.innerHTML = '';
-
-      if (!sorted.length) {
-        tbody.innerHTML = '<tr><td colspan="11" class="dash-table-empty">No posts for this platform yet.</td></tr>';
-        return;
-      }
-
-      sorted.forEach(p => {
-        const engClass = engColor(p.engagement_rate);
-        const badgeClass = platformBadgeClass(p.platform);
-        const hasCtr = p.ctr_pct > 0;
-        const hasRet = p.avg_view_pct > 0;
-        const hasFollowers = p.subscribers_gained > 0;
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="dash-td-title">
-            <span class="dash-post-title" title="${esc(p.title)}">${esc(p.title || '—')}</span>
-            <span class="dash-post-date">${p.published_date || ''}</span>
-          </td>
-          <td><span class="gm-badge ${badgeClass}">${esc(p.platform)}</span></td>
-          <td class="dash-td-num">${fmt(p.views)}</td>
-          <td class="dash-td-num">${fmt(p.likes)}</td>
-          <td class="dash-td-num">${p.comments > 0 ? fmt(p.comments) : '<span class="dash-td-na">—</span>'}</td>
-          <td class="dash-td-num">${p.shares > 0 ? fmt(p.shares) : '<span class="dash-td-na">—</span>'}</td>
-          <td class="dash-td-num ${engClass}">${(p.engagement_rate || 0).toFixed(2)}%</td>
-          <td class="${hasCtr ? 'dash-td-num' : 'dash-td-na'}">${hasCtr ? p.ctr_pct.toFixed(2) + '%' : 'N/A'}</td>
-          <td class="${hasRet ? 'dash-td-num' : 'dash-td-na'}">${hasRet ? p.avg_view_pct.toFixed(1) + '%' : 'N/A'}</td>
-          <td class="${hasFollowers ? 'dash-td-num gm-text-green' : 'dash-td-na'}">${hasFollowers ? '+' + fmt(p.subscribers_gained) : 'N/A'}</td>
-          <td><a href="${esc(p.url || '#')}" target="_blank" rel="noopener" class="dash-link">View →</a></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    // ── Best & Worst Posts ────────────────────────────────────────────────────
-    function renderBestWorst(posts) {
-      if (!posts.length) {
-        el('best-posts-list').innerHTML = '<p class="dash-no-data">No data yet.</p>';
-        el('worst-posts-list').innerHTML = '<p class="dash-no-data">No data yet.</p>';
-        return;
-      }
-
-      const sorted = [...posts].sort((a, b) => (b.views || 0) - (a.views || 0));
-      const best = sorted.slice(0, 3);
-      const worst = sorted.length >= 5 ? sorted.slice(-3).reverse() : [];
-
-      el('best-posts-list').innerHTML = best.map(p => postItemHTML(p, 'best')).join('');
-      el('worst-posts-list').innerHTML = worst.length
-        ? worst.map(p => postItemHTML(p, 'worst')).join('')
-        : '<p class="dash-no-data">Need at least 5 posts to show worst performers.</p>';
-    }
-
-    function postItemHTML(post, type) {
-      const url = post.url || '';
-      const exp = postExplanations[url];
-      const reasons = exp ? exp.reasons : [];
-      const reasonClass = type === 'best' ? 'dash-reason-best' : 'dash-reason-worst';
-
-      const reasonsHTML = reasons.length
-        ? reasons.map(r => `<div class="dash-reason ${reasonClass}">${esc(r)}</div>`).join('')
-        : '<div class="dash-no-data" style="font-size:11px;margin-top:4px;">Run python3 main.py to get AI analysis</div>';
-
-      return `
-        <div class="dash-post-item">
-          <div class="dash-post-item-title" title="${esc(post.title)}">${esc(post.title || '—')}</div>
-          <div class="dash-post-item-meta">
-            ${fmt(post.views)} views &nbsp;·&nbsp;
-            ${(post.engagement_rate || 0).toFixed(2)}% engagement &nbsp;·&nbsp;
-            <span class="${platformBadgeClass(post.platform)}" style="font-size:10px;font-weight:700;">${esc(post.platform)}</span>
-          </div>
-          ${reasonsHTML}
-        </div>
-      `;
-    }
-
-    // ── AI Insights ───────────────────────────────────────────────────────────
-    function renderInsights(insights) {
-      el('insight-dashboard').textContent = insights.dashboard ||
-        'Run python3 main.py to generate AI insights.';
-
-      const titleEl = el('insight-title');
-      const raw = insights.title || '';
-      if (!raw) {
-        titleEl.textContent = 'No title insights yet.';
-        return;
-      }
-      const lines = raw.split('\n').filter(l => l.trim());
-      titleEl.innerHTML = lines.map(line =>
-        `<div class="dash-insight-bullet">${esc(line.replace(/^[•\-]\s*/, ''))}</div>`
-      ).join('');
-    }
-
-    // ── Trends Tab ────────────────────────────────────────────────────────────
-    function renderTrends() {
-      const grid = el('trends-grid');
-
-      if (!trendsData.length) {
-        grid.innerHTML = `
-          <div class="dash-no-trends">
-            <p>No trends data yet.</p>
-            <p style="margin-top:8px;font-size:13px;">Run <strong>python3 main.py</strong> to search YouTube for trending videos in your niche and generate AI analysis.</p>
-          </div>`;
-        return;
-      }
-
-      grid.className = 'dash-trends-grid';
-      grid.innerHTML = trendsData.map(trend => {
-        const steps = (trend.how_to_implement || []).map((step, i) =>
-          `<div class="dash-trend-step"><span class="dash-trend-step-num">${i + 1}.</span>${esc(step)}</div>`
-        ).join('');
-
-        return `
-          <div class="gm-card dash-trend-card">
-            <div class="dash-trend-views">${fmt(trend.views)} views on YouTube</div>
-            <div class="dash-trend-title">${esc(trend.title)}</div>
-            <div class="dash-trend-channel">by ${esc(trend.channel)}</div>
-            <a href="${esc(trend.url)}" target="_blank" rel="noopener" class="dash-trend-url">
-              Watch Reference Video →
-            </a>
-            <div class="gm-divider"></div>
-            <div class="dash-trend-section-label">What This Trend Is</div>
-            <div class="dash-trend-text">${esc(trend.what_it_is)}</div>
-            <div class="dash-trend-section-label">Why It Works</div>
-            <div class="dash-trend-text">${esc(trend.why_it_works)}</div>
-            <div class="dash-trend-section-label">How to Implement It</div>
-            ${steps}
-          </div>
-        `;
-      }).join('');
-    }
-
-    // ── Last Updated ──────────────────────────────────────────────────────────
-    function renderLastUpdated(iso) {
-      if (!iso) return;
-      try {
-        const d = new Date(iso);
-        el('last-updated').textContent =
-          d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
-          ' at ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      } catch(e) {
-        el('last-updated').textContent = iso;
-      }
-    }
-
-    // ── Utilities ─────────────────────────────────────────────────────────────
-    function el(id) { return document.getElementById(id); }
-    function show(id) { el(id).classList.remove('hidden'); }
-    function hide(id) { el(id).classList.add('hidden'); }
-
-    function showError(msg) {
-      el('error-state').textContent = msg;
-      el('error-state').classList.remove('hidden');
-    }
-
-    function fmt(n) {
-      n = Number(n) || 0;
-      if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-      if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
-      return n.toLocaleString();
-    }
-
-    function sum(posts, key) {
-      return posts.reduce((s, p) => s + (Number(p[key]) || 0), 0);
-    }
-
-    function avg(posts, key) {
-      if (!posts.length) return 0;
-      return sum(posts, key) / posts.length;
-    }
-
-    function esc(str) {
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function engColor(rate) {
-      rate = Number(rate) || 0;
-      if (rate >= 3) return 'gm-text-green';
-      if (rate >= 1) return 'gm-text-yellow';
-      return 'gm-text-red';
-    }
-
-    function platformBadgeClass(platform) {
-      const map = {
-        'YouTube': 'gm-badge dash-badge-youtube',
-        'TikTok': 'gm-badge dash-badge-tiktok',
-        'Instagram': 'gm-badge dash-badge-instagram',
-        'Facebook': 'gm-badge dash-badge-facebook',
-      };
-      return map[platform] || 'gm-badge gm-badge-muted';
-    }
-
-    function colLabel(col) {
-      const labels = {
-        title: 'Title', platform: 'Platform', views: 'Views', likes: 'Likes',
-        comments: 'Comments', shares: 'Shares', engagement_rate: 'Eng. Rate',
-        ctr_pct: 'CTR', avg_view_pct: 'Retention', subscribers_gained: 'Followers+'
-      };
-      return labels[col] || col;
-    }
-
-    // ── Init ──────────────────────────────────────────────────────────────────
-    loadData();
-  </script>
-
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
