@@ -102,6 +102,7 @@ def get_youtube_data():
                 'ctr_pct': 0.0,
                 'shares': 0,
                 'subscribers_gained': 0,
+                'three_sec_view_rate': 0.0,
                 'url': f"https://youtu.be/{vid_id}",
             }
 
