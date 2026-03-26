@@ -95,6 +95,7 @@ def get_tiktok_data():
                 'avg_view_duration_sec': 0,
                 'avg_view_pct':          0.0,
                 'subscribers_gained':    0,
+                'three_sec_view_rate':   0.0,
             })
 
         has_more = data.get('has_more', False)

@@ -293,6 +293,7 @@ def get_instagram_data():
                         'avg_view_duration_sec': 0,
                         'avg_view_pct':          0.0,
                         'subscribers_gained':    0,
+                        'three_sec_view_rate':   0.0,
                     })
 
                     if (i + 1) % 10 == 0:
@@ -518,6 +519,7 @@ def get_facebook_data():
                         'avg_view_duration_sec': 0,
                         'avg_view_pct':          0.0,
                         'subscribers_gained':    0,
+                        'three_sec_view_rate':   0.0,
                     })
 
                     if (i + 1) % 5 == 0:
