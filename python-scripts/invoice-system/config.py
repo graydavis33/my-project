@@ -58,8 +58,7 @@ LARGE_PAYMENT_THRESHOLD = 5000
 CATEGORIES = [
     "Software & Subscriptions",
     "Equipment & Gear",
-    "Advertising & Marketing",
-    "Contractor Payments",
+    "Office",
     "Other",
 ]
 
