@@ -20,11 +20,26 @@ Goals: AI operator, automate business/life, monetize tools, grow social media.
 - Repo: https://github.com/graydavis33/my-project
 - Auto-push: `cd ~/Desktop/my-project && git add . && git commit -m "Session update" && git push`
 
+## Multi-Device Sync (set up 2026-03-25)
+All devices stay in sync via GitHub. Claude Code handles this automatically:
+- **Session Start hook** → runs `git pull origin main` on every device when you open Claude Code
+- **Session Stop hook** → auto-commits and pushes all CLAUDE.md files to GitHub
+- Config lives in `.claude/settings.json` (committed to repo, applies on all devices)
+
+**To set up a new device:**
+1. Clone the repo: `git clone https://github.com/graydavis33/my-project`
+2. Open Claude Code in that folder — hooks run automatically from that point on
+
+**Devices:**
+- MacBook — primary
+- Windows Desktop — secondary
+- iPhone — Claude.ai mobile (manual context paste until Claude Code mobile supports hooks)
+
 ## Security
 - All `.env`, `token.json`, `client_secret*.json` are gitignored — never commit them
 - API keys live only in `.env` files, never hardcoded
 
-## Current Priority List (as of 2026-03-18)
+## Current Priority List (as of 2026-03-25)
 Scored 0–3 across: Unblocks others / Revenue+Time / Showcase / Sellable
 
 | # | Project | Score | Status | Next Action |
