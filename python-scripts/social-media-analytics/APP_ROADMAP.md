@@ -4,6 +4,20 @@
 
 ---
 
+> **This is a living document.**
+> Everything in here is a starting point, not a contract. Phases will shift, features will get cut or added, pricing will get tested and changed, and the tech stack may evolve. Update this file whenever a decision changes — don't preserve wrong decisions for the sake of consistency.
+> The goal of this doc is to give direction, not to lock anything in.
+
+---
+
+## Changelog
+| Date | What Changed | Why |
+|------|-------------|-----|
+| 2026-03-27 | Created initial roadmap | First planning session |
+| 2026-03-27 | Added platform-agnostic architecture requirement | App should support any platform, not just the initial 4 |
+
+---
+
 ## What Is This App?
 
 A unified social media analytics dashboard for content creators — connect any social media platform in one place, see your real numbers, and get AI-powered insights on what's working and what to post next.
