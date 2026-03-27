@@ -6,10 +6,20 @@
 
 ## What Is This App?
 
-A unified social media analytics dashboard for content creators — connect YouTube, TikTok, Instagram, and Facebook in one place, see your real numbers, and get AI-powered insights on what's working and what to post next.
+A unified social media analytics dashboard for content creators — connect any social media platform in one place, see your real numbers, and get AI-powered insights on what's working and what to post next.
 
 **One-sentence value prop:**
 "Stop switching between 4 apps to check your stats — see everything in one dashboard with AI that tells you what to do next."
+
+**Long-term platform vision:**
+This app is not limited to 4 platforms. It is designed to eventually support ANY platform with analytics data — including but not limited to:
+- YouTube, TikTok, Instagram, Facebook (Phase 1–2)
+- X (Twitter), LinkedIn (Phase 2–3)
+- Pinterest, Snapchat, Threads (Phase 3+)
+- Whatnot, Amazon Live, and other live-selling/emerging platforms (future)
+- CapCut and any platform that exposes creator analytics via API
+
+**Architectural requirement:** The backend must be built platform-agnostic from day one — each platform is a self-contained module. Adding a new platform should never require rewriting core logic.
 
 ---
 
@@ -129,6 +139,12 @@ Keep it simple. Build for speed to market, not perfection.
 - [ ] White-label option
 - [ ] Zapier/webhook integrations
 - [ ] API access for power users
+- [ ] X (Twitter) analytics integration
+- [ ] LinkedIn analytics integration
+- [ ] Pinterest, Snapchat, Threads integrations
+- [ ] Whatnot / Amazon Live / live-selling platform support
+- [ ] CapCut and any emerging platform with creator API access
+- [ ] Platform request voting (let users vote on which platform to add next)
 
 ---
 
