@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice #001 — Gray Davis</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #f4f4f4;
+      color: #1a1a1a;
+      padding: 40px 20px;
+    }
+
+    .invoice-wrapper {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    /* ── Header ── */
+    .header {
+      background: #1a1a1a;
+      color: #ffffff;
+      padding: 40px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .header .brand h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .header .brand p {
+      font-size: 13px;
+      color: #aaaaaa;
+      margin-top: 4px;
+    }
+
+    .header .invoice-meta {
+      text-align: right;
+    }
+
+    .header .invoice-meta .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #aaaaaa;
+    }
+
+    .header .invoice-meta .invoice-number {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 4px;
+    }
+
+    .header .invoice-meta .status-badge {
+      display: inline-block;
+      margin-top: 10px;
+      background: #e8b84b;
+      color: #1a1a1a;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── Dates + Addresses ── */
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 36px 48px;
+      border-bottom: 1px solid #ebebeb;
+      gap: 24px;
+    }
+
+    .meta-block .meta-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888888;
+      margin-bottom: 8px;
+    }
+
+    .meta-block p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #1a1a1a;
+    }
+
+    .meta-block strong {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* ── Line Items ── */
+    .items-section {
+      padding: 0 48px 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 28px;
+    }
+
+    thead tr {
+      background: #f7f7f7;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888888;
+      padding: 12px 16px;
+      border-bottom: 2px solid #ebebeb;
+    }
+
+    thead th.right { text-align: right; }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    tbody td {
+      padding: 16px 16px;
+      font-size: 14px;
+      color: #1a1a1a;
+      vertical-align: top;
+    }
+
+    tbody td.right { text-align: right; }
+
+    tbody td .desc-main {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    tbody td .desc-sub {
+      font-size: 12px;
+      color: #888888;
+      margin-top: 3px;
+    }
+
+    /* ── Totals ── */
+    .totals {
+      padding: 0 48px 40px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .totals-box {
+      width: 280px;
+    }
+
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: #555555;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .totals-row.total {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      border-bottom: none;
+      padding-top: 14px;
+    }
+
+    /* ── Notes + Payment ── */
+    .footer-section {
+      background: #f9f9f9;
+      padding: 32px 48px;
+      border-top: 1px solid #ebebeb;
+      display: flex;
+      gap: 40px;
+      justify-content: space-between;
+    }
+
+    .footer-block { flex: 1; }
+
+    .footer-block .footer-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888888;
+      margin-bottom: 10px;
+    }
+
+    .footer-block p {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #444444;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .invoice-wrapper { box-shadow: none; border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="invoice-wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <h1>Gray Davis</h1>
+      <p>Freelance Videographer &amp; Photographer</p>
+    </div>
+    <div class="invoice-meta">
+      <div class="label">Invoice</div>
+      <div class="invoice-number">#001</div>
+      <div class="status-badge">Payment Due</div>
+    </div>
+  </div>
+
+  <!-- Dates + Addresses -->
+  <div class="meta-row">
+    <div class="meta-block">
+      <div class="meta-label">Billed To</div>
+      <p>
+        <strong>[Client Name / Organization]</strong><br>
+        [Client Address Line 1]<br>
+        [City, State ZIP]<br>
+        [client@email.com]
+      </p>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">From</div>
+      <p>
+        <strong>Gray Davis</strong><br>
+        [Your City, State]<br>
+        [your@email.com]<br>
+        [Your Phone Number]
+      </p>
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-label">Invoice Date</div>
+      <p>March 29, 2026</p>
+      <br>
+      <div class="meta-label">Due Date</div>
+      <p>April 12, 2026</p>
+    </div>
+  </div>
+
+  <!-- Line Items -->
+  <div class="items-section">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50%">Description</th>
+          <th class="right">Rate</th>
+          <th class="right">Qty / Hrs</th>
+          <th class="right">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="desc-main">Event Photography — All-Star Basketball Game</div>
+            <div class="desc-sub">On-site photography coverage of event. Includes delivery of edited photos.</div>
+          </td>
+          <td class="right">$50.00/hr</td>
+          <td class="right">8</td>
+          <td class="right">$400.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Totals -->
+  <div class="totals">
+    <div class="totals-box">
+      <div class="totals-row">
+        <span>Subtotal</span>
+        <span>$400.00</span>
+      </div>
+      <div class="totals-row">
+        <span>Tax (0%)</span>
+        <span>$0.00</span>
+      </div>
+      <div class="totals-row total">
+        <span>Total Due</span>
+        <span>$400.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer: Notes + Payment -->
+  <div class="footer-section">
+    <div class="footer-block">
+      <div class="footer-label">Payment Methods</div>
+      <p>
+        Venmo: @[your-venmo]<br>
+        Zelle: [your phone/email]<br>
+        PayPal: [your PayPal]<br>
+        Check payable to: Gray Davis
+      </p>
+    </div>
+    <div class="footer-block">
+      <div class="footer-label">Notes</div>
+      <p>
+        Thank you for the opportunity to photograph your event!
+        Please remit payment within 14 days of the invoice date.
+        Feel free to reach out with any questions.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
