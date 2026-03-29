@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Invoice Builder — Graydient Media</title>
   <link rel="stylesheet" href="../styles/brand.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
 
     body { padding: 24px 16px 80px; }
@@ -533,7 +535,7 @@
 <div class="preview-overlay" id="preview-overlay">
   <div class="preview-toolbar">
     <button onclick="closePreview()">← Back</button>
-    <button class="blue" onclick="window.print()">Export as PDF</button>
+    <button class="blue" id="download-btn" onclick="downloadPDF()">Download PDF</button>
     <button onclick="saveInvoice(); closePreview();" style="background:#166534;">Save Invoice</button>
   </div>
   <div class="inv-page" id="inv-page-render"></div>
@@ -710,6 +712,51 @@ function previewInvoice() {
 
 function closePreview() {
   document.getElementById('preview-overlay').classList.remove('open');
+}
+
+async function downloadPDF() {
+  const btn = document.getElementById('download-btn');
+  btn.textContent = 'Generating...';
+  btn.disabled = true;
+
+  const page = document.getElementById('inv-page-render');
+
+  try {
+    const canvas = await html2canvas(page, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false
+    });
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgW  = pageW;
+    const imgH  = (canvas.height * pageW) / canvas.width;
+
+    // if invoice is taller than one page, scale it to fit
+    const finalH = imgH > pageH ? pageH : imgH;
+    const finalW = imgH > pageH ? (canvas.width * pageH) / canvas.height : pageW;
+    const offsetX = imgH > pageH ? (pageW - finalW) / 2 : 0;
+
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', offsetX, 0, finalW, finalH);
+
+    // build filename from invoice number + client name
+    const num    = (document.getElementById('inv-number').value || 'invoice').replace(/[^a-z0-9#]/gi, '-');
+    const client = (document.getElementById('client-name').value || 'client').replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    pdf.save(`${num}-${client}.pdf`);
+
+    showToast('PDF downloaded!');
+  } catch (e) {
+    console.error(e);
+    showToast('Download failed — try again.');
+  } finally {
+    btn.textContent = 'Download PDF';
+    btn.disabled = false;
+  }
 }
 
 function renderInvoicePage(inv) {
