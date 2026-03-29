@@ -60,3 +60,7 @@ Thumbs.db
 # ============================================================
 # Add any output files you don't want tracked
 test.txt
+
+# Personal Assistant — runtime state files
+task_queue.json
+pending_drafts.json
