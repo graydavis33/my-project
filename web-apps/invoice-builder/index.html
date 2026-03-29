@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice Builder — Graydient Media</title>
+  <link rel="stylesheet" href="../styles/brand.css" />
+  <style>
+
+    body { padding: 24px 16px 80px; }
+
+    /* ── Top bar ── */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .topbar-wordmark {
+      font-size: 11px; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase;
+      background: var(--gradient-text);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      opacity: 0.8;
+    }
+    .topbar-title {
+      font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+      background: var(--gradient-text);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .topbar-right { display: flex; gap: 8px; align-items: center; }
+
+    /* ── Tabs ── */
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Section labels ── */
+    .section-label {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2.5px; color: var(--color-gray-light);
+      margin: 24px 0 10px;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* ── Two-col grid ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .span-2 { grid-column: span 2; }
+
+    /* ── Input fields ── */
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--color-gray-mid);
+    }
+    .field input, .field textarea, .field select {
+      background: rgba(10,10,15,0.6);
+      border: var(--border-input); border-radius: var(--radius-sm);
+      color: var(--color-white); font-family: var(--font-base);
+      font-size: 14px; padding: 10px 12px; width: 100%;
+      transition: border-color 0.15s;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      outline: none; border-color: var(--color-yellow);
+    }
+    .field input::placeholder, .field textarea::placeholder { color: var(--color-gray-mid); }
+    .field textarea { resize: none; min-height: 72px; line-height: 1.6; }
+    .field select { appearance: none; cursor: pointer; }
+
+    /* ── Line items ── */
+    .line-items-header {
+      display: grid; grid-template-columns: 1fr 90px 64px 90px 32px;
+      gap: 6px; padding: 0 0 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 4px;
+    }
+    .line-items-header span {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--color-gray-mid);
+    }
+    .line-items-header span.r { text-align: right; }
+
+    .line-row {
+      display: grid; grid-template-columns: 1fr 90px 64px 90px 32px;
+      gap: 6px; align-items: center; margin-bottom: 6px;
+    }
+    .line-row input {
+      background: rgba(10,10,15,0.6); border: var(--border-input);
+      border-radius: var(--radius-sm); color: var(--color-white);
+      font-family: var(--font-base); font-size: 13px;
+      padding: 8px 10px; width: 100%; transition: border-color 0.15s;
+    }
+    .line-row input:focus { outline: none; border-color: var(--color-yellow); }
+    .line-row input.r { text-align: right; }
+    .line-row input.amount-cell {
+      color: var(--color-green); font-weight: 600;
+      background: rgba(74,222,128,0.06); border-color: rgba(74,222,128,0.12);
+    }
+    .line-row .delete-btn {
+      background: none; border: none; color: rgba(255,255,255,0.18);
+      font-size: 16px; cursor: pointer; padding: 4px; border-radius: 4px;
+      transition: color 0.15s; display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-base);
+    }
+    .line-row .delete-btn:hover { color: var(--color-red); }
+
+    /* ── Totals ── */
+    .totals-block {
+      display: flex; flex-direction: column; align-items: flex-end;
+      gap: 0; margin-top: 8px;
+      border-top: 1px solid rgba(255,255,255,0.07); padding-top: 12px;
+    }
+    .totals-row {
+      display: flex; justify-content: space-between;
+      width: 220px; padding: 5px 0;
+      font-size: 13px; color: var(--color-gray-light);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .totals-row:last-child { border-bottom: none; }
+    .totals-row.grand {
+      font-size: 17px; font-weight: 800;
+      color: var(--color-yellow); padding-top: 10px;
+    }
+    .totals-row span:last-child { font-weight: 600; color: var(--color-white); }
+    .totals-row.grand span:last-child { color: var(--color-yellow); }
+
+    /* ── Tax row ── */
+    .tax-row { display: flex; align-items: center; gap: 8px; }
+    .tax-row span { color: var(--color-gray-light); font-size: 13px; white-space: nowrap; }
+    .tax-input {
+      background: rgba(10,10,15,0.6); border: var(--border-input);
+      border-radius: var(--radius-sm); color: var(--color-white);
+      font-family: var(--font-base); font-size: 13px;
+      width: 64px; padding: 6px 8px; text-align: right;
+    }
+    .tax-input:focus { outline: none; border-color: var(--color-yellow); }
+
+    /* ── Add row button ── */
+    .add-row-btn {
+      background: none; border: 1px dashed rgba(255,255,255,0.12);
+      border-radius: var(--radius-sm); color: var(--color-gray-mid);
+      font-family: var(--font-base); font-size: 12px; font-weight: 600;
+      cursor: pointer; padding: 8px 14px; width: 100%;
+      transition: border-color 0.15s, color 0.15s; margin-top: 4px;
+    }
+    .add-row-btn:hover { border-color: var(--color-yellow); color: var(--color-yellow); }
+
+    /* ── Action bar ── */
+    .action-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(10,10,15,0.98) 40%);
+      padding: 16px 16px 24px;
+      display: flex; gap: 10px; justify-content: center;
+    }
+    .action-bar button { min-width: 140px; }
+
+    /* ── History list ── */
+    .history-empty {
+      text-align: center; padding: 56px 24px;
+      color: var(--color-gray-mid); font-size: 13px; line-height: 1.8;
+    }
+    .history-empty .icon { font-size: 36px; margin-bottom: 12px; opacity: 0.4; }
+
+    .inv-card {
+      background: var(--gradient-card); border: var(--border-card);
+      border-radius: var(--radius-md); padding: 14px 16px;
+      margin-bottom: 8px; cursor: pointer;
+      transition: border-color 0.15s;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .inv-card:hover { border-color: rgba(232,184,75,0.25); }
+    .inv-card-left {}
+    .inv-card-num { font-size: 12px; font-weight: 700; color: var(--color-yellow); margin-bottom: 2px; }
+    .inv-card-client { font-size: 14px; font-weight: 600; color: var(--color-white); }
+    .inv-card-date { font-size: 11px; color: var(--color-gray-mid); margin-top: 2px; }
+    .inv-card-right { text-align: right; }
+    .inv-card-amount { font-size: 18px; font-weight: 800; color: var(--color-green); }
+    .inv-card-status {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; margin-top: 4px;
+    }
+    .inv-card-status.paid { color: var(--color-green); }
+    .inv-card-status.due { color: var(--color-yellow); }
+    .inv-card-status.overdue { color: var(--color-red); }
+    .inv-card-actions {
+      display: flex; gap: 6px; margin-top: 6px; padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .inv-card-actions button {
+      background: none; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px; color: var(--color-gray-light);
+      font-family: var(--font-base); font-size: 11px; font-weight: 600;
+      padding: 5px 12px; cursor: pointer; transition: all 0.15s;
+    }
+    .inv-card-actions button:hover { border-color: var(--color-yellow); color: var(--color-yellow); }
+    .inv-card-actions button.mark-paid { }
+    .inv-card-actions button.mark-paid:hover { border-color: var(--color-green); color: var(--color-green); }
+    .inv-card-actions button.del:hover { border-color: var(--color-red); color: var(--color-red); }
+
+    /* ── Stats bar ── */
+    .stats-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px; margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--gradient-card); border: var(--border-card);
+      border-radius: var(--radius-md); padding: 14px 12px; text-align: center;
+    }
+    .stat-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--color-gray-mid); margin-bottom: 6px; }
+    .stat-val { font-size: 20px; font-weight: 800; }
+    .stat-val.yellow { color: var(--color-yellow); }
+    .stat-val.green { color: var(--color-green); }
+    .stat-val.red { color: var(--color-red); }
+
+    /* ── Settings tab ── */
+    .settings-note {
+      font-size: 12px; color: var(--color-gray-mid); line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    /* ═══════════════════════════════════════
+       PRINT / PREVIEW STYLES
+    ═══════════════════════════════════════ */
+    .preview-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85); z-index: 200;
+      overflow-y: auto; padding: 32px 16px 60px;
+      backdrop-filter: blur(6px);
+    }
+    .preview-overlay.open { display: block; }
+
+    .preview-toolbar {
+      display: flex; justify-content: center; gap: 10px;
+      margin-bottom: 24px;
+    }
+    .preview-toolbar button {
+      background: #1a1a1a; color: #fff; border: none;
+      border-radius: 8px; padding: 10px 22px;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      transition: background 0.15s;
+    }
+    .preview-toolbar button:hover { background: #333; }
+    .preview-toolbar button.blue { background: #2563eb; }
+    .preview-toolbar button.blue:hover { background: #1d4ed8; }
+
+    /* The actual white invoice page */
+    .inv-page {
+      max-width: 760px; margin: 0 auto;
+      background: #fff; border-radius: 4px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #1a1a1a; overflow: hidden;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.4);
+    }
+    .inv-page .top-bar { height: 6px; background: linear-gradient(90deg,#2563eb,#7c3aed); }
+    .inv-page .inv-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 40px 48px 32px; border-bottom: 1px solid #f0f0f0;
+    }
+    .inv-page .inv-from-name { font-size: 26px; font-weight: 800; color: #0f0f0f; letter-spacing: -0.5px; }
+    .inv-page .inv-from-title { font-size: 13px; color: #888; margin-top: 3px; }
+    .inv-page .inv-stamp-word { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: #2563eb; text-align: right; }
+    .inv-page .inv-stamp-num { font-size: 28px; font-weight: 800; color: #0f0f0f; letter-spacing: -1px; text-align: right; margin-top: 2px; }
+    .inv-page .inv-badge {
+      display: inline-block; margin-top: 8px; padding: 4px 14px;
+      border-radius: 20px; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .inv-page .inv-badge.due { background: #fef3c7; color: #92400e; }
+    .inv-page .inv-badge.paid { background: #dcfce7; color: #166534; }
+
+    .inv-page .inv-addr {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      padding: 0 48px; border-bottom: 1px solid #f0f0f0;
+    }
+    .inv-page .inv-addr-col {
+      padding: 24px 0; border-right: 1px solid #f0f0f0;
+      padding-right: 28px;
+    }
+    .inv-page .inv-addr-col:last-child { border-right: none; padding-right: 0; padding-left: 28px; }
+    .inv-page .inv-addr-col:nth-child(2) { padding-left: 28px; }
+    .inv-page .inv-addr-col:first-child { padding-left: 0; }
+    .inv-page .addr-lbl {
+      font-size: 8px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: #aaa; margin-bottom: 8px;
+    }
+    .inv-page .addr-name { font-size: 14px; font-weight: 700; color: #0f0f0f; margin-bottom: 2px; }
+    .inv-page .addr-detail { font-size: 12px; color: #666; line-height: 1.7; }
+    .inv-page .date-val { font-size: 13px; font-weight: 600; color: #0f0f0f; }
+    .inv-page .date-lbl2 { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #aaa; margin: 10px 0 4px; }
+
+    .inv-page .inv-table-wrap { padding: 0 48px; }
+    .inv-page table { width: 100%; border-collapse: collapse; margin: 24px 0 0; }
+    .inv-page thead th {
+      font-size: 8px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: #aaa; padding: 0 12px 10px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    .inv-page thead th:first-child { padding-left: 0; }
+    .inv-page thead th.r { text-align: right; }
+    .inv-page tbody tr { border-bottom: 1px solid #f8f8f8; }
+    .inv-page tbody td {
+      padding: 14px 12px; font-size: 13px; color: #1a1a1a; vertical-align: top;
+    }
+    .inv-page tbody td:first-child { padding-left: 0; }
+    .inv-page tbody td.r { text-align: right; }
+    .inv-page .item-name { font-weight: 700; font-size: 13px; }
+    .inv-page .item-sub { font-size: 11px; color: #888; margin-top: 2px; line-height: 1.5; }
+
+    .inv-page .inv-totals {
+      display: flex; justify-content: flex-end;
+      padding: 16px 48px 32px; border-bottom: 1px solid #f0f0f0;
+    }
+    .inv-page .inv-totals-box { width: 240px; }
+    .inv-page .inv-t-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: #666; padding: 6px 0;
+      border-bottom: 1px solid #f8f8f8;
+    }
+    .inv-page .inv-t-row:last-child { border-bottom: none; }
+    .inv-page .inv-t-row.grand {
+      font-size: 17px; font-weight: 800; color: #0f0f0f; padding-top: 12px;
+    }
+    .inv-page .inv-t-row.grand span:last-child { color: #2563eb; }
+
+    .inv-page .inv-footer {
+      display: grid; grid-template-columns: 1fr 1fr;
+      padding: 28px 48px 40px; background: #fafafa;
+    }
+    .inv-page .inv-footer-col { padding-right: 32px; }
+    .inv-page .inv-footer-col:last-child { padding-right: 0; padding-left: 32px; border-left: 1px solid #ebebeb; }
+    .inv-page .footer-lbl {
+      font-size: 8px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: #aaa; margin-bottom: 10px;
+    }
+    .inv-page .footer-text { font-size: 12px; color: #555; line-height: 1.9; }
+    .inv-page .bot-bar { height: 4px; background: linear-gradient(90deg,#2563eb,#7c3aed); }
+
+    @media print {
+      .preview-overlay { position: static; background: none; padding: 0; }
+      .preview-toolbar { display: none; }
+      .inv-page { box-shadow: none; border-radius: 0; }
+      body > *:not(.preview-overlay) { display: none !important; }
+    }
+
+    /* ── Max width ── */
+    .max-w { max-width: 600px; margin: 0 auto; }
+
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ TOP BAR ═══════════════════════════ -->
+<div class="max-w">
+  <div class="topbar">
+    <span class="topbar-wordmark">Graydient Media</span>
+    <span class="topbar-title">Invoice Builder</span>
+    <div class="topbar-right">
+      <button class="gm-btn-ghost" style="padding:8px 14px;font-size:12px;" onclick="openTab('settings')">Settings</button>
+    </div>
+  </div>
+
+  <!-- ═══ TABS ═══ -->
+  <div class="gm-tabs">
+    <button class="gm-tab-btn active" onclick="openTab('builder',this)">New Invoice</button>
+    <button class="gm-tab-btn" onclick="openTab('history',this)">History</button>
+    <button class="gm-tab-btn" onclick="openTab('settings',this)">Settings</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TAB 1 — BUILDER
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane active" id="tab-builder">
+
+    <!-- Invoice Meta -->
+    <div class="section-label">Invoice Details</div>
+    <div class="grid-3">
+      <div class="field">
+        <label>Invoice #</label>
+        <input type="text" id="inv-number" placeholder="#001" />
+      </div>
+      <div class="field">
+        <label>Invoice Date</label>
+        <input type="date" id="inv-date" />
+      </div>
+      <div class="field">
+        <label>Due Date</label>
+        <input type="date" id="inv-due" />
+      </div>
+    </div>
+
+    <!-- Billed To -->
+    <div class="section-label">Billed To</div>
+    <div class="gm-card">
+      <div class="grid-2" style="margin-bottom:10px;">
+        <div class="field">
+          <label>Client Name</label>
+          <input type="text" id="client-name" placeholder="Full name or org" />
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="client-email" placeholder="client@email.com" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Address</label>
+        <input type="text" id="client-address" placeholder="Street address, City, State ZIP" />
+      </div>
+    </div>
+
+    <!-- Line Items -->
+    <div class="section-label">Line Items</div>
+    <div class="gm-card">
+      <div class="line-items-header">
+        <span>Description</span>
+        <span class="r">Rate</span>
+        <span class="r">Qty/Hrs</span>
+        <span class="r">Amount</span>
+        <span></span>
+      </div>
+      <div id="line-items-body"></div>
+      <button class="add-row-btn" onclick="addLineRow()">+ Add Line Item</button>
+
+      <!-- Tax + Totals -->
+      <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px;">
+        <div class="tax-row">
+          <span>Tax %:</span>
+          <input type="number" class="tax-input" id="tax-rate" value="0" min="0" max="100" step="0.1" oninput="calcTotals()" />
+        </div>
+        <div class="totals-block">
+          <div class="totals-row">
+            <span>Subtotal</span>
+            <span id="subtotal-display">$0.00</span>
+          </div>
+          <div class="totals-row">
+            <span>Tax</span>
+            <span id="tax-display">$0.00</span>
+          </div>
+          <div class="totals-row grand">
+            <span>Total Due</span>
+            <span id="total-display">$0.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment + Notes -->
+    <div class="section-label">Payment & Notes</div>
+    <div class="gm-card">
+      <div class="field" style="margin-bottom:10px;">
+        <label>Payment Methods</label>
+        <textarea id="payment-methods" placeholder="Venmo: @yourhandle&#10;Zelle: your@email.com&#10;PayPal: your@paypal.com"></textarea>
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="inv-notes" placeholder="Thank you for the opportunity! Payment due within 14 days."></textarea>
+      </div>
+    </div>
+
+    <div style="height:80px;"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TAB 2 — HISTORY
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane" id="tab-history">
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card"><div class="stat-label">Total Invoiced</div><div class="stat-val yellow" id="stat-total">$0</div></div>
+      <div class="stat-card"><div class="stat-label">Paid</div><div class="stat-val green" id="stat-paid">$0</div></div>
+      <div class="stat-card"><div class="stat-label">Outstanding</div><div class="stat-val red" id="stat-due">$0</div></div>
+    </div>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TAB 3 — SETTINGS
+  ══════════════════════════════════════════ -->
+  <div class="tab-pane" id="tab-settings">
+    <div class="section-label">Your Info (auto-fills every invoice)</div>
+    <div class="gm-card">
+      <div class="grid-2" style="margin-bottom:10px;">
+        <div class="field">
+          <label>Your Name</label>
+          <input type="text" id="set-name" placeholder="Gray Davis" />
+        </div>
+        <div class="field">
+          <label>Title / Business</label>
+          <input type="text" id="set-title" placeholder="Freelance Videographer & Photographer" />
+        </div>
+      </div>
+      <div class="grid-2" style="margin-bottom:10px;">
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="set-email" placeholder="your@email.com" />
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input type="tel" id="set-phone" placeholder="(555) 000-0000" />
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label>City, State</label>
+        <input type="text" id="set-location" placeholder="Atlanta, GA" />
+      </div>
+      <div class="field" style="margin-bottom:10px;">
+        <label>Default Payment Methods</label>
+        <textarea id="set-payment" placeholder="Venmo: @yourhandle&#10;Zelle: your@email.com&#10;PayPal: your@paypal.com"></textarea>
+      </div>
+      <div class="field">
+        <label>Default Notes</label>
+        <textarea id="set-notes" placeholder="Thank you for the opportunity! Please remit payment within 14 days."></textarea>
+      </div>
+    </div>
+    <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="gm-btn-primary" onclick="saveSettings()">Save Settings</button>
+      <button class="gm-btn-ghost" onclick="clearAllData()" style="font-size:12px;">Clear All Data</button>
+    </div>
+    <p class="settings-note" style="margin-top:16px;">Settings and invoice history are saved in your browser. Nothing leaves your device.</p>
+  </div>
+
+</div><!-- .max-w -->
+
+<!-- ═══════════════════════════
+     ACTION BAR
+═══════════════════════════ -->
+<div class="action-bar" id="action-bar">
+  <button class="gm-btn-ghost" onclick="clearBuilder()" style="font-size:13px;padding:11px 18px;">Clear</button>
+  <button class="gm-btn-primary" onclick="previewInvoice()">Preview & Export PDF</button>
+  <button class="gm-btn-ghost" onclick="saveInvoice()" style="font-size:13px;padding:11px 18px;border-color:rgba(74,222,128,0.3);color:var(--color-green);">Save</button>
+</div>
+
+<!-- ═══════════════════════════
+     PREVIEW OVERLAY
+═══════════════════════════ -->
+<div class="preview-overlay" id="preview-overlay">
+  <div class="preview-toolbar">
+    <button onclick="closePreview()">← Back</button>
+    <button class="blue" onclick="window.print()">Export as PDF</button>
+    <button onclick="saveInvoice(); closePreview();" style="background:#166534;">Save Invoice</button>
+  </div>
+  <div class="inv-page" id="inv-page-render"></div>
+</div>
+
+<!-- ═══════════════════════════
+     TOAST
+═══════════════════════════ -->
+<div class="gm-toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════ */
+let lineRowCount = 0;
+
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  setDefaultDates();
+  loadSettings();
+  addLineRow({ desc: 'Event Photography — All-Star Basketball Game', rate: 50, qty: 8 });
+  loadHistory();
+  autoInvoiceNumber();
+});
+
+function setDefaultDates() {
+  const today = new Date();
+  const due = new Date(today);
+  due.setDate(due.getDate() + 14);
+  document.getElementById('inv-date').value = fmtDateInput(today);
+  document.getElementById('inv-due').value = fmtDateInput(due);
+}
+
+function fmtDateInput(d) {
+  return d.toISOString().split('T')[0];
+}
+
+function fmtDateDisplay(iso) {
+  if (!iso) return '—';
+  const [y, m, d] = iso.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+}
+
+function autoInvoiceNumber() {
+  const history = getHistory();
+  const next = history.length + 1;
+  const padded = String(next).padStart(3, '0');
+  document.getElementById('inv-number').value = `#${padded}`;
+}
+
+/* ════════════════════════════════════════════
+   TABS
+════════════════════════════════════════════ */
+function openTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.gm-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  if (btn) btn.classList.add('active');
+
+  const actionBar = document.getElementById('action-bar');
+  actionBar.style.display = (name === 'builder') ? 'flex' : 'none';
+
+  if (name === 'history') loadHistory();
+}
+
+/* ════════════════════════════════════════════
+   LINE ITEMS
+════════════════════════════════════════════ */
+function addLineRow(prefill = {}) {
+  lineRowCount++;
+  const id = lineRowCount;
+  const container = document.getElementById('line-items-body');
+  const row = document.createElement('div');
+  row.className = 'line-row';
+  row.id = `line-row-${id}`;
+  row.innerHTML = `
+    <input type="text" placeholder="Description" value="${prefill.desc || ''}"
+      oninput="calcTotals()" class="desc-input" />
+    <input type="number" placeholder="0.00" value="${prefill.rate || ''}"
+      oninput="calcRowAmount(${id})" class="r rate-input" min="0" step="0.01" />
+    <input type="number" placeholder="1" value="${prefill.qty || ''}"
+      oninput="calcRowAmount(${id})" class="r qty-input" min="0" step="0.5" />
+    <input type="text" placeholder="$0.00" id="amount-${id}"
+      class="r amount-cell" readonly />
+    <button class="delete-btn" onclick="deleteRow(${id})">✕</button>
+  `;
+  container.appendChild(row);
+  if (prefill.rate && prefill.qty) calcRowAmount(id);
+}
+
+function calcRowAmount(id) {
+  const row = document.getElementById(`line-row-${id}`);
+  if (!row) return;
+  const rate = parseFloat(row.querySelector('.rate-input').value) || 0;
+  const qty  = parseFloat(row.querySelector('.qty-input').value) || 0;
+  const amt  = rate * qty;
+  row.querySelector(`#amount-${id}`).value = amt > 0 ? `$${amt.toFixed(2)}` : '';
+  calcTotals();
+}
+
+function deleteRow(id) {
+  const row = document.getElementById(`line-row-${id}`);
+  if (row) row.remove();
+  calcTotals();
+}
+
+function calcTotals() {
+  let subtotal = 0;
+  document.querySelectorAll('.amount-cell').forEach(el => {
+    const val = parseFloat(el.value.replace('$','')) || 0;
+    subtotal += val;
+  });
+  const taxRate = parseFloat(document.getElementById('tax-rate').value) || 0;
+  const taxAmt  = subtotal * (taxRate / 100);
+  const total   = subtotal + taxAmt;
+  document.getElementById('subtotal-display').textContent = `$${subtotal.toFixed(2)}`;
+  document.getElementById('tax-display').textContent = `$${taxAmt.toFixed(2)}`;
+  document.getElementById('total-display').textContent = `$${total.toFixed(2)}`;
+}
+
+/* ════════════════════════════════════════════
+   COLLECT INVOICE DATA
+════════════════════════════════════════════ */
+function collectInvoice() {
+  const settings = getSettings();
+  const items = [];
+  document.querySelectorAll('#line-items-body .line-row').forEach(row => {
+    const desc = row.querySelector('.desc-input').value.trim();
+    const rate = parseFloat(row.querySelector('.rate-input').value) || 0;
+    const qty  = parseFloat(row.querySelector('.qty-input').value) || 0;
+    const amt  = rate * qty;
+    if (desc || rate || qty) items.push({ desc, rate, qty, amt });
+  });
+
+  let subtotal = items.reduce((s, i) => s + i.amt, 0);
+  const taxRate = parseFloat(document.getElementById('tax-rate').value) || 0;
+  const taxAmt  = subtotal * (taxRate / 100);
+  const total   = subtotal + taxAmt;
+
+  return {
+    id: Date.now(),
+    number:   document.getElementById('inv-number').value || '#001',
+    date:     document.getElementById('inv-date').value,
+    due:      document.getElementById('inv-due').value,
+    clientName:    document.getElementById('client-name').value,
+    clientEmail:   document.getElementById('client-email').value,
+    clientAddress: document.getElementById('client-address').value,
+    fromName:    settings.name || 'Gray Davis',
+    fromTitle:   settings.title || 'Freelance Videographer & Photographer',
+    fromEmail:   settings.email || '',
+    fromPhone:   settings.phone || '',
+    fromLocation: settings.location || '',
+    items,
+    taxRate, taxAmt, subtotal, total,
+    payment: document.getElementById('payment-methods').value,
+    notes:   document.getElementById('inv-notes').value,
+    status: 'due',
+    savedAt: new Date().toISOString()
+  };
+}
+
+/* ════════════════════════════════════════════
+   PREVIEW
+════════════════════════════════════════════ */
+function previewInvoice() {
+  const inv = collectInvoice();
+  renderInvoicePage(inv);
+  document.getElementById('preview-overlay').classList.add('open');
+  window.scrollTo(0,0);
+}
+
+function closePreview() {
+  document.getElementById('preview-overlay').classList.remove('open');
+}
+
+function renderInvoicePage(inv) {
+  const itemRows = inv.items.map(i => `
+    <tr>
+      <td><div class="item-name">${esc(i.desc)}</div></td>
+      <td class="r">${i.rate > 0 ? '$'+i.rate.toFixed(2)+'/unit' : '—'}</td>
+      <td class="r">${i.qty || '—'}</td>
+      <td class="r" style="font-weight:600;">$${i.amt.toFixed(2)}</td>
+    </tr>`).join('');
+
+  const badgeClass = inv.status === 'paid' ? 'paid' : 'due';
+  const badgeText  = inv.status === 'paid' ? 'Paid' : 'Payment Due';
+
+  document.getElementById('inv-page-render').innerHTML = `
+    <div class="top-bar"></div>
+    <div class="inv-header">
+      <div>
+        <div class="inv-from-name">${esc(inv.fromName)}</div>
+        <div class="inv-from-title">${esc(inv.fromTitle)}</div>
+      </div>
+      <div>
+        <div class="inv-stamp-word">Invoice</div>
+        <div class="inv-stamp-num">${esc(inv.number)}</div>
+        <div><span class="inv-badge ${badgeClass}">${badgeText}</span></div>
+      </div>
+    </div>
+    <div class="inv-addr">
+      <div class="inv-addr-col">
+        <div class="addr-lbl">Billed To</div>
+        <div class="addr-name">${esc(inv.clientName) || '—'}</div>
+        <div class="addr-detail">${esc(inv.clientAddress).replace(/\n/g,'<br>')||''}<br>${esc(inv.clientEmail)||''}</div>
+      </div>
+      <div class="inv-addr-col">
+        <div class="addr-lbl">From</div>
+        <div class="addr-name">${esc(inv.fromName)}</div>
+        <div class="addr-detail">${esc(inv.fromLocation)||''}<br>${esc(inv.fromEmail)||''}<br>${esc(inv.fromPhone)||''}</div>
+      </div>
+      <div class="inv-addr-col">
+        <div class="addr-lbl">Invoice Date</div>
+        <div class="date-val">${fmtDateDisplay(inv.date)}</div>
+        <div class="date-lbl2">Due Date</div>
+        <div class="date-val">${fmtDateDisplay(inv.due)}</div>
+      </div>
+    </div>
+    <div class="inv-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50%">Description</th>
+            <th class="r">Rate</th>
+            <th class="r">Qty / Hrs</th>
+            <th class="r">Amount</th>
+          </tr>
+        </thead>
+        <tbody>${itemRows || '<tr><td colspan="4" style="color:#aaa;padding:16px 0;font-size:12px;">No items added.</td></tr>'}</tbody>
+      </table>
+    </div>
+    <div class="inv-totals">
+      <div class="inv-totals-box">
+        <div class="inv-t-row"><span>Subtotal</span><span>$${inv.subtotal.toFixed(2)}</span></div>
+        <div class="inv-t-row"><span>Tax (${inv.taxRate}%)</span><span>$${inv.taxAmt.toFixed(2)}</span></div>
+        <div class="inv-t-row grand"><span>Total Due</span><span>$${inv.total.toFixed(2)}</span></div>
+      </div>
+    </div>
+    <div class="inv-footer">
+      <div class="inv-footer-col">
+        <div class="footer-lbl">Payment Methods</div>
+        <div class="footer-text">${esc(inv.payment).replace(/\n/g,'<br>') || '—'}</div>
+      </div>
+      <div class="inv-footer-col">
+        <div class="footer-lbl">Notes</div>
+        <div class="footer-text">${esc(inv.notes).replace(/\n/g,'<br>') || '—'}</div>
+      </div>
+    </div>
+    <div class="bot-bar"></div>
+  `;
+}
+
+function esc(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+/* ════════════════════════════════════════════
+   SAVE / HISTORY
+════════════════════════════════════════════ */
+function saveInvoice() {
+  const inv = collectInvoice();
+  if (!inv.clientName && inv.total === 0) {
+    showToast('Add at least a client name or line item first.');
+    return;
+  }
+  const history = getHistory();
+  // prevent duplicate saves (same id)
+  const idx = history.findIndex(i => i.id === inv.id);
+  if (idx >= 0) history[idx] = inv;
+  else history.unshift(inv);
+  localStorage.setItem('gm_invoices', JSON.stringify(history));
+  showToast('Invoice saved!');
+}
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('gm_invoices')) || []; }
+  catch { return []; }
+}
+
+function loadHistory() {
+  const history = getHistory();
+  const list = document.getElementById('history-list');
+
+  // Stats
+  let totalInv = 0, totalPaid = 0, totalDue = 0;
+  history.forEach(inv => {
+    totalInv += inv.total;
+    if (inv.status === 'paid') totalPaid += inv.total;
+    else totalDue += inv.total;
+  });
+  document.getElementById('stat-total').textContent = '$' + totalInv.toFixed(0);
+  document.getElementById('stat-paid').textContent  = '$' + totalPaid.toFixed(0);
+  document.getElementById('stat-due').textContent   = '$' + totalDue.toFixed(0);
+
+  if (history.length === 0) {
+    list.innerHTML = `<div class="history-empty">
+      <div class="icon">🧾</div>
+      <div>No invoices saved yet.<br>Build one and hit <strong>Save</strong>.</div>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = history.map(inv => {
+    const statusClass = inv.status === 'paid' ? 'paid' : 'due';
+    const statusText  = inv.status === 'paid' ? '✓ Paid' : 'Payment Due';
+    return `
+    <div class="inv-card" id="hcard-${inv.id}">
+      <div style="width:100%">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <div class="inv-card-num">${esc(inv.number)}</div>
+            <div class="inv-card-client">${esc(inv.clientName) || 'Unknown Client'}</div>
+            <div class="inv-card-date">${fmtDateDisplay(inv.date)} · Due ${fmtDateDisplay(inv.due)}</div>
+          </div>
+          <div class="inv-card-right">
+            <div class="inv-card-amount">$${inv.total.toFixed(2)}</div>
+            <div class="inv-card-status ${statusClass}">${statusText}</div>
+          </div>
+        </div>
+        <div class="inv-card-actions">
+          <button onclick="viewInvoice(${inv.id})">View / Print</button>
+          <button onclick="loadIntoBuilder(${inv.id})">Edit</button>
+          ${inv.status !== 'paid'
+            ? `<button class="mark-paid" onclick="markPaid(${inv.id})">Mark Paid</button>`
+            : ''}
+          <button class="del" onclick="deleteInvoice(${inv.id})">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function viewInvoice(id) {
+  const inv = getHistory().find(i => i.id === id);
+  if (!inv) return;
+  renderInvoicePage(inv);
+  document.getElementById('preview-overlay').classList.add('open');
+  window.scrollTo(0,0);
+}
+
+function loadIntoBuilder(id) {
+  const inv = getHistory().find(i => i.id === id);
+  if (!inv) return;
+  document.getElementById('inv-number').value  = inv.number;
+  document.getElementById('inv-date').value    = inv.date;
+  document.getElementById('inv-due').value     = inv.due;
+  document.getElementById('client-name').value    = inv.clientName;
+  document.getElementById('client-email').value   = inv.clientEmail;
+  document.getElementById('client-address').value = inv.clientAddress;
+  document.getElementById('tax-rate').value   = inv.taxRate;
+  document.getElementById('payment-methods').value = inv.payment;
+  document.getElementById('inv-notes').value  = inv.notes;
+  // rebuild line rows
+  document.getElementById('line-items-body').innerHTML = '';
+  lineRowCount = 0;
+  inv.items.forEach(item => addLineRow({ desc: item.desc, rate: item.rate, qty: item.qty }));
+  calcTotals();
+  openTab('builder', document.querySelector('.gm-tab-btn'));
+  document.querySelectorAll('.gm-tab-btn')[0].classList.add('active');
+  showToast('Invoice loaded into builder.');
+}
+
+function markPaid(id) {
+  const history = getHistory();
+  const inv = history.find(i => i.id === id);
+  if (inv) { inv.status = 'paid'; localStorage.setItem('gm_invoices', JSON.stringify(history)); loadHistory(); showToast('Marked as paid!'); }
+}
+
+function deleteInvoice(id) {
+  const history = getHistory().filter(i => i.id !== id);
+  localStorage.setItem('gm_invoices', JSON.stringify(history));
+  loadHistory();
+  showToast('Invoice deleted.');
+}
+
+/* ════════════════════════════════════════════
+   CLEAR BUILDER
+════════════════════════════════════════════ */
+function clearBuilder() {
+  if (!confirm('Clear all fields and start fresh?')) return;
+  document.getElementById('client-name').value = '';
+  document.getElementById('client-email').value = '';
+  document.getElementById('client-address').value = '';
+  document.getElementById('inv-number').value = '';
+  document.getElementById('tax-rate').value = '0';
+  document.getElementById('line-items-body').innerHTML = '';
+  lineRowCount = 0;
+  const s = getSettings();
+  document.getElementById('payment-methods').value = s.payment || '';
+  document.getElementById('inv-notes').value = s.notes || '';
+  setDefaultDates();
+  autoInvoiceNumber();
+  addLineRow();
+  calcTotals();
+}
+
+/* ════════════════════════════════════════════
+   SETTINGS
+════════════════════════════════════════════ */
+function getSettings() {
+  try { return JSON.parse(localStorage.getItem('gm_settings')) || {}; }
+  catch { return {}; }
+}
+
+function loadSettings() {
+  const s = getSettings();
+  if (s.name)     document.getElementById('set-name').value     = s.name;
+  if (s.title)    document.getElementById('set-title').value    = s.title;
+  if (s.email)    document.getElementById('set-email').value    = s.email;
+  if (s.phone)    document.getElementById('set-phone').value    = s.phone;
+  if (s.location) document.getElementById('set-location').value = s.location;
+  if (s.payment)  document.getElementById('set-payment').value  = s.payment;
+  if (s.notes)    document.getElementById('set-notes').value    = s.notes;
+  // pre-fill builder
+  if (s.payment)  document.getElementById('payment-methods').value = s.payment;
+  if (s.notes)    document.getElementById('inv-notes').value    = s.notes;
+}
+
+function saveSettings() {
+  const s = {
+    name:     document.getElementById('set-name').value,
+    title:    document.getElementById('set-title').value,
+    email:    document.getElementById('set-email').value,
+    phone:    document.getElementById('set-phone').value,
+    location: document.getElementById('set-location').value,
+    payment:  document.getElementById('set-payment').value,
+    notes:    document.getElementById('set-notes').value,
+  };
+  localStorage.setItem('gm_settings', JSON.stringify(s));
+  document.getElementById('payment-methods').value = s.payment;
+  document.getElementById('inv-notes').value = s.notes;
+  showToast('Settings saved!');
+}
+
+function clearAllData() {
+  if (!confirm('Delete all invoices and settings? This cannot be undone.')) return;
+  localStorage.removeItem('gm_invoices');
+  localStorage.removeItem('gm_settings');
+  location.reload();
+}
+
+/* ════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+</script>
+</body>
+</html>
