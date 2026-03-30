@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graydient Media — Blue Accent Picker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #e8b84b;
+    --chrome: rgba(255,255,255,0.85);
+    --black: #080808;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--black);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(232,184,75,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 50%);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .wordmark {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #ffffff 20%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 400;
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  @media (max-width: 700px) {
+    .swatches { grid-template-columns: 1fr; }
+  }
+
+  .swatch-card {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .swatch-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,255,255,0.18);
+  }
+
+  .swatch-card.selected {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 2px rgba(232,184,75,0.4), 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  .selected-badge {
+    display: none;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--gold);
+    color: #000;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 100px;
+    z-index: 10;
+  }
+
+  .swatch-card.selected .selected-badge { display: block; }
+
+  /* The mock UI preview */
+  .swatch-preview {
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Sky Cyan */
+  .blue-1 .swatch-preview {
+    background: linear-gradient(160deg, #030b12 0%, #060f18 100%);
+  }
+  .blue-1 .glow {
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 70%);
+    top: -60px; left: 50%; transform: translateX(-50%);
+  }
+  .blue-1 .accent { color: #06B6D4; }
+  .blue-1 .glass-card { border-color: rgba(6,182,212,0.2); box-shadow: 0 8px 32px rgba(6,182,212,0.1); }
+  .blue-1 .pill { background: rgba(6,182,212,0.15); border: 1px solid rgba(6,182,212,0.3); color: #06B6D4; }
+  .blue-1 .bar-fill { background: linear-gradient(90deg, #06B6D4, #38BDF8); }
+  .blue-1 .btn-accent { background: linear-gradient(135deg, #06B6D4, #38BDF8); }
+
+  /* Turquoise */
+  .blue-2 .swatch-preview {
+    background: linear-gradient(160deg, #030d0c 0%, #061210 100%);
+  }
+  .blue-2 .glow {
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(45,212,191,0.25) 0%, transparent 70%);
+    top: -60px; left: 50%; transform: translateX(-50%);
+  }
+  .blue-2 .accent { color: #2DD4BF; }
+  .blue-2 .glass-card { border-color: rgba(45,212,191,0.2); box-shadow: 0 8px 32px rgba(45,212,191,0.1); }
+  .blue-2 .pill { background: rgba(45,212,191,0.15); border: 1px solid rgba(45,212,191,0.3); color: #2DD4BF; }
+  .blue-2 .bar-fill { background: linear-gradient(90deg, #2DD4BF, #5EEAD4); }
+  .blue-2 .btn-accent { background: linear-gradient(135deg, #2DD4BF, #5EEAD4); }
+
+  /* Ice Blue */
+  .blue-3 .swatch-preview {
+    background: linear-gradient(160deg, #04090e 0%, #060e18 100%);
+  }
+  .blue-3 .glow {
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,189,248,0.25) 0%, transparent 70%);
+    top: -60px; left: 50%; transform: translateX(-50%);
+  }
+  .blue-3 .accent { color: #38BDF8; }
+  .blue-3 .glass-card { border-color: rgba(56,189,248,0.2); box-shadow: 0 8px 32px rgba(56,189,248,0.1); }
+  .blue-3 .pill { background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.3); color: #38BDF8; }
+  .blue-3 .bar-fill { background: linear-gradient(90deg, #38BDF8, #7DD3FC); }
+  .blue-3 .btn-accent { background: linear-gradient(135deg, #38BDF8, #7DD3FC); }
+
+  /* Electric Blue */
+  .blue-4 .swatch-preview {
+    background: linear-gradient(160deg, #04080f 0%, #06101e 100%);
+  }
+  .blue-4 .glow {
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(14,165,233,0.25) 0%, transparent 70%);
+    top: -60px; left: 50%; transform: translateX(-50%);
+  }
+  .blue-4 .accent { color: #0EA5E9; }
+  .blue-4 .glass-card { border-color: rgba(14,165,233,0.2); box-shadow: 0 8px 32px rgba(14,165,233,0.1); }
+  .blue-4 .pill { background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.3); color: #0EA5E9; }
+  .blue-4 .bar-fill { background: linear-gradient(90deg, #0EA5E9, #38BDF8); }
+  .blue-4 .btn-accent { background: linear-gradient(135deg, #0EA5E9, #38BDF8); }
+
+  /* Mock UI inside each swatch */
+  .mock-ui {
+    position: relative;
+    z-index: 2;
+    width: 240px;
+  }
+
+  .glass-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+
+  .mock-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 8px;
+  }
+
+  .mock-stat {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .mock-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 10px;
+  }
+
+  .bar-bg {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    width: 68%;
+    border-radius: 100px;
+  }
+
+  .mock-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .pill {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+
+  .mock-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    flex: 1;
+  }
+
+  .btn-accent {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    color: #000;
+    padding: 6px 14px;
+    border-radius: 8px;
+    text-align: center;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  /* Info section below preview */
+  .swatch-info {
+    padding: 20px 22px 22px;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .swatch-name {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    margin-bottom: 3px;
+  }
+
+  .swatch-hex {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    margin-bottom: 8px;
+  }
+
+  .swatch-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+  }
+
+  /* Gold dot in color row */
+  .color-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .dot-gold { background: #e8b84b; }
+  .dot-chrome { background: linear-gradient(135deg, #c0c0c0, #f0f0f0); }
+  .dot-black { background: #1a1a1a; border: 1px solid rgba(255,255,255,0.15); }
+
+  .color-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Footer */
+  .footer-note {
+    margin-top: 40px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.2);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="wordmark">Graydient Media</div>
+  <div class="title">Pick Your Blue Accent</div>
+  <div class="subtitle">Each card shows the blue in a real UI context alongside your black + gold + chrome palette. Click to select.</div>
+</div>
+
+<div class="swatches">
+
+  <!-- Option 1: Sky Cyan #06B6D4 -->
+  <div class="swatch-card blue-1" onclick="select(this, '1')">
+    <div class="selected-badge">Selected</div>
+    <div class="swatch-preview">
+      <div class="glow"></div>
+      <div class="mock-ui">
+        <div class="glass-card">
+          <div class="mock-label">Total Views</div>
+          <div class="mock-stat accent">284.6K</div>
+          <div class="mock-sub">+12.4% this week</div>
+          <div class="bar-bg"><div class="bar-fill"></div></div>
+          <div class="mock-row">
+            <span class="pill">Live</span>
+            <span class="mock-text">graydient_media</span>
+          </div>
+        </div>
+        <div class="btn-accent">Connect Platform →</div>
+      </div>
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name" style="color:#06B6D4">Sky / Cyan</div>
+      <div class="swatch-hex">#06B6D4</div>
+      <div class="swatch-desc">Bright, electric, very tech-forward. High contrast on black. Clean and sharp — closest to what you'd see on a modern dashboard.</div>
+      <div class="color-row">
+        <div class="dot dot-black"></div>
+        <div class="dot dot-gold"></div>
+        <div class="dot dot-chrome"></div>
+        <div class="dot" style="background:#06B6D4;border:none;"></div>
+        <span class="color-label">Full Palette</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option 2: Turquoise #2DD4BF -->
+  <div class="swatch-card blue-2" onclick="select(this, '2')">
+    <div class="selected-badge">Selected</div>
+    <div class="swatch-preview">
+      <div class="glow"></div>
+      <div class="mock-ui">
+        <div class="glass-card">
+          <div class="mock-label">Total Views</div>
+          <div class="mock-stat accent">284.6K</div>
+          <div class="mock-sub">+12.4% this week</div>
+          <div class="bar-bg"><div class="bar-fill"></div></div>
+          <div class="mock-row">
+            <span class="pill">Live</span>
+            <span class="mock-text">graydient_media</span>
+          </div>
+        </div>
+        <div class="btn-accent">Connect Platform →</div>
+      </div>
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name" style="color:#2DD4BF">Turquoise / Teal</div>
+      <div class="swatch-hex">#2DD4BF</div>
+      <div class="swatch-desc">Warmer and richer than pure cyan. Slightly green-shifted — feels creative and organic, but still premium. Less cold than the others.</div>
+      <div class="color-row">
+        <div class="dot dot-black"></div>
+        <div class="dot dot-gold"></div>
+        <div class="dot dot-chrome"></div>
+        <div class="dot" style="background:#2DD4BF;border:none;"></div>
+        <span class="color-label">Full Palette</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option 3: Ice Blue #38BDF8 -->
+  <div class="swatch-card blue-3" onclick="select(this, '3')">
+    <div class="selected-badge">Selected</div>
+    <div class="swatch-preview">
+      <div class="glow"></div>
+      <div class="mock-ui">
+        <div class="glass-card">
+          <div class="mock-label">Total Views</div>
+          <div class="mock-stat accent">284.6K</div>
+          <div class="mock-sub">+12.4% this week</div>
+          <div class="bar-bg"><div class="bar-fill"></div></div>
+          <div class="mock-row">
+            <span class="pill">Live</span>
+            <span class="mock-text">graydient_media</span>
+          </div>
+        </div>
+        <div class="btn-accent">Connect Platform →</div>
+      </div>
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name" style="color:#38BDF8">Ice / Light Sky Blue</div>
+      <div class="swatch-hex">#38BDF8</div>
+      <div class="swatch-desc">Softer and airier than the others. Very Apple-adjacent — this is closest to iOS system blue in feel. Light, confident, clean.</div>
+      <div class="color-row">
+        <div class="dot dot-black"></div>
+        <div class="dot dot-gold"></div>
+        <div class="dot dot-chrome"></div>
+        <div class="dot" style="background:#38BDF8;border:none;"></div>
+        <span class="color-label">Full Palette</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option 4: Electric Blue #0EA5E9 -->
+  <div class="swatch-card blue-4" onclick="select(this, '4')">
+    <div class="selected-badge">Selected</div>
+    <div class="swatch-preview">
+      <div class="glow"></div>
+      <div class="mock-ui">
+        <div class="glass-card">
+          <div class="mock-label">Total Views</div>
+          <div class="mock-stat accent">284.6K</div>
+          <div class="mock-sub">+12.4% this week</div>
+          <div class="bar-bg"><div class="bar-fill"></div></div>
+          <div class="mock-row">
+            <span class="pill">Live</span>
+            <span class="mock-text">graydient_media</span>
+          </div>
+        </div>
+        <div class="btn-accent">Connect Platform →</div>
+      </div>
+    </div>
+    <div class="swatch-info">
+      <div class="swatch-name" style="color:#0EA5E9">Electric / Deep Blue</div>
+      <div class="swatch-hex">#0EA5E9</div>
+      <div class="swatch-desc">Deeper and more saturated. Bold and punchy — feels urgent and high-tech. Strong on dark backgrounds. The most "dashboard" of the four.</div>
+      <div class="color-row">
+        <div class="dot dot-black"></div>
+        <div class="dot dot-gold"></div>
+        <div class="dot dot-chrome"></div>
+        <div class="dot" style="background:#0EA5E9;border:none;"></div>
+        <span class="color-label">Full Palette</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-note">Click a card to select it — then tell me your pick in the chat and I'll build the full design board.</div>
+
+<script>
+  function select(el, id) {
+    document.querySelectorAll('.swatch-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+</script>
+
+</body>
+</html>
