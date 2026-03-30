@@ -67,7 +67,7 @@ def _handle_message(client: SocketModeClient, req: SocketModeRequest):
     def process():
         try:
             from dispatcher import handle_message
-            reply = handle_message(text)
+            reply = handle_message(text, channel)
             send_message(reply, channel=channel)
         except Exception as e:
             log.exception("Error handling message")

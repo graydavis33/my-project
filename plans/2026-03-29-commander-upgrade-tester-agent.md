@@ -1,7 +1,7 @@
 # Plan: Commander Upgrade + Tester Agent
 
 **Date:** 2026-03-29
-**Status:** Draft
+**Status:** Implemented
 **Request:** Upgrade the Personal Assistant Commander (swap Haiku intent-parser for Claude Sonnet with conversation history) and add a Tester Agent (runs a tool, analyzes output, returns PASS/FAIL verdict).
 
 ---
@@ -145,3 +145,23 @@ Before considering this done, verify these 4 scenarios work end-to-end via Slack
 - Max tool_use loop iterations: cap at 5 to prevent infinite loops if Claude keeps calling tools. After 5, return whatever text Claude has so far.
 - Keep runner.py, task_queue.py, scheduler.py, config.py, and slack_bot.py untouched.
 - Use `claude-sonnet-4-6` for both commander and tester agent. Haiku was only used because it was a dumb parser — Sonnet is worth the cost here.
+
+---
+
+## Implementation Notes
+
+**Implemented:** 2026-03-30
+
+### What Was Built
+- `commander.py` — new Claude Sonnet agent. Per-channel in-memory conversation history (max 20 turns), 6 tool_use definitions, system prompt with Gray's context + priorities. Replaces brain.py entirely.
+- `tester_agent.py` — new QA module. Runs any tool, feeds stdout/stderr/exit code to Claude Sonnet, returns Slack-formatted PASS/FAIL verdict.
+- `dispatcher.py` — rewritten as agentic loop. Calls commander.think(), executes tool_use blocks (run_tool, test_tool, queue_task, list_queue, clear_queue, get_status), feeds results back into history, loops up to 5 iterations.
+- `slack_bot.py` — updated single line: `handle_message(text)` → `handle_message(text, channel)` to pass channel ID for session tracking.
+- `brain.py` — deleted.
+
+### Deviations from Plan
+- `slack_bot.py` was modified (one line) even though the plan said "untouched" — necessary to pass `channel` arg to the new `handle_message` signature.
+- `record_assistant_response()` added to commander.py (not in original plan) to properly record Claude's assistant turn (including tool_use blocks) before adding tool_result turns. Required by Anthropic API message ordering rules.
+
+### Issues Encountered
+None — all syntax checks and import dry-runs passed cleanly.
