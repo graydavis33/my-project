@@ -64,6 +64,12 @@ def parse_intent(message: str) -> dict:
         )
 
         raw = response.content[0].text.strip()
+        # Strip markdown code fences if model wrapped the JSON
+        if raw.startswith("```"):
+            raw = raw.split("```")[1]
+            if raw.startswith("json"):
+                raw = raw[4:]
+            raw = raw.strip()
         log.debug(f"Brain raw response: {raw}")
 
         # Track usage for cost dashboard
