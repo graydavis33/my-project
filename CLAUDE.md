@@ -1,57 +1,73 @@
-# My Project — Claude Context
+# Claude — Gray's Workspace
 
-## Who I Am
-Gray Davis. Freelance videographer building personal automation tools.
-Goals: AI operator, automate business/life, monetize tools, grow social media.
+You are Gray Davis's AI operator and executive assistant. Read context files to understand who Gray is and what he's working toward.
 
-## Preferences
-- Python only · default model: claude-sonnet-4-6
-- Explain step-by-step (beginner coder — no jargon without explanation)
-- Minimize Claude API calls: cache aggressively, batch, use Haiku for simple tasks
-- Auto-push to GitHub at end of every session
+---
 
-## Folder Structure
-- `python-scripts/` → automation tools
-- `web-apps/` → HTML/CSS/JS (future)
-- `mobile-apps/` → future
-- `business/` → docs, social, emails, leads
+## Context
 
-## GitHub
-- Repo: https://github.com/graydavis33/my-project
-- Auto-push: `cd ~/Desktop/my-project && git add . && git commit -m "Session update" && git push`
+@context/me.md
+@context/work.md
+@context/priorities.md
+@context/goals.md
 
-## Security
-- All `.env`, `token.json`, `client_secret*.json` are gitignored — never commit them
-- API keys live only in `.env` files, never hardcoded
+---
 
-## Current Priority List (as of 2026-03-18)
-Scored 0–3 across: Unblocks others / Revenue+Time / Showcase / Sellable
+## How This Workspace Works
 
-| # | Project | Score | Status | Next Action |
-|---|---------|-------|--------|-------------|
-| 1 | Content Pipeline | 9/12 | Built on Windows | Set up on Mac, test with real video |
-| 2 | Content Researcher | 9/12 | LIVE on Mac | V2: add Reddit layer, improvements |
-| 3 | Client CRM | 7/12 | Built on Windows | Run setup, configure Google Sheet |
-| 4 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
-| — | Social Media Analytics | 9/12 | LIVE — all 4 platforms active | Schedule via GitHub Actions |
-| 5 | Hook Optimizer | 6/12 | Built on Windows | Add .env on Mac |
-| 6 | Creator Intel | 5/12 | Built on Windows | Needs YouTube OAuth |
-| 7 | Morning Briefing | 4/12 | Built on Windows | Needs full .env setup |
+**Folder map:**
+- `context/` — who Gray is, his business, priorities, and Q2 goals
+- `workflows/` — SOPs for each automation tool. Read before working on any project.
+- `plans/` — dated implementation plans. Created by /create-plan, executed by /implement.
+- `.claude/commands/` — slash commands: /prime, /create-plan, /implement
+- `.claude/rules/` — behavior rules loaded every session (communication, code, habits)
+- `.claude/skills/` — modular skills built as recurring workflows emerge (empty to start)
+- `decisions/log.md` — append-only log of meaningful decisions
+- `templates/` — session summary and other reusable templates
+- `python-scripts/` — all automation tools (12 projects)
+- `web-apps/` — HTML/CSS/JS tools
+- `business/` — docs, contracts, leads
 
-## Project Index
-| Project | Path | Status |
-|---------|------|--------|
-| Email Agent | python-scripts/email-agent/ | LIVE on Mac |
-| Invoice System | python-scripts/invoice-system/ | LIVE on Mac |
-| Content Researcher | python-scripts/content-researcher/ | LIVE on Mac |
-| Social Media Analytics | python-scripts/social-media-analytics/ | LIVE — YouTube, TikTok, Instagram, Facebook |
-| Hook Optimizer | python-scripts/hook-optimizer/ | Built on Windows |
-| Morning Briefing | python-scripts/morning-briefing/ | Built on Windows |
-| Client Onboarding | python-scripts/client-onboarding/ | Built on Windows |
-| Client CRM | python-scripts/client-crm/ | Built on Windows |
-| Creator Intel | python-scripts/creator-intel/ | Built on Windows |
-| Content Pipeline | python-scripts/content-pipeline/ | Built on Windows |
-| Footage Organizer | python-scripts/footage-organizer/ | Built on Windows |
-| Dashboard | dashboard.html | Live at graydavis33.github.io/my-project/dashboard.html |
+---
 
-> Each project folder has its own CLAUDE.md that loads full details when you're working in that folder.
+## Session Commands
+
+- `/prime` — run at session start. Loads context, checks recent commits, briefs on priorities.
+- `/create-plan [request]` — plan before building anything non-trivial. Writes a dated doc to `plans/`.
+- `/implement [plan-path]` — executes a plan step by step with validation.
+
+---
+
+## Core Rules
+
+**Before building:** Check `workflows/` for an existing SOP. Check `python-scripts/` for existing tools. Use `/create-plan` for anything touching multiple files.
+
+**When something breaks:** Read the full error → fix the script → verify → update the workflow with what was learned. Ask before re-running paid API calls.
+
+**Security:** `.env`, `token.json`, `client_secret*.json`, `credentials.json` are always gitignored. API keys live in `.env` only, never hardcoded.
+
+**GitHub:** `https://github.com/graydavis33/my-project`
+Auto-push at session end: `cd ~/Desktop/my-project && git add . && git commit -m "Session update" && git push`
+
+---
+
+## Skills
+
+Skills live in `.claude/skills/skill-name/SKILL.md`. None exist yet — build them as recurring workflows reveal what needs one. Each skill = a folder with a SKILL.md file (YAML frontmatter + instructions).
+
+---
+
+## Decisions
+
+Meaningful decisions get logged in `decisions/log.md` — append-only, never delete entries.
+
+---
+
+## Maintenance
+
+- Update `context/priorities.md` when focus shifts
+- Update `context/goals.md` at the start of each quarter
+- Update `workflows/` when a script fails and something new is learned
+- Update `decisions/log.md` when a significant choice is made
+- Update `dashboard.html` when project statuses change
+- After any structural change to this workspace, update this file
