@@ -1,7 +1,7 @@
 # Plan: Commander Builder Agent (`build_project` tool)
 
 **Date:** 2026-03-30
-**Status:** Draft
+**Status:** Implemented
 **Request:** Add a `build_project` tool to the Personal Assistant Commander so Gray can DM it build instructions and it actually writes code to disk autonomously.
 
 ---
@@ -206,3 +206,21 @@ After each test, verify files actually exist on disk at the specified paths.
 - Windows paths: `target_dir` like `web-apps/analytical/frontend` should be joined against the repo root. Use `os.path.join(REPO_ROOT, target_dir)` — add `REPO_ROOT` to config.py if it's not there.
 - This does not give Commander access to the full filesystem — only paths under the repo root. Don't change that.
 - V2 idea: add a `read_file` tool to the builder so Claude can inspect existing files before writing — useful for modifying existing pages rather than creating from scratch.
+
+---
+
+## Implementation Notes
+
+**Implemented:** 2026-03-30
+
+### What Was Built
+- `python-scripts/personal-assistant/builder_agent.py` — new module. `build_project(task, target_dir)` spins up Claude Sonnet with `write_file` + `create_directory` tools, runs up to 10 iterations, writes files to disk, returns Slack-formatted summary.
+- `python-scripts/personal-assistant/config.py` — added `REPO_ROOT` (resolves to `C:\Users\Gray Davis\my-project`), used by builder_agent to turn relative target paths into absolute paths.
+- `python-scripts/personal-assistant/commander.py` — added `build_project` to `COMMANDER_TOOLS` (now 7 tools total) and updated `_system_prompt()` with the new capability + routing rule.
+- `python-scripts/personal-assistant/dispatcher.py` — added `build_project` handler in `_execute_tool`.
+
+### Deviations from Plan
+- None.
+
+### Issues Encountered
+- None. All syntax checks and import dry-runs passed cleanly. `REPO_ROOT` resolves correctly to repo root.
