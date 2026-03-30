@@ -27,7 +27,7 @@ $settings = New-ScheduledTaskSettingsSet `
 $principal = New-ScheduledTaskPrincipal `
     -UserId ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name) `
     -LogonType Interactive `
-    -RunLevel Highest
+    -RunLevel Limited
 
 Register-ScheduledTask `
     -TaskName  $taskName `
