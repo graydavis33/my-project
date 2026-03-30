@@ -63,7 +63,10 @@ def send_briefing():
     quote = get_daily_quote()
     log.info(f"  Quote: {quote['author'] if quote else 'N/A'}")
 
-    blocks = build_briefing_blocks(events, pending_emails, outstanding_invoices, weather, quote)
+    news = get_news_digest()
+    log.info(f"  Headlines: {len(news.get('top_headlines', []))} | AI digest: {'yes' if news.get('ai_digest') else 'no'}")
+
+    blocks = build_briefing_blocks(events, pending_emails, outstanding_invoices, weather, quote, news)
 
     slack.chat_postMessage(
         channel=BRIEFING_CHANNEL_ID,

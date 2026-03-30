@@ -31,7 +31,7 @@ GOOGLE_TOKEN_PATH = os.getenv("GOOGLE_TOKEN_PATH", os.path.join(os.path.dirname(
 
 # Your daily top priorities (edit these directly to update your briefing)
 DAILY_PRIORITIES = [
-    "Follow up on outstanding client proposals",
-    "Post one piece of content",
-    "Review analytics and adjust strategy",
+    "Film and deliver content for Sai",
+    "Post one piece of content for Graydient Media",
+    "Move one automation tool closer to production",
 ]
