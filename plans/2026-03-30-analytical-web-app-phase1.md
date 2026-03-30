@@ -1,7 +1,7 @@
 # Plan: Analytical — Phase 1 Web App (MVP)
 
 **Date:** 2026-03-30
-**Status:** Draft
+**Status:** Implemented
 **Request:** Build the Phase 1 MVP of "Analytical" — a web-based social media analytics platform for content creators. Web-first (no mobile app). YouTube + TikTok only in Phase 1.
 
 ---
@@ -264,3 +264,37 @@ Create `web-apps/analytical/README.md` with:
 - **Token encryption:** `access_token` and `refresh_token` stored in `platform_connections` should ideally be encrypted at rest. For V1, storing them as plaintext in the DB is acceptable (Railway's database is not public). Add encryption in V1.1.
 - **CORS:** FastAPI needs `CORSMiddleware` to allow the frontend (running on a different port or domain) to call the backend. Add this in `main.py` from day one.
 - **What carries over from APP_ROADMAP.md:** this plan implements exactly Phase 1 as defined. Phase 2 (Instagram/Facebook, competitor tracking, weekly email digest) is not touched here.
+
+---
+
+## Implementation Notes
+
+**Implemented:** 2026-03-30
+
+### What Was Built
+- `web-apps/analytical/frontend/style.css` — full dark theme, Inter font, responsive, all component styles
+- `web-apps/analytical/frontend/index.html` — landing page with hero, features grid, 3-tier pricing table, CTAs
+- `web-apps/analytical/frontend/login.html` — login form with error handling, auto-redirect if already logged in
+- `web-apps/analytical/frontend/signup.html` — signup form with password confirmation validation
+- `web-apps/analytical/frontend/dashboard.html` — full dashboard shell: sidebar nav, platform badges, stats grid, top posts table, AI insights panel
+- `web-apps/analytical/frontend/connect.html` — OAuth connect page with connected/disconnected status for YouTube + TikTok
+- `web-apps/analytical/frontend/app.js` — auth helpers (getToken, requireAuth, logout), apiCall wrapper with Bearer token injection, number/date formatters
+- `web-apps/analytical/frontend/dashboard.js` — fetchStats, renderStats, renderTopPosts, fetchInsights, refreshStats, all wired to backend
+- `web-apps/analytical/backend/requirements.txt` — all dependencies
+- `web-apps/analytical/backend/.env.example` — all required env vars documented
+- `web-apps/analytical/backend/database.py` — PostgreSQL connection via psycopg2, init_db() creates all 4 tables
+- `web-apps/analytical/backend/models.py` — SQL helpers for users, platform_connections, analytics_snapshots, ai_insights
+- `web-apps/analytical/backend/auth.py` — bcrypt password hashing, JWT create/decode (7-day expiry)
+- `web-apps/analytical/backend/youtube_fetcher.py` — YouTubeFetcher class with token refresh callback + DB update
+- `web-apps/analytical/backend/tiktok_fetcher.py` — TikTokFetcher class with token refresh callback
+- `web-apps/analytical/backend/ai_analyzer.py` — Claude Haiku insights (cross-platform analysis), 7-day cache via DB
+- `web-apps/analytical/backend/main.py` — FastAPI app: all 13 routes including auth, YouTube OAuth, TikTok OAuth, stats, insights, Stripe checkout/portal/webhook
+- `web-apps/analytical/README.md` — local dev setup instructions
+
+### Deviations from Plan
+- SQLite mentioned in plan notes as dev fallback — not built into the code (psycopg2 is used directly). Use Railway's free Postgres or set up local Postgres.
+- `on_event('startup')` used for init_db — this is the standard FastAPI lifecycle hook.
+- `requests` imported as `req` inside the TikTok callback function to avoid name collision with FastAPI's `Request`.
+
+### Issues Encountered
+None — clean build.
