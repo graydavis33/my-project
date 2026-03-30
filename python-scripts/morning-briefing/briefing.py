@@ -6,7 +6,7 @@ Assembles all data sections into a single Slack message blocks payload.
 from datetime import datetime
 
 
-def build_briefing_blocks(events, pending_emails, outstanding_invoices, weather, quote):
+def build_briefing_blocks(events, pending_emails, outstanding_invoices, weather, quote, news=None):
     now = datetime.now()
     today = f"{now.strftime('%A, %B')} {now.day}"
     blocks = []
@@ -75,5 +75,27 @@ def build_briefing_blocks(events, pending_emails, outstanding_invoices, weather,
         quote_text = "*💭 Quote of the Day*\n_Stay focused. Make it count._"
 
     blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": quote_text}})
+    blocks.append({"type": "divider"})
+
+    # ── Top Headlines ────────────────────────────────────────────────────────
+    if news and news.get("top_headlines"):
+        headline_lines = "\n".join(
+            f"• [{h['source']}] {h['title']}"
+            for h in news["top_headlines"]
+        )
+        headlines_text = f"*🌍 Today's Headlines*\n{headline_lines}"
+    else:
+        headlines_text = "*🌍 Today's Headlines*\n_Could not fetch headlines._"
+
+    blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": headlines_text}})
+    blocks.append({"type": "divider"})
+
+    # ── AI Today ─────────────────────────────────────────────────────────────
+    if news and news.get("ai_digest"):
+        ai_text = f"*🤖 AI Today*\n{news['ai_digest']}"
+    else:
+        ai_text = "*🤖 AI Today*\n_Could not fetch AI news._"
+
+    blocks.append({"type": "section", "text": {"type": "mrkdwn", "text": ai_text}})
 
     return blocks

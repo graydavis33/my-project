@@ -25,6 +25,7 @@ from gmail_summary import get_pending_emails
 from sheets_summary import get_outstanding_invoices
 from weather_summary import get_weather
 from quote_summary import get_daily_quote
+from news_summary import get_news_digest
 from briefing import build_briefing_blocks
 
 # ─── Logging ────────────────────────────────────────────────────────────────
