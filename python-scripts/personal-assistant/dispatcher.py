@@ -85,6 +85,13 @@ def _execute_tool(tool_name: str, inputs: dict) -> str:
     if tool_name == "get_status":
         return _do_get_status()
 
+    if tool_name == "build_project":
+        import builder_agent
+        return builder_agent.build_project(
+            task=inputs.get("task", ""),
+            target_dir=inputs.get("target_dir", ""),
+        )
+
     return f"Unknown tool: '{tool_name}'"
 
 

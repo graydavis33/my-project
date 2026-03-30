@@ -22,6 +22,9 @@ SLACK_USER_ID    = os.getenv("SLACK_USER_ID")
 _default_base = os.path.normpath(os.path.join(_DIR, ".."))
 PA_SCRIPTS_BASE = os.getenv("PA_SCRIPTS_BASE", _default_base)
 
+# Absolute path to the repo root — used by builder_agent.py to resolve relative target dirs
+REPO_ROOT = os.path.normpath(os.path.join(_DIR, "../.."))
+
 # Scheduler hours (24h format)
 PA_QUEUE_HOUR   = int(os.getenv("PA_QUEUE_HOUR", "2"))   # 2am overnight run
 PA_SUMMARY_HOUR = int(os.getenv("PA_SUMMARY_HOUR", "7")) # 7am morning summary

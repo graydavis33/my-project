@@ -129,6 +129,28 @@ COMMANDER_TOOLS = [
             "properties": {},
         },
     },
+    {
+        "name": "build_project",
+        "description": (
+            "Build files and write code to disk autonomously. Use this when Gray asks you to build, "
+            "create, scaffold, or generate code for a specific project or page. "
+            "Requires a task description and a target directory path."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "task": {
+                    "type": "string",
+                    "description": "Plain-English description of what to build (e.g. 'build the login page with email/password form')",
+                },
+                "target_dir": {
+                    "type": "string",
+                    "description": "Path to the directory where files should be written (e.g. 'web-apps/analytical/frontend' or an absolute path)",
+                },
+            },
+            "required": ["task", "target_dir"],
+        },
+    },
 ]
 
 
@@ -146,6 +168,7 @@ Your capabilities:
 - Queue tools to run overnight at 2am (queue_task)
 - Check or manage the overnight queue (list_queue, clear_queue)
 - Report agent status (get_status)
+- Build new code files to disk (build_project) — use when Gray says "build", "create", "scaffold", or "generate"
 - Answer questions, give suggestions, and reason through problems (just reply — no tool needed)
 
 Rules:
@@ -153,6 +176,7 @@ Rules:
 - When Gray wants a tool run immediately → use run_tool
 - When Gray wants something tested/validated → use test_tool
 - When Gray says "tonight", "later", "overnight", "queue it" → use queue_task
+- When Gray says "build [something]" and gives a target dir → use build_project. If he doesn't give a target dir, ask for it first.
 - If a tool requires args (like a file path or concept) and Gray didn't provide them → ask before running
 - Interactive tools (client-onboarding) can't be run automatically — tell Gray to run them in terminal
 
