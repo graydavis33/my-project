@@ -63,14 +63,17 @@ def parse_intent(message: str) -> dict:
             messages=[{"role": "user", "content": message}],
         )
 
+        log.info(f"Brain stop_reason={response.stop_reason} content_blocks={len(response.content)}")
+        if not response.content:
+            raise ValueError("Empty response from Claude — no content blocks")
         raw = response.content[0].text.strip()
+        log.info(f"Brain raw response: '{raw[:200]}'")
         # Strip markdown code fences if model wrapped the JSON
         if raw.startswith("```"):
             raw = raw.split("```")[1]
             if raw.startswith("json"):
                 raw = raw[4:]
             raw = raw.strip()
-        log.debug(f"Brain raw response: {raw}")
 
         # Track usage for cost dashboard
         try:
