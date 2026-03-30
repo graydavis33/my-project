@@ -7,7 +7,8 @@ from datetime import datetime
 
 
 def build_briefing_blocks(events, pending_emails, outstanding_invoices, weather, quote):
-    today = datetime.now().strftime("%A, %B %-d")
+    now = datetime.now()
+    today = f"{now.strftime('%A, %B')} {now.day}"
     blocks = []
 
     # ── Header ──────────────────────────────────────────────────────────────
