@@ -7,9 +7,10 @@
 
 ## Revenue Streams
 
-1. **Freelance videography** — filming and editing for clients (primary income)
+1. **Freelance videography** — filming and editing for clients 
 2. **Automation tools** — building toward sellable products (future revenue)
 3. **Social media / content** — growing toward brand deals and audience monetization (future)
+4. **Personal Videographer for Sai Karra - Main source of income
 
 ## Tools I Use Daily
 
@@ -22,7 +23,7 @@
 | Slack | Notifications from automation tools |
 | Gmail | Client communication, managed by Email Agent |
 | GitHub | Code storage, auto-push at session end, GitHub Actions (future) |
-| Premiere Pro | Video editing |
+| Adobe Creative Cloud | Video editing |
 | CapCut | Short-form editing |
 
 ## MCP Servers (connected to Claude Code)
