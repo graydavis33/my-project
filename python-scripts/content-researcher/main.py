@@ -1,13 +1,12 @@
 """
-Content Researcher — Outlier Video Analysis Pipeline
+Content Researcher — Agentic Outlier Video Analysis
 
 Usage:
   python main.py "your video concept"
   python main.py                        (will prompt for input)
 
-Finds top YouTube outlier videos on your topic, analyzes what made them
-viral, and writes a full research report (hooks, script, keywords, etc.)
-to a Notion page.
+Claude uses tools in a loop to research outlier YouTube videos and Reddit
+discussions, then writes a 10-section report with hooks, script, keywords, etc.
 
 Results are cached for 7 days — same concept = instant re-run, no API cost.
 """
@@ -24,10 +23,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
-from searcher import generate_queries, search_videos, fetch_subscriber_counts
-from outlier import score_and_rank
-from transcript import enrich_with_hooks
-from analyzer import analyze
+from agent import run_agent
 from html_writer import write_html_report
 from cache import get_cached
 
@@ -66,7 +62,7 @@ def run(concept: str):
     print(f"{'='*60}")
     print(f"  Concept: {concept}\n")
 
-    # Check cache first — skip entire pipeline if hit
+    # Check cache first — skip entire agent run if hit
     cached = get_cached(concept)
     if cached:
         print("  Using cached result (< 7 days old). Skipping API calls.\n")
@@ -74,46 +70,10 @@ def run(concept: str):
         from_cache = True
     else:
         from_cache = False
-
-        # Step 1: Generate search queries
-        print("Step 1/5  Generating search queries...")
-        queries = generate_queries(concept)
-        print(f"  Queries: {queries}\n")
-
-        # Step 2: Search YouTube
-        print("Step 2/5  Searching YouTube...")
-        videos = search_videos(queries)
-        print(f"  Found {len(videos)} unique videos\n")
-
-        if not videos:
-            print("ERROR: No videos found. Check your API credentials or try a different concept.")
+        report = run_agent(concept)
+        if report.startswith("ERROR"):
+            print(f"\n{report}")
             sys.exit(1)
-
-        # Step 3: Fetch subscriber counts + score outliers
-        print("Step 3/5  Fetching subscriber counts + scoring outliers...")
-        videos = fetch_subscriber_counts(videos)
-        outliers = score_and_rank(videos, top_n=10)
-        print(f"  Top {len(outliers)} outliers identified\n")
-
-        if not outliers:
-            print("ERROR: No qualifying outlier videos found.")
-            sys.exit(1)
-
-        # Print outlier preview
-        print("  Top outliers:")
-        for i, v in enumerate(outliers, 1):
-            safe_title = v['title'][:55].encode('ascii', 'replace').decode('ascii')
-        print(f"  {i:2}. [{v['outlier_score']}x] {v['views']:>8,} views | {safe_title}")
-        print()
-
-        # Step 4: Extract hook transcripts
-        print("Step 4/5  Extracting hook transcripts (first 90s)...")
-        outliers = enrich_with_hooks(outliers)
-        print()
-
-        # Step 5: Analyze with Claude
-        print("Step 5/5  Running Claude Sonnet analysis...")
-        report = analyze(concept, outliers)
 
     # Write HTML report and open in browser
     print("\nGenerating HTML report...")
