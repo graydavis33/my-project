@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Analytical</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ─── Nav ─────────────────────────────────────────────────── -->
+<nav>
+  <a href="dashboard.html" class="nav-logo">Analy<span>tical</span></a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    <li><a href="connect.html">Connections</a></li>
+  </ul>
+  <div class="nav-cta">
+    <span id="user-email" style="font-size:0.85rem; color:var(--muted);"></span>
+    <button class="btn btn-ghost btn-sm" onclick="logout()">Log out</button>
+  </div>
+</nav>
+
+<!-- ─── Layout ────────────────────────────────────────────────── -->
+<div class="dash-layout">
+
+  <!-- Sidebar -->
+  <aside class="dash-sidebar">
+    <a href="dashboard.html" class="sidebar-link active">📊 Overview</a>
+    <a href="connect.html" class="sidebar-link">🔗 Connections</a>
+    <div class="sidebar-section-label">Account</div>
+    <a href="#" class="sidebar-link" id="upgrade-link">⭐ Upgrade</a>
+    <a href="#" class="sidebar-link" onclick="logout(); return false;">🚪 Log out</a>
+  </aside>
+
+  <!-- Main content -->
+  <main class="dash-main">
+
+    <!-- Header -->
+    <div class="dash-header">
+      <div>
+        <div class="dash-title">Overview</div>
+        <div class="dash-subtitle" id="last-updated">Loading your data...</div>
+      </div>
+      <button class="btn btn-outline btn-sm" id="refresh-btn" onclick="refreshStats()">
+        Refresh
+      </button>
+    </div>
+
+    <!-- Platform connection status -->
+    <div class="platform-cards" id="platform-cards">
+      <div class="platform-badge disconnected">
+        <div class="status-dot"></div>
+        <div>
+          <div class="platform-name">YouTube</div>
+          <div class="platform-status">Not connected</div>
+        </div>
+      </div>
+      <div class="platform-badge disconnected">
+        <div class="status-dot"></div>
+        <div>
+          <div class="platform-name">TikTok</div>
+          <div class="platform-status">Not connected</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Connect prompt (shown if nothing connected) -->
+    <div class="empty-state" id="connect-prompt" style="display:none;">
+      <h3>Connect a platform to get started</h3>
+      <p>Link your YouTube or TikTok account to see your analytics here.</p>
+      <a href="connect.html" class="btn btn-primary">Connect accounts</a>
+    </div>
+
+    <!-- Stats section (shown once data loads) -->
+    <div id="stats-section" style="display:none;">
+
+      <!-- AI Insights -->
+      <div class="insights-panel" id="insights-panel">
+        <div class="insights-header">
+          <div class="insights-title">AI Insights</div>
+          <button class="btn btn-ghost btn-sm" onclick="fetchInsights(true)">Regenerate</button>
+        </div>
+        <div class="insights-body" id="insights-body">Loading insights...</div>
+        <div class="insights-generated" id="insights-date"></div>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="stats-grid" id="stats-grid" style="margin-bottom:2rem;">
+        <div class="stat-card">
+          <div class="stat-label">Total Views</div>
+          <div class="stat-value" id="stat-views">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Likes</div>
+          <div class="stat-value" id="stat-likes">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Comments</div>
+          <div class="stat-value" id="stat-comments">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Videos</div>
+          <div class="stat-value" id="stat-videos">—</div>
+        </div>
+      </div>
+
+      <!-- Top posts table -->
+      <div class="card" style="margin-bottom:2rem;">
+        <div class="card-header">
+          <div class="card-title">Top Posts</div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Platform</th>
+                <th>Views</th>
+                <th>Likes</th>
+                <th>Comments</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="top-posts-body">
+              <tr><td colspan="6" style="text-align:center; padding:2rem; color:var(--muted);">No data yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /stats-section -->
+
+    <!-- Loading state -->
+    <div class="loading-state" id="loading-state">
+      <div class="spinner"></div>
+      <span>Loading your analytics...</span>
+    </div>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

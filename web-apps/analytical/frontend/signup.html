@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign up — Analytical</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-box">
+
+    <div class="auth-logo">
+      <a href="index.html" class="logo-text">Analy<span>tical</span></a>
+    </div>
+
+    <h1 class="auth-title">Create your account</h1>
+    <p class="auth-subtitle">Free to start — no credit card required.</p>
+
+    <div class="alert alert-error" id="error-alert"></div>
+    <div class="alert alert-success" id="success-alert"></div>
+
+    <form id="signup-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Min 8 characters" required autocomplete="new-password" minlength="8" />
+      </div>
+      <div class="form-group">
+        <label for="confirm-password">Confirm password</label>
+        <input type="password" id="confirm-password" name="confirm_password" placeholder="••••••••" required autocomplete="new-password" />
+        <span class="form-error" id="pw-mismatch" style="display:none;">Passwords do not match.</span>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" id="submit-btn">
+        Create account
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Already have an account? <a href="login.html">Log in</a>
+    </p>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if (getToken()) window.location.href = 'dashboard.html';
+
+  document.getElementById('signup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    const errorAlert = document.getElementById('error-alert');
+    const successAlert = document.getElementById('success-alert');
+    const pwMismatch = document.getElementById('pw-mismatch');
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm-password').value;
+
+    errorAlert.classList.remove('show');
+    successAlert.classList.remove('show');
+    pwMismatch.style.display = 'none';
+
+    if (password !== confirm) {
+      pwMismatch.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Creating account...';
+
+    try {
+      const data = await apiCall('/api/auth/signup', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.location.href = 'connect.html';
+    } catch (err) {
+      errorAlert.textContent = err.message || 'Could not create account. Try again.';
+      errorAlert.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Create account';
+    }
+  });
+</script>
+</body>
+</html>

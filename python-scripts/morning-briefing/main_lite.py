@@ -17,7 +17,10 @@ from datetime import datetime
 from slack_sdk import WebClient
 from dotenv import load_dotenv
 
-load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+# Load local .env first, fall back to personal-assistant .env (shares Slack tokens)
+_here = os.path.dirname(__file__)
+load_dotenv(os.path.join(_here, ".env"))
+load_dotenv(os.path.join(_here, "..", "personal-assistant", ".env"))
 
 logging.basicConfig(
     level=logging.INFO,

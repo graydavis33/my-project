@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connect Accounts — Analytical</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ─── Nav ─────────────────────────────────────────────────── -->
+<nav>
+  <a href="dashboard.html" class="nav-logo">Analy<span>tical</span></a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="connect.html" class="active">Connections</a></li>
+  </ul>
+  <div class="nav-cta">
+    <span id="user-email" style="font-size:0.85rem; color:var(--muted);"></span>
+    <button class="btn btn-ghost btn-sm" onclick="logout()">Log out</button>
+  </div>
+</nav>
+
+<div class="dash-layout">
+  <aside class="dash-sidebar">
+    <a href="dashboard.html" class="sidebar-link">📊 Overview</a>
+    <a href="connect.html" class="sidebar-link active">🔗 Connections</a>
+    <div class="sidebar-section-label">Account</div>
+    <a href="#" class="sidebar-link" id="upgrade-link">⭐ Upgrade</a>
+    <a href="#" class="sidebar-link" onclick="logout(); return false;">🚪 Log out</a>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-header">
+      <div>
+        <div class="dash-title">Connect Accounts</div>
+        <div class="dash-subtitle">Link your social media accounts so Analytical can fetch your data.</div>
+      </div>
+    </div>
+
+    <div class="alert alert-success show" id="connect-note" style="margin-bottom:1.5rem; display:none !important;">
+      Account connected! Your data will appear in the dashboard shortly.
+    </div>
+
+    <div class="connect-grid" id="connect-grid">
+
+      <!-- YouTube card -->
+      <div class="connect-card" id="yt-card">
+        <div class="connect-platform-icon">▶️</div>
+        <div class="connect-platform-name">YouTube</div>
+        <div class="connect-platform-desc">
+          Connect your YouTube channel to pull video views, likes, comments, watch time, CTR, and more.
+          Uses Google OAuth — no password stored.
+        </div>
+        <div class="connect-status disconnected" id="yt-status">
+          <span>●</span> Not connected
+        </div>
+        <button class="btn btn-primary btn-sm" id="yt-btn" onclick="connectYouTube()">
+          Connect YouTube
+        </button>
+      </div>
+
+      <!-- TikTok card -->
+      <div class="connect-card" id="tt-card">
+        <div class="connect-platform-icon">🎵</div>
+        <div class="connect-platform-name">TikTok</div>
+        <div class="connect-platform-desc">
+          Connect your TikTok account to pull video views, likes, shares, and comments.
+          Uses TikTok OAuth — no password stored.
+        </div>
+        <div class="connect-status disconnected" id="tt-status">
+          <span>●</span> Not connected
+        </div>
+        <button class="btn btn-primary btn-sm" id="tt-btn" onclick="connectTikTok()">
+          Connect TikTok
+        </button>
+      </div>
+
+    </div><!-- /connect-grid -->
+
+    <!-- Loading -->
+    <div class="loading-state" id="loading-state">
+      <div class="spinner"></div>
+      <span>Checking connection status...</span>
+    </div>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+<script>
+  requireAuth();
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const emailEl = document.getElementById('user-email');
+  if (emailEl && user.email) emailEl.textContent = user.email;
+
+  // Check if we just returned from OAuth (query param)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('connected')) {
+    const note = document.getElementById('connect-note');
+    note.style.display = 'block !important';
+    note.style.removeProperty('display');
+    note.classList.add('show');
+  }
+
+  async function loadStatus() {
+    document.getElementById('loading-state').style.display = 'flex';
+    document.getElementById('connect-grid').style.display = 'none';
+
+    try {
+      const data = await apiCall('/api/stats');
+      const connections = data.connections || {};
+
+      // YouTube
+      const ytStatus = document.getElementById('yt-status');
+      const ytBtn = document.getElementById('yt-btn');
+      if (connections.youtube) {
+        ytStatus.className = 'connect-status connected';
+        ytStatus.innerHTML = '<span>●</span> Connected';
+        ytBtn.textContent = 'Reconnect';
+        ytBtn.className = 'btn btn-outline btn-sm';
+      }
+
+      // TikTok
+      const ttStatus = document.getElementById('tt-status');
+      const ttBtn = document.getElementById('tt-btn');
+      if (connections.tiktok) {
+        ttStatus.className = 'connect-status connected';
+        ttStatus.innerHTML = '<span>●</span> Connected';
+        ttBtn.textContent = 'Reconnect';
+        ttBtn.className = 'btn btn-outline btn-sm';
+      }
+    } catch (e) {
+      // Ignore — show defaults
+    }
+
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('connect-grid').style.display = 'grid';
+  }
+
+  function connectYouTube() {
+    window.location.href = getApiBase() + '/api/connect/youtube?token=' + getToken();
+  }
+
+  function connectTikTok() {
+    window.location.href = getApiBase() + '/api/connect/tiktok?token=' + getToken();
+  }
+
+  loadStatus();
+</script>
+</body>
+</html>
