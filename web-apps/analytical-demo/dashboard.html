@@ -5,6 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — Analytical</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Page-specific extras ── */
+    .filter-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      margin-bottom: 1.75rem;
+      width: fit-content;
+    }
+    .filter-tab {
+      padding: 7px 18px;
+      border-radius: 6px;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .filter-tab:hover { color: var(--white); }
+    .filter-tab.active {
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(0,191,255,0.2);
+    }
+
+    .sort-header { cursor: pointer; user-select: none; }
+    .sort-header:hover { color: var(--white); }
+    .sort-arrow { margin-left: 4px; opacity: 0.5; }
+    .sort-header.active .sort-arrow { opacity: 1; color: var(--cyan); }
+
+    .reconnect-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .reconnect-icon { font-size: 1.5rem; }
+    .reconnect-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .reconnect-sub { font-size: 0.8rem; color: var(--muted); }
+
+    .no-data { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.875rem; }
+
+    .stat-card-platform {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    .platform-icon-tt { color: var(--cyan); }
+    .platform-icon-ig { color: #e04585; }
+    .platform-icon-yt { color: var(--gold); }
+
+    .last-updated {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.775rem;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 4px 12px;
+    }
+    .last-updated-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 5px rgba(74,222,128,0.5);
+    }
+  </style>
 </head>
 <body>
 
@@ -12,12 +95,16 @@
 <nav class="app-nav">
   <a href="index.html" class="nav-logo">Analy<span>tical</span></a>
   <div class="app-nav-right">
+    <div class="last-updated">
+      <div class="last-updated-dot"></div>
+      <span id="last-updated-text">Loading...</span>
+    </div>
     <span class="badge badge-gold">Creator Plan</span>
     <div class="app-user">
       <div class="app-avatar">GD</div>
       <div>
         <div class="app-user-name">Gray Davis</div>
-        <div class="app-user-plan">graydient_media</div>
+        <div class="app-user-plan">@graydient_media</div>
       </div>
     </div>
   </div>
@@ -31,328 +118,123 @@
     <a href="dashboard.html" class="sidebar-link active">
       <span class="sidebar-icon">📊</span> Overview
     </a>
-    <a href="#" class="sidebar-link">
+    <a href="#posts" class="sidebar-link" onclick="scrollToSection('posts-section')">
       <span class="sidebar-icon">📋</span> Top Posts
     </a>
-    <a href="#" class="sidebar-link">
-      <span class="sidebar-icon">🤖</span> AI Insights
+    <a href="#insights" class="sidebar-link" onclick="scrollToSection('insights-section')">
+      <span class="sidebar-icon">✦</span> AI Insights
     </a>
     <div class="sidebar-label">Platforms</div>
-    <a href="#" class="sidebar-link">
-      <span class="sidebar-icon">▶</span> YouTube
+    <a href="#" class="sidebar-link" id="yt-sidebar">
+      <span class="sidebar-icon platform-icon-yt">▶</span> YouTube
     </a>
-    <a href="#" class="sidebar-link">
-      <span class="sidebar-icon">◈</span> TikTok
+    <a href="https://tiktok.com/@graydient_media" target="_blank" class="sidebar-link">
+      <span class="sidebar-icon platform-icon-tt">◈</span> TikTok
     </a>
-    <a href="#" class="sidebar-link">
-      <span class="sidebar-icon">◎</span> Instagram
+    <a href="https://instagram.com/graydient_media" target="_blank" class="sidebar-link">
+      <span class="sidebar-icon platform-icon-ig">◎</span> Instagram
     </a>
     <div class="sidebar-label">Account</div>
-    <a href="#" class="sidebar-link">
-      <span class="sidebar-icon">⚙</span> Settings
-    </a>
     <a href="index.html" class="sidebar-link">
-      <span class="sidebar-icon">←</span> Log out
+      <span class="sidebar-icon">←</span> Back to Home
     </a>
   </aside>
 
-  <!-- Main Content -->
-  <main class="app-main">
+  <!-- Main -->
+  <main class="app-main" id="app-main">
 
     <!-- Page Header -->
     <div class="page-header">
       <div>
         <div class="page-title">Overview</div>
-        <div class="page-sub">Last synced: Today at 9:14 AM · All platforms combined</div>
+        <div class="page-sub" id="data-range">All platforms · All time</div>
       </div>
       <div class="page-actions">
-        <select class="btn btn-ghost btn-sm" style="cursor:pointer; background:var(--surface); border:1px solid var(--border); color:var(--muted); border-radius:var(--radius-sm);">
-          <option>Last 30 days</option>
-          <option>Last 7 days</option>
-          <option>Last 90 days</option>
-          <option>All time</option>
+        <select id="sort-period" class="btn btn-ghost btn-sm" style="cursor:pointer; background:var(--surface); border:1px solid var(--border); color:var(--muted); border-radius:var(--radius-sm);">
+          <option value="all">All time</option>
+          <option value="2026">2026 only</option>
+          <option value="2025">2025 only</option>
         </select>
-        <button class="btn btn-outline btn-sm">↻ Refresh</button>
       </div>
+    </div>
+
+    <!-- YouTube reconnect banner -->
+    <div class="reconnect-card" id="yt-reconnect">
+      <div class="reconnect-icon">▶</div>
+      <div style="flex:1;">
+        <div class="reconnect-title">YouTube not connected</div>
+        <div class="reconnect-sub">Run <code style="background:rgba(255,255,255,0.06); padding:1px 6px; border-radius:4px; font-size:0.78rem;">cd python-scripts/social-media-analytics && python auth.py</code> and log in as Graydient Media to connect your YouTube channel.</div>
+      </div>
+      <span class="badge badge-muted">Reconnect</span>
     </div>
 
     <!-- Platform Status Row -->
-    <div class="platform-row">
-      <div class="platform-pill">
-        <div class="status-dot live"></div>
-        <span class="platform-name">YouTube</span>
-        <span class="platform-stat">47 videos</span>
-      </div>
-      <div class="platform-pill">
-        <div class="status-dot live"></div>
-        <span class="platform-name">TikTok</span>
-        <span class="platform-stat">63 videos</span>
-      </div>
-      <div class="platform-pill">
-        <div class="status-dot live"></div>
-        <span class="platform-name">Instagram</span>
-        <span class="platform-stat">38 posts</span>
-      </div>
-    </div>
+    <div class="platform-row" id="platform-row"></div>
 
     <!-- Stat Cards -->
-    <div class="stat-grid">
-      <div class="stat-card">
-        <div class="stat-label">Total Views</div>
-        <div class="stat-value">440.8K</div>
-        <div class="stat-delta up">
-          ↑ 18.4%
-          <span class="stat-delta-period">vs last 30d</span>
-        </div>
+    <div class="stat-grid" id="stat-grid"></div>
+
+    <!-- AI Insights -->
+    <div class="insights-card" id="insights-section">
+      <div class="insights-header">
+        <div class="insights-title"><span>✦</span> AI Insights</div>
+        <span class="badge badge-muted" style="font-size:0.7rem;">Last scraped Mar 26</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Total Likes</div>
-        <div class="stat-value">21.1K</div>
-        <div class="stat-delta up">
-          ↑ 11.2%
-          <span class="stat-delta-period">vs last 30d</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Followers</div>
-        <div class="stat-value">3.2K</div>
-        <div class="stat-delta up">
-          ↑ 6.8%
-          <span class="stat-delta-period">vs last 30d</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Avg. Eng. Rate</div>
-        <div class="stat-value">4.8%</div>
-        <div class="stat-delta up">
-          ↑ 0.4 pts
-          <span class="stat-delta-period">vs last 30d</span>
-        </div>
-      </div>
+      <div class="insights-body" id="insights-body">Loading...</div>
+      <div class="insights-footer">Powered by Claude AI · Based on your last data pull</div>
     </div>
 
-    <!-- AI Insights + Platform Breakdown -->
-    <div class="two-col">
+    <!-- Platform Breakdown + Top Platform -->
+    <div class="two-col" style="margin-bottom:1.75rem;">
 
-      <!-- AI Insights -->
-      <div class="insights-card">
-        <div class="insights-header">
-          <div class="insights-title">
-            <span>✦</span> AI Insights
-          </div>
-          <button class="btn btn-ghost btn-sm">Regenerate</button>
-        </div>
-        <div class="insights-body">
-          <strong>Here's what's driving your growth this month:</strong>
-          <ul>
-            <li>Your <strong>tutorial-style content</strong> is outperforming everything else — "5 Camera Settings" and "10-Minute Color Grade" are your top 2 by engagement rate (6.2% and 5.9%). Your audience responds strongly to actionable, technical breakdowns.</li>
-            <li><strong>Posting on Wednesday and Thursday</strong> consistently delivers 40% higher reach than weekend posts across all three platforms. Consider front-loading your release schedule mid-week.</li>
-            <li>Your <strong>TikTok hooks are your biggest asset</strong> — videos where you open with a problem statement ("Here's the mistake every beginner makes...") average 2.3x more watch time than pure showcase content.</li>
-            <li>Instagram engagement is <strong>down 8% this month</strong> compared to TikTok and YouTube. Your shortest Reels (under 30 seconds) are performing best — consider testing more quick-tip formats there.</li>
-          </ul>
-        </div>
-        <div class="insights-footer">Generated March 31, 2026 · Powered by Claude AI</div>
-      </div>
-
-      <!-- Platform Breakdown -->
       <div class="app-card">
         <div class="app-card-header">
           <div class="app-card-title">Platform Breakdown</div>
-          <span class="badge badge-muted">Views</span>
+          <span class="badge badge-muted">by views / likes</span>
         </div>
-        <div class="app-card-body">
-          <div class="platform-breakdown">
+        <div class="app-card-body" id="platform-breakdown"></div>
+      </div>
 
-            <div class="platform-row-card">
-              <div class="pb-header">
-                <span class="pb-name">▶ YouTube</span>
-                <span class="pb-views">284.6K</span>
-              </div>
-              <div class="pb-bar-bg">
-                <div class="pb-bar-fill pb-bar-yt" style="width: 65%"></div>
-              </div>
-              <div class="pb-stats">
-                <span>12.4K likes</span>
-                <span>892 comments</span>
-              </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="platform-row-card">
-              <div class="pb-header">
-                <span class="pb-name">◈ TikTok</span>
-                <span class="pb-views">156.2K</span>
-              </div>
-              <div class="pb-bar-bg">
-                <div class="pb-bar-fill pb-bar-tt" style="width: 36%"></div>
-              </div>
-              <div class="pb-stats">
-                <span>8.7K likes</span>
-                <span>421 comments</span>
-              </div>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="platform-row-card">
-              <div class="pb-header">
-                <span class="pb-name">◎ Instagram</span>
-                <span class="pb-views">—</span>
-              </div>
-              <div class="pb-bar-bg">
-                <div class="pb-bar-fill pb-bar-ig" style="width: 0%"></div>
-              </div>
-              <div class="pb-stats">
-                <span class="text-muted" style="font-size:0.78rem;">Views not reported by API</span>
-              </div>
-            </div>
-
-          </div>
+      <div class="app-card">
+        <div class="app-card-header">
+          <div class="app-card-title">Top Post</div>
+          <span class="badge badge-cyan">All time</span>
         </div>
+        <div class="app-card-body" id="top-post-card"></div>
       </div>
 
     </div>
 
-    <!-- Top Posts Table -->
-    <div class="posts-table-wrap">
+    <!-- Posts Table -->
+    <div class="posts-table-wrap" id="posts-section">
       <div class="app-card">
         <div class="app-card-header">
-          <div class="app-card-title">Top Posts</div>
-          <div style="display:flex; gap:0.5rem;">
-            <span class="badge badge-muted" style="cursor:pointer;">All Platforms</span>
-            <span class="badge badge-gold" style="cursor:pointer;">This Month</span>
+          <div class="app-card-title">All Posts</div>
+          <span class="badge badge-muted" id="posts-count"></span>
+        </div>
+        <div style="padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border);">
+          <div class="filter-tabs" id="filter-tabs">
+            <button class="filter-tab active" data-platform="all">All</button>
+            <button class="filter-tab" data-platform="TikTok">TikTok</button>
+            <button class="filter-tab" data-platform="Instagram">Instagram</button>
+            <button class="filter-tab" data-platform="YouTube">YouTube</button>
           </div>
         </div>
         <div class="table-scroll">
           <table>
             <thead>
               <tr>
-                <th style="width:40px;"></th>
+                <th>#</th>
                 <th>Title</th>
                 <th>Platform</th>
-                <th>Views</th>
-                <th>Likes</th>
-                <th>Comments</th>
-                <th>Eng. Rate</th>
-                <th>Date</th>
+                <th class="sort-header active" data-sort="views">Views <span class="sort-arrow">↓</span></th>
+                <th class="sort-header" data-sort="likes">Likes <span class="sort-arrow">↕</span></th>
+                <th class="sort-header" data-sort="comments">Comments <span class="sort-arrow">↕</span></th>
+                <th class="sort-header" data-sort="engagement">Eng. Rate <span class="sort-arrow">↕</span></th>
+                <th class="sort-header" data-sort="date">Date <span class="sort-arrow">↕</span></th>
               </tr>
             </thead>
-            <tbody>
-
-              <tr>
-                <td><div class="td-thumb">▶</div></td>
-                <td class="td-title">5 Camera Settings That Changed My Videos</td>
-                <td><span class="badge badge-gold">YouTube</span></td>
-                <td class="td-num">48,214</td>
-                <td class="td-num">2,980</td>
-                <td class="td-num">147</td>
-                <td>
-                  <div class="eng-bar-wrap">
-                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:62%"></div></div>
-                    <div class="eng-bar-val">6.2%</div>
-                  </div>
-                </td>
-                <td class="text-muted">Mar 18</td>
-              </tr>
-
-              <tr>
-                <td><div class="td-thumb">◈</div></td>
-                <td class="td-title">My Full Editing Workflow (Breakdown)</td>
-                <td><span class="badge badge-blue">TikTok</span></td>
-                <td class="td-num">32,108</td>
-                <td class="td-num">1,865</td>
-                <td class="td-num">89</td>
-                <td>
-                  <div class="eng-bar-wrap">
-                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:58%"></div></div>
-                    <div class="eng-bar-val">5.8%</div>
-                  </div>
-                </td>
-                <td class="text-muted">Mar 22</td>
-              </tr>
-
-              <tr>
-                <td><div class="td-thumb">▶</div></td>
-                <td class="td-title">Day in the Life: Filming for a CEO</td>
-                <td><span class="badge badge-gold">YouTube</span></td>
-                <td class="td-num">28,741</td>
-                <td class="td-num">1,462</td>
-                <td class="td-num">203</td>
-                <td>
-                  <div class="eng-bar-wrap">
-                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:51%"></div></div>
-                    <div class="eng-bar-val">5.1%</div>
-                  </div>
-                </td>
-                <td class="text-muted">Mar 11</td>
-              </tr>
-
-              <tr>
-                <td><div class="td-thumb">◈</div></td>
-                <td class="td-title">Why I Switched to the Sony A7 IV</td>
-                <td><span class="badge badge-blue">TikTok</span></td>
-                <td class="td-num">24,390</td>
-                <td class="td-num">1,102</td>
-                <td class="td-num">58</td>
-                <td>
-                  <div class="eng-bar-wrap">
-                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:47%"></div></div>
-                    <div class="eng-bar-val">4.7%</div>
-                  </div>
-                </td>
-                <td class="text-muted">Mar 26</td>
-              </tr>
-
-              <tr>
-                <td><div class="td-thumb">▶</div></td>
-                <td class="td-title">How I Color Grade in 10 Minutes (My Exact LUT)</td>
-                <td><span class="badge badge-gold">YouTube</span></td>
-                <td class="td-num">19,814</td>
-                <td class="td-num">1,168</td>
-                <td class="td-num">76</td>
-                <td>
-                  <div class="eng-bar-wrap">
-                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:59%"></div></div>
-                    <div class="eng-bar-val">5.9%</div>
-                  </div>
-                </td>
-                <td class="text-muted">Mar 5</td>
-              </tr>
-
-              <tr>
-                <td><div class="td-thumb">◈</div></td>
-                <td class="td-title">POV: You Finally Nail the Focus Pull</td>
-                <td><span class="badge badge-blue">TikTok</span></td>
-                <td class="td-num">17,622</td>
-                <td class="td-num">889</td>
-                <td class="td-num">34</td>
-                <td>
-                  <div class="eng-bar-wrap">
-                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:44%"></div></div>
-                    <div class="eng-bar-val">4.4%</div>
-                  </div>
-                </td>
-                <td class="text-muted">Mar 29</td>
-              </tr>
-
-              <tr>
-                <td><div class="td-thumb">▶</div></td>
-                <td class="td-title">The Lens I Use for Everything (Sony 24-70 GM)</td>
-                <td><span class="badge badge-gold">YouTube</span></td>
-                <td class="td-num">14,903</td>
-                <td class="td-num">731</td>
-                <td class="td-num">91</td>
-                <td>
-                  <div class="eng-bar-wrap">
-                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:40%"></div></div>
-                    <div class="eng-bar-val">4.0%</div>
-                  </div>
-                </td>
-                <td class="text-muted">Feb 28</td>
-              </tr>
-
-            </tbody>
+            <tbody id="posts-tbody"></tbody>
           </table>
         </div>
       </div>
@@ -360,6 +242,334 @@
 
   </main>
 </div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────
+let allPosts = [];
+let currentFilter = 'all';
+let currentSort = 'views';
+let sortAsc = false;
+let currentPeriod = 'all';
+
+// ── Utils ─────────────────────────────────────────────────────
+function fmt(n) {
+  if (n == null) return '—';
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000)    return (n/1000).toFixed(1) + 'K';
+  return n.toLocaleString();
+}
+
+function engRate(post) {
+  if (!post.views || post.views === 0) return null;
+  return ((post.likes + post.comments) / post.views * 100);
+}
+
+function platformBadge(p) {
+  if (p === 'TikTok')    return '<span class="badge badge-cyan">TikTok</span>';
+  if (p === 'Instagram') return '<span class="badge" style="background:rgba(224,69,133,0.12);color:#e04585;border:1px solid rgba(224,69,133,0.22);">Instagram</span>';
+  if (p === 'YouTube')   return '<span class="badge badge-gold">YouTube</span>';
+  return `<span class="badge badge-muted">${p}</span>`;
+}
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  return false;
+}
+
+function filterByPeriod(posts) {
+  if (currentPeriod === 'all') return posts;
+  return posts.filter(p => p.date && p.date.startsWith(currentPeriod));
+}
+
+// ── Render platform row ───────────────────────────────────────
+function renderPlatformRow(data) {
+  const el = document.getElementById('platform-row');
+  const platforms = data.platforms;
+  el.innerHTML = `
+    <div class="platform-pill">
+      <div class="status-dot ${platforms.tiktok.connected ? 'live' : 'off'}"></div>
+      <span class="platform-name">TikTok</span>
+      <span class="platform-stat">${data.posts.filter(p=>p.platform==='TikTok').length} videos</span>
+    </div>
+    <div class="platform-pill">
+      <div class="status-dot ${platforms.instagram.connected ? 'live' : 'off'}"></div>
+      <span class="platform-name">Instagram</span>
+      <span class="platform-stat">${data.posts.filter(p=>p.platform==='Instagram').length} posts</span>
+    </div>
+    <div class="platform-pill">
+      <div class="status-dot off"></div>
+      <span class="platform-name" style="color:var(--muted)">YouTube</span>
+      <span class="platform-stat" style="color:var(--muted2)">Not connected</span>
+    </div>
+  `;
+}
+
+// ── Render stat cards ─────────────────────────────────────────
+function renderStats(posts) {
+  const ttPosts = posts.filter(p => p.platform === 'TikTok');
+  const igPosts = posts.filter(p => p.platform === 'Instagram');
+
+  const ttViews    = ttPosts.reduce((s,p) => s + (p.views||0), 0);
+  const ttLikes    = ttPosts.reduce((s,p) => s + (p.likes||0), 0);
+  const ttComments = ttPosts.reduce((s,p) => s + (p.comments||0), 0);
+  const igLikes    = igPosts.reduce((s,p) => s + (p.likes||0), 0);
+
+  const totalVideos = ttPosts.length + igPosts.length;
+  const eng = ttViews > 0 ? ((ttLikes + ttComments) / ttViews * 100).toFixed(1) : '—';
+
+  document.getElementById('stat-grid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">TikTok Views</div>
+      <div class="stat-value">${fmt(ttViews)}</div>
+      <div class="stat-card-platform">TikTok · ${ttPosts.length} videos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">TikTok Likes</div>
+      <div class="stat-value">${fmt(ttLikes)}</div>
+      <div class="stat-card-platform">+ ${ttComments} comments</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Instagram Likes</div>
+      <div class="stat-value">${fmt(igLikes)}</div>
+      <div class="stat-card-platform">Instagram · ${igPosts.length} posts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">TikTok Eng. Rate</div>
+      <div class="stat-value">${eng}%</div>
+      <div class="stat-card-platform">(likes + comments) ÷ views</div>
+    </div>
+  `;
+}
+
+// ── Render AI insights ────────────────────────────────────────
+function renderInsights(text) {
+  // Convert bullet-like sentences into formatted list
+  const parts = text.split(/(?<=\.)\s+(?=[A-Z"])/);
+  const body = document.getElementById('insights-body');
+  if (parts.length > 1) {
+    body.innerHTML = `<ul>${parts.map(s => `<li>${s.trim()}</li>`).join('')}</ul>`;
+  } else {
+    body.innerHTML = text;
+  }
+}
+
+// ── Render platform breakdown ─────────────────────────────────
+function renderBreakdown(posts) {
+  const ttPosts = posts.filter(p => p.platform === 'TikTok');
+  const igPosts = posts.filter(p => p.platform === 'Instagram');
+  const ttViews = ttPosts.reduce((s,p) => s + (p.views||0), 0);
+  const ttLikes = ttPosts.reduce((s,p) => s + (p.likes||0), 0);
+  const igLikes = igPosts.reduce((s,p) => s + (p.likes||0), 0);
+  const maxViews = Math.max(ttViews, 1);
+
+  document.getElementById('platform-breakdown').innerHTML = `
+    <div class="platform-breakdown">
+      <div class="platform-row-card">
+        <div class="pb-header">
+          <span class="pb-name platform-icon-tt">◈ TikTok</span>
+          <span class="pb-views">${fmt(ttViews)} views</span>
+        </div>
+        <div class="pb-bar-bg">
+          <div class="pb-bar-fill pb-bar-tt" style="width:${Math.round(ttViews/maxViews*100)}%"></div>
+        </div>
+        <div class="pb-stats">
+          <span>${fmt(ttLikes)} likes</span>
+          <span>${ttPosts.reduce((s,p)=>s+(p.comments||0),0)} comments</span>
+          <span>${ttPosts.length} videos</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="platform-row-card">
+        <div class="pb-header">
+          <span class="pb-name platform-icon-ig">◎ Instagram</span>
+          <span class="pb-views">${fmt(igLikes)} likes</span>
+        </div>
+        <div class="pb-bar-bg">
+          <div class="pb-bar-fill pb-bar-ig" style="width:${Math.round(igLikes/maxViews*60)}%"></div>
+        </div>
+        <div class="pb-stats">
+          <span>${igPosts.length} posts</span>
+          <span style="color:var(--muted2); font-size:0.75rem;">Views not reported by API</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="platform-row-card">
+        <div class="pb-header">
+          <span class="pb-name platform-icon-yt" style="opacity:0.4;">▶ YouTube</span>
+          <span class="pb-views" style="color:var(--muted2);">—</span>
+        </div>
+        <div class="pb-bar-bg">
+          <div class="pb-bar-fill pb-bar-yt" style="width:0%"></div>
+        </div>
+        <div class="pb-stats">
+          <span style="color:var(--muted2); font-size:0.75rem;">Reconnect Graydient Media channel</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Render top post card ──────────────────────────────────────
+function renderTopPost(posts) {
+  const top = [...posts].sort((a,b) => (b.views||b.likes||0) - (a.views||a.likes||0))[0];
+  if (!top) return;
+  const eng = engRate(top);
+  document.getElementById('top-post-card').innerHTML = `
+    <div style="margin-bottom:0.75rem;">
+      ${platformBadge(top.platform)}
+    </div>
+    <div style="font-size:1rem; font-weight:700; line-height:1.4; margin-bottom:1rem; color:var(--white);">${top.title}</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1rem;">
+      <div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-bottom:2px;">Views</div>
+        <div style="font-size:1.5rem; font-weight:800; letter-spacing:-1px;">${fmt(top.views)}</div>
+      </div>
+      <div>
+        <div style="font-size:0.75rem; color:var(--muted); margin-bottom:2px;">Likes</div>
+        <div style="font-size:1.5rem; font-weight:800; letter-spacing:-1px;">${fmt(top.likes)}</div>
+      </div>
+    </div>
+    ${eng != null ? `
+    <div style="margin-bottom:0.5rem;">
+      <div style="display:flex; justify-content:space-between; font-size:0.78rem; color:var(--muted); margin-bottom:4px;">
+        <span>Engagement rate</span><span style="color:var(--cyan);">${eng.toFixed(1)}%</span>
+      </div>
+      <div class="pb-bar-bg"><div class="pb-bar-fill pb-bar-tt" style="width:${Math.min(eng*10,100)}%"></div></div>
+    </div>` : ''}
+    <div style="font-size:0.75rem; color:var(--muted2); margin-top:0.75rem;">${top.date}</div>
+  `;
+}
+
+// ── Render posts table ────────────────────────────────────────
+function renderTable(posts) {
+  const tbody = document.getElementById('posts-tbody');
+  document.getElementById('posts-count').textContent = `${posts.length} posts`;
+
+  if (!posts.length) {
+    tbody.innerHTML = `<tr><td colspan="8" class="no-data">No posts for this filter</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = posts.map((p, i) => {
+    const eng = engRate(p);
+    const engPct = eng != null ? eng.toFixed(1) + '%' : '—';
+    const engWidth = eng != null ? Math.min(eng * 10, 100) : 0;
+    return `
+      <tr>
+        <td style="color:var(--muted2); font-size:0.8rem; font-weight:600;">${i+1}</td>
+        <td class="td-title">
+          <a href="${p.url}" target="_blank" style="color:inherit; text-decoration:none;" title="${p.title}">${p.title.length > 55 ? p.title.slice(0,55) + '…' : p.title}</a>
+        </td>
+        <td>${platformBadge(p.platform)}</td>
+        <td class="td-num">${fmt(p.views)}</td>
+        <td class="td-num">${fmt(p.likes)}</td>
+        <td class="td-num">${p.comments > 0 ? fmt(p.comments) : '—'}</td>
+        <td>
+          <div class="eng-bar-wrap">
+            <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:${engWidth}%; background: var(--grad-cyan);"></div></div>
+            <div class="eng-bar-val">${engPct}</div>
+          </div>
+        </td>
+        <td class="text-muted" style="white-space:nowrap;">${p.date}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ── Sort & filter logic ───────────────────────────────────────
+function getSortedFiltered() {
+  let posts = filterByPeriod(allPosts);
+
+  if (currentFilter !== 'all') {
+    posts = posts.filter(p => p.platform === currentFilter);
+  }
+
+  posts = [...posts].sort((a, b) => {
+    let va, vb;
+    if (currentSort === 'views')      { va = a.views||0;      vb = b.views||0; }
+    else if (currentSort === 'likes') { va = a.likes||0;      vb = b.likes||0; }
+    else if (currentSort === 'comments') { va = a.comments||0; vb = b.comments||0; }
+    else if (currentSort === 'engagement') {
+      va = engRate(a) || 0; vb = engRate(b) || 0;
+    }
+    else if (currentSort === 'date') {
+      va = a.date || ''; vb = b.date || '';
+    }
+    return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+  });
+
+  return posts;
+}
+
+function refreshTable() {
+  renderTable(getSortedFiltered());
+}
+
+// ── Event wiring ──────────────────────────────────────────────
+document.getElementById('filter-tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.filter-tab');
+  if (!tab) return;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  currentFilter = tab.dataset.platform;
+  refreshTable();
+});
+
+document.querySelectorAll('.sort-header').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.sort;
+    if (currentSort === col) {
+      sortAsc = !sortAsc;
+    } else {
+      currentSort = col;
+      sortAsc = false;
+    }
+    document.querySelectorAll('.sort-header').forEach(t => {
+      t.classList.remove('active');
+      t.querySelector('.sort-arrow').textContent = '↕';
+    });
+    th.classList.add('active');
+    th.querySelector('.sort-arrow').textContent = sortAsc ? '↑' : '↓';
+    refreshTable();
+  });
+});
+
+document.getElementById('sort-period').addEventListener('change', e => {
+  currentPeriod = e.target.value;
+  const posts = filterByPeriod(allPosts);
+  renderStats(posts);
+  renderBreakdown(posts);
+  renderTopPost(posts);
+  refreshTable();
+});
+
+// ── Load data ─────────────────────────────────────────────────
+fetch('./data.json')
+  .then(r => r.json())
+  .then(data => {
+    allPosts = data.posts;
+
+    // Last updated
+    const d = new Date(data.generated_at);
+    document.getElementById('last-updated-text').textContent =
+      'Data from ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+    const posts = filterByPeriod(allPosts);
+    renderPlatformRow(data);
+    renderStats(posts);
+    renderInsights(data.ai_insights);
+    renderBreakdown(posts);
+    renderTopPost(posts);
+    renderTable(getSortedFiltered());
+  })
+  .catch(err => {
+    console.error('Failed to load data.json:', err);
+    document.getElementById('app-main').innerHTML +=
+      `<div style="color:var(--red); padding:2rem; font-size:0.9rem;">
+        Could not load data.json — make sure the server is running (<code>python -m http.server 8081</code>)
+      </div>`;
+  });
+</script>
 
 </body>
 </html>

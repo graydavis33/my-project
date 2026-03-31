@@ -5,32 +5,37 @@
 
 /* ─── Tokens ─────────────────────────────────────────────────── */
 :root {
-  --bg:           #08080d;
-  --bg-deep:      #0d1b3e;
-  --surface:      #111520;
-  --surface2:     #161d30;
-  --surface3:     #1c2640;
-  --border:       rgba(255,255,255,0.07);
-  --border-mid:   rgba(255,255,255,0.11);
+  --bg:           #030d17;
+  --bg-deep:      #001830;
+  --surface:      #071420;
+  --surface2:     #0c1c2c;
+  --surface3:     #112438;
+  --border:       rgba(0,191,255,0.09);
+  --border-mid:   rgba(0,191,255,0.16);
 
   --gold:         #e8b84b;
   --gold-light:   #f5e070;
   --gold-dim:     rgba(232,184,75,0.15);
   --gold-glow:    0 0 28px rgba(232,184,75,0.2);
 
+  --cyan:         #00bfff;
+  --cyan-light:   #40d4ff;
+  --cyan-dim:     rgba(0,191,255,0.12);
+  --cyan-glow:    0 0 28px rgba(0,191,255,0.18);
+
   --white:        #f0f4f8;
-  --muted:        #8899aa;
-  --muted2:       #4a5568;
+  --muted:        #7a9ab5;
+  --muted2:       #3d5a72;
 
   --green:        #4ade80;
   --red:          #f87171;
-  --blue:         #38bdf8;
 
-  --grad-bg:      linear-gradient(180deg, #0d1b3e 0%, #08080d 100%);
-  --grad-radial:  radial-gradient(ellipse at 50% 0%, rgba(36,59,110,0.7) 0%, transparent 60%);
+  --grad-bg:      linear-gradient(180deg, #001830 0%, #030d17 100%);
+  --grad-radial:  radial-gradient(ellipse at 50% 0%, rgba(0,191,255,0.1) 0%, transparent 60%);
   --grad-gold:    linear-gradient(135deg, #e8b84b 0%, #f5e070 100%);
   --grad-text:    linear-gradient(135deg, #ffffff 10%, #e8b84b 100%);
-  --grad-card:    linear-gradient(160deg, rgba(26,45,90,0.35) 0%, rgba(10,10,20,0.7) 100%);
+  --grad-card:    linear-gradient(160deg, rgba(0,50,80,0.3) 0%, rgba(3,13,23,0.85) 100%);
+  --grad-cyan:    linear-gradient(135deg, #00bfff 0%, #40d4ff 100%);
 
   --radius-sm:    8px;
   --radius:       12px;
@@ -128,7 +133,7 @@ a { color: var(--gold); text-decoration: none; }
 .badge-gold   { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(232,184,75,0.22); }
 .badge-green  { background: rgba(74,222,128,0.12); color: var(--green); border: 1px solid rgba(74,222,128,0.22); }
 .badge-muted  { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); }
-.badge-blue   { background: rgba(56,189,248,0.12); color: var(--blue); border: 1px solid rgba(56,189,248,0.22); }
+.badge-cyan   { background: var(--cyan-dim); color: var(--cyan); border: 1px solid rgba(0,191,255,0.22); }
 
 /* ─── Divider ────────────────────────────────────────────────── */
 .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
@@ -975,7 +980,7 @@ footer a:hover { color: var(--muted); }
   transition: width 0.5s ease;
 }
 .pb-bar-yt { background: linear-gradient(90deg, #e8b84b, #f5e070); }
-.pb-bar-tt { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }
+.pb-bar-tt { background: var(--grad-cyan); }
 .pb-bar-ig { background: linear-gradient(90deg, #e04585, #f87171); }
 
 .pb-stats {
