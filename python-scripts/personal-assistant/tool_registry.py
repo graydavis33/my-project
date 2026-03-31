@@ -113,7 +113,7 @@ TOOLS: dict[str, dict] = {
 }
 
 
-def get_tool(name: str) -> dict | None:
+def get_tool(name: str) -> "dict | None":
     """Return tool config by exact name, or fuzzy-match a close name."""
     if name in TOOLS:
         return TOOLS[name]
@@ -125,7 +125,7 @@ def get_tool(name: str) -> dict | None:
     return None
 
 
-def get_tool_name(name: str) -> str | None:
+def get_tool_name(name: str) -> "str | None":
     """Return the canonical tool key for a fuzzy name, or None."""
     if name in TOOLS:
         return name
