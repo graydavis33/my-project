@@ -158,8 +158,8 @@
       </div>
     </div>
 
-    <!-- YouTube reconnect banner -->
-    <div class="reconnect-card" id="yt-reconnect">
+    <!-- YouTube reconnect banner (hidden when connected) -->
+    <div class="reconnect-card" id="yt-reconnect" style="display:none;">
       <div class="reconnect-icon">▶</div>
       <div style="flex:1;">
         <div class="reconnect-title">YouTube not connected</div>
@@ -285,6 +285,12 @@ function filterByPeriod(posts) {
 function renderPlatformRow(data) {
   const el = document.getElementById('platform-row');
   const platforms = data.platforms;
+  const ytConnected = platforms.youtube.connected;
+  const ytCount = data.posts.filter(p=>p.platform==='YouTube').length;
+
+  // Show/hide reconnect banner
+  document.getElementById('yt-reconnect').style.display = ytConnected ? 'none' : 'flex';
+
   el.innerHTML = `
     <div class="platform-pill">
       <div class="status-dot ${platforms.tiktok.connected ? 'live' : 'off'}"></div>
@@ -297,9 +303,11 @@ function renderPlatformRow(data) {
       <span class="platform-stat">${data.posts.filter(p=>p.platform==='Instagram').length} posts</span>
     </div>
     <div class="platform-pill">
-      <div class="status-dot off"></div>
-      <span class="platform-name" style="color:var(--muted)">YouTube</span>
-      <span class="platform-stat" style="color:var(--muted2)">Not connected</span>
+      <div class="status-dot ${ytConnected ? 'live' : 'off'}"></div>
+      <span class="platform-name" style="${ytConnected ? '' : 'color:var(--muted)'}">YouTube</span>
+      <span class="platform-stat" style="${ytConnected ? '' : 'color:var(--muted2)'}">
+        ${ytConnected ? ytCount + ' videos' : 'Not connected'}
+      </span>
     </div>
   `;
 }
@@ -308,35 +316,39 @@ function renderPlatformRow(data) {
 function renderStats(posts) {
   const ttPosts = posts.filter(p => p.platform === 'TikTok');
   const igPosts = posts.filter(p => p.platform === 'Instagram');
+  const ytPosts = posts.filter(p => p.platform === 'YouTube');
 
   const ttViews    = ttPosts.reduce((s,p) => s + (p.views||0), 0);
   const ttLikes    = ttPosts.reduce((s,p) => s + (p.likes||0), 0);
   const ttComments = ttPosts.reduce((s,p) => s + (p.comments||0), 0);
+  const ytViews    = ytPosts.reduce((s,p) => s + (p.views||0), 0);
+  const ytLikes    = ytPosts.reduce((s,p) => s + (p.likes||0), 0);
   const igLikes    = igPosts.reduce((s,p) => s + (p.likes||0), 0);
 
-  const totalVideos = ttPosts.length + igPosts.length;
+  const totalViews = ttViews + ytViews;
+  const totalLikes = ttLikes + ytLikes + igLikes;
   const eng = ttViews > 0 ? ((ttLikes + ttComments) / ttViews * 100).toFixed(1) : '—';
 
   document.getElementById('stat-grid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Total Views</div>
+      <div class="stat-value">${fmt(totalViews)}</div>
+      <div class="stat-card-platform">TikTok + YouTube</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">YouTube Views</div>
+      <div class="stat-value">${fmt(ytViews)}</div>
+      <div class="stat-card-platform">YouTube · ${ytPosts.length} videos</div>
+    </div>
     <div class="stat-card">
       <div class="stat-label">TikTok Views</div>
       <div class="stat-value">${fmt(ttViews)}</div>
       <div class="stat-card-platform">TikTok · ${ttPosts.length} videos</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">TikTok Likes</div>
-      <div class="stat-value">${fmt(ttLikes)}</div>
-      <div class="stat-card-platform">+ ${ttComments} comments</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Instagram Likes</div>
-      <div class="stat-value">${fmt(igLikes)}</div>
-      <div class="stat-card-platform">Instagram · ${igPosts.length} posts</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">TikTok Eng. Rate</div>
-      <div class="stat-value">${eng}%</div>
-      <div class="stat-card-platform">(likes + comments) ÷ views</div>
+      <div class="stat-label">Total Likes</div>
+      <div class="stat-value">${fmt(totalLikes)}</div>
+      <div class="stat-card-platform">All platforms combined</div>
     </div>
   `;
 }
@@ -357,10 +369,13 @@ function renderInsights(text) {
 function renderBreakdown(posts) {
   const ttPosts = posts.filter(p => p.platform === 'TikTok');
   const igPosts = posts.filter(p => p.platform === 'Instagram');
+  const ytPosts = posts.filter(p => p.platform === 'YouTube');
   const ttViews = ttPosts.reduce((s,p) => s + (p.views||0), 0);
   const ttLikes = ttPosts.reduce((s,p) => s + (p.likes||0), 0);
+  const ytViews = ytPosts.reduce((s,p) => s + (p.views||0), 0);
+  const ytLikes = ytPosts.reduce((s,p) => s + (p.likes||0), 0);
   const igLikes = igPosts.reduce((s,p) => s + (p.likes||0), 0);
-  const maxViews = Math.max(ttViews, 1);
+  const maxViews = Math.max(ttViews, ytViews, 1);
 
   document.getElementById('platform-breakdown').innerHTML = `
     <div class="platform-breakdown">
@@ -381,6 +396,21 @@ function renderBreakdown(posts) {
       <div class="divider"></div>
       <div class="platform-row-card">
         <div class="pb-header">
+          <span class="pb-name platform-icon-yt">▶ YouTube</span>
+          <span class="pb-views">${fmt(ytViews)} views</span>
+        </div>
+        <div class="pb-bar-bg">
+          <div class="pb-bar-fill pb-bar-yt" style="width:${Math.round(ytViews/maxViews*100)}%"></div>
+        </div>
+        <div class="pb-stats">
+          <span>${fmt(ytLikes)} likes</span>
+          <span>${ytPosts.reduce((s,p)=>s+(p.comments||0),0)} comments</span>
+          <span>${ytPosts.length} videos</span>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="platform-row-card">
+        <div class="pb-header">
           <span class="pb-name platform-icon-ig">◎ Instagram</span>
           <span class="pb-views">${fmt(igLikes)} likes</span>
         </div>
@@ -390,19 +420,6 @@ function renderBreakdown(posts) {
         <div class="pb-stats">
           <span>${igPosts.length} posts</span>
           <span style="color:var(--muted2); font-size:0.75rem;">Views not reported by API</span>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="platform-row-card">
-        <div class="pb-header">
-          <span class="pb-name platform-icon-yt" style="opacity:0.4;">▶ YouTube</span>
-          <span class="pb-views" style="color:var(--muted2);">—</span>
-        </div>
-        <div class="pb-bar-bg">
-          <div class="pb-bar-fill pb-bar-yt" style="width:0%"></div>
-        </div>
-        <div class="pb-stats">
-          <span style="color:var(--muted2); font-size:0.75rem;">Reconnect Graydient Media channel</span>
         </div>
       </div>
     </div>

@@ -1,47 +1,467 @@
 {
-  "generated_at": "2026-03-26T14:22:33Z",
+  "generated_at": "2026-03-31T21:00:18Z",
   "handle": "graydient_media",
   "platforms": {
-    "tiktok":    { "connected": true,  "handle": "@graydient_media", "url": "https://tiktok.com/@graydient_media" },
-    "instagram": { "connected": true,  "handle": "@graydient_media", "url": "https://instagram.com/graydient_media" },
-    "youtube":   { "connected": false, "handle": null, "note": "Reconnect Graydient Media YouTube" },
-    "facebook":  { "connected": false, "handle": null, "note": "Not set up yet" }
+    "tiktok": {
+      "connected": true,
+      "handle": "@graydient_media",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    "instagram": {
+      "connected": true,
+      "handle": "@graydient_media",
+      "url": "https://instagram.com/graydient_media"
+    },
+    "youtube": {
+      "connected": true,
+      "handle": "@graydientmedia",
+      "note": "Reconnect Graydient Media YouTube"
+    },
+    "facebook": {
+      "connected": false,
+      "handle": null,
+      "note": "Not set up yet"
+    }
   },
   "posts": [
-    { "platform": "TikTok",    "title": "If your footage looks sideways in CapCut — here's why",          "views": 9563,  "likes": 102, "comments": 7,  "date": "2025-11-06", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Frame by Frame Ep. 1 — Head Shake Effect",                        "views": 7536,  "likes": 162, "comments": 11, "date": "2025-07-25", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Tried the Floating Effect! One of my favorite transitions",       "views": 1443,  "likes": 77,  "comments": 2,  "date": "2025-11-02", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "POV: your friend teaches you how to aura farm",                   "views": 901,   "likes": 61,  "comments": 5,  "date": "2026-02-04", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "They don't call it a MAGIC arm for no reason",                    "views": 869,   "likes": 49,  "comments": 3,  "date": "2025-07-30", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Underrated tool every videographer should try",                   "views": 790,   "likes": 37,  "comments": 0,  "date": "2025-07-27", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "When the degree looks better than the photo",                     "views": 722,   "likes": 26,  "comments": 2,  "date": "2025-06-10", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Part 2 of 100 Videography Tips Anyone Can Learn",                 "views": 585,   "likes": 40,  "comments": 1,  "date": "2026-03-05", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "To Be Continued... #hologram",                                    "views": 494,   "likes": 33,  "comments": 2,  "date": "2025-06-16", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Spec ad for a local business — favorite project so far",          "views": 449,   "likes": 22,  "comments": 0,  "date": "2025-05-05", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "The bet? First fish in 10 minutes",                               "views": 385,   "likes": 20,  "comments": 0,  "date": "2025-06-30", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Created this promo for Kieth Keppner and Brett Moseley",          "views": 373,   "likes": 15,  "comments": 0,  "date": "2025-05-26", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Short film with Isabelle Lovejoy, Adriane Nanje, Emma G",         "views": 354,   "likes": 14,  "comments": 1,  "date": "2025-05-05", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Part 1 of 100 Videography Tips Anyone Can Learn",                 "views": 343,   "likes": 22,  "comments": 0,  "date": "2026-03-01", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "If you haven't mastered the filming part of speed ramps...",      "views": 294,   "likes": 7,   "comments": 0,  "date": "2026-02-25", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "TikTok",    "title": "Offensive lineman can play golf! #ugafootball",                   "views": 217,   "likes": 15,  "comments": 0,  "date": "2025-06-27", "url": "https://tiktok.com/@graydient_media" },
-    { "platform": "Instagram", "title": "Cade's first fish catch — fishing content collab",                "views": null,  "likes": 53,  "comments": 0,  "date": "2025-06-30", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Frame by Frame Ep. 1 — Head Shake Effect",                        "views": null,  "likes": 49,  "comments": 0,  "date": "2025-07-25", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Part 1 of 100 Videography Tips Anyone Can Learn",                 "views": null,  "likes": 48,  "comments": 0,  "date": "2026-03-02", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "If you haven't mastered the filming part of speed ramps...",      "views": null,  "likes": 38,  "comments": 0,  "date": "2026-02-25", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "New SD card just dropped!",                                       "views": null,  "likes": 32,  "comments": 0,  "date": "2025-06-17", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Learned how to float last night...",                              "views": null,  "likes": 31,  "comments": 0,  "date": "2025-11-03", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Sometimes the edit is the aura.",                                 "views": null,  "likes": 30,  "comments": 0,  "date": "2026-02-05", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "If your footage looks sideways in CapCut, here's why",            "views": null,  "likes": 23,  "comments": 0,  "date": "2025-11-07", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "They don't call it a MAGIC arm for no reason",                    "views": null,  "likes": 23,  "comments": 0,  "date": "2025-07-30", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Part 2 of 100 Videography Tips Anyone Can Learn",                 "views": null,  "likes": 18,  "comments": 0,  "date": "2026-03-05", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Filmed Colbie for his first catch of the summer",                 "views": null,  "likes": 17,  "comments": 0,  "date": "2025-06-23", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Save this for your next shoot",                                   "views": null,  "likes": 14,  "comments": 0,  "date": "2025-07-28", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Spec ad — one of my favorite projects so far",                    "views": null,  "likes": 12,  "comments": 0,  "date": "2025-05-05", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Short film with Isabelle Lovejoy, Adriane Nanje, Emma G",         "views": null,  "likes": 10,  "comments": 0,  "date": "2025-05-02", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Created this promo for Kieth Keppner and Brett Moseley",          "views": null,  "likes": 6,   "comments": 0,  "date": "2025-05-26", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "Athens I love you!!! @barsouthathensga",                          "views": null,  "likes": 2,   "comments": 0,  "date": "2026-03-24", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "DGD Outdoors Golf tournament recap",                              "views": null,  "likes": 1,   "comments": 0,  "date": "2025-06-26", "url": "https://instagram.com/graydient_media" },
-    { "platform": "Instagram", "title": "When the degree looks better than the photo",                     "views": null,  "likes": 1,   "comments": 0,  "date": "2025-06-10", "url": "https://instagram.com/graydient_media" }
+    {
+      "platform": "TikTok",
+      "title": "If your footage looks sideways in CapCut — here's why",
+      "views": 9563,
+      "likes": 102,
+      "comments": 7,
+      "date": "2025-11-06",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Frame by Frame Ep. 1 — Head Shake Effect",
+      "views": 7536,
+      "likes": 162,
+      "comments": 11,
+      "date": "2025-07-25",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Tried the Floating Effect! One of my favorite transitions",
+      "views": 1443,
+      "likes": 77,
+      "comments": 2,
+      "date": "2025-11-02",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "POV: your friend teaches you how to aura farm",
+      "views": 901,
+      "likes": 61,
+      "comments": 5,
+      "date": "2026-02-04",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "They don't call it a MAGIC arm for no reason",
+      "views": 869,
+      "likes": 49,
+      "comments": 3,
+      "date": "2025-07-30",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Underrated tool every videographer should try",
+      "views": 790,
+      "likes": 37,
+      "comments": 0,
+      "date": "2025-07-27",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "When the degree looks better than the photo",
+      "views": 722,
+      "likes": 26,
+      "comments": 2,
+      "date": "2025-06-10",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Part 2 of 100 Videography Tips Anyone Can Learn",
+      "views": 585,
+      "likes": 40,
+      "comments": 1,
+      "date": "2026-03-05",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "To Be Continued... #hologram",
+      "views": 494,
+      "likes": 33,
+      "comments": 2,
+      "date": "2025-06-16",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Spec ad for a local business — favorite project so far",
+      "views": 449,
+      "likes": 22,
+      "comments": 0,
+      "date": "2025-05-05",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "The bet? First fish in 10 minutes",
+      "views": 385,
+      "likes": 20,
+      "comments": 0,
+      "date": "2025-06-30",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Created this promo for Kieth Keppner and Brett Moseley",
+      "views": 373,
+      "likes": 15,
+      "comments": 0,
+      "date": "2025-05-26",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Short film with Isabelle Lovejoy, Adriane Nanje, Emma G",
+      "views": 354,
+      "likes": 14,
+      "comments": 1,
+      "date": "2025-05-05",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Part 1 of 100 Videography Tips Anyone Can Learn",
+      "views": 343,
+      "likes": 22,
+      "comments": 0,
+      "date": "2026-03-01",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "If you haven't mastered the filming part of speed ramps...",
+      "views": 294,
+      "likes": 7,
+      "comments": 0,
+      "date": "2026-02-25",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "TikTok",
+      "title": "Offensive lineman can play golf! #ugafootball",
+      "views": 217,
+      "likes": 15,
+      "comments": 0,
+      "date": "2025-06-27",
+      "url": "https://tiktok.com/@graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Cade's first fish catch — fishing content collab",
+      "views": null,
+      "likes": 53,
+      "comments": 0,
+      "date": "2025-06-30",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Frame by Frame Ep. 1 — Head Shake Effect",
+      "views": null,
+      "likes": 49,
+      "comments": 0,
+      "date": "2025-07-25",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Part 1 of 100 Videography Tips Anyone Can Learn",
+      "views": null,
+      "likes": 48,
+      "comments": 0,
+      "date": "2026-03-02",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "If you haven't mastered the filming part of speed ramps...",
+      "views": null,
+      "likes": 38,
+      "comments": 0,
+      "date": "2026-02-25",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "New SD card just dropped!",
+      "views": null,
+      "likes": 32,
+      "comments": 0,
+      "date": "2025-06-17",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Learned how to float last night...",
+      "views": null,
+      "likes": 31,
+      "comments": 0,
+      "date": "2025-11-03",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Sometimes the edit is the aura.",
+      "views": null,
+      "likes": 30,
+      "comments": 0,
+      "date": "2026-02-05",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "If your footage looks sideways in CapCut, here's why",
+      "views": null,
+      "likes": 23,
+      "comments": 0,
+      "date": "2025-11-07",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "They don't call it a MAGIC arm for no reason",
+      "views": null,
+      "likes": 23,
+      "comments": 0,
+      "date": "2025-07-30",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Part 2 of 100 Videography Tips Anyone Can Learn",
+      "views": null,
+      "likes": 18,
+      "comments": 0,
+      "date": "2026-03-05",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Filmed Colbie for his first catch of the summer",
+      "views": null,
+      "likes": 17,
+      "comments": 0,
+      "date": "2025-06-23",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Save this for your next shoot",
+      "views": null,
+      "likes": 14,
+      "comments": 0,
+      "date": "2025-07-28",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Spec ad — one of my favorite projects so far",
+      "views": null,
+      "likes": 12,
+      "comments": 0,
+      "date": "2025-05-05",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Short film with Isabelle Lovejoy, Adriane Nanje, Emma G",
+      "views": null,
+      "likes": 10,
+      "comments": 0,
+      "date": "2025-05-02",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Created this promo for Kieth Keppner and Brett Moseley",
+      "views": null,
+      "likes": 6,
+      "comments": 0,
+      "date": "2025-05-26",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "Athens I love you!!! @barsouthathensga",
+      "views": null,
+      "likes": 2,
+      "comments": 0,
+      "date": "2026-03-24",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "DGD Outdoors Golf tournament recap",
+      "views": null,
+      "likes": 1,
+      "comments": 0,
+      "date": "2025-06-26",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "Instagram",
+      "title": "When the degree looks better than the photo",
+      "views": null,
+      "likes": 1,
+      "comments": 0,
+      "date": "2025-06-10",
+      "url": "https://instagram.com/graydient_media"
+    },
+    {
+      "platform": "YouTube",
+      "title": "Part 2 of 100 Videography Tips Anyone Can Learn",
+      "views": 138,
+      "likes": 0,
+      "comments": 0,
+      "date": "2026-03-05",
+      "url": "https://youtu.be/6RtxXDP3E8g",
+      "watch_time_minutes": 6.0,
+      "avg_view_pct": 10.6,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "Part 1 of 100 Videography Tips Anyone Can Learn.",
+      "views": 124,
+      "likes": 0,
+      "comments": 0,
+      "date": "2026-03-02",
+      "url": "https://youtu.be/Fye6c7Pbn50",
+      "watch_time_minutes": 5.0,
+      "avg_view_pct": 26.3,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "Speed Ramp Shooting Mistakes Costing You #videoediting #shorts",
+      "views": 1284,
+      "likes": 25,
+      "comments": 0,
+      "date": "2026-02-25",
+      "url": "https://youtu.be/N3UcxmCJsOU",
+      "watch_time_minutes": 265.0,
+      "avg_view_pct": 56.1,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "Sometimes the edit is the aura.",
+      "views": 980,
+      "likes": 7,
+      "comments": 2,
+      "date": "2026-02-04",
+      "url": "https://youtu.be/UPTXWWV4jyA",
+      "watch_time_minutes": 107.0,
+      "avg_view_pct": 54.9,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "“If Your Footage is Sideways in CapCut, Do This ⬇️ (6-Step Fix)”",
+      "views": 224,
+      "likes": 0,
+      "comments": 0,
+      "date": "2025-11-07",
+      "url": "https://youtu.be/zHSUsIMUaP8",
+      "watch_time_minutes": 35.0,
+      "avg_view_pct": 52.1,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "What Happens If You Jump At Midnight?",
+      "views": 90,
+      "likes": 0,
+      "comments": 0,
+      "date": "2025-11-03",
+      "url": "https://youtu.be/7MW4KtVFxKI",
+      "watch_time_minutes": 6.0,
+      "avg_view_pct": 279.4,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "They don’t call it MAGIC arm for no reason…😏",
+      "views": 1679,
+      "likes": 10,
+      "comments": 1,
+      "date": "2025-07-30",
+      "url": "https://youtu.be/9DghVHRTxVA",
+      "watch_time_minutes": 103.0,
+      "avg_view_pct": 81.5,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "You Won't Believe What This Arm Can Do!",
+      "views": 141,
+      "likes": 0,
+      "comments": 0,
+      "date": "2025-07-28",
+      "url": "https://youtu.be/Bq43uv8EJoQ",
+      "watch_time_minutes": 10.0,
+      "avg_view_pct": 171.2,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "Head Shake Effect - FBF",
+      "views": 876,
+      "likes": 19,
+      "comments": 0,
+      "date": "2025-07-25",
+      "url": "https://youtu.be/PMqOuGMxSqQ",
+      "watch_time_minutes": 269.0,
+      "avg_view_pct": 39.7,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "Fly Human Fly!",
+      "views": 221,
+      "likes": 5,
+      "comments": 0,
+      "date": "2025-06-21",
+      "url": "https://youtu.be/5LhaYD_YQac",
+      "watch_time_minutes": 18.0,
+      "avg_view_pct": 37.9,
+      "is_short": true
+    },
+    {
+      "platform": "YouTube",
+      "title": "New SD Card Just Dropped!",
+      "views": 994,
+      "likes": 8,
+      "comments": 1,
+      "date": "2025-06-16",
+      "url": "https://youtu.be/KxypBJzoCRg",
+      "watch_time_minutes": 192.0,
+      "avg_view_pct": 44.5,
+      "is_short": true
+    }
   ],
   "ai_insights": "Your top-performing content is tutorial and technique-focused — \"CapCut sideways footage\" (9.5K views) and \"Head Shake Effect\" (7.5K views) are 3–5x larger than everything else. These worked because they solved a specific problem or taught a specific skill with a clear, benefit-driven title. Your immediate priority: double down on this format. Every video should answer a question or teach a technique. Personal and promotional content is consistently your lowest performers — fishing trips, golf tournaments, and promos averaged under 400 views vs. 3,500+ for tutorials. TikTok is your growth platform right now. Instagram engagement is strong relative to reach but comments are not being tracked yet. Connect YouTube (Graydient Media) to get the full picture."
 }
