@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Analytical</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ─── App Nav ───────────────────────────────────────────────── -->
+<nav class="app-nav">
+  <a href="index.html" class="nav-logo">Analy<span>tical</span></a>
+  <div class="app-nav-right">
+    <span class="badge badge-gold">Creator Plan</span>
+    <div class="app-user">
+      <div class="app-avatar">GD</div>
+      <div>
+        <div class="app-user-name">Gray Davis</div>
+        <div class="app-user-plan">graydient_media</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── App Layout ────────────────────────────────────────────── -->
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="app-sidebar">
+    <a href="dashboard.html" class="sidebar-link active">
+      <span class="sidebar-icon">📊</span> Overview
+    </a>
+    <a href="#" class="sidebar-link">
+      <span class="sidebar-icon">📋</span> Top Posts
+    </a>
+    <a href="#" class="sidebar-link">
+      <span class="sidebar-icon">🤖</span> AI Insights
+    </a>
+    <div class="sidebar-label">Platforms</div>
+    <a href="#" class="sidebar-link">
+      <span class="sidebar-icon">▶</span> YouTube
+    </a>
+    <a href="#" class="sidebar-link">
+      <span class="sidebar-icon">◈</span> TikTok
+    </a>
+    <a href="#" class="sidebar-link">
+      <span class="sidebar-icon">◎</span> Instagram
+    </a>
+    <div class="sidebar-label">Account</div>
+    <a href="#" class="sidebar-link">
+      <span class="sidebar-icon">⚙</span> Settings
+    </a>
+    <a href="index.html" class="sidebar-link">
+      <span class="sidebar-icon">←</span> Log out
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="app-main">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">Overview</div>
+        <div class="page-sub">Last synced: Today at 9:14 AM · All platforms combined</div>
+      </div>
+      <div class="page-actions">
+        <select class="btn btn-ghost btn-sm" style="cursor:pointer; background:var(--surface); border:1px solid var(--border); color:var(--muted); border-radius:var(--radius-sm);">
+          <option>Last 30 days</option>
+          <option>Last 7 days</option>
+          <option>Last 90 days</option>
+          <option>All time</option>
+        </select>
+        <button class="btn btn-outline btn-sm">↻ Refresh</button>
+      </div>
+    </div>
+
+    <!-- Platform Status Row -->
+    <div class="platform-row">
+      <div class="platform-pill">
+        <div class="status-dot live"></div>
+        <span class="platform-name">YouTube</span>
+        <span class="platform-stat">47 videos</span>
+      </div>
+      <div class="platform-pill">
+        <div class="status-dot live"></div>
+        <span class="platform-name">TikTok</span>
+        <span class="platform-stat">63 videos</span>
+      </div>
+      <div class="platform-pill">
+        <div class="status-dot live"></div>
+        <span class="platform-name">Instagram</span>
+        <span class="platform-stat">38 posts</span>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Views</div>
+        <div class="stat-value">440.8K</div>
+        <div class="stat-delta up">
+          ↑ 18.4%
+          <span class="stat-delta-period">vs last 30d</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Likes</div>
+        <div class="stat-value">21.1K</div>
+        <div class="stat-delta up">
+          ↑ 11.2%
+          <span class="stat-delta-period">vs last 30d</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Followers</div>
+        <div class="stat-value">3.2K</div>
+        <div class="stat-delta up">
+          ↑ 6.8%
+          <span class="stat-delta-period">vs last 30d</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg. Eng. Rate</div>
+        <div class="stat-value">4.8%</div>
+        <div class="stat-delta up">
+          ↑ 0.4 pts
+          <span class="stat-delta-period">vs last 30d</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Insights + Platform Breakdown -->
+    <div class="two-col">
+
+      <!-- AI Insights -->
+      <div class="insights-card">
+        <div class="insights-header">
+          <div class="insights-title">
+            <span>✦</span> AI Insights
+          </div>
+          <button class="btn btn-ghost btn-sm">Regenerate</button>
+        </div>
+        <div class="insights-body">
+          <strong>Here's what's driving your growth this month:</strong>
+          <ul>
+            <li>Your <strong>tutorial-style content</strong> is outperforming everything else — "5 Camera Settings" and "10-Minute Color Grade" are your top 2 by engagement rate (6.2% and 5.9%). Your audience responds strongly to actionable, technical breakdowns.</li>
+            <li><strong>Posting on Wednesday and Thursday</strong> consistently delivers 40% higher reach than weekend posts across all three platforms. Consider front-loading your release schedule mid-week.</li>
+            <li>Your <strong>TikTok hooks are your biggest asset</strong> — videos where you open with a problem statement ("Here's the mistake every beginner makes...") average 2.3x more watch time than pure showcase content.</li>
+            <li>Instagram engagement is <strong>down 8% this month</strong> compared to TikTok and YouTube. Your shortest Reels (under 30 seconds) are performing best — consider testing more quick-tip formats there.</li>
+          </ul>
+        </div>
+        <div class="insights-footer">Generated March 31, 2026 · Powered by Claude AI</div>
+      </div>
+
+      <!-- Platform Breakdown -->
+      <div class="app-card">
+        <div class="app-card-header">
+          <div class="app-card-title">Platform Breakdown</div>
+          <span class="badge badge-muted">Views</span>
+        </div>
+        <div class="app-card-body">
+          <div class="platform-breakdown">
+
+            <div class="platform-row-card">
+              <div class="pb-header">
+                <span class="pb-name">▶ YouTube</span>
+                <span class="pb-views">284.6K</span>
+              </div>
+              <div class="pb-bar-bg">
+                <div class="pb-bar-fill pb-bar-yt" style="width: 65%"></div>
+              </div>
+              <div class="pb-stats">
+                <span>12.4K likes</span>
+                <span>892 comments</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="platform-row-card">
+              <div class="pb-header">
+                <span class="pb-name">◈ TikTok</span>
+                <span class="pb-views">156.2K</span>
+              </div>
+              <div class="pb-bar-bg">
+                <div class="pb-bar-fill pb-bar-tt" style="width: 36%"></div>
+              </div>
+              <div class="pb-stats">
+                <span>8.7K likes</span>
+                <span>421 comments</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="platform-row-card">
+              <div class="pb-header">
+                <span class="pb-name">◎ Instagram</span>
+                <span class="pb-views">—</span>
+              </div>
+              <div class="pb-bar-bg">
+                <div class="pb-bar-fill pb-bar-ig" style="width: 0%"></div>
+              </div>
+              <div class="pb-stats">
+                <span class="text-muted" style="font-size:0.78rem;">Views not reported by API</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Top Posts Table -->
+    <div class="posts-table-wrap">
+      <div class="app-card">
+        <div class="app-card-header">
+          <div class="app-card-title">Top Posts</div>
+          <div style="display:flex; gap:0.5rem;">
+            <span class="badge badge-muted" style="cursor:pointer;">All Platforms</span>
+            <span class="badge badge-gold" style="cursor:pointer;">This Month</span>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:40px;"></th>
+                <th>Title</th>
+                <th>Platform</th>
+                <th>Views</th>
+                <th>Likes</th>
+                <th>Comments</th>
+                <th>Eng. Rate</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr>
+                <td><div class="td-thumb">▶</div></td>
+                <td class="td-title">5 Camera Settings That Changed My Videos</td>
+                <td><span class="badge badge-gold">YouTube</span></td>
+                <td class="td-num">48,214</td>
+                <td class="td-num">2,980</td>
+                <td class="td-num">147</td>
+                <td>
+                  <div class="eng-bar-wrap">
+                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:62%"></div></div>
+                    <div class="eng-bar-val">6.2%</div>
+                  </div>
+                </td>
+                <td class="text-muted">Mar 18</td>
+              </tr>
+
+              <tr>
+                <td><div class="td-thumb">◈</div></td>
+                <td class="td-title">My Full Editing Workflow (Breakdown)</td>
+                <td><span class="badge badge-blue">TikTok</span></td>
+                <td class="td-num">32,108</td>
+                <td class="td-num">1,865</td>
+                <td class="td-num">89</td>
+                <td>
+                  <div class="eng-bar-wrap">
+                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:58%"></div></div>
+                    <div class="eng-bar-val">5.8%</div>
+                  </div>
+                </td>
+                <td class="text-muted">Mar 22</td>
+              </tr>
+
+              <tr>
+                <td><div class="td-thumb">▶</div></td>
+                <td class="td-title">Day in the Life: Filming for a CEO</td>
+                <td><span class="badge badge-gold">YouTube</span></td>
+                <td class="td-num">28,741</td>
+                <td class="td-num">1,462</td>
+                <td class="td-num">203</td>
+                <td>
+                  <div class="eng-bar-wrap">
+                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:51%"></div></div>
+                    <div class="eng-bar-val">5.1%</div>
+                  </div>
+                </td>
+                <td class="text-muted">Mar 11</td>
+              </tr>
+
+              <tr>
+                <td><div class="td-thumb">◈</div></td>
+                <td class="td-title">Why I Switched to the Sony A7 IV</td>
+                <td><span class="badge badge-blue">TikTok</span></td>
+                <td class="td-num">24,390</td>
+                <td class="td-num">1,102</td>
+                <td class="td-num">58</td>
+                <td>
+                  <div class="eng-bar-wrap">
+                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:47%"></div></div>
+                    <div class="eng-bar-val">4.7%</div>
+                  </div>
+                </td>
+                <td class="text-muted">Mar 26</td>
+              </tr>
+
+              <tr>
+                <td><div class="td-thumb">▶</div></td>
+                <td class="td-title">How I Color Grade in 10 Minutes (My Exact LUT)</td>
+                <td><span class="badge badge-gold">YouTube</span></td>
+                <td class="td-num">19,814</td>
+                <td class="td-num">1,168</td>
+                <td class="td-num">76</td>
+                <td>
+                  <div class="eng-bar-wrap">
+                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:59%"></div></div>
+                    <div class="eng-bar-val">5.9%</div>
+                  </div>
+                </td>
+                <td class="text-muted">Mar 5</td>
+              </tr>
+
+              <tr>
+                <td><div class="td-thumb">◈</div></td>
+                <td class="td-title">POV: You Finally Nail the Focus Pull</td>
+                <td><span class="badge badge-blue">TikTok</span></td>
+                <td class="td-num">17,622</td>
+                <td class="td-num">889</td>
+                <td class="td-num">34</td>
+                <td>
+                  <div class="eng-bar-wrap">
+                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:44%"></div></div>
+                    <div class="eng-bar-val">4.4%</div>
+                  </div>
+                </td>
+                <td class="text-muted">Mar 29</td>
+              </tr>
+
+              <tr>
+                <td><div class="td-thumb">▶</div></td>
+                <td class="td-title">The Lens I Use for Everything (Sony 24-70 GM)</td>
+                <td><span class="badge badge-gold">YouTube</span></td>
+                <td class="td-num">14,903</td>
+                <td class="td-num">731</td>
+                <td class="td-num">91</td>
+                <td>
+                  <div class="eng-bar-wrap">
+                    <div class="eng-bar-bg"><div class="eng-bar-fill" style="width:40%"></div></div>
+                    <div class="eng-bar-val">4.0%</div>
+                  </div>
+                </td>
+                <td class="text-muted">Feb 28</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
