@@ -2,36 +2,24 @@
 <html>
 <head>
   <title>TikTok Auth Callback</title>
-  <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 80px auto; text-align: center; }
-    #code-box { font-size: 18px; font-weight: bold; background: #f0f0f0; padding: 16px; border-radius: 8px; word-break: break-all; margin: 20px 0; }
-    button { padding: 10px 24px; font-size: 16px; cursor: pointer; }
-  </style>
 </head>
 <body>
-  <h2>TikTok Authorization</h2>
-  <div id="status"></div>
-  <div id="code-box"></div>
-  <button id="copy-btn" style="display:none" onclick="copyCode()">Copy Code</button>
-
+  <p>Connecting TikTok... please wait.</p>
   <script>
     const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
+    const code  = params.get('code');
+    const state = params.get('state');
     const error = params.get('error');
 
-    if (code) {
-      document.getElementById('status').innerHTML = '<p>Authorization successful! Copy the code below and paste it into your terminal.</p>';
-      document.getElementById('code-box').textContent = code;
-      document.getElementById('copy-btn').style.display = 'inline-block';
+    if (code && state) {
+      // Relay to local backend
+      window.location.href =
+        'http://localhost:8000/api/connect/tiktok/callback?code=' +
+        encodeURIComponent(code) + '&state=' + encodeURIComponent(state);
     } else if (error) {
-      document.getElementById('status').innerHTML = '<p style="color:red">Error: ' + error + '</p>';
+      document.body.innerHTML = '<p style="color:red">TikTok error: ' + error + '</p>';
     } else {
-      document.getElementById('status').innerHTML = '<p style="color:red">No code found in URL.</p>';
-    }
-
-    function copyCode() {
-      navigator.clipboard.writeText(code);
-      document.getElementById('copy-btn').textContent = 'Copied!';
+      document.body.innerHTML = '<p style="color:red">No auth code received.</p>';
     }
   </script>
 </body>
