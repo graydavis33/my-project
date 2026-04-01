@@ -1,66 +1,59 @@
+import sqlite3
 import os
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from dotenv import load_dotenv
 
-load_dotenv()
+DB_PATH = os.path.join(os.path.dirname(__file__), 'analytical.db')
 
-DATABASE_URL = os.getenv('DATABASE_URL', '')
+
+def dict_factory(cursor, row):
+    return {col[0]: row[idx] for idx, col in enumerate(cursor.description)}
 
 
 def get_connection():
-    """Return a new psycopg2 connection using DATABASE_URL."""
-    return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = dict_factory
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
 
 
 def init_db():
-    """Create all tables if they don't exist. Safe to run on every startup."""
     conn = get_connection()
     try:
-        with conn.cursor() as cur:
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS users (
-                    id SERIAL PRIMARY KEY,
-                    email TEXT UNIQUE NOT NULL,
-                    password_hash TEXT NOT NULL,
-                    tier TEXT NOT NULL DEFAULT 'free',
-                    stripe_customer_id TEXT,
-                    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-                )
-            """)
+        conn.executescript("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                tier TEXT NOT NULL DEFAULT 'free',
+                stripe_customer_id TEXT,
+                created_at TEXT NOT NULL DEFAULT (datetime('now'))
+            );
 
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS platform_connections (
-                    id SERIAL PRIMARY KEY,
-                    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                    platform TEXT NOT NULL,
-                    access_token TEXT NOT NULL,
-                    refresh_token TEXT,
-                    expires_at TIMESTAMPTZ,
-                    connected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                    UNIQUE(user_id, platform)
-                )
-            """)
+            CREATE TABLE IF NOT EXISTS platform_connections (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                platform TEXT NOT NULL,
+                access_token TEXT NOT NULL,
+                refresh_token TEXT,
+                expires_at TEXT,
+                connected_at TEXT NOT NULL DEFAULT (datetime('now')),
+                UNIQUE(user_id, platform)
+            );
 
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS analytics_snapshots (
-                    id SERIAL PRIMARY KEY,
-                    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                    platform TEXT NOT NULL,
-                    fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                    data JSONB NOT NULL
-                )
-            """)
+            CREATE TABLE IF NOT EXISTS analytics_snapshots (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                platform TEXT NOT NULL,
+                fetched_at TEXT NOT NULL DEFAULT (datetime('now')),
+                data TEXT NOT NULL
+            );
 
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS ai_insights (
-                    id SERIAL PRIMARY KEY,
-                    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-                    generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-                    content TEXT NOT NULL
-                )
-            """)
-
+            CREATE TABLE IF NOT EXISTS ai_insights (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                generated_at TEXT NOT NULL DEFAULT (datetime('now')),
+                content TEXT NOT NULL
+            );
+        """)
         conn.commit()
     finally:
         conn.close()
