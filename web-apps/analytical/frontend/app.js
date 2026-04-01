@@ -7,14 +7,44 @@ function getApiBase() {
 }
 
 // ─── Auth Helpers ─────────────────────────────────────────────
+const LOCAL_EMAIL = 'local@analytical.app';
+const LOCAL_PASS  = 'localdev123';
+
 function getToken() {
   return localStorage.getItem('token');
 }
 
-function requireAuth() {
-  if (!getToken()) {
-    window.location.href = 'login.html';
-  }
+async function requireAuth() {
+  if (getToken()) return;
+
+  // Auto-login as the local user (create account if first run)
+  try {
+    const res = await fetch(API_BASE + '/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: LOCAL_EMAIL, password: LOCAL_PASS }),
+    });
+    const data = await res.json();
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      return;
+    }
+  } catch {}
+
+  // Account already exists — login instead
+  try {
+    const res = await fetch(API_BASE + '/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: LOCAL_EMAIL, password: LOCAL_PASS }),
+    });
+    const data = await res.json();
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+    }
+  } catch {}
 }
 
 function logout() {

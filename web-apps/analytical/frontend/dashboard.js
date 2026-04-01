@@ -298,4 +298,4 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ─── Boot ─────────────────────────────────────────────────────
-fetchStats();
+requireAuth().then(() => fetchStats());

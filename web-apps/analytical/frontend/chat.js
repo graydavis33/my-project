@@ -1,5 +1,5 @@
 // ─── Init ─────────────────────────────────────────────────────
-requireAuth();
+requireAuth(); // async — fire and forget, token set before any user action
 
 let history = [];
 let isLoading = false;

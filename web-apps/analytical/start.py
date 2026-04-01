@@ -34,7 +34,7 @@ frontend_proc = subprocess.Popen(
 time.sleep(2)
 print()
 print("Opening http://localhost:3000 ...")
-webbrowser.open('http://localhost:3000')
+webbrowser.open('http://localhost:3000/dashboard.html')
 
 print()
 print("Both servers are running.")
