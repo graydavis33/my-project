@@ -50,7 +50,7 @@ async function requireAuth() {
 function logout() {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
-  window.location.href = 'login.html';
+  window.location.href = 'dashboard.html';
 }
 
 // ─── API Call Wrapper ─────────────────────────────────────────
@@ -68,9 +68,11 @@ async function apiCall(path, options = {}) {
   });
 
   if (res.status === 401) {
-    // Token expired or invalid — force logout
-    logout();
-    throw new Error('Session expired. Please log in again.');
+    // Token expired — clear and re-auth next page load
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    await requireAuth();
+    throw new Error('Session refreshed — please try again.');
   }
 
   const data = await res.json().catch(() => ({}));
