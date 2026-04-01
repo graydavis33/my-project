@@ -47,7 +47,7 @@ YOUTUBE_SCOPES = [
     'https://www.googleapis.com/auth/yt-analytics.readonly',
 ]
 YOUTUBE_REDIRECT_URI = os.getenv('YOUTUBE_REDIRECT_URI', 'http://localhost:8000/api/connect/youtube/callback')
-TIKTOK_REDIRECT_URI = os.getenv('TIKTOK_REDIRECT_URI', 'http://localhost:8000/api/connect/tiktok/callback')
+TIKTOK_REDIRECT_URI = os.getenv('TIKTOK_REDIRECT_URI', 'https://graydavis33.github.io/my-project/tiktok-callback.html')
 
 _oauth_states = {}
 
