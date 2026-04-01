@@ -5,6 +5,8 @@ import os
 os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 import json
 import secrets
+import hashlib
+import base64
 import stripe
 import anthropic
 from datetime import datetime, timezone
@@ -212,13 +214,18 @@ def connect_tiktok(token: str = Query(...)):
         raise HTTPException(status_code=401, detail='Invalid token')
 
     state = secrets.token_urlsafe(32)
-    _oauth_states[state] = {'user_id': user_id, 'platform': 'tiktok'}
+    code_verifier = secrets.token_urlsafe(64)
+    code_challenge = base64.urlsafe_b64encode(
+        hashlib.sha256(code_verifier.encode()).digest()
+    ).rstrip(b'=').decode()
+    _oauth_states[state] = {'user_id': user_id, 'platform': 'tiktok', 'code_verifier': code_verifier}
 
     auth_url = (
         f'https://www.tiktok.com/v2/auth/authorize/'
         f'?client_key={TIKTOK_CLIENT_KEY}'
         f'&response_type=code&scope=user.info.basic,video.list'
         f'&redirect_uri={TIKTOK_REDIRECT_URI}&state={state}'
+        f'&code_challenge={code_challenge}&code_challenge_method=S256'
     )
     return RedirectResponse(auth_url)
 
@@ -239,6 +246,7 @@ def tiktok_callback(code: str = Query(None), state: str = Query(None), error: st
         'code': code,
         'grant_type': 'authorization_code',
         'redirect_uri': TIKTOK_REDIRECT_URI,
+        'code_verifier': state_data.get('code_verifier', ''),
     }, timeout=20)
 
     if not resp.ok:
