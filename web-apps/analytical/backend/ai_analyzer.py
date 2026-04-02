@@ -24,58 +24,61 @@ def _build_prompt(stats):
     if yt and yt.get('videos'):
         all_videos.extend(yt['videos'])
         platform_summaries.append(
-            f"YouTube: {yt.get('channel_name', '')} — {yt.get('subscriber_count', 0):,} subscribers, "
-            f"{len(yt['videos'])} videos"
+            f"YouTube: {yt.get('channel_name', 'your channel')} — "
+            f"{yt.get('subscriber_count', 0):,} subscribers, {len(yt['videos'])} videos"
         )
 
     tt = stats.get('tiktok')
     if tt and tt.get('videos'):
         all_videos.extend(tt['videos'])
         platform_summaries.append(
-            f"TikTok: {tt.get('username', '')} — {tt.get('follower_count', 0):,} followers, "
-            f"{len(tt['videos'])} videos"
+            f"TikTok: @{tt.get('username', '')} — "
+            f"{tt.get('follower_count', 0):,} followers, {len(tt['videos'])} videos"
         )
 
     if not all_videos:
         return None
 
     total = len(all_videos)
-    top = sorted(all_videos, key=lambda x: x.get('views', 0), reverse=True)[:10]
-    bottom = sorted(all_videos, key=lambda x: x.get('views', 0))[:5]
+    top = sorted(all_videos, key=lambda x: x.get('views', 0), reverse=True)[:8]
     avg_views = sum(v.get('views', 0) for v in all_videos) / total
 
     def fmt(v):
+        eng = v.get('likes', 0) + v.get('comments', 0) + v.get('shares', 0)
+        views = v.get('views', 0)
+        eng_rate = f"{(eng / views * 100):.1f}%" if views > 0 else "—"
         return (
-            f"  [{v.get('platform', '')}] <title>{_safe_title(v.get('title', ''))}</title>\n"
-            f"  Published: {v.get('published_at', '—')} | Views: {v.get('views', 0):,} | "
-            f"Likes: {v.get('likes', 0):,} | Comments: {v.get('comments', 0):,} | "
-            f"Shares: {v.get('shares', 0):,}\n"
+            f"  [{v.get('platform', '')}] \"{_safe_title(v.get('title', ''))}\"\n"
+            f"  {v.get('views', 0):,} views · {v.get('likes', 0):,} likes · "
+            f"{v.get('comments', 0):,} comments · {eng_rate} engagement\n"
         )
 
-    platforms_str = '\n'.join(f'- {s}' for s in platform_summaries)
+    platforms_str = ' | '.join(platform_summaries)
 
-    return f"""You are a social media analytics expert advising a content creator. Analyze this cross-platform data and provide deep, actionable insights.
+    return f"""You are a sharp, direct content strategy coach reviewing a creator's analytics. Your job is to give them a fast, honest read on their data.
 
-ACCOUNTS:
+CREATOR DATA:
 {platforms_str}
+Total videos: {total} | Avg views: {avg_views:,.0f}
 
-OVERVIEW:
-- Total videos analyzed: {total}
-- Average views per video: {avg_views:,.0f}
-
-TOP 10 PERFORMING VIDEOS:
+TOP PERFORMING VIDEOS:
 {''.join(fmt(v) for v in top)}
-BOTTOM 5 PERFORMING VIDEOS:
-{''.join(fmt(v) for v in bottom)}
 
-Please provide a thorough analysis covering:
-1. **What's Working** — Common patterns among top performers (length, topics, titles, timing, platform)
-2. **What's Not Working** — Why the low performers likely underperformed
-3. **Cross-Platform Patterns** — What the data reveals about YouTube vs TikTok performance
-4. **Engagement Analysis** — Likes/comments/shares relative to views
-5. **Top 5 Recommendations** — Specific, actionable changes to make immediately
+Write your analysis in exactly 4 short sections. Each section has a bold title on its own line, followed by 2–3 sentences of plain prose. No bullet lists. No fluff. Speak directly to the creator as "you."
 
-Be specific. Reference actual video titles and numbers. Give honest, direct advice."""
+**What's Landing**
+What patterns are driving the top videos? Be specific — mention titles, numbers, and what they have in common.
+
+**What's Not Working**
+Where is performance falling flat and why? Be honest.
+
+**Your Best Move**
+One strategic shift that would have the biggest impact on growth right now.
+
+**Quick Win**
+One specific thing they can do this week — a video idea, title format, or posting change — based directly on what the data shows.
+
+Keep the whole response under 250 words. Be concrete, not generic."""
 
 
 def generate_insights(stats):
@@ -95,7 +98,7 @@ def generate_insights(stats):
     client = anthropic.Anthropic(api_key=api_key)
     response = client.messages.create(
         model='claude-haiku-4-5-20251001',
-        max_tokens=1500,
+        max_tokens=600,
         messages=[{'role': 'user', 'content': prompt}]
     )
     return response.content[0].text.strip()
