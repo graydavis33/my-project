@@ -387,18 +387,24 @@
     function openEditor() {
       const labelsRow = card.querySelector('.stat-progress-labels');
       labelsRow.innerHTML = `
-        <span class="stat-progress-current">${currentLabel.textContent}</span>
-        <div class="stat-goal-editor">
-          <input class="stat-goal-input" type="number" value="${current}" placeholder="Current">
-          <span style="color:rgba(148,163,184,0.6)">/</span>
-          <input class="stat-goal-input" type="number" value="${goal}" placeholder="Goal">
+        <div class="stat-goal-editor" style="width:100%">
+          <div class="stat-goal-editor-row">
+            <span class="stat-goal-label">Current</span>
+            <input class="stat-goal-input" type="number" value="${current}">
+          </div>
+          <div class="stat-goal-editor-row">
+            <span class="stat-goal-label">Goal</span>
+            <input class="stat-goal-input" type="number" value="${goal}">
+          </div>
           <button class="stat-goal-save">Save</button>
         </div>
       `;
       labelsRow.querySelector('.stat-goal-save').addEventListener('click', () => {
         const inputs = labelsRow.querySelectorAll('.stat-goal-input');
-        current = parseFloat(inputs[0].value) || current;
-        goal = parseFloat(inputs[1].value) || goal;
+        const newCurrent = parseFloat(inputs[0].value);
+        const newGoal = parseFloat(inputs[1].value);
+        if (!isNaN(newCurrent)) current = newCurrent;
+        if (!isNaN(newGoal)) goal = newGoal;
         labelsRow.innerHTML = `
           <span class="stat-progress-current">${current.toLocaleString()}</span>
           <span class="stat-progress-goal">Goal: ${goal.toLocaleString()}</span>
