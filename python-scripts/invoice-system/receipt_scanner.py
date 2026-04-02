@@ -10,7 +10,9 @@ import json
 import os
 import sys as _sys
 import anthropic
-from config import ANTHROPIC_API_KEY, CATEGORIES
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+from config import ANTHROPIC_API_KEY, CATEGORIES, SLACK_BOT_TOKEN, SLACK_PAYMENTS_CHANNEL_ID
 
 _sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
 from usage_logger import track_response
@@ -185,6 +187,33 @@ def _single_extract_transaction(email):
         return None
 
 
+def _post_slack_notification(expense):
+    if not SLACK_BOT_TOKEN or not SLACK_PAYMENTS_CHANNEL_ID:
+        return
+    try:
+        slack = WebClient(token=SLACK_BOT_TOKEN)
+        blocks = [
+            {"type": "header", "text": {"type": "plain_text", "text": "🧾 Expense Logged"}},
+            {
+                "type": "section",
+                "fields": [
+                    {"type": "mrkdwn", "text": f"*Amount:*\n${expense['amount']:,.2f}"},
+                    {"type": "mrkdwn", "text": f"*Vendor:*\n{expense['vendor']}"},
+                    {"type": "mrkdwn", "text": f"*Category:*\n{expense['category']}"},
+                    {"type": "mrkdwn", "text": f"*Date:*\n{expense['date']}"},
+                ],
+            },
+            {"type": "context", "elements": [{"type": "mrkdwn", "text": "✓ Logged to Google Sheets — Business Expenses tab"}]},
+        ]
+        slack.chat_postMessage(
+            channel=SLACK_PAYMENTS_CHANNEL_ID,
+            blocks=blocks,
+            text=f"Expense logged — ${expense['amount']:,.2f} at {expense['vendor']} ({expense['category']})",
+        )
+    except SlackApiError as e:
+        print(f"    ⚠️  Slack error: {e.response['error']}")
+
+
 def scan_receipts(emails):
     """
     Run extraction on a list of Gmail emails in batches of 5.
@@ -213,13 +242,15 @@ def scan_receipts(emails):
         for email, result in zip(batch, results):
             newly_scanned.add(email['id'])
             if result:
-                expenses.append({
+                expense = {
                     "date": result["date"],
                     "vendor": result["vendor"],
                     "category": result["category"],
                     "amount": result["amount"],
                     "notes": result.get("notes", ""),
-                })
+                }
+                expenses.append(expense)
+                _post_slack_notification(expense)
                 print(f"    ✓ {email['subject'][:50]} → ${result['amount']} | {result['category']}")
             else:
                 print(f"    – {email['subject'][:50]} → not a receipt")
