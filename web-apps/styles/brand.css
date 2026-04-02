@@ -18,6 +18,14 @@
   --color-gray-mid:     #4a5568;
   --color-gray-light:   #8899aa;
   --color-white:        #f0f4f8;
+  /* Electric Blue — primary interactive accent (Analytical + future apps) */
+  --color-blue:         #0EA5E9;
+  --color-blue-light:   #38BDF8;
+  --color-blue-dim:     rgba(14, 165, 233, 0.12);
+  --glow-blue:          0 0 24px rgba(14, 165, 233, 0.22);
+  --border-blue:        1px solid rgba(14, 165, 233, 0.35);
+
+  /* Gold — Graydient brand marks only */
   --color-yellow:       #e8b84b;
   --color-yellow-light: #f5e070;
   --color-yellow-dim:   rgba(232, 184, 75, 0.15);

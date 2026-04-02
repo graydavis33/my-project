@@ -5,7 +5,7 @@ let globalStats = null;
 let currentView = 'overview';
 let chartInstances = {};
 
-// Chart defaults — gold on dark navy
+// Chart defaults — electric blue on dark
 Chart.defaults.color = '#8899aa';
 Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 Chart.defaults.font.family = "'Inter', sans-serif";
@@ -332,9 +332,9 @@ function toggleAdvanced(platform) {
 }
 
 // ─── Charts ───────────────────────────────────────────────────
-const GOLD = '#e8b84b';
-const GOLD_DIM = 'rgba(232,184,75,0.15)';
-const GOLD_LINE = 'rgba(232,184,75,0.8)';
+const GOLD = '#0EA5E9';
+const GOLD_DIM = 'rgba(14,165,233,0.15)';
+const GOLD_LINE = 'rgba(14,165,233,0.8)';
 
 function chartConfig(labels, data, type) {
   if (type === 'bar') {
