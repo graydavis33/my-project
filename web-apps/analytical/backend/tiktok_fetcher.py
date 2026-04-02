@@ -153,6 +153,12 @@ class TikTokFetcher:
             has_more = data.get('has_more', False)
             cursor = data.get('cursor', 0)
 
+        # Extract username from video URL if user.info scope wasn't granted
+        if not username and videos:
+            url = videos[0].get('url', '')
+            if '/@' in url:
+                username = url.split('/@')[1].split('/')[0]
+
         return {
             'username': username,
             'follower_count': follower_count,
