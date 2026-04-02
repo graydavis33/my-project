@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytical — Design Preview</title>
+  <link rel="stylesheet" href="frontend/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* Preview-only: show all views at once */
+    .view-section { margin-bottom: 3rem; }
+    .preview-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(14,165,233,0.5);
+      font-weight: 700;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Nav ────────────────────────────────────────────────── -->
+<nav>
+  <a href="#" class="nav-logo">Analy<span>tical</span></a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Dashboard</a></li>
+    <li><a href="#">Connections</a></li>
+    <li><a href="#">AI Chat</a></li>
+  </ul>
+  <div class="nav-cta">
+    <span style="font-size:0.85rem; color:var(--muted);">gray@graydientmedia.com</span>
+    <button class="btn btn-ghost btn-sm">Log out</button>
+  </div>
+</nav>
+
+<!-- ─── Layout ───────────────────────────────────────────────── -->
+<div class="dash-layout">
+
+  <!-- Sidebar -->
+  <aside class="dash-sidebar">
+    <a href="#" class="sidebar-link active">
+      <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Overview
+    </a>
+
+    <div class="sidebar-section-label">Platforms</div>
+
+    <a href="#" class="sidebar-link">
+      <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="#FF0000">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+      </svg>
+      YouTube
+    </a>
+
+    <a href="#" class="sidebar-link">
+      <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="white">
+        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.01a8.16 8.16 0 004.77 1.52V7.07a4.85 4.85 0 01-1-.38z"/>
+      </svg>
+      TikTok
+    </a>
+
+    <a href="#" class="sidebar-link">
+      <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f09433"/><stop offset="50%" style="stop-color:#dc2743"/><stop offset="100%" style="stop-color:#bc1888"/></linearGradient></defs><path fill="url(#ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      Instagram
+    </a>
+
+    <a href="#" class="sidebar-link">
+      <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="#1877F2">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+      Facebook
+    </a>
+
+    <div class="sidebar-section-label">Tools</div>
+
+    <a href="#" class="sidebar-link">
+      <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      AI Chat
+    </a>
+
+    <a href="#" class="sidebar-link">
+      <svg style="width:16px;height:16px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      Connections
+    </a>
+
+    <div class="sidebar-section-label">Account</div>
+    <a href="#" class="sidebar-link">⭐ Upgrade</a>
+    <a href="#" class="sidebar-link">🚪 Log out</a>
+  </aside>
+
+  <!-- Main -->
+  <main class="dash-main">
+
+    <!-- Header -->
+    <div class="dash-header">
+      <div>
+        <div class="dash-title">Overview</div>
+        <div class="dash-subtitle">Last updated: Today at 2:41 PM</div>
+      </div>
+      <button class="btn btn-outline btn-sm">↻ Refresh</button>
+    </div>
+
+    <!-- Platform badges -->
+    <div class="platform-cards">
+      <div class="platform-badge connected">
+        <div class="status-dot"></div>
+        <span class="platform-name">YouTube</span>
+        <span class="platform-status">Connected</span>
+      </div>
+      <div class="platform-badge connected">
+        <div class="status-dot"></div>
+        <span class="platform-name">TikTok</span>
+        <span class="platform-status">Connected</span>
+      </div>
+      <div class="platform-badge">
+        <div class="status-dot"></div>
+        <span class="platform-name">Instagram</span>
+        <span class="platform-status">Not connected</span>
+      </div>
+      <div class="platform-badge">
+        <div class="status-dot"></div>
+        <span class="platform-name">Facebook</span>
+        <span class="platform-status">Not connected</span>
+      </div>
+    </div>
+
+    <!-- AI Insights panel -->
+    <div class="insights-panel">
+      <div class="insights-header">
+        <div class="insights-title">✦ AI Insights</div>
+        <button class="btn btn-ghost btn-sm">Regenerate</button>
+      </div>
+      <div class="insights-body">
+        Your <strong>YouTube channel</strong> is outperforming TikTok by 3.2× on average views per post. Your top video this week — <strong>"How I Edit Reels in 10 Min"</strong> — hit 284K views with a 6.4% engagement rate, well above your 2.1% average.<br><br>
+        Posting between <strong>6–8 PM EST</strong> drives 42% higher engagement. Your hook-heavy titles consistently outperform question-based hooks by 1.8×.
+      </div>
+      <div class="insights-generated">Generated Apr 2, 2026 at 2:41 PM</div>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="stats-grid" style="margin-bottom:2rem;">
+      <div class="stat-card">
+        <div class="stat-label">Total Followers</div>
+        <div class="stat-value">47.2K</div>
+        <div class="stat-delta">↑ +1.4K this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Views</div>
+        <div class="stat-value">2.8M</div>
+        <div class="stat-delta">↑ +284K this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Likes</div>
+        <div class="stat-value">186K</div>
+        <div class="stat-delta">↑ +12.4K this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Comments</div>
+        <div class="stat-value">9.3K</div>
+        <div class="stat-delta">↑ +740 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Shares</div>
+        <div class="stat-value">22.1K</div>
+        <div class="stat-delta">↑ +1.8K this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Videos</div>
+        <div class="stat-value">138</div>
+        <div class="stat-delta">↑ +3 this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Engagement</div>
+        <div class="stat-value">4.7%</div>
+        <div class="stat-delta">↑ +0.3% this week</div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="chart-grid" style="grid-template-columns:1fr; margin-bottom:2rem;">
+      <div class="chart-card">
+        <div class="chart-title">Platform Comparison — Total Views</div>
+        <div class="chart-canvas-wrap">
+          <canvas id="chart-overview"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top posts table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Top Posts — All Platforms</div>
+      </div>
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label>Platform</label>
+          <select>
+            <option>All</option>
+            <option>YouTube</option>
+            <option>TikTok</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Sort by</label>
+          <select>
+            <option>Views</option>
+            <option>Likes</option>
+            <option>Engagement Rate</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:64px;"></th>
+              <th>Title</th>
+              <th>Platform</th>
+              <th>Views</th>
+              <th>Likes</th>
+              <th>Eng%</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div style="width:64px;height:36px;background:rgba(14,165,233,0.12);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1rem;">▶</div></td>
+              <td style="font-size:0.875rem;">How I Edit Reels in 10 Min (No Plugins)</td>
+              <td><span style="font-size:0.75rem;color:#ff0000;font-weight:600;">YouTube</span></td>
+              <td>284K</td>
+              <td>18.2K</td>
+              <td style="color:var(--success);">6.4%</td>
+              <td style="color:var(--muted);font-size:0.8rem;">Mar 28</td>
+              <td><button class="btn btn-ghost btn-sm">Watch</button></td>
+            </tr>
+            <tr>
+              <td><div style="width:64px;height:36px;background:rgba(255,255,255,0.05);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1rem;">♫</div></td>
+              <td style="font-size:0.875rem;">POV: You're a videographer for a CEO</td>
+              <td><span style="font-size:0.75rem;color:#fff;font-weight:600;">TikTok</span></td>
+              <td>198K</td>
+              <td>14.1K</td>
+              <td style="color:var(--success);">7.1%</td>
+              <td style="color:var(--muted);font-size:0.8rem;">Mar 25</td>
+              <td><button class="btn btn-ghost btn-sm">Open</button></td>
+            </tr>
+            <tr>
+              <td><div style="width:64px;height:36px;background:rgba(14,165,233,0.12);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1rem;">▶</div></td>
+              <td style="font-size:0.875rem;">CapCut vs Premiere Pro — Honest Review</td>
+              <td><span style="font-size:0.75rem;color:#ff0000;font-weight:600;">YouTube</span></td>
+              <td>142K</td>
+              <td>9.8K</td>
+              <td style="color:var(--success);">6.9%</td>
+              <td style="color:var(--muted);font-size:0.8rem;">Mar 21</td>
+              <td><button class="btn btn-ghost btn-sm">Watch</button></td>
+            </tr>
+            <tr>
+              <td><div style="width:64px;height:36px;background:rgba(255,255,255,0.05);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:1rem;">♫</div></td>
+              <td style="font-size:0.875rem;">I automated my entire video workflow with AI</td>
+              <td><span style="font-size:0.75rem;color:#fff;font-weight:600;">TikTok</span></td>
+              <td>97K</td>
+              <td>6.2K</td>
+              <td style="color:var(--warning);">3.8%</td>
+              <td style="color:var(--muted);font-size:0.8rem;">Mar 18</td>
+              <td><button class="btn btn-ghost btn-sm">Open</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  Chart.defaults.color = '#8899aa';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+  const ctx = document.getElementById('chart-overview').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+      datasets: [
+        {
+          label: 'YouTube',
+          data: [420000, 510000, 680000, 590000, 720000, 810000, 940000, 1100000],
+          backgroundColor: 'rgba(14,165,233,0.2)',
+          borderColor: '#0EA5E9',
+          borderWidth: 2,
+          borderRadius: 6,
+        },
+        {
+          label: 'TikTok',
+          data: [180000, 240000, 310000, 280000, 350000, 420000, 390000, 470000],
+          backgroundColor: 'rgba(56,189,248,0.12)',
+          borderColor: '#38BDF8',
+          borderWidth: 2,
+          borderRadius: 6,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top', labels: { color: '#8899aa', font: { size: 12 } } }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa' } },
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa' } }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
