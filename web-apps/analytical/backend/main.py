@@ -252,7 +252,8 @@ def tiktok_callback(code: str = Query(None), state: str = Query(None), error: st
     if not resp.ok:
         return RedirectResponse(f'{FRONTEND_URL}/connect.html?error=tiktok_token_failed')
 
-    token_data = resp.json().get('data', {})
+    raw = resp.json()
+    token_data = raw.get('data', raw)  # TikTok v2 returns tokens at top level
     conn = database.get_connection()
     try:
         models.upsert_connection(
