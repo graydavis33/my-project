@@ -21,8 +21,7 @@ Each project scored 0–3 across 4 dimensions:
 |---|---------|-------|--------|-------------|
 | 1 | Content Pipeline | 9/12 | Built on Windows | Set up on Mac, test with real video |
 | 2 | Content Researcher | 9/12 | LIVE on Mac | V2: add Reddit layer + improvements |
-| 3 | Client CRM | 7/12 | Built on Windows | Run setup, configure Google Sheet |
-| 4 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
+| 3 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
 | — | Social Media Analytics | 9/12 | LIVE — all 4 platforms active | Schedule via GitHub Actions |
 | 5 | Hook Optimizer | 6/12 | Built on Windows | Add .env on Mac |
 | 6 | Creator Intel | 5/12 | Built on Windows | Needs YouTube OAuth |
