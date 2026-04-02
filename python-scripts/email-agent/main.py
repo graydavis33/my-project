@@ -54,6 +54,28 @@ from config import (
 )
 
 
+def _run_payment_scan():
+    """Trigger the invoice system's payment scanner after each email check."""
+    import subprocess
+    import sys as _sys
+    invoice_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'invoice-system'))
+    try:
+        result = subprocess.run(
+            [_sys.executable, 'main.py', 'scan-payments', '--days', '2'],
+            cwd=invoice_dir,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        output = (result.stdout or result.stderr or "").strip()
+        if result.returncode == 0:
+            log.info(f"[Invoice] {output or 'Payment scan complete.'}")
+        else:
+            log.warning(f"[Invoice] scan-payments error: {output}")
+    except Exception:
+        log.exception("[Invoice] Payment scan failed")
+
+
 def run_email_check():
     """Main logic: fetch, classify, draft, notify."""
     log.info("Running email check...")
@@ -72,47 +94,50 @@ def run_email_check():
 
         if not emails:
             log.info("No new emails to process.")
-            return
+        else:
+            log.info(f"Found {len(emails)} unprocessed email(s).")
 
-        log.info(f"Found {len(emails)} unprocessed email(s).")
+            for email in emails:
+                log.info(f"Processing: \"{email['subject']}\" from {email['from']}")
 
-        for email in emails:
-            log.info(f"Processing: \"{email['subject']}\" from {email['from']}")
+                category, reason = classify_email(email)
+                log.info(f"  → Category: {category} | Reason: {reason}")
 
-            category = classify_email(email)
-            log.info(f"  → Category: {category}")
+                # Mark as processed so it won't be picked up again
+                mark_as_processed(service, email["id"], label_id)
 
-            # Mark as processed so it won't be picked up again
-            mark_as_processed(service, email["id"], label_id)
+                if category == CATEGORY_NEEDS_REPLY:
+                    # Only needs_reply emails get a category label — skip labeling fyi/ignore
+                    apply_category_label(service, email["id"], LABEL_NEEDS_REPLY)
+                    draft = write_draft(email)
+                    log.info(f"  → Draft written ({len(draft)} chars). Sending to Slack...")
 
-            if category == CATEGORY_NEEDS_REPLY:
-                # Only needs_reply emails get a category label — skip labeling fyi/ignore
-                apply_category_label(service, email["id"], LABEL_NEEDS_REPLY)
-                draft = write_draft(email)
-                log.info(f"  → Draft written ({len(draft)} chars). Sending to Slack...")
+                    # This callback is called when user taps Send in Slack
+                    def make_send_callback(e):
+                        def send(draft_text):
+                            reply_subject = (
+                                e["subject"]
+                                if e["subject"].startswith("Re:")
+                                else f"Re: {e['subject']}"
+                            )
+                            send_email(
+                                service,
+                                to=e["from"],
+                                subject=reply_subject,
+                                body=draft_text,
+                                thread_id=e["thread_id"],
+                            )
+                            log.info(f"Email sent to {e['from']}")
+                            followup_tracker.record_sent_reply(e)
+                        return send
 
-                # This callback is called when user taps Send in Slack
-                def make_send_callback(e):
-                    def send(draft_text):
-                        reply_subject = (
-                            e["subject"]
-                            if e["subject"].startswith("Re:")
-                            else f"Re: {e['subject']}"
-                        )
-                        send_email(
-                            service,
-                            to=e["from"],
-                            subject=reply_subject,
-                            body=draft_text,
-                            thread_id=e["thread_id"],
-                        )
-                        log.info(f"Email sent to {e['from']}")
-                        followup_tracker.record_sent_reply(e)
-                    return send
+                    send_draft_notification(email, draft, make_send_callback(email))
+                else:
+                    log.info(f"  → No action needed.")
 
-                send_draft_notification(email, draft, make_send_callback(email))
-            else:
-                log.info(f"  → No action needed.")
+        # Run invoice payment scan every cycle so payments are logged automatically
+        log.info("Running invoice payment scan...")
+        _run_payment_scan()
 
         # Check for unanswered replies older than 3 days
         overdue = followup_tracker.check_followups(service)

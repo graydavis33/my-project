@@ -34,14 +34,18 @@ Your job is to classify each email into one of three categories:
 
 When in doubt between needs_reply and fyi_only, choose needs_reply.
 
-Respond with ONLY one of these exact words: needs_reply, fyi_only, ignore
-Do not add any explanation or punctuation."""
+Respond in this exact format on one line:
+category|one short phrase explaining why (max 8 words)
+
+Example: needs_reply|client asking about project timeline
+Example: ignore|promotional newsletter from software company"""
 
 
 def classify_email(email):
     """
-    Pass an email to Claude and get back its category string.
-    Returns one of: 'needs_reply', 'fyi_only', 'ignore'
+    Pass an email to Claude and get back its category and reason.
+    Returns a tuple: (category, reason)
+    category is one of: 'needs_reply', 'fyi_only', 'ignore'
     """
     attachment_section = ""
     if email.get("attachments"):
@@ -59,15 +63,24 @@ Body:
 
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=10,
+        max_tokens=30,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_message}],
     )
     track_response(response)
 
-    category = response.content[0].text.strip().lower()
+    raw = response.content[0].text.strip().lower()
+
+    if "|" in raw:
+        parts = raw.split("|", 1)
+        category = parts[0].strip()
+        reason = parts[1].strip()
+    else:
+        category = raw
+        reason = ""
 
     if category not in (CATEGORY_NEEDS_REPLY, CATEGORY_FYI_ONLY, CATEGORY_IGNORE):
         category = CATEGORY_IGNORE
+        reason = reason or "unrecognized response from classifier"
 
-    return category
+    return category, reason
