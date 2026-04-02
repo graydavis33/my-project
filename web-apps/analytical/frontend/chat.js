@@ -1,8 +1,19 @@
 // ─── Init ─────────────────────────────────────────────────────
 requireAuth(); // async — fire and forget, token set before any user action
 
-let history = [];
+// Persist chat history for the browser session (resets on close)
+let history = JSON.parse(sessionStorage.getItem('chat_history') || '[]');
 let isLoading = false;
+
+// Restore any existing messages on page load
+(function restoreMessages() {
+  if (!history.length) return;
+  document.getElementById('chat-empty').style.display = 'none';
+  document.getElementById('chat-messages').style.display = 'flex';
+  for (const msg of history) {
+    appendMessage(msg.role, msg.content);
+  }
+})();
 
 // ─── Send message ─────────────────────────────────────────────
 async function sendMessage() {
@@ -40,8 +51,9 @@ async function sendMessage() {
     history.push({ role: 'user', content: message });
     history.push({ role: 'assistant', content: response });
 
-    // Keep history bounded
+    // Keep history bounded and persist to sessionStorage
     if (history.length > 24) history = history.slice(-24);
+    sessionStorage.setItem('chat_history', JSON.stringify(history));
 
   } catch (err) {
     removeTyping(typingId);
