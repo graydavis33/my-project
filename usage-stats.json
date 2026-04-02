@@ -1,37 +1,37 @@
 {
-  "generated": "2026-03-30T03:23:39.234157+00:00",
+  "generated": "2026-04-02T18:40:16.285964+00:00",
   "projects": {
     "email-agent": {
-      "last_used": "2026-03-19T20:01:50.933759+00:00",
-      "last_used_label": "1w ago",
+      "last_used": null,
+      "last_used_label": null,
       "this_week": 0,
-      "all_time": 3,
+      "all_time": 0,
       "cost_this_week": 0.0,
-      "cost_all_time": 0.0166
+      "cost_all_time": 0.0
     },
     "invoice-system": {
-      "last_used": "2026-03-23T17:19:44.829039+00:00",
-      "last_used_label": "6d ago",
-      "this_week": 6,
-      "all_time": 15,
-      "cost_this_week": 0.0018,
-      "cost_all_time": 0.0125
-    },
-    "content-researcher": {
-      "last_used": "2026-03-19T12:57:27.509401+00:00",
+      "last_used": "2026-03-24T18:46:19.738858+00:00",
       "last_used_label": "1w ago",
       "this_week": 0,
-      "all_time": 1,
+      "all_time": 5,
       "cost_this_week": 0.0,
-      "cost_all_time": 0.0177
+      "cost_all_time": 0.0011
+    },
+    "content-researcher": {
+      "last_used": null,
+      "last_used_label": null,
+      "this_week": 0,
+      "all_time": 0,
+      "cost_this_week": 0.0,
+      "cost_all_time": 0.0
     },
     "social-media-analytics": {
-      "last_used": "2026-03-29T16:01:30.354500+00:00",
-      "last_used_label": "Today",
-      "this_week": 3,
-      "all_time": 8,
-      "cost_this_week": 0.0013,
-      "cost_all_time": 0.0043
+      "last_used": "2026-03-26T14:19:11.777604+00:00",
+      "last_used_label": "1w ago",
+      "this_week": 0,
+      "all_time": 15,
+      "cost_this_week": 0.0,
+      "cost_all_time": 0.0047
     }
   }
 }
