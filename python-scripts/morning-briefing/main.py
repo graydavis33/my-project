@@ -80,8 +80,8 @@ if __name__ == "__main__":
     scheduled = "--schedule" in sys.argv
 
     if scheduled:
-        log.info("Morning Briefing scheduler started. Will send at 8:00 AM daily.")
-        schedule.every().day.at("08:00").do(send_briefing)
+        log.info("Morning Briefing scheduler started. Will send at 8:00 AM ET (12:00 UTC) daily.")
+        schedule.every().day.at("12:00").do(send_briefing)
         while True:
             try:
                 schedule.run_pending()
