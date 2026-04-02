@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard — Analytical</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -27,7 +28,7 @@
 
   <!-- Sidebar -->
   <aside class="dash-sidebar">
-    <a href="dashboard.html" class="sidebar-link active" data-view="overview" onclick="switchView('overview', this)">
+    <a href="dashboard.html" class="sidebar-link active" data-view="overview" onclick="switchView('overview', this); return false;">
       <svg class="platform-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Overview
     </a>
@@ -35,7 +36,6 @@
     <div class="sidebar-section-label">Platforms</div>
 
     <a href="#" class="sidebar-link" data-view="youtube" onclick="switchView('youtube', this); return false;">
-      <!-- YouTube logo -->
       <svg class="platform-logo" viewBox="0 0 24 24" fill="#FF0000">
         <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
       </svg>
@@ -43,7 +43,6 @@
     </a>
 
     <a href="#" class="sidebar-link" data-view="tiktok" onclick="switchView('tiktok', this); return false;">
-      <!-- TikTok logo -->
       <svg class="platform-logo" viewBox="0 0 24 24" fill="white">
         <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.01a8.16 8.16 0 004.77 1.52V7.07a4.85 4.85 0 01-1-.38z"/>
       </svg>
@@ -51,22 +50,11 @@
     </a>
 
     <a href="#" class="sidebar-link" data-view="instagram" onclick="switchView('instagram', this); return false;">
-      <!-- Instagram logo -->
-      <svg class="platform-logo" viewBox="0 0 24 24">
-        <defs>
-          <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#f09433"/>
-            <stop offset="50%" style="stop-color:#dc2743"/>
-            <stop offset="100%" style="stop-color:#bc1888"/>
-          </linearGradient>
-        </defs>
-        <path fill="url(#ig-grad)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-      </svg>
+      <svg class="platform-logo" viewBox="0 0 24 24"><defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f09433"/><stop offset="50%" style="stop-color:#dc2743"/><stop offset="100%" style="stop-color:#bc1888"/></linearGradient></defs><path fill="url(#ig-grad)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
       Instagram
     </a>
 
     <a href="#" class="sidebar-link" data-view="facebook" onclick="switchView('facebook', this); return false;">
-      <!-- Facebook logo -->
       <svg class="platform-logo" viewBox="0 0 24 24" fill="#1877F2">
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
       </svg>
@@ -76,19 +64,12 @@
     <div class="sidebar-section-label">Tools</div>
 
     <a href="chat.html" class="sidebar-link">
-      <!-- Chat icon -->
-      <svg class="platform-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
+      <svg class="platform-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       AI Chat
     </a>
 
     <a href="connect.html" class="sidebar-link">
-      <!-- Link icon -->
-      <svg class="platform-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-      </svg>
+      <svg class="platform-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
       Connections
     </a>
 
@@ -121,6 +102,7 @@
 
       <div id="stats-section" style="display:none;">
 
+        <!-- AI Insights -->
         <div class="insights-panel" id="insights-panel">
           <div class="insights-header">
             <div class="insights-title">AI Insights</div>
@@ -130,7 +112,12 @@
           <div class="insights-generated" id="insights-date"></div>
         </div>
 
+        <!-- Stats grid: 7 cards -->
         <div class="stats-grid" id="stats-grid" style="margin-bottom:2rem;">
+          <div class="stat-card">
+            <div class="stat-label">Total Followers</div>
+            <div class="stat-value" id="stat-followers">—</div>
+          </div>
           <div class="stat-card">
             <div class="stat-label">Total Views</div>
             <div class="stat-value" id="stat-views">—</div>
@@ -144,30 +131,69 @@
             <div class="stat-value" id="stat-comments">—</div>
           </div>
           <div class="stat-card">
+            <div class="stat-label">Total Shares</div>
+            <div class="stat-value" id="stat-shares">—</div>
+          </div>
+          <div class="stat-card">
             <div class="stat-label">Total Videos</div>
             <div class="stat-value" id="stat-videos">—</div>
           </div>
+          <div class="stat-card">
+            <div class="stat-label">Avg Engagement</div>
+            <div class="stat-value" id="stat-engagement">—</div>
+          </div>
         </div>
 
+        <!-- Overview chart -->
+        <div class="chart-grid" style="grid-template-columns:1fr;" id="overview-chart-section">
+          <div class="chart-card">
+            <div class="chart-title">Platform Comparison — Total Views</div>
+            <div class="chart-canvas-wrap">
+              <canvas id="chart-overview"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Posts with filter bar -->
         <div class="card" style="margin-bottom:2rem;">
           <div class="card-header">
             <div class="card-title">Top Posts — All Platforms</div>
+          </div>
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label for="filter-platform">Platform</label>
+              <select id="filter-platform" onchange="applyFilters()">
+                <option value="all">All</option>
+                <option value="YouTube">YouTube</option>
+                <option value="TikTok">TikTok</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-sort">Sort by</label>
+              <select id="filter-sort" onchange="applyFilters()">
+                <option value="views">Views</option>
+                <option value="likes">Likes</option>
+                <option value="comments">Comments</option>
+                <option value="engagement">Engagement Rate</option>
+              </select>
+            </div>
           </div>
           <div class="table-wrapper">
             <table>
               <thead>
                 <tr>
+                  <th style="width:64px;"></th>
                   <th>Title</th>
                   <th>Platform</th>
                   <th>Views</th>
                   <th>Likes</th>
-                  <th>Comments</th>
+                  <th>Eng%</th>
                   <th>Date</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody id="top-posts-body">
-                <tr><td colspan="7" style="text-align:center; padding:2rem; color:var(--muted);">No data yet</td></tr>
+                <tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">No data yet</td></tr>
               </tbody>
             </table>
           </div>
@@ -182,7 +208,7 @@
 
     </div><!-- /view-overview -->
 
-    <!-- ── PLATFORM VIEWS ─────────────────────────── -->
+    <!-- ── YOUTUBE VIEW ───────────────────────────── -->
     <div id="view-youtube" style="display:none;">
       <div class="dash-header">
         <div class="dash-title" style="display:flex; align-items:center; gap:0.6rem;">
@@ -190,18 +216,63 @@
           YouTube
         </div>
       </div>
-      <div id="yt-stats-grid" class="stats-grid" style="margin-bottom:2rem;"></div>
+
+      <!-- Main stats -->
+      <div id="yt-stats-grid" class="stats-grid" style="margin-bottom:1.5rem;"></div>
+
+      <!-- Advanced metrics (collapsible) -->
+      <div style="margin-bottom:2rem;">
+        <button class="advanced-toggle" id="yt-advanced-toggle" onclick="toggleAdvanced('yt')">
+          <span>Advanced Metrics</span>
+          <span class="toggle-arrow">▼</span>
+        </button>
+        <div class="advanced-metrics stats-grid" id="yt-advanced-metrics" style="margin-top:1rem;"></div>
+      </div>
+
+      <!-- Charts -->
+      <div class="chart-grid" style="margin-bottom:2rem;">
+        <div class="chart-card">
+          <div class="chart-title">Top 10 Videos by Views</div>
+          <div class="chart-canvas-wrap"><canvas id="chart-yt-bar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Views Over Time</div>
+          <div class="chart-canvas-wrap"><canvas id="chart-yt-line"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Videos table with filter -->
       <div class="card">
         <div class="card-header"><div class="card-title">All Videos</div></div>
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label for="filter-yt-type">Type</label>
+            <select id="filter-yt-type" onchange="applyYTFilters()">
+              <option value="all">All</option>
+              <option value="short">Shorts</option>
+              <option value="long">Long-form</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filter-yt-sort">Sort by</label>
+            <select id="filter-yt-sort" onchange="applyYTFilters()">
+              <option value="views">Views</option>
+              <option value="likes">Likes</option>
+              <option value="comments">Comments</option>
+              <option value="engagement">Engagement Rate</option>
+            </select>
+          </div>
+        </div>
         <div class="table-wrapper">
           <table>
-            <thead><tr><th>Title</th><th>Views</th><th>Likes</th><th>Comments</th><th>Date</th><th></th></tr></thead>
-            <tbody id="yt-posts-body"><tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);">Connect YouTube to see your videos</td></tr></tbody>
+            <thead><tr><th style="width:64px;"></th><th>Title</th><th>Views</th><th>Likes</th><th>Eng%</th><th>Date</th><th></th></tr></thead>
+            <tbody id="yt-posts-body"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted);">Connect YouTube to see your videos</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
+    <!-- ── TIKTOK VIEW ────────────────────────────── -->
     <div id="view-tiktok" style="display:none;">
       <div class="dash-header">
         <div class="dash-title" style="display:flex; align-items:center; gap:0.6rem;">
@@ -210,17 +281,43 @@
         </div>
       </div>
       <div id="tt-stats-grid" class="stats-grid" style="margin-bottom:2rem;"></div>
+
+      <!-- Charts -->
+      <div class="chart-grid" style="margin-bottom:2rem;">
+        <div class="chart-card">
+          <div class="chart-title">Top 10 Videos by Views</div>
+          <div class="chart-canvas-wrap"><canvas id="chart-tt-bar"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Views Over Time</div>
+          <div class="chart-canvas-wrap"><canvas id="chart-tt-line"></canvas></div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-header"><div class="card-title">All Videos</div></div>
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label for="filter-tt-sort">Sort by</label>
+            <select id="filter-tt-sort" onchange="applyTTFilters()">
+              <option value="views">Views</option>
+              <option value="likes">Likes</option>
+              <option value="comments">Comments</option>
+              <option value="shares">Shares</option>
+              <option value="engagement">Engagement Rate</option>
+            </select>
+          </div>
+        </div>
         <div class="table-wrapper">
           <table>
-            <thead><tr><th>Title</th><th>Views</th><th>Likes</th><th>Comments</th><th>Date</th><th></th></tr></thead>
-            <tbody id="tt-posts-body"><tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);">Connect TikTok to see your videos</td></tr></tbody>
+            <thead><tr><th style="width:64px;"></th><th>Title</th><th>Views</th><th>Likes</th><th>Shares</th><th>Eng%</th><th>Date</th><th></th></tr></thead>
+            <tbody id="tt-posts-body"><tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--muted);">Connect TikTok to see your videos</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
+    <!-- ── INSTAGRAM VIEW ─────────────────────────── -->
     <div id="view-instagram" style="display:none;">
       <div class="dash-header">
         <div class="dash-title" style="display:flex; align-items:center; gap:0.6rem;">
@@ -230,11 +327,12 @@
       </div>
       <div class="empty-state">
         <h3>Instagram coming soon</h3>
-        <p>Instagram connection via Meta API is in progress. Check back soon.</p>
+        <p>Add META_EMAIL and META_PASSWORD to your .env to connect Instagram via Playwright scraper.</p>
         <a href="connect.html" class="btn btn-outline">View Connections</a>
       </div>
     </div>
 
+    <!-- ── FACEBOOK VIEW ──────────────────────────── -->
     <div id="view-facebook" style="display:none;">
       <div class="dash-header">
         <div class="dash-title" style="display:flex; align-items:center; gap:0.6rem;">
@@ -244,7 +342,7 @@
       </div>
       <div class="empty-state">
         <h3>Facebook coming soon</h3>
-        <p>Facebook connection via Meta API is in progress. Check back soon.</p>
+        <p>Add META_EMAIL and META_PASSWORD to your .env to connect Facebook via Playwright scraper.</p>
         <a href="connect.html" class="btn btn-outline">View Connections</a>
       </div>
     </div>
