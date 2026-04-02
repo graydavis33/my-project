@@ -1,0 +1,16 @@
+[Unit]
+Description=Graydient Media Invoice Scanner
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/my-project/python-scripts/invoice-system
+ExecStart=/root/my-project/python-scripts/invoice-system/venv/bin/python main.py scan-all --schedule --time 09:00
+Restart=always
+RestartSec=15
+StandardOutput=append:/root/my-project/python-scripts/invoice-system/invoice_scan.log
+StandardError=append:/root/my-project/python-scripts/invoice-system/invoice_scan.log
+
+[Install]
+WantedBy=multi-user.target

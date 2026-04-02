@@ -1,7 +1,7 @@
 # Plan: VPS Deployment — Email Agent, Morning Briefing, Invoice Scan
 
 **Date:** 2026-04-02
-**Status:** Draft
+**Status:** Implemented
 **Request:** Deploy Email Agent, Morning Briefing, and Invoice System to Hostinger VPS so they run 24/7 in the cloud instead of requiring a local terminal.
 
 ---
@@ -191,3 +191,22 @@ journalctl -u email-agent -n 50
 - **Email Agent calls scan-payments hourly** already (hardcoded in `main.py`). The `invoice-scan` service handles `scan-receipts` + `scan-payments` at 9am as a full daily sweep. Small overlap is fine — the payment scanner deduplicates.
 - **Token expiry risk:** Gmail OAuth tokens expire. If the token was generated on Mac, it may need to be re-generated. If the agent crashes with auth errors after ~7 days, we'll need a re-auth flow. Ubuntu 24.04 has no browser so re-auth must be done with a local tunnel or by re-generating the token on Mac and SCP-ing it up. Flag this if it happens.
 - **Morning Briefing credentials:** It uses Google Sheets (gspread) which may share the same credentials.json as invoice-system. Check if it has its own token.json before uploading — may be able to reuse.
+
+---
+
+## Implementation Notes
+
+**Implemented:** 2026-04-02
+
+### What Was Built
+- `deploy/email-agent.service` — systemd service file, runs email-agent/main.py via venv Python, auto-restarts
+- `deploy/morning-briefing.service` — systemd service file, runs main.py --schedule via venv Python
+- `deploy/invoice-scan.service` — systemd service file, runs scan-all --schedule --time 09:00 via venv Python
+- `deploy/setup-vps.sh` — one-shot setup script: installs deps, clones repo, creates venvs, installs requirements, moves credentials from /tmp, creates .env templates, installs and enables all 3 systemd services
+
+### Deviations from Plan
+- Morning Briefing `credentials.json` was missing — resolved by copying from invoice-system (same Google Cloud project). `token.json` generated locally via `python main.py` before deploy.
+- Setup script intentionally does NOT auto-start services — prints instructions to fill .env files first, then start manually.
+
+### Issues Encountered
+- None during build. Pre-deploy: morning-briefing had no Google credentials — resolved before implementation.
