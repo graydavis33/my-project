@@ -59,9 +59,12 @@ def _run_payment_scan():
     import subprocess
     import sys as _sys
     invoice_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'invoice-system'))
+    # Use invoice-system's own venv Python if it exists (VPS), else fall back to current Python (local)
+    _venv_python = os.path.join(invoice_dir, 'venv', 'bin', 'python')
+    _python_exe = _venv_python if os.path.exists(_venv_python) else _sys.executable
     try:
         result = subprocess.run(
-            [_sys.executable, 'main.py', 'scan-payments', '--days', '2'],
+            [_python_exe, 'main.py', 'scan-payments', '--days', '2'],
             cwd=invoice_dir,
             capture_output=True,
             text=True,
