@@ -44,6 +44,9 @@ Which of the Q2 goals from `context/goals.md` are most relevant to today's sessi
 **My suggestion for today:**
 Based on priorities and momentum, recommend the single best thing to work on this session and why.
 
+**Top 3 MCP servers to add:**
+Based on what's being worked on this session and Gray's current toolset, recommend the 3 most useful MCP servers he doesn't already have connected. For each: server name, what it does, and why it's relevant right now.
+
 **Ready to work.** Confirm and ask: "What do you want to tackle?"
 
 ---
