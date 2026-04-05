@@ -109,6 +109,7 @@ def fetch_payment_emails(service, days=30):
         f"newer_than:{days}d "
         "(from:venmo.com OR from:stripe.com OR from:paypal.com "
         "OR from:primesouthbank.com OR from:email.primesouthbank.com "
+        "OR from:alerts.primesouth.com OR from:primesouth.com "
         "OR from:quickbooks.intuit.com OR from:intuit.com "
         "OR from:cash.app OR from:square.com "
         "OR subject:zelle) "
@@ -116,7 +117,7 @@ def fetch_payment_emails(service, days=30):
         "OR subject:\"paid you\" OR subject:\"money received\" "
         "OR subject:\"invoice paid\" OR subject:\"deposit received\" "
         "OR subject:\"transferred you\" OR subject:\"direct deposit\" "
-        "OR subject:\"payment from\") "
+        "OR subject:\"payment from\" OR subject:\"sent you\") "
         "-from:me"
     )
 
