@@ -591,67 +591,108 @@
     text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem;
   }
 
-  /* ── Stat card flip ───────────────────────────────────── */
-  .stat-card { perspective: 900px; }
-  .stat-card-inner {
-    position: relative;
-    width: 100%; min-height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
-  }
-  .stat-card.flipped .stat-card-inner { transform: rotateY(180deg); }
-  .stat-card-front, .stat-card-back {
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-  }
-  .stat-card-front { width: 100%; }
-  .stat-card-back {
-    position: absolute; inset: 0;
-    transform: rotateY(180deg);
-    display: flex; flex-direction: column; gap: 0.45rem;
-    background: rgba(10,18,35,0.95);
-    border-radius: calc(var(--radius) - 1px);
-    padding: 0.65rem 0.85rem;
-    overflow: hidden;
-  }
+  /* ── Edit button on stat card ─────────────────────────── */
   .stat-edit-btn {
-    position: absolute; top: 0.5rem; right: 0.5rem; z-index: 2;
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px; width: 24px; height: 24px;
+    position: absolute; top: 0; right: 0; z-index: 2;
+    background: rgba(255,255,255,0.05); border: none;
+    border-radius: 0 calc(var(--radius) - 1px) 0 6px;
+    width: 22px; height: 22px;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; color: var(--muted); transition: background 0.2s, color 0.2s;
+    padding: 0;
   }
-  .stat-edit-btn:hover { background: rgba(14,165,233,0.15); color: var(--accent); }
-  .stat-back-label {
-    font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.07em; color: rgba(148,163,184,0.5); margin-bottom: 0.1rem;
-  }
-  .stat-back-input {
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px; color: white; font-size: 0.78rem; padding: 0.3rem 0.5rem;
-    width: 100%; outline: none; font-family: inherit;
-    transition: border-color 0.2s;
-  }
-  .stat-back-input:focus { border-color: rgba(14,165,233,0.5); }
-  .stat-back-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
-  .stat-back-save {
-    margin-top: auto; background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.3);
-    border-radius: 6px; color: var(--accent); font-size: 0.72rem; font-weight: 700;
-    padding: 0.35rem; cursor: pointer; width: 100%; transition: background 0.2s;
-    font-family: inherit;
-  }
-  .stat-back-save:hover { background: rgba(14,165,233,0.28); }
-  /* Selected metric badge on card */
+  .stat-edit-btn:hover { background: rgba(14,165,233,0.2); color: var(--accent); }
+
+  /* ── Selected metric badge on card ────────────────────── */
   .stat-metric-badge {
-    position: absolute; top: 0.5rem; left: 0.5rem; z-index: 2;
-    width: 18px; height: 18px; border-radius: 50%;
+    position: absolute; top: 0; left: 0; z-index: 2;
+    width: 18px; height: 18px;
+    border-radius: calc(var(--radius) - 1px) 0 6px 0;
     background: var(--accent); color: #000;
-    font-size: 0.62rem; font-weight: 800;
+    font-size: 0.6rem; font-weight: 800;
     display: flex; align-items: center; justify-content: center;
     opacity: 0; transform: scale(0); transition: opacity 0.2s, transform 0.2s;
   }
   .stat-card.chart-selected .stat-metric-badge { opacity: 1; transform: scale(1); }
   .stat-card.chart-selected { border-color: rgba(14,165,233,0.6) !important; box-shadow: var(--glow) !important; }
+
+  /* ── Stat edit modal ──────────────────────────────────── */
+  #stat-edit-overlay {
+    display: none; position: fixed; inset: 0; z-index: 600;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  #stat-edit-overlay.open { display: flex; }
+  #stat-edit-modal {
+    background: rgba(10,18,38,0.98);
+    border: 1px solid rgba(14,165,233,0.35);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    width: min(400px, 92vw);
+    display: flex; flex-direction: column; gap: 1rem;
+    box-shadow: 0 0 60px rgba(14,165,233,0.12), 0 24px 48px rgba(0,0,0,0.5);
+    animation: editModalIn 0.28s cubic-bezier(0.34,1.36,0.64,1);
+    position: relative;
+  }
+  @keyframes editModalIn {
+    from { opacity: 0; transform: scale(0.88) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .sem-header {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .sem-title {
+    font-size: 1rem; font-weight: 700; color: white;
+  }
+  .sem-close {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; width: 28px; height: 28px; cursor: pointer;
+    color: var(--muted); font-size: 1rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sem-close:hover { background: rgba(255,60,60,0.15); color: #f87171; }
+  .sem-label {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: rgba(148,163,184,0.55);
+    margin-bottom: 0.3rem;
+  }
+  .sem-input {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; color: white; font-size: 0.9rem; padding: 0.5rem 0.75rem;
+    width: 100%; outline: none; font-family: inherit; transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+  .sem-input:focus { border-color: rgba(14,165,233,0.55); }
+  .sem-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .sem-goal-preview {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px; padding: 0.75rem 1rem;
+  }
+  .sem-goal-bar-track {
+    height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px;
+    overflow: hidden; margin: 0.5rem 0 0.35rem;
+  }
+  .sem-goal-bar-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), #38bdf8);
+    box-shadow: 0 0 8px rgba(14,165,233,0.5);
+    transition: width 0.3s ease;
+  }
+  .sem-goal-info {
+    display: flex; justify-content: space-between;
+    font-size: 0.72rem; color: var(--muted);
+  }
+  .sem-goal-pct { color: var(--accent); font-weight: 700; }
+  .sem-save {
+    background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(56,189,248,0.15));
+    border: 1px solid rgba(14,165,233,0.4);
+    border-radius: 8px; color: var(--accent); font-size: 0.85rem; font-weight: 700;
+    padding: 0.65rem; cursor: pointer; width: 100%;
+    transition: background 0.2s, box-shadow 0.2s; font-family: inherit;
+  }
+  .sem-save:hover { background: rgba(14,165,233,0.28); box-shadow: var(--glow); }
 
   /* ── Compact metric selector cards ───────────────────── */
   .metrics-compact { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.6rem; }
@@ -941,6 +982,17 @@
     const container = document.getElementById('charts-container');
     const count = selectedMetrics.length;
 
+    // Empty state
+    if (count === 0) {
+      Object.keys(chartInstances).forEach(m => { chartInstances[m].destroy(); delete chartInstances[m]; });
+      container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.85rem;">Select a metric above to compare platforms</div>';
+      updateCardBadges();
+      return;
+    } else {
+      const emptyMsg = container.querySelector('div[style*="Select a metric"]');
+      if (emptyMsg) emptyMsg.remove();
+    }
+
     // Update grid columns
     container.style.gridTemplateColumns = count === 1 ? '1fr' : count === 2 ? '1fr 1fr' : '1fr 1fr 1fr';
 
@@ -997,13 +1049,9 @@
     if (!metricData[metric]) return;
     const idx = selectedMetrics.indexOf(metric);
     if (idx !== -1) {
-      // Deselect — only if more than 1 selected
-      if (selectedMetrics.length > 1) {
-        selectedMetrics.splice(idx, 1);
-      }
+      selectedMetrics.splice(idx, 1); // deselect — even if last one
     } else {
-      // Select — drop oldest if already at 3
-      if (selectedMetrics.length >= 3) selectedMetrics.shift();
+      if (selectedMetrics.length >= 3) selectedMetrics.shift(); // drop oldest if at 3
       selectedMetrics.push(metric);
     }
     renderCharts();
@@ -1026,114 +1074,112 @@
   // Initial render
   renderCharts();
 
-  // ── Stat card: flip-to-edit + progress bar ──────────────────
-  document.querySelectorAll('.stat-card').forEach(card => {
-    let current = parseFloat(card.dataset.current) || 0;
-    let goal    = parseFloat(card.dataset.goal) || 100;
-    let unit    = card.dataset.unit || '';
-    const pct = () => Math.min(100, (current / goal) * 100);
+  // ── Stat card: edit button + progress bar + metric toggle ───
+  let editingCard = null;
 
-    // Wrap existing content in front face
-    const frontContent = card.innerHTML;
-    card.innerHTML = `
-      <div class="stat-card-inner">
-        <div class="stat-card-front">
-          <div class="stat-metric-badge"></div>
-          <button class="stat-edit-btn" title="Edit">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </button>
-          ${frontContent}
-        </div>
-        <div class="stat-card-back">
-          <div style="font-size:0.75rem;font-weight:700;color:var(--accent);margin-bottom:0.2rem;">Edit Metric</div>
-          <div>
-            <div class="stat-back-label">Label</div>
-            <input class="stat-back-input" data-field="label" type="text" value="${card.querySelector ? '' : ''}">
-          </div>
-          <div class="stat-back-row">
-            <div>
-              <div class="stat-back-label">Current</div>
-              <input class="stat-back-input" data-field="current" type="number" value="${current}">
-            </div>
-            <div>
-              <div class="stat-back-label">Goal</div>
-              <input class="stat-back-input" data-field="goal" type="number" value="${goal}">
-            </div>
-          </div>
-          <div class="stat-back-row">
-            <div>
-              <div class="stat-back-label">Unit</div>
-              <input class="stat-back-input" data-field="unit" type="text" placeholder="K, M, $, %" value="${unit}" style="text-align:center;">
-            </div>
-            <div>
-              <div class="stat-back-label">Type</div>
-              <select class="stat-back-input" data-field="type" style="cursor:pointer;">
-                <option value="number">Number</option>
-                <option value="currency">Currency</option>
-                <option value="percent">Percent</option>
-              </select>
-            </div>
-          </div>
-          <button class="stat-back-save">Save & flip back</button>
-        </div>
-      </div>
-    `;
+  function openStatEdit(card) {
+    editingCard = card;
+    const current = parseFloat(card.dataset.current) || 0;
+    const goal    = parseFloat(card.dataset.goal) || 100;
+    const label   = card.querySelector('.stat-label')?.textContent || '';
+    const unit    = card.dataset.unit || '';
 
-    // Set the label input value now that it's in DOM
-    const labelEl = card.querySelector('.stat-label');
-    const labelInput = card.querySelector('[data-field="label"]');
-    if (labelEl && labelInput) labelInput.value = labelEl.textContent;
+    document.getElementById('sem-label').value   = label;
+    document.getElementById('sem-current').value = current;
+    document.getElementById('sem-goal').value    = goal;
+    document.getElementById('sem-unit').value    = unit;
+    updateSemPreview(current, goal);
 
-    const bar = card.querySelector('.stat-progress-bar');
+    document.getElementById('stat-edit-overlay').classList.add('open');
+  }
 
-    // Set progress bar to show goal %
-    function updateBar() {
-      if (bar) bar.style.width = pct() + '%';
+  function closeStatEdit(e) {
+    // Allow close from: X button (no event), overlay backdrop click
+    if (e && e.target !== document.getElementById('stat-edit-overlay')) return;
+    document.getElementById('stat-edit-overlay').classList.remove('open');
+    editingCard = null;
+  }
+  // Close button calls this without event arg
+  document.querySelector('.sem-close').addEventListener('click', () => {
+    document.getElementById('stat-edit-overlay').classList.remove('open');
+    editingCard = null;
+  });
+
+  function updateSemPreview(current, goal) {
+    const pct = goal > 0 ? Math.min(100, Math.round((current / goal) * 100)) : 0;
+    document.getElementById('sem-bar').style.width = pct + '%';
+    document.getElementById('sem-preview-pct').textContent = pct + '%';
+    document.getElementById('sem-preview-current').textContent = Number(current).toLocaleString();
+    document.getElementById('sem-preview-goal').textContent = 'Goal: ' + Number(goal).toLocaleString();
+  }
+
+  // Live preview update as user types
+  ['sem-current','sem-goal'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const c = parseFloat(document.getElementById('sem-current').value) || 0;
+      const g = parseFloat(document.getElementById('sem-goal').value) || 0;
+      updateSemPreview(c, g);
+    });
+  });
+
+  document.getElementById('sem-save-btn').addEventListener('click', () => {
+    if (!editingCard) return;
+    const newCurrent = parseFloat(document.getElementById('sem-current').value);
+    const newGoal    = parseFloat(document.getElementById('sem-goal').value);
+    const newLabel   = document.getElementById('sem-label').value.trim();
+    const newUnit    = document.getElementById('sem-unit').value.trim();
+
+    if (!isNaN(newCurrent)) editingCard.dataset.current = newCurrent;
+    if (!isNaN(newGoal))    editingCard.dataset.goal    = newGoal;
+    if (newUnit)            editingCard.dataset.unit    = newUnit;
+
+    const valEl = editingCard.querySelector('.stat-value');
+    const lblEl = editingCard.querySelector('.stat-label');
+    const bar   = editingCard.querySelector('.stat-progress-bar');
+
+    const cur = parseFloat(editingCard.dataset.current) || 0;
+    const gol = parseFloat(editingCard.dataset.goal) || 100;
+    const pct = Math.min(100, (cur / gol) * 100);
+
+    if (valEl && !isNaN(newCurrent)) {
+      valEl.textContent = cur >= 1000000 ? (cur/1000000).toFixed(1)+'M'
+                        : cur >= 1000    ? (cur/1000).toFixed(1)+'K'
+                        : cur;
     }
-    updateBar(); // always show (not hover-only now)
+    if (lblEl && newLabel) lblEl.textContent = newLabel;
+    if (bar) bar.style.width = pct + '%';
 
-    // Hover lifts, mouseleave returns
-    card.addEventListener('mouseenter', () => { if (bar) bar.style.width = pct() + '%'; });
-    card.addEventListener('mouseleave', () => { if (bar) bar.style.width = pct() + '%'; });
+    document.getElementById('stat-edit-overlay').classList.remove('open');
+    editingCard = null;
+  });
 
-    // Edit button → flip
-    const editBtn = card.querySelector('.stat-edit-btn');
-    editBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      card.classList.add('flipped');
-    });
+  document.querySelectorAll('.stat-card').forEach(card => {
+    const current = parseFloat(card.dataset.current) || 0;
+    const goal    = parseFloat(card.dataset.goal) || 100;
+    const pct     = Math.min(100, (current / goal) * 100);
 
-    // Save → flip back
-    const saveBtn = card.querySelector('.stat-back-save');
-    saveBtn.addEventListener('click', () => {
-      const newCurrent = parseFloat(card.querySelector('[data-field="current"]').value);
-      const newGoal    = parseFloat(card.querySelector('[data-field="goal"]').value);
-      const newLabel   = card.querySelector('[data-field="label"]').value.trim();
-      const newUnit    = card.querySelector('[data-field="unit"]').value.trim();
+    // Inject edit button and metric badge
+    const editBtn = document.createElement('button');
+    editBtn.className = 'stat-edit-btn';
+    editBtn.title = 'Edit metric';
+    editBtn.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+    editBtn.addEventListener('click', e => { e.stopPropagation(); openStatEdit(card); });
 
-      if (!isNaN(newCurrent)) { current = newCurrent; card.dataset.current = current; }
-      if (!isNaN(newGoal))    { goal    = newGoal;    card.dataset.goal    = goal;    }
-      if (newUnit) unit = newUnit;
+    const badge = document.createElement('div');
+    badge.className = 'stat-metric-badge';
 
-      // Update front face display
-      const valEl = card.querySelector('.stat-value');
-      const lblEl = card.querySelector('.stat-label');
-      if (valEl) valEl.textContent = current >= 1000000 ? (current/1000000).toFixed(1)+'M'
-                                   : current >= 1000    ? (current/1000).toFixed(1)+'K'
-                                   : current;
-      if (lblEl && newLabel) lblEl.textContent = newLabel;
+    card.style.position = 'relative';
+    card.insertBefore(badge, card.firstChild);
+    card.insertBefore(editBtn, card.firstChild);
 
-      updateBar();
-      card.classList.remove('flipped');
-    });
+    // Show progress bar always
+    const bar = card.querySelector('.stat-progress-bar');
+    if (bar) bar.style.width = pct + '%';
 
-    // Metric toggle on click (not on edit btn)
+    // Metric toggle on click
     if (card.dataset.metric) {
       card.addEventListener('click', e => {
-        if (e.target.closest('.stat-edit-btn') || e.target.closest('.stat-card-back')) return;
+        if (e.target.closest('.stat-edit-btn')) return;
         toggleMetric(card.dataset.metric);
       });
     }
@@ -1349,6 +1395,57 @@
       <button onclick="closeAddMetric()" style="flex:1;padding:0.75rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);font-size:0.875rem;font-weight:600;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Cancel</button>
       <button onclick="createCustomMetric()" style="flex:2;padding:0.75rem;background:var(--accent);border:none;border-radius:8px;color:#fff;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Add to Dashboard</button>
     </div>
+  </div>
+</div>
+
+<!-- ── Stat card edit modal ──────────────────────────────────── -->
+<div id="stat-edit-overlay" onclick="closeStatEdit(event)">
+  <div id="stat-edit-modal" onclick="event.stopPropagation()">
+    <div class="sem-header">
+      <div class="sem-title">Edit Metric</div>
+      <button class="sem-close" onclick="closeStatEdit()">×</button>
+    </div>
+    <div>
+      <div class="sem-label">Label</div>
+      <input class="sem-input" id="sem-label" type="text" placeholder="e.g. Total Views">
+    </div>
+    <div class="sem-row">
+      <div>
+        <div class="sem-label">Current Value</div>
+        <input class="sem-input" id="sem-current" type="number" placeholder="0">
+      </div>
+      <div>
+        <div class="sem-label">Goal</div>
+        <input class="sem-input" id="sem-goal" type="number" placeholder="100">
+      </div>
+    </div>
+    <div class="sem-row">
+      <div>
+        <div class="sem-label">Unit</div>
+        <input class="sem-input" id="sem-unit" type="text" placeholder="K, M, $, %" style="text-align:center;">
+      </div>
+      <div>
+        <div class="sem-label">Type</div>
+        <select class="sem-input" id="sem-type" style="cursor:pointer;">
+          <option value="number">Number</option>
+          <option value="currency">Currency ($)</option>
+          <option value="percent">Percent (%)</option>
+        </select>
+      </div>
+    </div>
+    <!-- Live goal preview -->
+    <div class="sem-goal-preview">
+      <div class="sem-label" style="margin-bottom:0;">Goal Progress Preview</div>
+      <div class="sem-goal-bar-track">
+        <div class="sem-goal-bar-fill" id="sem-bar" style="width:0%;"></div>
+      </div>
+      <div class="sem-goal-info">
+        <span id="sem-preview-current">0</span>
+        <span class="sem-goal-pct" id="sem-preview-pct">0%</span>
+        <span id="sem-preview-goal">Goal: 0</span>
+      </div>
+    </div>
+    <button class="sem-save" id="sem-save-btn">Save Changes</button>
   </div>
 </div>
 
