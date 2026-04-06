@@ -64,17 +64,19 @@ def _compute_stats(entries):
         if not dts:
             stats[project] = {
                 "last_used": None, "this_week": 0, "all_time": 0,
-                "cost_this_week": round(costs["this_week"], 4),
-                "cost_all_time":  round(costs["all_time"], 4),
+                "tokens_all_time":  costs.get("tokens_all_time", 0),
+                "cost_this_week":   round(costs["this_week"], 4),
+                "cost_all_time":    round(costs["all_time"], 4),
             }
             continue
         last_dt = max(dts)
         stats[project] = {
-            "last_used":       last_dt.isoformat(),
-            "this_week":       sum(1 for dt in dts if dt >= week),
-            "all_time":        len(dts),
-            "cost_this_week":  round(costs["this_week"], 4),
-            "cost_all_time":   round(costs["all_time"], 4),
+            "last_used":        last_dt.isoformat(),
+            "this_week":        sum(1 for dt in dts if dt >= week),
+            "all_time":         len(dts),
+            "tokens_all_time":  costs.get("tokens_all_time", 0),
+            "cost_this_week":   round(costs["this_week"], 4),
+            "cost_all_time":    round(costs["all_time"], 4),
         }
 
     return stats
@@ -109,21 +111,23 @@ def main():
         print("  Run a live script first to generate data.\n")
         # Still write an empty stats file so the dashboard doesn't fail
         stats_raw = {p: {"last_used": None, "this_week": 0, "all_time": 0,
-                         "cost_this_week": 0.0, "cost_all_time": 0.0}
+                         "tokens_all_time": 0, "cost_this_week": 0.0, "cost_all_time": 0.0}
                      for p in _PROJECT_NAMES}
     else:
         stats_raw = _compute_stats(entries)
         print(f"  {len(entries)} total log entries found.\n")
 
     # Print summary table
-    print(f"  {'Project':<35} {'Last Used':<14} {'This Week':>10} {'All Time':>10} {'Cost (All)':>12}")
-    print(f"  {'-'*35} {'-'*14} {'-'*10} {'-'*10} {'-'*12}")
+    print(f"  {'Project':<35} {'Last Used':<14} {'Runs':>6} {'Tokens':>10} {'Cost (All)':>12}")
+    print(f"  {'-'*35} {'-'*14} {'-'*6} {'-'*10} {'-'*12}")
     for project, s in stats_raw.items():
         name      = _PROJECT_NAMES.get(project, project)
         last_str  = _fmt_last_used(s["last_used"]) or "Never"
         cost      = s.get("cost_all_time", 0)
         cost_str  = f"${cost:.4f}" if cost else "—"
-        print(f"  {name:<35} {last_str:<14} {s['this_week']:>10} {s['all_time']:>10} {cost_str:>12}")
+        tokens    = s.get("tokens_all_time", 0)
+        tok_str   = f"{tokens:,}" if tokens else "—"
+        print(f"  {name:<35} {last_str:<14} {s['all_time']:>6} {tok_str:>10} {cost_str:>12}")
 
     # Build the JSON output (add human-friendly last_used_label)
     output = {
@@ -136,6 +140,7 @@ def main():
             "last_used_label":  _fmt_last_used(s["last_used"]),
             "this_week":        s["this_week"],
             "all_time":         s["all_time"],
+            "tokens_all_time":  s.get("tokens_all_time", 0),
             "cost_this_week":   s.get("cost_this_week", 0),
             "cost_all_time":    s.get("cost_all_time", 0),
         }
