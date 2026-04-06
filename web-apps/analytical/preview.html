@@ -356,7 +356,7 @@
           <span class="stat-progress-goal">Goal: 150</span>
         </div>
       </div>
-      <div class="stat-card" data-current="4.7" data-goal="6">
+      <div class="stat-card" data-current="4.7" data-goal="6" data-metric="engagement" style="cursor:pointer;">
         <div class="stat-value">4.7%</div>
         <div class="stat-label">Avg Engagement</div>
         <div class="stat-trend-badge">
@@ -416,7 +416,15 @@
     <!-- Chart -->
     <div class="chart-grid" style="grid-template-columns:1fr; margin-bottom:2rem;">
       <div class="chart-card">
-        <div class="chart-title">Platform Comparison — Total Views</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+          <div id="chart-title" class="chart-title" style="margin-bottom:0;">Platform Comparison — Total Views</div>
+          <div style="display:flex;gap:0.5rem;" id="chart-legend">
+            <span class="chart-legend-item" style="--lc:#FF0000;">YouTube</span>
+            <span class="chart-legend-item" style="--lc:#69C9D0;">TikTok</span>
+            <span class="chart-legend-item" style="--lc:#E1306C;">Instagram</span>
+            <span class="chart-legend-item" style="--lc:#1877F2;">Facebook</span>
+          </div>
+        </div>
         <div class="chart-canvas-wrap">
           <canvas id="chart-overview"></canvas>
         </div>
@@ -714,44 +722,142 @@
   }
 
   renderTable();
+  // ── Platform colors ──────────────────────────────────────────
+  const platforms = {
+    youtube:   { label: 'YouTube',   color: '#FF0000', bg: 'rgba(255,0,0,0.15)' },
+    tiktok:    { label: 'TikTok',    color: '#69C9D0', bg: 'rgba(105,201,208,0.15)' },
+    instagram: { label: 'Instagram', color: '#E1306C', bg: 'rgba(225,48,108,0.15)' },
+    facebook:  { label: 'Facebook',  color: '#1877F2', bg: 'rgba(24,119,242,0.15)' },
+  };
+
+  // ── Per-metric per-platform data ─────────────────────────────
+  const metricData = {
+    views: {
+      label: 'Total Views',
+      youtube:   [420000, 510000, 680000, 590000, 720000, 810000, 940000, 1100000],
+      tiktok:    [180000, 240000, 310000, 280000, 350000, 420000, 390000, 470000],
+      instagram: [95000,  140000, 175000, 155000, 200000, 240000, 280000, 310000],
+      facebook:  [60000,  75000,  90000,  80000,  105000, 115000, 130000, 145000],
+    },
+    followers: {
+      label: 'Total Followers',
+      youtube:   [12000, 13500, 15200, 16800, 18400, 20100, 22300, 24900],
+      tiktok:    [8000,  9200,  10800, 11500, 12900, 14200, 15800, 17100],
+      instagram: [3500,  4100,  4800,  5200,  5900,  6700,  7400,  8200],
+      facebook:  [1800,  2000,  2200,  2350,  2500,  2700,  2900,  3100],
+    },
+    likes: {
+      label: 'Total Likes',
+      youtube:   [32000, 41000, 54000, 47000, 62000, 71000, 83000, 97000],
+      tiktok:    [48000, 61000, 79000, 68000, 88000, 102000, 119000, 138000],
+      instagram: [21000, 27000, 34000, 30000, 39000, 45000, 53000, 61000],
+      facebook:  [8000,  10000, 13000, 11000, 15000, 17000, 20000, 23000],
+    },
+    comments: {
+      label: 'Total Comments',
+      youtube:   [1200, 1500, 2100, 1800, 2400, 2900, 3400, 4000],
+      tiktok:    [2800, 3500, 4600, 4000, 5200, 6100, 7000, 8100],
+      instagram: [900,  1100, 1500, 1300, 1700, 2000, 2400, 2800],
+      facebook:  [400,  500,  650,  580,  720,  840,  980,  1100],
+    },
+    shares: {
+      label: 'Total Shares',
+      youtube:   [3200, 4100, 5500, 4800, 6200, 7100, 8400, 9800],
+      tiktok:    [5800, 7200, 9400, 8100, 10500, 12200, 14100, 16400],
+      instagram: [1800, 2300, 3000, 2600, 3400, 4000, 4700, 5500],
+      facebook:  [1100, 1400, 1800, 1600, 2100, 2500, 2900, 3400],
+    },
+    videos: {
+      label: 'Total Videos',
+      youtube:   [18, 22, 27, 31, 35, 40, 46, 52],
+      tiktok:    [24, 30, 37, 43, 50, 58, 67, 76],
+      instagram: [12, 15, 19, 22, 26, 30, 35, 40],
+      facebook:  [8,  10, 13, 15, 18, 21, 24, 28],
+    },
+    engagement: {
+      label: 'Avg Engagement Rate',
+      youtube:   [3.8, 4.1, 4.6, 4.3, 4.9, 5.2, 5.6, 6.1],
+      tiktok:    [5.2, 5.8, 6.4, 6.0, 6.8, 7.3, 7.9, 8.5],
+      instagram: [3.1, 3.4, 3.9, 3.6, 4.1, 4.5, 4.9, 5.3],
+      facebook:  [1.8, 2.0, 2.3, 2.1, 2.5, 2.7, 3.0, 3.3],
+    },
+  };
+
+  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+
   Chart.defaults.color = '#8899aa';
   Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 
   const ctx = document.getElementById('chart-overview').getContext('2d');
-  new Chart(ctx, {
+  const overviewChart = new Chart(ctx, {
     type: 'bar',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-      datasets: [
-        {
-          label: 'YouTube',
-          data: [420000, 510000, 680000, 590000, 720000, 810000, 940000, 1100000],
-          backgroundColor: 'rgba(14,165,233,0.2)',
-          borderColor: '#0EA5E9',
-          borderWidth: 2,
-          borderRadius: 6,
-        },
-        {
-          label: 'TikTok',
-          data: [180000, 240000, 310000, 280000, 350000, 420000, 390000, 470000],
-          backgroundColor: 'rgba(56,189,248,0.12)',
-          borderColor: '#38BDF8',
-          borderWidth: 2,
-          borderRadius: 6,
-        }
-      ]
-    },
+    data: { labels, datasets: buildDatasets('views') },
     options: {
       responsive: true,
-      plugins: {
-        legend: { position: 'top', labels: { color: '#8899aa', font: { size: 12 } } }
-      },
+      animation: { duration: 500, easing: 'easeInOutQuart' },
+      plugins: { legend: { display: false } },
       scales: {
         x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa' } },
-        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa' } }
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa',
+          callback: v => v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v
+        }}
       }
     }
   });
+
+  function buildDatasets(metric) {
+    return Object.entries(platforms).map(([key, p]) => ({
+      label: p.label,
+      data: metricData[metric][key],
+      backgroundColor: p.bg,
+      borderColor: p.color,
+      borderWidth: 2,
+      borderRadius: 6,
+    }));
+  }
+
+  let activeMetric = 'views';
+
+  function switchMetric(metric, label) {
+    if (!metricData[metric]) return;
+    activeMetric = metric;
+    document.getElementById('chart-title').textContent = 'Platform Comparison — ' + label;
+    overviewChart.data.datasets = buildDatasets(metric);
+    overviewChart.update();
+    // Highlight active stat card
+    document.querySelectorAll('.stat-card[data-metric]').forEach(c => {
+      c.style.borderColor = c.dataset.metric === metric ? 'var(--accent)' : '';
+      c.style.boxShadow  = c.dataset.metric === metric ? 'var(--glow)' : '';
+    });
+  }
+
+  // Wire up stat cards — click locks, hover previews
+  document.querySelectorAll('.stat-card[data-metric]').forEach(card => {
+    const metric = card.dataset.metric;
+    const label  = card.querySelector('.stat-label').textContent;
+    card.addEventListener('mouseenter', () => switchMetric(metric, label));
+    card.addEventListener('mouseleave', () => switchMetric(activeMetric, document.querySelector(`.stat-card[data-metric="${activeMetric}"] .stat-label`)?.textContent || 'Total Views'));
+    card.addEventListener('click', () => {
+      activeMetric = metric;
+      switchMetric(metric, label);
+    });
+  });
+
+  // Add legend style
+  const legendStyle = document.createElement('style');
+  legendStyle.textContent = `
+    .chart-legend-item {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.72rem; font-weight: 600; color: var(--muted);
+      padding: 0.2rem 0.6rem; border-radius: 20px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+    }
+    .chart-legend-item::before {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--lc); flex-shrink: 0;
+    }
+  `;
+  document.head.appendChild(legendStyle);
 
   // Stat card progress bar — animate on hover, editable goal
   document.querySelectorAll('.stat-card').forEach(card => {
