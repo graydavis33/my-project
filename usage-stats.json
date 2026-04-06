@@ -1,37 +1,50 @@
 {
-  "generated": "2026-04-02T19:42:51.446067+00:00",
+  "generated": "2026-04-06T20:46:15.696358+00:00",
   "projects": {
     "email-agent": {
-      "last_used": "2026-03-19T20:01:50.933759+00:00",
-      "last_used_label": "1w ago",
+      "last_used": null,
+      "last_used_label": null,
       "this_week": 0,
-      "all_time": 3,
+      "all_time": 0,
+      "tokens_all_time": 0,
       "cost_this_week": 0.0,
-      "cost_all_time": 0.0166
+      "cost_all_time": 0.0
     },
     "invoice-system": {
-      "last_used": "2026-04-02T19:42:37.160154+00:00",
-      "last_used_label": "Today",
-      "this_week": 2,
-      "all_time": 17,
-      "cost_this_week": 0.0011,
-      "cost_all_time": 0.0137
-    },
-    "content-researcher": {
-      "last_used": "2026-03-19T12:57:27.509401+00:00",
-      "last_used_label": "2w ago",
-      "this_week": 0,
-      "all_time": 1,
-      "cost_this_week": 0.0,
-      "cost_all_time": 0.0177
-    },
-    "social-media-analytics": {
-      "last_used": "2026-03-31T20:43:25.894245+00:00",
+      "last_used": "2026-04-05T01:49:52.642966+00:00",
       "last_used_label": "Yesterday",
       "this_week": 2,
-      "all_time": 9,
+      "all_time": 7,
+      "tokens_all_time": 1057,
       "cost_this_week": 0.0,
-      "cost_all_time": 0.0043
+      "cost_all_time": 0.0011
+    },
+    "morning-briefing": {
+      "last_used": null,
+      "last_used_label": null,
+      "this_week": 0,
+      "all_time": 0,
+      "tokens_all_time": 0,
+      "cost_this_week": 0.0,
+      "cost_all_time": 0.0
+    },
+    "content-researcher": {
+      "last_used": null,
+      "last_used_label": null,
+      "this_week": 0,
+      "all_time": 0,
+      "tokens_all_time": 0,
+      "cost_this_week": 0.0,
+      "cost_all_time": 0.0
+    },
+    "social-media-analytics": {
+      "last_used": "2026-03-26T14:19:11.777604+00:00",
+      "last_used_label": "1w ago",
+      "this_week": 0,
+      "all_time": 15,
+      "tokens_all_time": 2443,
+      "cost_this_week": 0.0,
+      "cost_all_time": 0.0047
     }
   }
 }
