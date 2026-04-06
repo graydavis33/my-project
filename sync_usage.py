@@ -20,8 +20,9 @@ _STATS_OUT = os.path.join(os.path.dirname(__file__), "usage-stats.json")
 _PROJECT_NAMES = {
     "email-agent":            "AI Email Agent",
     "invoice-system":         "Invoice & Accounting System",
+    "morning-briefing":       "Daily Morning Briefing",
     "content-researcher":     "Content Researcher",
-    "social-media-analytics": "Social Media Analytics (YouTube)",
+    "social-media-analytics": "Social Media Analytics",
 }
 
 
@@ -47,8 +48,10 @@ def _compute_stats(entries):
         if "cost_usd" in e:
             dt   = datetime.fromisoformat(e["ts"])
             cost = e.get("cost_usd", 0) or 0
-            rec  = by_project_costs.setdefault(key, {"this_week": 0.0, "all_time": 0.0})
+            tokens = e.get("tokens_in", 0) + e.get("tokens_out", 0)
+            rec  = by_project_costs.setdefault(key, {"this_week": 0.0, "all_time": 0.0, "tokens_all_time": 0})
             rec["all_time"] += cost
+            rec["tokens_all_time"] += tokens
             if dt >= week:
                 rec["this_week"] += cost
         else:
