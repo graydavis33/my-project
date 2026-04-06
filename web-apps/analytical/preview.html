@@ -427,10 +427,7 @@
 
       <!-- Inline chart (same card) -->
       <div style="border-top:1px solid rgba(56,189,248,0.1);padding-top:1rem;">
-        <div id="chart-title" style="font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;">Platform Comparison — Total Views</div>
-        <div class="chart-canvas-wrap">
-          <canvas id="chart-overview"></canvas>
-        </div>
+        <div id="charts-container" style="display:grid;gap:1rem;grid-template-columns:1fr;"></div>
       </div>
     </div>
 
@@ -587,11 +584,80 @@
   #post-sidebar { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
   #comment-input::placeholder { color: var(--muted); }
 
+  /* ── Chart panels (multi-chart grid) ─────────────────── */
+  .chart-panel { display: flex; flex-direction: column; min-width: 0; }
+  .chart-panel-title {
+    font-size: 0.72rem; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.6rem;
+  }
+
+  /* ── Stat card flip ───────────────────────────────────── */
+  .stat-card { perspective: 900px; }
+  .stat-card-inner {
+    position: relative;
+    width: 100%; min-height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+  }
+  .stat-card.flipped .stat-card-inner { transform: rotateY(180deg); }
+  .stat-card-front, .stat-card-back {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .stat-card-front { width: 100%; }
+  .stat-card-back {
+    position: absolute; inset: 0;
+    transform: rotateY(180deg);
+    display: flex; flex-direction: column; gap: 0.45rem;
+    background: rgba(10,18,35,0.95);
+    border-radius: calc(var(--radius) - 1px);
+    padding: 0.65rem 0.85rem;
+    overflow: hidden;
+  }
+  .stat-edit-btn {
+    position: absolute; top: 0.5rem; right: 0.5rem; z-index: 2;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--muted); transition: background 0.2s, color 0.2s;
+  }
+  .stat-edit-btn:hover { background: rgba(14,165,233,0.15); color: var(--accent); }
+  .stat-back-label {
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; color: rgba(148,163,184,0.5); margin-bottom: 0.1rem;
+  }
+  .stat-back-input {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; color: white; font-size: 0.78rem; padding: 0.3rem 0.5rem;
+    width: 100%; outline: none; font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .stat-back-input:focus { border-color: rgba(14,165,233,0.5); }
+  .stat-back-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+  .stat-back-save {
+    margin-top: auto; background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.3);
+    border-radius: 6px; color: var(--accent); font-size: 0.72rem; font-weight: 700;
+    padding: 0.35rem; cursor: pointer; width: 100%; transition: background 0.2s;
+    font-family: inherit;
+  }
+  .stat-back-save:hover { background: rgba(14,165,233,0.28); }
+  /* Selected metric badge on card */
+  .stat-metric-badge {
+    position: absolute; top: 0.5rem; left: 0.5rem; z-index: 2;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent); color: #000;
+    font-size: 0.62rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transform: scale(0); transition: opacity 0.2s, transform 0.2s;
+  }
+  .stat-card.chart-selected .stat-metric-badge { opacity: 1; transform: scale(1); }
+  .stat-card.chart-selected { border-color: rgba(14,165,233,0.6) !important; box-shadow: var(--glow) !important; }
+
   /* ── Compact metric selector cards ───────────────────── */
   .metrics-compact { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.6rem; }
   .metrics-compact .stat-card {
     padding: 0.65rem 0.85rem;
-    min-height: unset;
+    min-height: 160px;
   }
   .metrics-compact .stat-value {
     font-size: 1.35rem;
@@ -825,62 +891,7 @@
   Chart.defaults.color = '#8899aa';
   Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
 
-  const ctx = document.getElementById('chart-overview').getContext('2d');
-  const overviewChart = new Chart(ctx, {
-    type: 'bar',
-    data: { labels, datasets: buildDatasets('views') },
-    options: {
-      responsive: true,
-      animation: { duration: 500, easing: 'easeInOutQuart' },
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa' } },
-        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa',
-          callback: v => v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v
-        }}
-      }
-    }
-  });
-
-  function buildDatasets(metric) {
-    return Object.entries(platforms).map(([key, p]) => ({
-      label: p.label,
-      data: metricData[metric][key],
-      backgroundColor: p.bg,
-      borderColor: p.color,
-      borderWidth: 2,
-      borderRadius: 6,
-    }));
-  }
-
-  let activeMetric = 'views';
-
-  function switchMetric(metric, label) {
-    if (!metricData[metric]) return;
-    activeMetric = metric;
-    document.getElementById('chart-title').textContent = 'Platform Comparison — ' + label;
-    overviewChart.data.datasets = buildDatasets(metric);
-    overviewChart.update();
-    // Highlight active stat card
-    document.querySelectorAll('.stat-card[data-metric]').forEach(c => {
-      c.style.borderColor = c.dataset.metric === metric ? 'var(--accent)' : '';
-      c.style.boxShadow  = c.dataset.metric === metric ? 'var(--glow)' : '';
-    });
-  }
-
-  // Wire up stat cards — click locks, hover previews
-  document.querySelectorAll('.stat-card[data-metric]').forEach(card => {
-    const metric = card.dataset.metric;
-    const label  = card.querySelector('.stat-label').textContent;
-    card.addEventListener('mouseenter', () => switchMetric(metric, label));
-    card.addEventListener('mouseleave', () => switchMetric(activeMetric, document.querySelector(`.stat-card[data-metric="${activeMetric}"] .stat-label`)?.textContent || 'Total Views'));
-    card.addEventListener('click', () => {
-      activeMetric = metric;
-      switchMetric(metric, label);
-    });
-  });
-
-  // Add legend style
+  // ── Legend style ────────────────────────────────────────────
   const legendStyle = document.createElement('style');
   legendStyle.textContent = `
     .chart-legend-item {
@@ -896,50 +907,240 @@
   `;
   document.head.appendChild(legendStyle);
 
-  // Stat card progress bar — animate on hover, editable goal
-  document.querySelectorAll('.stat-card').forEach(card => {
-    const bar = card.querySelector('.stat-progress-bar');
-    const currentLabel = card.querySelector('.stat-progress-current');
+  // ── Multi-chart system (up to 3 simultaneous) ───────────────
+  const chartInstances = {}; // metric → Chart instance
+  let selectedMetrics = ['views']; // ordered list, max 3
 
-    let current = parseFloat(card.dataset.current) || 0;
-    let goal = parseFloat(card.dataset.goal) || 100;
-    const pct = () => Math.min(100, Math.round((current / goal) * 100));
+  function buildDatasets(metric) {
+    return Object.entries(platforms).map(([key, p]) => ({
+      label: p.label,
+      data: metricData[metric][key],
+      backgroundColor: p.bg,
+      borderColor: p.color,
+      borderWidth: 2,
+      borderRadius: 6,
+    }));
+  }
 
-    card.addEventListener('mouseenter', () => { bar.style.width = pct() + '%'; });
-    card.addEventListener('mouseleave', () => { bar.style.width = '0%'; });
+  function makeChartOptions() {
+    return {
+      responsive: true,
+      maintainAspectRatio: true,
+      animation: { duration: 450, easing: 'easeInOutQuart' },
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa', font: { size: 10 } } },
+        y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#8899aa', font: { size: 10 },
+          callback: v => v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000).toFixed(0)+'K' : v
+        }}
+      }
+    };
+  }
 
-    function openEditor() {
-      const labelsRow = card.querySelector('.stat-progress-labels');
-      labelsRow.innerHTML = `
-        <div class="stat-goal-editor" style="width:100%">
-          <div class="stat-goal-editor-row">
-            <span class="stat-goal-label">Current</span>
-            <input class="stat-goal-input" type="number" value="${current}">
-          </div>
-          <div class="stat-goal-editor-row">
-            <span class="stat-goal-label">Goal</span>
-            <input class="stat-goal-input" type="number" value="${goal}">
-          </div>
-          <button class="stat-goal-save">Save</button>
-        </div>
+  function renderCharts() {
+    const container = document.getElementById('charts-container');
+    const count = selectedMetrics.length;
+
+    // Update grid columns
+    container.style.gridTemplateColumns = count === 1 ? '1fr' : count === 2 ? '1fr 1fr' : '1fr 1fr 1fr';
+
+    // Remove panels for deselected metrics
+    Object.keys(chartInstances).forEach(m => {
+      if (!selectedMetrics.includes(m)) {
+        chartInstances[m].destroy();
+        delete chartInstances[m];
+        const panel = container.querySelector(`[data-chart="${m}"]`);
+        if (panel) panel.remove();
+      }
+    });
+
+    // Add panels for newly selected metrics (in order)
+    selectedMetrics.forEach((metric, idx) => {
+      const mData = metricData[metric];
+      if (!mData) return;
+
+      if (chartInstances[metric]) {
+        // Already exists — just make sure it's in the right DOM order
+        const panel = container.querySelector(`[data-chart="${metric}"]`);
+        if (panel) container.appendChild(panel); // move to end to re-order
+        return;
+      }
+
+      // Create new panel
+      const panel = document.createElement('div');
+      panel.className = 'chart-panel';
+      panel.dataset.chart = metric;
+      panel.innerHTML = `
+        <div class="chart-panel-title">${mData.label}</div>
+        <div class="chart-canvas-wrap"><canvas></canvas></div>
       `;
-      labelsRow.querySelector('.stat-goal-save').addEventListener('click', () => {
-        const inputs = labelsRow.querySelectorAll('.stat-goal-input');
-        const newCurrent = parseFloat(inputs[0].value);
-        const newGoal = parseFloat(inputs[1].value);
-        if (!isNaN(newCurrent)) current = newCurrent;
-        if (!isNaN(newGoal)) goal = newGoal;
-        labelsRow.innerHTML = `
-          <span class="stat-progress-current">${current.toLocaleString()}</span>
-          <span class="stat-progress-goal">Goal: ${goal.toLocaleString()}</span>
-        `;
-        labelsRow.querySelector('.stat-progress-goal').addEventListener('click', openEditor);
-        bar.style.width = pct() + '%';
+      container.appendChild(panel);
+
+      const canvas = panel.querySelector('canvas');
+      chartInstances[metric] = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: { labels, datasets: buildDatasets(metric) },
+        options: makeChartOptions(),
+      });
+    });
+
+    // Sync DOM order with selectedMetrics order
+    selectedMetrics.forEach(m => {
+      const el = container.querySelector(`[data-chart="${m}"]`);
+      if (el) container.appendChild(el);
+    });
+
+    updateCardBadges();
+  }
+
+  function toggleMetric(metric) {
+    if (!metricData[metric]) return;
+    const idx = selectedMetrics.indexOf(metric);
+    if (idx !== -1) {
+      // Deselect — only if more than 1 selected
+      if (selectedMetrics.length > 1) {
+        selectedMetrics.splice(idx, 1);
+      }
+    } else {
+      // Select — drop oldest if already at 3
+      if (selectedMetrics.length >= 3) selectedMetrics.shift();
+      selectedMetrics.push(metric);
+    }
+    renderCharts();
+  }
+
+  function updateCardBadges() {
+    document.querySelectorAll('.stat-card[data-metric]').forEach(card => {
+      const m = card.dataset.metric;
+      const idx = selectedMetrics.indexOf(m);
+      const badge = card.querySelector('.stat-metric-badge');
+      if (idx !== -1) {
+        card.classList.add('chart-selected');
+        if (badge) badge.textContent = idx + 1;
+      } else {
+        card.classList.remove('chart-selected');
+      }
+    });
+  }
+
+  // Initial render
+  renderCharts();
+
+  // ── Stat card: flip-to-edit + progress bar ──────────────────
+  document.querySelectorAll('.stat-card').forEach(card => {
+    let current = parseFloat(card.dataset.current) || 0;
+    let goal    = parseFloat(card.dataset.goal) || 100;
+    let unit    = card.dataset.unit || '';
+    const pct = () => Math.min(100, (current / goal) * 100);
+
+    // Wrap existing content in front face
+    const frontContent = card.innerHTML;
+    card.innerHTML = `
+      <div class="stat-card-inner">
+        <div class="stat-card-front">
+          <div class="stat-metric-badge"></div>
+          <button class="stat-edit-btn" title="Edit">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </button>
+          ${frontContent}
+        </div>
+        <div class="stat-card-back">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--accent);margin-bottom:0.2rem;">Edit Metric</div>
+          <div>
+            <div class="stat-back-label">Label</div>
+            <input class="stat-back-input" data-field="label" type="text" value="${card.querySelector ? '' : ''}">
+          </div>
+          <div class="stat-back-row">
+            <div>
+              <div class="stat-back-label">Current</div>
+              <input class="stat-back-input" data-field="current" type="number" value="${current}">
+            </div>
+            <div>
+              <div class="stat-back-label">Goal</div>
+              <input class="stat-back-input" data-field="goal" type="number" value="${goal}">
+            </div>
+          </div>
+          <div class="stat-back-row">
+            <div>
+              <div class="stat-back-label">Unit</div>
+              <input class="stat-back-input" data-field="unit" type="text" placeholder="K, M, $, %" value="${unit}" style="text-align:center;">
+            </div>
+            <div>
+              <div class="stat-back-label">Type</div>
+              <select class="stat-back-input" data-field="type" style="cursor:pointer;">
+                <option value="number">Number</option>
+                <option value="currency">Currency</option>
+                <option value="percent">Percent</option>
+              </select>
+            </div>
+          </div>
+          <button class="stat-back-save">Save & flip back</button>
+        </div>
+      </div>
+    `;
+
+    // Set the label input value now that it's in DOM
+    const labelEl = card.querySelector('.stat-label');
+    const labelInput = card.querySelector('[data-field="label"]');
+    if (labelEl && labelInput) labelInput.value = labelEl.textContent;
+
+    const bar = card.querySelector('.stat-progress-bar');
+
+    // Set progress bar to show goal %
+    function updateBar() {
+      if (bar) bar.style.width = pct() + '%';
+    }
+    updateBar(); // always show (not hover-only now)
+
+    // Hover lifts, mouseleave returns
+    card.addEventListener('mouseenter', () => { if (bar) bar.style.width = pct() + '%'; });
+    card.addEventListener('mouseleave', () => { if (bar) bar.style.width = pct() + '%'; });
+
+    // Edit button → flip
+    const editBtn = card.querySelector('.stat-edit-btn');
+    editBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      card.classList.add('flipped');
+    });
+
+    // Save → flip back
+    const saveBtn = card.querySelector('.stat-back-save');
+    saveBtn.addEventListener('click', () => {
+      const newCurrent = parseFloat(card.querySelector('[data-field="current"]').value);
+      const newGoal    = parseFloat(card.querySelector('[data-field="goal"]').value);
+      const newLabel   = card.querySelector('[data-field="label"]').value.trim();
+      const newUnit    = card.querySelector('[data-field="unit"]').value.trim();
+
+      if (!isNaN(newCurrent)) { current = newCurrent; card.dataset.current = current; }
+      if (!isNaN(newGoal))    { goal    = newGoal;    card.dataset.goal    = goal;    }
+      if (newUnit) unit = newUnit;
+
+      // Update front face display
+      const valEl = card.querySelector('.stat-value');
+      const lblEl = card.querySelector('.stat-label');
+      if (valEl) valEl.textContent = current >= 1000000 ? (current/1000000).toFixed(1)+'M'
+                                   : current >= 1000    ? (current/1000).toFixed(1)+'K'
+                                   : current;
+      if (lblEl && newLabel) lblEl.textContent = newLabel;
+
+      updateBar();
+      card.classList.remove('flipped');
+    });
+
+    // Metric toggle on click (not on edit btn)
+    if (card.dataset.metric) {
+      card.addEventListener('click', e => {
+        if (e.target.closest('.stat-edit-btn') || e.target.closest('.stat-card-back')) return;
+        toggleMetric(card.dataset.metric);
       });
     }
-
-    card.querySelector('.stat-progress-goal').addEventListener('click', openEditor);
   });
+
+  // Initial badge sync
+  updateCardBadges();
 
   // ── Glass Sidebar ───────────────────────────────────────────
   const glassSidebar = document.getElementById('glass-sidebar');
