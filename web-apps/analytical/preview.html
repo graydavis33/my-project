@@ -276,8 +276,19 @@
       <div class="insights-generated">Generated Apr 2, 2026 at 2:41 PM</div>
     </div>
 
-    <!-- Stats grid -->
-    <div class="stats-grid" style="margin-bottom:2rem;">
+    <!-- Platform Comparison + Metrics (unified section) -->
+    <div class="chart-card" style="margin-bottom:2rem;padding:1.5rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+        <div class="chart-title" style="margin-bottom:0;">Platform Overview</div>
+        <div style="display:flex;gap:0.5rem;" id="chart-legend">
+          <span class="chart-legend-item" style="--lc:#FF0000;">YouTube</span>
+          <span class="chart-legend-item" style="--lc:#69C9D0;">TikTok</span>
+          <span class="chart-legend-item" style="--lc:#E1306C;">Instagram</span>
+          <span class="chart-legend-item" style="--lc:#1877F2;">Facebook</span>
+        </div>
+      </div>
+      <!-- Compact metric selector cards -->
+      <div class="stats-grid metrics-compact" style="margin-bottom:1.25rem;">
       <div class="stat-card" data-current="47200" data-goal="65000" data-metric="followers" style="cursor:pointer;">
         <div class="stat-value">47.2K</div>
         <div class="stat-label">Total Followers</div>
@@ -414,18 +425,9 @@
 
     </div>
 
-    <!-- Chart -->
-    <div class="chart-grid" style="grid-template-columns:1fr; margin-bottom:2rem;">
-      <div class="chart-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-          <div id="chart-title" class="chart-title" style="margin-bottom:0;">Platform Comparison — Total Views</div>
-          <div style="display:flex;gap:0.5rem;" id="chart-legend">
-            <span class="chart-legend-item" style="--lc:#FF0000;">YouTube</span>
-            <span class="chart-legend-item" style="--lc:#69C9D0;">TikTok</span>
-            <span class="chart-legend-item" style="--lc:#E1306C;">Instagram</span>
-            <span class="chart-legend-item" style="--lc:#1877F2;">Facebook</span>
-          </div>
-        </div>
+      <!-- Inline chart (same card) -->
+      <div style="border-top:1px solid rgba(56,189,248,0.1);padding-top:1rem;">
+        <div id="chart-title" style="font-size:0.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;">Platform Comparison — Total Views</div>
         <div class="chart-canvas-wrap">
           <canvas id="chart-overview"></canvas>
         </div>
@@ -584,6 +586,40 @@
   #top-posts-table tbody tr:hover { background: rgba(255,255,255,0.03); }
   #post-sidebar { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
   #comment-input::placeholder { color: var(--muted); }
+
+  /* ── Compact metric selector cards ───────────────────── */
+  .metrics-compact { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.6rem; }
+  .metrics-compact .stat-card {
+    padding: 0.65rem 0.85rem;
+    min-height: unset;
+  }
+  .metrics-compact .stat-value {
+    font-size: 1.35rem;
+    margin-bottom: 0.15rem;
+  }
+  .metrics-compact .stat-label {
+    font-size: 0.68rem;
+    margin-bottom: 0.5rem;
+    color: rgba(148,163,184,0.7);
+  }
+  .metrics-compact .stat-trend-badge {
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    gap: 3px;
+    margin-bottom: 0.4rem;
+  }
+  .metrics-compact .stat-trend-sublabel { display: none; }
+  .metrics-compact .stat-progress-container { height: 2px; margin-bottom: 0.2rem; }
+  .metrics-compact .stat-progress-labels { display: none; }
+  .metrics-compact #add-metric-card {
+    min-height: 80px;
+    padding: 0.65rem;
+    gap: 0.4rem;
+  }
+  .metrics-compact #add-metric-card > div:first-child { width: 28px; height: 28px; }
+  .metrics-compact #add-metric-card svg { width: 14px; height: 14px; }
+  .metrics-compact #add-metric-card p:first-child { font-size: 0.75rem; }
+  .metrics-compact #add-metric-card p:last-child { display: none; }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
