@@ -7,17 +7,114 @@
   <link rel="stylesheet" href="frontend/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
-    /* Preview-only: show all views at once */
+    /* Preview-only */
     .view-section { margin-bottom: 3rem; }
     .preview-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(14,165,233,0.5);
-      font-weight: 700;
-      padding: 0.5rem 0.75rem;
-      margin-bottom: 0;
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;
+      color: rgba(14,165,233,0.5); font-weight: 700; padding: 0.5rem 0.75rem; margin-bottom: 0;
     }
+
+    /* ── Glass Sidebar ─────────────────────────────────────── */
+    :root {
+      --gs-accent:      #22D3EE;
+      --gs-accent2:     #2563EB;
+      --gs-glow:        0 0 20px rgba(34,211,238,0.8), 0 0 40px rgba(34,211,238,0.4);
+      --gs-text-glow:   0 0 10px rgba(34,211,238,0.5);
+      --gs-bg:          rgba(34,211,238,0.1);
+      --gs-collapsed:   80px;
+      --gs-expanded:    280px;
+    }
+
+    .glass-sidebar {
+      width: var(--gs-collapsed);
+      min-width: var(--gs-collapsed);
+      transition: width 0.3s cubic-bezier(0.4,0,0.2,1), min-width 0.3s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1rem;
+      gap: 0;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .glass-sidebar.expanded {
+      width: var(--gs-expanded);
+      min-width: var(--gs-expanded);
+    }
+
+    /* Logo */
+    .glass-logo {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 2.5rem; padding: 0.25rem 0; flex-shrink: 0;
+    }
+    .glass-logo-icon {
+      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gs-accent), var(--gs-accent2));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 16px rgba(34,211,238,0.35);
+      transition: background 0.5s, box-shadow 0.5s;
+    }
+    .glass-logo-text {
+      font-size: 1.2rem; font-weight: 700; color: var(--gs-accent);
+      white-space: nowrap; opacity: 0; transition: opacity 0.25s;
+      text-shadow: var(--gs-text-glow);
+    }
+    .glass-sidebar.expanded .glass-logo-text { opacity: 1; }
+
+    /* Nav container */
+    .glass-nav {
+      flex: 1; display: flex; flex-direction: column; gap: 2px;
+      overflow-y: auto; overflow-x: hidden; position: relative;
+    }
+    .glass-nav::-webkit-scrollbar { width: 0; }
+
+    /* Active sliding indicator */
+    .glass-indicator {
+      position: absolute; left: 0; width: 3px; border-radius: 0 3px 3px 0;
+      background: var(--gs-accent); box-shadow: var(--gs-glow);
+      transition: top 0.3s cubic-bezier(0.4,0,0.2,1), height 0.3s, background 0.5s, box-shadow 0.5s;
+      pointer-events: none; z-index: 2;
+    }
+
+    /* Links */
+    .glass-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem; border-radius: 8px;
+      color: rgba(156,163,175,1); text-decoration: none;
+      transition: background 0.2s, color 0.2s; position: relative;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .glass-link:hover { background: rgba(255,255,255,0.05); color: white; }
+    .glass-link.active {
+      background: var(--gs-bg);
+      color: var(--gs-accent);
+      text-shadow: var(--gs-text-glow);
+    }
+    .glass-icon { width: 20px; height: 20px; flex-shrink: 0; transition: color 0.3s; }
+    .glass-label {
+      font-size: 0.875rem; font-weight: 500;
+      opacity: 0; width: 0; overflow: hidden; transition: opacity 0.2s, width 0.2s;
+    }
+    .glass-sidebar.expanded .glass-label { opacity: 1; width: auto; }
+
+    /* Divider + section labels */
+    .glass-divider {
+      height: 1px; margin: 0.75rem 0;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.15), transparent);
+    }
+    .glass-section {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--gs-accent); opacity: 0;
+      padding: 0 0.5rem 0.4rem; transition: opacity 0.2s; white-space: nowrap;
+    }
+    .glass-sidebar.expanded .glass-section { opacity: 0.6; }
+
+    /* Bottom */
+    .glass-bottom { flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; }
   </style>
 </head>
 <body>
@@ -39,77 +136,94 @@
 <!-- ─── Layout ───────────────────────────────────────────────── -->
 <div class="dash-layout">
 
-  <!-- Sidebar -->
-  <aside class="dash-sidebar" id="sidebar">
-    <div class="sidebar-indicator" id="sidebar-indicator"></div>
+  <!-- Glassmorphism Sidebar -->
+  <aside id="glass-sidebar" class="glass-sidebar" onmouseenter="sidebarExpand()" onmouseleave="sidebarCollapse()">
 
-    <div class="sidebar-nav">
-      <a href="#" class="sidebar-link active" data-label="Overview">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        <span class="sidebar-link-text">Overview</span>
+    <!-- Logo -->
+    <div class="glass-logo">
+      <div class="glass-logo-icon" id="glass-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" fill="white"/></svg>
+      </div>
+      <span class="glass-logo-text" id="glass-logo-text">Analytical</span>
+    </div>
+
+    <!-- Nav -->
+    <div class="glass-nav" id="glass-nav">
+      <!-- Active glow indicator -->
+      <div class="glass-indicator" id="glass-indicator"></div>
+
+      <!-- Overview -->
+      <a href="#" class="glass-link active" data-label="Overview" onclick="setGlassActive(this);return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span class="glass-label">Overview</span>
       </a>
 
-      <div class="sidebar-section-label">Platforms</div>
+      <!-- Divider + Platforms -->
+      <div class="glass-divider"></div>
+      <div class="glass-section" id="section-platforms">Platforms</div>
 
-      <a href="#" class="sidebar-link" data-label="YouTube">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        <span class="sidebar-link-text">YouTube</span>
+      <a href="#" class="glass-link" data-label="YouTube" onclick="setGlassActive(this);return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        <span class="glass-label">YouTube</span>
       </a>
 
-      <a href="#" class="sidebar-link" data-label="TikTok">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.01a8.16 8.16 0 004.77 1.52V7.07a4.85 4.85 0 01-1-.38z"/></svg>
-        <span class="sidebar-link-text">TikTok</span>
+      <a href="#" class="glass-link" data-label="TikTok" onclick="setGlassActive(this);return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.01a8.16 8.16 0 004.77 1.52V7.07a4.85 4.85 0 01-1-.38z"/></svg>
+        <span class="glass-label">TikTok</span>
       </a>
 
-      <a href="#" class="sidebar-link" data-label="Instagram">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f09433"/><stop offset="50%" style="stop-color:#dc2743"/><stop offset="100%" style="stop-color:#bc1888"/></linearGradient></defs><path fill="url(#ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        <span class="sidebar-link-text">Instagram</span>
+      <a href="#" class="glass-link" data-label="Instagram" onclick="setGlassActive(this);return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24"><defs><linearGradient id="ig2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f09433"/><stop offset="50%" style="stop-color:#dc2743"/><stop offset="100%" style="stop-color:#bc1888"/></linearGradient></defs><path fill="url(#ig2)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        <span class="glass-label">Instagram</span>
       </a>
 
-      <a href="#" class="sidebar-link" data-label="Facebook">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        <span class="sidebar-link-text">Facebook</span>
+      <a href="#" class="glass-link" data-label="Facebook" onclick="setGlassActive(this);return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        <span class="glass-label">Facebook</span>
       </a>
 
-      <div class="sidebar-section-label">Features</div>
+      <!-- Divider + Features -->
+      <div class="glass-divider"></div>
+      <div class="glass-section" id="section-features">Features</div>
 
-      <a href="#" class="sidebar-link" data-label="AI Chat">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span class="sidebar-link-text">AI Chat</span>
+      <a href="#" class="glass-link" data-label="AI Chat" onclick="setGlassActive(this);return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="glass-label">AI Chat</span>
       </a>
 
-      <a href="#" class="sidebar-link" data-label="Connect">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        <span class="sidebar-link-text">Connect</span>
+      <a href="#" class="glass-link" data-label="Connect" onclick="setGlassActive(this);return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <span class="glass-label">Connect</span>
       </a>
     </div>
 
-    <div class="sidebar-bottom">
-      <div class="sidebar-divider"></div>
-      <a href="#" class="sidebar-link" id="open-color-picker" data-label="Theme">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-        <span class="sidebar-link-text">Color Theme</span>
+    <!-- Bottom links -->
+    <div class="glass-bottom">
+      <div class="glass-divider"></div>
+      <a href="#" class="glass-link" data-label="Theme" onclick="openGlassColorPicker();return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        <span class="glass-label">Color Theme</span>
       </a>
-      <a href="#" class="sidebar-link" data-label="Logout">
-        <svg class="sidebar-link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        <span class="sidebar-link-text">Log out</span>
+      <a href="#" class="glass-link" data-label="Logout" onclick="return false;">
+        <svg class="glass-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="glass-label">Log out</span>
       </a>
     </div>
   </aside>
 
   <!-- Color Picker Modal -->
-  <div class="color-picker-overlay" id="color-picker-overlay">
-    <div class="color-picker-modal">
-      <div class="color-picker-header">
-        <div class="color-picker-title">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-          Color Theme
+  <div id="glass-color-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:1rem;" onclick="closeGlassColorPicker()">
+    <div style="background:rgba(10,15,30,0.95);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:1.75rem;max-width:680px;width:100%;max-height:80vh;overflow-y:auto;" onclick="event.stopPropagation()">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          <span style="font-size:1.35rem;font-weight:700;color:white;">Color Theme</span>
         </div>
-        <button class="color-picker-close" id="close-color-picker">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <button onclick="closeGlassColorPicker()" style="background:none;border:none;cursor:pointer;color:rgba(156,163,175,1);padding:0.25rem;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(156,163,175,1)'">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
-      <div class="color-picker-grid" id="color-picker-grid"></div>
+      <div id="glass-color-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;"></div>
     </div>
   </div>
 
@@ -255,6 +369,48 @@
           <span class="stat-progress-goal">Goal: 6</span>
         </div>
       </div>
+
+      <!-- Revenue card -->
+      <div class="stat-card" data-current="3200" data-goal="10000" style="border-color:rgba(232,184,75,0.25);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.25rem;">
+          <div class="stat-value" style="color:var(--brand-gold);">$3,200</div>
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(232,184,75,0.12);display:flex;align-items:center;justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e8b84b" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+        </div>
+        <div class="stat-label">Monthly Revenue</div>
+        <div class="stat-trend-badge" style="background:rgba(232,184,75,0.1);border-color:rgba(232,184,75,0.2);color:var(--brand-gold);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          <span>+$480</span><span class="stat-trend-sublabel">this month</span>
+        </div>
+        <div class="stat-progress-container" style="background:rgba(232,184,75,0.08);">
+          <div class="stat-progress-bar" style="background:linear-gradient(90deg,#e8b84b,#f5e070);"></div>
+        </div>
+        <div class="stat-progress-labels">
+          <span class="stat-progress-current">$3,200</span>
+          <span class="stat-progress-goal">Goal: $10,000</span>
+        </div>
+      </div>
+
+      <!-- Custom "Add Metric" card -->
+      <div id="add-metric-card" onclick="openAddMetric()" style="
+        border: 2px dashed rgba(14,165,233,0.25); border-radius: var(--radius);
+        padding: 1.25rem; cursor: pointer; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 0.75rem; min-height: 160px;
+        background: rgba(14,165,233,0.03); transition: border-color 0.2s, background 0.2s;"
+        onmouseover="this.style.borderColor='rgba(14,165,233,0.5)';this.style.background='rgba(14,165,233,0.07)'"
+        onmouseout="this.style.borderColor='rgba(14,165,233,0.25)';this.style.background='rgba(14,165,233,0.03)'">
+        <div style="width:40px;height:40px;border-radius:50%;background:rgba(14,165,233,0.12);display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <div style="text-align:center;">
+          <p style="font-size:0.875rem;font-weight:600;color:var(--accent);">Add Metric</p>
+          <p style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">Track a custom stat</p>
+        </div>
+      </div>
+
+      <!-- Custom metrics render here -->
+      <div id="custom-metrics" style="display:contents;"></div>
     </div>
 
     <!-- Chart -->
@@ -641,7 +797,216 @@
 
     card.querySelector('.stat-progress-goal').addEventListener('click', openEditor);
   });
+
+  // ── Glass Sidebar ───────────────────────────────────────────
+  const glassSidebar = document.getElementById('glass-sidebar');
+  const glassIndicator = document.getElementById('glass-indicator');
+
+  function sidebarExpand() { glassSidebar.classList.add('expanded'); updateIndicator(); }
+  function sidebarCollapse() { glassSidebar.classList.remove('expanded'); }
+
+  function setGlassActive(el) {
+    document.querySelectorAll('.glass-link').forEach(l => l.classList.remove('active'));
+    el.classList.add('active');
+    updateIndicator();
+  }
+
+  function updateIndicator() {
+    const active = glassSidebar.querySelector('.glass-link.active');
+    if (!active) return;
+    const navRect = document.getElementById('glass-nav').getBoundingClientRect();
+    const linkRect = active.getBoundingClientRect();
+    glassIndicator.style.top = (linkRect.top - navRect.top) + 'px';
+    glassIndicator.style.height = linkRect.height + 'px';
+  }
+
+  // Position indicator on load
+  window.addEventListener('load', () => setTimeout(updateIndicator, 50));
+
+  // ── Glass Color Picker ──────────────────────────────────────
+  const glassVariants = [
+    { name: 'Electric Blue',  value: 'blue',    from: '#22D3EE', to: '#2563EB', glow: '34,211,238' },
+    { name: 'Royal Purple',   value: 'purple',  from: '#C084FC', to: '#7C3AED', glow: '192,132,252' },
+    { name: 'Fresh Emerald',  value: 'emerald', from: '#34D399', to: '#059669', glow: '52,211,153' },
+    { name: 'Sunset Rose',    value: 'rose',    from: '#FB7185', to: '#E11D48', glow: '251,113,133' },
+    { name: 'Golden Amber',   value: 'amber',   from: '#FBBF24', to: '#D97706', glow: '251,191,36' },
+    { name: 'Deep Indigo',    value: 'indigo',  from: '#818CF8', to: '#4338CA', glow: '129,140,248' },
+    { name: 'Hot Pink',       value: 'pink',    from: '#F472B6', to: '#DB2777', glow: '244,114,182' },
+    { name: 'Ocean Teal',     value: 'teal',    from: '#2DD4BF', to: '#0F766E', glow: '45,212,191' },
+    { name: 'Vivid Orange',   value: 'orange',  from: '#FB923C', to: '#EA580C', glow: '251,146,60' },
+    { name: 'Electric Lime',  value: 'lime',    from: '#A3E635', to: '#65A30D', glow: '163,230,53' },
+    { name: 'Sky Blue',       value: 'sky',     from: '#38BDF8', to: '#0284C7', glow: '56,189,248' },
+    { name: 'Neon Fuchsia',   value: 'fuchsia', from: '#E879F9', to: '#A21CAF', glow: '232,121,249' },
+    { name: 'Violet Dream',   value: 'violet',  from: '#A78BFA', to: '#7C3AED', glow: '167,139,250' },
+    { name: 'Aqua Cyan',      value: 'cyan',    from: '#22D3EE', to: '#0891B2', glow: '34,211,238' },
+    { name: 'Crimson Red',    value: 'red',     from: '#F87171', to: '#DC2626', glow: '248,113,113' },
+    { name: 'Matrix Green',   value: 'green',   from: '#4ADE80', to: '#16A34A', glow: '74,222,128' },
+    { name: 'Bright Yellow',  value: 'yellow',  from: '#FACC15', to: '#CA8A04', glow: '250,204,21' },
+    { name: 'Cool Slate',     value: 'slate',   from: '#94A3B8', to: '#475569', glow: '148,163,184' },
+    { name: 'Steel Zinc',     value: 'zinc',    from: '#A1A1AA', to: '#52525B', glow: '161,161,170' },
+    { name: 'Neutral Gray',   value: 'neutral', from: '#A3A3A3', to: '#525252', glow: '163,163,163' },
+  ];
+
+  let currentVariant = glassVariants[0];
+
+  function openGlassColorPicker() {
+    const overlay = document.getElementById('glass-color-overlay');
+    const grid = document.getElementById('glass-color-grid');
+    overlay.style.display = 'flex';
+
+    grid.innerHTML = glassVariants.map(v => `
+      <button onclick="applyGlassVariant('${v.value}')" style="
+        border: ${v.value === currentVariant.value ? '2px solid white' : '2px solid transparent'};
+        background: rgba(255,255,255,0.04); border-radius: 12px; padding: 0.75rem;
+        cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+        transform: ${v.value === currentVariant.value ? 'scale(1.05)' : 'scale(1)'};"
+        onmouseover="this.style.transform='scale(1.05)'"
+        onmouseout="this.style.transform='${v.value === currentVariant.value ? 'scale(1.05)' : 'scale(1)'}'">
+        <div style="width:100%;height:52px;border-radius:8px;background:linear-gradient(135deg,${v.from},${v.to});margin-bottom:0.5rem;"></div>
+        <p style="font-size:0.7rem;color:white;font-weight:500;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${v.name}</p>
+      </button>
+    `).join('');
+  }
+
+  function closeGlassColorPicker() {
+    document.getElementById('glass-color-overlay').style.display = 'none';
+  }
+
+  function applyGlassVariant(value) {
+    const v = glassVariants.find(x => x.value === value);
+    if (!v) return;
+    currentVariant = v;
+    const r = document.documentElement.style;
+    r.setProperty('--gs-accent',    v.from);
+    r.setProperty('--gs-accent2',   v.to);
+    r.setProperty('--gs-glow',      `0 0 20px rgba(${v.glow},0.8), 0 0 40px rgba(${v.glow},0.4)`);
+    r.setProperty('--gs-text-glow', `0 0 10px rgba(${v.glow},0.5)`);
+    r.setProperty('--gs-bg',        `rgba(${v.glow},0.1)`);
+    // Update logo icon gradient
+    document.getElementById('glass-logo-icon').style.background = `linear-gradient(135deg,${v.from},${v.to})`;
+    document.getElementById('glass-logo-icon').style.boxShadow = `0 4px 16px rgba(${v.glow},0.35)`;
+    updateIndicator();
+    closeGlassColorPicker();
+  }
+
+  // ── Add Custom Metric ────────────────────────────────────────
+  function openAddMetric() {
+    document.getElementById('add-metric-overlay').style.display = 'flex';
+    setTimeout(() => document.getElementById('metric-name').focus(), 50);
+  }
+  function closeAddMetric() {
+    document.getElementById('add-metric-overlay').style.display = 'none';
+    ['metric-name','metric-value','metric-goal','metric-unit','metric-trend'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  }
+  function createCustomMetric() {
+    const name  = document.getElementById('metric-name').value.trim();
+    const val   = document.getElementById('metric-value').value.trim();
+    const goal  = document.getElementById('metric-goal').value.trim();
+    const unit  = document.getElementById('metric-unit').value;
+    const trend = document.getElementById('metric-trend').value.trim();
+    if (!name || !val) { document.getElementById('metric-name').focus(); return; }
+
+    const numVal  = parseFloat(val.replace(/[^0-9.]/g,'')) || 0;
+    const numGoal = parseFloat(goal.replace(/[^0-9.]/g,'')) || Math.round(numVal * 2);
+    const prefix  = unit === '$' ? '$' : '';
+    const suffix  = (unit && unit !== '$') ? unit : '';
+    const fmt = n => prefix + (n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'K' : n) + suffix;
+
+    const card = document.createElement('div');
+    card.className = 'stat-card';
+    card.dataset.current = numVal;
+    card.dataset.goal = numGoal;
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.25rem;">
+        <div class="stat-value">${fmt(numVal)}</div>
+        <button onclick="this.closest('.stat-card').remove()" title="Remove" style="background:none;border:none;cursor:pointer;color:var(--muted);padding:2px;line-height:1;" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--muted)'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="stat-label">${name}</div>
+      ${trend ? `<div class="stat-trend-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span>${trend}</span><span class="stat-trend-sublabel">this week</span></div>` : ''}
+      <div class="stat-progress-container"><div class="stat-progress-bar"></div></div>
+      <div class="stat-progress-labels">
+        <span class="stat-progress-current">${prefix}${numVal.toLocaleString()}${suffix}</span>
+        <span class="stat-progress-goal" style="cursor:pointer">Goal: ${fmt(numGoal)}</span>
+      </div>`;
+
+    let cur = numVal, gl = numGoal;
+    const bar = card.querySelector('.stat-progress-bar');
+    const pct = () => Math.min(100, Math.round((cur/gl)*100));
+    card.addEventListener('mouseenter', () => { bar.style.width = pct()+'%'; });
+    card.addEventListener('mouseleave', () => { bar.style.width = '0%'; });
+    card.querySelector('.stat-progress-goal').addEventListener('click', () => {
+      const lr = card.querySelector('.stat-progress-labels');
+      lr.innerHTML = `<div class="stat-goal-editor" style="width:100%"><div class="stat-goal-editor-row"><span class="stat-goal-label">Current</span><input class="stat-goal-input" type="number" value="${cur}"></div><div class="stat-goal-editor-row"><span class="stat-goal-label">Goal</span><input class="stat-goal-input" type="number" value="${gl}"></div><button class="stat-goal-save">Save</button></div>`;
+      lr.querySelector('.stat-goal-save').addEventListener('click', () => {
+        const inputs = lr.querySelectorAll('.stat-goal-input');
+        cur = parseFloat(inputs[0].value)||cur; gl = parseFloat(inputs[1].value)||gl;
+        lr.innerHTML = `<span class="stat-progress-current">${prefix}${cur.toLocaleString()}${suffix}</span><span class="stat-progress-goal" style="cursor:pointer">Goal: ${fmt(gl)}</span>`;
+        bar.style.width = pct()+'%';
+        lr.querySelector('.stat-progress-goal').addEventListener('click', arguments.callee);
+      });
+    });
+
+    document.getElementById('custom-metrics').appendChild(card);
+    closeAddMetric();
+  }
 </script>
+
+<!-- Add Metric Modal -->
+<div id="add-metric-overlay" onclick="closeAddMetric()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:400;align-items:center;justify-content:center;padding:1rem;">
+  <div onclick="event.stopPropagation()" style="background:rgba(13,17,32,0.97);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:1.75rem;width:100%;max-width:440px;box-shadow:0 24px 64px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--text);">Add Custom Metric</h3>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.2rem;">Track anything alongside your main stats</p>
+      </div>
+      <button onclick="closeAddMetric()" style="background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+      <div>
+        <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:0.4rem;">Metric Name *</label>
+        <input id="metric-name" type="text" placeholder="e.g. Brand Deals, Watch Hours, Clients..." style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.65rem 0.875rem;color:var(--text);font-size:0.875rem;outline:none;font-family:inherit;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" onkeydown="if(event.key==='Enter')document.getElementById('metric-value').focus()">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+        <div>
+          <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:0.4rem;">Current Value *</label>
+          <input id="metric-value" type="text" placeholder="e.g. 3200" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.65rem 0.875rem;color:var(--text);font-size:0.875rem;outline:none;font-family:inherit;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+        </div>
+        <div>
+          <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:0.4rem;">Goal (optional)</label>
+          <input id="metric-goal" type="text" placeholder="e.g. 10000" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.65rem 0.875rem;color:var(--text);font-size:0.875rem;outline:none;font-family:inherit;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+        <div>
+          <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:0.4rem;">Unit</label>
+          <select id="metric-unit" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.65rem 0.875rem;color:var(--text);font-size:0.875rem;outline:none;font-family:inherit;cursor:pointer;">
+            <option value="">None</option>
+            <option value="$">$ (dollars)</option>
+            <option value="%">% (percent)</option>
+            <option value="hrs">hrs</option>
+            <option value="x">x (multiplier)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:0.4rem;">Weekly Change</label>
+          <input id="metric-trend" type="text" placeholder="e.g. +12%" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.65rem 0.875rem;color:var(--text);font-size:0.875rem;outline:none;font-family:inherit;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+      <button onclick="closeAddMetric()" style="flex:1;padding:0.75rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--muted);font-size:0.875rem;font-weight:600;cursor:pointer;font-family:inherit;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--muted)'">Cancel</button>
+      <button onclick="createCustomMetric()" style="flex:2;padding:0.75rem;background:var(--accent);border:none;border-radius:8px;color:#fff;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Add to Dashboard</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
