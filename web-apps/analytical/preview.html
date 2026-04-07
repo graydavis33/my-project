@@ -44,6 +44,14 @@
       align-self: flex-start;
       flex-shrink: 0;
     }
+    .glass-sidebar:hover {
+      width: var(--gs-expanded);
+      min-width: var(--gs-expanded);
+    }
+    .glass-sidebar:hover .glass-label { opacity: 1; width: auto; }
+    .glass-sidebar:hover .glass-logo-text { opacity: 1; }
+    .glass-sidebar:hover .glass-section { opacity: 0.6; }
+
     .glass-sidebar.expanded {
       width: var(--gs-expanded);
       min-width: var(--gs-expanded);
