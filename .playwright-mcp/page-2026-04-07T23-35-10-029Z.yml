@@ -1,0 +1,291 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - main [ref=e4]:
+      - main [ref=e5]:
+        - generic [ref=e8]:
+          - generic [ref=e13]:
+            - generic [ref=e14]:
+              - generic [ref=e15]:
+                - generic [ref=e18]:
+                  - button "21st logo 21st" [ref=e20] [cursor=pointer]:
+                    - generic [ref=e21]:
+                      - generic [ref=e23]:
+                        - img "21st logo"
+                      - generic [ref=e25]: 21st
+                      - img
+                  - button "Close sidebar" [ref=e27] [cursor=pointer]:
+                    - img
+                - generic [ref=e30]:
+                  - img
+                  - textbox "Search" [ref=e31] [cursor=pointer]
+                  - generic:
+                    - img
+                    - generic: K
+              - generic [ref=e32]:
+                - generic [ref=e35]:
+                  - link "Home" [ref=e37] [cursor=pointer]:
+                    - /url: /
+                    - img [ref=e38]
+                    - generic [ref=e41]: Home
+                  - generic [ref=e42]:
+                    - heading "Explore" [level=3] [ref=e44]
+                    - generic [ref=e45]:
+                      - button "Components" [ref=e46] [cursor=pointer]:
+                        - img [ref=e47]
+                        - generic [ref=e49]: Components
+                        - img [ref=e51]
+                      - link "Agent Templates" [ref=e53] [cursor=pointer]:
+                        - /url: /community/templates
+                        - img [ref=e54]
+                        - generic [ref=e56]: Agent Templates
+                      - link "MCP" [ref=e57] [cursor=pointer]:
+                        - /url: /mcp
+                        - img [ref=e58]
+                        - generic [ref=e64]: MCP
+                  - generic [ref=e65]:
+                    - heading "Build" [level=3] [ref=e67]
+                    - generic [ref=e68]:
+                      - button "Agents" [ref=e69] [cursor=pointer]:
+                        - img [ref=e70]
+                        - generic [ref=e85]: Agents
+                        - img [ref=e87]
+                      - link "1Code" [ref=e89] [cursor=pointer]:
+                        - /url: /1code
+                        - generic [ref=e90]:
+                          - img [ref=e91]
+                          - img [ref=e93]
+                        - generic [ref=e95]: 1Code
+                        - img [ref=e96]
+                      - link "Magic Chat" [ref=e100] [cursor=pointer]:
+                        - /url: /magic
+                        - img [ref=e101]
+                        - generic [ref=e105]: Magic Chat
+                        - img [ref=e106]
+                - generic [ref=e112]:
+                  - generic [ref=e115]:
+                    - generic [ref=e116]:
+                      - generic [ref=e117]: 21st Agents SDK
+                      - paragraph [ref=e118]: The fastest way to build and deploy AI agents.
+                    - link [ref=e119] [cursor=pointer]:
+                      - /url: https://21st.dev/agents
+                    - generic [ref=e120]:
+                      - link [ref=e121] [cursor=pointer]:
+                        - /url: https://21st.dev/agents
+                        - text: Read more
+                      - button [ref=e122] [cursor=pointer]: Dismiss
+                  - generic [ref=e125]:
+                    - generic [ref=e126]:
+                      - generic [ref=e127]: We're in YC
+                      - paragraph [ref=e128]: 21st is backed by Y Combinator. Excited for what's ahead!
+                    - link [ref=e129] [cursor=pointer]:
+                      - /url: https://www.ycombinator.com/companies/1code-21stdev
+                    - generic [ref=e130]:
+                      - link "Read more" [ref=e131] [cursor=pointer]:
+                        - /url: https://www.ycombinator.com/companies/1code-21stdev
+                      - button "Dismiss" [ref=e132] [cursor=pointer]
+                - generic [ref=e134]:
+                  - generic [ref=e135]:
+                    - button "Toggle theme" [ref=e136] [cursor=pointer]:
+                      - img
+                    - button "Settings" [ref=e137] [cursor=pointer]:
+                      - img
+                  - button "Log in" [ref=e138] [cursor=pointer]:
+                    - generic [ref=e139]: Log in
+            - button "Toggle Sidebar" [ref=e140] [cursor=pointer]
+          - generic [ref=e143]:
+            - generic [ref=e145]:
+              - generic [ref=e148]: Home
+              - generic [ref=e149]:
+                - generic:
+                  - button "Search":
+                    - img
+                    - generic: Search
+                    - generic:
+                      - img
+                      - generic: K
+            - generic [ref=e151]:
+              - generic [ref=e152]:
+                - generic [ref=e153]:
+                  - heading "UI Components" [level=2] [ref=e154]
+                  - button "View all" [ref=e155] [cursor=pointer]:
+                    - generic [ref=e156]:
+                      - text: View all
+                      - img
+                - generic [ref=e157]:
+                  - generic [ref=e161]:
+                    - listitem [ref=e163]
+                    - listitem [ref=e166]
+                    - listitem [ref=e169]
+                    - listitem [ref=e172]
+                    - listitem [ref=e175]
+                    - listitem [ref=e178]
+                  - button:
+                    - img
+                  - button [ref=e180] [cursor=pointer]:
+                    - img
+              - generic [ref=e181]:
+                - generic [ref=e182]:
+                  - heading "Agents SDK" [level=2] [ref=e183]
+                  - link "Read docs" [ref=e184] [cursor=pointer]:
+                    - /url: /agents/docs
+                    - text: Read docs
+                    - img [ref=e185]
+                - generic [ref=e188]:
+                  - generic [ref=e189]:
+                    - generic [ref=e190]:
+                      - heading "The fastest way to ship AI agents" [level=3] [ref=e191]
+                      - paragraph [ref=e192]: Built-in UI, chat history, spend limits, sandbox execution, and observability. Works with Claude and OpenAI.
+                    - generic [ref=e193]:
+                      - link "Get started" [ref=e194] [cursor=pointer]:
+                        - /url: /agents/app
+                        - text: Get started
+                        - img [ref=e195]
+                      - link "Documentation" [ref=e197] [cursor=pointer]:
+                        - /url: /agents/docs
+                  - generic [ref=e198]:
+                    - generic [ref=e199]:
+                      - img [ref=e200]
+                      - generic [ref=e202]:
+                        - generic [ref=e203]: E2B Sandboxes
+                        - generic [ref=e204]: Isolated VM per session
+                    - generic [ref=e205]:
+                      - img [ref=e206]
+                      - generic [ref=e208]:
+                        - generic [ref=e209]: Streaming
+                        - generic [ref=e210]: Token-by-token via SSE
+                    - generic [ref=e211]:
+                      - img [ref=e212]
+                      - generic [ref=e214]:
+                        - generic [ref=e215]: Auth & Limits
+                        - generic [ref=e216]: Tokens, rate limits, spend caps
+                    - generic [ref=e217]:
+                      - img [ref=e218]
+                      - generic [ref=e221]:
+                        - generic [ref=e222]: Observability
+                        - generic [ref=e223]: Session replay & traces
+              - generic [ref=e224]:
+                - generic [ref=e225]:
+                  - heading "Agent Templates" [level=2] [ref=e226]
+                  - button "View all" [ref=e227] [cursor=pointer]:
+                    - generic [ref=e228]:
+                      - text: View all
+                      - img
+                - generic [ref=e229]:
+                  - generic [ref=e233]:
+                    - button "Next.js Next.js Starter Next.js chat interface with AI agent powered by 21st Agents SDK Claude Code DuckDuckGo" [ref=e235] [cursor=pointer]:
+                      - generic [ref=e236]:
+                        - img "Next.js" [ref=e238]
+                        - generic [ref=e239]:
+                          - paragraph [ref=e240]: Next.js Starter
+                          - paragraph [ref=e241]: Next.js chat interface with AI agent powered by 21st Agents SDK
+                          - generic [ref=e242]:
+                            - generic [ref=e243]: Claude Code
+                            - generic [ref=e244]: DuckDuckGo
+                    - button "Python Python Starter Minimal server-side Python chat client using the 21st SDK Python 21st SDK" [ref=e246] [cursor=pointer]:
+                      - generic [ref=e247]:
+                        - img "Python" [ref=e249]
+                        - generic [ref=e250]:
+                          - paragraph [ref=e251]: Python Starter
+                          - paragraph [ref=e252]: Minimal server-side Python chat client using the 21st SDK
+                          - generic [ref=e253]:
+                            - generic [ref=e254]: Python
+                            - generic [ref=e255]: 21st SDK
+                    - button "Go Go Starter Minimal terminal chat client in Go using the 21st SDK Go 21st SDK" [ref=e257] [cursor=pointer]:
+                      - generic [ref=e258]:
+                        - img "Go" [ref=e260]
+                        - generic [ref=e261]:
+                          - paragraph [ref=e262]: Go Starter
+                          - paragraph [ref=e263]: Minimal terminal chat client in Go using the 21st SDK
+                          - generic [ref=e264]:
+                            - generic [ref=e265]: Go
+                            - generic [ref=e266]: 21st SDK
+                    - button "Slack Lead Research Agent Research people by email online, qualify leads, and send Slack alerts for interesting prospects Claude Code Slack Exa.ai" [ref=e268] [cursor=pointer]:
+                      - generic [ref=e269]:
+                        - img "Slack" [ref=e271]
+                        - generic [ref=e272]:
+                          - paragraph [ref=e273]: Lead Research Agent
+                          - paragraph [ref=e274]: Research people by email online, qualify leads, and send Slack alerts for interesting prospects
+                          - generic [ref=e275]:
+                            - generic [ref=e276]: Claude Code
+                            - generic [ref=e277]: Slack
+                            - generic [ref=e278]: Exa.ai
+                    - button "Form Autocomplete AI-powered form filling with tabbed forms and chat interface Claude Code" [ref=e280] [cursor=pointer]:
+                      - generic [ref=e281]:
+                        - img [ref=e283]
+                        - generic [ref=e286]:
+                          - paragraph [ref=e287]: Form Autocomplete
+                          - paragraph [ref=e288]: AI-powered form filling with tabbed forms and chat interface
+                          - generic [ref=e290]: Claude Code
+                    - button "Docs Assistant (llms.txt) Documentation Q&A agent — provide a docs URL and get an instant assistant that searches via llms.txt Claude Code llms.txt" [ref=e292] [cursor=pointer]:
+                      - generic [ref=e293]:
+                        - img [ref=e295]
+                        - generic [ref=e297]:
+                          - paragraph [ref=e298]: Docs Assistant (llms.txt)
+                          - paragraph [ref=e299]: Documentation Q&A agent — provide a docs URL and get an instant assistant that searches via llms.txt
+                          - generic [ref=e300]:
+                            - generic [ref=e301]: Claude Code
+                            - generic [ref=e302]: llms.txt
+                    - button "Support Agent Docs-powered support agent that answers questions from llms.txt and escalates unanswered ones via email (Resend) Claude Code llms.txt Resend" [ref=e304] [cursor=pointer]:
+                      - generic [ref=e305]:
+                        - img [ref=e307]
+                        - generic [ref=e309]:
+                          - paragraph [ref=e310]: Support Agent
+                          - paragraph [ref=e311]: Docs-powered support agent that answers questions from llms.txt and escalates unanswered ones via email (Resend)
+                          - generic [ref=e312]:
+                            - generic [ref=e313]: Claude Code
+                            - generic [ref=e314]: llms.txt
+                            - generic [ref=e315]: Resend
+                    - generic [ref=e316]:
+                      - generic [ref=e318]: Examples
+                      - button "Nia MCP Explain GitHub repos with Nia Next.js repository chat with Nia MCP-backed GitHub analysis Claude Code Nia MCP" [ref=e319] [cursor=pointer]:
+                        - generic [ref=e320]:
+                          - img "Nia MCP" [ref=e322]
+                          - generic [ref=e323]:
+                            - paragraph [ref=e324]: Explain GitHub repos with Nia
+                            - paragraph [ref=e325]: Next.js repository chat with Nia MCP-backed GitHub analysis
+                            - generic [ref=e326]:
+                              - generic [ref=e327]: Claude Code
+                              - generic [ref=e328]: Nia MCP
+                    - button "AgentMail AgentMail Agent Email operations copilot — send, read inbox, auto-reply via AgentMail Claude Code AgentMail" [ref=e330] [cursor=pointer]:
+                      - generic [ref=e331]:
+                        - img "AgentMail" [ref=e333]
+                        - generic [ref=e334]:
+                          - paragraph [ref=e335]: AgentMail Agent
+                          - paragraph [ref=e336]: Email operations copilot — send, read inbox, auto-reply via AgentMail
+                          - generic [ref=e337]:
+                            - generic [ref=e338]: Claude Code
+                            - generic [ref=e339]: AgentMail
+                    - button "Convex Note Taker with Convex AI notebook assistant with persistent notes and real-time sync via Convex Claude Code Convex" [ref=e341] [cursor=pointer]:
+                      - generic [ref=e342]:
+                        - img "Convex" [ref=e344]
+                        - generic [ref=e345]:
+                          - paragraph [ref=e346]: Note Taker with Convex
+                          - paragraph [ref=e347]: AI notebook assistant with persistent notes and real-time sync via Convex
+                          - generic [ref=e348]:
+                            - generic [ref=e349]: Claude Code
+                            - generic [ref=e350]: Convex
+                    - button "Slack Slack Monitor Agent Track service status and send updates directly to Slack Claude Code Slack Atlassian Statuspage" [ref=e352] [cursor=pointer]:
+                      - generic [ref=e353]:
+                        - img "Slack" [ref=e355]
+                        - generic [ref=e356]:
+                          - paragraph [ref=e357]: Slack Monitor Agent
+                          - paragraph [ref=e358]: Track service status and send updates directly to Slack
+                          - generic [ref=e359]:
+                            - generic [ref=e360]: Claude Code
+                            - generic [ref=e361]: Slack
+                            - generic [ref=e362]: Atlassian Statuspage
+                    - button "Browser Use BrowserUse Agent Extract structured data from any website using Browser Use Cloud Claude Code Browser Use" [ref=e364] [cursor=pointer]:
+                      - generic [ref=e365]:
+                        - img "Browser Use" [ref=e367]
+                        - generic [ref=e368]:
+                          - paragraph [ref=e369]: BrowserUse Agent
+                          - paragraph [ref=e370]: Extract structured data from any website using Browser Use Cloud
+                          - generic [ref=e371]:
+                            - generic [ref=e372]: Claude Code
+                            - generic [ref=e373]: Browser Use
+                  - button:
+                    - img
+                  - button [ref=e374] [cursor=pointer]:
+                    - img
+    - region "Notifications alt+T"
+  - alert [ref=e376]
