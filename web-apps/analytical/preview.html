@@ -779,6 +779,9 @@
   .platform-tab[data-platform="facebook"].active { color: #1877F2; border-bottom-color: #1877F2; }
 </style>
 
+<!-- Flip backdrop (must be before the script block so getElementById finds it) -->
+<div id="flip-backdrop"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
   // ── Posts data ──────────────────────────────────────────
@@ -1476,8 +1479,6 @@
   </div>
 </div>
 
-<!-- Flip backdrop -->
-<div id="flip-backdrop"></div>
 
 </body>
 </html>
