@@ -726,17 +726,13 @@
     font-family: inherit;
   }
   .stat-back-save:hover { background: rgba(14,165,233,0.28); }
-  /* Selected metric badge on card */
-  .stat-metric-badge {
-    position: absolute; top: 0.5rem; left: 0.5rem; z-index: 2;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: var(--accent); color: #000;
-    font-size: 0.62rem; font-weight: 800;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; transform: scale(0); transition: opacity 0.2s, transform 0.2s;
+  /* Selected metric badge — hidden, replaced by gold glow */
+  .stat-metric-badge { display: none; }
+  .stat-card.chart-selected .stat-card-front {
+    background: linear-gradient(160deg, rgba(232,184,75,0.22) 0%, rgba(245,224,112,0.07) 60%, rgba(10,10,15,0.65) 100%) !important;
+    border-color: rgba(232,184,75,0.55) !important;
+    box-shadow: 0 0 18px rgba(232,184,75,0.35), 0 0 6px rgba(245,224,112,0.2), inset 0 1px 0 rgba(245,224,112,0.15) !important;
   }
-  .stat-card.chart-selected .stat-metric-badge { opacity: 1; transform: scale(1); }
-  .stat-card.chart-selected { border-color: rgba(14,165,233,0.6) !important; box-shadow: var(--glow) !important; }
 
   /* ── Compact metric selector cards ───────────────────── */
   .metrics-compact { grid-template-columns: repeat(auto-fill, 155px); gap: 0.6rem; }
@@ -1165,7 +1161,6 @@
       const badge = card.querySelector('.stat-metric-badge');
       if (idx !== -1) {
         card.classList.add('chart-selected');
-        if (badge) badge.textContent = idx + 1;
       } else {
         card.classList.remove('chart-selected');
       }
