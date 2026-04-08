@@ -731,8 +731,8 @@
   /* ── Compact metric selector cards ───────────────────── */
   .metrics-compact { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.6rem; }
   .metrics-compact .stat-card {
-    padding: 0.65rem 0.85rem;
-    min-height: 110px;
+    padding: 0.5rem 0.75rem 0.5rem;
+    min-height: 0;
     overflow: visible !important;
   }
   .metrics-compact .stat-value {
@@ -754,7 +754,7 @@
   .metrics-compact .stat-progress-container { height: 2px; margin-bottom: 0.2rem; }
   .metrics-compact .stat-progress-labels { display: flex; justify-content: flex-end; margin-top: 0.15rem; }
   .metrics-compact .stat-progress-current { display: none; }
-  .metrics-compact .stat-progress-goal { font-size: 0.6rem; font-weight: 700; color: rgba(163,230,53,0.8); letter-spacing: 0.03em; }
+  .metrics-compact .stat-progress-goal { font-size: 0.6rem; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: 0.03em; }
   .metrics-compact #add-metric-card {
     min-height: 80px;
     padding: 0.65rem;
@@ -768,13 +768,22 @@
   /* ── Compact card: trend badge bookmark + overflow chain ── */
   .metrics-compact .stat-card-inner,
   .metrics-compact .stat-card-front { overflow: visible; }
+  .metrics-compact .stat-card-front { position: relative; }
+  /* Fake "card bottom" covers the badge top so it looks tucked behind the card */
+  .metrics-compact .stat-card-front::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 16px;
+    background: linear-gradient(180deg, rgba(26,45,90,0) 0%, rgba(14,22,42,0.92) 100%);
+    border-radius: 0 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px);
+    pointer-events: none; z-index: 4;
+  }
   .metrics-compact .stat-trend-badge {
-    position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
-    z-index: 3; white-space: nowrap;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+    position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+    z-index: 2; white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.5);
     border-radius: 20px;
   }
-  .metrics-compact { row-gap: 1.75rem; }
+  .metrics-compact { row-gap: 2rem; }
 
   /* ── Platform tabs ──────────────────────────────────── */
   .platform-tab {
