@@ -1174,19 +1174,13 @@
               <input class="stat-back-input" data-field="goal" type="number" value="${goal}">
             </div>
           </div>
-          <div class="stat-back-row">
-            <div>
-              <div class="stat-back-label">Unit</div>
-              <input class="stat-back-input" data-field="unit" type="text" placeholder="K, M, $, %" value="${unit}" style="text-align:center;">
-            </div>
-            <div>
-              <div class="stat-back-label">Type</div>
-              <select class="stat-back-input" data-field="type" style="cursor:pointer;">
-                <option value="number">Number</option>
-                <option value="currency">Currency</option>
-                <option value="percent">Percent</option>
-              </select>
-            </div>
+          <div>
+            <div class="stat-back-label">Type</div>
+            <select class="stat-back-input" data-field="type" style="cursor:pointer;">
+              <option value="number"># Number</option>
+              <option value="currency">$ Currency</option>
+              <option value="percent">% Percent</option>
+            </select>
           </div>
           <button class="stat-back-save">Save & flip back</button>
         </div>
