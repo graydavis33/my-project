@@ -665,9 +665,9 @@
     overflow: hidden;
   }
   .stat-edit-btn {
-    position: absolute; top: 0; right: 0; z-index: 2;
+    position: absolute; top: 0; left: 0; z-index: 2;
     background: rgba(255,255,255,0.09); border: none;
-    border-radius: 0 calc(var(--radius) - 1px) 0 9px;
+    border-radius: calc(var(--radius) - 1px) 0 9px 0;
     width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; color: rgba(148,163,184,0.75); transition: background 0.2s, color 0.2s;
@@ -718,7 +718,7 @@
   .stat-back-save:hover { background: rgba(14,165,233,0.28); }
   /* Selected metric badge on card */
   .stat-metric-badge {
-    position: absolute; top: 0.5rem; left: 0.5rem; z-index: 2;
+    position: absolute; top: 0.5rem; right: 0.5rem; z-index: 2;
     width: 18px; height: 18px; border-radius: 50%;
     background: var(--accent); color: #000;
     font-size: 0.62rem; font-weight: 800;
@@ -750,7 +750,7 @@
     gap: 3px;
     margin-bottom: 0.4rem;
   }
-  .metrics-compact .stat-trend-sublabel { display: none; }
+  .metrics-compact .stat-trend-sublabel { display: none !important; }
   .metrics-compact .stat-progress-container { height: 2px; margin-bottom: 0.2rem; }
   .metrics-compact .stat-progress-labels { display: flex; justify-content: flex-end; margin-top: 0.15rem; }
   .metrics-compact .stat-progress-current { display: none; }
@@ -765,25 +765,30 @@
   .metrics-compact #add-metric-card p:first-child { font-size: 0.75rem; }
   .metrics-compact #add-metric-card p:last-child { display: none; }
 
-  /* ── Compact card: trend badge bookmark + overflow chain ── */
+  /* ── Compact card: right-side stacked card badge ── */
+  .metrics-compact .stat-card { padding-right: 0.75rem; }
   .metrics-compact .stat-card-inner,
   .metrics-compact .stat-card-front { overflow: visible; }
-  .metrics-compact .stat-card-front { position: relative; }
-  /* Fake "card bottom" covers the badge top so it looks tucked behind the card */
-  .metrics-compact .stat-card-front::after {
-    content: '';
-    position: absolute; bottom: 0; left: 0; right: 0; height: 16px;
-    background: linear-gradient(180deg, rgba(26,45,90,0) 0%, rgba(14,22,42,0.92) 100%);
-    border-radius: 0 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px);
-    pointer-events: none; z-index: 4;
+  /* Card front sits above the badge (z-index: 1) and covers the badge's left edge */
+  .metrics-compact .stat-card-front {
+    position: relative; z-index: 1;
+    background: linear-gradient(160deg, rgba(26,45,90,0.4) 0%, rgba(10,10,15,0.7) 100%);
+    border-radius: calc(var(--radius) - 1px);
+    border: 1px solid rgba(255,255,255,0.07);
   }
+  /* Badge sits behind card-front (z-index: 0), peeks out from right edge */
   .metrics-compact .stat-trend-badge {
-    position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
-    z-index: 2; white-space: nowrap;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.5);
-    border-radius: 20px;
+    position: absolute; right: -26px; top: 6px;
+    z-index: 0;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 1px; padding: 5px 7px;
+    border-radius: 0 10px 10px 0;
+    min-width: 38px;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.5);
+    white-space: nowrap;
   }
-  .metrics-compact { row-gap: 2rem; }
+  .metrics-compact .stat-trend-badge svg { width: 10px; height: 10px; flex-shrink: 0; }
+  .metrics-compact { gap: 0.6rem; }
 
   /* ── Platform tabs ──────────────────────────────────── */
   .platform-tab {
@@ -1198,6 +1203,14 @@
         </div>
       </div>
     `;
+
+    // In compact grid: move trend badge out of card-front so it can sit behind it (z-index: 0 vs 1)
+    if (card.closest('.metrics-compact')) {
+      const inner = card.querySelector('.stat-card-inner');
+      const front = card.querySelector('.stat-card-front');
+      const trendBadge = front && front.querySelector('.stat-trend-badge');
+      if (trendBadge) inner.appendChild(trendBadge);
+    }
 
     // Set the label input value now that it's in DOM
     const labelEl = card.querySelector('.stat-label');
