@@ -1039,7 +1039,7 @@
 
   // ── Multi-chart system (up to 3 simultaneous) ───────────────
   const chartInstances = {}; // metric → Chart instance
-  let selectedMetrics = ['views']; // ordered list, max 3
+  let selectedMetrics = []; // ordered list, max 3
 
   function buildDatasets(metric) {
     return Object.entries(platforms).map(([key, p]) => ({
@@ -1070,6 +1070,27 @@
   function renderCharts() {
     const container = document.getElementById('charts-container');
     const count = selectedMetrics.length;
+
+    // Empty state — no cards selected
+    let placeholder = container.querySelector('.chart-placeholder');
+    if (count === 0) {
+      Object.keys(chartInstances).forEach(m => {
+        chartInstances[m].destroy();
+        delete chartInstances[m];
+        const panel = container.querySelector(`[data-chart="${m}"]`);
+        if (panel) panel.remove();
+      });
+      if (!placeholder) {
+        placeholder = document.createElement('div');
+        placeholder.className = 'chart-placeholder';
+        placeholder.style.cssText = 'grid-column:1/-1;display:flex;align-items:center;justify-content:center;min-height:120px;color:rgba(148,163,184,0.45);font-size:0.875rem;letter-spacing:0.02em;';
+        placeholder.textContent = 'Select a main metric stat card for graph view';
+        container.appendChild(placeholder);
+      }
+      updateCardBadges();
+      return;
+    }
+    if (placeholder) placeholder.remove();
 
     // Update grid columns
     container.style.gridTemplateColumns = count === 1 ? '1fr' : count === 2 ? '1fr 1fr' : '1fr 1fr 1fr';
@@ -1127,10 +1148,8 @@
     if (!metricData[metric]) return;
     const idx = selectedMetrics.indexOf(metric);
     if (idx !== -1) {
-      // Deselect — only if more than 1 selected
-      if (selectedMetrics.length > 1) {
-        selectedMetrics.splice(idx, 1);
-      }
+      // Deselect — allow going to 0
+      selectedMetrics.splice(idx, 1);
     } else {
       // Select — drop oldest if already at 3
       if (selectedMetrics.length >= 3) selectedMetrics.shift();
