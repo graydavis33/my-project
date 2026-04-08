@@ -274,19 +274,6 @@
       </div>
     </div>
 
-    <!-- AI Insights panel -->
-    <div class="insights-panel">
-      <div class="insights-header">
-        <div class="insights-title">✦ AI Insights</div>
-        <button class="btn btn-ghost btn-sm">Regenerate</button>
-      </div>
-      <div class="insights-body">
-        Your <strong>YouTube channel</strong> is outperforming TikTok by 3.2× on average views per post. Your top video this week — <strong>"How I Edit Reels in 10 Min"</strong> — hit 284K views with a 6.4% engagement rate, well above your 2.1% average.<br><br>
-        Posting between <strong>6–8 PM EST</strong> drives 42% higher engagement. Your hook-heavy titles consistently outperform question-based hooks by 1.8×.
-      </div>
-      <div class="insights-generated">Generated Apr 2, 2026 at 2:41 PM</div>
-    </div>
-
     <!-- Platform Comparison + Metrics (unified section) -->
     <div class="chart-card" style="margin-bottom:2rem;padding:1.5rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
@@ -463,6 +450,19 @@
           <tbody id="top-posts-body"></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- AI Insights panel -->
+    <div class="insights-panel">
+      <div class="insights-header">
+        <div class="insights-title">✦ AI Insights</div>
+        <button class="btn btn-ghost btn-sm">Regenerate</button>
+      </div>
+      <div class="insights-body">
+        Your <strong>YouTube channel</strong> is outperforming TikTok by 3.2× on average views per post. Your top video this week — <strong>"How I Edit Reels in 10 Min"</strong> — hit 284K views with a 6.4% engagement rate, well above your 2.1% average.<br><br>
+        Posting between <strong>6–8 PM EST</strong> drives 42% higher engagement. Your hook-heavy titles consistently outperform question-based hooks by 1.8×.
+      </div>
+      <div class="insights-generated">Generated Apr 2, 2026 at 2:41 PM</div>
     </div>
 
     <!-- ─── Platform Sections (tab area for 21st.dev editing) ── -->
@@ -644,6 +644,8 @@
   }
   .stat-card.flipped .stat-card-inner { transform: rotateY(180deg); }
   .stat-card.flipped .stat-card-front { pointer-events: none; }
+  .stat-card-back { pointer-events: none; }
+  .stat-card.flipped .stat-card-back { pointer-events: all; }
   .stat-card-front, .stat-card-back {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -687,8 +689,19 @@
     width: min(400px, 90vw) !important;
     height: 340px !important;
     z-index: 500;
+    background: transparent !important;
+    border-color: transparent !important;
     box-shadow: 0 0 80px rgba(14,165,233,0.2), 0 32px 64px rgba(0,0,0,0.7) !important;
     overflow: hidden !important;
+  }
+  .stat-card.flip-expanded .stat-card-front {
+    min-height: 340px;
+    padding: 1.25rem;
+    border-radius: var(--radius);
+  }
+  .stat-card.flip-expanded .stat-card-back {
+    padding: 1.25rem;
+    gap: 0.65rem;
   }
   /* Override: when expanded+flipped, inner still rotates */
   .stat-card.flip-expanded.flipped .stat-card-inner {
@@ -733,9 +746,19 @@
   /* ── Compact metric selector cards ───────────────────── */
   .metrics-compact { grid-template-columns: repeat(auto-fill, 155px); gap: 0.6rem; }
   .metrics-compact .stat-card {
-    padding: 0.4rem 0.85rem;
+    padding: 0 !important;
     min-height: 70px;
     overflow: visible !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+  .metrics-compact .stat-card-front {
+    background: linear-gradient(160deg, rgba(26,45,90,0.4) 0%, rgba(10,10,15,0.7) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius);
+    padding: 0.4rem 0.85rem;
+    min-height: 70px;
   }
   .metrics-compact .stat-value {
     font-size: 1.35rem;
