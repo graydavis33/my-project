@@ -684,7 +684,7 @@
     top: 50% !important; left: 50% !important;
     transform: translate(-50%, -50%) !important;
     width: min(400px, 90vw) !important;
-    min-height: 300px !important;
+    height: 340px !important;
     z-index: 500;
     box-shadow: 0 0 80px rgba(14,165,233,0.2), 0 32px 64px rgba(0,0,0,0.7) !important;
     overflow: hidden !important;
@@ -693,11 +693,10 @@
   .stat-card.flip-expanded.flipped .stat-card-inner {
     transform: rotateY(180deg);
   }
-  /* Back face fills the expanded card */
+  /* Back face fills the full expanded card height */
   .stat-card.flip-expanded .stat-card-back {
-    min-height: 300px;
     padding: 1.25rem;
-    gap: 0.6rem;
+    gap: 0.65rem;
   }
   .stat-back-label {
     font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
