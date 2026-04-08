@@ -275,18 +275,20 @@ nav {
   top: 0; left: 0;
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #0ea5e9 0%, #38bdf8 100%);
+  background: linear-gradient(90deg, #38bdf8 0%, #0ea5e9 60%, rgba(14,165,233,0.3) 100%);
   border-radius: 3px;
   transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
 }
 
-.stat-progress-bar::after {
+.stat-progress-container::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
-  animation: shimmer 2s infinite;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+  width: 40%;
+  animation: shimmer 2s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .stat-progress-labels {
@@ -1178,7 +1180,7 @@ tbody td:first-child { color: var(--text); }
 
 @keyframes shimmer {
   0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  100% { transform: translateX(250%); }
 }
 
 .loading-state {
