@@ -640,7 +640,7 @@
     position: relative;
     width: 100%; min-height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+    transition: transform 0.55s cubic-bezier(0.35,0,0.25,1);
   }
   .stat-card.flipped .stat-card-inner { transform: rotateY(180deg); }
   .stat-card-front, .stat-card-back {
@@ -670,25 +670,34 @@
 
   /* Flip backdrop */
   #flip-backdrop {
-    display: none; position: fixed; inset: 0; z-index: 498;
+    position: fixed; inset: 0; z-index: 498;
     background: rgba(0,0,0,0.65);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
   }
-  #flip-backdrop.active { display: block; }
+  #flip-backdrop.active { opacity: 1; pointer-events: all; }
 
   /* Expanded flipped card — centers and enlarges */
   .stat-card.flip-expanded {
     position: fixed !important;
     top: 50% !important; left: 50% !important;
     transform: translate(-50%, -50%) !important;
-    width: min(380px, 90vw) !important;
-    min-height: auto !important;
+    width: min(400px, 90vw) !important;
+    min-height: 300px !important;
     z-index: 500;
-    box-shadow: 0 0 60px rgba(14,165,233,0.15), 0 24px 48px rgba(0,0,0,0.6) !important;
+    box-shadow: 0 0 80px rgba(14,165,233,0.2), 0 32px 64px rgba(0,0,0,0.7) !important;
+    overflow: hidden !important;
   }
   /* Override: when expanded+flipped, inner still rotates */
   .stat-card.flip-expanded.flipped .stat-card-inner {
     transform: rotateY(180deg);
+  }
+  /* Back face fills the expanded card */
+  .stat-card.flip-expanded .stat-card-back {
+    min-height: 300px;
+    padding: 1.25rem;
+    gap: 0.6rem;
   }
   .stat-back-label {
     font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
