@@ -666,11 +666,11 @@
   }
   .stat-edit-btn {
     position: absolute; top: 0; right: 0; z-index: 2;
-    background: rgba(255,255,255,0.06); border: none;
-    border-radius: 0 calc(var(--radius) - 1px) 0 6px;
-    width: 22px; height: 22px;
+    background: rgba(255,255,255,0.09); border: none;
+    border-radius: 0 calc(var(--radius) - 1px) 0 9px;
+    width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; color: var(--muted); transition: background 0.2s, color 0.2s;
+    cursor: pointer; color: rgba(148,163,184,0.75); transition: background 0.2s, color 0.2s;
     padding: 0;
   }
   .stat-edit-btn:hover { background: rgba(14,165,233,0.2); color: var(--accent); }
@@ -732,7 +732,8 @@
   .metrics-compact { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.6rem; }
   .metrics-compact .stat-card {
     padding: 0.65rem 0.85rem;
-    min-height: 160px;
+    min-height: 110px;
+    overflow: visible !important;
   }
   .metrics-compact .stat-value {
     font-size: 1.35rem;
@@ -751,7 +752,9 @@
   }
   .metrics-compact .stat-trend-sublabel { display: none; }
   .metrics-compact .stat-progress-container { height: 2px; margin-bottom: 0.2rem; }
-  .metrics-compact .stat-progress-labels { display: none; }
+  .metrics-compact .stat-progress-labels { display: flex; justify-content: flex-end; margin-top: 0.15rem; }
+  .metrics-compact .stat-progress-current { display: none; }
+  .metrics-compact .stat-progress-goal { font-size: 0.6rem; font-weight: 700; color: rgba(163,230,53,0.8); letter-spacing: 0.03em; }
   .metrics-compact #add-metric-card {
     min-height: 80px;
     padding: 0.65rem;
@@ -761,6 +764,17 @@
   .metrics-compact #add-metric-card svg { width: 14px; height: 14px; }
   .metrics-compact #add-metric-card p:first-child { font-size: 0.75rem; }
   .metrics-compact #add-metric-card p:last-child { display: none; }
+
+  /* ── Compact card: trend badge bookmark + overflow chain ── */
+  .metrics-compact .stat-card-inner,
+  .metrics-compact .stat-card-front { overflow: visible; }
+  .metrics-compact .stat-trend-badge {
+    position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%);
+    z-index: 3; white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+    border-radius: 20px;
+  }
+  .metrics-compact { row-gap: 1.75rem; }
 
   /* ── Platform tabs ──────────────────────────────────── */
   .platform-tab {
@@ -1189,6 +1203,13 @@
     }
     updateBar(); // always show (not hover-only now)
 
+    // Show live percentage at bottom right of progress bar
+    const pctEl = card.querySelector('.stat-progress-goal');
+    function updatePct() {
+      if (pctEl) pctEl.textContent = Math.round(pct()) + '%';
+    }
+    updatePct();
+
     // Hover lifts, mouseleave returns
     card.addEventListener('mouseenter', () => { if (bar) bar.style.width = pct() + '%'; });
     card.addEventListener('mouseleave', () => { if (bar) bar.style.width = pct() + '%'; });
@@ -1240,6 +1261,7 @@
       if (lblEl && newLabel) lblEl.textContent = newLabel;
 
       updateBar();
+      updatePct();
       closeFlip();
     });
 
