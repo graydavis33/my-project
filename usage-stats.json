@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-06T20:46:15.696358+00:00",
+  "generated": "2026-04-08T02:52:22.996047+00:00",
   "projects": {
     "email-agent": {
       "last_used": null,
@@ -12,7 +12,7 @@
     },
     "invoice-system": {
       "last_used": "2026-04-05T01:49:52.642966+00:00",
-      "last_used_label": "Yesterday",
+      "last_used_label": "3d ago",
       "this_week": 2,
       "all_time": 7,
       "tokens_all_time": 1057,
@@ -38,13 +38,13 @@
       "cost_all_time": 0.0
     },
     "social-media-analytics": {
-      "last_used": "2026-03-26T14:19:11.777604+00:00",
-      "last_used_label": "1w ago",
-      "this_week": 0,
-      "all_time": 15,
-      "tokens_all_time": 2443,
-      "cost_this_week": 0.0,
-      "cost_all_time": 0.0047
+      "last_used": "2026-04-08T02:48:17.808737+00:00",
+      "last_used_label": "Today",
+      "this_week": 1,
+      "all_time": 16,
+      "tokens_all_time": 3176,
+      "cost_this_week": 0.0014,
+      "cost_all_time": 0.0062
     }
   }
 }
