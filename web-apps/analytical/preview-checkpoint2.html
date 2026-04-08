@@ -1463,24 +1463,10 @@
     const suffix  = (unit && unit !== '$') ? unit : '';
     const fmt = n => prefix + (n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'K' : n) + suffix;
 
-    // Register in metricData so card can drive a chart
-    const metricKey = 'custom_' + Date.now();
-    const ramp = (end, steps) => Array.from({length: steps}, (_, i) =>
-      Math.round(end * (0.2 + 0.8 * (i / (steps - 1)))));
-    metricData[metricKey] = {
-      label: name,
-      youtube: ramp(numVal * 0.4, 8),
-      tiktok:  ramp(numVal * 0.35, 8),
-      instagram: ramp(numVal * 0.15, 8),
-      facebook: ramp(numVal * 0.1, 8),
-    };
-
     const card = document.createElement('div');
     card.className = 'stat-card';
     card.dataset.current = numVal;
     card.dataset.goal = numGoal;
-    card.dataset.metric = metricKey;
-    card.style.cursor = 'pointer';
     card.innerHTML = `
       <div class="stat-value">${fmt(numVal)}</div>
       <div class="stat-label">${name}</div>
