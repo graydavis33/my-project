@@ -1,6 +1,6 @@
 # Current Priorities
 
-_Last updated: 2026-03-29_
+_Last updated: 2026-04-09_
 _Update this file whenever your focus shifts._
 
 ## Scoring Framework
