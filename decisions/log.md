@@ -16,3 +16,7 @@ Format: `[YYYY-MM-DD] DECISION: ... | REASONING: ... | CONTEXT: ...`
 [2026-03-29] DECISION: Use Adobe Creative Cloud (not just Premiere Pro) as primary editing stack | REASONING: Gray uses full CC suite, not just Premiere | CONTEXT: Updated in context/work.md
 
 [2026-03-29] DECISION: Skills directory stays empty until recurring workflows reveal what needs one | REASONING: Don't pre-build skills speculatively — let real usage patterns drive it | CONTEXT: Following Liam's "build organically" principle
+
+[2026-04-09] DECISION: Keep default Chart.js bar style for Analytical dashboard charts, not isometric 3D | REASONING: Gray tested both — preferred the clean default with glow + thicker bars over the 3D block style | CONTEXT: Added custom barGlow plugin (shadowBlur: 18) and barPercentage: 0.88 to enhance the default look
+
+[2026-04-09] DECISION: Custom metric cards persist via localStorage, not backend | REASONING: Dashboard is still a preview/static file — no backend wired yet | CONTEXT: saveCustomMetrics() / loadCustomMetrics() write to localStorage key 'analytical_custom_metrics'; will migrate to DB when backend is live
