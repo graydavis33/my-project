@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#07090f; display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+  .wrap { width:860px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:2rem 2.25rem; }
+  .label { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:2.5px; color:rgba(148,163,184,0.4); margin-bottom:0.6rem; }
+  .title { font-size:1.1rem; font-weight:700; color:rgba(240,248,255,0.9); margin-bottom:1.5rem; }
+  .legend { display:flex; gap:1rem; margin-bottom:1.5rem; }
+  .li { display:flex; align-items:center; gap:0.5rem; font-size:0.75rem; font-weight:600; color:rgba(148,163,184,0.75); }
+  .ld { width:12px; height:12px; border-radius:50%; }
+  canvas { display:block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="label">Style 2 — Neon Glow Gradient</div>
+  <div class="title">Monthly Views by Platform</div>
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:#FF0000;box-shadow:0 0 6px #FF0000;"></div>YouTube</div>
+    <div class="li"><div class="ld" style="background:#69C9D0;box-shadow:0 0 6px #69C9D0;"></div>TikTok</div>
+    <div class="li"><div class="ld" style="background:#E1306C;box-shadow:0 0 6px #E1306C;"></div>Instagram</div>
+  </div>
+  <div style="position:relative;height:360px;">
+    <canvas id="c"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  // Colors: base, glow-rgb
+  const palettes = [
+    { hex:'#FF4444', rgb:'255,68,68',     bright:'#FF8888' },
+    { hex:'#69C9D0', rgb:'105,201,208',   bright:'#A8E8ED' },
+    { hex:'#E1306C', rgb:'225,48,108',    bright:'#F06090' },
+  ];
+
+  const glowPlugin = {
+    id:'glowBars',
+    beforeDatasetsDraw(chart) {
+      const { ctx, chartArea:ca } = chart;
+      if (!ca) return;
+      chart.data.datasets.forEach((ds, di) => {
+        const p = palettes[di];
+        if (!p) return;
+        const grad = ctx.createLinearGradient(0, ca.top, 0, ca.bottom);
+        grad.addColorStop(0,   p.bright + 'FF');
+        grad.addColorStop(0.4, p.hex + 'EE');
+        grad.addColorStop(1,   `rgba(${p.rgb},0.4)`);
+        ds.backgroundColor = grad;
+      });
+    },
+    afterDatasetsDraw(chart) {
+      const ctx = chart.ctx;
+      chart.data.datasets.forEach((ds, di) => {
+        const meta = chart.getDatasetMeta(di);
+        if (meta.hidden) return;
+        const p = palettes[di];
+        if (!p) return;
+        meta.data.forEach(bar => {
+          const { x, y, base } = bar;
+          const w2 = bar.width / 2;
+          if (base - y < 2) return;
+          ctx.save();
+          ctx.shadowColor = `rgba(${p.rgb},0.7)`;
+          ctx.shadowBlur = 18;
+          ctx.strokeStyle = p.hex;
+          ctx.lineWidth = 1.5;
+          ctx.strokeRect(x-w2+0.75, y+0.75, bar.width-1.5, base-y-1.5);
+          ctx.restore();
+          // Bright top edge highlight
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(x-w2+2, y+1);
+          ctx.lineTo(x+w2-2, y+1);
+          ctx.strokeStyle = `rgba(255,255,255,0.45)`;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+          ctx.restore();
+        });
+      });
+    }
+  };
+  Chart.register(glowPlugin);
+
+  const labels = ["May '25","Jun '25","Jul '25","Nov '25","Feb '26","Mar '26"];
+
+  Chart.defaults.color = '#667788';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.04)';
+
+  new Chart(document.getElementById('c'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label:'YouTube',   data:[0, 1215, 2698, 314, 2264, 262],     borderColor:'#FF4444', borderWidth:0, borderRadius:3 },
+        { label:'TikTok',    data:[1176, 1818, 9195, 11006, 1195, 928], borderColor:'#69C9D0', borderWidth:0, borderRadius:3 },
+        { label:'Instagram', data:[0, 102, 49, 0, 76, 48],             borderColor:'#E1306C', borderWidth:0, borderRadius:3 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      animation:{ duration:0 },
+      layout:{ padding:{ top:10, right:10 } },
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ grid:{ color:'rgba(255,255,255,0.03)' }, ticks:{ color:'#667788', font:{ size:10 } } },
+        y:{ grid:{ color:'rgba(255,255,255,0.03)' }, ticks:{ color:'#667788', font:{ size:10 },
+          callback: v => v>=1000 ? (v/1000).toFixed(0)+'K' : v
+        }}
+      }
+    }
+  });
+</script>
+</body>
+</html>
