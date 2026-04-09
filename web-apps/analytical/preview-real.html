@@ -1349,6 +1349,7 @@
 
       updateBar();
       updatePct();
+      if (card.dataset.metric && card.dataset.metric.startsWith('custom_')) saveCustomMetrics();
       closeFlip();
     });
 
@@ -1364,6 +1365,7 @@
       card.classList.remove('flipped', 'flip-expanded');
       backdrop.classList.remove('active');
       card.remove();
+      saveCustomMetrics();
     });
 
     // Metric toggle on click (not on edit btn)
@@ -1497,20 +1499,13 @@
     btn.classList.add('active');
     document.getElementById('metric-unit').value = btn.dataset.unit;
   }
-  function createCustomMetric() {
-    const name  = document.getElementById('metric-name').value.trim();
-    const val   = document.getElementById('metric-value').value.trim();
-    const goal  = document.getElementById('metric-goal').value.trim();
-    const unit  = document.getElementById('metric-unit').value;
-    if (!name || !val) { document.getElementById('metric-name').focus(); return; }
 
-    const numVal  = parseFloat(val.replace(/[^0-9.]/g,'')) || 0;
-    const numGoal = parseFloat(goal.replace(/[^0-9.]/g,'')) || Math.round(numVal * 2);
-    const prefix  = unit === '$' ? '$' : '';
-    const suffix  = (unit === '%' || unit === 'hrs') ? unit : '';
+  // Shared card builder — used by createCustomMetric AND loadCustomMetrics
+  function makeCustomCard(name, numVal, numGoal, unit, metricKey) {
+    const prefix = unit === '$' ? '$' : '';
+    const suffix = (unit === '%' || unit === 'hrs') ? unit : '';
     const fmt = n => prefix + (n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'K' : n) + suffix;
 
-    const metricKey = 'custom_' + Date.now();
     metricData[metricKey] = { label: name, total: [0, 0, 0, 0, 0, numVal] };
 
     const card = document.createElement('div');
@@ -1518,6 +1513,7 @@
     card.dataset.current = numVal;
     card.dataset.goal = numGoal;
     card.dataset.metric = metricKey;
+    card.dataset.unit = unit;
     card.style.cursor = 'pointer';
     card.innerHTML = `
       <div class="stat-value">${fmt(numVal)}</div>
@@ -1530,8 +1526,52 @@
 
     document.getElementById('custom-metrics').appendChild(card);
     initStatCard(card);
+    return card;
+  }
+
+  // Persist all custom cards to localStorage
+  function saveCustomMetrics() {
+    const metrics = [];
+    document.querySelectorAll('#custom-metrics .stat-card').forEach(card => {
+      const key = card.dataset.metric;
+      if (!key || !key.startsWith('custom_')) return;
+      metrics.push({
+        key,
+        name:   metricData[key] ? metricData[key].label : '',
+        numVal: parseFloat(card.dataset.current) || 0,
+        numGoal: parseFloat(card.dataset.goal) || 0,
+        unit:   card.dataset.unit || '',
+      });
+    });
+    localStorage.setItem('analytical_custom_metrics', JSON.stringify(metrics));
+  }
+
+  // Restore custom cards from localStorage on page load
+  function loadCustomMetrics() {
+    const saved = localStorage.getItem('analytical_custom_metrics');
+    if (!saved) return;
+    try {
+      JSON.parse(saved).forEach(m => makeCustomCard(m.name, m.numVal, m.numGoal, m.unit, m.key));
+    } catch(e) {}
+  }
+
+  function createCustomMetric() {
+    const name  = document.getElementById('metric-name').value.trim();
+    const val   = document.getElementById('metric-value').value.trim();
+    const goal  = document.getElementById('metric-goal').value.trim();
+    const unit  = document.getElementById('metric-unit').value;
+    if (!name || !val) { document.getElementById('metric-name').focus(); return; }
+
+    const numVal  = parseFloat(val.replace(/[^0-9.]/g,'')) || 0;
+    const numGoal = parseFloat(goal.replace(/[^0-9.]/g,'')) || Math.round(numVal * 2);
+
+    makeCustomCard(name, numVal, numGoal, unit, 'custom_' + Date.now());
+    saveCustomMetrics();
     closeAddMetric();
   }
+
+  // Restore custom metric cards from previous session
+  loadCustomMetrics();
 
   // ── Platform tab switching ───────────────────────────────────
   function switchPlatformTab(platform) {
