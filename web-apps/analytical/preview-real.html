@@ -805,6 +805,21 @@
   .platform-tab[data-platform="tiktok"].active   { color: #69C9D0; border-bottom-color: #69C9D0; }
   .platform-tab[data-platform="instagram"].active{ color: #E1306C; border-bottom-color: #E1306C; }
   .platform-tab[data-platform="facebook"].active { color: #1877F2; border-bottom-color: #1877F2; }
+
+  /* ── Unit picker buttons ──────────────────────────────── */
+  .unit-opt {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.45rem 0.75rem; border-radius: 8px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted); font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
+    font-family: inherit;
+  }
+  .unit-opt:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+  .unit-opt.active {
+    background: rgba(14,165,233,0.15); border-color: rgba(14,165,233,0.45);
+    color: var(--accent);
+  }
 </style>
 
 <!-- Flip backdrop (must be before the script block so getElementById finds it) -->
@@ -1068,6 +1083,10 @@
   let selectedMetrics = []; // ordered list, max 3
 
   function buildDatasets(metric) {
+    if (metric.startsWith('custom_')) {
+      const d = metricData[metric];
+      return [{ label: d.label, data: d.total, backgroundColor: 'rgba(14,165,233,0.15)', borderColor: '#0EA5E9', borderWidth: 2, borderRadius: 6 }];
+    }
     return Object.entries(platforms).map(([key, p]) => ({
       label: p.label,
       data: metricData[metric][key],
@@ -1440,32 +1459,44 @@
   }
   function closeAddMetric() {
     document.getElementById('add-metric-overlay').style.display = 'none';
-    ['metric-name','metric-value','metric-goal','metric-unit','metric-trend'].forEach(id => {
+    ['metric-name','metric-value','metric-goal'].forEach(id => {
       document.getElementById(id).value = '';
     });
+    document.getElementById('metric-unit').value = '';
+    document.querySelectorAll('.unit-opt').forEach(b => b.classList.remove('active'));
+    const noneBtn = document.querySelector('.unit-opt[data-unit=""]');
+    if (noneBtn) noneBtn.classList.add('active');
+  }
+  function selectUnit(btn) {
+    document.querySelectorAll('.unit-opt').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('metric-unit').value = btn.dataset.unit;
   }
   function createCustomMetric() {
     const name  = document.getElementById('metric-name').value.trim();
     const val   = document.getElementById('metric-value').value.trim();
     const goal  = document.getElementById('metric-goal').value.trim();
     const unit  = document.getElementById('metric-unit').value;
-    const trend = document.getElementById('metric-trend').value.trim();
     if (!name || !val) { document.getElementById('metric-name').focus(); return; }
 
     const numVal  = parseFloat(val.replace(/[^0-9.]/g,'')) || 0;
     const numGoal = parseFloat(goal.replace(/[^0-9.]/g,'')) || Math.round(numVal * 2);
     const prefix  = unit === '$' ? '$' : '';
-    const suffix  = (unit && unit !== '$') ? unit : '';
+    const suffix  = (unit === '%' || unit === 'hrs') ? unit : '';
     const fmt = n => prefix + (n >= 1000000 ? (n/1000000).toFixed(1)+'M' : n >= 1000 ? (n/1000).toFixed(1)+'K' : n) + suffix;
+
+    const metricKey = 'custom_' + Date.now();
+    metricData[metricKey] = { label: name, total: [0, 0, 0, 0, 0, numVal] };
 
     const card = document.createElement('div');
     card.className = 'stat-card';
     card.dataset.current = numVal;
     card.dataset.goal = numGoal;
+    card.dataset.metric = metricKey;
+    card.style.cursor = 'pointer';
     card.innerHTML = `
       <div class="stat-value">${fmt(numVal)}</div>
       <div class="stat-label">${name}</div>
-      ${trend ? `<div class="stat-trend-badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span>${trend}</span><span class="stat-trend-sublabel">this week</span></div>` : ''}
       <div class="stat-progress-container"><div class="stat-progress-bar"></div></div>
       <div class="stat-progress-labels">
         <span class="stat-progress-current">${prefix}${numVal.toLocaleString()}${suffix}</span>
@@ -1514,21 +1545,22 @@
           <input id="metric-goal" type="text" placeholder="e.g. 10000" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.65rem 0.875rem;color:var(--text);font-size:0.875rem;outline:none;font-family:inherit;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-        <div>
-          <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:0.4rem;">Unit</label>
-          <select id="metric-unit" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.65rem 0.875rem;color:var(--text);font-size:0.875rem;outline:none;font-family:inherit;cursor:pointer;">
-            <option value="">None</option>
-            <option value="$">$ (dollars)</option>
-            <option value="%">% (percent)</option>
-            <option value="hrs">hrs</option>
-            <option value="x">x (multiplier)</option>
-          </select>
+      <div>
+        <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:0.5rem;">Unit</label>
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button type="button" class="unit-opt active" data-unit="" onclick="selectUnit(this)">None</button>
+          <button type="button" class="unit-opt" data-unit="$" onclick="selectUnit(this)">$ Dollar</button>
+          <button type="button" class="unit-opt" data-unit="%" onclick="selectUnit(this)">% Percent</button>
+          <button type="button" class="unit-opt" data-unit="#" onclick="selectUnit(this)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+            Number
+          </button>
+          <button type="button" class="unit-opt" data-unit="hrs" onclick="selectUnit(this)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Hours
+          </button>
         </div>
-        <div>
-          <label style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:0.4rem;">Weekly Change</label>
-          <input id="metric-trend" type="text" placeholder="e.g. +12%" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0.65rem 0.875rem;color:var(--text);font-size:0.875rem;outline:none;font-family:inherit;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
-        </div>
+        <input type="hidden" id="metric-unit" value="">
       </div>
     </div>
 
