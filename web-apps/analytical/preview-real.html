@@ -718,6 +718,13 @@
     font-family: inherit;
   }
   .stat-back-save:hover { background: rgba(14,165,233,0.28); }
+  .stat-back-delete {
+    background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 6px; color: #f87171; font-size: 0.72rem; font-weight: 700;
+    padding: 0.35rem; cursor: pointer; width: 100%; transition: background 0.2s;
+    font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+  }
+  .stat-back-delete:hover { background: rgba(239,68,68,0.22); }
   /* Selected metric badge — hidden, replaced by gold glow */
   .stat-metric-badge { display: none; }
 
@@ -1265,6 +1272,10 @@
             </select>
           </div>
           <button class="stat-back-save">Save & flip back</button>
+          <button class="stat-back-delete">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Delete Card
+          </button>
         </div>
       </div>
     `;
@@ -1339,6 +1350,20 @@
       updateBar();
       updatePct();
       closeFlip();
+    });
+
+    // Delete button
+    const deleteBtn = card.querySelector('.stat-back-delete');
+    deleteBtn.addEventListener('click', () => {
+      const m = card.dataset.metric;
+      if (m) {
+        const idx = selectedMetrics.indexOf(m);
+        if (idx !== -1) { selectedMetrics.splice(idx, 1); renderCharts(); }
+        if (m.startsWith('custom_')) delete metricData[m];
+      }
+      card.classList.remove('flipped', 'flip-expanded');
+      backdrop.classList.remove('active');
+      card.remove();
     });
 
     // Metric toggle on click (not on edit btn)
