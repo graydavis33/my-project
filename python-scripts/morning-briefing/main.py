@@ -1,11 +1,10 @@
 """
 main.py
-Daily Morning Briefing — sends one Slack message at 8am to #morning-briefing with:
+Daily Morning Briefing — sends one Slack message at 8am with:
   - NYC weather
-  - Today's Google Calendar events
-  - Emails needing reply (from Email Agent's pending_drafts.json)
-  - Outstanding invoices (from Invoice System Google Sheet)
   - Inspirational quote of the day
+  - Top general headlines
+  - Tech & AI bulletin (bullet points, creator/builder focused)
 
 Run:
   python3 main.py          # send briefing immediately (for testing)
@@ -20,9 +19,6 @@ import schedule
 from slack_sdk import WebClient
 
 from config import SLACK_BOT_TOKEN, BRIEFING_CHANNEL_ID
-from calendar_summary import get_todays_events
-from gmail_summary import get_pending_emails
-from sheets_summary import get_outstanding_invoices
 from weather_summary import get_weather
 from quote_summary import get_daily_quote
 from news_summary import get_news_digest
@@ -47,15 +43,6 @@ def send_briefing():
     """Collect all data and send the morning briefing to Slack."""
     log.info("Assembling morning briefing...")
 
-    events = get_todays_events()
-    log.info(f"  Calendar events today: {len(events)}")
-
-    pending_emails = get_pending_emails()
-    log.info(f"  Pending emails: {len(pending_emails)}")
-
-    outstanding_invoices = get_outstanding_invoices()
-    log.info(f"  Outstanding invoices: {len(outstanding_invoices)}")
-
     weather = get_weather()
     log.info(f"  Weather: {weather['temp']}°F {weather['description'] if weather else 'N/A'}")
 
@@ -63,9 +50,9 @@ def send_briefing():
     log.info(f"  Quote: {quote['author'] if quote else 'N/A'}")
 
     news = get_news_digest()
-    log.info(f"  Headlines: {len(news.get('top_headlines', []))} | AI digest: {'yes' if news.get('ai_digest') else 'no'}")
+    log.info(f"  Headlines: {len(news.get('top_headlines', []))} | Tech & AI digest: {'yes' if news.get('ai_digest') else 'no'}")
 
-    blocks = build_briefing_blocks(events, pending_emails, outstanding_invoices, weather, quote, news)
+    blocks = build_briefing_blocks(weather, quote, news)
 
     slack.chat_postMessage(
         channel=BRIEFING_CHANNEL_ID,

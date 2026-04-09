@@ -23,14 +23,22 @@ _AI_FEEDS = [
     ("TechCrunch", "https://techcrunch.com/category/artificial-intelligence/feed/"),
     ("VentureBeat", "https://venturebeat.com/category/ai/feed/"),
     ("Ars Technica", "https://feeds.arstechnica.com/arstechnica/index"),
+    ("The Verge", "https://www.theverge.com/rss/index.xml"),
+    ("Wired", "https://www.wired.com/feed/rss"),
 ]
 
 _AI_DIGEST_SYSTEM = (
-    "You write a crisp daily AI news digest for a tech-savvy content creator and AI operator. "
-    "Given today's AI headlines and blurbs, write a 150-200 word newspaper-style paragraph "
-    "covering the most important developments. Lead with the biggest story. "
-    "Write in present tense. Flowing prose only — no bullet points, no headers. "
-    "End with one sentence on what it means for people building with AI."
+    "You write a daily tech and AI bulletin for Gray Davis — a freelance videographer, content creator, "
+    "and AI operator building automation tools. He works in video production, social media content, "
+    "and uses Claude Code daily to build Python tools and web apps.\n\n"
+    "Given today's tech headlines, produce 5-7 bullet points covering:\n"
+    "- New products launching (physical hardware, software, apps, AI tools)\n"
+    "- AI use cases for creators, builders, and indie operators — not just enterprise news\n"
+    "- Anything relevant to video production, content creation, social media, or automation\n"
+    "- Interesting new technology (robotics, wearables, creative tools, dev tools)\n\n"
+    "Format: bullet points only. Each bullet is one punchy sentence. No headers, no prose paragraphs. "
+    "Skip big-company earnings, politics, and anything about invoices or email tools. "
+    "Lead with the most interesting or useful thing for someone who builds with AI daily."
 )
 
 
@@ -76,7 +84,7 @@ def get_news_digest() -> dict:
     try:
         response = _client.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=400,
+            max_tokens=600,
             system=_AI_DIGEST_SYSTEM,
             messages=[{"role": "user", "content": f"Today's AI headlines:\n\n{stories_text}"}],
         )
