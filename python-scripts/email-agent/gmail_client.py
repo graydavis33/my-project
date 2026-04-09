@@ -228,6 +228,15 @@ def fetch_sent_emails(service, count=25):
     return emails
 
 
+def archive_email(service, message_id):
+    """Remove from INBOX (archive) without deleting. Email stays in All Mail."""
+    service.users().messages().modify(
+        userId="me",
+        id=message_id,
+        body={"removeLabelIds": ["INBOX"]},
+    ).execute()
+
+
 def send_email(service, to, subject, body, thread_id=None):
     """Send an email from the authenticated Gmail account."""
     message = MIMEText(body)

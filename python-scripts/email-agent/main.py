@@ -38,6 +38,7 @@ from gmail_client import (
     fetch_unprocessed_emails,
     apply_category_label,
     mark_as_processed,
+    archive_email,
     send_email,
 )
 from classifier import classify_email
@@ -136,7 +137,8 @@ def run_email_check():
 
                     send_draft_notification(email, draft, make_send_callback(email))
                 else:
-                    log.info(f"  → No action needed.")
+                    archive_email(service, email["id"])
+                    log.info(f"  → Archived (no action needed).")
 
         # Run invoice payment scan every cycle so payments are logged automatically
         log.info("Running invoice payment scan...")
