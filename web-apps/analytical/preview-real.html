@@ -721,11 +721,6 @@
   /* Selected metric badge — hidden, replaced by gold glow */
   .stat-metric-badge { display: none; }
 
-  @keyframes gold-shimmer {
-    0%   { transform: translateX(-150%) skewX(-15deg); }
-    100% { transform: translateX(250%) skewX(-15deg); }
-  }
-
   .stat-card.chart-selected .stat-card-front {
     background: linear-gradient(160deg, rgba(200,150,20,0.45) 0%, rgba(232,184,75,0.25) 50%, rgba(10,10,15,0.75) 100%) !important;
     border-color: rgba(255,210,60,0.75) !important;
@@ -733,25 +728,6 @@
       0 0 22px rgba(255,200,40,0.55),
       0 0 8px rgba(255,230,80,0.35),
       inset 0 1px 0 rgba(255,240,120,0.3) !important;
-    overflow: hidden !important;
-    position: relative !important;
-  }
-  .stat-card.chart-selected .stat-card-front::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      105deg,
-      transparent 30%,
-      rgba(255,240,120,0.15) 44%,
-      rgba(255,220,60,0.55) 50%,
-      rgba(255,240,120,0.15) 56%,
-      transparent 70%
-    );
-    width: 60%;
-    animation: gold-shimmer 1.6s ease-in-out infinite;
-    pointer-events: none;
-    border-radius: inherit;
   }
 
   /* ── Compact metric selector cards ───────────────────── */
