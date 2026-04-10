@@ -1,6 +1,6 @@
 # Current Priorities
 
-_Last updated: 2026-04-10_
+_Last updated: 2026-04-11_
 _Update this file whenever your focus shifts._
 
 ## Scoring Framework
@@ -22,7 +22,7 @@ Each project scored 0–3 across 4 dimensions:
 | 1 | Content Pipeline | 9/12 | Built on Windows | Set up on Mac, test with real video |
 | 2 | Content Researcher | 9/12 | LIVE on Mac | V2: add Reddit layer + improvements |
 | 3 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
-| — | Social Media Analytics | 9/12 | LIVE — Instagram data broken (scraper) | Switch to Meta Graph API (meta_fetcher.py ready, needs .env tokens) |
+| — | Social Media Analytics | 9/12 | LIVE — Instagram data broken (scraper) | Meta app configured (4 permissions added) — next: get access token from Graph API Explorer, add to .env, swap main.py to meta_fetcher |
 | 5 | Hook Optimizer | 6/12 | Built on Windows | Add .env on Mac |
 | 6 | Creator Intel | 5/12 | Built on Windows | Needs YouTube OAuth |
 | 7 | Morning Briefing | 4/12 | Built on Windows | Needs full .env setup |
