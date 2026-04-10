@@ -20,3 +20,9 @@ Format: `[YYYY-MM-DD] DECISION: ... | REASONING: ... | CONTEXT: ...`
 [2026-04-09] DECISION: Keep default Chart.js bar style for Analytical dashboard charts, not isometric 3D | REASONING: Gray tested both — preferred the clean default with glow + thicker bars over the 3D block style | CONTEXT: Added custom barGlow plugin (shadowBlur: 18) and barPercentage: 0.88 to enhance the default look
 
 [2026-04-09] DECISION: Custom metric cards persist via localStorage, not backend | REASONING: Dashboard is still a preview/static file — no backend wired yet | CONTEXT: saveCustomMetrics() / loadCustomMetrics() write to localStorage key 'analytical_custom_metrics'; will migrate to DB when backend is live
+
+[2026-04-10] DECISION: Switch Instagram + Facebook data source from Playwright scraper to Meta Graph API (meta_fetcher.py) | REASONING: Scraper returns broken data — views default to likes count, comments/shares always 0, engagement rate shows 100% | CONTEXT: meta_fetcher.py already built and ready; needs META_ACCESS_TOKEN, INSTAGRAM_BUSINESS_ACCOUNT_ID, FACEBOOK_PAGE_ID in .env; Gray has Creator/Business account so Graph API is fully accessible
+
+[2026-04-10] DECISION: Created Meta Developer account and app for Analytical SaaS | REASONING: Need official API access to replace broken Instagram scraper and to support future multi-user OAuth | CONTEXT: App created with use cases: "Manage messaging & content on Instagram" + "Manage everything on your Page"; currently Standard Access (Gray's accounts only); Advanced Access requires App Review when going public
+
+[2026-04-10] DECISION: Color theme picker in Analytical dashboard now affects the entire UI, not just the sidebar | REASONING: Gray requested full-dashboard theming; hardcoded rgba values replaced with CSS variable --accent-rgb; applyGlassVariant() now updates all CSS vars + re-renders charts | CONTEXT: preview-real.html + frontend/style.css both updated
