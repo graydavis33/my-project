@@ -13,6 +13,8 @@
   /* Electric Blue — primary interactive accent */
   --accent:      #0EA5E9;
   --accent2:     #38BDF8;
+  --accent-rgb:  14,165,233;
+  --accent2-rgb: 56,189,248;
   --accent-dim:  rgba(14,165,233,0.12);
   --glow:        0 0 24px rgba(14,165,233,0.22);
   --border-accent: 1px solid rgba(14,165,233,0.35);
@@ -275,10 +277,10 @@ nav {
   top: 0; left: 0;
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #38bdf8 0%, #0ea5e9 60%, rgba(14,165,233,0.3) 100%);
+  background: linear-gradient(90deg, var(--accent2) 0%, var(--accent) 60%, rgba(var(--accent-rgb),0.3) 100%);
   border-radius: 3px;
   transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+  box-shadow: 0 0 10px rgba(var(--accent-rgb),0.5);
 }
 
 .stat-progress-container::after {
@@ -301,7 +303,7 @@ nav {
 }
 
 .stat-progress-current {
-  color: #38bdf8;
+  color: var(--accent2);
   font-weight: 600;
 }
 
@@ -310,7 +312,7 @@ nav {
   cursor: pointer;
   transition: color 0.2s;
 }
-.stat-progress-goal:hover { color: #38bdf8; }
+.stat-progress-goal:hover { color: var(--accent2); }
 
 .stat-goal-editor {
   display: flex;
