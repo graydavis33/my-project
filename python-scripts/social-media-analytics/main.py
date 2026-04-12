@@ -43,7 +43,11 @@ def _fetch_facebook():
         print("  Skipping Facebook — META_ACCESS_TOKEN / FACEBOOK_PAGE_ID not in .env")
         return []
     from meta_fetcher import get_facebook_data
-    return get_facebook_data()
+    try:
+        return get_facebook_data()
+    except Exception as e:
+        print(f"  Facebook skipped — API access not yet approved ({e})")
+        return []
 
 
 def _fetch_tiktok():
