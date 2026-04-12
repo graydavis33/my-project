@@ -1,14 +1,14 @@
 """
 Slack Socket Mode bot for the ai-shorts pipeline.
-Listens for Gray's DM replies to advance or revise the pipeline.
+Uses interactive buttons (same pattern as email-agent) so it works with the
+existing Slack app configuration — no Slack app changes required.
 
 Two approval gates:
-  1. Script review — Gray replies "approve" or gives feedback
-  2. Video review  — Gray replies "approve" or gives feedback
-
-Runs in a persistent background thread alongside main.py.
+  1. Script review — Approve / Request Changes (opens modal for feedback text)
+  2. Video review  — Approve & Publish / Request Changes (same modal pattern)
 """
 
+import json
 import time
 import threading
 import logging
@@ -22,20 +22,28 @@ from config import SLACK_BOT_TOKEN, SLACK_APP_TOKEN, SLACK_USER_ID
 log = logging.getLogger(__name__)
 _web = WebClient(token=SLACK_BOT_TOKEN)
 
-# Callback registered by main.py — called when Gray approves/rejects
+# Callbacks registered by main.py
 _on_script_response: callable = None
 _on_video_response:  callable = None
 
+# Action ID prefixes
+_ACT_SCRIPT_APPROVE  = 'shorts_script_approve'
+_ACT_SCRIPT_FEEDBACK = 'shorts_script_feedback'
+_ACT_VIDEO_APPROVE   = 'shorts_video_approve'
+_ACT_VIDEO_FEEDBACK  = 'shorts_video_feedback'
+_VIEW_SCRIPT         = 'shorts_script_modal'
+_VIEW_VIDEO          = 'shorts_video_modal'
 
-# ─── Public: register callbacks ───────────────────────────────────────────────
 
-def on_script_approval(callback: callable):
+# ─── Callback registration ────────────────────────────────────────────────────
+
+def on_script_approval(callback):
     """callback(approved: bool, feedback: str | None)"""
     global _on_script_response
     _on_script_response = callback
 
 
-def on_video_approval(callback: callable):
+def on_video_approval(callback):
     """callback(approved: bool, feedback: str | None)"""
     global _on_video_response
     _on_video_response = callback
@@ -43,117 +51,190 @@ def on_video_approval(callback: callable):
 
 # ─── Sending messages ─────────────────────────────────────────────────────────
 
-def send_message(text: str, blocks: list = None):
-    """Send a DM to Gray."""
+def send_script_review(script_text: str):
+    """Send script to Gray's DM with Approve / Request Changes buttons."""
     _web.chat_postMessage(
         channel=SLACK_USER_ID,
-        text=text,
-        blocks=blocks,
-    )
-
-
-def send_script_review(script_text: str):
-    """Send script for Gray's review with clear instructions."""
-    send_message(
-        text="Script ready for review — reply `approve` or give feedback",
+        text="Script ready — approve or request changes",
         blocks=[
             {
                 'type': 'section',
                 'text': {'type': 'mrkdwn', 'text': script_text},
+            },
+            {'type': 'divider'},
+            {
+                'type': 'actions',
+                'elements': [
+                    {
+                        'type': 'button',
+                        'text': {'type': 'plain_text', 'text': '✅  Approve Script'},
+                        'style': 'primary',
+                        'action_id': _ACT_SCRIPT_APPROVE,
+                    },
+                    {
+                        'type': 'button',
+                        'text': {'type': 'plain_text', 'text': '✏️  Request Changes'},
+                        'action_id': _ACT_SCRIPT_FEEDBACK,
+                    },
+                ],
             },
         ],
     )
 
 
 def send_video_review(private_url: str, youtube_title: str):
-    """Send private YouTube link for Gray's review."""
-    send_message(
-        text=f"Video ready for review — reply `approve` to publish, or describe what to fix",
+    """Send private YouTube link to Gray's DM with Approve / Request Changes buttons."""
+    _web.chat_postMessage(
+        channel=SLACK_USER_ID,
+        text="Video ready — approve to publish or request changes",
         blocks=[
             {
                 'type': 'section',
                 'text': {
                     'type': 'mrkdwn',
                     'text': (
-                        f"*Video ready to review:*\n"
+                        f"*Video ready for review:*\n"
                         f"*{youtube_title}*\n\n"
                         f"<{private_url}|Watch private preview on YouTube>\n\n"
-                        f"Reply `approve` to publish, or describe what to change."
+                        f"_Watch the full video, then approve or describe what to change._"
                     ),
                 },
+            },
+            {'type': 'divider'},
+            {
+                'type': 'actions',
+                'elements': [
+                    {
+                        'type': 'button',
+                        'text': {'type': 'plain_text', 'text': '🚀  Approve & Publish'},
+                        'style': 'primary',
+                        'action_id': _ACT_VIDEO_APPROVE,
+                    },
+                    {
+                        'type': 'button',
+                        'text': {'type': 'plain_text', 'text': '✏️  Request Changes'},
+                        'action_id': _ACT_VIDEO_FEEDBACK,
+                    },
+                ],
             },
         ],
     )
 
 
 def send_notification(text: str):
-    """Send a simple status notification."""
-    send_message(text)
+    _web.chat_postMessage(channel=SLACK_USER_ID, text=text)
 
 
-# ─── Socket Mode listener ─────────────────────────────────────────────────────
+# ─── Socket Mode event handlers ───────────────────────────────────────────────
 
-def _handle_event(client: SocketModeClient, req: SocketModeRequest):
+def _handle_interactive(client: SocketModeClient, req: SocketModeRequest):
+    if req.type != 'interactive':
+        return
+
     client.send_socket_mode_response(SocketModeResponse(envelope_id=req.envelope_id))
 
-    if req.type != 'events_api':
-        return
+    payload = req.payload
 
-    event = req.payload.get('event', {})
-    if event.get('type') != 'message':
-        return
-    if event.get('subtype'):
-        return  # Ignore bot messages, edits, etc.
-    if event.get('user') != SLACK_USER_ID:
-        return  # Only care about Gray's messages
-    if event.get('channel_type') not in ('im', 'mpim'):
-        return  # Only DMs
+    # ── Button clicks ──────────────────────────────────────────────────────────
+    if payload.get('type') == 'block_actions':
+        action     = payload['actions'][0]
+        action_id  = action['action_id']
+        trigger_id = payload.get('trigger_id')
+        channel    = payload.get('channel', {}).get('id', SLACK_USER_ID)
+        msg_ts     = payload.get('message', {}).get('ts')
 
-    text = (event.get('text') or '').strip()
-    if not text:
-        return
+        if action_id == _ACT_SCRIPT_APPROVE:
+            _update_message(channel, msg_ts, "✅ Script approved — generating media assets...")
+            _fire(_on_script_response, approved=True, feedback=None)
 
-    approved = text.lower() in ('approve', 'approved', 'yes', 'ok', '✅', 'looks good')
-    feedback = None if approved else text
+        elif action_id == _ACT_SCRIPT_FEEDBACK:
+            _open_feedback_modal(trigger_id, _VIEW_SCRIPT, "Script feedback",
+                                 "What would you like to change?", channel, msg_ts)
 
-    log.info(f"[slack] Gray replied: '{text[:80]}' | approved={approved}")
+        elif action_id == _ACT_VIDEO_APPROVE:
+            _update_message(channel, msg_ts, "🚀 Video approved — publishing to YouTube...")
+            _fire(_on_video_response, approved=True, feedback=None)
 
-    # Route to the correct callback in a non-blocking thread
-    if _on_script_response:
-        threading.Thread(
-            target=_on_script_response,
-            args=(approved, feedback),
-            daemon=True,
-        ).start()
-        return
+        elif action_id == _ACT_VIDEO_FEEDBACK:
+            _open_feedback_modal(trigger_id, _VIEW_VIDEO, "Video feedback",
+                                 "What would you like to change? (e.g. 'swap story 2', 'too slow', 'redo script')",
+                                 channel, msg_ts)
 
-    if _on_video_response:
-        threading.Thread(
-            target=_on_video_response,
-            args=(approved, feedback),
-            daemon=True,
-        ).start()
+    # ── Modal submissions ──────────────────────────────────────────────────────
+    elif payload.get('type') == 'view_submission':
+        callback_id = payload['view']['callback_id']
+        feedback    = (
+            payload['view']['state']['values']
+            ['feedback_block']['feedback_input']['value'] or ''
+        ).strip()
+        metadata = json.loads(payload['view'].get('private_metadata', '{}'))
+        channel  = metadata.get('channel', SLACK_USER_ID)
+        msg_ts   = metadata.get('msg_ts')
 
+        if callback_id == _VIEW_SCRIPT:
+            _update_message(channel, msg_ts, f"✏️ Script feedback received: _{feedback}_\nRevising...")
+            _fire(_on_script_response, approved=False, feedback=feedback)
+
+        elif callback_id == _VIEW_VIDEO:
+            _update_message(channel, msg_ts, f"✏️ Video feedback received: _{feedback}_\nRebuilding...")
+            _fire(_on_video_response, approved=False, feedback=feedback)
+
+
+def _open_feedback_modal(trigger_id, callback_id, title, placeholder, channel, msg_ts):
+    _web.views_open(
+        trigger_id=trigger_id,
+        view={
+            'type': 'modal',
+            'callback_id': callback_id,
+            'title':  {'type': 'plain_text', 'text': title},
+            'submit': {'type': 'plain_text', 'text': 'Send'},
+            'close':  {'type': 'plain_text', 'text': 'Cancel'},
+            'private_metadata': json.dumps({'channel': channel, 'msg_ts': msg_ts}),
+            'blocks': [{
+                'type': 'input',
+                'block_id': 'feedback_block',
+                'element': {
+                    'type': 'plain_text_input',
+                    'action_id': 'feedback_input',
+                    'multiline': True,
+                    'placeholder': {'type': 'plain_text', 'text': placeholder},
+                },
+                'label': {'type': 'plain_text', 'text': 'Your feedback'},
+            }],
+        },
+    )
+
+
+def _update_message(channel: str, ts: str, text: str):
+    try:
+        _web.chat_update(channel=channel, ts=ts, text=text, blocks=[])
+    except Exception:
+        _web.chat_postMessage(channel=SLACK_USER_ID, text=text)
+
+
+def _fire(callback, approved: bool, feedback: str):
+    if callback:
+        threading.Thread(target=callback, args=(approved, feedback), daemon=True).start()
+    else:
+        log.warning("[slack] No callback registered for this response")
+
+
+# ─── Listener ─────────────────────────────────────────────────────────────────
 
 def start_listener():
-    """Start the Slack Socket Mode listener in a persistent background thread."""
     def run():
         while True:
             try:
-                socket_client = SocketModeClient(
-                    app_token=SLACK_APP_TOKEN,
-                    web_client=_web,
-                )
-                socket_client.socket_mode_request_listeners.append(_handle_event)
+                socket_client = SocketModeClient(app_token=SLACK_APP_TOKEN, web_client=_web)
+                socket_client.socket_mode_request_listeners.append(_handle_interactive)
                 socket_client.connect()
                 log.info("[slack] Socket Mode connected")
                 while socket_client.is_connected():
                     time.sleep(30)
-                log.warning("[slack] Socket Mode disconnected — reconnecting in 10s...")
+                log.warning("[slack] Disconnected — reconnecting in 10s...")
             except Exception as e:
-                log.error(f"[slack] Listener error: {e} — reconnecting in 10s...")
+                log.error(f"[slack] Error: {e} — reconnecting in 10s...")
             time.sleep(10)
 
-    thread = threading.Thread(target=run, daemon=True)
-    thread.start()
+    threading.Thread(target=run, daemon=True).start()
     log.info("[slack] Listener thread started")
