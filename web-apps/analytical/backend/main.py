@@ -27,6 +27,7 @@ import models
 from youtube_fetcher import YouTubeFetcher
 from tiktok_fetcher import TikTokFetcher
 from ai_analyzer import generate_insights
+import meta_fetcher as meta
 
 load_dotenv()
 
@@ -36,6 +37,9 @@ YOUTUBE_CLIENT_ID = os.getenv('YOUTUBE_CLIENT_ID', '')
 YOUTUBE_CLIENT_SECRET = os.getenv('YOUTUBE_CLIENT_SECRET', '')
 TIKTOK_CLIENT_KEY = os.getenv('TIKTOK_CLIENT_KEY', '')
 TIKTOK_CLIENT_SECRET = os.getenv('TIKTOK_CLIENT_SECRET', '')
+META_APP_ID = os.getenv('META_APP_ID', '')
+META_APP_SECRET = os.getenv('META_APP_SECRET', '')
+META_REDIRECT_URI = os.getenv('META_REDIRECT_URI', 'http://localhost:8000/api/connect/meta/callback')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
 STRIPE_WEBHOOK_SECRET = os.getenv('STRIPE_WEBHOOK_SECRET', '')
 STRIPE_CREATOR_PRICE_ID = os.getenv('STRIPE_CREATOR_PRICE_ID', '')
@@ -267,6 +271,64 @@ def tiktok_callback(code: str = Query(None), state: str = Query(None), error: st
     return RedirectResponse(f'{FRONTEND_URL}/connect.html?connected=tiktok')
 
 
+# ─── Meta OAuth (Instagram + Facebook) ───────────────────────
+@app.get('/api/connect/meta')
+def connect_meta(token: str = Query(...)):
+    try:
+        user_id = auth_module.decode_token(token)
+    except JWTError:
+        raise HTTPException(status_code=401, detail='Invalid token')
+
+    if not META_APP_ID:
+        raise HTTPException(status_code=500, detail='META_APP_ID not configured')
+
+    state = secrets.token_urlsafe(32)
+    _oauth_states[state] = {'user_id': user_id, 'platform': 'meta'}
+
+    auth_url = (
+        f'https://www.facebook.com/v19.0/dialog/oauth'
+        f'?client_id={META_APP_ID}'
+        f'&redirect_uri={META_REDIRECT_URI}'
+        f'&scope=instagram_basic,instagram_manage_insights,pages_read_engagement,pages_show_list'
+        f'&state={state}'
+        f'&response_type=code'
+    )
+    return RedirectResponse(auth_url)
+
+
+@app.get('/api/connect/meta/callback')
+def meta_callback(code: str = Query(None), state: str = Query(None), error: str = Query(None)):
+    if error or not code or not state:
+        return RedirectResponse(f'{FRONTEND_URL}/connect.html?error=meta_denied')
+
+    state_data = _oauth_states.pop(state, None)
+    if not state_data:
+        return RedirectResponse(f'{FRONTEND_URL}/connect.html?error=invalid_state')
+
+    user_id = state_data['user_id']
+
+    try:
+        short_token  = meta.exchange_code_for_token(code, META_APP_ID, META_APP_SECRET, META_REDIRECT_URI)
+        long_token   = meta.exchange_for_long_lived(short_token, META_APP_ID, META_APP_SECRET)
+        page_token, page_id, ig_id = meta.get_page_and_ig_account(long_token)
+    except Exception as e:
+        print(f'Meta OAuth failed: {e}')
+        return RedirectResponse(f'{FRONTEND_URL}/connect.html?error=meta_token_failed')
+
+    conn = database.get_connection()
+    try:
+        # Store Instagram connection: access_token=page_token, refresh_token=ig_account_id
+        if ig_id:
+            models.upsert_connection(conn, user_id, 'instagram', page_token, ig_id)
+        # Store Facebook connection: access_token=page_token, refresh_token=page_id
+        models.upsert_connection(conn, user_id, 'facebook', page_token, page_id)
+    finally:
+        conn.close()
+
+    connected = 'instagram_facebook' if ig_id else 'facebook'
+    return RedirectResponse(f'{FRONTEND_URL}/connect.html?connected={connected}')
+
+
 # ─── Stats ────────────────────────────────────────────────────
 @app.get('/api/stats')
 def get_stats(authorization: str = Header(None)):
@@ -279,21 +341,19 @@ def get_stats(authorization: str = Header(None)):
             'fetched_at': None,
             'youtube': None,
             'tiktok': None,
+            'instagram': None,
+            'facebook': None,
         }
 
         latest_fetch = None
 
-        if 'youtube' in connections:
-            snapshot = models.get_latest_snapshot(conn, user_id, 'youtube')
-            if not models.is_snapshot_stale(snapshot):
-                result['youtube'] = snapshot['data']
-                if snapshot.get('fetched_at'):
-                    latest_fetch = snapshot['fetched_at']
-
-        if 'tiktok' in connections:
-            snapshot = models.get_latest_snapshot(conn, user_id, 'tiktok')
-            if not models.is_snapshot_stale(snapshot):
-                result['tiktok'] = snapshot['data']
+        for platform in ('youtube', 'tiktok', 'instagram', 'facebook'):
+            if platform in connections:
+                snapshot = models.get_latest_snapshot(conn, user_id, platform)
+                if not models.is_snapshot_stale(snapshot):
+                    result[platform] = snapshot['data']
+                    if snapshot.get('fetched_at') and not latest_fetch:
+                        latest_fetch = snapshot['fetched_at']
 
         if latest_fetch:
             result['fetched_at'] = latest_fetch
@@ -339,6 +399,28 @@ def refresh_stats(authorization: str = Header(None)):
                 models.save_snapshot(conn, user_id, 'tiktok', data)
             except Exception as e:
                 print(f'TikTok fetch failed: {e}')
+
+        if 'instagram' in connections:
+            ig_conn = connections['instagram']
+            try:
+                data = meta.fetch_instagram(
+                    page_token=ig_conn['access_token'],
+                    ig_account_id=ig_conn['refresh_token'],
+                )
+                models.save_snapshot(conn, user_id, 'instagram', data)
+            except Exception as e:
+                print(f'Instagram fetch failed: {e}')
+
+        if 'facebook' in connections:
+            fb_conn = connections['facebook']
+            try:
+                data = meta.fetch_facebook(
+                    page_token=fb_conn['access_token'],
+                    page_id=fb_conn['refresh_token'],
+                )
+                models.save_snapshot(conn, user_id, 'facebook', data)
+            except Exception as e:
+                print(f'Facebook fetch failed: {e}')
 
         return {'status': 'ok'}
     finally:
@@ -438,6 +520,9 @@ def chat(body: ChatMessage, authorization: str = Header(None)):
         yt_snap = models.get_latest_snapshot(conn, user_id, 'youtube')
         tt_snap = models.get_latest_snapshot(conn, user_id, 'tiktok')
 
+        ig_snap = models.get_latest_snapshot(conn, user_id, 'instagram')
+        fb_snap = models.get_latest_snapshot(conn, user_id, 'facebook')
+
         context_parts = []
         if yt_snap:
             d = yt_snap['data']
@@ -450,6 +535,18 @@ def chat(body: ChatMessage, authorization: str = Header(None)):
             context_parts.append(
                 f"TikTok (@{d.get('username','')}, {d.get('follower_count',0):,} followers):\n"
                 + json.dumps(d.get('videos', [])[:30], indent=2)[:4000]
+            )
+        if ig_snap:
+            d = ig_snap['data']
+            context_parts.append(
+                f"Instagram (@{d.get('username','')}, {d.get('follower_count',0):,} followers):\n"
+                + json.dumps(d.get('posts', [])[:30], indent=2)[:4000]
+            )
+        if fb_snap:
+            d = fb_snap['data']
+            context_parts.append(
+                f"Facebook ({d.get('page_name','')}, {d.get('fan_count',0):,} fans):\n"
+                + json.dumps(d.get('posts', [])[:30], indent=2)[:4000]
             )
 
         context = '\n\n'.join(context_parts) if context_parts else 'No analytics data connected yet.'
@@ -465,7 +562,7 @@ You can:
 - Give content strategy advice based on the data patterns
 - Answer questions about the Analytical platform itself:
   - Pricing: Free ($0, 1 platform, 10 videos), Creator ($19/mo, both platforms, full history + AI), Pro ($39/mo, coming soon)
-  - Connected platforms: YouTube, TikTok (Instagram and Facebook coming soon, LinkedIn in planning)
+  - Connected platforms: YouTube, TikTok, Instagram, Facebook (LinkedIn in planning)
   - Features: unified dashboard, AI insights, top posts tracking, OAuth connect, comments viewer, video previews
 - Answer general social media growth questions
 
