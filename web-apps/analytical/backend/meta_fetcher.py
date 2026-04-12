@@ -203,7 +203,7 @@ def exchange_for_long_lived(short_token: str, app_id: str, app_secret: str) -> s
     return resp.json()['access_token']
 
 
-def get_page_and_ig_account(long_lived_token: str) -> tuple[str, str, str]:
+def get_page_and_ig_account(long_lived_token: str, fallback_ig_id: str = '', fallback_page_id: str = '') -> tuple[str, str, str]:
     """
     Returns (page_token, page_id, ig_account_id).
 
@@ -247,17 +247,8 @@ def get_page_and_ig_account(long_lived_token: str) -> tuple[str, str, str]:
         # Use user token as page_token (works for IG insights), no page_id
         return long_lived_token, '', ig_id
 
+    if fallback_ig_id or fallback_page_id:
+        print(f'Using fallback IDs — IG: {fallback_ig_id}, Page: {fallback_page_id}')
+        return long_lived_token, fallback_page_id, fallback_ig_id
+
     raise ValueError('Could not find Instagram Business Account or Facebook Page on this account')
-
-    page = pages[0]
-    page_id    = page['id']
-    page_token = page['access_token']
-
-    ig_resp = requests.get(f'{GRAPH}/{page_id}', params={
-        'fields':       'instagram_business_account',
-        'access_token': page_token,
-    }, timeout=15)
-    ig_resp.raise_for_status()
-    ig_id = ig_resp.json().get('instagram_business_account', {}).get('id', '')
-
-    return page_token, page_id, ig_id

@@ -312,7 +312,11 @@ def meta_callback(code: str = Query(None), state: str = Query(None), error: str 
     try:
         short_token  = meta.exchange_code_for_token(code, META_APP_ID, META_APP_SECRET, META_REDIRECT_URI)
         long_token   = meta.exchange_for_long_lived(short_token, META_APP_ID, META_APP_SECRET)
-        page_token, page_id, ig_id = meta.get_page_and_ig_account(long_token)
+        page_token, page_id, ig_id = meta.get_page_and_ig_account(
+            long_token,
+            fallback_ig_id=IG_ACCOUNT_ID,
+            fallback_page_id=FB_PAGE_ID,
+        )
     except Exception as e:
         print(f'Meta OAuth failed: {e}')
         return RedirectResponse(f'{FRONTEND_URL}/connect.html?error=meta_token_failed')
