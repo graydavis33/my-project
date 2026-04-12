@@ -31,16 +31,18 @@ _EXPLANATIONS_CACHE = os.path.join(_DIR, '.post_explanations_cache.json')
 # ── Fetch helpers ────────────────────────────────────────────────────────────
 
 def _fetch_instagram():
-    if not os.getenv('META_EMAIL') or not os.getenv('IG_USERNAME'):
+    if not os.getenv('META_ACCESS_TOKEN') or not os.getenv('INSTAGRAM_BUSINESS_ACCOUNT_ID'):
+        print("  Skipping Instagram — META_ACCESS_TOKEN / INSTAGRAM_BUSINESS_ACCOUNT_ID not in .env")
         return []
-    from meta_scraper import get_instagram_data
+    from meta_fetcher import get_instagram_data
     return get_instagram_data()
 
 
 def _fetch_facebook():
-    if not os.getenv('META_EMAIL') or not os.getenv('FB_PAGE_SLUG'):
+    if not os.getenv('META_ACCESS_TOKEN') or not os.getenv('FACEBOOK_PAGE_ID'):
+        print("  Skipping Facebook — META_ACCESS_TOKEN / FACEBOOK_PAGE_ID not in .env")
         return []
-    from meta_scraper import get_facebook_data
+    from meta_fetcher import get_facebook_data
     return get_facebook_data()
 
 
