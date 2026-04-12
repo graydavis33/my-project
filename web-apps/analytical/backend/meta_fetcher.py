@@ -205,30 +205,49 @@ def exchange_for_long_lived(short_token: str, app_id: str, app_secret: str) -> s
 
 def get_page_and_ig_account(long_lived_token: str) -> tuple[str, str, str]:
     """
-    Returns (page_token, page_id, ig_account_id) for the first Page found.
-    Page tokens returned here are permanent (never expire).
+    Returns (page_token, page_id, ig_account_id).
+
+    Facebook Login for Business doesn't return pages via /me/accounts.
+    Strategy:
+    1. Try /me/accounts (works with regular Facebook Login)
+    2. Fall back to /me?fields=instagram_business_account (works with Facebook Login for Business)
+    In the fallback case, the long-lived user token works directly for IG API calls.
     """
-    # Check what permissions the token actually has
-    perm_resp = requests.get(f'{GRAPH}/me/permissions', params={'access_token': long_lived_token}, timeout=15)
-    print(f'DEBUG permissions: {perm_resp.text[:500]}')
-
-    # Check what /me returns
-    me_resp = requests.get(f'{GRAPH}/me', params={
-        'fields': 'id,name,accounts{id,name,access_token,instagram_business_account}',
-        'access_token': long_lived_token,
-    }, timeout=15)
-    print(f'DEBUG /me nested accounts: {me_resp.text[:500]}')
-
+    # Try /me/accounts first
     resp = requests.get(f'{GRAPH}/me/accounts', params={
         'access_token': long_lived_token,
         'fields': 'id,name,access_token,instagram_business_account',
     }, timeout=15)
-    print(f'DEBUG /me/accounts status: {resp.status_code}')
-    print(f'DEBUG /me/accounts response: {resp.text[:500]}')
     resp.raise_for_status()
     pages = resp.json().get('data', [])
-    if not pages:
-        raise ValueError('No Facebook Pages found on this account')
+
+    if pages:
+        page = pages[0]
+        page_id    = page['id']
+        page_token = page['access_token']
+        ig_id = page.get('instagram_business_account', {}).get('id', '')
+        print(f'Got page via /me/accounts: {page.get("name")} (IG: {ig_id})')
+        return page_token, page_id, ig_id
+
+    # Fallback: Facebook Login for Business — get IG account directly from user
+    print('pages_show_list returned empty — trying direct IG account lookup (Facebook Login for Business mode)')
+    me_resp = requests.get(f'{GRAPH}/me', params={
+        'fields': 'id,name,instagram_business_account',
+        'access_token': long_lived_token,
+    }, timeout=15)
+    me_resp.raise_for_status()
+    me_data = me_resp.json()
+    print(f'DEBUG /me: {me_resp.text[:300]}')
+
+    ig_account = me_data.get('instagram_business_account', {})
+    ig_id = ig_account.get('id', '')
+
+    if ig_id:
+        print(f'Got IG account directly: {ig_id} — using user token for API calls')
+        # Use user token as page_token (works for IG insights), no page_id
+        return long_lived_token, '', ig_id
+
+    raise ValueError('Could not find Instagram Business Account or Facebook Page on this account')
 
     page = pages[0]
     page_id    = page['id']

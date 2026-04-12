@@ -317,15 +317,19 @@ def meta_callback(code: str = Query(None), state: str = Query(None), error: str 
 
     conn = database.get_connection()
     try:
-        # Store Instagram connection: access_token=page_token, refresh_token=ig_account_id
         if ig_id:
             models.upsert_connection(conn, user_id, 'instagram', page_token, ig_id)
-        # Store Facebook connection: access_token=page_token, refresh_token=page_id
-        models.upsert_connection(conn, user_id, 'facebook', page_token, page_id)
+        if page_id:
+            models.upsert_connection(conn, user_id, 'facebook', page_token, page_id)
     finally:
         conn.close()
 
-    connected = 'instagram_facebook' if ig_id else 'facebook'
+    if ig_id and page_id:
+        connected = 'instagram_facebook'
+    elif ig_id:
+        connected = 'instagram'
+    else:
+        connected = 'facebook'
     return RedirectResponse(f'{FRONTEND_URL}/connect.html?connected={connected}')
 
 
