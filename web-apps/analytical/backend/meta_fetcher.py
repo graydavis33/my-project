@@ -208,6 +208,17 @@ def get_page_and_ig_account(long_lived_token: str) -> tuple[str, str, str]:
     Returns (page_token, page_id, ig_account_id) for the first Page found.
     Page tokens returned here are permanent (never expire).
     """
+    # Check what permissions the token actually has
+    perm_resp = requests.get(f'{GRAPH}/me/permissions', params={'access_token': long_lived_token}, timeout=15)
+    print(f'DEBUG permissions: {perm_resp.text[:500]}')
+
+    # Check what /me returns
+    me_resp = requests.get(f'{GRAPH}/me', params={
+        'fields': 'id,name,accounts{id,name,access_token,instagram_business_account}',
+        'access_token': long_lived_token,
+    }, timeout=15)
+    print(f'DEBUG /me nested accounts: {me_resp.text[:500]}')
+
     resp = requests.get(f'{GRAPH}/me/accounts', params={
         'access_token': long_lived_token,
         'fields': 'id,name,access_token,instagram_business_account',
