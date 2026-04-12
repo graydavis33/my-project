@@ -169,9 +169,26 @@ def create_assets():
     for d in dirs:
         d.mkdir(parents=True, exist_ok=True)
     print(f"  Created: .tmp/, output/, assets/music/, assets/fonts/")
-    print(f"  ACTION NEEDED: Add 1-2 royalty-free MP3 tracks to assets/music/")
-    print(f"    → YouTube Audio Library: https://studio.youtube.com/channel/UC.../music")
+    _download_font()
+    print(f"  Note: Music is optional. Add MP3s to assets/music/ to enable background music.")
+    print(f"    → YouTube Audio Library: https://studio.youtube.com/channel/UC.../music (free, YouTube-licensed)")
     print(f"    → Pixabay Music (free):  https://pixabay.com/music/")
+
+
+def _download_font():
+    """Auto-download Inter Bold (open source) for clean text overlays."""
+    import urllib.request
+    font_path = BASE_DIR / 'assets' / 'fonts' / 'Inter-Bold.ttf'
+    if font_path.exists():
+        print(f"  Font already present: Inter-Bold.ttf")
+        return
+    url = 'https://github.com/rsms/inter/raw/master/docs/font-files/Inter-Bold.ttf'
+    try:
+        print(f"  Downloading Inter Bold font...")
+        urllib.request.urlretrieve(url, font_path)
+        print(f"  Font downloaded: Inter-Bold.ttf")
+    except Exception as e:
+        print(f"  Font download failed ({e}) — will use system Arial as fallback")
 
 
 @step("7. Validate API connections")
