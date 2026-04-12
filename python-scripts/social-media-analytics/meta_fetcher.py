@@ -45,7 +45,7 @@ def get_instagram_data():
         return []
 
     media_params = {
-        'fields':       'id,timestamp,permalink,media_type,like_count,comments_count',
+        'fields':       'id,timestamp,permalink,media_type,like_count,comments_count,caption',
         'access_token': token,
     }
 
@@ -57,7 +57,8 @@ def get_instagram_data():
         likes      = int(item.get('like_count', 0))
         comments   = int(item.get('comments_count', 0))
         media_type = item.get('media_type', 'IMAGE')
-        title      = f"[{media_type}] {published}"
+        caption    = (item.get('caption') or '').strip().split('\n')[0][:80]
+        title      = caption if caption else f"[{media_type}] {published}"
 
         # Fetch per-media insights — 400 on old posts or personal accounts, skip gracefully
         insights = {'plays': 0, 'reach': 0, 'shares': 0, 'saved': 0}
