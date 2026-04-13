@@ -32,6 +32,11 @@ import os
 import sys
 import time
 
+# Windows consoles default to cp1252 which can't render emoji in email subjects
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 import schedule
 
 # ─── Logging ────────────────────────────────────────────────────────────────
