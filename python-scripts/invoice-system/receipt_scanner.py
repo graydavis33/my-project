@@ -145,7 +145,7 @@ def _batch_extract_transactions(emails):
         pass
 
     # Batch failed — fall back to individual extraction
-    print("    ⚠️  Batch parse failed, falling back to individual extraction...")
+    print("    [!] Batch parse failed, falling back to individual extraction...")
     return [_single_extract_transaction(e) for e in emails]
 
 
@@ -191,7 +191,7 @@ def _post_slack_notification(expense):
     try:
         slack = WebClient(token=SLACK_BOT_TOKEN)
         blocks = [
-            {"type": "header", "text": {"type": "plain_text", "text": "🧾 Expense Logged"}},
+            {"type": "header", "text": {"type": "plain_text", "text": "[receipt] Expense Logged"}},
             {
                 "type": "section",
                 "fields": [
@@ -201,7 +201,7 @@ def _post_slack_notification(expense):
                     {"type": "mrkdwn", "text": f"*Date:*\n{expense['date']}"},
                 ],
             },
-            {"type": "context", "elements": [{"type": "mrkdwn", "text": "✓ Logged to Google Sheets — Business Expenses tab"}]},
+            {"type": "context", "elements": [{"type": "mrkdwn", "text": "[+] Logged to Google Sheets — Business Expenses tab"}]},
         ]
         slack.chat_postMessage(
             channel=SLACK_PAYMENTS_CHANNEL_ID,
@@ -209,7 +209,7 @@ def _post_slack_notification(expense):
             text=f"Expense logged — ${expense['amount']:,.2f} at {expense['vendor']} ({expense['category']})",
         )
     except SlackApiError as e:
-        print(f"    ⚠️  Slack error: {e.response['error']}")
+        print(f"    [!]  Slack error: {e.response['error']}")
 
 
 def scan_receipts(emails):
@@ -249,9 +249,9 @@ def scan_receipts(emails):
                 }
                 expenses.append(expense)
                 _post_slack_notification(expense)
-                print(f"    ✓ {email['subject'][:50]} → ${result['amount']} | {result['category']}")
+                print(f"    [+] {email['subject'][:50]} -> ${result['amount']} | {result['category']}")
             else:
-                print(f"    – {email['subject'][:50]} → not a receipt")
+                print(f"    - {email['subject'][:50]} -> not a receipt")
 
     if newly_scanned:
         _save_scanned_ids(scanned_ids | newly_scanned)
