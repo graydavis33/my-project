@@ -519,7 +519,7 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-0" type="number" placeholder="auto" oninput="onManualSpent(0)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-0" value="300" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" />
+                <input class="budget-right-input" type="number" id="budget-0" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" />
                 <div class="expense-rem-sub" id="rem-0"></div>
               </div>
             </div>
@@ -531,7 +531,7 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-1" type="number" placeholder="auto" oninput="onManualSpent(1)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-1" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" />
+                <input class="budget-right-input" type="number" id="budget-1" value="150" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" />
                 <div class="expense-rem-sub" id="rem-1"></div>
               </div>
             </div>
@@ -539,11 +539,11 @@
           <div class="txn-list" id="txn-list-1"></div>
 
           <div class="expense-row">
-            <div class="expense-name">Utilities / Internet<button class="txn-toggle" id="txn-toggle-2" onclick="toggleTxns(2)" style="display:none"></button></div>
+            <div class="expense-name">Software &amp; Tools<button class="txn-toggle" id="txn-toggle-2" onclick="toggleTxns(2)" style="display:none"></button></div>
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-2" type="number" placeholder="auto" oninput="onManualSpent(2)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-2" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" />
+                <input class="budget-right-input" type="number" id="budget-2" value="100" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" />
                 <div class="expense-rem-sub" id="rem-2"></div>
               </div>
             </div>
@@ -563,16 +563,64 @@
           <div class="txn-list" id="txn-list-3"></div>
 
           <div class="expense-row">
-            <div class="expense-name">Misc / Buffer<button class="txn-toggle" id="txn-toggle-4" onclick="toggleTxns(4)" style="display:none"></button></div>
+            <div class="expense-name">Utilities / Internet<button class="txn-toggle" id="txn-toggle-4" onclick="toggleTxns(4)" style="display:none"></button></div>
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-4" type="number" placeholder="auto" oninput="onManualSpent(4)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-4" value="375" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" />
+                <input class="budget-right-input" type="number" id="budget-4" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" />
                 <div class="expense-rem-sub" id="rem-4"></div>
               </div>
             </div>
           </div>
           <div class="txn-list" id="txn-list-4"></div>
+
+          <div class="expense-row">
+            <div class="expense-name">Transport<button class="txn-toggle" id="txn-toggle-5" onclick="toggleTxns(5)" style="display:none"></button></div>
+            <div class="expense-right">
+              <input class="expense-spent-input" id="spent-input-5" type="number" placeholder="auto" oninput="onManualSpent(5)" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-5" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(5)" />
+                <div class="expense-rem-sub" id="rem-5"></div>
+              </div>
+            </div>
+          </div>
+          <div class="txn-list" id="txn-list-5"></div>
+
+          <div class="expense-row">
+            <div class="expense-name">Health &amp; Wellness<button class="txn-toggle" id="txn-toggle-6" onclick="toggleTxns(6)" style="display:none"></button></div>
+            <div class="expense-right">
+              <input class="expense-spent-input" id="spent-input-6" type="number" placeholder="auto" oninput="onManualSpent(6)" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-6" value="50" onclick="event.stopPropagation()" oninput="updateBudgetAmount(6)" />
+                <div class="expense-rem-sub" id="rem-6"></div>
+              </div>
+            </div>
+          </div>
+          <div class="txn-list" id="txn-list-6"></div>
+
+          <div class="expense-row">
+            <div class="expense-name">Shopping<button class="txn-toggle" id="txn-toggle-7" onclick="toggleTxns(7)" style="display:none"></button></div>
+            <div class="expense-right">
+              <input class="expense-spent-input" id="spent-input-7" type="number" placeholder="auto" oninput="onManualSpent(7)" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-7" value="100" onclick="event.stopPropagation()" oninput="updateBudgetAmount(7)" />
+                <div class="expense-rem-sub" id="rem-7"></div>
+              </div>
+            </div>
+          </div>
+          <div class="txn-list" id="txn-list-7"></div>
+
+          <div class="expense-row">
+            <div class="expense-name">Misc / Buffer<button class="txn-toggle" id="txn-toggle-8" onclick="toggleTxns(8)" style="display:none"></button></div>
+            <div class="expense-right">
+              <input class="expense-spent-input" id="spent-input-8" type="number" placeholder="auto" oninput="onManualSpent(8)" />
+              <div class="budget-right-col">
+                <input class="budget-right-input" type="number" id="budget-8" value="235" onclick="event.stopPropagation()" oninput="updateBudgetAmount(8)" />
+                <div class="expense-rem-sub" id="rem-8"></div>
+              </div>
+            </div>
+          </div>
+          <div class="txn-list" id="txn-list-8"></div>
 
           <div class="expense-total-row">
             <span>Total remaining</span>
@@ -623,11 +671,11 @@
 </div>
 
 <script>
-  const STORAGE_KEY = 'payday_v1';
+  const STORAGE_KEY = 'payday_v2';
   const HISTORY_KEY = 'payday_history_v1';
   const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'MetroCard', 'Expense Budget', 'Emergency Fund'];
-  const EXPENSE_NAMES = ['Groceries', 'Dining Out', 'Utilities', 'Streaming', 'Misc'];
-  const DEFAULT_BUDGETS = [300, 200, 60, 40, 375];
+  const EXPENSE_NAMES = ['Groceries', 'Dining Out', 'Software & Tools', 'Streaming', 'Utilities', 'Transport', 'Health & Wellness', 'Shopping', 'Misc'];
+  const DEFAULT_BUDGETS = [200, 150, 100, 40, 60, 40, 50, 100, 235];
   let EXPENSE_BUDGETS = [...DEFAULT_BUDGETS];
 
   function getTotalBudget() { return EXPENSE_BUDGETS.reduce((a, b) => a + b, 0); }
@@ -888,11 +936,15 @@
   // ── Auto-expense sync from expenses.json ──────────────────────────────
 
   const EXPENSES_JSON_URL = './expenses.json';
-  const CATEGORY_INDEX = { 'Groceries': 0, 'Dining Out': 1, 'Utilities': 2, 'Streaming': 3, 'Misc': 4 };
+  const CATEGORY_INDEX = {
+    'Groceries': 0, 'Dining Out': 1, 'Software & Tools': 2,
+    'Streaming': 3, 'Utilities': 4, 'Transport': 5,
+    'Health & Wellness': 6, 'Shopping': 7, 'Misc': 8
+  };
+  const NUM_CATEGORIES = 9;
 
-  let autoTotals = [0, 0, 0, 0, 0];
-  let autoTransactions = [[], [], [], [], []];
-  let manualOverrides = [false, false, false, false, false];
+  let autoTotals = Array(NUM_CATEGORIES).fill(0);
+  let autoTransactions = Array.from({length: NUM_CATEGORIES}, () => []);
 
   async function loadAutoExpenses() {
     try {
@@ -906,8 +958,8 @@
       if (data.month !== currentMonth) return;
 
       // Sum by category
-      autoTotals = [0, 0, 0, 0, 0];
-      autoTransactions = [[], [], [], [], []];
+      autoTotals = Array(NUM_CATEGORIES).fill(0);
+      autoTransactions = Array.from({length: NUM_CATEGORIES}, () => []);
       for (const exp of (data.expenses || [])) {
         const idx = CATEGORY_INDEX[exp.category];
         if (idx === undefined) continue;
@@ -915,17 +967,11 @@
         autoTransactions[idx].push(exp);
       }
 
-      // Load saved manual overrides
-      const saved = load();
-      if (saved.manualOverrides) manualOverrides = saved.manualOverrides;
-
-      // Apply to inputs (skip categories the user has overridden manually)
-      for (let i = 0; i < 5; i++) {
+      // Always auto-fill all inputs from the JSON
+      for (let i = 0; i < NUM_CATEGORIES; i++) {
         const input = document.getElementById('spent-input-' + i);
         if (!input) continue;
-        if (!manualOverrides[i]) {
-          input.value = autoTotals[i] > 0 ? autoTotals[i].toFixed(2) : '';
-        }
+        input.value = autoTotals[i] > 0 ? autoTotals[i].toFixed(2) : '';
         renderTxnList(i);
       }
 
@@ -941,16 +987,11 @@
 
       updateExpenses();
     } catch (err) {
-      // Silently fall back — file may not exist yet or fetch may fail locally
       console.log('Expense sync unavailable:', err.message);
     }
   }
 
   function onManualSpent(i) {
-    manualOverrides[i] = true;
-    const saved = load();
-    saved.manualOverrides = manualOverrides;
-    save(saved);
     updateExpenses();
   }
 
@@ -983,10 +1024,6 @@
   }
 
   function clearAutoExpenses() {
-    manualOverrides = [false, false, false, false, false];
-    const saved = load();
-    saved.manualOverrides = manualOverrides;
-    save(saved);
     loadAutoExpenses();
   }
 
