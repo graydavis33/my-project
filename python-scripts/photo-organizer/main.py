@@ -164,7 +164,7 @@ def main():
 
         for i, path in enumerate(paths_sorted):
             if i < keep_count:
-                copy_file(path, os.path.join(output_folder, ORGANIZED_FOLDER, location))
+                copy_file(path, os.path.join(output_folder, ORGANIZED_FOLDER))
                 organized_count += 1
             else:
                 copy_file(path, os.path.join(output_folder, REJECTED_FOLDER, location))
