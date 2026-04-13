@@ -26,4 +26,4 @@ EXPENSES_OUTPUT_PATH = os.path.join(
 )
 
 # Must match the payday checklist's 5 expense categories exactly
-PERSONAL_CATEGORIES = ["Groceries", "Dining Out", "Utilities", "Streaming", "Misc"]
+PERSONAL_CATEGORIES = ["Groceries", "Dining Out", "Software & Tools", "Streaming", "Utilities", "Transport", "Health & Wellness", "Shopping", "Misc"]

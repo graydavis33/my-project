@@ -20,14 +20,18 @@ _SYSTEM_PROMPT = f"""You are a personal expense tracker. Extract spending data f
 
 Given an email, extract:
 - date: the transaction date in YYYY-MM-DD format
-- vendor: the store or service name (e.g. "Netflix", "Instacart", "Con Edison")
+- vendor: the store or service name (e.g. "Netflix", "Adobe", "DoorDash")
 - amount: the total charged as a number only (e.g. 12.99) — no $ sign
-- category: one of EXACTLY these five options:
-    Groceries   — grocery stores, Instacart, food delivery labeled as groceries
-    Dining Out  — restaurants, DoorDash, UberEats, Grubhub, coffee shops
-    Utilities   — electricity, gas, internet, phone bill
-    Streaming   — Netflix, Spotify, Hulu, Disney+, Apple TV+, YouTube Premium
-    Misc        — anything that doesn't clearly fit above
+- category: one of EXACTLY these nine options:
+    Groceries         — grocery stores, Instacart, Whole Foods, food labeled as grocery
+    Dining Out        — restaurants, DoorDash, UberEats, Grubhub, coffee shops
+    Software & Tools  — Adobe, Spotify, software subscriptions, SaaS tools, productivity apps, Anthropic/AI tools
+    Streaming         — Netflix, Hulu, Disney+, Apple TV+, YouTube Premium, HBO Max
+    Utilities         — electricity, gas, internet, phone bill, Con Edison
+    Transport         — parking, ParkMobile, Citi Bike, Uber/Lyft (non-food), tolls
+    Health & Wellness — gym, pharmacy, supplements, doctor, dental
+    Shopping          — Amazon, clothing, electronics, home goods, gear
+    Misc              — anything that doesn't clearly fit above
 
 Rules:
 - If you cannot find a clear dollar amount, return null
