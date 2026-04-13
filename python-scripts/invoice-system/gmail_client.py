@@ -97,19 +97,40 @@ def _parse_email(raw_message):
 
 
 def _extract_body(payload):
-    """Pull plain text body from a Gmail message payload."""
-    if payload.get("mimeType") == "text/plain":
-        data = payload.get("body", {}).get("data", "")
-        if data:
-            return base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
+    """Pull readable text from a Gmail message payload.
+    Prefers text/plain; falls back to text/html with tags stripped."""
+    import re
 
-    if "parts" in payload:
-        for part in payload["parts"]:
-            result = _extract_body(part)
+    def _decode(data):
+        return base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
+
+    def _strip_html(html):
+        text = re.sub(r"<[^>]+>", " ", html)
+        text = re.sub(r"[ \t]+", " ", text)
+        text = re.sub(r"\n{3,}", "\n\n", text)
+        return text.strip()
+
+    def _walk(node):
+        mime = node.get("mimeType", "")
+        if mime == "text/plain":
+            data = node.get("body", {}).get("data", "")
+            if data:
+                return ("plain", _decode(data))
+        if mime == "text/html":
+            data = node.get("body", {}).get("data", "")
+            if data:
+                return ("html", _decode(data))
+        for part in node.get("parts", []):
+            result = _walk(part)
             if result:
                 return result
+        return None
 
-    return ""
+    result = _walk(payload)
+    if not result:
+        return ""
+    kind, text = result
+    return _strip_html(text) if kind == "html" else text
 
 
 def send_invoice_email(service, to_email, client_name, invoice_num, total, pdf_path):
