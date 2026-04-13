@@ -884,7 +884,6 @@
 
   // Init
   loadBudgets(); loadRent(); loadSteps(); loadFund(); loadExpenses(); loadNotes();
-  loadAutoExpenses();
 
   // ── Auto-expense sync from expenses.json ──────────────────────────────
 
@@ -990,6 +989,9 @@
     save(saved);
     loadAutoExpenses();
   }
+
+  // Run after all constants and functions are defined
+  loadAutoExpenses();
 </script>
 </body>
 </html>
