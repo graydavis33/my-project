@@ -39,6 +39,8 @@ def _save_scanned_ids(ids):
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
+_CATEGORY_LIST = "\n".join(f"  - {c}" for c in CATEGORIES)
+
 SYSTEM_PROMPT = f"""You are a bookkeeping assistant. Your job is to extract business expense data
 from receipt and billing emails for Gray Davis, a freelance videographer.
 
@@ -47,11 +49,7 @@ Given an email, extract:
 - vendor: vendor/company name only (e.g. "Adobe", "Amazon", "B&H Photo")
 - amount: the total charged amount as a number (no $ sign, just digits and decimal)
 - category: one of these exact options:
-  - Software & Subscriptions
-  - Equipment & Gear
-  - Advertising & Marketing
-  - Contractor Payments
-  - Other
+{_CATEGORY_LIST}
 - notes: a short note ONLY if the expense is unusual — e.g. amount >= ${_LARGE_EXPENSE_THRESHOLD:,}, one-time large purchase, anything that stands out. Empty string for normal routine expenses.
 
 Rules:
