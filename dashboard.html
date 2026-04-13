@@ -181,42 +181,43 @@
 
     /* Usage Stats */
     .usage-row {
-      display: flex;
-      gap: 8px;
       margin-bottom: 16px;
+    }
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       flex-wrap: wrap;
     }
-    .usage-stat {
-      flex: 1;
-      min-width: 72px;
-      background: #1a1a1a;
-      border: 1px solid #222;
-      border-radius: 8px;
-      padding: 10px 12px;
-      text-align: center;
-    }
-    .usage-stat .u-label {
+    .status-badge {
       font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: #444;
-      margin-bottom: 5px;
-    }
-    .usage-stat .u-value {
-      font-size: 18px;
       font-weight: 700;
-      color: #fff;
-      line-height: 1;
+      letter-spacing: 0.5px;
+      padding: 3px 9px;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
-    .usage-stat .u-sub {
-      font-size: 10px;
+    .sb-live    { background: #052e16; color: #34d399; }
+    .sb-partial { background: #1c1a00; color: #fbbf24; }
+    .sb-inprog  { background: #0c1a40; color: #60a5fa; }
+    .sb-unused  { background: #1a1a1a; color: #6b7280; }
+    .sb-retired { background: #1a0a0a; color: #9ca3af; }
+    .status-notes {
+      font-size: 12.5px;
+      color: #888;
+      flex: 1;
+    }
+    .usage-secondary {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .u-chip {
+      font-size: 11px;
       color: #555;
-      margin-top: 3px;
     }
-    .usage-stat.highlight { border-color: #10b981; }
-    .usage-stat.highlight .u-value { color: #34d399; }
-    .usage-stat.stale .u-value { color: #f87171; }
-    .usage-stat.pending .u-value { font-size: 13px; color: #444; }
+    .u-chip span { color: #888; font-weight: 600; }
 
     /* VPS badge */
     .vps-tag {
@@ -232,7 +233,7 @@
 
   <div class="header">
     <h1>Gray Davis <span>/ Project Dashboard</span></h1>
-    <div class="last-updated">Last updated: 2026-04-06 · 14 projects</div>
+    <div class="last-updated">Last updated: 2026-04-13 · 14 projects</div>
   </div>
 
   <div class="tab-bar">
@@ -988,64 +989,52 @@
     }
 
     function loadUsageStats() {
-      fetch('usage-stats.json?t=' + Date.now())
-        .then(r => r.json())
-        .then(data => {
-          const projects = data.projects || {};
-          const now = new Date();
+      const statusLabels = {
+        live:    { cls: 'sb-live',    text: 'LIVE' },
+        partial: { cls: 'sb-partial', text: 'PARTIAL' },
+        inprog:  { cls: 'sb-inprog',  text: 'IN PROGRESS' },
+        unused:  { cls: 'sb-unused',  text: 'NOT ACTIVE' },
+        retired: { cls: 'sb-retired', text: 'RETIRED' },
+      };
 
-          document.querySelectorAll('.card[data-project]').forEach(card => {
-            const stats = projects[card.dataset.project];
-            if (!stats) return;
+      Promise.all([
+        fetch('project-status.json?t=' + Date.now()).then(r => r.json()).catch(() => ({})),
+        fetch('usage-stats.json?t='    + Date.now()).then(r => r.json()).catch(() => ({})),
+      ]).then(([manual, auto]) => {
+        const manualProjects = manual.projects || {};
+        const autoProjects   = auto.projects   || {};
 
-            card.querySelectorAll('.usage-stat[data-stat]').forEach(box => {
-              const key   = box.dataset.stat;
-              const valEl = box.querySelector('.u-value');
-              const subEl = box.querySelector('.u-sub');
-              if (!valEl) return;
+        document.querySelectorAll('.card[data-project]').forEach(card => {
+          const key    = card.dataset.project;
+          const mstats = manualProjects[key] || {};
+          const astats = autoProjects[key]   || {};
+          const row    = card.querySelector('.usage-row');
+          if (!row) return;
 
-              box.classList.remove('pending');
+          const statusKey = mstats.status || 'unused';
+          const badge     = statusLabels[statusKey] || statusLabels.unused;
+          const notes     = mstats.notes || '';
 
-              if (key === 'last_used') {
-                if (stats.last_used_label) {
-                  valEl.textContent = stats.last_used_label;
-                  if (subEl) subEl.textContent = new Date(stats.last_used)
-                    .toLocaleDateString('en-US', {month:'short', day:'numeric'});
-                  const diff = (now - new Date(stats.last_used)) / 86400000;
-                  box.classList.toggle('highlight', diff < 7);
-                  box.classList.toggle('stale', diff >= 30);
-                } else {
-                  valEl.textContent = 'Never';
-                  if (subEl) subEl.textContent = 'no runs yet';
-                  box.classList.add('stale');
-                }
-              } else if (key === 'all_time') {
-                valEl.textContent = stats.all_time || 0;
-                if (subEl) subEl.textContent = 'total runs';
-                box.classList.toggle('highlight', (stats.all_time || 0) > 0);
-              } else if (key === 'tokens_all_time') {
-                const tokens = stats.tokens_all_time || 0;
-                if (tokens >= 1000000) {
-                  valEl.textContent = (tokens / 1000000).toFixed(1) + 'M';
-                } else if (tokens >= 1000) {
-                  valEl.textContent = Math.round(tokens / 1000) + 'K';
-                } else {
-                  valEl.textContent = tokens > 0 ? tokens : '—';
-                }
-                if (subEl) subEl.textContent = 'tokens used';
-                box.classList.toggle('highlight', tokens > 0);
-              } else if (key === 'cost_all_time') {
-                const cost = stats.cost_all_time || 0;
-                valEl.textContent = cost < 0.01 ? (cost > 0 ? '<$0.01' : '$0') : '$' + cost.toFixed(2);
-                if (subEl) subEl.textContent = 'API spend';
-                box.classList.toggle('highlight', cost > 0);
-              }
-            });
-          });
-        })
-        .catch(err => {
-          if (!(err instanceof SyntaxError)) console.warn('Usage stats unavailable:', err);
+          // Build secondary chips from real tracked data only
+          const runs  = astats.all_time || 0;
+          const cost  = astats.cost_all_time || 0;
+          let chips = '';
+          if (runs > 0) {
+            chips += `<div class="u-chip"><span>${runs}</span> local runs</div>`;
+          }
+          if (cost >= 0.01) {
+            chips += `<div class="u-chip"><span>$${cost.toFixed(2)}</span> API cost</div>`;
+          }
+
+          row.innerHTML = `
+            <div class="status-line">
+              <span class="status-badge ${badge.cls}">${badge.text}</span>
+              <span class="status-notes">${notes}</span>
+            </div>
+            ${chips ? `<div class="usage-secondary">${chips}</div>` : ''}
+          `;
         });
+      });
     }
 
     switchTab('home');
