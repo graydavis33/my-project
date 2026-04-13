@@ -159,19 +159,21 @@
       font-family: var(--font-base); font-size: 13px; width: 68px; padding: 5px 8px; text-align: right;
     }
     .expense-spent-input:focus { outline: none; border-color: var(--color-yellow); }
-    /* Budget input — replaces the green remaining number, lives on the right */
+    /* Budget remaining display + inline budget editor */
     .budget-right-col { text-align: right; }
-    .budget-right-input {
-      background: transparent; border: none;
-      border-bottom: 1px solid transparent;
-      color: var(--color-green); font-size: 14px; font-weight: 700;
-      width: 62px; text-align: right; font-family: var(--font-base);
-      padding: 0; cursor: text;
+    .budget-remaining {
+      font-size: 14px; font-weight: 700; min-width: 50px; text-align: right;
     }
-    .budget-right-input:focus { outline: none; border-bottom-color: var(--color-yellow); }
-    .budget-right-input.over { color: var(--color-red); }
-    .expense-rem-sub { font-size: 10px; color: var(--color-gray-mid); margin-top: 2px; }
-    .expense-rem-sub.over { color: var(--color-red); }
+    .budget-label-sub {
+      font-size: 10px; color: var(--color-gray-mid);
+      margin-top: 2px; display: flex; align-items: center; justify-content: flex-end; gap: 2px;
+    }
+    .budget-inline-input {
+      background: transparent; border: none; border-bottom: 1px solid transparent;
+      color: var(--color-gray-mid); font-size: 10px;
+      width: 36px; text-align: right; font-family: var(--font-base); padding: 0; cursor: text;
+    }
+    .budget-inline-input:focus { outline: none; border-bottom-color: var(--color-yellow); }
     .ok { color: var(--color-green); }
     .over { color: var(--color-red); }
     .expense-total-row {
@@ -519,8 +521,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-0" type="number" placeholder="auto" oninput="onManualSpent(0)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-0" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" />
-                <div class="expense-rem-sub" id="rem-0"></div>
+                <div class="budget-remaining ok" id="rem-display-0">$200</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-0" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" /></div>
               </div>
             </div>
           </div>
@@ -531,8 +533,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-1" type="number" placeholder="auto" oninput="onManualSpent(1)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-1" value="150" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" />
-                <div class="expense-rem-sub" id="rem-1"></div>
+                <div class="budget-remaining ok" id="rem-display-1">$150</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-1" value="150" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" /></div>
               </div>
             </div>
           </div>
@@ -543,8 +545,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-2" type="number" placeholder="auto" oninput="onManualSpent(2)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-2" value="100" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" />
-                <div class="expense-rem-sub" id="rem-2"></div>
+                <div class="budget-remaining ok" id="rem-display-2">$100</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-2" value="100" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" /></div>
               </div>
             </div>
           </div>
@@ -555,8 +557,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-3" type="number" placeholder="auto" oninput="onManualSpent(3)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-3" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(3)" />
-                <div class="expense-rem-sub" id="rem-3"></div>
+                <div class="budget-remaining ok" id="rem-display-3">$40</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-3" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(3)" /></div>
               </div>
             </div>
           </div>
@@ -567,8 +569,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-4" type="number" placeholder="auto" oninput="onManualSpent(4)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-4" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" />
-                <div class="expense-rem-sub" id="rem-4"></div>
+                <div class="budget-remaining ok" id="rem-display-4">$60</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-4" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" /></div>
               </div>
             </div>
           </div>
@@ -579,8 +581,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-5" type="number" placeholder="auto" oninput="onManualSpent(5)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-5" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(5)" />
-                <div class="expense-rem-sub" id="rem-5"></div>
+                <div class="budget-remaining ok" id="rem-display-5">$40</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-5" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(5)" /></div>
               </div>
             </div>
           </div>
@@ -591,8 +593,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-6" type="number" placeholder="auto" oninput="onManualSpent(6)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-6" value="50" onclick="event.stopPropagation()" oninput="updateBudgetAmount(6)" />
-                <div class="expense-rem-sub" id="rem-6"></div>
+                <div class="budget-remaining ok" id="rem-display-6">$50</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-6" value="50" onclick="event.stopPropagation()" oninput="updateBudgetAmount(6)" /></div>
               </div>
             </div>
           </div>
@@ -603,8 +605,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-7" type="number" placeholder="auto" oninput="onManualSpent(7)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-7" value="100" onclick="event.stopPropagation()" oninput="updateBudgetAmount(7)" />
-                <div class="expense-rem-sub" id="rem-7"></div>
+                <div class="budget-remaining ok" id="rem-display-7">$100</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-7" value="100" onclick="event.stopPropagation()" oninput="updateBudgetAmount(7)" /></div>
               </div>
             </div>
           </div>
@@ -615,8 +617,8 @@
             <div class="expense-right">
               <input class="expense-spent-input" id="spent-input-8" type="number" placeholder="auto" oninput="onManualSpent(8)" />
               <div class="budget-right-col">
-                <input class="budget-right-input" type="number" id="budget-8" value="235" onclick="event.stopPropagation()" oninput="updateBudgetAmount(8)" />
-                <div class="expense-rem-sub" id="rem-8"></div>
+                <div class="budget-remaining ok" id="rem-display-8">$235</div>
+                <div class="budget-label-sub">bud: <input class="budget-inline-input" type="number" id="budget-8" value="235" onclick="event.stopPropagation()" oninput="updateBudgetAmount(8)" /></div>
               </div>
             </div>
           </div>
@@ -780,18 +782,11 @@
       const budget = EXPENSE_BUDGETS[i], spent = parseFloat(input.value) || 0;
       totalSpent += spent;
       const rem = budget - spent;
-      // Update budget input color
-      const budgetEl = document.getElementById('budget-' + i);
-      if (budgetEl) budgetEl.className = 'budget-right-input' + (rem < 0 ? ' over' : '');
-      // Show remaining sub-text only when something is spent
-      const remEl = document.getElementById('rem-' + i);
-      if (remEl) {
-        if (spent > 0) {
-          remEl.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0) + ' left';
-          remEl.className = 'expense-rem-sub' + (rem < 0 ? ' over' : '');
-        } else {
-          remEl.textContent = '';
-        }
+      // Update remaining display — counts down from budget to 0, goes red when over
+      const remDisplayEl = document.getElementById('rem-display-' + i);
+      if (remDisplayEl) {
+        remDisplayEl.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0);
+        remDisplayEl.className = 'budget-remaining ' + (rem < 0 ? 'over' : 'ok');
       }
     });
     const total = getTotalBudget(), totalRem = total - totalSpent;
