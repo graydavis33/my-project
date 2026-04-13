@@ -78,4 +78,6 @@ for _i, _cat in enumerate(CATEGORIES):
     if _i < len(CATEGORIES) - 1:
         EXPENSE_HEADERS.append("")   # spacer column between categories
 EXPENSE_HEADERS.append("Total")
+# Mileage log section — appended to the right of expense categories
+EXPENSE_HEADERS += ["", "Date", "From", "Destination", "Miles"]
 TAX_SUMMARY_HEADERS = ["Category", "Total"]
