@@ -11,6 +11,7 @@ import anthropic
 from config import ANTHROPIC_API_KEY, PERSONAL_CATEGORIES
 
 _SCANNED_IDS_FILE = os.path.join(os.path.dirname(__file__), ".scanned_ids.json")
+_EXPENSE_CACHE_FILE = os.path.join(os.path.dirname(__file__), ".expense_cache.json")
 _BATCH_SIZE = 5
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
@@ -82,6 +83,22 @@ def _load_scanned_ids():
 def _save_scanned_ids(ids):
     with open(_SCANNED_IDS_FILE, "w") as f:
         json.dump(list(ids), f)
+
+
+def _load_expense_cache():
+    """Load all previously extracted expenses keyed by email_id."""
+    if os.path.exists(_EXPENSE_CACHE_FILE):
+        try:
+            with open(_EXPENSE_CACHE_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def _save_expense_cache(cache):
+    with open(_EXPENSE_CACHE_FILE, "w") as f:
+        json.dump(cache, f, indent=2)
 
 
 def _format_email_for_batch(i, email):
@@ -188,44 +205,47 @@ def _validate(r):
 def scan_expenses(emails):
     """
     Extract personal expenses from a list of Gmail emails.
-    Skips already-processed emails. Returns list of expense dicts:
+    Skips already-processed emails. Returns list of ALL known expense dicts
+    (new ones extracted this run + previously cached ones):
     {email_id, date, vendor, amount, category}
     """
     scanned_ids = _load_scanned_ids()
-    expenses = []
+    expense_cache = _load_expense_cache()  # {email_id: expense_dict}
     newly_scanned = set()
+    new_expenses = []
 
     unscanned = [e for e in emails if e["id"] not in scanned_ids]
     skipped = len(emails) - len(unscanned)
     if skipped:
         print(f"  Skipping {skipped} already-scanned email(s).")
 
-    if not unscanned:
-        return expenses
+    if unscanned:
+        for batch_start in range(0, len(unscanned), _BATCH_SIZE):
+            batch = unscanned[batch_start : batch_start + _BATCH_SIZE]
+            print(f"  Processing batch of {len(batch)} email(s) (call {batch_start // _BATCH_SIZE + 1})...")
 
-    for batch_start in range(0, len(unscanned), _BATCH_SIZE):
-        batch = unscanned[batch_start : batch_start + _BATCH_SIZE]
-        print(f"  Processing batch of {len(batch)} email(s) (call {batch_start // _BATCH_SIZE + 1})...")
+            results = _batch_extract(batch)
 
-        results = _batch_extract(batch)
+            for email, result in zip(batch, results):
+                newly_scanned.add(email["id"])
+                if result:
+                    expense = {
+                        "email_id": email["id"],
+                        "date": result["date"],
+                        "vendor": result["vendor"],
+                        "amount": result["amount"],
+                        "category": result["category"],
+                    }
+                    new_expenses.append(expense)
+                    expense_cache[email["id"]] = expense
+                    print(f"    + {result['vendor']} ${result['amount']} ({result['category']}) - {result['date']}")
+                else:
+                    subj = email['subject'][:60].encode('ascii', errors='replace').decode()
+                    print(f"    - {subj}")
 
-        for email, result in zip(batch, results):
-            newly_scanned.add(email["id"])
-            if result:
-                expense = {
-                    "email_id": email["id"],
-                    "date": result["date"],
-                    "vendor": result["vendor"],
-                    "amount": result["amount"],
-                    "category": result["category"],
-                }
-                expenses.append(expense)
-                print(f"    + {result['vendor']} ${result['amount']} ({result['category']}) - {result['date']}")
-            else:
-                subj = email['subject'][:60].encode('ascii', errors='replace').decode()
-                print(f"    - {subj}")
-
-    if newly_scanned:
         _save_scanned_ids(scanned_ids | newly_scanned)
+        _save_expense_cache(expense_cache)
 
-    return expenses
+    # Return all known expenses (cached + newly extracted)
+    all_email_ids = {e["id"] for e in emails}
+    return [exp for exp in expense_cache.values() if exp["email_id"] in all_email_ids]
