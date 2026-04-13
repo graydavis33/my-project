@@ -1,6 +1,6 @@
 # Current Priorities
 
-_Last updated: 2026-04-12_
+_Last updated: 2026-04-13_
 _Update this file whenever your focus shifts._
 
 ## Scoring Framework
@@ -30,7 +30,7 @@ Each project scored 0–3 across 4 dimensions:
 ## Recently Completed
 
 - Social Media Analytics — all 4 platforms live (YouTube, TikTok, Instagram, Facebook)
-- Invoice System — sheet restructured, live with clean data
+- Invoice System — receipt scanner fully fixed, expenses + dates auto-logged, mileage columns added
 - Payday Checklist — built, live on GitHub Pages
 - Footage Organizer — built, Claude Haiku Vision clip analysis
 
