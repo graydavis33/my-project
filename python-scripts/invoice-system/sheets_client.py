@@ -191,14 +191,14 @@ def _expand_sheet_dimensions(spreadsheet, ws, rows=1000, cols=26):
 def _get_expense_col_map(ws):
     """
     Read row 1 of the Business Expenses tab and return a dict mapping
-    category name → (vendor_col, amount_col) as 1-based column indices.
+    category name → (vendor_col, amount_col, date_col) as 1-based column indices.
     Works regardless of how the user manually arranges the sheet.
     """
     headers = ws.row_values(1)
     col_map = {}
     for i, h in enumerate(headers):
-        if h in CATEGORIES and i + 1 < len(headers) and headers[i + 1] == "Amount":
-            col_map[h] = (i + 1, i + 2)  # 1-based vendor_col, amount_col
+        if h in CATEGORIES and i + 2 < len(headers) and headers[i + 1] == "Amount" and headers[i + 2] == "Date":
+            col_map[h] = (i + 1, i + 2, i + 3)  # 1-based vendor_col, amount_col, date_col
     return col_map
 
 
@@ -277,14 +277,14 @@ def setup_sheet():
     # Total Income
     tax_rows.append(["Total Income", f"=SUMIF('{tx}'!A:A,\"<>TOTAL\",'{tx}'!D:D)"])
 
-    # Each expense category — amount col is i*3+2 (1-based): B, E, H, K, N
+    # Each expense category — amount col is i*4+2 (1-based): B, F, J, N
     for i, cat in enumerate(CATEGORIES):
-        amount_col = _col_letter(i * 3 + 2)
+        amount_col = _col_letter(i * 4 + 2)
         tax_rows.append([cat, f"=SUM('{exp}'!{amount_col}2:{amount_col}1000)"])
 
     # Total Expenses = sum of all category amount columns
     all_sums = "+".join(
-        [f"SUM('{exp}'!{_col_letter(i * 3 + 2)}2:{_col_letter(i * 3 + 2)}1000)"
+        [f"SUM('{exp}'!{_col_letter(i * 4 + 2)}2:{_col_letter(i * 4 + 2)}1000)"
          for i in range(len(CATEGORIES))]
     )
     tax_rows.append(["Total Expenses", f"={all_sums}"])
@@ -297,19 +297,20 @@ def setup_sheet():
     for row in tax_rows:
         ws_tax.append_row(row)
 
-    # Add ARRAYFORMULA to Total column (O2) — sums all category amount cols per row
-    amount_cols = [_col_letter(i * 3 + 2) for i in range(len(CATEGORIES))]
+    # Add ARRAYFORMULA to Total column — sums all category amount cols per row
+    # Stride is 4 (cat, amount, date, spacer); total col = len(CATEGORIES) * 4
+    amount_cols = [_col_letter(i * 4 + 2) for i in range(len(CATEGORIES))]
     ranges = [f"{c}2:{c}1000" for c in amount_cols]
     sum_expr = "+".join(ranges)
-    total_col_1based = (len(CATEGORIES) - 1) * 3 + 3   # col O
+    total_col_1based = len(CATEGORIES) * 4
     array_formula = f'=ARRAYFORMULA(IF(({sum_expr})=0,"",{sum_expr}))'
     ws_exp.update_cell(2, total_col_1based, array_formula)
 
     # Format Amount column on Transactions
     _format_currency_column(sheet, ws_tx, col_index=3)
-    # Format all Amount cols on Business Expenses (0-indexed: 1, 4, 7, 10, 13) and Total col
+    # Format all Amount cols on Business Expenses (0-indexed: 1, 5, 9, 13) and Total col
     for i in range(len(CATEGORIES)):
-        _format_currency_column(sheet, ws_exp, col_index=i * 3 + 1)
+        _format_currency_column(sheet, ws_exp, col_index=i * 4 + 1)
     _format_currency_column(sheet, ws_exp, col_index=total_col_1based - 1)
 
     _auto_resize_all(sheet)
@@ -348,12 +349,13 @@ def append_expense(date, vendor, category, amount, notes=""):
             print(f"  Warning: category '{category}' not found in sheet. Skipping.")
             return
 
-    vendor_col, amount_col = col_map[category]
+    vendor_col, amount_col, date_col = col_map[category]
     col_vals = ws.col_values(vendor_col)
     next_row = max(len(col_vals) + 1, 2)
     col_a = _col_letter(vendor_col)
     col_b = _col_letter(amount_col)
-    ws.update(f"{col_a}{next_row}:{col_b}{next_row}", [[vendor, amount]])
+    col_c = _col_letter(date_col)
+    ws.update(f"{col_a}{next_row}:{col_c}{next_row}", [[vendor, amount, date]])
     _auto_resize(sheet, ws)
 
 
@@ -372,11 +374,12 @@ def append_expenses(rows):
             else:
                 print(f"  Warning: category '{category}' not found in sheet. Skipping.")
                 continue
-        vendor_col, amount_col = col_map[category]
+        vendor_col, amount_col, date_col = col_map[category]
         col_vals = ws.col_values(vendor_col)
         next_row = max(len(col_vals) + 1, 2)
         col_a = _col_letter(vendor_col)
         col_b = _col_letter(amount_col)
-        ws.update(f"{col_a}{next_row}:{col_b}{next_row}", [[vendor, amount]])
+        col_c = _col_letter(date_col)
+        ws.update(f"{col_a}{next_row}:{col_c}{next_row}", [[vendor, amount, _date]])
 
     _auto_resize(sheet, ws)
