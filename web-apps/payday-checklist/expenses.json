@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-13T20:07:47Z",
+  "generated_at": "2026-04-13T20:44:19Z",
   "month": "2026-04",
   "expenses": [
     {
@@ -7,21 +7,21 @@
       "date": "2026-04-13",
       "vendor": "Google Play",
       "amount": 0.49,
-      "category": "Streaming"
+      "category": "Software & Tools"
     },
     {
       "email_id": "19d72785cfd5df99",
       "date": "2026-04-09",
       "vendor": "Adobe",
       "amount": 69.99,
-      "category": "Misc"
+      "category": "Software & Tools"
     },
     {
       "email_id": "19d6a241c4cfd0a0",
       "date": "2026-04-07",
       "vendor": "Wispr Flow",
       "amount": 15.0,
-      "category": "Misc"
+      "category": "Software & Tools"
     }
   ]
 }
