@@ -52,7 +52,8 @@ def fetch_receipt_emails(service, days=30):
         "(subject:receipt OR subject:\"order confirmation\" OR subject:\"payment confirmation\" "
         "OR subject:\"invoice\" OR subject:\"billing\" OR subject:\"subscription\" "
         "OR subject:\"your order\" OR subject:charge OR subject:statement "
-        "OR subject:renewal OR subject:\"payment receipt\" OR subject:\"order shipped\") "
+        "OR subject:renewal OR subject:\"payment receipt\" OR subject:\"order shipped\" "
+        "OR subject:purchase) "
         "-from:me"
     )
 
