@@ -12,10 +12,10 @@ PHOTO_EXTENSIONS = {
 # ── Blur detection ─────────────────────────────────────────────────────────────
 # Laplacian variance below this value = blurry photo (rejected immediately).
 # Lower = more strict (rejects more). Raise this if too many good photos get cut.
-BLUR_THRESHOLD = 80.0
+BLUR_THRESHOLD = 15.0
 
 # ── Top % to keep per location ─────────────────────────────────────────────────
-TOP_PERCENT = 0.20   # 0.20 = keep top 20%
+TOP_PERCENT = 0.25   # 0.25 = keep top 25%
 
 # ── Output folder names ────────────────────────────────────────────────────────
 ORGANIZED_FOLDER = "organized"
