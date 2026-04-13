@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-13T20:30:24.283469+00:00",
+  "generated": "2026-04-13T20:39:35.852356+00:00",
   "projects": {
     "email-agent": {
       "last_used": "2026-03-19T20:01:50.933759+00:00",
@@ -11,13 +11,13 @@
       "cost_all_time": 0.0166
     },
     "invoice-system": {
-      "last_used": "2026-04-13T20:29:42.371147+00:00",
+      "last_used": "2026-04-13T20:39:00.910656+00:00",
       "last_used_label": "Today",
-      "this_week": 7,
-      "all_time": 24,
-      "tokens_all_time": 216666,
-      "cost_this_week": 0.6994,
-      "cost_all_time": 0.7131
+      "this_week": 9,
+      "all_time": 26,
+      "tokens_all_time": 248859,
+      "cost_this_week": 0.8113,
+      "cost_all_time": 0.825
     },
     "morning-briefing": {
       "last_used": null,
