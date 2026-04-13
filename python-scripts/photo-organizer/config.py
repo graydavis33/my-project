@@ -17,28 +17,27 @@ BLUR_THRESHOLD = 80.0
 # ── Top % to keep per location ─────────────────────────────────────────────────
 TOP_PERCENT = 0.20   # 0.20 = keep top 20%
 
-# ── GPS clustering ─────────────────────────────────────────────────────────────
-# Photos within this many meters of each other = same location cluster
-CLUSTER_RADIUS_METERS = 500
-
-# Minimum photos needed to form a named location group.
-# Lone photos that don't cluster go into "Uncategorized"
-MIN_CLUSTER_SIZE = 1
-
 # ── Output folder names ────────────────────────────────────────────────────────
 ORGANIZED_FOLDER = "organized"
 REJECTED_FOLDER  = "rejected"
 
-# ── Reverse geocoding ──────────────────────────────────────────────────────────
-# Nominatim (OpenStreetMap) — free, no API key needed.
-# Rate limit: 1 request per second (handled automatically).
-GEOCODE_USER_AGENT  = "photo-organizer-gray"
-GEOCODE_CACHE_FILE  = "geocode_cache.json"
+# ── Vision-based location grouping ────────────────────────────────────────────
+# Uses Claude Haiku to identify the scene/location in each photo visually.
+# Results are cached so re-runs are instant and don't cost anything extra.
+VISION_CACHE_FILE   = "vision_cache.json"
+VISION_MODEL        = "claude-haiku-4-5-20251001"   # cheapest, fast enough
+VISION_THUMBNAIL_PX = 512      # resize to this before sending (saves cost)
+
+# After getting all individual descriptions, Claude groups similar ones together
+# into clean folder names (e.g. "rocky mountain trail" + "mountain path" → "Mountain Trail")
+VISION_GROUP_BATCH  = 80       # send this many descriptions per grouping request
 
 # ── Quality scoring weights (must sum to 1.0) ──────────────────────────────────
-WEIGHT_SHARPNESS  = 0.60   # Most important — is it in focus?
-WEIGHT_EXPOSURE   = 0.25   # Is it properly lit (not too dark / too bright)?
-WEIGHT_CONTRAST   = 0.15   # Does it have tonal range?
+# NOTE: Exposure is intentionally excluded — shooter uses RAW and deliberately
+# underexposes to recover highlights in post. Penalizing dark shots would cut
+# the best frames.
+WEIGHT_SHARPNESS  = 0.80   # Is it in focus / sharp?
+WEIGHT_CONTRAST   = 0.20   # Does it have tonal range?
 
 # ── Progress & logging ─────────────────────────────────────────────────────────
 SHOW_PROGRESS = True

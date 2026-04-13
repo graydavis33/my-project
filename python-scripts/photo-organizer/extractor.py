@@ -1,80 +1,20 @@
 """
-Photo Organizer — EXIF Extractor
-Reads GPS coordinates and basic metadata from photo files.
+Photo Organizer — File Extractor + Thumbnail Generator
+Finds photo files (including Canon CR3/CR2 RAW) and extracts
+small JPEG thumbnails for vision analysis.
 """
 
+import base64
+import io
 import os
-import struct
-from datetime import datetime
-from typing import Optional, Tuple
+from typing import Optional
+
+import rawpy
+import numpy as np
 from PIL import Image
-from PIL.ExifTags import TAGS, GPSTAGS
 
 
-def get_exif(filepath: str) -> dict:
-    """Return raw EXIF data dict from a photo, or empty dict if none."""
-    try:
-        img = Image.open(filepath)
-        raw = img._getexif()
-        if not raw:
-            return {}
-        return {TAGS.get(tag, tag): value for tag, value in raw.items()}
-    except Exception:
-        return {}
-
-
-def get_gps_coords(filepath: str) -> Optional[Tuple[float, float]]:
-    """
-    Return (latitude, longitude) decimal degrees from photo EXIF, or None.
-    """
-    exif = get_exif(filepath)
-    gps_info_raw = exif.get("GPSInfo")
-    if not gps_info_raw:
-        return None
-
-    # Convert raw GPSInfo tag numbers to named keys
-    gps = {}
-    for key, val in gps_info_raw.items():
-        name = GPSTAGS.get(key, key)
-        gps[name] = val
-
-    try:
-        lat  = _dms_to_decimal(gps["GPSLatitude"],  gps.get("GPSLatitudeRef",  "N"))
-        lon  = _dms_to_decimal(gps["GPSLongitude"], gps.get("GPSLongitudeRef", "E"))
-        return (lat, lon)
-    except (KeyError, TypeError, ZeroDivisionError):
-        return None
-
-
-def get_date_taken(filepath: str) -> Optional[datetime]:
-    """Return date photo was taken from EXIF, or None."""
-    exif = get_exif(filepath)
-    raw = exif.get("DateTimeOriginal") or exif.get("DateTime")
-    if not raw:
-        return None
-    try:
-        return datetime.strptime(str(raw), "%Y:%m:%d %H:%M:%S")
-    except ValueError:
-        return None
-
-
-def _dms_to_decimal(dms, ref: str) -> float:
-    """Convert degrees/minutes/seconds tuple to decimal degrees."""
-    def to_float(val):
-        if isinstance(val, tuple):
-            return val[0] / val[1] if val[1] != 0 else 0.0
-        return float(val)
-
-    degrees = to_float(dms[0])
-    minutes = to_float(dms[1])
-    seconds = to_float(dms[2])
-    decimal = degrees + (minutes / 60.0) + (seconds / 3600.0)
-    if ref in ("S", "W"):
-        decimal = -decimal
-    return decimal
-
-
-def find_photos(folder: str, extensions: set) -> list[str]:
+def find_photos(folder: str, extensions: set) -> list:
     """Recursively find all photo files in a folder."""
     photos = []
     for root, _, files in os.walk(folder):
@@ -83,3 +23,69 @@ def find_photos(folder: str, extensions: set) -> list[str]:
             if ext in extensions:
                 photos.append(os.path.join(root, name))
     return sorted(photos)
+
+
+RAW_EXTENSIONS = {".cr2", ".cr3", ".nef", ".arw", ".dng", ".orf", ".rw2"}
+
+
+def _is_raw(filepath: str) -> bool:
+    return os.path.splitext(filepath)[1].lower() in RAW_EXTENSIONS
+
+
+def load_pil_image(filepath: str) -> Optional[Image.Image]:
+    """
+    Open a photo as a PIL Image regardless of format (JPEG, HEIC, RAW, etc.).
+    Returns None if the file can't be read.
+    """
+    if _is_raw(filepath):
+        try:
+            with rawpy.imread(filepath) as raw:
+                # Try to get embedded thumbnail first (fast, no demosaicing)
+                try:
+                    thumb = raw.extract_thumb()
+                    if thumb.format == rawpy.ThumbFormat.JPEG:
+                        return Image.open(io.BytesIO(thumb.data)).convert("RGB")
+                    elif thumb.format == rawpy.ThumbFormat.BITMAP:
+                        return Image.fromarray(thumb.data).convert("RGB")
+                except rawpy.LibRawNoThumbnailError:
+                    pass
+                # Fall back to full RAW processing (slower but always works)
+                rgb = raw.postprocess(use_camera_wb=True, no_auto_bright=True, output_bps=8)
+                return Image.fromarray(rgb)
+        except Exception:
+            return None
+    else:
+        try:
+            return Image.open(filepath).convert("RGB")
+        except Exception:
+            return None
+
+
+def make_thumbnail_b64(filepath: str, max_px: int) -> Optional[str]:
+    """
+    Load photo, resize to max_px on longest side, return as base64 JPEG string.
+    Used for sending to Claude vision API.
+    Returns None if file can't be read.
+    """
+    img = load_pil_image(filepath)
+    if img is None:
+        return None
+
+    # Resize keeping aspect ratio
+    img.thumbnail((max_px, max_px), Image.LANCZOS)
+
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=75)
+    return base64.b64encode(buf.getvalue()).decode("utf-8")
+
+
+def make_cv2_gray(filepath: str) -> Optional[np.ndarray]:
+    """
+    Load photo as grayscale numpy array for blur/quality scoring.
+    Works with RAW and non-RAW files.
+    """
+    img = load_pil_image(filepath)
+    if img is None:
+        return None
+    gray = img.convert("L")
+    return np.array(gray)
