@@ -1,0 +1,25 @@
+{
+  "note": "Manually maintained by Claude each session. Update status + notes to reflect real current state.",
+  "projects": {
+    "email-agent": {
+      "status": "live",
+      "notes": "Running 24/7 on VPS — classifies Gmail + drafts Slack replies hourly"
+    },
+    "morning-briefing": {
+      "status": "live",
+      "notes": "Fires 8am daily on VPS — emails, invoices, priorities to Slack"
+    },
+    "invoice-system": {
+      "status": "partial",
+      "notes": "Manual input works perfectly; automating data entry"
+    },
+    "social-media-analytics": {
+      "status": "retired",
+      "notes": "Not actively used — backend logic being repurposed for Analytical SaaS"
+    },
+    "content-researcher": {
+      "status": "unused",
+      "notes": "Built and working, not part of regular workflow yet"
+    }
+  }
+}
