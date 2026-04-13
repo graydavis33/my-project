@@ -20,6 +20,7 @@ credentials.json
 .comment_summary_cache.json
 .scanned_receipt_ids.json
 .scanned_ids.json
+.expense_cache.json
 
 # ============================================================
 # PYTHON
