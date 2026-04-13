@@ -94,6 +94,38 @@ def _format_email_for_batch(i, email):
     )
 
 
+def _extract_json(text):
+    """Extract JSON from text that may contain markdown code blocks or surrounding prose."""
+    text = text.strip()
+    # Strip markdown code fences
+    if text.startswith("```"):
+        lines = text.split("\n")
+        text = "\n".join(lines[1:-1] if lines[-1].strip() == "```" else lines[1:])
+    text = text.strip()
+    # Try direct parse first
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    # Try to find the first [...] or {...} block in the text
+    for start_char, end_char in [("[", "]"), ("{", "}")]:
+        start = text.find(start_char)
+        if start != -1:
+            # Find the matching close bracket by counting depth
+            depth = 0
+            for i in range(start, len(text)):
+                if text[i] == start_char:
+                    depth += 1
+                elif text[i] == end_char:
+                    depth -= 1
+                    if depth == 0:
+                        try:
+                            return json.loads(text[start:i+1])
+                        except json.JSONDecodeError:
+                            break
+    return None
+
+
 def _batch_extract(emails):
     """Send up to _BATCH_SIZE emails in one Claude call. Returns list of dicts or None."""
     n = len(emails)
@@ -107,20 +139,12 @@ def _batch_extract(emails):
         messages=[{"role": "user", "content": prompt}],
     )
 
-    text = response.content[0].text.strip()
-
-    try:
-        results = json.loads(text)
-        if isinstance(results, list) and len(results) == n:
-            validated = []
-            for r in results:
-                validated.append(_validate(r))
-            return validated
-    except (json.JSONDecodeError, Exception):
-        pass
+    parsed = _extract_json(response.content[0].text)
+    if isinstance(parsed, list) and len(parsed) == n:
+        return [_validate(r) for r in parsed]
 
     # Batch parse failed — fall back to individual
-    print("    Batch parse failed, falling back to individual extraction...")
+    print("    Batch parse failed, trying individual extraction...")
     return [_single_extract(e) for e in emails]
 
 
@@ -135,19 +159,15 @@ def _single_extract(email):
 
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=150,
+        max_tokens=200,
         system=_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": prompt}],
     )
 
-    text = response.content[0].text.strip()
-    if text.lower() == "null" or not text:
+    parsed = _extract_json(response.content[0].text)
+    if parsed is None:
         return None
-
-    try:
-        return _validate(json.loads(text))
-    except json.JSONDecodeError:
-        return None
+    return _validate(parsed)
 
 
 def _validate(r):
@@ -200,9 +220,10 @@ def scan_expenses(emails):
                     "category": result["category"],
                 }
                 expenses.append(expense)
-                print(f"    + {result['vendor']} ${result['amount']} ({result['category']}) — {result['date']}")
+                print(f"    + {result['vendor']} ${result['amount']} ({result['category']}) - {result['date']}")
             else:
-                print(f"    - {email['subject'][:60]} → not an expense")
+                subj = email['subject'][:60].encode('ascii', errors='replace').decode()
+                print(f"    - {subj}")
 
     if newly_scanned:
         _save_scanned_ids(scanned_ids | newly_scanned)
