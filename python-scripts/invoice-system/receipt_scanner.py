@@ -105,6 +105,15 @@ def _format_email_for_batch(i, email):
     )
 
 
+def _strip_code_block(text):
+    """Remove markdown code fences (```json ... ```) if Claude wraps its response in one."""
+    if text.startswith("```"):
+        text = text.split("\n", 1)[-1]  # drop the opening fence line
+    if text.endswith("```"):
+        text = text.rsplit("```", 1)[0]
+    return text.strip()
+
+
 def _batch_extract_transactions(emails):
     """
     Send up to _BATCH_SIZE emails in one Claude call.
@@ -123,7 +132,7 @@ def _batch_extract_transactions(emails):
     )
     track_response(response)
 
-    text = response.content[0].text.strip()
+    text = _strip_code_block(response.content[0].text.strip())
 
     try:
         results = json.loads(text)
@@ -169,7 +178,7 @@ def _single_extract_transaction(email):
     )
     track_response(response)
 
-    text = response.content[0].text.strip()
+    text = _strip_code_block(response.content[0].text.strip())
 
     if text.lower() == "null" or not text:
         return None
