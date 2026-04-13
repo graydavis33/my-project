@@ -1,23 +1,23 @@
 {
-  "generated": "2026-04-08T02:52:22.996047+00:00",
+  "generated": "2026-04-13T20:22:33.862506+00:00",
   "projects": {
     "email-agent": {
-      "last_used": null,
-      "last_used_label": null,
+      "last_used": "2026-03-19T20:01:50.933759+00:00",
+      "last_used_label": "3w ago",
       "this_week": 0,
-      "all_time": 0,
-      "tokens_all_time": 0,
+      "all_time": 3,
+      "tokens_all_time": 20330,
       "cost_this_week": 0.0,
-      "cost_all_time": 0.0
+      "cost_all_time": 0.0166
     },
     "invoice-system": {
-      "last_used": "2026-04-05T01:49:52.642966+00:00",
-      "last_used_label": "3d ago",
+      "last_used": "2026-04-13T20:22:13.633952+00:00",
+      "last_used_label": "Today",
       "this_week": 2,
-      "all_time": 7,
-      "tokens_all_time": 1057,
-      "cost_this_week": 0.0,
-      "cost_all_time": 0.0011
+      "all_time": 19,
+      "tokens_all_time": 16666,
+      "cost_this_week": 0.0157,
+      "cost_all_time": 0.0293
     },
     "morning-briefing": {
       "last_used": null,
@@ -29,22 +29,22 @@
       "cost_all_time": 0.0
     },
     "content-researcher": {
-      "last_used": null,
-      "last_used_label": null,
+      "last_used": "2026-03-19T12:57:27.509401+00:00",
+      "last_used_label": "3w ago",
       "this_week": 0,
-      "all_time": 0,
-      "tokens_all_time": 0,
+      "all_time": 1,
+      "tokens_all_time": 6034,
       "cost_this_week": 0.0,
-      "cost_all_time": 0.0
+      "cost_all_time": 0.0177
     },
     "social-media-analytics": {
-      "last_used": "2026-04-08T02:48:17.808737+00:00",
+      "last_used": "2026-04-12T23:15:59.241237+00:00",
       "last_used_label": "Today",
-      "this_week": 1,
-      "all_time": 16,
-      "tokens_all_time": 3176,
-      "cost_this_week": 0.0014,
-      "cost_all_time": 0.0062
+      "this_week": 6,
+      "all_time": 15,
+      "tokens_all_time": 2069,
+      "cost_this_week": 0.0,
+      "cost_all_time": 0.0043
     }
   }
 }
