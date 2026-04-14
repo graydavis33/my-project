@@ -1,0 +1,49 @@
+{
+  "lastUpdated": "2026-04-14",
+  "currentIteration": {
+    "tool": "Email Agent",
+    "approach": "A",
+    "approachName": "Fix the Brain",
+    "startedDate": "2026-04-14",
+    "designDoc": "../../docs/superpowers/specs/2026-04-14-email-agent-fix-the-brain-design.md",
+    "summary": "Build shared role_context.md master prompt, rewrite classifier + drafter prompts using Role-Context-Command-Format formula, kill stale 'social media marketer' line, add --dry-run flag.",
+    "steps": [
+      { "name": "Design", "status": "complete" },
+      { "name": "Plan", "status": "next" },
+      { "name": "Build", "status": "pending" },
+      { "name": "Test", "status": "pending" },
+      { "name": "Ship", "status": "pending" }
+    ]
+  },
+  "approaches": {
+    "A": { "name": "Fix the Brain", "description": "Master prompt + Role-Context-Command-Format formula on existing prompts" },
+    "B": { "name": "Feedback Loop", "description": "Capture rejections/edits, feed back into prompts/profile" },
+    "C": { "name": "Skill-File Refactor", "description": "Move prompts out of code into .claude/skills/<tool>/SKILL.md" }
+  },
+  "tools": [
+    {
+      "id": 1,
+      "name": "Email Agent",
+      "category": "inbox",
+      "status": "in_progress",
+      "approach": "A",
+      "startedDate": "2026-04-14",
+      "completedDate": null,
+      "designDoc": "../../docs/superpowers/specs/2026-04-14-email-agent-fix-the-brain-design.md",
+      "notes": "Design approved, implementation plan pending"
+    },
+    { "id": 2, "name": "Invoice System", "category": "finance", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 3, "name": "Morning Briefing", "category": "daily", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 4, "name": "Social Media Analytics", "category": "content", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 5, "name": "Hook Optimizer", "category": "content", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 6, "name": "Content Researcher", "category": "content", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 7, "name": "Content Pipeline", "category": "content", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 8, "name": "Client Onboarding", "category": "business", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 9, "name": "Creator Intel", "category": "content", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 10, "name": "Footage Organizer", "category": "videography", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 11, "name": "Personal Assistant", "category": "daily", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 12, "name": "AI Shorts Channel", "category": "content", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 13, "name": "Expense Tracker", "category": "finance", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" },
+    { "id": 14, "name": "Photo Organizer", "category": "videography", "status": "pending", "approach": null, "startedDate": null, "completedDate": null, "designDoc": null, "notes": "" }
+  ]
+}
