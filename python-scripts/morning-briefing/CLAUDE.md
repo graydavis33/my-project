@@ -1,1 +1,1 @@
-@morning-briefing.md
+@README.md

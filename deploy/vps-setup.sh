@@ -25,7 +25,8 @@ VPS_USER="root"
 VPS_IP="72.61.10.152"
 REPO_URL="https://github.com/graydavis33/my-project"
 REPO_DIR="/root/my-project"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Project root is one level up from this script (which lives in deploy/)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo ""
 echo "╔══════════════════════════════════════════════════╗"

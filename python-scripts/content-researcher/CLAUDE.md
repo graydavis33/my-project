@@ -1,1 +1,1 @@
-@content-researcher.md
+@README.md
