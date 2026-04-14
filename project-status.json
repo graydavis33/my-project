@@ -1,25 +1,90 @@
 {
-  "note": "Manually maintained by Claude each session. Update status + notes to reflect real current state.",
+  "note": "Manually maintained by Claude each session. Update status + notes to reflect real current state. Status keys: live | partial | inprog | unused | retired",
+  "last_updated": "2026-04-14",
   "projects": {
     "email-agent": {
       "status": "live",
-      "notes": "Running 24/7 on VPS — classifies Gmail + drafts Slack replies hourly"
+      "notes": "Running 24/7 on VPS (systemd) — classifies Gmail + drafts Slack replies hourly. Auto-archive enabled."
     },
     "morning-briefing": {
       "status": "live",
-      "notes": "Fires 8am daily on VPS — emails, invoices, priorities to Slack"
+      "notes": "Running on VPS as systemd service — fires daily 8am with emails/invoices/priorities."
     },
     "invoice-system": {
-      "status": "partial",
-      "notes": "Manual input works perfectly; automating data entry"
+      "status": "live",
+      "notes": "Receipt scanner + payments + dates + mileage all working. VPS cron at 9am daily."
     },
     "social-media-analytics": {
-      "status": "retired",
-      "notes": "Not actively used — backend logic being repurposed for Analytical SaaS"
+      "status": "live",
+      "notes": "All 4 platforms LIVE (YouTube/TikTok/IG/FB). Meta via Playwright scraper, NOT Graph API."
     },
     "content-researcher": {
+      "status": "live",
+      "notes": "LIVE on Windows + Mac. Agent loop + Reddit layer built. Workflow doc out of date."
+    },
+    "content-pipeline": {
+      "status": "partial",
+      "notes": "Built on Windows. Needs Mac setup + real video end-to-end test."
+    },
+    "client-onboarding": {
+      "status": "retired",
+      "notes": "Discontinued — no longer needed."
+    },
+    "hook-optimizer": {
+      "status": "live",
+      "notes": "Live on Windows (.env set 2026-04-13). Needs .env on Mac."
+    },
+    "creator-intel": {
+      "status": "partial",
+      "notes": "Built on Windows. Needs YouTube OAuth setup."
+    },
+    "footage-organizer": {
+      "status": "partial",
+      "notes": "ffmpeg + .env installed on Windows. Needs real footage folder test."
+    },
+    "ai-shorts-channel": {
       "status": "unused",
-      "notes": "Built and working, not part of regular workflow yet"
+      "notes": "Code complete. Awaiting account setup + .env."
+    },
+    "personal-assistant": {
+      "status": "live",
+      "notes": "Commander with 7 tools including build_project autonomous code-writing agent."
+    },
+    "expense-tracker": {
+      "status": "live",
+      "notes": "Auto-syncs expenses from Gmail via GitHub Actions to Payday Checklist."
+    },
+    "photo-organizer": {
+      "status": "unused",
+      "notes": "Built. Not in regular workflow yet."
+    },
+    "payday-checklist": {
+      "status": "live",
+      "notes": "Live on GitHub Pages. Auto-expense sync via Gmail + Claude Haiku + GitHub Actions."
+    },
+    "invoice-builder": {
+      "status": "live",
+      "notes": "Web-based invoice builder (single HTML file)."
+    },
+    "invoice-template": {
+      "status": "live",
+      "notes": "Static invoice HTML template."
+    },
+    "analytical": {
+      "status": "inprog",
+      "notes": "SaaS web app — backend + frontend running locally. Charts polished. Stripe deferred until beta users."
+    },
+    "analytical-demo": {
+      "status": "live",
+      "notes": "Marketing landing page + demo dashboard for Analytical SaaS."
+    },
+    "brand-board": {
+      "status": "live",
+      "notes": "Static color reference for Graydient Media brand."
+    },
+    "social-media-analytics-web": {
+      "status": "live",
+      "notes": "Static web dashboard mirroring Sheets data."
     }
   }
 }
