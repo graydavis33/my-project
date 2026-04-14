@@ -27,7 +27,7 @@ def transcribe(video_path: str) -> list:
         return _prompt_manual_transcript()
 
 
-def _transcribe_with_local_whisper(video_path: str, model_name: str = "base") -> list:
+def _transcribe_with_local_whisper(video_path: str, model_name: str = "large-v3") -> list:
     """
     Transcribe using the local openai-whisper package. Free, runs offline, no file size limit.
     Model sizes: tiny (39M), base (74M, default), small (244M), medium (769M), large (1550M).
