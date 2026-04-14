@@ -9,8 +9,9 @@ Takes a long-form video and outputs:
 
 Usage:
   python main.py path/to/video.mp4
-  python main.py path/to/video.mp4 --no-cut     (skip ffmpeg, output cut list only)
-  python main.py path/to/video.mp4 --context "My video about AI editing tools"
+  python main.py path/to/video.mp4 --no-cut             (skip ffmpeg, output cut list only)
+  python main.py path/to/video.mp4 --context "..."      (give Claude context)
+  python main.py path/to/video.mp4 --transcribe-only    (just dump a clean .md transcript)
 
 Requirements:
   - ANTHROPIC_API_KEY in .env (always)
@@ -49,6 +50,7 @@ def _parse_args():
     args = sys.argv[1:]
     video_path = None
     skip_cut = "--no-cut" in args
+    transcribe_only = "--transcribe-only" in args
     context = ""
 
     if "--context" in args:
@@ -56,13 +58,57 @@ def _parse_args():
         if idx + 1 < len(args):
             context = args[idx + 1]
 
-    # First non-flag arg is video path
+    skip_next = False
     for a in args:
+        if skip_next:
+            skip_next = False
+            continue
+        if a == "--context":
+            skip_next = True
+            continue
         if not a.startswith("--"):
             video_path = a
             break
 
-    return video_path, skip_cut, context
+    return video_path, skip_cut, context, transcribe_only
+
+
+def save_transcript(video_path: str, segments: list) -> str:
+    """Save a clean Markdown transcript of the video to output/."""
+    base_name = Path(video_path).stem
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    out_file = os.path.join(OUTPUT_DIR, f"{base_name}-transcript-{timestamp}.md")
+
+    duration = segments[-1]["end"] if segments and segments[-1].get("end") else 0
+
+    with open(out_file, "w", encoding="utf-8") as f:
+        f.write(f"# Transcript: {base_name}\n\n")
+        f.write(f"*Transcribed: {datetime.now().strftime('%Y-%m-%d %H:%M')}*  \n")
+        if duration:
+            mins, secs = divmod(int(duration), 60)
+            f.write(f"*Duration: {mins}m {secs}s*  \n")
+        f.write(f"*Segments: {len(segments)}*\n\n")
+        f.write("---\n\n")
+
+        # Full prose — paragraph break every ~6 segments for readability
+        para = []
+        for i, seg in enumerate(segments, 1):
+            para.append(seg["text"])
+            if i % 6 == 0:
+                f.write(" ".join(para) + "\n\n")
+                para = []
+        if para:
+            f.write(" ".join(para) + "\n\n")
+
+        # Timestamped version for reference
+        f.write("---\n\n## Timestamped\n\n")
+        for seg in segments:
+            start = seg.get("start", 0)
+            mins, secs = divmod(int(start), 60)
+            f.write(f"**[{mins:02d}:{secs:02d}]** {seg['text']}\n\n")
+
+    return out_file
 
 
 def save_results(base_name: str, clips: list, captions: list, cut_paths: list):
@@ -97,7 +143,7 @@ def save_results(base_name: str, clips: list, captions: list, cut_paths: list):
     return out_file
 
 
-def run_pipeline(video_path: str, skip_cut: bool = False, context: str = ""):
+def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", transcribe_only: bool = False):
     base_name = Path(video_path).stem
 
     print(f"\n{'=' * 60}")
@@ -108,6 +154,12 @@ def run_pipeline(video_path: str, skip_cut: bool = False, context: str = ""):
     log.info("Step 1: Transcribing...")
     segments = transcribe(video_path)
     log.info(f"  {len(segments)} segment(s) transcribed")
+
+    if transcribe_only:
+        out_file = save_transcript(video_path, segments)
+        print(f"\n  ✅ Transcript saved: {out_file}")
+        log.info(f"Transcribe-only complete. Transcript: {out_file}")
+        return
 
     # Step 2: Pick moments
     log.info("Step 2: Identifying best moments with Claude...")
@@ -147,7 +199,7 @@ def run_pipeline(video_path: str, skip_cut: bool = False, context: str = ""):
 
 
 if __name__ == "__main__":
-    video_path, skip_cut, context = _parse_args()
+    video_path, skip_cut, context, transcribe_only = _parse_args()
 
     if not video_path:
         print(__doc__)
@@ -158,6 +210,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        run_pipeline(video_path, skip_cut, context)
+        run_pipeline(video_path, skip_cut, context, transcribe_only)
     except Exception:
         log.exception("Pipeline failed")
