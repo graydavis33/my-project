@@ -58,6 +58,11 @@ Thumbs.db
 *.swo
 
 # ============================================================
+# MCP SERVER ARTIFACTS (browser sessions, screenshots, dumps)
+# ============================================================
+.playwright-mcp/
+
+# ============================================================
 # PROJECT-SPECIFIC
 # ============================================================
 # Add any output files you don't want tracked
@@ -66,3 +71,6 @@ test.txt
 # Personal Assistant — runtime state files
 task_queue.json
 pending_drafts.json
+
+# Note: analytical.db is intentionally tracked (cross-machine sync)
+# Will be removed + .gitignored once Analytical has real users (PII concern)
