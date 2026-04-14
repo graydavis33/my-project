@@ -14,13 +14,45 @@ from config import OPENAI_API_KEY
 def transcribe(video_path: str) -> list:
     """
     Transcribe the video and return timestamped segments.
-    Uses OpenAI Whisper API if key is available, otherwise prompts for manual input.
+    Tries local Whisper first (free, no size limit), then OpenAI Whisper API,
+    then falls back to manual paste.
     """
-    if OPENAI_API_KEY:
-        return _transcribe_with_whisper(video_path)
-    else:
-        print("\n  ⚠️  OPENAI_API_KEY not set — switching to manual transcript mode.")
+    try:
+        return _transcribe_with_local_whisper(video_path)
+    except ImportError:
+        if OPENAI_API_KEY:
+            print("  Local Whisper not installed — falling back to OpenAI Whisper API.")
+            return _transcribe_with_whisper(video_path)
+        print("\n  ⚠️  No transcription backend available — switching to manual mode.")
         return _prompt_manual_transcript()
+
+
+def _transcribe_with_local_whisper(video_path: str, model_name: str = "base") -> list:
+    """
+    Transcribe using the local openai-whisper package. Free, runs offline, no file size limit.
+    Model sizes: tiny (39M), base (74M, default), small (244M), medium (769M), large (1550M).
+    First run downloads the model (~140MB for 'base').
+    """
+    import whisper
+
+    print(f"  Transcribing with local Whisper ({model_name} model)...")
+    file_size_mb = os.path.getsize(video_path) / (1024 * 1024)
+    print(f"  File size: {file_size_mb:.1f} MB")
+
+    model = whisper.load_model(model_name)
+    result = model.transcribe(video_path, verbose=False)
+
+    segments = []
+    for seg in result.get("segments", []):
+        segments.append({
+            "start": round(seg["start"], 1),
+            "end": round(seg["end"], 1),
+            "text": seg["text"].strip(),
+        })
+
+    duration = segments[-1]["end"] if segments else 0
+    print(f"  Transcribed {len(segments)} segment(s) ({duration:.0f}s total)")
+    return segments
 
 
 def _transcribe_with_whisper(video_path: str) -> list:
