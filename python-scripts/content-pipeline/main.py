@@ -101,13 +101,6 @@ def save_transcript(video_path: str, segments: list) -> str:
         if para:
             f.write(" ".join(para) + "\n\n")
 
-        # Timestamped version for reference
-        f.write("---\n\n## Timestamped\n\n")
-        for seg in segments:
-            start = seg.get("start", 0)
-            mins, secs = divmod(int(start), 60)
-            f.write(f"**[{mins:02d}:{secs:02d}]** {seg['text']}\n\n")
-
     return out_file
 
 
