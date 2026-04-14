@@ -1,1 +1,1 @@
-@footage-organizer.md
+@README.md
