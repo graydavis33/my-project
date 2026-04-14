@@ -157,7 +157,7 @@ def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", tra
 
     if transcribe_only:
         out_file = save_transcript(video_path, segments)
-        print(f"\n  ✅ Transcript saved: {out_file}")
+        print(f"\n  [OK] Transcript saved: {out_file}")
         log.info(f"Transcribe-only complete. Transcript: {out_file}")
         return
 
@@ -166,7 +166,7 @@ def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", tra
     clips = pick_moments(segments, context)
     if not clips:
         log.error("No clips identified — aborting")
-        print("  ❌ Claude couldn't identify clips. Try providing --context.")
+        print("  [X] Claude couldn't identify clips. Try providing --context.")
         return
     log.info(f"  {len(clips)} clip(s) identified")
 
@@ -194,7 +194,7 @@ def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", tra
 
     # Step 5: Save results
     out_file = save_results(base_name, clips, captions, cut_paths)
-    print(f"\n  ✅ Results saved: {out_file}")
+    print(f"\n  [OK] Results saved: {out_file}")
     log.info(f"Pipeline complete. Results: {out_file}")
 
 
@@ -206,7 +206,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     if not os.path.exists(video_path):
-        print(f"  ❌ File not found: {video_path}")
+        print(f"  [X] File not found: {video_path}")
         sys.exit(1)
 
     try:
