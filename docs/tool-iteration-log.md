@@ -41,3 +41,13 @@ Running log of the "apply the AI-workflow-video framework to each existing tool,
 - Design doc: [2026-04-14-email-agent-fix-the-brain-design.md](superpowers/specs/2026-04-14-email-agent-fix-the-brain-design.md)
 - Goal: shared `role_context.md` master prompt + rewrite classifier/drafter prompts using Role-Context-Command-Format formula
 - Outcome: TBD
+
+**RESUME POINT (2026-04-14, end of session):**
+- Design approved by Gray, all 4 sections
+- Design doc + this log + memory pointer written
+- Implementation plan NOT yet written (writing-plans skill not invoked)
+- **Next action when resuming:**
+  1. Gray answers Mac-vs-VPS deployment question (recommendation: VPS authoritative, disable Mac launchd)
+  2. I draft a first-pass `role_context.md` based on workspace context files + what I know about Sai + Gray reviews/edits
+  3. Then invoke `superpowers:writing-plans` to generate the step-by-step implementation plan
+- Transcript that kicked this off: `python-scripts/content-pipeline/output/not-behind-ai-content-transcript-20260414-112732.md`

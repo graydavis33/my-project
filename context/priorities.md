@@ -1,6 +1,6 @@
 # Current Priorities
 
-_Last updated: 2026-04-13 (evening — after automation-system test sweep)_
+_Last updated: 2026-04-14 (late — Content Pipeline transcription added + Tool Iteration Initiative kickoff)_
 _Update this file whenever your focus shifts._
 
 ## Scoring Framework
@@ -19,7 +19,7 @@ Each project scored 0–3 across 4 dimensions:
 
 | # | Project | Score | Status | Next Action |
 |---|---------|-------|--------|-------------|
-| 1 | Content Pipeline | 9/12 | Built on Windows | Set up on Mac, test with real video |
+| 1 | Content Pipeline | 9/12 | Built on Windows + transcription-only mode added 2026-04-14 (local Whisper large-v3, YouTube URL workflow working) | Set up on Mac, test full pipeline (clip picking + ffmpeg cut) with real video |
 | 2 | Content Researcher | 9/12 | LIVE on Windows + Mac (agent loop + Reddit already exist) | Docs out of date — content-researcher.md describes old 5-step pipeline, actual code is agentic |
 | 3 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
 | — | Social Media Analytics | 9/12 | LIVE — Instagram data broken (scraper) | Meta app configured (4 permissions added) — next: get access token from Graph API Explorer, add to .env, swap main.py to meta_fetcher |
@@ -36,6 +36,7 @@ Each project scored 0–3 across 4 dimensions:
 
 ## Ongoing / Always Active
 
-- Email Agent — runs hourly 7am–8pm (LIVE on Mac)
+- Email Agent — runs hourly 7am–8pm (LIVE on Mac + VPS — duplicate-run question pending resolution; Approach A iteration in progress, design at docs/superpowers/specs/2026-04-14-email-agent-fix-the-brain-design.md)
 - Invoice System — CLI finance tool (LIVE on Mac)
 - Dashboard — `dashboard.html` at graydavis33.github.io/my-project/dashboard.html
+- **Tool Iteration Initiative** — iterating on all 14 tools one at a time, applying the AI-workflow-video framework. Log at `docs/tool-iteration-log.md`. Currently: Email Agent (iteration #1, mid-flight).
