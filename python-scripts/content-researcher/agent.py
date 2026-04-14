@@ -303,7 +303,7 @@ def run_agent(concept: str) -> str:
 
         response = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=6000,
+            max_tokens=16000,
             system=system,
             tools=_TOOLS,
             messages=messages
