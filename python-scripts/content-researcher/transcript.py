@@ -13,8 +13,8 @@ def get_hook_transcript(video_id: str) -> str:
     """
     try:
         from youtube_transcript_api import YouTubeTranscriptApi
-        entries = YouTubeTranscriptApi.get_transcript(video_id, languages=['en', 'en-US', 'en-GB'])
-        hook_parts = [e['text'] for e in entries if e.get('start', 999) < HOOK_SECONDS]
+        entries = YouTubeTranscriptApi().fetch(video_id, languages=['en', 'en-US', 'en-GB'])
+        hook_parts = [e.text for e in entries if e.start < HOOK_SECONDS]
         return ' '.join(hook_parts).strip()
     except Exception:
         return ''
