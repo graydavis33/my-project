@@ -8,16 +8,16 @@ Use this as the map before implementing anything.
 ## Files at a Glance
 
 ```
-json/
+references/
 ├── CATALOG.md                          ← This file
-├── CLAUDE.md                           ← Nate's WAT framework (source)
+├── wat-framework-reference.md          ← Nate's WAT framework (source) — was CLAUDE.md
 ├── executive-assistant-init-prompt.md  ← Liam's EA onboarding prompt (source)
 └── trigger-dev/
     ├── mcp.json                        ← Trigger.dev MCP server config
     └── trigger-ref.md                  ← Trigger.dev SDK v4 API reference
 └── claude-workspace-template/
     └── claude-workspace-template/
-        ├── CLAUDE.md                   ← Liam's workspace template main file
+        ├── workspace-template-reference.md  ← Liam's workspace template (was CLAUDE.md)
         ├── shell-aliases.md            ← cs / cr shell aliases for session launch
         ├── context/
         │   ├── personal-info.md        ← Template: who you are
