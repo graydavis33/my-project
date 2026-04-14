@@ -1,6 +1,6 @@
 # /save — Session End
 
-Run this at the end of every session to log decisions, update priorities, and push everything to GitHub.
+Run this at the end of every session to log decisions, update priorities, save a session note to Obsidian, and push everything to GitHub.
 
 ---
 
@@ -34,25 +34,17 @@ If no meaningful decisions were made, skip this step.
 
 ---
 
-## Step 4: Push to GitHub
+## Step 4: Save Session Note to Obsidian Vault
 
-Run:
+Using the **Write tool** (not MCP — the obsidian MCP server is not loading reliably), save a session note to:
+
 ```
-cd ~/Desktop/my-project && git add . && git commit -m "Session update" && git push
+C:/Users/Gray Davis/Documents/Obsidian/Graydient Media/Sessions/YYYY-MM-DD-session.md
 ```
 
-If there's nothing new to commit, skip the commit and just confirm everything is up to date.
+Use today's date (UTC) for the filename. If a file already exists for today, read it first and append a new section dated with the current time, instead of overwriting.
 
----
-
-## Step 5: Save Session Note to Obsidian
-
-Using the Obsidian MCP server, write a session note to the vault at:
-`~/Documents/obsidian-vault/builds/YYYY-MM-DD-session.md`
-
-Use today's date for the filename. If a file already exists for today, append to it.
-
-The note should include:
+Format:
 
 ```markdown
 # Session — YYYY-MM-DD
@@ -68,9 +60,27 @@ The note should include:
 
 ## Next Actions
 - [what to pick up next session]
+
+## Related
+- [[Home]]
+- Project: [[<related project name if applicable>]]
 ```
 
+Use `[[wikilinks]]` for any project names, decisions, or context files mentioned. This makes the Obsidian graph view connect this session to related notes.
+
 Keep it tight — this note is for quick recall at the start of the next session.
+
+---
+
+## Step 5: Push to GitHub
+
+The Stop hook in `~/.claude/settings.json` auto-commits + pushes when Claude stops responding. So normally this step is automatic.
+
+If for some reason auto-push didn't fire (e.g., hooks were disabled, or you want an explicit message), manually run:
+
+```bash
+cd "C:/Users/Gray Davis/my-project" && git add . && git commit -m "Session update: <one-line summary>" && git push
+```
 
 ---
 
@@ -80,5 +90,5 @@ Respond with a short summary:
 - What was done this session (2-3 bullets max)
 - Whether priorities.md was updated and what changed
 - Whether any decisions were logged
-- Confirm the GitHub push succeeded
-- Confirm the Obsidian note was saved and where
+- The path of the Obsidian session note
+- Confirm GitHub state (auto-pushed or manual)
