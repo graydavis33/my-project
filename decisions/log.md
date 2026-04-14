@@ -19,6 +19,10 @@ Format: `[YYYY-MM-DD] DECISION: ... | REASONING: ... | CONTEXT: ...`
 
 [2026-04-09] DECISION: Keep default Chart.js bar style for Analytical dashboard charts, not isometric 3D | REASONING: Gray tested both — preferred the clean default with glow + thicker bars over the 3D block style | CONTEXT: Added custom barGlow plugin (shadowBlur: 18) and barPercentage: 0.88 to enhance the default look
 
+[2026-04-13] DECISION: Migrate Content Researcher transcript.py to youtube-transcript-api v1.2.4 API | REASONING: Library upgraded and removed `YouTubeTranscriptApi.get_transcript()` classmethod — replaced with `YouTubeTranscriptApi().fetch()` returning FetchedTranscriptSnippet objects (attr access, not dict) | CONTEXT: All 10 transcript fetches were silently returning empty strings because the try/except swallowed the AttributeError — masked the breakage. Worth auditing other tools using the same library.
+
+[2026-04-13] DECISION: Bump Content Researcher agent.py max_tokens from 6000 → 16000 | REASONING: Final 10-section report has a 450-750 word full script draft (~3k tokens alone) plus per-iteration reasoning — 6000 was causing mid-stream truncation and `max_tokens` stop_reason failures at iteration 3-5 | CONTEXT: Claude Sonnet 4.6 supports 64k output tokens; 16k gives comfortable headroom without cost bloat
+
 [2026-04-09] DECISION: Custom metric cards persist via localStorage, not backend | REASONING: Dashboard is still a preview/static file — no backend wired yet | CONTEXT: saveCustomMetrics() / loadCustomMetrics() write to localStorage key 'analytical_custom_metrics'; will migrate to DB when backend is live
 
 [2026-04-10] DECISION: Switch Instagram + Facebook data source from Playwright scraper to Meta Graph API (meta_fetcher.py) | REASONING: Scraper returns broken data — views default to likes count, comments/shares always 0, engagement rate shows 100% | CONTEXT: meta_fetcher.py already built and ready; needs META_ACCESS_TOKEN, INSTAGRAM_BUSINESS_ACCOUNT_ID, FACEBOOK_PAGE_ID in .env; Gray has Creator/Business account so Graph API is fully accessible
