@@ -37,3 +37,9 @@ EXCLUDED_VENDORS = [
     "Jodi Ammons",    # rent
     "Ohana Housing",  # rent — landlord
 ]
+
+# Venmo P2P payees whose category should be forced (Haiku defaults them to Misc
+# because the memo is ambiguous). Matched case-insensitively as vendor substring.
+CATEGORY_OVERRIDES = {
+    "Garrett ODell": "Dining Out",
+}

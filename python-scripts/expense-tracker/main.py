@@ -10,7 +10,7 @@ import json
 import os
 from datetime import date, timezone, datetime
 
-from config import EXPENSES_OUTPUT_PATH, EXCLUDED_VENDORS
+from config import EXPENSES_OUTPUT_PATH, EXCLUDED_VENDORS, CATEGORY_OVERRIDES
 from gmail_client import get_gmail_service, fetch_personal_expense_emails
 from expense_scanner import scan_expenses
 
@@ -18,6 +18,15 @@ from expense_scanner import scan_expenses
 def _is_excluded(expense):
     vendor = (expense.get("vendor") or "").lower()
     return any(excl.lower() in vendor for excl in EXCLUDED_VENDORS)
+
+
+def _apply_category_override(expense):
+    vendor = (expense.get("vendor") or "").lower()
+    for match, category in CATEGORY_OVERRIDES.items():
+        if match.lower() in vendor:
+            expense["category"] = category
+            return
+
 
 
 def write_expenses_json(expenses, current_month):
@@ -68,6 +77,10 @@ def main():
         print(f"  Excluded {before - len(expenses)} rent/non-budget expense(s):")
         for e in excluded:
             print(f"    - {e['vendor']} ${e['amount']:.2f} ({e['date']})")
+
+    # Apply vendor-specific category overrides
+    for e in expenses:
+        _apply_category_override(e)
 
     print(f"\nTotal for {today.strftime('%B')}: {len(expenses)} expense(s)")
 
