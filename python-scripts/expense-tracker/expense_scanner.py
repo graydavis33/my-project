@@ -20,7 +20,7 @@ _SYSTEM_PROMPT = f"""You are a personal expense tracker. Extract spending data f
 
 Given an email, extract:
 - date: the transaction date in YYYY-MM-DD format
-- vendor: the store or service name (e.g. "Netflix", "Adobe", "DoorDash")
+- vendor: the store, service, or person paid (e.g. "Netflix", "Adobe", "DoorDash", "Jack Perkins" for Venmo P2P)
 - amount: the total charged as a number only (e.g. 12.99) — no $ sign
 - category: one of EXACTLY these nine options:
     Groceries         — grocery stores, Instacart, Whole Foods, food labeled as grocery
@@ -28,14 +28,20 @@ Given an email, extract:
     Software & Tools  — Adobe, Spotify, software subscriptions, SaaS tools, productivity apps, Anthropic/AI tools
     Streaming         — Netflix, Hulu, Disney+, Apple TV+, YouTube Premium, HBO Max
     Utilities         — electricity, gas, internet, phone bill, Con Edison
-    Transport         — parking, ParkMobile, Citi Bike, Uber/Lyft (non-food), tolls
+    Transport         — parking, ParkMobile, Citi Bike, Uber/Lyft (non-food), tolls, MTA
     Health & Wellness — gym, pharmacy, supplements, doctor, dental
-    Shopping          — Amazon, clothing, electronics, home goods, gear
-    Misc              — anything that doesn't clearly fit above
+    Shopping          — Amazon, clothing, electronics, home goods, gear, barber/salon
+    Misc              — anything that doesn't clearly fit above, including Venmo P2P payments with unclear purpose
 
-Rules:
+Venmo / Zelle / PayPal P2P rules:
+- "You paid [person] $X" or "You sent [person] $X" → IT IS AN EXPENSE. Extract it. Use the person's name as vendor. Use the Venmo note/memo to pick category if possible; otherwise "Misc".
+- "[person] paid you $X" or "[person] sent you $X" → SKIP (return null) — this is income, not expense.
+- "[person] requests $X" or "payment request" → SKIP (return null) — not yet paid.
+- "Your [monthly] transaction history" or "Your Venmo Standard transfer has been initiated" → SKIP (return null) — summary/transfer, not a transaction.
+
+General rules:
 - If you cannot find a clear dollar amount, return null
-- If this is clearly not a personal purchase receipt, return null
+- Security alerts, password resets, sign-in notifications, marketing emails, shipping notices without prices → return null
 - Return ONLY valid JSON — no other text"""
 
 _BATCH_PROMPT = """Extract personal expense data from each of the following {n} emails.
