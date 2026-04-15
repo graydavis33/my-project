@@ -27,3 +27,13 @@ EXPENSES_OUTPUT_PATH = os.path.join(
 
 # Must match the payday checklist's 5 expense categories exactly
 PERSONAL_CATEGORIES = ["Groceries", "Dining Out", "Software & Tools", "Streaming", "Utilities", "Transport", "Health & Wellness", "Shopping", "Misc"]
+
+# Venmo/Zelle/PayPal P2P vendors to exclude from the expense budget.
+# These are handled separately in the payday checklist (e.g. rent step), so they
+# should NOT count against the monthly budget. Names are matched case-insensitively
+# as substrings of the vendor field.
+EXCLUDED_VENDORS = [
+    "A K",            # rent — roommate share
+    "Jodi Ammons",    # rent
+    "Ohana Housing",  # rent — landlord
+]

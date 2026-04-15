@@ -10,9 +10,14 @@ import json
 import os
 from datetime import date, timezone, datetime
 
-from config import EXPENSES_OUTPUT_PATH
+from config import EXPENSES_OUTPUT_PATH, EXCLUDED_VENDORS
 from gmail_client import get_gmail_service, fetch_personal_expense_emails
 from expense_scanner import scan_expenses
+
+
+def _is_excluded(expense):
+    vendor = (expense.get("vendor") or "").lower()
+    return any(excl.lower() in vendor for excl in EXCLUDED_VENDORS)
 
 
 def write_expenses_json(expenses, current_month):
@@ -54,6 +59,15 @@ def main():
     filtered = len(all_expenses) - len(expenses)
     if filtered:
         print(f"  Filtered out {filtered} expense(s) from previous month(s).")
+
+    # Exclude rent/non-budget vendors (tracked separately in payday checklist)
+    before = len(expenses)
+    excluded = [e for e in expenses if _is_excluded(e)]
+    expenses = [e for e in expenses if not _is_excluded(e)]
+    if excluded:
+        print(f"  Excluded {before - len(expenses)} rent/non-budget expense(s):")
+        for e in excluded:
+            print(f"    - {e['vendor']} ${e['amount']:.2f} ({e['date']})")
 
     print(f"\nTotal for {today.strftime('%B')}: {len(expenses)} expense(s)")
 
