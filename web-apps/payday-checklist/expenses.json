@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-15T14:34:05Z",
+  "generated_at": "2026-04-15T19:44:04Z",
   "month": "2026-04",
   "expenses": [
     {
@@ -38,13 +38,6 @@
       "category": "Misc"
     },
     {
-      "email_id": "19d69f5764c6db8d",
-      "date": "2026-04-07",
-      "vendor": "A K",
-      "amount": 1175.0,
-      "category": "Misc"
-    },
-    {
       "email_id": "19d59d4052e5fc43",
       "date": "2026-04-04",
       "vendor": "Jack Perkins",
@@ -63,13 +56,6 @@
       "date": "2026-04-04",
       "vendor": "James Ammons",
       "amount": 6.0,
-      "category": "Misc"
-    },
-    {
-      "email_id": "19d4ecf0c55171ba",
-      "date": "2026-04-02",
-      "vendor": "Jodi Ammons",
-      "amount": 450.0,
       "category": "Misc"
     }
   ]
