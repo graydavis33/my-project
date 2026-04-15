@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-15T14:30:43Z",
+  "generated_at": "2026-04-15T14:32:20Z",
   "month": "2026-04",
   "expenses": [
     {
@@ -22,6 +22,13 @@
       "vendor": "Wispr Flow",
       "amount": 15.0,
       "category": "Software & Tools"
+    },
+    {
+      "email_id": "19d4eed964cce55e",
+      "date": "2026-04-02",
+      "vendor": "University Cuts",
+      "amount": 25.0,
+      "category": "Shopping"
     }
   ]
 }
