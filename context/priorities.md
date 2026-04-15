@@ -1,7 +1,9 @@
 # Current Priorities
 
-_Last updated: 2026-04-14 (late — Content Pipeline transcription added + Tool Iteration Initiative kickoff)_
+_Last updated: 2026-04-14 (very late — Sai job starts 2026-04-15 morning; strategy + research + footage-system docs prepared)_
 _Update this file whenever your focus shifts._
+
+> **⚡ MAJOR FOCUS SHIFT 2026-04-15:** Sai Karra job begins — 5h filming + 3h editing daily, 1 short/day + 1 LinkedIn/day + 1 long-form/week. Primary income + primary creative output. Debrief materials at `plans/2026-04-15-sai-debrief-content-strategy.md` (strategy), `plans/2026-04-15-sai-debrief-research-deepdive.md` (intel dump), `plans/2026-04-15-sai-footage-organization-system.md` (filing system). All internal-project work below secondary to Sai deliverables until stable cadence established (~Day 30).
 
 ## Scoring Framework
 
