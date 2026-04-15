@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-15T19:44:04Z",
+  "generated_at": "2026-04-15T19:46:52Z",
   "month": "2026-04",
   "expenses": [
     {
@@ -35,7 +35,7 @@
       "date": "2026-04-11",
       "vendor": "Garrett ODell",
       "amount": 40.0,
-      "category": "Misc"
+      "category": "Dining Out"
     },
     {
       "email_id": "19d59d4052e5fc43",
