@@ -10,20 +10,23 @@ def organize_file(
     src_path: str,
     output_dir: str,
     format_type: str,
+    date_path: str,
     category: str,
     move: bool = False,
 ) -> str:
     """
-    Copy (default) or move src_path into output_dir/format_type/category/filename.
+    Copy (default) or move src_path into output_dir/format_type/date_path/category/filename.
     Returns the destination path.
 
-    - format_type is one of: long-form, short-form, other
+    - format_type: long-form | short-form | other
+    - date_path for long-form:  "2026-04-16"
+    - date_path for short-form: "week-of-2026-04-14/2026-04-16"
     - Creates subfolders if they don't exist.
     - If a file with the same name already exists, appends _2, _3, etc.
       Never silently overwrites.
     - Uses shutil.copy2 to preserve original file timestamps.
     """
-    dest_dir = os.path.join(output_dir, format_type, category)
+    dest_dir = os.path.join(output_dir, format_type, date_path, category)
     os.makedirs(dest_dir, exist_ok=True)
 
     filename = os.path.basename(src_path)

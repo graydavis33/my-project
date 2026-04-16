@@ -11,6 +11,38 @@ import tempfile
 from config import FRAME_POSITIONS
 
 
+def get_shoot_date(filepath: str) -> str:
+    """
+    Read the shoot date from camera-embedded metadata via ffprobe.
+    Returns a 'YYYY-MM-DD' string.
+    Falls back to the file's last-modified date if metadata is missing.
+    """
+    import json
+    from datetime import datetime, timezone
+
+    cmd = [
+        "ffprobe",
+        "-v", "quiet",
+        "-print_format", "json",
+        "-show_entries", "format_tags=creation_time",
+        filepath,
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        data = json.loads(result.stdout)
+        creation_time = data.get("format", {}).get("tags", {}).get("creation_time", "")
+        if creation_time:
+            # Format: "2026-04-16T14:23:45.000000Z"
+            dt = datetime.fromisoformat(creation_time.replace("Z", "+00:00"))
+            return dt.astimezone().strftime("%Y-%m-%d")
+    except Exception:
+        pass
+
+    # Fallback: file modification time
+    mtime = os.path.getmtime(filepath)
+    return datetime.fromtimestamp(mtime).strftime("%Y-%m-%d")
+
+
 def ffmpeg_available() -> bool:
     return shutil.which("ffmpeg") is not None and shutil.which("ffprobe") is not None
 
