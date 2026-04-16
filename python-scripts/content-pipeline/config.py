@@ -25,7 +25,7 @@ OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 
 # Obsidian vault path for meeting notes output
 OBSIDIAN_SAI_CONVERSATIONS = os.path.expanduser(
-    "~/Documents/obsidian-vault/sai-karra/Conversations"
+    "~/Google Drive/My Drive/Obsidian/Graydient Media/sai-karra/Conversations"
 )
 
 # Number of short clips to extract from long-form video
