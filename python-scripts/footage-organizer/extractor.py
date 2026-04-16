@@ -15,6 +15,28 @@ def ffmpeg_available() -> bool:
     return shutil.which("ffmpeg") is not None and shutil.which("ffprobe") is not None
 
 
+def get_resolution(filepath: str) -> tuple[int, int]:
+    """
+    Get video width and height via ffprobe.
+    Returns (width, height). Raises RuntimeError if it fails.
+    """
+    cmd = [
+        "ffprobe",
+        "-v", "error",
+        "-select_streams", "v:0",
+        "-show_entries", "stream=width,height",
+        "-of", "csv=p=0",
+        filepath,
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    raw = result.stdout.strip()
+    try:
+        parts = raw.split(",")
+        return int(parts[0]), int(parts[1])
+    except (ValueError, IndexError):
+        raise RuntimeError(f"Could not parse resolution from ffprobe: '{raw}'")
+
+
 def get_duration(filepath: str) -> float:
     """
     Get video duration in seconds via ffprobe.
