@@ -1,26 +1,37 @@
 """
 Auto Footage Organizer
 Analyzes raw video files visually using Claude AI and organizes them
-into subfolders by content type.
+into the client's 02_ORGANIZED/ folder, split by format and date.
 
 Usage:
-  python main.py /path/to/footage/
-  python main.py /path/to/footage/ --output ~/Desktop/shoot-march19/
-  python main.py /path/to/footage/ --move
+  # Sort Sai's footage (point at the date folder you dumped to)
+  python main.py --client sai 01_RAW_INCOMING/2026-04-16/
+
+  # Sort your own footage
+  python main.py --client graydient 01_RAW_INCOMING/
+
+  # Move instead of copy
+  python main.py --client sai 01_RAW_INCOMING/2026-04-16/ --move
 
 Requires:
   - ANTHROPIC_API_KEY in .env
+  - SAI_LIBRARY_ROOT and/or GRAYDIENT_LIBRARY_ROOT in .env
   - ffmpeg + ffprobe installed (https://ffmpeg.org/download.html)
 """
 import argparse
 import os
 import sys
+from datetime import datetime, timedelta
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
 from usage_logger import log_run
 
-from config import CATEGORIES, VIDEO_EXTENSIONS, FOOTAGE_INBOX, FORMAT_LONG_FORM, FORMAT_SHORT_FORM, FORMAT_OTHER, LONGFORM_WIDTH, LONGFORM_HEIGHT
-from extractor import ffmpeg_available, get_duration, get_resolution, extract_frames
+from config import (
+    CATEGORIES, VIDEO_EXTENSIONS, CLIENT_ROOTS,
+    FORMAT_LONG_FORM, FORMAT_SHORT_FORM, FORMAT_OTHER,
+    LONGFORM_WIDTH, LONGFORM_HEIGHT,
+)
+from extractor import ffmpeg_available, get_shoot_date, get_duration, get_resolution, extract_frames
 from analyzer import classify_video
 from organizer import organize_file
 from cache import get_cached, store_cached
@@ -28,18 +39,19 @@ from cache import get_cached, store_cached
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Organize raw footage by visual content using Claude AI."
+        description="Organize raw footage by format + date + content type using Claude AI."
+    )
+    parser.add_argument(
+        "--client", "-c",
+        required=True,
+        choices=list(CLIENT_ROOTS.keys()),
+        help="Which client's library to sort into (sai or graydient)"
     )
     parser.add_argument(
         "input_folder",
         nargs="?",
         default=None,
-        help="Path to footage folder (default: FOOTAGE_INBOX from .env)"
-    )
-    parser.add_argument(
-        "--output", "-o",
-        default=None,
-        help="Output folder (default: input_folder/organized/)"
+        help="Path to footage folder. Absolute, or relative to the client's library root."
     )
     parser.add_argument(
         "--move",
@@ -49,22 +61,73 @@ def parse_args():
     return parser.parse_args()
 
 
+def resolve_input_folder(client: str, input_arg: str) -> str:
+    """
+    Resolve the input folder path.
+    If input_arg is absolute, use it directly.
+    If relative, resolve it against the client library root.
+    """
+    library_root = CLIENT_ROOTS.get(client, "")
+    if not library_root:
+        print(f"\n  Error: {client.upper()}_LIBRARY_ROOT is not set in your .env file.")
+        print(f"  Add it like: SAI_LIBRARY_ROOT=/Volumes/MySSD/Sai")
+        sys.exit(1)
+
+    if not input_arg:
+        # Default to 01_RAW_INCOMING/ inside the library
+        return os.path.join(library_root, "01_RAW_INCOMING")
+
+    if os.path.isabs(input_arg):
+        return input_arg
+
+    # Relative path — resolve from library root
+    return os.path.join(library_root, input_arg)
+
+
+def get_output_dir(client: str) -> str:
+    library_root = CLIENT_ROOTS[client]
+    return os.path.join(library_root, "02_ORGANIZED")
+
+
 def find_videos(folder: str) -> list[str]:
-    """Return sorted list of video file paths in folder (non-recursive)."""
+    """Return sorted list of video file paths — searches recursively."""
     files = []
-    for name in os.listdir(folder):
-        ext = os.path.splitext(name)[1]
-        if ext in VIDEO_EXTENSIONS:
-            files.append(os.path.join(folder, name))
+    for root, _, filenames in os.walk(folder):
+        for name in filenames:
+            ext = os.path.splitext(name)[1]
+            if ext in VIDEO_EXTENSIONS:
+                files.append(os.path.join(root, name))
     return sorted(files)
 
 
-def run(input_folder: str, output_dir: str, move: bool):
+def get_week_monday(date_str: str) -> str:
+    """Given 'YYYY-MM-DD', return 'week-of-YYYY-MM-DD' for the Monday of that week."""
+    dt = datetime.strptime(date_str, "%Y-%m-%d")
+    monday = dt - timedelta(days=dt.weekday())
+    return f"week-of-{monday.strftime('%Y-%m-%d')}"
+
+
+def build_date_path(format_type: str, shoot_date: str) -> str:
+    """
+    Build the date subfolder path within 02_ORGANIZED/format_type/.
+
+    long-form:  "2026-04-16"
+    short-form: "week-of-2026-04-14/2026-04-16"
+    other:      "2026-04-16"
+    """
+    if format_type == FORMAT_SHORT_FORM:
+        week = get_week_monday(shoot_date)
+        return os.path.join(week, shoot_date)
+    return shoot_date
+
+
+def run(client: str, input_folder: str, output_dir: str, move: bool):
     log_run("footage-organizer")
 
     print(f"\n{'=' * 60}")
     print(f"  Auto Footage Organizer")
     print(f"{'=' * 60}")
+    print(f"  Client: {client}")
     print(f"  Input:  {input_folder}")
     print(f"  Output: {output_dir}")
     print(f"  Mode:   {'MOVE' if move else 'COPY'}")
@@ -77,7 +140,7 @@ def run(input_folder: str, output_dir: str, move: bool):
 
     print(f"  Found {len(videos)} video file(s)\n")
 
-    results = []   # (filename, format_type, category, dest_path, from_cache)
+    results = []   # (filename, format_type, shoot_date, category, dest_path, from_cache)
     skipped = []   # filenames that failed
 
     for i, filepath in enumerate(videos, 1):
@@ -99,12 +162,22 @@ def run(input_folder: str, output_dir: str, move: bool):
             skipped.append(filename)
             continue
 
+        # --- Read shoot date from camera metadata ---
+        try:
+            shoot_date = get_shoot_date(filepath)
+            date_path = build_date_path(format_type, shoot_date)
+            print(f"         date: {shoot_date}  path: {format_type}/{date_path}")
+        except Exception as e:
+            print(f"         [skip] Could not read shoot date: {e}")
+            skipped.append(filename)
+            continue
+
         # --- Cache check ---
         cached_category = get_cached(filepath)
         if cached_category:
             print(f"         (cached) -> {cached_category}")
-            dest = organize_file(filepath, output_dir, format_type, cached_category, move=move)
-            results.append((filename, format_type, cached_category, dest, True))
+            dest = organize_file(filepath, output_dir, format_type, date_path, cached_category, move=move)
+            results.append((filename, format_type, shoot_date, cached_category, dest, True))
             continue
 
         # --- Extract frames ---
@@ -126,8 +199,8 @@ def run(input_folder: str, output_dir: str, move: bool):
 
         print(f"         -> {category}")
         store_cached(filepath, category)
-        dest = organize_file(filepath, output_dir, format_type, category, move=move)
-        results.append((filename, format_type, category, dest, False))
+        dest = organize_file(filepath, output_dir, format_type, date_path, category, move=move)
+        results.append((filename, format_type, shoot_date, category, dest, False))
 
     _print_summary(results, skipped, output_dir, move)
 
@@ -144,10 +217,10 @@ def _print_summary(results, skipped, output_dir, move):
 
     print(f"  {action} {total} file(s)  ({new_count} analyzed, {cached_count} from cache)\n")
 
-    # Group by format, then category
     from collections import defaultdict
+    # breakdown[format_type][category] = count
     breakdown = defaultdict(lambda: defaultdict(int))
-    for _, format_type, category, _, _ in results:
+    for _, format_type, _, category, _, _ in results:
         breakdown[format_type][category] += 1
 
     for fmt in [FORMAT_LONG_FORM, FORMAT_SHORT_FORM, FORMAT_OTHER]:
@@ -174,13 +247,7 @@ def _print_summary(results, skipped, output_dir, move):
 if __name__ == "__main__":
     args = parse_args()
 
-    input_folder = args.input_folder or FOOTAGE_INBOX
-
-    if not input_folder:
-        print("\n  Error: No input folder specified.")
-        print("  Set FOOTAGE_INBOX in your .env file, or pass a folder path as an argument.")
-        print(r"  Example .env entry:  FOOTAGE_INBOX=C:\Users\Gray Davis\Desktop\Footage Inbox")
-        sys.exit(1)
+    input_folder = resolve_input_folder(args.client, args.input_folder)
 
     if not os.path.isdir(input_folder):
         print(f"\n  Error: '{input_folder}' is not a valid folder.")
@@ -192,7 +259,7 @@ if __name__ == "__main__":
         print("  Then make sure ffmpeg is in your system PATH.\n")
         sys.exit(1)
 
-    output_dir = args.output or os.path.join(input_folder, "organized")
+    output_dir = get_output_dir(args.client)
     os.makedirs(output_dir, exist_ok=True)
 
-    run(input_folder, output_dir, move=args.move)
+    run(args.client, input_folder, output_dir, move=args.move)

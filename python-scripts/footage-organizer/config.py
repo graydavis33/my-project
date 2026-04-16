@@ -17,8 +17,14 @@ ANTHROPIC_API_KEY = _require("ANTHROPIC_API_KEY")
 
 MODEL = "claude-haiku-4-5-20251001"
 
-# Format detection — based on resolution/orientation metadata (no API call needed)
-# 3840x2160 horizontal = long-form; portrait (height > width) = short-form; anything else = other
+# Client library roots — set these in .env to the root of each client's SSD folder
+# e.g. SAI_LIBRARY_ROOT=/Volumes/MySSD/Sai
+CLIENT_ROOTS = {
+    "sai":      os.getenv("SAI_LIBRARY_ROOT", ""),
+    "graydient": os.getenv("GRAYDIENT_LIBRARY_ROOT", ""),
+}
+
+# Format detection — based on resolution/orientation (no API call needed)
 FORMAT_LONG_FORM = "long-form"
 FORMAT_SHORT_FORM = "short-form"
 FORMAT_OTHER = "other"
@@ -39,7 +45,3 @@ CATEGORIES = [
 FRAME_POSITIONS = [0.20, 0.40, 0.60, 0.80]  # % through video to sample
 
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".MP4", ".MOV"}
-
-# Optional: set this in .env once to never need to pass a path argument.
-# The tool will ONLY process this folder by default.
-FOOTAGE_INBOX = os.getenv("FOOTAGE_INBOX", "")
