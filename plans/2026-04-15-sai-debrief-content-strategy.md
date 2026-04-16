@@ -309,6 +309,41 @@ Sai at 21 telling his 15-year-old self — who just started his first business �
 - **Why:** Age-gap reflection is one of the highest-performing formats on TikTok/Reels — it's relatable (everyone has regrets), aspirational (he built TWO agencies in that gap), and infinitely repeatable (one lesson per video = dozens of episodes). The 15→21 age range hits Gen Z's exact demographic. Built-in series potential.
 - **Series structure:** Each video = one specific lesson. Title pattern: "What I'd tell my 15-year-old self about [topic]." Can rotate through: first clients, money mistakes, partnerships, burnout, hiring, social media, confidence, rejection, family business dynamics with Srikar, etc.
 
+#### Format 11 — "Ask Sai Anything" (Q&A Series)
+Viewers and followers submit questions, Sai answers one per video. Direct to camera.
+- **Hook:** "You asked: [question]. Here's the truth." / "[Follower] asked me [X]. Nobody's asked me this before."
+- **Why:** Zero content ideation needed — audience does the work. Replies boost original video's algorithm. Infinite episodes. Builds community loyalty.
+
+#### Format 12 — "Things I Stopped Doing After [X]"
+One habit or mistake Sai dropped after a specific milestone or event. Repeatable series.
+- **Hook:** "Things I stopped doing after hitting 200 followers." / "Things I stopped doing after losing my first client." / "Things I stopped doing after firing my first employee."
+- **Why:** Negative framing outperforms positive on short-form — people click to avoid mistakes faster than they click to learn tips. Each milestone = a new episode.
+
+#### Format 13 — "How I Built My Client List"
+What actually won clients over — the real pitch, the real relationship-building, the real moves.
+- **Hook:** "Here's exactly how I got [client] to say yes." / "The one thing that built our entire client list."
+- **Why:** Actionable, specific, demonstrates Trendify's credibility without bragging. High save rate — people screenshot this stuff.
+
+#### Format 14 — "Srikar Says vs. Sai Says"
+Same question, different answers. Split-screen or back-to-back with the brothers.
+- **Hook:** One brother starts a claim, the other finishes or contradicts. "We built two agencies together and still can't agree on [X]."
+- **Why:** Sibling chemistry is organic content. Agreement AND disagreement both work. Gen Z loves sibling dynamics. Built-in differentiator nobody else has.
+
+#### Format 15 — "The Big Money Mistake" (Back Pocket)
+A time Sai lost a significant amount of money. One story per video.
+- **Hook:** "I lost $[X] because of [one sentence]."
+- **Note:** Sai may not want to lead with this — keep in back pocket. If he's open to vulnerability content, this is one of the highest-performing formats on business TikTok. Specificity + loss aversion = scroll-stopper.
+
+#### Format 16 — "Lessons From My Mentors"
+One lesson per video from a specific mentor or advisor in Sai's life.
+- **Hook:** "The best advice I ever got was from [mentor]." / "My mentor told me [X] at 17. I didn't listen. Here's what happened."
+- **Why:** Borrowed authority + storytelling. Positions Sai as someone who learns from the best, not just someone who figured it out alone. Humanizing.
+
+#### Format 17 — "The Whiteboard" (Weekly Mini-Lesson)
+Sai at a whiteboard breaking down one business or content concept in 60 seconds flat.
+- **Hook:** "Let me explain [concept] in 60 seconds." / "[Concept] — here's how it actually works."
+- **Why:** Visual + educational. Highest save rate format in business content. Positions Sai as a teacher, not just a founder. Works without B-roll — just whiteboard + marker + Sai. Easy to batch-film.
+
 ### Daily Cadence — Week 1
 
 | Day | Format | Deliverable |
