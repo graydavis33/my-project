@@ -9,19 +9,21 @@ import shutil
 def organize_file(
     src_path: str,
     output_dir: str,
+    format_type: str,
     category: str,
     move: bool = False,
 ) -> str:
     """
-    Copy (default) or move src_path into output_dir/category/filename.
+    Copy (default) or move src_path into output_dir/format_type/category/filename.
     Returns the destination path.
 
-    - Creates the category subfolder if it doesn't exist.
+    - format_type is one of: long-form, short-form, other
+    - Creates subfolders if they don't exist.
     - If a file with the same name already exists, appends _2, _3, etc.
       Never silently overwrites.
     - Uses shutil.copy2 to preserve original file timestamps.
     """
-    dest_dir = os.path.join(output_dir, category)
+    dest_dir = os.path.join(output_dir, format_type, category)
     os.makedirs(dest_dir, exist_ok=True)
 
     filename = os.path.basename(src_path)

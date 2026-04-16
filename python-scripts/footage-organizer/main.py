@@ -19,8 +19,8 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
 from usage_logger import log_run
 
-from config import CATEGORIES, VIDEO_EXTENSIONS, FOOTAGE_INBOX
-from extractor import ffmpeg_available, get_duration, extract_frames
+from config import CATEGORIES, VIDEO_EXTENSIONS, FOOTAGE_INBOX, FORMAT_LONG_FORM, FORMAT_SHORT_FORM, FORMAT_OTHER, LONGFORM_WIDTH, LONGFORM_HEIGHT
+from extractor import ffmpeg_available, get_duration, get_resolution, extract_frames
 from analyzer import classify_video
 from organizer import organize_file
 from cache import get_cached, store_cached
@@ -77,19 +77,34 @@ def run(input_folder: str, output_dir: str, move: bool):
 
     print(f"  Found {len(videos)} video file(s)\n")
 
-    results = []   # (filename, category, dest_path, from_cache)
+    results = []   # (filename, format_type, category, dest_path, from_cache)
     skipped = []   # filenames that failed
 
     for i, filepath in enumerate(videos, 1):
         filename = os.path.basename(filepath)
         print(f"  [{i}/{len(videos)}] {filename}")
 
+        # --- Detect format from resolution (free — no API call) ---
+        try:
+            width, height = get_resolution(filepath)
+            if height > width:
+                format_type = FORMAT_SHORT_FORM
+            elif width >= LONGFORM_WIDTH and height >= LONGFORM_HEIGHT:
+                format_type = FORMAT_LONG_FORM
+            else:
+                format_type = FORMAT_OTHER
+            print(f"         {width}x{height} -> {format_type}")
+        except Exception as e:
+            print(f"         [skip] Could not read resolution: {e}")
+            skipped.append(filename)
+            continue
+
         # --- Cache check ---
         cached_category = get_cached(filepath)
         if cached_category:
             print(f"         (cached) -> {cached_category}")
-            dest = organize_file(filepath, output_dir, cached_category, move=move)
-            results.append((filename, cached_category, dest, True))
+            dest = organize_file(filepath, output_dir, format_type, cached_category, move=move)
+            results.append((filename, format_type, cached_category, dest, True))
             continue
 
         # --- Extract frames ---
@@ -111,8 +126,8 @@ def run(input_folder: str, output_dir: str, move: bool):
 
         print(f"         -> {category}")
         store_cached(filepath, category)
-        dest = organize_file(filepath, output_dir, category, move=move)
-        results.append((filename, category, dest, False))
+        dest = organize_file(filepath, output_dir, format_type, category, move=move)
+        results.append((filename, format_type, category, dest, False))
 
     _print_summary(results, skipped, output_dir, move)
 
@@ -122,21 +137,26 @@ def _print_summary(results, skipped, output_dir, move):
     print(f"  DONE")
     print(f"{'=' * 60}\n")
 
-    counts = {}
-    for _, category, _, _ in results:
-        counts[category] = counts.get(category, 0) + 1
-
     action = "Moved" if move else "Copied"
     total = len(results)
-    cached_count = sum(1 for _, _, _, from_cache in results if from_cache)
+    cached_count = sum(1 for *_, from_cache in results if from_cache)
     new_count = total - cached_count
 
     print(f"  {action} {total} file(s)  ({new_count} analyzed, {cached_count} from cache)\n")
 
-    if counts:
-        print(f"  By category:")
+    # Group by format, then category
+    from collections import defaultdict
+    breakdown = defaultdict(lambda: defaultdict(int))
+    for _, format_type, category, _, _ in results:
+        breakdown[format_type][category] += 1
+
+    for fmt in [FORMAT_LONG_FORM, FORMAT_SHORT_FORM, FORMAT_OTHER]:
+        if fmt not in breakdown:
+            continue
+        fmt_total = sum(breakdown[fmt].values())
+        print(f"  {fmt}  ({fmt_total} file(s)):")
         for category in CATEGORIES:
-            count = counts.get(category, 0)
+            count = breakdown[fmt].get(category, 0)
             if count > 0:
                 bar = "#" * count
                 print(f"    {category:<22} {bar}  ({count})")

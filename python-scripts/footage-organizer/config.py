@@ -17,6 +17,15 @@ ANTHROPIC_API_KEY = _require("ANTHROPIC_API_KEY")
 
 MODEL = "claude-haiku-4-5-20251001"
 
+# Format detection — based on resolution/orientation metadata (no API call needed)
+# 3840x2160 horizontal = long-form; portrait (height > width) = short-form; anything else = other
+FORMAT_LONG_FORM = "long-form"
+FORMAT_SHORT_FORM = "short-form"
+FORMAT_OTHER = "other"
+
+LONGFORM_WIDTH = 3840
+LONGFORM_HEIGHT = 2160
+
 CATEGORIES = [
     "interviews",
     "broll-people",
