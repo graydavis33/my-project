@@ -1,6 +1,6 @@
 # Current Priorities
 
-_Last updated: 2026-04-15 — Payday Checklist expense sync upgraded (Venmo P2P + rent exclusions + category overrides); Sai content strategy expanded with 7 new short-form formats + 4 new long-form series_
+_Last updated: 2026-04-16 — Footage Organizer rebuilt with full 00–07 folder structure, deployed to /Volumes/Footage/Sai + Graydient, first real test run with FX3 footage in progress_
 _Update this file whenever your focus shifts._
 
 > **⚡ MAJOR FOCUS SHIFT 2026-04-15:** Sai Karra job begins — 5h filming + 3h editing daily, 1 short/day + 1 LinkedIn/day + 1 long-form/week. Primary income + primary creative output. Debrief materials at `plans/2026-04-15-sai-debrief-content-strategy.md` (strategy), `plans/2026-04-15-sai-debrief-research-deepdive.md` (intel dump), `plans/2026-04-15-sai-footage-organization-system.md` (filing system). All internal-project work below secondary to Sai deliverables until stable cadence established (~Day 30).
@@ -34,7 +34,7 @@ Each project scored 0–3 across 4 dimensions:
 - Social Media Analytics — all 4 platforms live (YouTube, TikTok, Instagram, Facebook)
 - Invoice System — receipt scanner fully fixed, expenses + dates auto-logged, mileage columns added
 - Payday Checklist — built, live on GitHub Pages. Auto-expense sync via Gmail + Claude Haiku + GitHub Actions. Budget countdown UI shows remaining per category. **Updated 2026-04-15:** expanded Gmail query (25+ vendor domains, Venmo/Zelle/PayPal P2P), rent payee exclusions (EXCLUDED_VENDORS in config.py), category overrides for known contacts (CATEGORY_OVERRIDES). Bank statement CSV integration designed but deferred.
-- Footage Organizer — built, Claude Haiku Vision clip analysis. .env + ffmpeg installed on Windows 2026-04-13; ready to run, needs actual footage folder test
+- Footage Organizer — rebuilt 2026-04-16 with 00–07 numbered folder structure, Sai + Graydient libraries on /Volumes/Footage, first real FX3 test run in progress
 
 ## Ongoing / Always Active
 
