@@ -303,6 +303,12 @@ War stories from the previous agency.
 - **Hook:** "At BuiltGen we [made this mistake / figured out this thing]."
 - **Why:** BuiltGen generated 20M+ leads — there's a library of learnings. Credibility + usefulness.
 
+#### Format 10 — "Letter to My 15-Year-Old Self"
+Sai at 21 telling his 15-year-old self — who just started his first business — what he wishes he knew. One lesson per video, direct to camera.
+- **Hook:** "If I could go back to 15 when I started my first business, here's what I'd say." / "At 15, I thought [X]. At 21, I know [Y]." / "The one thing I'd tell 15-year-old me about [money / partners / failure / clients / scaling]."
+- **Why:** Age-gap reflection is one of the highest-performing formats on TikTok/Reels — it's relatable (everyone has regrets), aspirational (he built TWO agencies in that gap), and infinitely repeatable (one lesson per video = dozens of episodes). The 15→21 age range hits Gen Z's exact demographic. Built-in series potential.
+- **Series structure:** Each video = one specific lesson. Title pattern: "What I'd tell my 15-year-old self about [topic]." Can rotate through: first clients, money mistakes, partnerships, burnout, hiring, social media, confidence, rejection, family business dynamics with Srikar, etc.
+
 ### Daily Cadence — Week 1
 
 | Day | Format | Deliverable |
