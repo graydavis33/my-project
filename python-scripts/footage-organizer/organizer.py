@@ -1,38 +1,35 @@
 """
 organizer.py
-Copies or moves a video file into output_dir/category/, with collision handling.
+Handles placing video files into the correct destination folder.
 """
 import os
 import shutil
 
 
-def organize_file(
-    src_path: str,
-    output_dir: str,
-    format_type: str,
-    date_path: str,
-    category: str,
-    move: bool = False,
-) -> str:
+def organize_file(src_path, output_dir, format_type, date_str, category, move=False):
     """
-    Copy (default) or move src_path into output_dir/format_type/date_path/category/filename.
-    Returns the destination path.
+    Copy/move src into ORGANIZED/date_str/format_type/category/
+    Returns destination path.
+    """
+    dest_dir = os.path.join(output_dir, date_str, format_type, category)
+    return _place_file(src_path, dest_dir, move)
 
-    - format_type: long-form | short-form | other
-    - date_path for long-form:  "2026-04-16"
-    - date_path for short-form: "week-of-2026-04-14/2026-04-16"
-    - Creates subfolders if they don't exist.
-    - If a file with the same name already exists, appends _2, _3, etc.
-      Never silently overwrites.
-    - Uses shutil.copy2 to preserve original file timestamps.
+
+def archive_file(src_path, archive_dir, category, move=True):
     """
-    dest_dir = os.path.join(output_dir, format_type, date_path, category)
+    Move/copy src into ARCHIVE/category/ — global, no dates.
+    Returns destination path.
+    """
+    dest_dir = os.path.join(archive_dir, category)
+    return _place_file(src_path, dest_dir, move)
+
+
+def _place_file(src_path, dest_dir, move):
     os.makedirs(dest_dir, exist_ok=True)
 
     filename = os.path.basename(src_path)
     dest_path = os.path.join(dest_dir, filename)
 
-    # Collision handling
     if os.path.exists(dest_path) and not _same_file(src_path, dest_path):
         stem, ext = os.path.splitext(filename)
         counter = 2
@@ -43,12 +40,12 @@ def organize_file(
     if move:
         shutil.move(src_path, dest_path)
     else:
-        shutil.copy2(src_path, dest_path)  # copy2 preserves timestamps
+        shutil.copy2(src_path, dest_path)
 
     return dest_path
 
 
-def _same_file(a: str, b: str) -> bool:
+def _same_file(a, b):
     try:
         return os.path.samefile(a, b)
     except Exception:
