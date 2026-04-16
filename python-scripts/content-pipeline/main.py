@@ -149,6 +149,9 @@ def save_meeting_notes(audio_path: str, segments: list) -> str:
         for seg in segments:
             f.write(seg["text"].strip() + " ")
 
+    os.remove(audio_path)
+    print(f"  [OK] Audio deleted: {audio_path}")
+
     return out_file
 
 
