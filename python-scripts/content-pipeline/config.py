@@ -23,6 +23,11 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 
+# Obsidian vault path for meeting notes output
+OBSIDIAN_SAI_CONVERSATIONS = os.path.expanduser(
+    "~/Documents/obsidian-vault/sai-karra/Conversations"
+)
+
 # Number of short clips to extract from long-form video
 MAX_CLIPS = 5
 

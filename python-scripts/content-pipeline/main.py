@@ -12,6 +12,7 @@ Usage:
   python main.py path/to/video.mp4 --no-cut             (skip ffmpeg, output cut list only)
   python main.py path/to/video.mp4 --context "..."      (give Claude context)
   python main.py path/to/video.mp4 --transcribe-only    (just dump a clean .md transcript)
+  python main.py path/to/recording.m4a --meeting-notes  (transcribe + extract structured notes → Obsidian)
 
 Requirements:
   - ANTHROPIC_API_KEY in .env (always)
@@ -30,7 +31,8 @@ from transcriber import transcribe
 from moment_picker import pick_moments, _fmt_time
 from caption_writer import write_all_captions
 from video_cutter import cut_all_clips
-from config import OUTPUT_DIR
+import anthropic
+from config import OUTPUT_DIR, ANTHROPIC_API_KEY, OBSIDIAN_SAI_CONVERSATIONS
 
 # ─── Logging ────────────────────────────────────────────────────────────────
 _LOG_FILE = os.path.join(os.path.dirname(__file__), "pipeline.log")
@@ -51,6 +53,7 @@ def _parse_args():
     video_path = None
     skip_cut = "--no-cut" in args
     transcribe_only = "--transcribe-only" in args
+    meeting_notes = "--meeting-notes" in args
     context = ""
 
     if "--context" in args:
@@ -70,7 +73,7 @@ def _parse_args():
             video_path = a
             break
 
-    return video_path, skip_cut, context, transcribe_only
+    return video_path, skip_cut, context, transcribe_only, meeting_notes
 
 
 def save_transcript(video_path: str, segments: list) -> str:
@@ -100,6 +103,51 @@ def save_transcript(video_path: str, segments: list) -> str:
                 para = []
         if para:
             f.write(" ".join(para) + "\n\n")
+
+    return out_file
+
+
+def save_meeting_notes(audio_path: str, segments: list) -> str:
+    """Transcribe a voice memo, extract structured notes with Haiku, save to Obsidian."""
+    full_transcript = " ".join(seg["text"] for seg in segments)
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    base_name = Path(audio_path).stem
+
+    print("  Extracting structured notes with Claude Haiku...")
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    response = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=1024,
+        messages=[{
+            "role": "user",
+            "content": (
+                "You are extracting notes from a voice conversation between Gray Davis "
+                "(Creative Director) and Sai Karra (his client / employer). "
+                "Read the transcript and return ONLY the following markdown sections — "
+                "no intro, no commentary:\n\n"
+                "## Summary\n"
+                "2-3 sentences covering what was discussed.\n\n"
+                "## Content Ideas\n"
+                "Bullet list of any content ideas, formats, or concepts mentioned.\n\n"
+                "## Decisions & Priorities\n"
+                "Bullet list of any decisions made or priorities set.\n\n"
+                "## Action Items\n"
+                "Checkbox list of specific next steps for Gray or Sai.\n\n"
+                f"Transcript:\n{full_transcript}"
+            )
+        }]
+    )
+    structured = response.content[0].text.strip()
+
+    os.makedirs(OBSIDIAN_SAI_CONVERSATIONS, exist_ok=True)
+    out_file = os.path.join(OBSIDIAN_SAI_CONVERSATIONS, f"{date_str}-{base_name}.md")
+
+    with open(out_file, "w", encoding="utf-8") as f:
+        f.write(f"# {date_str} — {base_name}\n\n")
+        f.write(structured)
+        f.write("\n\n---\n\n## Full Transcript\n\n")
+        for seg in segments:
+            f.write(seg["text"].strip() + " ")
 
     return out_file
 
@@ -136,7 +184,7 @@ def save_results(base_name: str, clips: list, captions: list, cut_paths: list):
     return out_file
 
 
-def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", transcribe_only: bool = False):
+def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", transcribe_only: bool = False, meeting_notes: bool = False):
     base_name = Path(video_path).stem
 
     print(f"\n{'=' * 60}")
@@ -147,6 +195,12 @@ def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", tra
     log.info("Step 1: Transcribing...")
     segments = transcribe(video_path)
     log.info(f"  {len(segments)} segment(s) transcribed")
+
+    if meeting_notes:
+        out_file = save_meeting_notes(video_path, segments)
+        print(f"\n  [OK] Meeting notes saved: {out_file}")
+        log.info(f"Meeting notes complete. File: {out_file}")
+        return
 
     if transcribe_only:
         out_file = save_transcript(video_path, segments)
@@ -192,7 +246,7 @@ def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", tra
 
 
 if __name__ == "__main__":
-    video_path, skip_cut, context, transcribe_only = _parse_args()
+    video_path, skip_cut, context, transcribe_only, meeting_notes = _parse_args()
 
     if not video_path:
         print(__doc__)
@@ -203,6 +257,6 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        run_pipeline(video_path, skip_cut, context, transcribe_only)
+        run_pipeline(video_path, skip_cut, context, transcribe_only, meeting_notes)
     except Exception:
         log.exception("Pipeline failed")
