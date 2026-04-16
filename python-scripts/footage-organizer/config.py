@@ -25,11 +25,14 @@ CLIENT_ROOTS = {
 }
 
 # Top-level folder names inside each client library root
-FOLDER_RAW       = "RAW"        # Temporary card dumps, dated subfolders
-FOLDER_ORGANIZED = "ORGANIZED"  # AI-sorted output, dated subfolders
-FOLDER_PROJECTS  = "PROJECTS"   # Active editing projects
-FOLDER_ARCHIVE   = "ARCHIVE"    # Global reusable library, no dates, by category
-FOLDER_PUBLISH   = "PUBLISH"    # Completed exports ready to post
+FOLDER_TEMPLATES    = "00_TEMPLATES"    # Reusable project templates, LUTs, title cards
+FOLDER_RAW          = "01_RAW_INCOMING" # Temporary card dumps, dated subfolders
+FOLDER_ORGANIZED    = "02_ORGANIZED"    # AI-sorted output, dated subfolders
+FOLDER_PROJECTS     = "03_PROJECTS"     # Active editing projects
+FOLDER_DELIVERED    = "04_DELIVERED"    # Finished exports (published)
+FOLDER_ARCHIVE      = "05_ARCHIVE"      # Retired/old projects
+FOLDER_BROLL_LIB    = "06_BROLL_LIBRARY" # Global reusable footage library, by category
+FOLDER_ASSETS       = "07_ASSETS"       # Brand assets, fonts, music, SFX
 
 # Format detection — based on resolution (no API call needed)
 FORMAT_LONG_FORM  = "long-form"   # 4K horizontal  (3840x2160)

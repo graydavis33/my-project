@@ -3,11 +3,14 @@ Auto Footage Organizer
 Analyzes raw video using Claude AI and organizes by format + content type.
 
 Folder structure (inside each client's library root):
-  RAW/YYYY-MM-DD/        ← dump card here each shoot day
-  ORGANIZED/YYYY-MM-DD/  ← AI-sorted output (long-form/ or short-form/ → category/)
-  PROJECTS/              ← active editing projects (you manage this manually)
-  ARCHIVE/category/      ← global reusable library, no dates
-  PUBLISH/               ← finished exports (shorts/, episodes/, linkedin/)
+  00_TEMPLATES/                        ← LUTs, title cards, Premiere templates
+  01_RAW_INCOMING/YYYY-MM-DD/          ← dump card here each shoot day
+  02_ORGANIZED/YYYY-MM-DD/             ← AI-sorted output (long-form/ or short-form/ → category/)
+  03_PROJECTS/                         ← active editing projects (you manage this manually)
+  04_DELIVERED/                        ← finished published exports
+  05_ARCHIVE/                          ← old/retired projects
+  06_BROLL_LIBRARY/category/           ← global reusable footage library, no dates
+  07_ASSETS/                           ← brand assets, fonts, music, SFX
 
 Usage:
   # First-time setup — create all folders
@@ -39,7 +42,8 @@ from usage_logger import log_run
 
 from config import (
     CLIENT_ROOTS, VIDEO_EXTENSIONS,
-    FOLDER_RAW, FOLDER_ORGANIZED, FOLDER_PROJECTS, FOLDER_ARCHIVE, FOLDER_PUBLISH,
+    FOLDER_TEMPLATES, FOLDER_RAW, FOLDER_ORGANIZED, FOLDER_PROJECTS,
+    FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BROLL_LIB, FOLDER_ASSETS,
     CATEGORIES,
     FORMAT_LONG_FORM, FORMAT_SHORT_FORM, FORMAT_OTHER,
     LONGFORM_WIDTH, LONGFORM_HEIGHT,
@@ -95,15 +99,23 @@ def get_library(client):
 
 def setup_structure(library, client):
     dirs = [
+        os.path.join(library, FOLDER_TEMPLATES),
         os.path.join(library, FOLDER_RAW),
         os.path.join(library, FOLDER_ORGANIZED),
-        os.path.join(library, FOLDER_PROJECTS),
-        os.path.join(library, FOLDER_PUBLISH, "shorts"),
-        os.path.join(library, FOLDER_PUBLISH, "episodes"),
-        os.path.join(library, FOLDER_PUBLISH, "linkedin"),
+        os.path.join(library, FOLDER_PROJECTS, "episodes"),
+        os.path.join(library, FOLDER_PROJECTS, "shorts"),
+        os.path.join(library, FOLDER_PROJECTS, "linkedin"),
+        os.path.join(library, FOLDER_DELIVERED, "episodes"),
+        os.path.join(library, FOLDER_DELIVERED, "shorts"),
+        os.path.join(library, FOLDER_DELIVERED, "linkedin"),
+        os.path.join(library, FOLDER_ARCHIVE),
+        os.path.join(library, FOLDER_ASSETS, "fonts"),
+        os.path.join(library, FOLDER_ASSETS, "music"),
+        os.path.join(library, FOLDER_ASSETS, "sfx"),
+        os.path.join(library, FOLDER_ASSETS, "brand"),
     ]
     for cat in CATEGORIES:
-        dirs.append(os.path.join(library, FOLDER_ARCHIVE, cat))
+        dirs.append(os.path.join(library, FOLDER_BROLL_LIB, cat))
 
     for path in dirs:
         os.makedirs(path, exist_ok=True)
@@ -114,11 +126,14 @@ def setup_structure(library, client):
     print(f"  Library: {library}")
     print()
     print(f"  Folders created:")
-    print(f"    {FOLDER_RAW}/               ← dump card footage here each day")
-    print(f"    {FOLDER_ORGANIZED}/          ← AI-sorted output")
-    print(f"    {FOLDER_PROJECTS}/           ← active edits (you manage this)")
-    print(f"    {FOLDER_ARCHIVE}/            ← {len(CATEGORIES)} category folders for reusable footage")
-    print(f"    {FOLDER_PUBLISH}/            ← finished exports")
+    print(f"    {FOLDER_TEMPLATES}/    ← LUTs, Premiere templates, title cards")
+    print(f"    {FOLDER_RAW}/  ← dump card footage here each day (dated)")
+    print(f"    {FOLDER_ORGANIZED}/   ← AI-sorted output (dated)")
+    print(f"    {FOLDER_PROJECTS}/    ← active edits")
+    print(f"    {FOLDER_DELIVERED}/   ← finished published exports")
+    print(f"    {FOLDER_ARCHIVE}/     ← old/retired projects")
+    print(f"    {FOLDER_BROLL_LIB}/  ← {len(CATEGORIES)} category folders for reusable footage")
+    print(f"    {FOLDER_ASSETS}/      ← brand assets, fonts, music, SFX")
     print()
     print(f"  Next step: copy today's card into {FOLDER_RAW}/{date.today().strftime('%Y-%m-%d')}/")
     print(f"  Then run:  python main.py --client {client}\n")
@@ -220,7 +235,7 @@ def run_organize(client, date_str, move):
 def run_archive(client, date_str):
     library = get_library(client)
     organized_date = os.path.join(library, FOLDER_ORGANIZED, date_str)
-    archive_dir    = os.path.join(library, FOLDER_ARCHIVE)
+    broll_dir      = os.path.join(library, FOLDER_BROLL_LIB)
 
     if not os.path.isdir(organized_date):
         print(f"\n  Error: No organized folder found: {organized_date}")
@@ -228,15 +243,15 @@ def run_archive(client, date_str):
         sys.exit(1)
 
     print(f"\n  {'=' * 56}")
-    print(f"  Archive — {client.upper()} — {date_str}")
+    print(f"  Send to B-Roll Library — {client.upper()} — {date_str}")
     print(f"  {'=' * 56}")
     print(f"  From: {organized_date}")
-    print(f"  To:   {archive_dir}/{{category}}/")
+    print(f"  To:   {broll_dir}/{{category}}/")
     print()
 
     videos = find_videos(organized_date)
     if not videos:
-        print("  No videos found to archive.")
+        print("  No videos found.")
         sys.exit(0)
 
     moved = 0
@@ -245,12 +260,12 @@ def run_archive(client, date_str):
     for filepath in videos:
         cached_cat = get_cached(filepath)
         category = cached_cat if cached_cat else "miscellaneous"
-        archive_file(filepath, archive_dir, category, move=True)
+        archive_file(filepath, broll_dir, category, move=True)
         by_category[category] += 1
         moved += 1
-        print(f"  {os.path.basename(filepath)} → {FOLDER_ARCHIVE}/{category}/")
+        print(f"  {os.path.basename(filepath)} → {FOLDER_BROLL_LIB}/{category}/")
 
-    print(f"\n  Archived {moved} file(s) into {FOLDER_ARCHIVE}/")
+    print(f"\n  Moved {moved} file(s) into {FOLDER_BROLL_LIB}/")
     for cat, count in sorted(by_category.items()):
         print(f"    {cat:<26} {count} file(s)")
     print()
@@ -296,7 +311,7 @@ def _print_organize_summary(results, skipped, organized_dir, date_str, move, cli
     print()
     print(f"  Next steps:")
     print(f"    1. Pull selects into {FOLDER_PROJECTS}/ for editing")
-    print(f"    2. When done, archive unused clips:")
+    print(f"    2. Send unused clips to the B-Roll Library:")
     print(f"       python main.py --client {client} --archive {date_str}")
     print()
 
