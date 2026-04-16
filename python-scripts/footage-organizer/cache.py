@@ -38,7 +38,7 @@ def _save(cache: dict):
     os.replace(tmp, _CACHE_FILE)
 
 
-def get_cached(filepath: str) -> str | None:
+def get_cached(filepath: str):
     """Return category string if this file was already analyzed, else None."""
     cache = _load()
     entry = cache.get(make_key(filepath))
