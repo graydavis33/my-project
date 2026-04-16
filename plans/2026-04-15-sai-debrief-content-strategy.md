@@ -240,6 +240,47 @@ Each week: one episode documenting the inside of Trendify + the Karra brothers' 
 - ***Lessons From BuiltGen*** — pull war stories from their first agency. Evergreen fuel, built-in narrative.
 - ***Brother Banter*** (if Srikar participates) — 90-second segments, the sibling dynamic pulled forward
 
+### Additional Long-Form Series
+
+#### Series A — "The Monthly Report" (Monthly)
+End-of-month episode recapping Trendify's real progress. Focus on **wins and losses** — what went right, what went wrong, what surprised them. Raw and authentic, no sugarcoating.
+- **What to include:** new clients landed, biggest win of the month, biggest loss or setback, lessons learned, what's changing next month
+- **What to keep private:** exact revenue figures, employee personal info, client financials, anything under NDA. Keep it directional ("we grew" / "we lost a client") rather than spreadsheet-level. The honesty is in the storytelling, not the numbers.
+- **Why it works:** low production overhead (one sit-down per month), builds a habit for viewers to check in, creates accountability and parasocial investment in Trendify's journey. Monthly cadence means each episode has enough material to feel substantial.
+- **Length:** 8-12 min
+
+#### Series B — "How to Build an Agency from the Ground Up" (Limited Series)
+Step-by-step walkthrough of exactly how to start and scale an agency. Not theory — what Sai actually did. Twice.
+- **Episode arc (suggested 5-6 episodes):**
+  - Ep 1: Finding your first client (the real way, not the guru way)
+  - Ep 2: Pricing, proposals, and closing
+  - Ep 3: Delivering work and keeping clients
+  - Ep 4: Hiring your first person
+  - Ep 5: Scaling past the first $100K
+  - Ep 6: What changes when you build your second agency (BuiltGen → Trendify arc)
+- **Why it works:** this is the "subscribe because I need the next episode" series. Founders who are currently at the stage Sai already passed through will binge this. High search volume ("how to start an agency" is an evergreen YouTube query). Also functions as a Trendify recruiting + client pipeline tool — people who learn from Sai want to work with him.
+- **Length:** 10-15 min per episode
+
+#### Series C — "Office Hours" (Bi-Weekly or Monthly, Live or Pre-Recorded)
+Sai sits down and answers 3-5 viewer questions in real depth. Not surface-level — pick the meatiest questions and spend 2-3 minutes each going deep.
+- **Format options:**
+  - **YouTube Live** — builds subscriber notifications, real-time chat, community feel. Can be edited down to a highlight reel afterwards.
+  - **Pre-recorded** — more polished, edited to 10-12 min. One camera, one location, one session.
+- **Question sourcing:** Instagram story polls, TikTok comments, YouTube community tab, LinkedIn DMs
+- **Why it works:** lowest production overhead of any long-form format. One camera, one sitting, done. Audience does the content ideation. The depth is what differentiates this from the short-form Q&A (Format 11) — short-form answers in 30 seconds, Office Hours answers in 3 minutes.
+- **Length:** 15-25 min live, 10-12 min edited
+
+#### Series D — "What I'd Do Differently" (Retrospective Series)
+Each episode picks one major decision from Sai's past and replays it with the benefit of hindsight.
+- **Episode ideas:**
+  - "What I'd do differently about our first hire"
+  - "What I'd do differently about our pricing model"
+  - "What I'd do differently about our first viral campaign"
+  - "What I'd do differently about choosing a cofounder (even when it's your brother)"
+  - "What I'd do differently about our first $50K"
+- **Why it works:** appeals directly to founders who are currently at the stage Sai already passed through. Honest, specific, not generic advice. Each episode is self-contained but the series builds a narrative of growth. The long-form version of Format 10 (Letter to 15-Year-Old Self) but more tactical and business-focused.
+- **Length:** 8-12 min per episode
+
 ---
 
 ## 3. Short-Form Strategy
