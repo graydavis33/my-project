@@ -25,25 +25,26 @@ Classify this clip into exactly one of the following categories:
 Category definitions:
 - interviews: A person is speaking directly to or facing the camera. Talking-head style. The subject is clearly the focus.
 - broll-people: People visible but NOT in interview position. Candid activity, walking, working, crowd shots, lifestyle.
-- broll-environment: Landscapes, architecture, cityscapes, establishing shots, nature, interiors without people as the focus.
-- inserts: Extreme close-ups of objects, hands, food, products, gear, or details. Camera is very close to the subject.
-- action: High-energy movement — sports, running, vehicles, dynamic camera movement, fast-paced sequences.
-- graphics-screens: Monitor footage, screen recordings, slideshows, text overlays, UI demonstrations.
-- uncategorized: The frames are too dark, blurry, or ambiguous to classify confidently.
+- broll-inserts: Extreme close-ups of hands, objects, food, products, gear, or details. Camera is very close.
+- broll-environment: Landscapes, architecture, cityscapes, nature, or interiors where no person is the primary focus.
+- establishing-shots: Wide angle shots that establish a location or set the scene context. Usually exterior or overhead.
+- location-shots: Footage of a specific recognizable place — NYC street, office interior, restaurant, rooftop, etc.
+- action-shots: High-energy movement — sports, running, vehicles, fast camera movement, dynamic sequences.
+- broll-office: Office interiors, desk setups, workspace environments, co-working spaces.
+- screen-recordings: Monitor or phone screen footage, dashboards, software UI, app demos, slide decks.
+- duo-shots: Two people clearly visible in the same frame together.
+- reaction-shots: A person reacting, listening, watching, or in an over-the-shoulder framing.
+- product-shots: Products, merchandise, equipment, or gear displayed for showcasing purposes.
+- miscellaneous: Doesn't fit any category above, or contains mixed/unclear content.
 
 Rules:
 - Reply with ONLY the category name, nothing else.
 - Do not add punctuation, explanation, or extra words.
 - If the clip could fit two categories, pick the dominant one.
-- Default to uncategorized only if you genuinely cannot tell."""
+- Default to miscellaneous only if you genuinely cannot classify it."""
 
 
 def classify_video(frames_b64: list[str], filename: str) -> str:
-    """
-    Send 4 base64 JPEG frames to Claude Haiku Vision.
-    Returns one category string from CATEGORIES.
-    Falls back to 'uncategorized' if Claude returns an unexpected response.
-    """
     content = []
     for b64 in frames_b64:
         content.append({
@@ -66,7 +67,7 @@ def classify_video(frames_b64: list[str], filename: str) -> str:
     raw = response.content[0].text.strip().lower()
 
     if raw not in CATEGORIES:
-        print(f"         [warn] unexpected label '{raw}' — using 'uncategorized'")
-        return "uncategorized"
+        print(f"         [warn] unexpected label '{raw}' — using 'miscellaneous'")
+        return "miscellaneous"
 
     return raw
