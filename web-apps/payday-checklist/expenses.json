@@ -1,11 +1,18 @@
 {
-  "generated_at": "2026-04-17T11:52:41Z",
+  "generated_at": "2026-04-18T11:34:25Z",
   "month": "2026-04",
   "expenses": [
     {
+      "email_id": "19d9c1ed173d0ba3",
+      "date": "2026-04-17",
+      "vendor": "P.C. Richard & Son",
+      "amount": 261.27,
+      "category": "Shopping"
+    },
+    {
       "email_id": "19d8841d7d520d4f",
       "date": "2026-04-13",
-      "vendor": "Google One",
+      "vendor": "Google Play",
       "amount": 0.49,
       "category": "Software & Tools"
     },
