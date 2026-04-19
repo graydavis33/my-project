@@ -1,9 +1,9 @@
 # Current Priorities
 
-_Last updated: 2026-04-16 — Footage Organizer rebuilt with full 00–07 folder structure, deployed to /Volumes/Footage/Sai + Graydient, first real test run with FX3 footage in progress_
+_Last updated: 2026-04-17 — Footage Organizer rebuilt with full 00–07 folder structure, deployed to /Volumes/Footage/Sai + Graydient; shooting-script companion docs created for every Sai format + series_
 _Update this file whenever your focus shifts._
 
-> **⚡ MAJOR FOCUS SHIFT 2026-04-15:** Sai Karra job begins — 5h filming + 3h editing daily, 1 short/day + 1 LinkedIn/day + 1 long-form/week. Primary income + primary creative output. Debrief materials at `plans/2026-04-15-sai-debrief-content-strategy.md` (strategy), `plans/2026-04-15-sai-debrief-research-deepdive.md` (intel dump), `plans/2026-04-15-sai-footage-organization-system.md` (filing system). All internal-project work below secondary to Sai deliverables until stable cadence established (~Day 30).
+> **⚡ MAJOR FOCUS SHIFT 2026-04-15:** Sai Karra job begins — 5h filming + 3h editing daily, 1 short/day + 1 LinkedIn/day + 1 long-form/week. Primary income + primary creative output. Debrief materials at `plans/2026-04-15-sai-debrief-content-strategy.md` (strategy), `plans/2026-04-15-sai-debrief-research-deepdive.md` (intel dump), `plans/2026-04-15-sai-footage-organization-system.md` (filing system), `plans/2026-04-16-sai-format-shooting-scripts.md` (on-set shooting scripts for every format + series). All internal-project work below secondary to Sai deliverables until stable cadence established (~Day 30).
 
 ## Scoring Framework
 
