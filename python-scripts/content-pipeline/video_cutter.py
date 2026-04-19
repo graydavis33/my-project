@@ -14,7 +14,7 @@ def _ffmpeg_available() -> bool:
     return shutil.which("ffmpeg") is not None
 
 
-def cut_clip(video_path: str, clip: dict, output_name: str) -> str | None:
+def cut_clip(video_path: str, clip: dict, output_name: str):
     """
     Cut a clip from video_path using ffmpeg.
     Returns the output path, or None if cutting failed/skipped.
