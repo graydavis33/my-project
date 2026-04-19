@@ -139,6 +139,13 @@ def save_meeting_notes(audio_path: str, segments: list) -> str:
     )
     structured = response.content[0].text.strip()
 
+    vault_parent = os.path.dirname(OBSIDIAN_SAI_CONVERSATIONS)
+    if not os.path.isdir(vault_parent):
+        raise FileNotFoundError(
+            f"Obsidian vault parent not found: {vault_parent}\n"
+            f"  Is Google Drive for Desktop running and synced?\n"
+            f"  Set OBSIDIAN_SAI_CONVERSATIONS in .env to the correct path for this machine."
+        )
     os.makedirs(OBSIDIAN_SAI_CONVERSATIONS, exist_ok=True)
     out_file = os.path.join(OBSIDIAN_SAI_CONVERSATIONS, f"{date_str}-{base_name}.md")
 
