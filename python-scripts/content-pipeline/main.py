@@ -23,6 +23,7 @@ Requirements:
 import json
 import logging
 import os
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -108,11 +109,23 @@ def save_transcript(video_path: str, segments: list) -> str:
     return out_file
 
 
+_DATE_PREFIX_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})\b[\s\-_]*(.*)$")
+
+
+def _date_and_title_from_name(audio_path: str) -> tuple[str, str]:
+    """Parse YYYY-MM-DD prefix from filename. Falls back to today's date."""
+    stem = Path(audio_path).stem
+    m = _DATE_PREFIX_RE.match(stem)
+    if m:
+        return m.group(1), (m.group(2).strip() or stem)
+    return datetime.now().strftime("%Y-%m-%d"), stem
+
+
 def save_meeting_notes(audio_path: str, segments: list) -> str:
     """Transcribe a voice memo, extract structured notes with Haiku, save to Obsidian."""
     full_transcript = " ".join(seg["text"] for seg in segments)
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    base_name = Path(audio_path).stem
+    date_str, title = _date_and_title_from_name(audio_path)
+    base_name = title
 
     print("  Extracting structured notes with Claude Haiku...")
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
@@ -260,15 +273,19 @@ if __name__ == "__main__":
     video_path, skip_cut, context, transcribe_only, meeting_notes, batch = _parse_args()
 
     if batch and meeting_notes:
-        input_dir = os.path.join(os.path.dirname(__file__), "input")
+        if video_path and os.path.isdir(video_path):
+            input_dir = video_path
+        else:
+            input_dir = os.path.join(os.path.dirname(__file__), "input")
         audio_exts = {".m4a"}
         files = sorted(
             p for p in Path(input_dir).iterdir()
             if p.is_file() and p.suffix.lower() in audio_exts
         )
         if not files:
-            print("  [X] No audio files found in input/")
+            print(f"  [X] No audio files found in {input_dir}")
             sys.exit(1)
+        print(f"  Scanning: {input_dir}")
         print(f"  Found {len(files)} file(s) to process.\n")
         for f in files:
             try:
