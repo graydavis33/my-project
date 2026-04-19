@@ -261,7 +261,7 @@ if __name__ == "__main__":
 
     if batch and meeting_notes:
         input_dir = os.path.join(os.path.dirname(__file__), "input")
-        audio_exts = {".m4a", ".mp3", ".wav", ".aac", ".ogg"}
+        audio_exts = {".m4a"}
         files = sorted(
             p for p in Path(input_dir).iterdir()
             if p.is_file() and p.suffix.lower() in audio_exts
