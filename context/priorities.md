@@ -1,6 +1,6 @@
 # Current Priorities
 
-_Last updated: 2026-04-17 — Footage Organizer rebuilt with full 00–07 folder structure, deployed to /Volumes/Footage/Sai + Graydient; shooting-script companion docs created for every Sai format + series_
+_Last updated: 2026-04-19 — Content Pipeline .env created on Mac; Obsidian MCP path updated to Google Drive vault; sai-karra folder confirmed in vault; voice memo → meeting notes workflow ready (pending first memo drop). Shooting-script companion docs created for every Sai format + series._
 _Update this file whenever your focus shifts._
 
 > **⚡ MAJOR FOCUS SHIFT 2026-04-15:** Sai Karra job begins — 5h filming + 3h editing daily, 1 short/day + 1 LinkedIn/day + 1 long-form/week. Primary income + primary creative output. Debrief materials at `plans/2026-04-15-sai-debrief-content-strategy.md` (strategy), `plans/2026-04-15-sai-debrief-research-deepdive.md` (intel dump), `plans/2026-04-15-sai-footage-organization-system.md` (filing system), `plans/2026-04-16-sai-format-shooting-scripts.md` (on-set shooting scripts for every format + series). All internal-project work below secondary to Sai deliverables until stable cadence established (~Day 30).
@@ -21,7 +21,7 @@ Each project scored 0–3 across 4 dimensions:
 
 | # | Project | Score | Status | Next Action |
 |---|---------|-------|--------|-------------|
-| 1 | Content Pipeline | 9/12 | Built on Windows + transcription-only mode added 2026-04-14 (local Whisper large-v3, YouTube URL workflow working) | Set up on Mac, test full pipeline (clip picking + ffmpeg cut) with real video |
+| 1 | Content Pipeline | 9/12 | .env created on Mac 2026-04-19. Obsidian path in config.py needs fix (points at wrong Google Drive path). Voice memo → meeting notes workflow ready — waiting on first memo | Drop a voice memo in input/, run python main.py "input/memo.m4a" --meeting-notes. Fix config.py Obsidian path first. |
 | 2 | Content Researcher | 9/12 | LIVE on Windows + Mac (agent loop + Reddit already exist) | Docs out of date — content-researcher.md describes old 5-step pipeline, actual code is agentic |
 | 3 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
 | — | Social Media Analytics | 9/12 | LIVE — Instagram data broken (scraper) | Meta app configured (4 permissions added) — next: get access token from Graph API Explorer, add to .env, swap main.py to meta_fetcher |
