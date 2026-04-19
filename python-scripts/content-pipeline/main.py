@@ -54,6 +54,7 @@ def _parse_args():
     skip_cut = "--no-cut" in args
     transcribe_only = "--transcribe-only" in args
     meeting_notes = "--meeting-notes" in args
+    batch = "--all" in args
     context = ""
 
     if "--context" in args:
@@ -73,7 +74,7 @@ def _parse_args():
             video_path = a
             break
 
-    return video_path, skip_cut, context, transcribe_only, meeting_notes
+    return video_path, skip_cut, context, transcribe_only, meeting_notes, batch
 
 
 def save_transcript(video_path: str, segments: list) -> str:
@@ -256,7 +257,25 @@ def run_pipeline(video_path: str, skip_cut: bool = False, context: str = "", tra
 
 
 if __name__ == "__main__":
-    video_path, skip_cut, context, transcribe_only, meeting_notes = _parse_args()
+    video_path, skip_cut, context, transcribe_only, meeting_notes, batch = _parse_args()
+
+    if batch and meeting_notes:
+        input_dir = os.path.join(os.path.dirname(__file__), "input")
+        audio_exts = {".m4a", ".mp3", ".wav", ".aac", ".ogg"}
+        files = sorted(
+            p for p in Path(input_dir).iterdir()
+            if p.is_file() and p.suffix.lower() in audio_exts
+        )
+        if not files:
+            print("  [X] No audio files found in input/")
+            sys.exit(1)
+        print(f"  Found {len(files)} file(s) to process.\n")
+        for f in files:
+            try:
+                run_pipeline(str(f), skip_cut, context, transcribe_only, meeting_notes)
+            except Exception:
+                log.exception(f"Failed: {f.name}")
+        sys.exit(0)
 
     if not video_path:
         print(__doc__)
