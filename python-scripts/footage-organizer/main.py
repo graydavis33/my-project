@@ -35,7 +35,7 @@ import argparse
 import os
 import sys
 from collections import defaultdict
-from datetime import date
+from datetime import date, datetime, timedelta
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
 from usage_logger import log_run
@@ -229,10 +229,21 @@ def run_organize(client, date_str, move):
     _print_organize_summary(results, skipped, organized_dir, date_str, move, client)
 
 
+def monday_of_week(date_str):
+    """
+    Given 'YYYY-MM-DD', return the Monday of that ISO week as 'YYYY-MM-DD'.
+    Used to bucket archived B-roll by week shot.
+    """
+    d = datetime.strptime(date_str, "%Y-%m-%d").date()
+    monday = d - timedelta(days=d.weekday())
+    return monday.strftime("%Y-%m-%d")
+
+
 def run_archive(client, date_str):
     library = get_library(client)
     organized_date = os.path.join(library, FOLDER_ORGANIZED, date_str)
     broll_dir      = os.path.join(library, FOLDER_BROLL_LIB)
+    week           = monday_of_week(date_str)
 
     if not os.path.isdir(organized_date):
         print(f"\n  Error: No organized folder found: {organized_date}")
@@ -243,7 +254,7 @@ def run_archive(client, date_str):
     print(f"  Send to B-Roll Library — {client.upper()} — {date_str}")
     print(f"  {'=' * 56}")
     print(f"  From: {organized_date}")
-    print(f"  To:   {broll_dir}/{{category}}/")
+    print(f"  To:   {broll_dir}/{{category}}/{week}/   (week of {week})")
     print()
 
     videos = find_videos(organized_date)
@@ -257,12 +268,12 @@ def run_archive(client, date_str):
     for filepath in videos:
         cached_cat = get_cached(filepath)
         category = cached_cat if cached_cat else "miscellaneous"
-        archive_file(filepath, broll_dir, category, move=True)
+        archive_file(filepath, broll_dir, os.path.join(category, week), move=True)
         by_category[category] += 1
         moved += 1
-        print(f"  {os.path.basename(filepath)} → {FOLDER_BROLL_LIB}/{category}/")
+        print(f"  {os.path.basename(filepath)} → {FOLDER_BROLL_LIB}/{category}/{week}/")
 
-    print(f"\n  Moved {moved} file(s) into {FOLDER_BROLL_LIB}/")
+    print(f"\n  Moved {moved} file(s) into {FOLDER_BROLL_LIB}/  (week of {week})")
     for cat, count in sorted(by_category.items()):
         print(f"    {cat:<26} {count} file(s)")
     print()
