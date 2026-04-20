@@ -26,20 +26,24 @@ Usage:
 
   # Organize old/undated footage (any label works — used as the folder name)
   python main.py --client sai --date old-broll
-  python main.py --client sai --date pre-2026
 
   # Move instead of copy (saves disk space — use when you're sure)
   python main.py --client sai --move
 
-  # Archive unused clips from a date → global ARCHIVE/
-  # Run this after you've pulled your selects into PROJECTS/
+  # Archive an organized date → 06_FOOTAGE_LIBRARY/unused/{category}/{date}/
+  # Run after you've pulled your selects into PROJECTS/. Deletes ORGANIZED/{date}/.
   python main.py --client sai --archive 2026-04-16
+
+  # Mark clips from a shoot date as used (moves unused/ → used/)
+  # Run after you publish a video that used footage from that date
+  python main.py --client sai --mark-used 2026-04-16
 """
 import argparse
 import os
+import shutil
 import sys
 from collections import defaultdict
-from datetime import date, datetime, timedelta
+from datetime import date
 
 # Windows default console encoding (cp1252) can't render the arrows / em-dashes used
 # in this script's output. Force UTF-8 on stdout/stderr so prints don't crash.
@@ -55,7 +59,8 @@ from usage_logger import log_run
 from config import (
     CLIENT_ROOTS, VIDEO_EXTENSIONS,
     FOLDER_TEMPLATES, FOLDER_RAW, FOLDER_ORGANIZED, FOLDER_PROJECTS,
-    FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BROLL_LIB, FOLDER_ASSETS,
+    FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_FOOTAGE_LIB,
+    FOLDER_FOOTAGE_UNUSED, FOLDER_FOOTAGE_USED, FOLDER_ASSETS,
     CATEGORIES,
     FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
 )
@@ -88,8 +93,15 @@ def parse_args():
     parser.add_argument(
         "--archive",
         metavar="DATE",
-        help="Move organized clips from ORGANIZED/DATE/ into global ARCHIVE/. "
-             "Run after pulling selects into PROJECTS/."
+        help="Move clips from ORGANIZED/DATE/ into FOOTAGE_LIBRARY/unused/. "
+             "Run after pulling your selects into PROJECTS/."
+    )
+    parser.add_argument(
+        "--mark-used",
+        metavar="DATE",
+        dest="mark_used",
+        help="Move clips for DATE from unused/ to used/ in FOOTAGE_LIBRARY. "
+             "Run after publishing a video that used footage from that date."
     )
     parser.add_argument(
         "--setup",
@@ -125,8 +137,9 @@ def setup_structure(library, client):
         os.path.join(library, FOLDER_ASSETS, "sfx"),
         os.path.join(library, FOLDER_ASSETS, "brand"),
     ]
-    for cat in CATEGORIES:
-        dirs.append(os.path.join(library, FOLDER_BROLL_LIB, cat))
+    for status in [FOLDER_FOOTAGE_UNUSED, FOLDER_FOOTAGE_USED]:
+        for cat in CATEGORIES:
+            dirs.append(os.path.join(library, FOLDER_FOOTAGE_LIB, status, cat))
 
     for path in dirs:
         os.makedirs(path, exist_ok=True)
@@ -143,7 +156,7 @@ def setup_structure(library, client):
     print(f"    {FOLDER_PROJECTS}/    ← active edits")
     print(f"    {FOLDER_DELIVERED}/   ← finished published exports")
     print(f"    {FOLDER_ARCHIVE}/     ← old/retired projects")
-    print(f"    {FOLDER_BROLL_LIB}/  ← {len(CATEGORIES)} category folders for reusable footage")
+    print(f"    {FOLDER_FOOTAGE_LIB}/  ← unused/ and used/ each with {len(CATEGORIES)} category folders")
     print(f"    {FOLDER_ASSETS}/      ← brand assets, fonts, music, SFX")
     print()
     print(f"  Next step: copy today's card into {FOLDER_RAW}/{date.today().strftime('%Y-%m-%d')}/")
@@ -240,22 +253,16 @@ def run_organize(client, date_str, move):
 
     _print_organize_summary(results, skipped, organized_dir, date_str, move, client)
 
-
-def monday_of_week(date_str):
-    """
-    Given 'YYYY-MM-DD', return the Monday of that ISO week as 'YYYY-MM-DD'.
-    Used to bucket archived B-roll by week shot.
-    """
-    d = datetime.strptime(date_str, "%Y-%m-%d").date()
-    monday = d - timedelta(days=d.weekday())
-    return monday.strftime("%Y-%m-%d")
+    real_skips = [s for s in skipped if not s.startswith("._")]
+    if not real_skips:
+        shutil.rmtree(raw_folder)
+        print(f"  Deleted RAW folder: {raw_folder}\n")
 
 
 def run_archive(client, date_str):
     library = get_library(client)
     organized_date = os.path.join(library, FOLDER_ORGANIZED, date_str)
-    broll_dir      = os.path.join(library, FOLDER_BROLL_LIB)
-    week           = monday_of_week(date_str)
+    unused_root    = os.path.join(library, FOLDER_FOOTAGE_LIB, FOLDER_FOOTAGE_UNUSED)
 
     if not os.path.isdir(organized_date):
         print(f"\n  Error: No organized folder found: {organized_date}")
@@ -263,10 +270,10 @@ def run_archive(client, date_str):
         sys.exit(1)
 
     print(f"\n  {'=' * 56}")
-    print(f"  Send to B-Roll Library — {client.upper()} — {date_str}")
+    print(f"  Archive to Footage Library — {client.upper()} — {date_str}")
     print(f"  {'=' * 56}")
     print(f"  From: {organized_date}")
-    print(f"  To:   {broll_dir}/{{category}}/{week}/   (week of {week})")
+    print(f"  To:   {FOLDER_FOOTAGE_LIB}/unused/{{category}}/{date_str}/")
     print()
 
     videos = find_videos(organized_date)
@@ -279,15 +286,54 @@ def run_archive(client, date_str):
 
     for filepath in videos:
         cached_cat = get_cached(filepath)
-        category = cached_cat if cached_cat else "miscellaneous"
-        archive_file(filepath, broll_dir, os.path.join(category, week), move=True)
+        category = cached_cat if cached_cat else "misc"
+        archive_file(filepath, unused_root, os.path.join(category, date_str), move=True)
         by_category[category] += 1
         moved += 1
-        print(f"  {os.path.basename(filepath)} → {FOLDER_BROLL_LIB}/{category}/{week}/")
+        print(f"  {os.path.basename(filepath)} → unused/{category}/{date_str}/")
 
-    print(f"\n  Moved {moved} file(s) into {FOLDER_BROLL_LIB}/  (week of {week})")
+    shutil.rmtree(organized_date)
+    print(f"\n  Moved {moved} clip(s) into {FOLDER_FOOTAGE_LIB}/unused/  ({date_str})")
     for cat, count in sorted(by_category.items()):
         print(f"    {cat:<26} {count} file(s)")
+    print(f"\n  Deleted organized folder: {organized_date}")
+    print(f"\n  Run when published: python main.py --client {client} --mark-used {date_str}\n")
+
+
+def run_mark_used(client, date_str):
+    library     = get_library(client)
+    unused_root = os.path.join(library, FOLDER_FOOTAGE_LIB, FOLDER_FOOTAGE_UNUSED)
+    used_root   = os.path.join(library, FOLDER_FOOTAGE_LIB, FOLDER_FOOTAGE_USED)
+
+    print(f"\n  {'=' * 56}")
+    print(f"  Mark as Used — {client.upper()} — {date_str}")
+    print(f"  {'=' * 56}")
+    print(f"  Moving: unused/*/{{date_str}}/ → used/*/{{date_str}}/")
+    print()
+
+    moved = 0
+    by_category = defaultdict(int)
+
+    for cat in CATEGORIES:
+        src_dir = os.path.join(unused_root, cat, date_str)
+        if not os.path.isdir(src_dir):
+            continue
+        for filename in os.listdir(src_dir):
+            if os.path.splitext(filename)[1] in VIDEO_EXTENSIONS:
+                src = os.path.join(src_dir, filename)
+                archive_file(src, used_root, os.path.join(cat, date_str), move=True)
+                by_category[cat] += 1
+                moved += 1
+                print(f"  {filename} → used/{cat}/{date_str}/")
+        shutil.rmtree(src_dir)
+
+    if moved == 0:
+        print(f"  No clips found in unused/ for date: {date_str}")
+        print(f"  Run --archive {date_str} first if you haven't already.")
+    else:
+        print(f"\n  Marked {moved} clip(s) as used  ({date_str})")
+        for cat, count in sorted(by_category.items()):
+            print(f"    {cat:<26} {count} file(s)")
     print()
 
 
@@ -330,9 +376,11 @@ def _print_organize_summary(results, skipped, organized_dir, date_str, move, cli
     print(f"  Output: {organized_dir}/{date_str}/")
     print()
     print(f"  Next steps:")
-    print(f"    1. Pull selects into {FOLDER_PROJECTS}/ for editing")
-    print(f"    2. Send unused clips to the B-Roll Library:")
+    print(f"    1. Pull selects from {FOLDER_ORGANIZED}/{date_str}/ into {FOLDER_PROJECTS}/ for editing")
+    print(f"    2. Archive to Footage Library (deletes ORGANIZED/{date_str}/):")
     print(f"       python main.py --client {client} --archive {date_str}")
+    print(f"    3. After publishing, mark footage as used:")
+    print(f"       python main.py --client {client} --mark-used {date_str}")
     print()
 
 
@@ -349,7 +397,9 @@ if __name__ == "__main__":
         print("  Install: https://ffmpeg.org/download.html\n")
         sys.exit(1)
 
-    if args.archive:
+    if args.mark_used:
+        run_mark_used(args.client, args.mark_used)
+    elif args.archive:
         run_archive(args.client, args.archive)
     else:
         date_str = args.date or date.today().strftime("%Y-%m-%d")
