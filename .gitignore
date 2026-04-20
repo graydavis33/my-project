@@ -75,5 +75,8 @@ test.txt
 task_queue.json
 pending_drafts.json
 
+# Footage organizer — local test-set has machine-specific paths
+python-scripts/footage-organizer/test-set.csv
+
 # Note: analytical.db is intentionally tracked (cross-machine sync)
 # Will be removed + .gitignored once Analytical has real users (PII concern)
