@@ -23,12 +23,11 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 
-# Obsidian vault path for meeting notes output.
-# Set OBSIDIAN_SAI_CONVERSATIONS in .env to override (required on Windows, where
-# Google Drive for Desktop mounts as a drive letter, e.g. G:/My Drive/...).
-_DEFAULT_OBSIDIAN_PATH = "/Users/graydavis28/Library/CloudStorage/GoogleDrive-graydavis33@gmail.com/My Drive/Obsidian/Graydient Media/sai-karra/Conversations"
-OBSIDIAN_SAI_CONVERSATIONS = os.path.expanduser(
-    os.getenv("OBSIDIAN_SAI_CONVERSATIONS", _DEFAULT_OBSIDIAN_PATH)
+# Obsidian vault path for voice memo transcripts.
+# Set OBSIDIAN_VOICE_MEMOS in .env to override per-machine.
+_DEFAULT_OBSIDIAN_PATH = "/Users/graydavis28/Library/CloudStorage/GoogleDrive-graydavis33@gmail.com/My Drive/Obsidian/Graydient Media/Voice Memos"
+OBSIDIAN_VOICE_MEMOS = os.path.expanduser(
+    os.getenv("OBSIDIAN_VOICE_MEMOS", _DEFAULT_OBSIDIAN_PATH)
 )
 
 # Number of short clips to extract from long-form video
