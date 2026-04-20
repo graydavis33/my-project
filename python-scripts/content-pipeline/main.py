@@ -33,7 +33,7 @@ from moment_picker import pick_moments, _fmt_time
 from caption_writer import write_all_captions
 from video_cutter import cut_all_clips
 import anthropic
-from config import OUTPUT_DIR, ANTHROPIC_API_KEY, OBSIDIAN_SAI_CONVERSATIONS
+from config import OUTPUT_DIR, ANTHROPIC_API_KEY, OBSIDIAN_VOICE_MEMOS
 
 # ─── Logging ────────────────────────────────────────────────────────────────
 _LOG_FILE = os.path.join(os.path.dirname(__file__), "pipeline.log")
@@ -153,18 +153,19 @@ def save_meeting_notes(audio_path: str, segments: list) -> str:
     )
     structured = response.content[0].text.strip()
 
-    vault_parent = os.path.dirname(OBSIDIAN_SAI_CONVERSATIONS)
+    vault_parent = os.path.dirname(OBSIDIAN_VOICE_MEMOS)
     if not os.path.isdir(vault_parent):
         raise FileNotFoundError(
             f"Obsidian vault parent not found: {vault_parent}\n"
             f"  Is Google Drive for Desktop running and synced?\n"
-            f"  Set OBSIDIAN_SAI_CONVERSATIONS in .env to the correct path for this machine."
+            f"  Set OBSIDIAN_VOICE_MEMOS in .env to the correct path for this machine."
         )
-    os.makedirs(OBSIDIAN_SAI_CONVERSATIONS, exist_ok=True)
-    out_file = os.path.join(OBSIDIAN_SAI_CONVERSATIONS, f"{date_str}-{base_name}.md")
+    os.makedirs(OBSIDIAN_VOICE_MEMOS, exist_ok=True)
+    out_file = os.path.join(OBSIDIAN_VOICE_MEMOS, f"{date_str}-{base_name}.md")
 
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(f"# {date_str} — {base_name}\n\n")
+        f.write("← [[_Index|Voice Memos Index]]\n\n")
         f.write(structured)
         f.write("\n\n---\n\n## Full Transcript\n\n")
         for seg in segments:
