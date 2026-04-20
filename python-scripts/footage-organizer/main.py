@@ -37,6 +37,14 @@ import sys
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 
+# Windows default console encoding (cp1252) can't render the arrows / em-dashes used
+# in this script's output. Force UTF-8 on stdout/stderr so prints don't crash.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
 from usage_logger import log_run
 
