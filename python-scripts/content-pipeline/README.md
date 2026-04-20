@@ -32,7 +32,7 @@ python main.py path/to/voice-memo.m4a --meeting-notes
 ## Env Vars (.env)
 - `ANTHROPIC_API_KEY` (required)
 - `OPENAI_API_KEY` (optional — for Whisper API fallback if local Whisper isn't installed)
-- `OBSIDIAN_SAI_CONVERSATIONS` (override for `--meeting-notes` output path — required on Windows)
+- `OBSIDIAN_VOICE_MEMOS` (override for `--meeting-notes` output path — required on Windows)
 
 ## Status
 Built on Windows + Mac. ffmpeg and OpenAI key are optional. Local Whisper (`pip install openai-whisper`) is the default transcription backend.
