@@ -34,29 +34,47 @@ FOLDER_ARCHIVE      = "05_ARCHIVE"      # Retired/old projects
 FOLDER_BROLL_LIB    = "06_BROLL_LIBRARY" # Global reusable footage library, by category
 FOLDER_ASSETS       = "07_ASSETS"       # Brand assets, fonts, music, SFX
 
-# Format detection — based on resolution (no API call needed)
-FORMAT_LONG_FORM  = "long-form"   # 4K horizontal  (3840x2160)
-FORMAT_SHORT_FORM = "short-form"  # Vertical        (height > width)
-FORMAT_OTHER      = "other"       # Everything else
+# Format detection — orientation only (horizontal=long-form, vertical=short-form)
+# As of 2026-04-19: long-form is shot 1080p horizontal, short-form is shot vertical.
+# Resolution no longer signals format — only orientation does.
+FORMAT_LONG_FORM  = "long-form"   # Horizontal (width >= height)
+FORMAT_SHORT_FORM = "short-form"  # Vertical   (height > width)
 
-LONGFORM_WIDTH  = 3840
-LONGFORM_HEIGHT = 2160
-
-# Content categories — used in ORGANIZED/ (dated) and ARCHIVE/ (global)
+# Content categories — used in ORGANIZED/ (dated) and BROLL_LIBRARY/ (global)
+# DESIGN PRINCIPLE: every category has a primary visual question that separates
+# it from its neighbors. The model is told to fall back to `miscellaneous` whenever
+# two categories could equally apply — Gray reviews those manually.
 CATEGORIES = [
-    "interviews",           # Person speaking directly to camera, talking-head
-    "broll-people",         # People in candid activity, walking, working, lifestyle
-    "broll-inserts",        # Close-ups of hands, objects, food, gear, product details
-    "broll-environment",    # Landscapes, architecture, interiors (no people focus)
-    "establishing-shots",   # Wide shots setting a location or scene context
-    "location-shots",       # Specific recognizable location footage (NYC street, office, etc.)
-    "action-shots",         # Fast movement, sports, vehicles, dynamic sequences
-    "broll-office",         # Office interiors, desk setups, workspace footage
-    "screen-recordings",    # Monitor/phone screens, dashboards, UI, software demos
-    "duo-shots",            # Two people in frame together
-    "reaction-shots",       # Reactions, listening shots, over-the-shoulder
-    "product-shots",        # Products, gear, equipment on display
-    "miscellaneous",        # Anything that doesn't fit above
+    # People — addressing camera
+    "interview-solo",
+    "interview-duo",
+    "walk-and-talk",
+
+    # People — not addressing camera
+    "candid-people",
+    "reaction-listening",
+    "crowd-group",
+
+    # Details / Objects
+    "insert-hands",
+    "insert-product",
+    "insert-food-drink",
+    "insert-detail",
+
+    # Screens / Graphics
+    "screens-and-text",
+
+    # Environments
+    "establishing-exterior",
+    "establishing-interior",
+    "environment-detail",
+
+    # Movement
+    "action-sport-fitness",
+    "transit-vehicles",
+
+    # Catch-all — model returns this when uncertain or when 2+ categories tie
+    "miscellaneous",
 ]
 
 FRAME_POSITIONS = [0.20, 0.40, 0.60, 0.80]
