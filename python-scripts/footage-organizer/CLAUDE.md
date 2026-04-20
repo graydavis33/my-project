@@ -7,6 +7,7 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - 17 mutually-exclusive categories — see README.
 - `miscellaneous` is the "I'm not sure" bucket — model uses it whenever two categories could fit. Gray reviews those manually.
 - Eval harness in `eval.py` measures accuracy against a hand-labeled CSV. Logs go to `eval_runs/`.
+- B-Roll Library archive (`--archive DATE`) drops clips into `06_BROLL_LIBRARY/{category}/{week-of-date}/`. Week = Monday of that ISO week, format `YYYY-MM-DD`.
 
 ## When asked to "improve the organizer"
 1. Run the latest eval first — never tune blind.

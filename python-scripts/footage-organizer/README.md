@@ -44,6 +44,24 @@ Mutually exclusive — each clip lands in exactly one. When the model can't choo
 - **Movement:** `action-sport-fitness`, `transit-vehicles`
 - **Catch-all:** `miscellaneous` (manual review)
 
+## B-Roll Library Structure
+
+When you run `--archive DATE`, clips move from `02_ORGANIZED/{date}/` into `06_BROLL_LIBRARY/{category}/{week-of-date}/`. The week label is the Monday of the ISO week.
+
+```
+06_BROLL_LIBRARY/
+  interview-solo/
+    2026-04-13/     ← week of April 13 (Monday) — clips archived from any day Mon–Sun that week
+      C0001.MP4
+    2026-04-20/
+      C0034.MP4
+  insert-hands/
+    2026-04-13/
+      C0019.MP4
+```
+
+This way the global B-roll library stays category-first but you can still see roughly when something was shot.
+
 ## Setup
 1. Copy `.env.example` to `.env` and add `ANTHROPIC_API_KEY`
 2. Set `SAI_LIBRARY_ROOT` and/or `GRAYDIENT_LIBRARY_ROOT` in `.env` to the SSD path
