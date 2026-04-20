@@ -74,7 +74,7 @@ CATEGORIES = [
     "transit-vehicles",
 
     # Catch-all — model returns this when uncertain or when 2+ categories tie
-    "miscellaneous",
+    "misc",
 ]
 
 FRAME_POSITIONS = [0.20, 0.40, 0.60, 0.80]

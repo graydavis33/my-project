@@ -24,6 +24,10 @@ Usage:
   # Organize a specific date
   python main.py --client sai --date 2026-04-15
 
+  # Organize old/undated footage (any label works — used as the folder name)
+  python main.py --client sai --date old-broll
+  python main.py --client sai --date pre-2026
+
   # Move instead of copy (saves disk space — use when you're sure)
   python main.py --client sai --move
 
@@ -74,7 +78,7 @@ def parse_args():
     parser.add_argument(
         "--date", "-d",
         default=None,
-        help="Date to process (YYYY-MM-DD). Defaults to today."
+        help="Folder name to process (YYYY-MM-DD or any label like 'old-broll'). Defaults to today."
     )
     parser.add_argument(
         "--move",
