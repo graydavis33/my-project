@@ -1,6 +1,6 @@
 # Current Priorities
 
-_Last updated: 2026-04-19 (late evening) — Footage Organizer overhauled and live-tested: format detection switched from 4K-resolution to orientation-only (long-form is now shot 1080p horizontal); 17 mutually-exclusive categories with strict "miscellaneous when uncertain" rule; new eval harness (`eval.py`) for measurable prompt iteration; B-roll archive now bucketed by Monday-of-week. Test run on 2026-04-18 (33 clips) and 2026-04-19 (18 clips) succeeded — total ~$0.15. Awaiting Gray's manual review of misses tomorrow at Sai's lunch. Earlier today: Content Pipeline voice-memo flow fully live on Windows GPU (RTX 5070, CUDA 12.8); 10 .m4a transcribed → `Obsidian/Graydient Media/Voice Memos/` with `_Index.md` hub + backlinks; script patched (`--all` accepts folder path, filename date-prefix parsed, auto-backlink, env var `OBSIDIAN_VOICE_MEMOS`). Source-of-truth memo: 2026-04-19 New Recording 7 (5 PM) = current content system (one weekly vlog + 3 daily shorts, 1080p)._
+_Last updated: 2026-04-20 — Footage Organizer fully live on Mac. `06_BROLL_LIBRARY` renamed to `06_FOOTAGE_LIBRARY` with `unused/` and `used/` subfolders. Auto-delete RAW after organize. `--mark-used DATE` command added. `04_DELIVERED` restructured to format-first (shorts/linkedin/episodes). `miscellaneous` renamed to `misc`. Organized 2026-04-17 (23 clips) + old-broll (15 clips). Archived 2026-04-16, 2026-04-17, 2026-04-18, old-broll into FOOTAGE_LIBRARY/unused/. Note: 2026-04-16 archive landed all 40 clips in misc/ (Windows cache path mismatch — categories lost)._
 _Update this file whenever your focus shifts._
 
 > **⚡ MAJOR FOCUS SHIFT 2026-04-15:** Sai Karra job begins — 5h filming + 3h editing daily, 1 short/day + 1 LinkedIn/day + 1 long-form/week. Primary income + primary creative output. Debrief materials at `plans/2026-04-15-sai-debrief-content-strategy.md` (strategy), `plans/2026-04-15-sai-debrief-research-deepdive.md` (intel dump), `plans/2026-04-15-sai-footage-organization-system.md` (filing system), `plans/2026-04-16-sai-format-shooting-scripts.md` (on-set shooting scripts for every format + series). All internal-project work below secondary to Sai deliverables until stable cadence established (~Day 30).
@@ -28,7 +28,7 @@ Each project scored 0–3 across 4 dimensions:
 | 5 | Hook Optimizer | 6/12 | LIVE on Windows (real .env key set 2026-04-13) | Add .env on Mac |
 | 6 | Creator Intel | 5/12 | Built on Windows | Needs YouTube OAuth |
 | 7 | Morning Briefing | 4/12 | Built on Windows | Needs full .env setup |
-| 8 | Footage Organizer | 8/12 | LIVE on Windows. Rebuilt 2026-04-19 with orientation-only format, 17 categories, eval harness, week-folder archive. 51 clips test-classified (2026-04-18 + 2026-04-19). | Gray reviews misses tomorrow at Sai's lunch → reports per-clip wrong-folder list → tighten prompt for worst-confused pair → re-run. Cycle until accuracy plateau. Cache cleared, originals safe in RAW/. |
+| 8 | Footage Organizer | 8/12 | LIVE on Mac + Windows. Footage Library rebuilt: unused/used split, auto-delete RAW, --mark-used command, format-first Delivered folder. 111 clips archived into FOOTAGE_LIBRARY/unused/ (2026-04-16/17/18 + old-broll). | Build test-set.csv from real misses → run eval.py → tighten prompt → repeat. April 16 clips in misc/ need manual re-sort (Windows cache issue). |
 
 ## Recently Completed
 
