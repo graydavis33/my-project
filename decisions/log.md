@@ -51,6 +51,16 @@ Format: `[YYYY-MM-DD] DECISION: ... | REASONING: ... | CONTEXT: ...`
 
 [2026-04-12] DECISION: Add instagram_manage_comments permission to Graydient Analytics Meta app | REASONING: Gray wants users to be able to respond to Instagram comments directly from the Analytical SaaS dashboard | CONTEXT: Permission added in Graph API Explorer alongside the 4 analytics permissions; final permission list: pages_show_list, pages_read_engagement, instagram_basic, instagram_manage_insights, instagram_manage_comments
 
+[2026-04-20] DECISION: Rename 06_BROLL_LIBRARY → 06_FOOTAGE_LIBRARY with unused/ and used/ subfolders | REASONING: All footage — whether used in a published video or not — belongs in the library for future reuse; the used/unused split lets Gray quickly see what's available vs already deployed | CONTEXT: Archive command now sends to unused/{category}/{shoot-date}/; --mark-used DATE moves clips to used/ after publishing
+
+[2026-04-20] DECISION: Auto-delete RAW_INCOMING folder after a successful organize run | REASONING: RAW is a temporary card dump — once clips are in ORGANIZED/ and backed up, the RAW folder is just a duplicate wasting disk space | CONTEXT: Only deletes if there are zero non-hidden skips (._files are ignored); if real clips were skipped, RAW is preserved
+
+[2026-04-20] DECISION: Archive subfolders use exact shoot date (YYYY-MM-DD), not Monday-of-week | REASONING: Monday-of-week bucketing prevents --mark-used from distinguishing between two shoot days in the same week | CONTEXT: Overrides 2026-04-19 decision about Monday-of-week bucketing; exact date is more precise and enables per-shoot mark-used workflow
+
+[2026-04-20] DECISION: 04_DELIVERED organized by format first (shorts/linkedin/episodes), then date | REASONING: When searching delivered content you think "which short was that?" not "what week did I publish?" — format-first matches the mental model | CONTEXT: Replaces flat date-based DELIVERED structure; mirrors how PROJECTS/ is already organized
+
+[2026-04-20] DECISION: Rename category miscellaneous → misc | REASONING: Shorter folder name, easier to type, less clinical — same function | CONTEXT: Updated in config.py, analyzer.py prompt, and CLAUDE.md
+
 [2026-04-12] DECISION: Instagram (@graydient_media) must be linked to Graydient Media Facebook Page before Graph API can return instagram_business_account ID | REASONING: Query 622940830905493?fields=instagram_business_account returned empty — Instagram is not yet connected to the FB page | CONTEXT: Fix: go to facebook.com/GraydientMedia → Settings → Instagram → Connect account
 
 [2026-04-13] DECISION: Photo Organizer blur threshold lowered from 80 to 15, keep % raised from 20% to 25%, organized folder flattened (no location subfolders) | REASONING: Threshold of 80 was too aggressive for CR3 embedded JPEG thumbnails — marked ~1,774 of ~1,864 photos as blurry; flat output folder requested by Gray for easier browsing | CONTEXT: One-time script to sort ~1,800 Canon RAW photos from Mac onto Windows due to Mac storage constraints
