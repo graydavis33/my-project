@@ -19,7 +19,7 @@ _CATEGORY_LIST = "\n".join(f"- {c}" for c in CATEGORIES)
 _PROMPT = f"""You are classifying raw footage from a freelance videographer's SD card.
 You have 4 frames extracted from a single video clip (at 20%, 40%, 60%, and 80% through the clip).
 
-Your job: pick exactly ONE category from the list below. If two categories could equally apply, you MUST return `miscellaneous` — do not guess. The videographer reviews `miscellaneous` clips manually, so a wrong confident answer is worse than `miscellaneous`.
+Your job: pick exactly ONE category from the list below. If two categories could equally apply, you MUST return `misc` — do not guess. The videographer reviews `misc` clips manually, so a wrong confident answer is worse than `misc`.
 
 Categories (return one of these strings exactly):
 {_CATEGORY_LIST}
@@ -55,12 +55,12 @@ MOVEMENT:
 - transit-vehicles: Cars, subways, taxis, transportation, or traffic is the subject.
 
 CATCH-ALL:
-- miscellaneous: Use this when (a) you cannot confidently classify, or (b) two categories could equally apply, or (c) the clip is too dark/blurry/short to read.
+- misc: Use this when (a) you cannot confidently classify, or (b) two categories could equally apply, or (c) the clip is too dark/blurry/short to read.
 
 Output rules:
 - Reply with ONLY the category name. Nothing else. No punctuation. No explanation.
 - Use only the exact strings from the category list above.
-- When in doubt: `miscellaneous`. The videographer prefers manual review over a wrong confident answer."""
+- When in doubt: `misc`. The videographer prefers manual review over a wrong confident answer."""
 
 
 def classify_video(frames_b64: list[str], filename: str) -> str:
@@ -86,7 +86,7 @@ def classify_video(frames_b64: list[str], filename: str) -> str:
     raw = response.content[0].text.strip().lower()
 
     if raw not in CATEGORIES:
-        print(f"         [warn] unexpected label '{raw}' — using 'miscellaneous'")
-        return "miscellaneous"
+        print(f"         [warn] unexpected label '{raw}' — using 'misc'")
+        return "misc"
 
     return raw
