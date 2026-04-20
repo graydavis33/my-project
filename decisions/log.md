@@ -13,6 +13,14 @@ Format: `[YYYY-MM-DD] DECISION: ... | REASONING: ... | CONTEXT: ...`
 
 [2026-03-29] DECISION: Skip Trigger.dev for now | REASONING: Requires TypeScript rewrite of all Python scripts — medium effort with no immediate payoff | CONTEXT: Python + Windows Task Scheduler works fine; revisit when scaling automation infrastructure
 
+[2026-04-19] DECISION: Footage Organizer detects format by orientation only (horizontal=long-form, vertical=short-form), not by resolution | REASONING: Sai workflow switched long-form from 4K to 1080p, so 4K-vs-1080p is no longer a meaningful signal; orientation is the only file-level property that maps to intended use | CONTEXT: Old code used `width >= 3840 and height >= 2160` for long-form, which would have dumped every new 1080p shoot into a `FORMAT_OTHER/` bucket
+
+[2026-04-19] DECISION: Footage Organizer uses 17 mutually-exclusive categories with a strict "return miscellaneous when uncertain" rule — model never invents folders | REASONING: A wrong confident classification is worse than a `miscellaneous` flag because it scatters files Gray then has to hunt for; manual review of one bucket is cheap | CONTEXT: Old 13-category set had heavy overlap (broll-environment vs establishing-shots vs location-shots) which made any classifier choice look arbitrary
+
+[2026-04-19] DECISION: Built `eval.py` harness against a hand-labeled CSV instead of tweaking the prompt by vibes | REASONING: Without a fixed test set, every prompt edit is unmeasurable — you can't tell if v2 is actually better than v1 or just differently wrong | CONTEXT: Eval bypasses cache so prompt changes actually re-run; logs go to `eval_runs/` so accuracy can be tracked across iterations
+
+[2026-04-19] DECISION: B-roll library archive subfolders by Monday-of-week, not by exact shoot date | REASONING: Library is meant for "any interview-solo Sai's ever shot" lookup — daily granularity creates folder clutter, weekly gives a useful "roughly when" handle without splitting a single shoot's clips across multiple folders | CONTEXT: `06_BROLL_LIBRARY/{category}/{YYYY-MM-DD}/` where the date is always Monday of the ISO week containing the original shoot date
+
 [2026-03-29] DECISION: Use Adobe Creative Cloud (not just Premiere Pro) as primary editing stack | REASONING: Gray uses full CC suite, not just Premiere | CONTEXT: Updated in context/work.md
 
 [2026-03-29] DECISION: Skills directory stays empty until recurring workflows reveal what needs one | REASONING: Don't pre-build skills speculatively — let real usage patterns drive it | CONTEXT: Following Liam's "build organically" principle
