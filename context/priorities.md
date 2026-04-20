@@ -1,6 +1,6 @@
 # Current Priorities
 
-_Last updated: 2026-04-19 — Obsidian vault now syncs Mac ↔ Windows via Google Drive for Desktop (Mirror mode). Content Pipeline fully unblocked: path fixed on both machines, Whisper installed, `--meeting-notes --all` batch flag added. 5 .m4a files mid-transcription on Mac, paused for sleep — resume next Mac session._
+_Last updated: 2026-04-19 (evening) — Content Pipeline voice-memo flow now fully live on Windows GPU (RTX 5070, CUDA 12.8). 10 .m4a files transcribed tonight → dedicated `Obsidian/Graydient Media/Voice Memos/` folder with `_Index.md` hub + per-memo backlinks. Script patched: `--all` accepts folder path, filename date-prefix (`YYYY-MM-DD`) parsed for recording date, auto-inserts `← [[_Index]]` backlink, env var renamed `OBSIDIAN_SAI_CONVERSATIONS` → `OBSIDIAN_VOICE_MEMOS`. Source-of-truth memo flagged in memory: 2026-04-19 New Recording 7 (5 PM) = current content system (one weekly vlog + 3 daily shorts, 1080p). Graydient Media format library extended: Short-Form Formats +3 (Day-on-Set POV, Gear in 30s, AI Editing Timelapse), new Long-Form Formats.md with 7 formats. Video idea for 2026-04-20 shoot scripted: 30-sec SD-card-skip tip (Part 3 of 100 Videography Tips Series)._
 _Update this file whenever your focus shifts._
 
 > **⚡ MAJOR FOCUS SHIFT 2026-04-15:** Sai Karra job begins — 5h filming + 3h editing daily, 1 short/day + 1 LinkedIn/day + 1 long-form/week. Primary income + primary creative output. Debrief materials at `plans/2026-04-15-sai-debrief-content-strategy.md` (strategy), `plans/2026-04-15-sai-debrief-research-deepdive.md` (intel dump), `plans/2026-04-15-sai-footage-organization-system.md` (filing system), `plans/2026-04-16-sai-format-shooting-scripts.md` (on-set shooting scripts for every format + series). All internal-project work below secondary to Sai deliverables until stable cadence established (~Day 30).
@@ -21,7 +21,7 @@ Each project scored 0–3 across 4 dimensions:
 
 | # | Project | Score | Status | Next Action |
 |---|---------|-------|--------|-------------|
-| 1 | Content Pipeline | 9/12 | Obsidian path fixed 2026-04-19. Whisper installed. --all batch flag added (.m4a only). Transcription in progress — killed mid-run (Mac needs to stay awake). | Resume: open terminal, cd content-pipeline, python3 main.py --meeting-notes --all. Keep Mac lid open. 5 .m4a files pending. |
+| 1 | Content Pipeline | 9/12 | LIVE on Windows GPU (CUDA 12.8). 10 voice memos transcribed 2026-04-19 → `Voice Memos/` vault folder + index. Filename date-prefix parsing + auto-backlink shipped. | For future memos: drop `.m4a` in `C:/Users/Gray Davis/My Drive/Voice Memos/` with `YYYY-MM-DD - ` prefix, run `python main.py "C:/Users/Gray Davis/My Drive/Voice Memos" --meeting-notes --all`. Upgrade: iOS Shortcut or Just Press Record app to auto-prefix dates. |
 | 2 | Content Researcher | 9/12 | LIVE on Windows + Mac (agent loop + Reddit already exist) | Docs out of date — content-researcher.md describes old 5-step pipeline, actual code is agentic |
 | 3 | Client Onboarding | 7/12 | Built on Windows | Fill .env, review contract template |
 | — | Social Media Analytics | 9/12 | LIVE — Instagram data broken (scraper) | Meta app configured (4 permissions added) — next: get access token from Graph API Explorer, add to .env, swap main.py to meta_fetcher |
