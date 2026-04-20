@@ -16,32 +16,51 @@ client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
 _CATEGORY_LIST = "\n".join(f"- {c}" for c in CATEGORIES)
 
-_PROMPT = f"""You are analyzing footage from a freelance videographer's SD card.
-You have been given 4 frames extracted from a single video clip (at 20%, 40%, 60%, and 80% through the video).
+_PROMPT = f"""You are classifying raw footage from a freelance videographer's SD card.
+You have 4 frames extracted from a single video clip (at 20%, 40%, 60%, and 80% through the clip).
 
-Classify this clip into exactly one of the following categories:
+Your job: pick exactly ONE category from the list below. If two categories could equally apply, you MUST return `miscellaneous` — do not guess. The videographer reviews `miscellaneous` clips manually, so a wrong confident answer is worse than `miscellaneous`.
+
+Categories (return one of these strings exactly):
 {_CATEGORY_LIST}
 
-Category definitions:
-- interviews: A person is speaking directly to or facing the camera. Talking-head style. The subject is clearly the focus.
-- broll-people: People visible but NOT in interview position. Candid activity, walking, working, crowd shots, lifestyle.
-- broll-inserts: Extreme close-ups of hands, objects, food, products, gear, or details. Camera is very close.
-- broll-environment: Landscapes, architecture, cityscapes, nature, or interiors where no person is the primary focus.
-- establishing-shots: Wide angle shots that establish a location or set the scene context. Usually exterior or overhead.
-- location-shots: Footage of a specific recognizable place — NYC street, office interior, restaurant, rooftop, etc.
-- action-shots: High-energy movement — sports, running, vehicles, fast camera movement, dynamic sequences.
-- broll-office: Office interiors, desk setups, workspace environments, co-working spaces.
-- screen-recordings: Monitor or phone screen footage, dashboards, software UI, app demos, slide decks.
-- duo-shots: Two people clearly visible in the same frame together.
-- reaction-shots: A person reacting, listening, watching, or in an over-the-shoulder framing.
-- product-shots: Products, merchandise, equipment, or gear displayed for showcasing purposes.
-- miscellaneous: Doesn't fit any category above, or contains mixed/unclear content.
+Definitions — pick the category whose PRIMARY VISUAL QUESTION matches the clip:
 
-Rules:
-- Reply with ONLY the category name, nothing else.
-- Do not add punctuation, explanation, or extra words.
-- If the clip could fit two categories, pick the dominant one.
-- Default to miscellaneous only if you genuinely cannot classify it."""
+PEOPLE — addressing camera (subject is engaging the lens):
+- interview-solo: ONE person, framed and clearly speaking to camera, static or near-static framing. Talking-head.
+- interview-duo: TWO people in frame, both engaged in on-camera conversation or being interviewed together.
+- walk-and-talk: Subject is BOTH moving through space AND speaking to camera (handheld follow, vlog-style). Movement is the discriminator vs interview-solo.
+
+PEOPLE — not addressing camera:
+- candid-people: One or two people in natural activity, NOT speaking to camera. Working, walking, lifestyle.
+- reaction-listening: A person is reacting, listening, or shown over-the-shoulder. They are NOT the active speaker in the frame.
+- crowd-group: THREE or more people. Group dynamic, audience, meeting room, gathering.
+
+DETAILS / OBJECTS (close-ups where an object is the subject):
+- insert-hands: Hands are the PRIMARY subject — typing, holding, gesturing, working. Face may be absent or out of focus.
+- insert-product: A product, piece of gear, or equipment is the static subject of the frame.
+- insert-food-drink: Food, beverages, or dining is the subject.
+- insert-detail: Extreme close-up of an object, texture, or material that is NOT hands, NOT a product, NOT food.
+
+SCREENS:
+- screens-and-text: A computer monitor, phone screen, dashboard, app UI, or prominent text/signage is the subject.
+
+ENVIRONMENTS:
+- establishing-exterior: Wide exterior shot that identifies a location — skyline, building, street view. No person is the focus.
+- establishing-interior: Wide interior shot of a venue or room. No person is the focus.
+- environment-detail: Architectural detail, texture, ambient interior — no person is the focus, not a wide establisher.
+
+MOVEMENT:
+- action-sport-fitness: Sports, working out, physical activity is the subject.
+- transit-vehicles: Cars, subways, taxis, transportation, or traffic is the subject.
+
+CATCH-ALL:
+- miscellaneous: Use this when (a) you cannot confidently classify, or (b) two categories could equally apply, or (c) the clip is too dark/blurry/short to read.
+
+Output rules:
+- Reply with ONLY the category name. Nothing else. No punctuation. No explanation.
+- Use only the exact strings from the category list above.
+- When in doubt: `miscellaneous`. The videographer prefers manual review over a wrong confident answer."""
 
 
 def classify_video(frames_b64: list[str], filename: str) -> str:

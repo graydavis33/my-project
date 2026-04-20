@@ -45,8 +45,7 @@ from config import (
     FOLDER_TEMPLATES, FOLDER_RAW, FOLDER_ORGANIZED, FOLDER_PROJECTS,
     FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BROLL_LIB, FOLDER_ASSETS,
     CATEGORIES,
-    FORMAT_LONG_FORM, FORMAT_SHORT_FORM, FORMAT_OTHER,
-    LONGFORM_WIDTH, LONGFORM_HEIGHT,
+    FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
 )
 from extractor import ffmpeg_available, get_duration, get_resolution, extract_frames
 from analyzer import classify_video
@@ -152,10 +151,8 @@ def detect_format(filepath):
     width, height = get_resolution(filepath)
     if height > width:
         fmt = FORMAT_SHORT_FORM
-    elif width >= LONGFORM_WIDTH and height >= LONGFORM_HEIGHT:
-        fmt = FORMAT_LONG_FORM
     else:
-        fmt = FORMAT_OTHER
+        fmt = FORMAT_LONG_FORM
     return fmt, width, height
 
 
@@ -287,7 +284,7 @@ def _print_organize_summary(results, skipped, organized_dir, date_str, move, cli
     for _, fmt, cat, _, _ in results:
         breakdown[fmt][cat] += 1
 
-    for fmt in [FORMAT_LONG_FORM, FORMAT_SHORT_FORM, FORMAT_OTHER]:
+    for fmt in [FORMAT_LONG_FORM, FORMAT_SHORT_FORM]:
         if fmt not in breakdown:
             continue
         fmt_total = sum(breakdown[fmt].values())
