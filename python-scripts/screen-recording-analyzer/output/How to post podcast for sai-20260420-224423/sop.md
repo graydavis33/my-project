@@ -1,6 +1,6 @@
 # SOP: Edit and Publish "Building Blocks with Sai Karra" Episode
 
-**Trigger:** Sai sends a new podcast recording; Gray drops it into the shared Google Drive folder for podcasts (path TBD — set on first run). Automation watches/pulls from that folder.
+**Trigger:** Sai sends a new podcast recording via Google Drive; Gray pulls it down and drops it into a folder on his local footage hard drive (`D:/`). Automation reads from that local folder — no Google Drive integration needed. Exact folder path TBD (see Still Open).
 **Frequency:** ~1 episode per week (confirm cadence)
 **Owner today:** Sai Karra → **Future owner:** AI agent — **fully autonomous, auto-publishes at the end.** No human checkpoint.
 **Expected runtime:** ~15 minutes manual today; target ~2 minutes with automation
@@ -9,9 +9,9 @@
 
 ## Inputs
 
-- Raw pod recording — Sai delivers; Gray drops in the Google Drive podcast folder; automation pulls from there
-- "Building Blocks intro" stinger audio (pre-made — location TBD, see Open Questions)
-- "Building Blocks midway" stinger audio (pre-made — location TBD, see Open Questions)
+- Raw pod recording — Sai delivers via Google Drive; Gray pulls it to a folder on `D:/` (footage drive); automation reads from there
+- "Building Blocks intro" stinger audio — stored on `D:/` alongside the pods (path TBD)
+- "Building Blocks midway" stinger audio — stored on `D:/` alongside the pods (path TBD)
 - Episode title (free-form, formula: "What I learned from my $100m mentor"-style)
 - Episode notes (formula: 1-sentence premise + "These are the X biggest takeaways" list)
 - RSS.com login (Sai will share when handoff happens — reference only, never pasted in chat)
@@ -139,7 +139,7 @@
 ## Automation Hooks
 
 - **Fully automatable — end-to-end, no human checkpoint:**
-  - **Input pickup:** watch the Google Drive podcast folder (or pull latest file on run)
+  - **Input pickup:** watch a folder on `D:/` (footage drive) for the latest raw pod file, or pass it as an arg on run. No Google Drive API in the automation — Gray manually moves the file from Drive to `D:/`.
   - **Step 6 — cut dead space:** ffmpeg silence-detect → auto-trim (`silencedetect` + `atrim` filters)
   - **Step 3 — find the hook end:** Whisper transcript + Claude Sonnet pass to find the exact timestamp where the opening hook sentence ends. Deterministic splice point once we have it.
   - **Step 4 — insert intro stinger:** ffmpeg concat at the hook-end timestamp. No judgment — rule is fixed.
@@ -160,7 +160,8 @@
 
 ## Resolved (2026-04-20)
 
-- **Raw pod delivery:** Sai sends it → Gray drops in a Google Drive podcast folder → automation pulls from there
+- **Raw pod delivery:** Sai sends via Google Drive → Gray manually pulls to a folder on `D:/` (footage drive) → automation reads from local path. Keeps the code simple: no Google Drive API, no OAuth.
+- **Stinger storage:** intro + midway audio files live on `D:/` in the same footage structure. Local file reads only.
 - **Intro placement:** always immediately after the hook. Locked rule, no judgment.
 - **Midway placement:** at a mini-hook / engaging moment in the middle of the pod. Claude picks the timestamp.
 - **Auto-publish:** yes. Once the automation kicks off it runs all the way to Publish.
@@ -168,8 +169,8 @@
 
 ## ⚠ Still Open
 
-1. **Canonical Drive folder path** — needs to be set before the first run. Candidate: `Google Drive / Sai / Podcasts / Incoming`.
-2. **Where do the intro and midway stinger files live?** Pre-made — need a canonical path. Candidate: `Google Drive / Sai / Podcasts / Stingers / intro.mp3` + `midway.mp3`.
+1. **Canonical local folder on `D:/` for incoming pods** — needs to be set before the first run. Candidate: `D:/Sai/Podcasts/Incoming/` (fits the existing `D:/Sai/` structure).
+2. **Canonical local paths for intro + midway stingers** — Candidate: `D:/Sai/Podcasts/Stingers/intro.mp3` + `D:/Sai/Podcasts/Stingers/midway.mp3`.
 3. **Is the ChatGPT project for episode notes something we should replicate in Claude** (simpler, we have the key) — confirm with Sai. Default assumption: yes, replicate in Claude.
 4. **RSS.com has no documented public API** — before committing to Playwright, inspect network traffic during a manual upload for an undocumented internal endpoint.
 5. **2FA / session handling on RSS.com** — unknown; will surface on first Playwright run.
