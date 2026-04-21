@@ -1,59 +1,115 @@
 # Workflow: Footage Organizer
 
-**Status:** Built on Windows
-**Cost:** ~$0.003/video (Claude Haiku Vision). Re-runs = $0 (permanent cache).
+**Status:** LIVE on Mac + Windows
+**Cost:** ~$0.003/clip (Claude Haiku Vision, 4 frames). Re-runs hit the permanent cache = $0.
 **Script:** `python-scripts/footage-organizer/`
 
 ---
 
 ## Objective
 
-Drop a folder of raw MP4/MOV files → Claude visually analyzes 4 frames per clip → organizes everything into labeled subfolders. Saves hours of manual sorting after a shoot.
+Drop a card's worth of raw footage into a dated RAW folder → run one command → Claude Vision classifies every clip by format (long-form vs short-form, by orientation) + 17 content categories. Then archive what you didn't use into the Footage Library, and mark what you did use as "used" when the video ships.
+
+Reliability bar: **Gray never has to manually re-sort a clip.**
 
 ---
 
-## How to Run
+## Library Structure (per client)
+
+The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIENT_LIBRARY_ROOT` in `.env`). Each library has eight top-level folders:
+
+```
+00_TEMPLATES/                  ← LUTs, title cards, Premiere templates
+01_RAW_INCOMING/{YYYY-MM-DD}/  ← dump card here each shoot day
+02_ORGANIZED/{YYYY-MM-DD}/     ← AI-sorted output (long-form/ and short-form/ subtrees)
+03_PROJECTS/episodes · shorts · linkedin · misc/   ← active edits
+04_DELIVERED/shorts · linkedin · episodes/          ← finished published exports, format-first
+05_ARCHIVE/                    ← retired projects
+06_FOOTAGE_LIBRARY/
+  ├─ unused/{category}/{YYYY-MM-DD}/   ← archived but still pullable
+  └─ used/{category}/{YYYY-MM-DD}/     ← shipped in a published video
+07_ASSETS/brand · fonts · music · sfx/ ← reusable assets, intro.mp3 etc.
+```
+
+Archive subfolders use the **exact shoot date** (`YYYY-MM-DD`), not Monday-of-week — per decision 2026-04-20.
+
+---
+
+## Commands
 
 ```bash
 cd python-scripts/footage-organizer
 
-python main.py /path/to/footage/                        # Copy files into organized/ subfolders
-python main.py /path/to/footage/ --move                 # Move instead of copy
-python main.py /path/to/footage/ --output ~/Desktop/shoot-march19/  # Custom output location
+# First-time setup for a client (creates all folders)
+python main.py --client sai --setup
+python main.py --client graydient --setup
+
+# Organize today's card (reads from 01_RAW_INCOMING/{today})
+python main.py --client sai
+
+# Organize a specific date
+python main.py --client sai --date 2026-04-15
+
+# Organize old/undated footage (any label works as the subfolder name)
+python main.py --client sai --date old-broll
+
+# Move instead of copy (frees disk — only use when sure)
+python main.py --client sai --move
+
+# Archive an organized date into the Footage Library as "unused"
+# Run after pulling selects into 03_PROJECTS/. Deletes 02_ORGANIZED/{date}/.
+python main.py --client sai --archive 2026-04-16
+
+# Mark clips from a shoot date as used (unused/ → used/)
+# Run after publishing a video that used footage from that date
+python main.py --client sai --mark-used 2026-04-16
 ```
 
 ---
 
-## Output Categories
+## The 17 Categories
 
-| Folder | What Goes There |
-|--------|----------------|
-| `interviews/` | Person speaking to/facing camera |
-| `broll-people/` | People in candid activity |
-| `broll-environment/` | Landscapes, cityscapes, establishing shots |
-| `inserts/` | Close-ups of objects, food, hands, gear |
-| `action/` | Movement, vehicles, fast-paced sequences |
-| `graphics-screens/` | Screen recordings, monitor footage |
-| `uncategorized/` | Too dark, blurry, or ambiguous |
+Defined in `config.py → CATEGORIES`. Mutually exclusive — the model picks exactly one per clip, or falls back to `misc` when two could fit. Never invents folders.
+
+Category names map directly to folder names. Use the eval harness before adding or renaming any.
+
+---
+
+## Format Detection
+
+**Orientation only.** Vertical (height > width) → `short-form/`. Horizontal → `long-form/`. 4K vs 1080p is irrelevant and explicitly rejected (see decision 2026-04-19 — Sai's workflow shoots 1080p for long-form now).
 
 ---
 
 ## What It Does (Step by Step)
 
-1. Scans input folder for `.mp4` / `.mov` files
-2. Extracts 4 frames per video (at 20/40/60/80% through the clip) via ffmpeg
-3. Sends all 4 frames to Claude Haiku Vision in one call
-4. Returns one category label per clip
-5. Copies (or moves) file into `organized/{category}/`
-6. Caches result by filename + filesize — same clip never analyzed twice
+1. Reads `01_RAW_INCOMING/{date}/` (recursive — finds `.mp4` / `.mov`)
+2. Reads width/height with ffprobe → picks `long-form/` or `short-form/`
+3. Checks `.cache.json` (keyed by filename + filesize) — skips analysis if hit
+4. Extracts 4 frames per clip at 20/40/60/80% via ffmpeg
+5. Sends all 4 frames to Claude Haiku Vision in one call; model returns exactly one category from the CATEGORIES list
+6. Copies (or moves with `--move`) into `02_ORGANIZED/{date}/{format}/{category}/`
+7. Writes the cache so the clip is never analyzed twice
+8. Deletes `01_RAW_INCOMING/{date}/` automatically on success (no dangling RAW)
 
 ---
 
-## Setup Checklist
+## Archive + Mark-Used Flow
 
-- [ ] `ANTHROPIC_API_KEY` in `.env`
-- [ ] ffmpeg installed and in PATH (`brew install ffmpeg` on Mac)
-- [ ] `pip install -r requirements.txt`
+- **`--archive {date}`** moves everything from `02_ORGANIZED/{date}/` into `06_FOOTAGE_LIBRARY/unused/{category}/{date}/` using the cached category from step 5. Deletes the organized folder afterwards.
+- **`--mark-used {date}`** promotes all clips from `unused/*/{date}/` into `used/*/{date}/`. Run this after you publish a video that pulled from that shoot day.
+
+---
+
+## Cache Sync Guardrail (2026-04-20 fix)
+
+`.cache.json` is committed to git as the cross-machine sync layer. Before any cache-touching command (`organize`, `--archive`, `--mark-used`), the script runs a read-only `git fetch` + `git log HEAD..@{u} -- .cache.json` and WARNS + PROMPTS if the remote is ahead.
+
+- Default prompt answer is "no" — type `y` to override
+- Non-blocking if git is unavailable or no upstream set
+- Silent on clean state — only speaks up when there's actually a cache drift
+
+**Why this exists:** 2026-04-16 misc/ incident. Windows ran `--archive` without pulling the Mac's cache update → 40 clips missed the cache → fell back to `misc/`.
 
 ---
 
@@ -61,17 +117,41 @@ python main.py /path/to/footage/ --output ~/Desktop/shoot-march19/  # Custom out
 
 | Problem | Fix |
 |---------|-----|
-| ffmpeg not found | Install ffmpeg: `brew install ffmpeg` (Mac) or download from ffmpeg.org (Windows) |
-| Clips landing in `uncategorized/` | Dark or blurry clips — normal. Review and move manually. |
-| Re-running after changes | Cache is permanent by filename+filesize. Delete `.cache.json` to re-analyze all clips. |
-| API errors | Check `ANTHROPIC_API_KEY` in `.env` |
+| ffmpeg not found | Install ffmpeg + ffprobe; script aborts on startup if missing |
+| Clips landing in `misc/` | Either ambiguous content (expected — review manually) OR cache drift (see guardrail above) |
+| `--client` unknown | Add `SAI_LIBRARY_ROOT` or `GRAYDIENT_LIBRARY_ROOT` to `.env` |
+| Category looks wrong | Run the eval harness (`eval.py`) against `test-set.csv` before tightening the prompt — never tune blind |
+| New category needed | Last resort. First check if `misc` + manual review handles it. See `CLAUDE.md` in the project folder. |
+
+---
+
+## Env Vars Required
+
+```
+ANTHROPIC_API_KEY
+SAI_LIBRARY_ROOT         # absolute path to Sai's library root
+GRAYDIENT_LIBRARY_ROOT   # absolute path to Graydient Media's library root
+```
+
+---
+
+## Iteration Discipline
+
+See `python-scripts/footage-organizer/CLAUDE.md` for the rules when improving the organizer:
+
+- Run the latest eval first — never tune blind
+- Look at the confusion matrix — find the worst-confused pair
+- Tighten the prompt for that pair specifically; don't mass-rewrite
+- Commit one tightening per commit
+- Never restore 4K-based format detection
+- Never add a `voiceover` category (explicitly rejected)
 
 ---
 
 ## Cost Estimate
 
-| Shoot Size | Approximate Cost |
-|------------|-----------------|
-| 20 clips | ~$0.06 |
-| 100 clips | ~$0.30 |
-| Re-run (any size) | $0.00 |
+| Shoot Size | First-run cost | Re-run (cached) |
+|------------|----------------|-----------------|
+| 20 clips | ~$0.06 | $0 |
+| 100 clips | ~$0.30 | $0 |
+| 1,000 clips | ~$3.00 | $0 |

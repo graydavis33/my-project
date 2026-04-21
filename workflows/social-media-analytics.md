@@ -24,12 +24,14 @@ python -X utf8 main.py
 
 ## What It Does (Step by Step)
 
-1. YouTube: fetches video analytics via YouTube Data API v3 (Google OAuth2)
-2. TikTok: fetches post metrics via TikTok Display API (auto token refresh)
-3. Instagram: Playwright logs into Instagram, scrapes post metrics from web UI
-4. Facebook: Playwright logs into Facebook, scrapes Graydient Media page
-5. Claude Haiku generates AI insights across all platforms (cached daily)
-6. Writes everything to Google Sheets — one tab per platform
+1. **Fetch** all four platforms in sequence: YouTube (Data API v3 + OAuth2) → Instagram (Playwright scraper OR Meta Graph API if `META_ACCESS_TOKEN` set) → Facebook (same) → TikTok (Display API, auto token refresh)
+2. **Compute** engagement_rate per post ((likes + comments + shares) / views × 100)
+3. **AI sheet insights** — one Haiku call, cached daily, produces the tab-level summaries
+4. **Best/worst post explanations** — Haiku generates 3-bullet "why this worked" / "why this underperformed" for top 3 + bottom 3 posts by views. Cached per-URL per-day (no re-spend on posts already explained today).
+5. **Trends** — searches YouTube for real trending videos in `CONTENT_NICHE` (from `.env`), takes the top 2 by views, Haiku analyzes each into `{what_it_is, why_it_works, how_to_implement}`. Cached daily.
+6. **Dashboard JSON export** — writes `web-apps/social-media-analytics/analytics_data.json` with posts + ai_insights + post_explanations + trends (the web dashboard reads this)
+7. **Google Sheets write** — platform tabs + Dashboard + Comments + Best Posting Day + Trends
+8. **Deep AI analysis → Notion** (optional if `NOTION_TOKEN` set)
 
 ---
 
@@ -73,9 +75,10 @@ TIKTOK_CLIENT_SECRET
 
 ## Scheduling
 
-- **Current:** Windows Task Scheduler, every Sunday 8am
-- **Goal (Q2):** GitHub Actions workflow — runs in cloud, no machine needed
-  - Secrets needed in GitHub: `GOOGLE_TOKEN_JSON` (base64 of token.json), `ANTHROPIC_API_KEY`, `SHEET_ID`
+- **Current:** GitHub Actions — weekly, every Sunday 9am EST (in-cloud, no machine needed)
+- Secrets configured in GitHub: `GOOGLE_TOKEN_JSON` (base64 of token.json), `ANTHROPIC_API_KEY`, `SHEET_ID`, `META_*`, `TIKTOK_*`
+- Local manual runs still work via `python -X utf8 main.py` — useful for ad-hoc refreshes between weekly runs
+- `CONTENT_NICHE` env var controls the trends search query (default: "videography video editing tutorial")
 
 ---
 
