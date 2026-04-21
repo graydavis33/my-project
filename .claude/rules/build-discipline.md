@@ -111,4 +111,4 @@ Same for `context/priorities.md` when focus shifts, and `decisions/log.md` for m
 
 ## Recurring-Audit Cadence
 
-Run a full workspace audit (the pattern from 2026-04-20) roughly quarterly, or any time "things feel off." Use `audits/2026-04-20-workspace-audit.html` as the baseline. Compare. Log what changed. Delete what's dead. Update this file if new patterns emerge worth preventing.
+Run a full workspace audit roughly quarterly, or any time "things feel off." The SOP is at `workflows/workspace-audit.md` — self-contained prompts for 5 parallel research agents, verification-before-deletion discipline, branded HTML output structure. Use `audits/2026-04-20-workspace-audit.html` as the baseline for comparison. Log what changed. Delete what's dead. If a new recurring failure pattern surfaces, append it here.
