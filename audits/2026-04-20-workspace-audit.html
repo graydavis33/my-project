@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workspace Audit — Graydient Media</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #e8b84b;
+    --gold-soft: rgba(232,184,75,0.15);
+    --gold-border: rgba(232,184,75,0.3);
+    --ice: #38BDF8;
+    --chrome: rgba(255,255,255,0.85);
+    --black: #080808;
+    --surface: rgba(255,255,255,0.04);
+    --surface-raised: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #fff;
+    --text-dim: rgba(255,255,255,0.6);
+    --text-faint: rgba(255,255,255,0.35);
+    --text-ghost: rgba(255,255,255,0.22);
+
+    --ok: #4ADE80;
+    --warn: #FBBF24;
+    --bad: #F87171;
+    --ok-soft: rgba(74,222,128,0.12);
+    --warn-soft: rgba(251,191,36,0.12);
+    --bad-soft: rgba(248,113,113,0.12);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--black);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 48px 24px 96px;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 5%, rgba(232,184,75,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 30%, rgba(56,189,248,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 100%, rgba(232,184,75,0.04) 0%, transparent 60%);
+    line-height: 1.55;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  /* ========== HEADER ========== */
+  .hero { text-align: center; padding: 32px 0 56px; }
+  .wordmark {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-ghost);
+    margin-bottom: 24px;
+  }
+  .title {
+    font-size: clamp(36px, 6vw, 62px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    background: linear-gradient(135deg, #ffffff 20%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+  }
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .metabar {
+    margin-top: 28px;
+    display: inline-flex;
+    gap: 8px;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--surface);
+  }
+  .meta-pill {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text-dim);
+    border-radius: 100px;
+  }
+  .meta-pill.gold { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-border); }
+
+  /* ========== NAV ========== */
+  nav.toc {
+    position: sticky;
+    top: 16px;
+    z-index: 20;
+    margin: 0 auto 48px;
+    max-width: 920px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: rgba(8,8,8,0.75);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  nav.toc a {
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    border-radius: 100px;
+    transition: all 0.15s ease;
+  }
+  nav.toc a:hover { color: var(--gold); background: var(--gold-soft); }
+
+  /* ========== METRIC CARDS ========== */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 56px;
+  }
+  .metric {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 22px;
+  }
+  .metric-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-ghost);
+    margin-bottom: 10px;
+  }
+  .metric-value {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .metric-value .unit { font-size: 15px; font-weight: 500; color: var(--text-dim); margin-left: 4px; letter-spacing: 0; }
+  .metric-sub { font-size: 11px; color: var(--text-faint); }
+  .metric.gold .metric-value { color: var(--gold); }
+  .metric.ice .metric-value { color: var(--ice); }
+  .metric.ok .metric-value { color: var(--ok); }
+  .metric.warn .metric-value { color: var(--warn); }
+  .metric.bad .metric-value { color: var(--bad); }
+
+  /* ========== SECTIONS ========== */
+  section { margin-bottom: 72px; scroll-margin-top: 96px; }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sec-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .sec-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  .sec-meta {
+    font-size: 11px;
+    color: var(--text-faint);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  /* ========== GLASS CARDS ========== */
+  .glass {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .glass + .glass { margin-top: 18px; }
+
+  .card-head {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 18px;
+  }
+
+  /* ========== TABLES ========== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-ghost);
+    padding: 12px 14px 12px 0;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  td {
+    padding: 14px 14px 14px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  td.name { color: var(--text); font-weight: 600; }
+  td.mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; }
+  tr:hover td { background: rgba(255,255,255,0.015); }
+
+  /* ========== BADGES ========== */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 100px;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: "";
+    width: 5px; height: 5px; border-radius: 50%;
+    background: currentColor;
+  }
+  .b-ok   { color: var(--ok);   background: var(--ok-soft);   border-color: rgba(74,222,128,0.25); }
+  .b-warn { color: var(--warn); background: var(--warn-soft); border-color: rgba(251,191,36,0.25); }
+  .b-bad  { color: var(--bad);  background: var(--bad-soft);  border-color: rgba(248,113,113,0.25); }
+  .b-gold { color: var(--gold); background: var(--gold-soft); border-color: var(--gold-border); }
+  .b-neu  { color: var(--text-dim); background: rgba(255,255,255,0.04); border-color: var(--border); }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .tag.cost-light    { color: var(--ok);   border-color: rgba(74,222,128,0.2); }
+  .tag.cost-moderate { color: var(--warn); border-color: rgba(251,191,36,0.2); }
+  .tag.cost-heavy    { color: var(--bad);  border-color: rgba(248,113,113,0.2); }
+
+  /* ========== EXECUTIVE SUMMARY ========== */
+  .exec {
+    background: linear-gradient(135deg, rgba(232,184,75,0.06) 0%, rgba(56,189,248,0.04) 100%);
+    border: 1px solid var(--gold-border);
+    border-radius: 24px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+  .exec::before {
+    content: "";
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(232,184,75,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .exec-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .exec-head {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 18px;
+    max-width: 760px;
+    position: relative;
+  }
+  .exec p {
+    font-size: 14px;
+    color: var(--text-dim);
+    max-width: 820px;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .exec p:last-child { margin-bottom: 0; }
+  .exec strong { color: var(--text); font-weight: 700; }
+  .exec .gold { color: var(--gold); }
+
+  /* ========== FINDING LISTS ========== */
+  .findings { list-style: none; margin-top: 14px; }
+  .findings li {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .findings li:last-child { border-bottom: none; }
+  .findings .num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--gold-soft);
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--gold-border);
+  }
+  .findings .body { flex: 1; padding-top: 2px; }
+  .findings .hook { color: var(--text); font-weight: 600; display: block; margin-bottom: 4px; }
+
+  /* ========== ACTION GRID ========== */
+  .action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .action-col {
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 26px;
+  }
+  .action-col.immediate { border-color: rgba(248,113,113,0.25); background: linear-gradient(180deg, rgba(248,113,113,0.04) 0%, rgba(248,113,113,0) 100%); }
+  .action-col.short    { border-color: rgba(251,191,36,0.25); background: linear-gradient(180deg, rgba(251,191,36,0.04) 0%, rgba(251,191,36,0) 100%); }
+  .action-col.ongoing  { border-color: rgba(74,222,128,0.25);  background: linear-gradient(180deg, rgba(74,222,128,0.04) 0%, rgba(74,222,128,0) 100%); }
+  .action-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .action-col.immediate .action-tag { color: var(--bad); }
+  .action-col.short    .action-tag { color: var(--warn); }
+  .action-col.ongoing  .action-tag { color: var(--ok); }
+  .action-head {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin-bottom: 18px;
+  }
+  .action-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .action-list li {
+    font-size: 13px;
+    color: var(--text-dim);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .action-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .action-list li strong { color: var(--text); font-weight: 600; }
+
+  /* ========== DELETION LIST ========== */
+  .del-wrap {
+    background: linear-gradient(180deg, rgba(248,113,113,0.04) 0%, rgba(248,113,113,0) 100%);
+    border: 1px solid rgba(248,113,113,0.25);
+    border-radius: 18px;
+    padding: 28px 32px;
+  }
+  .del-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .del-list li {
+    font-size: 13px;
+    color: var(--text);
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-family: 'SF Mono','Fira Code',monospace;
+    font-size: 12px;
+  }
+  .del-list li .why {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-faint);
+    font-size: 11px;
+    margin-top: 3px;
+  }
+
+  /* ========== NOTE BOX ========== */
+  .note {
+    font-size: 12px;
+    color: var(--text-faint);
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px dashed var(--border-strong);
+    border-radius: 12px;
+    margin-top: 18px;
+  }
+
+  /* ========== FOOTER ========== */
+  footer {
+    margin-top: 80px;
+    padding-top: 36px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-ghost);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  footer .dot {
+    display: inline-block;
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--gold);
+    margin: 0 12px;
+    vertical-align: middle;
+  }
+
+  /* ========== UTIL ========== */
+  h3.subhead {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 24px 0 12px;
+  }
+  h3.subhead:first-child { margin-top: 0; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 720px) {
+    .two-col { grid-template-columns: 1fr; }
+    .sec-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+
+  .table-wrap { overflow-x: auto; }
+
+  code.inline {
+    font-family: 'SF Mono','Fira Code',monospace;
+    font-size: 11.5px;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: var(--surface-raised);
+    color: var(--gold);
+    border: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ========== HEADER ========== -->
+<header class="hero">
+  <div class="wordmark">Graydient Media · Workspace Intelligence</div>
+  <h1 class="title">Claude Code Workspace<br>Background Check</h1>
+  <p class="subtitle">A top-to-bottom audit of every asset, script, config, and document in <code class="inline">my-project</code>. What's alive, what's dead, what's leaking credits, what can be cut, what can be merged.</p>
+  <div class="metabar">
+    <span class="meta-pill gold">Audit 2026-04-20</span>
+    <span class="meta-pill">6 research agents</span>
+    <span class="meta-pill">64+ assets scanned</span>
+  </div>
+</header>
+
+<!-- ========== NAV ========== -->
+<nav class="toc">
+  <a href="#summary">Summary</a>
+  <a href="#python">Python</a>
+  <a href="#web">Web Apps</a>
+  <a href="#claude">Claude Config</a>
+  <a href="#docs">Docs</a>
+  <a href="#root">Root / VPS</a>
+  <a href="#action">Action Plan</a>
+  <a href="#delete">Cut List</a>
+</nav>
+
+<!-- ========== EXECUTIVE SUMMARY ========== -->
+<section id="summary">
+  <div class="exec">
+    <div class="exec-label">Executive Summary</div>
+    <h2 class="exec-head">Your workspace is lean, active, and plan-driven — but carrying <span class="gold">~20% dead weight</span> and <span class="gold">3 structural risks</span> that cost clarity more than credits.</h2>
+    <p><strong>The good news:</strong> Usage is real, not theoretical. <code class="inline">decisions/log.md</code> is live (32 entries), <code class="inline">priorities.md</code> was updated today, and every single plan in <code class="inline">plans/</code> has shipped or is executing. No ghost plans. Hooks auto-push at session end and it works. Core tools (Footage Organizer, Content Pipeline, Invoice System) show recent touches.</p>
+    <p><strong>The problems:</strong> 4 overlapping Python projects (photo-organizer vs footage-organizer, creator-intel vs content-researcher, expense-tracker vs invoice-system, screen-recording-analyzer vs content-pipeline). 4 dead web prototypes. 6 of 8 workflow docs describe code that's 1–3 versions behind reality. VPS has dual-scheduling (cron AND systemd) for the same jobs — that's a real outage risk. <code class="inline">ui-ux-pro-max</code> skill is so broadly triggered it will hijack project-specific skills. And the Anthropic API cache is not being used anywhere.</p>
+    <p><strong>The bottom line:</strong> Money-wise you're already running lean (total recorded spend &lt; $0.01). The real prize of this audit is <span class="gold">clarity</span>: fewer moving parts, docs that match code, one source of truth for project status, and zero-risk scheduling on the VPS.</p>
+  </div>
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="metric gold">
+      <div class="metric-label">Python Projects</div>
+      <div class="metric-value">15</div>
+      <div class="metric-sub">10 keep · 3 merge · 3 delete</div>
+    </div>
+    <div class="metric ice">
+      <div class="metric-label">Web Apps</div>
+      <div class="metric-value">8</div>
+      <div class="metric-sub">3 live · 4 delete · 1 move</div>
+    </div>
+    <div class="metric ok">
+      <div class="metric-label">Live / Healthy</div>
+      <div class="metric-value">62<span class="unit">%</span></div>
+      <div class="metric-sub">of scanned assets</div>
+    </div>
+    <div class="metric warn">
+      <div class="metric-label">Stale Docs</div>
+      <div class="metric-value">6<span class="unit">/8</span></div>
+      <div class="metric-sub">workflows behind code</div>
+    </div>
+    <div class="metric bad">
+      <div class="metric-label">Hard Deletes</div>
+      <div class="metric-value">13</div>
+      <div class="metric-sub">folders + files cut</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Credit Spend</div>
+      <div class="metric-value">&lt;$0.01</div>
+      <div class="metric-sub">all-time logged</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PYTHON ========== -->
+<section id="python">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Section 01</div>
+      <h2 class="sec-title">Python Scripts · 15 projects</h2>
+    </div>
+    <div class="sec-meta">python-scripts/</div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">Project-by-project verdict</div>
+    <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:22%">Project</th>
+          <th>Last Use</th>
+          <th>Status</th>
+          <th>Cost Posture</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="name">content-pipeline</td><td>1 day</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-light">Haiku · light</span></td><td>Keep. Voice-memo → Obsidian running daily.</td></tr>
+        <tr><td class="name">footage-organizer</td><td>0 days</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-light">Haiku Vision</span></td><td>Keep. Sai's daily archive pipeline.</td></tr>
+        <tr><td class="name">invoice-system</td><td>6 days</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-light">Haiku</span></td><td>Keep. Unify expense-tracker into it as <code class="inline">scan-expenses</code>.</td></tr>
+        <tr><td class="name">social-media-analytics</td><td>6 days</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-light">Haiku</span></td><td>Keep. 4 platforms all scraping.</td></tr>
+        <tr><td class="name">content-researcher</td><td>6 days</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-moderate">Sonnet + Haiku</span></td><td>Keep. Fold creator-intel in as <code class="inline">--creator-mode</code>.</td></tr>
+        <tr><td class="name">email-agent</td><td>6 days</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-moderate">Sonnet</span></td><td>Keep, but <strong>audit duplicate runs</strong> (VPS + Mac both running hourly).</td></tr>
+        <tr><td class="name">morning-briefing</td><td>6 days</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-light">Haiku</span></td><td>Keep. But <code class="inline">usage-stats.json</code> shows zero runs — verify it's actually firing.</td></tr>
+        <tr><td class="name">personal-assistant</td><td>6 days</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-moderate">Sonnet</span></td><td>Keep. Consider routing trivial commands to Haiku.</td></tr>
+        <tr><td class="name">hook-optimizer</td><td>6 days</td><td><span class="badge b-ok">Live</span></td><td><span class="tag cost-moderate">Sonnet</span></td><td><strong>Downgrade Sonnet → Haiku.</strong> Titles don't need reasoning.</td></tr>
+        <tr><td class="name">screen-recording-analyzer</td><td>— </td><td><span class="badge b-warn">Stale</span></td><td><span class="tag cost-light">Haiku Vision</span></td><td><strong>Merge into content-pipeline</strong> — shared ffmpeg + Whisper logic.</td></tr>
+        <tr><td class="name">expense-tracker</td><td>5 days</td><td><span class="badge b-warn">Redundant</span></td><td><span class="tag cost-light">Haiku</span></td><td><strong>Merge into invoice-system</strong> — both parse Gmail expenses.</td></tr>
+        <tr><td class="name">creator-intel</td><td>6 days</td><td><span class="badge b-warn">Partial</span></td><td><span class="tag cost-moderate">Sonnet</span></td><td><strong>Merge into content-researcher</strong> — duplicate YouTube fetching.</td></tr>
+        <tr><td class="name">photo-organizer</td><td>6 days</td><td><span class="badge b-bad">Unused</span></td><td><span class="tag cost-light">Haiku Vision</span></td><td><strong>Delete.</strong> Footage-organizer already does vision-based org.</td></tr>
+        <tr><td class="name">ai-shorts-channel</td><td>6 days</td><td><span class="badge b-bad">Never configured</span></td><td>—</td><td><strong>Delete or archive.</strong> Stalled awaiting YouTube account.</td></tr>
+        <tr><td class="name">client-onboarding</td><td>44 days</td><td><span class="badge b-bad">Retired</span></td><td>—</td><td><strong>Delete.</strong> Already marked retired in project-status.json.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">Top 5 Python wins</div>
+    <ol class="findings">
+      <li><span class="num">1</span><div class="body"><span class="hook">Merge screen-recording-analyzer → content-pipeline</span>Both extract transcripts and keyframes. Unify under a <code class="inline">--analysis-bundle</code> flag. Removes ~80 lines of duplicate ffmpeg/Whisper wrapper.</div></li>
+      <li><span class="num">2</span><div class="body"><span class="hook">Consolidate expense-tracker → invoice-system as <code class="inline">scan-expenses</code></span>One finance CLI to rule them all. One .env, one schedule, one source-of-truth sheet.</div></li>
+      <li><span class="num">3</span><div class="body"><span class="hook">Merge creator-intel → content-researcher</span>Both pull YouTube creator metadata. Add a <code class="inline">--creator-mode</code> flag. Saves ~150 API calls/week if batched.</div></li>
+      <li><span class="num">4</span><div class="body"><span class="hook">Downgrade hook-optimizer to Haiku</span>Creative ideation is Haiku's sweet spot. ~30–40% cost drop on that tool. 7-day cache already blocks repeats.</div></li>
+      <li><span class="num">5</span><div class="body"><span class="hook">Add ephemeral cache to every multi-message call</span>Zero projects use <code class="inline">cache_control={"type":"ephemeral"}</code>. Every loop, every batch, every agentic step would benefit. Flat 50–90% cache-hit savings once wired.</div></li>
+    </ol>
+  </div>
+
+  <div class="note">Reality check on spend — <code class="inline">usage-stats.json</code> shows total logged cost across the whole workspace is under $0.01. Most scripts never even log a run. The "cost" column above is about <em>posture</em> (is this tool <em>set up</em> in a way that will scale cheaply?), not current spend.</div>
+</section>
+
+<!-- ========== WEB APPS ========== -->
+<section id="web">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Section 02</div>
+      <h2 class="sec-title">Web Apps · 8 folders</h2>
+    </div>
+    <div class="sec-meta">web-apps/</div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">App-by-app verdict</div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:24%">App</th><th>Status</th><th>Evidence</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="name">analytical</td><td><span class="badge b-ok">Live SaaS</span></td><td>FastAPI + SQLite + 4 frontend flows. Recent commits Apr 12.</td><td>Keep. Core product.</td></tr>
+        <tr><td class="name">analytical-demo</td><td><span class="badge b-ok">Live marketing</span></td><td>Distinct copy, pricing grid, links into analytical. Apr 11 edit.</td><td>Keep separate. Public landing page.</td></tr>
+        <tr><td class="name">payday-checklist</td><td><span class="badge b-ok">Live on Pages</span></td><td><code class="inline">expenses.json</code> touched today. Apr 13 UI commit.</td><td>Keep. Most recently refined.</td></tr>
+        <tr><td class="name">tool-iteration</td><td><span class="badge b-neu">Internal</span></td><td>Planning tracker, 20K HTML + JSON. Last edit Apr 14.</td><td>Keep or move to <code class="inline">docs/</code>.</td></tr>
+        <tr><td class="name">brand-board</td><td><span class="badge b-bad">Prototype</span></td><td>Single 15K HTML, not linked anywhere, unused since Apr 11.</td><td><strong>Delete.</strong> Color pick is made.</td></tr>
+        <tr><td class="name">invoice-builder</td><td><span class="badge b-bad">Prototype</span></td><td>Single 44K HTML, no backend, orphan since Mar 29.</td><td><strong>Delete.</strong> Fold into Analytical if ever needed.</td></tr>
+        <tr><td class="name">invoice-template</td><td><span class="badge b-bad">Reference-only</span></td><td>12K HTML, no links. Superseded by invoice-builder's superseding.</td><td><strong>Delete.</strong></td></tr>
+        <tr><td class="name">social-media-analytics</td><td><span class="badge b-bad">Dead mockup</span></td><td>Pure HTML preview, no JS logic. Real tool lives in <code class="inline">python-scripts/</code>.</td><td><strong>Delete.</strong> Misleading duplicate name.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">Cross-app findings</div>
+    <ul class="findings">
+      <li><span class="num">·</span><div class="body"><span class="hook">Duplicate stylesheets</span><code class="inline">analytical-demo/style.css</code> (1,096 lines) and <code class="inline">analytical/frontend/style.css</code> (1,670 lines) overlap heavily. Unify shared variables into <code class="inline">web-apps/styles/brand.css</code>.</div></li>
+      <li><span class="num">·</span><div class="body"><span class="hook">No root index for web-apps/</span>Each app stands alone. Consider a tiny <code class="inline">web-apps/index.html</code> linking live apps for visibility.</div></li>
+      <li><span class="num">·</span><div class="body"><span class="hook">Name collision</span><code class="inline">web-apps/social-media-analytics/</code> vs <code class="inline">python-scripts/social-media-analytics/</code> are unrelated. The web one is a dead mockup — deleting it removes the footgun.</div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========== CLAUDE CONFIG ========== -->
+<section id="claude">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Section 03</div>
+      <h2 class="sec-title">Claude Code Config</h2>
+    </div>
+    <div class="sec-meta">.claude/ · ~/.claude.json · hooks</div>
+  </div>
+
+  <div class="two-col">
+    <div class="glass">
+      <h3 class="subhead">Slash Commands · 4</h3>
+      <div class="table-wrap">
+      <table>
+        <tbody>
+          <tr><td class="name">/prime</td><td><span class="badge b-ok">34 uses</span></td></tr>
+          <tr><td class="name">/save</td><td><span class="badge b-ok">27 uses</span></td></tr>
+          <tr><td class="name">/implement</td><td><span class="badge b-warn">5 uses</span></td></tr>
+          <tr><td class="name">/create-plan</td><td><span class="badge b-warn">4 uses</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note"><strong>Bug:</strong> <code class="inline">/save</code> writes to <code class="inline">Documents/Obsidian/</code> but CLAUDE.md says vault is at <code class="inline">My Drive/Obsidian/</code>. One is wrong. Reconcile before sessions silently drop notes.</div>
+    </div>
+
+    <div class="glass">
+      <h3 class="subhead">Rules · 3</h3>
+      <ul class="findings">
+        <li><span class="num">✓</span><div class="body"><span class="hook">communication-style.md</span>Active, no drift.</div></li>
+        <li><span class="num">✓</span><div class="body"><span class="hook">python-and-code.md</span>Active, matches current code conventions.</div></li>
+        <li><span class="num">!</span><div class="body"><span class="hook">session-habits.md</span>Stale path: says <code class="inline">cd ~/Desktop/my-project</code> but actual is <code class="inline">c:/Users/Gray Davis/my-project</code>. Low severity (hooks use the correct path) but will confuse future copy-paste.</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">Custom Skills · 4</div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:25%">Skill</th><th>Frontmatter</th><th>Trigger quality</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td class="name">google-oauth-refresh</td><td>✓</td><td>Excellent — scoped to 401/RefreshError + two projects.</td><td><span class="badge b-ok">Keep</span></td></tr>
+        <tr><td class="name">invoice-expense-logger</td><td>✓</td><td>Excellent — 8 explicit commands, one project.</td><td><span class="badge b-ok">Keep</span></td></tr>
+        <tr><td class="name">analytical-feature-builder</td><td>✓</td><td>Excellent — file-path-based triggers, tight to Analytical house style.</td><td><span class="badge b-ok">Keep</span></td></tr>
+        <tr><td class="name">ui-ux-pro-max</td><td>✓</td><td><strong>Dangerously broad.</strong> 10 action verbs + unlimited projects. Will hijack project-specific skills.</td><td><span class="badge b-bad">Narrow or disable</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="note">Missing file referenced in <code class="inline">ui-ux-pro-max/scripts/search.py</code> — either dataset was never copied over or the skill is partially broken. Fix or drop.</div>
+  </div>
+
+  <div class="two-col">
+    <div class="glass">
+      <h3 class="subhead">Hooks</h3>
+      <ul class="findings">
+        <li><span class="num">✓</span><div class="body"><span class="hook">SessionStart → git pull</span>Syncs workspace on every session start.</div></li>
+        <li><span class="num">✓</span><div class="body"><span class="hook">Stop → auto-commit + push</span>Confirmed in recent commits. Working as intended.</div></li>
+        <li><span class="num">✓</span><div class="body"><span class="hook">PreCompact → auto-commit + push</span>Redundant with Stop but safe — no action needed.</div></li>
+      </ul>
+    </div>
+
+    <div class="glass">
+      <h3 class="subhead">MCP Servers</h3>
+      <ul class="findings">
+        <li><span class="num">●</span><div class="body"><span class="hook">filesystem · github · gdrive</span>Active. Daily use — baseline.</div></li>
+        <li><span class="num">○</span><div class="body"><span class="hook">obsidian</span>Flagged unreliable in <code class="inline">/save</code>'s own code. Verify or disable.</div></li>
+        <li><span class="num">○</span><div class="body"><span class="hook">slack · sequential-thinking · magic</span>Dormant — configured but no evidence of use. Keep sequential-thinking for complex tasks; consider dropping magic if not being used.</div></li>
+      </ul>
+      <div class="note">CLAUDE.md still references <strong>fetch</strong> and <strong>puppeteer</strong>. These were dropped 2026-04-15. Update CLAUDE.md.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DOCS ========== -->
+<section id="docs">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Section 04</div>
+      <h2 class="sec-title">Documentation Layer</h2>
+    </div>
+    <div class="sec-meta">context · workflows · plans · docs · references · templates · business</div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">Layer-by-layer health</div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:20%">Layer</th><th>Files</th><th>Status</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="name">context/</td><td>4</td><td><span class="badge b-ok">Current</span></td><td>priorities.md updated today. goals.md Q2-aligned. me.md + work.md accurate.</td></tr>
+        <tr><td class="name">decisions/log.md</td><td>1 · 32 entries</td><td><span class="badge b-ok">Live</span></td><td>Last entry today. Append-only discipline intact.</td></tr>
+        <tr><td class="name">plans/</td><td>9</td><td><span class="badge b-ok">All shipped</span></td><td>Zero ghost plans. April 19 Footage refinement is the only "partially implemented" (eval.py harness unclear).</td></tr>
+        <tr><td class="name">workflows/</td><td>8</td><td><span class="badge b-bad">6 stale</span></td><td>Docs describe old code. Top offender: content-researcher.md (old 5-step pipeline vs actual agentic loop).</td></tr>
+        <tr><td class="name">docs/</td><td>3</td><td><span class="badge b-warn">Partial</span></td><td>Email Agent iter #1 spec says "paused before implementation plan" — verify or archive.</td></tr>
+        <tr><td class="name">references/</td><td>4 items</td><td><span class="badge b-neu">Archive</span></td><td>OK. 6-month review set for Oct 2026.</td></tr>
+        <tr><td class="name">templates/</td><td>1</td><td><span class="badge b-bad">Orphan</span></td><td>session-summary.md superseded when sessions moved to Obsidian vault.</td></tr>
+        <tr><td class="name">business/</td><td>2</td><td><span class="badge b-warn">Partial</span></td><td>sai-job-reference.md superseded by plans/2026-04-15-sai-debrief-* files.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">Critical finding · workflows/ drift</div>
+    <p style="color:var(--text-dim);font-size:13px;margin-bottom:14px;">Six of eight workflow SOPs describe code that's 1–3 versions behind reality. These are the docs you'd hand to a future you (or a new collaborator) — and they'd be wrong.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Workflow</th><th>Drift</th></tr></thead>
+      <tbody>
+        <tr><td class="name">content-researcher.md</td><td>Describes old 5-step pipeline; code is agentic (decision 2026-04-13).</td></tr>
+        <tr><td class="name">content-pipeline.md</td><td>Missing Whisper integration + <code class="inline">--all</code> batch flag (added 2026-04-19).</td></tr>
+        <tr><td class="name">footage-organizer.md</td><td>Lists old 7 categories; code uses 17 new categories + orientation-only detection.</td></tr>
+        <tr><td class="name">invoice-system.md</td><td>Lists 5 categories; code uses 9 + mileage columns.</td></tr>
+        <tr><td class="name">social-media-analytics.md</td><td>Doesn't mention Instagram/FB scraper approach; still proposes Graph API path that was abandoned.</td></tr>
+        <tr><td class="name">email-agent.md</td><td>Missing iteration #1 redesign direction.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="note">Batch-refresh estimate: ~1.5 hours for all six. High leverage — these are the docs that prevent re-learning your own tools.</div>
+  </div>
+</section>
+
+<!-- ========== ROOT / VPS ========== -->
+<section id="root">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Section 05</div>
+      <h2 class="sec-title">Root + VPS / Deploy</h2>
+    </div>
+    <div class="sec-meta">dashboard.html · sync_usage.py · deploy/</div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">Root-level files</div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:24%">File</th><th>Status</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="name">dashboard.html</td><td><span class="badge b-ok">Alive</span></td><td>Live on Pages. Loads usage-stats.json + project-status.json.</td></tr>
+        <tr><td class="name">sync_usage.py</td><td><span class="badge b-warn">Manual</span></td><td>Works but never auto-runs. Add a cron or GitHub Action.</td></tr>
+        <tr><td class="name">usage-stats.json</td><td><span class="badge b-ok">Fresh today</span></td><td>But many projects show zero runs — VPS may not be logging.</td></tr>
+        <tr><td class="name">project-status.json</td><td><span class="badge b-warn">Conflicts</span></td><td>Manual. Disagrees with priorities.md + usage-stats.json. Automate or delete.</td></tr>
+        <tr><td class="name">tiktok-callback.html</td><td><span class="badge b-ok">Locked</span></td><td>Must stay at root — TikTok dev console URL hardcoded.</td></tr>
+        <tr><td class="name">CLAUDE.md</td><td><span class="badge b-warn">Minor drift</span></td><td>Mentions fetch + puppeteer (dropped). Email-agent schedule description ambiguous.</td></tr>
+        <tr><td class="name">README.md</td><td><span class="badge b-bad">Stub</span></td><td>14 bytes. Expand for public repo, or delete.</td></tr>
+        <tr><td class="name">.gitignore</td><td><span class="badge b-ok">Good</span></td><td>Comprehensive.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="glass">
+    <div class="card-head">VPS · Deploy layer</div>
+    <p style="color:var(--text-dim);font-size:13px;margin-bottom:14px;"><strong style="color:var(--bad)">Highest-risk finding in the audit.</strong> The VPS has both <code class="inline">cron</code> and <code class="inline">systemd</code> trying to schedule the same jobs. This is a real outage vector — not theoretical.</p>
+    <ul class="findings">
+      <li><span class="num">⚠</span><div class="body"><span class="hook">morning-briefing</span>systemd service passes <code class="inline">--schedule</code> (internal scheduler) AND cron fires it at 8am. Two schedulers, one job. Risk of double-runs or race conditions.</div></li>
+      <li><span class="num">⚠</span><div class="body"><span class="hook">invoice-scan</span>systemd service says <code class="inline">--time 12:00</code> (noon). Cron job says 9am. Which is canonical? Currently both can fire.</div></li>
+      <li><span class="num">⚠</span><div class="body"><span class="hook">email-agent</span>Service file uses <code class="inline">Restart=always</code> + 15s. vps-setup.sh builds a service that uses <code class="inline">Restart=on-failure</code> + 30s. File drift between committed config and install script.</div></li>
+      <li><span class="num">⚠</span><div class="body"><span class="hook">email-agent duplicate runs</span>Per memory, Gray already suspects email-agent is running on both Mac and VPS simultaneously. Confirm which is canonical and shut the other down.</div></li>
+    </ul>
+    <div class="note"><strong>Recommendation:</strong> pick one scheduler — <code class="inline">cron</code> for time-based jobs (8am briefing, 9am invoice), <code class="inline">systemd</code> only for the always-on email-agent daemon. Delete the conflicting .service files. Re-run <code class="inline">bash deploy/vps-setup.sh</code> from clean state.</div>
+  </div>
+</section>
+
+<!-- ========== ACTION PLAN ========== -->
+<section id="action">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Priority Plan</div>
+      <h2 class="sec-title">What to actually do</h2>
+    </div>
+    <div class="sec-meta">in order of leverage</div>
+  </div>
+
+  <div class="action-grid">
+    <div class="action-col immediate">
+      <div class="action-tag">This week · 2–3 hrs</div>
+      <div class="action-head">Quick wins + risk removal</div>
+      <ul class="action-list">
+        <li><strong>Delete 3 Python projects:</strong> client-onboarding, photo-organizer, ai-shorts-channel</li>
+        <li><strong>Delete 4 web apps:</strong> brand-board, invoice-builder, invoice-template, web-apps/social-media-analytics</li>
+        <li><strong>Delete 2 docs:</strong> templates/session-summary.md, business/sai-job-reference.md</li>
+        <li><strong>Delete 2 workflow docs:</strong> client-crm.md, screen-recording-to-sop.md</li>
+        <li><strong>Narrow ui-ux-pro-max skill triggers</strong> or disable outright</li>
+        <li><strong>Fix session-habits.md stale path</strong> (~/Desktop → c:/Users/Gray Davis)</li>
+        <li><strong>Downgrade hook-optimizer Sonnet → Haiku</strong></li>
+        <li><strong>Resolve VPS scheduling:</strong> pick cron OR systemd, not both</li>
+        <li><strong>Verify email-agent isn't running on both Mac + VPS</strong></li>
+      </ul>
+    </div>
+
+    <div class="action-col short">
+      <div class="action-tag">Next 2 weeks · 1 session each</div>
+      <div class="action-head">Consolidation + doc refresh</div>
+      <ul class="action-list">
+        <li><strong>Merge screen-recording-analyzer → content-pipeline</strong> via <code class="inline">--analysis-bundle</code> flag</li>
+        <li><strong>Merge expense-tracker → invoice-system</strong> as <code class="inline">scan-expenses</code> subcommand</li>
+        <li><strong>Merge creator-intel → content-researcher</strong> as <code class="inline">--creator-mode</code></li>
+        <li><strong>Refresh all 6 stale workflow docs</strong> to match current code</li>
+        <li><strong>Update CLAUDE.md:</strong> remove fetch/puppeteer, fix email-agent schedule description</li>
+        <li><strong>Resolve Obsidian path ambiguity</strong> between /save and CLAUDE.md</li>
+        <li><strong>Unify analytical CSS</strong> under web-apps/styles/brand.css</li>
+        <li><strong>Expand or delete README.md</strong></li>
+      </ul>
+    </div>
+
+    <div class="action-col ongoing">
+      <div class="action-tag">Compound wins</div>
+      <div class="action-head">Systems upgrades</div>
+      <ul class="action-list">
+        <li><strong>Add ephemeral cache_control</strong> to every Anthropic API call (flat savings across all tools)</li>
+        <li><strong>Automate sync_usage.py</strong> via GitHub Action or weekly cron</li>
+        <li><strong>Kill project-status.json</strong> and derive status from usage-stats.json + VPS health checks</li>
+        <li><strong>Batch API calls</strong> in invoice-system and expense-tracker (currently loop 1-by-1)</li>
+        <li><strong>Add skill for "merge project X into Y"</strong> — this pattern recurs</li>
+        <li><strong>Schedule a 6-month references/ review</strong> for October 2026 (already in decisions log)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ========== DELETIONS ========== -->
+<section id="delete">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Cut List</div>
+      <h2 class="sec-title">13 files + folders to delete</h2>
+    </div>
+    <div class="sec-meta">clean rm -rf candidates</div>
+  </div>
+
+  <div class="del-wrap">
+    <p style="color:var(--text-dim);font-size:13px;">Everything below is verified dead, redundant, or superseded. Each removes a file without breaking anything that's alive.</p>
+    <ul class="del-list">
+      <li>python-scripts/client-onboarding/<span class="why">Retired, marked so in project-status.json</span></li>
+      <li>python-scripts/photo-organizer/<span class="why">Duplicate of footage-organizer</span></li>
+      <li>python-scripts/ai-shorts-channel/<span class="why">Stalled waiting for accounts since Feb</span></li>
+      <li>web-apps/brand-board/<span class="why">Color pick is made, tool unused</span></li>
+      <li>web-apps/invoice-builder/<span class="why">Prototype, no backend, no users</span></li>
+      <li>web-apps/invoice-template/<span class="why">Reference-only, superseded</span></li>
+      <li>web-apps/social-media-analytics/<span class="why">Dead HTML mockup — real tool is in python-scripts/</span></li>
+      <li>templates/session-summary.md<span class="why">Orphaned after Obsidian vault move</span></li>
+      <li>business/sai-job-reference.md<span class="why">Superseded by plans/2026-04-15-sai-debrief-*</span></li>
+      <li>workflows/client-crm.md<span class="why">Tool never shipped</span></li>
+      <li>workflows/screen-recording-to-sop.md<span class="why">Tool unclear, not in index</span></li>
+      <li>deploy/morning-briefing.service<span class="why">Dual-scheduling with cron — pick one</span></li>
+      <li>deploy/invoice-scan.service<span class="why">Dual-scheduling with cron — pick one</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  Graydient Media <span class="dot"></span> Workspace Audit 2026-04-20 <span class="dot"></span> Generated by Claude Code
+</footer>
+
+</div>
+</body>
+</html>
