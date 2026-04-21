@@ -1,0 +1,163 @@
+# SOP: Edit and Publish "Building Blocks with Sai Karra" Episode
+
+**Trigger:** Sai finishes a new podcast recording and the raw audio/video is available (location not shown in tutorial — confirm with Sai)
+**Frequency:** ~1 episode per week (confirm cadence)
+**Owner today:** Sai Karra → **Future owner:** AI agent (with Gray reviewing the draft before Publish)
+**Expected runtime:** ~15 minutes manual today; target ~2 minutes with automation
+
+---
+
+## Inputs
+
+- Raw pod recording (file name shown in tutorial: `pod.mp3` in macOS Downloads — exact source channel not shown)
+- "Building Blocks intro" stinger audio (pre-made — location not shown)
+- "Building Blocks midway" stinger audio (pre-made — location not shown)
+- Episode title (free-form, formula: "What I learned from my $100m mentor"-style)
+- Episode notes (formula: 1-sentence premise + "These are the X biggest takeaways" list)
+- RSS.com login (Sai will share when handoff happens — reference only, never pasted in chat)
+
+## Tools & Accounts
+
+- **CapCut** (Mac desktop app) — edit + export audio — login not required
+- **RSS.com** (`https://dashboard.rss.com/`) — podcast host — login via email/password
+- **ChatGPT** (optional, Sai's personal workflow) — SEO-optimized episode notes from transcript — swap for Claude Sonnet in the automation
+
+---
+
+## Steps
+
+### Stage A — Edit in CapCut
+
+1. **Open CapCut and create a new project**
+   - Action: launch CapCut → start a new project
+   - Frame reference: `frames/frame_00001.jpg` @ 00:24 (CapCut menu bar visible)
+   - Expected result: empty CapCut workspace with Media panel on the right
+
+2. **Import the three source files**
+   - Action: in the Media panel, click **Import** and select:
+     - The raw pod recording (`pod.mp3` or similar)
+     - The Building Blocks **intro** stinger
+     - The Building Blocks **midway** stinger
+   - Frame reference: `frames/frame_00003.jpg` @ 00:26 (Import button visible in Media panel)
+   - Expected result: all three files appear in the media bin
+
+3. **Drop the podcast on the timeline and locate the hook**
+   - Action: drag the main pod onto the timeline. Scrub to just after the opening hook sentence ("I was fortunate enough to get lunch today with my mentor…")
+   - Expected result: playhead sits immediately after the hook line ends
+
+4. **Split the pod and insert the intro stinger after the hook**
+   - Action: split (cut) the pod at the end of the hook → drag the **intro stinger** into the gap so it plays right after the hook
+   - Transcript reference: **[01:06]** "And then you find the intro, like, right after the hook. You cut it, and then drag that intro in there."
+   - Expected result: timeline order is `hook → intro stinger → rest of pod`
+
+5. **Find a tension point mid-episode and insert the midway stinger**
+   - Action: scrub to a tension/curiosity moment in the pod ("the point in which I'm about to drop some sauce") → split → drag the **midway stinger** into the split
+   - Transcript reference: **[01:58]** "find a midway point, somewhere where it's, like, tension-causing"
+   - Expected result: midway stinger plays at a narrative peak
+
+6. **Cut dead space throughout**
+   - Action: scrub through the full timeline and delete obvious silence / dead air. No creative edits, no music, no effects.
+   - Transcript reference: **[02:29]** "make sure you just cut out the dead space. And that's pretty much it."
+   - Expected result: tight cut with no long gaps
+
+7. **Export as audio**
+   - Action: click **Export** → choose audio-only export (MP3)
+   - Transcript reference: **[02:34]** "You click export... I'm going to export it as audio."
+   - Expected result: a single `.mp3` file of the edited episode on disk
+
+### Stage B — Publish on RSS.com
+
+8. **Open rss.com and sign in**
+   - Action: browser → `https://rss.com` → Sign In → enter Sai's credentials
+   - Frame references: `frames/frame_00006.jpg` @ 02:59 (rss.com homepage), `frames/frame_00007.jpg` @ 03:01 (sign-in page)
+   - Expected result: land on the "Building Blocks with Sai Karra" podcast dashboard (see `frames/frame_00010.jpg` @ 03:08)
+
+9. **Click "New episode"**
+   - Action: click the orange **+ New episode** button on the podcast dashboard
+   - Frame reference: `frames/frame_00010.jpg` @ 03:08 (New episode button visible)
+   - Expected result: navigate to `dashboard.rss.com/podcasts/{show-slug}/new-episode/`
+
+10. **Upload the exported audio**
+    - Action: drag-and-drop the exported MP3 into the **Episode audio file** zone (2 GB limit)
+    - Frame reference: `frames/frame_00011.jpg` @ 04:59 (audio upload section with file attached)
+    - Expected result: audio file attached, duration shown, "Replace audio file" option appears
+
+11. **Set the Episode Title**
+    - Action: paste/type a descriptive title — formula Sai uses: `What I learned from my $100m mentor`
+    - Max 250 chars; his examples trend to 35 chars
+    - Frame reference: `frames/frame_00011.jpg` — title field visible with the example filled in
+    - Expected result: title saved in field
+
+12. **Fill in Episode Notes**
+    - Action: write description with this formula:
+      - 1-sentence premise: *"I got lunch with a mentor today whose agency does over $100m a year."*
+      - Hook line: *"These are the 3 biggest takeaways."*
+      - Bullet points for each takeaway (Sai's usual pattern is 3)
+    - Sai's preferred method: paste transcript into a ChatGPT project tuned for SEO podcast descriptions. For automation: use Claude Sonnet with the same intent.
+    - Transcript reference: **[03:50]** "what I usually do is I get the transcript of the actual audio and then I put it in the chat GPT. I build out like a project or a bot that's specific for thumbnail title or podcast descriptions that are like optimized for SEO"
+    - Expected result: episode notes filled in, 116+/4000 chars
+
+13. **Cover art — leave default**
+    - Action: leave the existing "Building Blocks with Sai Karra" cover art; do NOT replace per episode
+    - Frame reference: `frames/frame_00011.jpg` — cover art visible on right rail
+    - Expected result: no change
+
+14. **Save Draft**
+    - Action: click **Save Draft** (bottom right)
+    - Frame reference: `frames/frame_00011.jpg` — Save Draft button
+    - Expected result: draft saved, Publish button appears
+
+15. **Publish**
+    - Action: click **Publish**
+    - Transcript reference: **[05:04]** "Once you save draft, you're going to get a button that says publish. You click publish and then you export that shit to the internet."
+    - Expected result: URL changes to `?status=published`, episode goes live, distributes to Apple Podcasts / Spotify / etc. via RSS.com's automatic distribution
+
+---
+
+## Success Criteria
+
+- Published episode appears on the dashboard with `?status=published` in URL (see `frames/frame_00013.jpg`)
+- Audio plays end-to-end without dead-space gaps
+- Intro stinger plays immediately after the opening hook
+- Midway stinger plays at a tension point
+- Episode distributes to Apple Podcasts and Spotify within ~1–2 hours (RSS.com handles this automatically)
+
+---
+
+## Failure Modes
+
+- **Intro/midway stinger in the wrong place** → the narrative beat is wrong. Recovery: delete episode, re-edit, re-upload.
+- **Published with the wrong title/notes** → RSS.com allows post-publish edits on the episode page.
+- **Audio file > 2 GB** → compress with `ffmpeg -i in.mp3 -b:a 128k out.mp3` before upload.
+- **Login expired / 2FA prompt** → tutorial doesn't show 2FA being used; flag this the first time it happens.
+
+---
+
+## Automation Hooks
+
+- **Fully automatable (target: new Python script):**
+  - **Step 6 — cut dead space:** ffmpeg silence-detect → auto-trim (`silencedetect` + `atrim` filters)
+  - **Step 4 & 5 — insert stingers:** ffmpeg concat with a programmatic split-point. Step 5's "tension point" is the judgment call — either (a) use a Claude pass on the transcript to pick the timestamp, or (b) default to the midpoint as v1.
+  - **Step 7 — export:** ffmpeg encode → MP3
+  - **Step 11 — title:** Claude Sonnet prompt on transcript, constrained to "What I learned from…"-style formula
+  - **Step 12 — episode notes:** Claude Sonnet prompt: premise + "X biggest takeaways" + bullet list. Replaces ChatGPT/Sai's project — we already have `ANTHROPIC_API_KEY`.
+- **Needs human review:**
+  - Stinger placement (step 5) — at least until we benchmark Claude's tension-point picks against Sai's manual picks
+  - Final Publish click (step 15) — Gray reviews the draft first
+- **No public API — Playwright required:**
+  - Steps 8–14 on RSS.com (no public API; scrape/drive via Playwright like `social-media-analytics/meta_scraper.py` does for Meta)
+- **Next script to build:** `python-scripts/podcast-publisher/main.py`
+  - Inputs: path to raw pod, path to intro stinger, path to midway stinger, `--dry-run` flag
+  - Outputs: edited MP3 at `output/{episode}.mp3` + a `draft.json` with generated title + notes; optionally drives RSS.com to draft state (final Publish = manual)
+
+---
+
+## ⚠ Open Questions
+
+1. **Where does the raw pod recording come from?** Tutorial shows `pod.mp3` already in macOS Downloads. Is it a Zoom cloud export? A Rode/Shure mic recording? A Descript export? This determines the start of the pipeline.
+2. **Where do the intro and midway stingers live?** Pre-made files — need the canonical path so the automation can grab them.
+3. **Is the ChatGPT project for episode notes something we should replicate in Claude**, or does Sai want to keep using it and just hand over the transcript? Simpler for us to rebuild in Claude with the same intent.
+4. **RSS.com has no documented public API** — confirm before committing to Playwright. Check for an undocumented internal API by inspecting network traffic during a manual upload.
+5. **2FA / session handling on RSS.com** — unknown; will surface on first Playwright run.
+6. **Cadence** — how often does a new episode drop? Weekly? Daily? This sets the priority of automation.
+7. **Does Sai want the automation to Publish automatically, or always stop at "Save Draft" for his review?** Current SOP assumes draft-only; Sai clicks Publish.
