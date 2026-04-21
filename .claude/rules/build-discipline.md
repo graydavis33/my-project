@@ -109,6 +109,12 @@ Same for `context/priorities.md` when focus shifts, and `decisions/log.md` for m
 
 ---
 
+## When Writing a New SOP
+
+Use `templates/sop-template.md` as the scaffold. Keep the section order — every `workflows/*.md` shares the same shape so future Claudes (and future Gray) know where to find commands vs failure modes vs env vars without hunting. Don't invent new sections; delete ones that don't apply instead.
+
+---
+
 ## Recurring-Audit Cadence
 
 Run a full workspace audit roughly quarterly, or any time "things feel off." The SOP is at `workflows/workspace-audit.md` — self-contained prompts for 5 parallel research agents, verification-before-deletion discipline, branded HTML output structure. Use `audits/2026-04-20-workspace-audit.html` as the baseline for comparison. Log what changed. Delete what's dead. If a new recurring failure pattern surfaces, append it here.
