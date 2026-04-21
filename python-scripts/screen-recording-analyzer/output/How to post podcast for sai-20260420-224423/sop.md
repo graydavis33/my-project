@@ -109,8 +109,9 @@
     - Frame reference: `frames/frame_00011.jpg` — Save Draft button
     - Expected result: draft saved, Publish button appears
 
-15. **Publish**
-    - Action: click **Publish**
+15. **Publish (auto)**
+    - Action: click **Publish** immediately after Save Draft — the automation does this end-to-end with no human stop
+    - **Rule (locked):** once the pipeline kicks off, it runs all the way through to Publish. No draft-and-wait step.
     - Transcript reference: **[05:04]** "Once you save draft, you're going to get a button that says publish. You click publish and then you export that shit to the internet."
     - Expected result: URL changes to `?status=published`, episode goes live, distributes to Apple Podcasts / Spotify / etc. via RSS.com's automatic distribution
 
@@ -137,20 +138,23 @@
 
 ## Automation Hooks
 
-- **Fully automatable (target: new Python script):**
+- **Fully automatable — end-to-end, no human checkpoint:**
+  - **Input pickup:** watch the Google Drive podcast folder (or pull latest file on run)
   - **Step 6 — cut dead space:** ffmpeg silence-detect → auto-trim (`silencedetect` + `atrim` filters)
-  - **Step 4 & 5 — insert stingers:** ffmpeg concat with a programmatic split-point. Step 5's "tension point" is the judgment call — either (a) use a Claude pass on the transcript to pick the timestamp, or (b) default to the midpoint as v1.
+  - **Step 3 — find the hook end:** Whisper transcript + Claude Sonnet pass to find the exact timestamp where the opening hook sentence ends. Deterministic splice point once we have it.
+  - **Step 4 — insert intro stinger:** ffmpeg concat at the hook-end timestamp. No judgment — rule is fixed.
+  - **Step 5 — insert midway stinger:** Claude Sonnet pass on the transcript to score candidate "mini-hook" lines in the middle third of the pod → pick the top scorer → ffmpeg concat at that timestamp.
   - **Step 7 — export:** ffmpeg encode → MP3
   - **Step 11 — title:** Claude Sonnet prompt on transcript, constrained to "What I learned from…"-style formula
   - **Step 12 — episode notes:** Claude Sonnet prompt: premise + "X biggest takeaways" + bullet list. Replaces ChatGPT/Sai's project — we already have `ANTHROPIC_API_KEY`.
-- **Needs human review:**
-  - Stinger placement (step 5) — at least until we benchmark Claude's tension-point picks against Sai's manual picks
-  - Final Publish click (step 15) — Gray reviews the draft first
+  - **Step 15 — publish:** Playwright drives through Save Draft AND Publish. No draft-and-wait.
 - **No public API — Playwright required:**
-  - Steps 8–14 on RSS.com (no public API; scrape/drive via Playwright like `social-media-analytics/meta_scraper.py` does for Meta)
+  - Steps 8–15 on RSS.com (no public API; scrape/drive via Playwright like `social-media-analytics/meta_scraper.py` does for Meta)
+- **Iteration plan:**
+  - v1 ships as auto-publish end-to-end. Gray audits the first few published episodes against what Sai would have shipped manually. If Claude's mini-hook picks or title/notes miss, update THIS SOP with the refinement and retune the prompts.
 - **Next script to build:** `python-scripts/podcast-publisher/main.py`
-  - Inputs: path to raw pod, path to intro stinger, path to midway stinger, `--dry-run` flag
-  - Outputs: edited MP3 at `output/{episode}.mp3` + a `draft.json` with generated title + notes; optionally drives RSS.com to draft state (final Publish = manual)
+  - Inputs: (optional) path to raw pod override; otherwise auto-pull from Drive folder
+  - Outputs: edited MP3 at `output/{episode}.mp3` + generated title/notes + published episode URL logged to Slack
 
 ---
 
