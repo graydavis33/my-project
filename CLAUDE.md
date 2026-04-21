@@ -27,8 +27,9 @@ You are Gray Davis's AI operator and executive assistant. Read context files to 
 - `references/` — source library: framework docs and templates studied to build this workspace
 - `templates/` — reusable templates (currently session-summary.md)
 - `.claude/commands/` — slash commands: /prime, /create-plan, /implement, /save
-- `.claude/rules/` — behavior rules loaded every session (communication, code, habits)
+- `.claude/rules/` — behavior rules loaded every session (communication, code, habits, build-discipline)
 - `.claude/skills/` — custom skills (3 active — see below)
+- `audits/` — periodic workspace audit reports. Baseline: `2026-04-20-workspace-audit.html`
 
 **Root files:**
 - `dashboard.html` — project status dashboard, served at graydavis33.github.io/my-project/dashboard.html
@@ -109,9 +110,13 @@ Six MCP servers configured in `~/.claude.json` (VS Code extension uses `--strict
 
 ## Core Rules
 
-**Before building:** Check `workflows/` for an existing SOP. Check `python-scripts/` for existing tools. Use the planning heuristics above.
+**Before building:** Read `.claude/rules/build-discipline.md` first. Check `workflows/` for an existing SOP. Walk `python-scripts/` for existing tools before proposing new ones — extend-with-flag beats new-project. Use the planning heuristics above.
 
-**When something breaks:** Read the full error → fix the script → verify → update the workflow with what was learned. Ask before re-running paid API calls.
+**When something breaks:** Read the full error → fix the script → verify → update the workflow with what was learned (same commit). Ask before re-running paid API calls.
+
+**Doc + code must match:** when code changes, update the workflow SOP + README + CLAUDE.md references in the same commit. Stale docs are bugs.
+
+**One scheduler per job:** systemd OR cron OR launchd OR an in-script scheduler — never two. Duplicate schedulers mean duplicate API calls.
 
 **Security:** `.env`, `token.json`, `client_secret*.json`, `credentials.json` are always gitignored. API keys live in `.env` only, never hardcoded.
 

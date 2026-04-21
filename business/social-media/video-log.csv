@@ -1,0 +1,10 @@
+video_id,post_date,platform,series,pillar,hook_style,format,topic,title,caption,views_7d,saves_7d,shares_7d,comments_7d,follows_7d,performance_tier,notes
+# Schema reference:
+# video_id: YYYY-MM-DD-slug (e.g. 2026-04-21-claude-edit-color-grade)
+# platform: tiktok | instagram | youtube-shorts | youtube-longform | x
+# series: Claude Edits | 60-Second Effect | Videographers Week | Month One | Tool Report | BTS Personal Videographer | Social Media Growth Update | trend-hop | standalone
+# pillar: AI+Camera | BTS | Tutorial | Before/After | Journey
+# hook_style: Problem | Curiosity | Counter-intuitive | Trend | Story | Result
+# format: talking-head | screen-recording | b-roll-montage | split-screen-before-after | phone-at-self | mixed
+# performance_tier: HIT | OK | MISS (assigned 7 days after post)
+# One row per video per platform. Same video posted to 3 platforms = 3 rows.
