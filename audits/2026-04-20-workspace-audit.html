@@ -513,6 +513,7 @@
   <p class="subtitle">A top-to-bottom audit of every asset, script, config, and document in <code class="inline">my-project</code>. What's alive, what's dead, what's leaking credits, what can be cut, what can be merged.</p>
   <div class="metabar">
     <span class="meta-pill gold">Audit 2026-04-20</span>
+    <span class="meta-pill">Progress 2026-04-21</span>
     <span class="meta-pill">6 research agents</span>
     <span class="meta-pill">64+ assets scanned</span>
   </div>
@@ -520,6 +521,7 @@
 
 <!-- ========== NAV ========== -->
 <nav class="toc">
+  <a href="#progress">Progress</a>
   <a href="#summary">Summary</a>
   <a href="#python">Python</a>
   <a href="#web">Web Apps</a>
@@ -529,6 +531,68 @@
   <a href="#action">Action Plan</a>
   <a href="#delete">Cut List</a>
 </nav>
+
+<!-- ========== PROGRESS UPDATE ========== -->
+<section id="progress" style="margin-bottom:72px; scroll-margin-top:96px;">
+  <div class="exec" style="border-color: rgba(74,222,128,0.3); background: linear-gradient(135deg, rgba(74,222,128,0.05) 0%, rgba(232,184,75,0.04) 100%);">
+    <div class="exec-label" style="color: var(--ok);">Progress · 2026-04-21</div>
+    <h2 class="exec-head">Most of Tier 1 shipped overnight. Tier 2 started. Audit stays as the historical record; this block is the running ledger.</h2>
+    <p style="max-width:820px;">Gray gave the go on zero-risk items and the approved deletions; work ran autonomously while he slept. A couple of audit recommendations were <span class="gold">revised</span> on closer inspection — captured below.</p>
+  </div>
+
+  <div class="two-col" style="margin-top:18px;">
+    <div class="glass" style="border-color: rgba(74,222,128,0.25);">
+      <h3 class="subhead" style="color: var(--ok);">✓ Done</h3>
+      <ul class="findings">
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Deleted <code class="inline">ui-ux-pro-max</code> skill</span>31 files removed. Trigger set was too broad.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Deleted <code class="inline">magic</code> MCP server</span>Config clean; VS Code reload drops it from runtime. Claude Design supersedes it.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Fixed <code class="inline">session-habits.md</code> stale path</span>Now points at the Windows path + notes auto-push is hook-driven.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Deleted 2 Python projects</span><code class="inline">photo-organizer</code>, <code class="inline">client-onboarding</code>. <code class="inline">ai-shorts-channel</code> KEPT — Gray will use it.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Deleted 4 web-app prototypes</span><code class="inline">brand-board</code>, <code class="inline">invoice-builder</code>, <code class="inline">invoice-template</code>, <code class="inline">web-apps/social-media-analytics</code>.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Refreshed all 6 stale workflow docs</span>content-researcher, content-pipeline, footage-organizer (near-full rewrite), invoice-system, social-media-analytics, email-agent. Docs match code now.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Email-agent investigation report</span><code class="inline">audits/2026-04-20-email-agent-duplicate-run-investigation.md</code>. Confirmed it's a self-scheduling daemon; VPS is canonical.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">CLAUDE.md polished</span>MCP table corrected (fetch + puppeteer out, slack + sequential-thinking in, config location → <code class="inline">.claude.json</code>). Email-agent schedule wording fixed to reflect daemon architecture.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Future-proofing rule created</span><code class="inline">.claude/rules/build-discipline.md</code> — codifies 8 patterns (extend-existing-tools-first, one-scheduler-per-job, specific skill triggers, doc drift, config drift, cache discipline, etc.). Wired into CLAUDE.md so it loads every session.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">Auto-memory updated</span>New entries: <code class="inline">feedback_extend_existing_tools.md</code> + <code class="inline">reference_workspace_audits.md</code>. Removed dead refs.</div></li>
+        <li><span class="num" style="background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.35);">✓</span><div class="body"><span class="hook">5 decisions logged</span>In <code class="inline">decisions/log.md</code> — deletions, email-agent canonical runner, build-discipline rule, doc refresh pass.</div></li>
+      </ul>
+    </div>
+
+    <div class="glass" style="border-color: rgba(232,184,75,0.3);">
+      <h3 class="subhead">⟲ Revised from the audit</h3>
+      <ul class="findings">
+        <li><span class="num">!</span><div class="body"><span class="hook"><code class="inline">ai-shorts-channel</code> is NOT dead</span>Audit flagged it as stalled/delete. Reality: Gray intends to use it once accounts land. Keep.</div></li>
+        <li><span class="num">!</span><div class="body"><span class="hook"><code class="inline">workflows/screen-recording-to-sop.md</code> is NOT an orphan</span>Audit flagged for deletion. Reality: actively used for Sai's podcast upload SOP (per decisions/log 2026-04-21). Keep.</div></li>
+        <li><span class="num">!</span><div class="body"><span class="hook"><code class="inline">python-scripts/screen-recording-analyzer/</code> is NOT redundant</span>Audit recommended merging into content-pipeline. Reality: it's the on-ramp for delegating workflows to agents — different purpose (frames + SOP generation, not clip selection).</div></li>
+        <li><span class="num">!</span><div class="body"><span class="hook"><code class="inline">business/sai-job-reference.md</code> worth keeping</span>Has the career ladder ($7.5K senior → $10K+ creative director) + the "Why This Role Exists" quote. Not captured elsewhere.</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:18px;">
+    <div class="glass" style="border-color: rgba(251,191,36,0.25);">
+      <h3 class="subhead" style="color: var(--warn);">◷ Pending — Gray's call</h3>
+      <ul class="findings">
+        <li><span class="num">?</span><div class="body"><span class="hook">Delete 2 remaining orphan docs?</span><code class="inline">templates/session-summary.md</code> + <code class="inline">workflows/client-crm.md</code> — both confirmed dead, awaiting word.</div></li>
+        <li><span class="num">?</span><div class="body"><span class="hook">Obsidian vault path</span>My Drive/Obsidian/… vs Documents/Obsidian/… — which is canonical?</div></li>
+        <li><span class="num">?</span><div class="body"><span class="hook">README.md</span>Expand into a public intro, or delete?</div></li>
+        <li><span class="num">?</span><div class="body"><span class="hook">Hook-optimizer model swap</span>OK to flip Sonnet → Haiku? One-line change.</div></li>
+        <li><span class="num">?</span><div class="body"><span class="hook">sync_usage.py automation</span>Cron locally or GitHub Action?</div></li>
+      </ul>
+    </div>
+
+    <div class="glass" style="border-color: rgba(248,113,113,0.25);">
+      <h3 class="subhead" style="color: var(--bad);">⚠ Deferred — needs a plan first</h3>
+      <ul class="findings">
+        <li><span class="num">→</span><div class="body"><span class="hook">3 Python merges</span>screen-rec → pipeline was DROPPED (see Revised column). The remaining two: <code class="inline">expense-tracker</code> → <code class="inline">invoice-system</code>, <code class="inline">creator-intel</code> → <code class="inline">content-researcher</code>. Each wants a <code class="inline">/create-plan</code>.</div></li>
+        <li><span class="num">→</span><div class="body"><span class="hook">VPS dual-scheduling fix</span>Highest risk in the audit. Touches live services.</div></li>
+        <li><span class="num">→</span><div class="body"><span class="hook">Ephemeral cache rollout</span>Scope discussion first — which projects get it, what's the verification plan.</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:18px;">The original audit below stays as-is — historical record of what was found on 2026-04-20. Cross-reference with this progress block for current state.</div>
+</section>
 
 <!-- ========== EXECUTIVE SUMMARY ========== -->
 <section id="summary">
