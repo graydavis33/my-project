@@ -174,6 +174,12 @@
       width: 30px; text-align: right; font-family: var(--font-base); padding: 0; cursor: text;
     }
     .budget-inline-input:focus { outline: none; border-bottom-color: var(--color-yellow); }
+    .goal-inline-input {
+      background: transparent; border: none; border-bottom: 1px solid transparent;
+      color: var(--color-gray-light); font-size: 11px; font-weight: 500;
+      width: 55px; text-align: left; font-family: var(--font-base); padding: 0; cursor: text;
+    }
+    .goal-inline-input:focus { outline: none; border-bottom-color: var(--color-yellow); }
     .ok { color: var(--color-green); }
     .over { color: var(--color-red); }
     .expense-total-row {
@@ -459,18 +465,6 @@
         <div class="step" id="step-4" onclick="toggleStep(4)">
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
-            <div class="step-label">Set aside expense budget</div>
-            <div class="step-sub">Monthly total — track spending on the right</div>
-          </div>
-          <div class="step-right">
-            <div class="step-amount neutral" id="step4-amount">$975</div>
-            <div class="step-balance">Monthly budget</div>
-          </div>
-        </div>
-
-        <div class="step" id="step-5" onclick="toggleStep(5)">
-          <div class="checkbox"><span class="checkmark">✓</span></div>
-          <div class="step-body">
             <div class="step-label">Transfer to emergency fund</div>
             <div class="step-sub">$1,500/mo goal — update tracker on the right</div>
           </div>
@@ -497,7 +491,7 @@
           <div class="fund-top">
             <div>
               <div class="fund-title">Savings Balance</div>
-              <div class="fund-goal">Goal: $9,000 (6 months)</div>
+              <div class="fund-goal">Goal: $<input class="goal-inline-input" type="number" id="fund-goal" value="9000" oninput="updateFund()" /></div>
             </div>
             <div class="fund-input-wrap">
               <span>$</span>
@@ -510,6 +504,27 @@
           <div class="fund-stats">
             <span id="fund-pct">0% there</span>
             <span id="fund-months" class="highlight"></span>
+          </div>
+        </div>
+
+        <div class="gm-label" style="margin-top:24px">Engagement Ring <button class="section-reset-btn" onclick="resetRing()">Reset</button></div>
+        <div class="gm-card">
+          <div class="fund-top">
+            <div>
+              <div class="fund-title">Ring Savings</div>
+              <div class="fund-goal">Goal: $<input class="goal-inline-input" type="number" id="ring-goal" value="10000" oninput="updateRing()" /></div>
+            </div>
+            <div class="fund-input-wrap">
+              <span>$</span>
+              <input class="fund-input" type="number" id="ring-balance" placeholder="0" oninput="updateRing()" />
+            </div>
+          </div>
+          <div class="gm-progress-bg">
+            <div class="gm-progress-fill" id="ring-bar" style="width:0%"></div>
+          </div>
+          <div class="fund-stats">
+            <span id="ring-pct">0% there</span>
+            <span id="ring-months" class="highlight"></span>
           </div>
         </div>
 
@@ -675,7 +690,7 @@
 <script>
   const STORAGE_KEY = 'payday_v2';
   const HISTORY_KEY = 'payday_history_v1';
-  const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'MetroCard', 'Expense Budget', 'Emergency Fund'];
+  const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'MetroCard', 'Emergency Fund'];
   const EXPENSE_NAMES = ['Groceries', 'Dining Out', 'Software & Tools', 'Streaming', 'Utilities', 'Transport', 'Health & Wellness', 'Shopping', 'Misc'];
   const DEFAULT_BUDGETS = [200, 150, 100, 40, 60, 40, 50, 100, 235];
   let EXPENSE_BUDGETS = [...DEFAULT_BUDGETS];
@@ -713,7 +728,24 @@
   }
 
   function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
-  function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; } }
+  function loadHistory() {
+    try {
+      let h = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+      let migrated = false;
+      h = h.map(e => {
+        if (e.steps && e.steps[5] !== undefined) {
+          migrated = true;
+          const steps = {...e.steps};
+          steps[4] = steps[5];
+          delete steps[5];
+          return {...e, steps};
+        }
+        return e;
+      });
+      if (migrated) localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+      return h;
+    } catch { return []; }
+  }
 
   function switchTab(name) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -744,17 +776,34 @@
 
   function updateFund() {
     const val = parseFloat(document.getElementById('fund-balance').value) || 0;
-    const goal = 9000, pct = Math.min(100, (val / goal) * 100);
+    const goal = parseFloat(document.getElementById('fund-goal').value) || 9000;
+    const pct = Math.min(100, (val / goal) * 100);
     document.getElementById('fund-bar').style.width = pct.toFixed(1) + '%';
     document.getElementById('fund-pct').textContent = pct.toFixed(0) + '% there';
     const monthsLeft = Math.ceil((goal - val) / 1500);
     document.getElementById('fund-months').textContent = val >= goal ? 'Goal reached!' : monthsLeft + ' month' + (monthsLeft === 1 ? '' : 's') + ' to go';
-    const data = load(); data.fundBalance = val; save(data);
+    const data = load(); data.fundBalance = val; data.fundGoal = goal; save(data);
+  }
+
+  function updateRing() {
+    const val = parseFloat(document.getElementById('ring-balance').value) || 0;
+    const goal = parseFloat(document.getElementById('ring-goal').value) || 10000;
+    const pct = Math.min(100, (val / goal) * 100);
+    document.getElementById('ring-bar').style.width = pct.toFixed(1) + '%';
+    document.getElementById('ring-pct').textContent = pct.toFixed(0) + '% there';
+    const monthsLeft = Math.ceil((goal - val) / 300);
+    document.getElementById('ring-months').textContent = val >= goal ? 'Goal reached!' : monthsLeft + ' month' + (monthsLeft === 1 ? '' : 's') + ' to go';
+    const data = load(); data.ringBalance = val; data.ringGoal = goal; save(data);
   }
 
   function loadFund() {
     const data = load();
-    if (data.fundBalance != null) { document.getElementById('fund-balance').value = data.fundBalance; updateFund(); }
+    if (data.fundGoal != null) document.getElementById('fund-goal').value = data.fundGoal;
+    if (data.fundBalance != null) document.getElementById('fund-balance').value = data.fundBalance;
+    updateFund();
+    if (data.ringGoal != null) document.getElementById('ring-goal').value = data.ringGoal;
+    if (data.ringBalance != null) document.getElementById('ring-balance').value = data.ringBalance;
+    updateRing();
   }
 
   function updateBudgetAmount(i) {
@@ -794,7 +843,6 @@
     totalEl.textContent = (totalRem < 0 ? '-$' : '$') + Math.abs(totalRem).toFixed(0);
     totalEl.className = totalRem < 0 ? 'over' : 'ok';
     document.getElementById('expense-budget-total').textContent = '$' + total.toLocaleString();
-    document.getElementById('step4-amount').textContent = '$' + total.toLocaleString();
     const data = load(); data.expenses = Array.from(inputs).map(i => i.value); save(data);
   }
 
@@ -831,6 +879,14 @@
     document.getElementById('fund-months').textContent = '';
     const data = load(); delete data.fundBalance; save(data);
   }
+  function resetRing() {
+    if (!confirm('Clear engagement ring balance?')) return;
+    document.getElementById('ring-balance').value = '';
+    document.getElementById('ring-bar').style.width = '0%';
+    document.getElementById('ring-pct').textContent = '0% there';
+    document.getElementById('ring-months').textContent = '';
+    const data = load(); delete data.ringBalance; save(data);
+  }
   function resetExpenses() {
     if (!confirm('Clear all expense inputs?')) return;
     document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
@@ -858,6 +914,10 @@
     document.getElementById('fund-bar').style.width = '0%';
     document.getElementById('fund-pct').textContent = '0% there';
     document.getElementById('fund-months').textContent = '';
+    document.getElementById('ring-balance').value = '';
+    document.getElementById('ring-bar').style.width = '0%';
+    document.getElementById('ring-pct').textContent = '0% there';
+    document.getElementById('ring-months').textContent = '';
     updateExpenses();
   }
 
