@@ -28,7 +28,7 @@ Each project scored 0–3 across 4 dimensions:
 | 5 | Hook Optimizer | 6/12 | LIVE on Windows (real .env key set 2026-04-13) | Add .env on Mac |
 | 6 | Creator Intel | 5/12 | Built on Windows | Needs YouTube OAuth |
 | 7 | Morning Briefing | 4/12 | Built on Windows | Needs full .env setup |
-| 8 | Footage Organizer | 8/12 | LIVE on Mac + Windows. Footage Library rebuilt: unused/used split, auto-delete RAW, --mark-used command, format-first Delivered folder. 111 clips archived into FOOTAGE_LIBRARY/unused/ (2026-04-16/17/18 + old-broll). | Build test-set.csv from real misses → run eval.py → tighten prompt → repeat. April 16 clips in misc/ need manual re-sort (Windows cache issue). |
+| 8 | Footage Organizer | 8/12 | LIVE on Mac + Windows. Move-as-default (RAW auto-deleted after organize). unused/used split removed — flat category/date structure. 03_PROJECTS → 03_ACTIVE_PROJECTS. 52 week folders seeded across Footage Library, Delivered, Archive, Active Projects. Old BROLL_LIBRARY deleted. --mark-used removed. | Build test-set.csv from real misses → run eval.py → tighten prompt → repeat. April 16 clips in misc/ need manual re-sort (Windows cache issue). |
 
 ## Recently Completed
 
