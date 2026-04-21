@@ -10,8 +10,8 @@
 ## Inputs
 
 - Raw pod recording — Sai delivers via Google Drive; Gray pulls it to a folder on `D:/` (footage drive); automation reads from there
-- "Building Blocks intro" stinger audio — stored on `D:/` alongside the pods (path TBD)
-- "Building Blocks midway" stinger audio — stored on `D:/` alongside the pods (path TBD)
+- "Building Blocks intro" stinger audio — **fixed file, same every episode**. Lives in `D:/Sai/07_ASSETS/` (exact subfolder TBD — candidate: `07_ASSETS/Podcast/intro.mp3`)
+- "Building Blocks midway" stinger audio — **fixed file, same every episode**. Same folder as intro (candidate: `07_ASSETS/Podcast/midway.mp3`)
 - Episode title (free-form, formula: "What I learned from my $100m mentor"-style)
 - Episode notes (formula: 1-sentence premise + "These are the X biggest takeaways" list)
 - RSS.com login (Sai will share when handoff happens — reference only, never pasted in chat)
@@ -161,7 +161,7 @@
 ## Resolved (2026-04-20)
 
 - **Raw pod delivery:** Sai sends via Google Drive → Gray manually pulls to a folder on `D:/` (footage drive) → automation reads from local path. Keeps the code simple: no Google Drive API, no OAuth.
-- **Stinger storage:** intro + midway audio files live on `D:/` in the same footage structure. Local file reads only.
+- **Stinger storage:** intro.mp3 + midway.mp3 are **fixed static assets** — same files every episode. They live in the existing `D:/Sai/07_ASSETS/` folder (subfolder TBD). Only the incoming-pod folder ever gets new files.
 - **Intro placement:** always immediately after the hook. Locked rule, no judgment.
 - **Midway placement:** at a mini-hook / engaging moment in the middle of the pod. Claude picks the timestamp.
 - **Auto-publish:** yes. Once the automation kicks off it runs all the way to Publish.
@@ -170,7 +170,7 @@
 ## ⚠ Still Open
 
 1. **Canonical local folder on `D:/` for incoming pods** — needs to be set before the first run. Candidate: `D:/Sai/Podcasts/Incoming/` (fits the existing `D:/Sai/` structure).
-2. **Canonical local paths for intro + midway stingers** — Candidate: `D:/Sai/Podcasts/Stingers/intro.mp3` + `D:/Sai/Podcasts/Stingers/midway.mp3`.
+2. **Canonical local paths for intro + midway stingers** — Gray is placing the two fixed files in the existing `D:/Sai/07_ASSETS/` folder (subfolder name TBD; candidate: `07_ASSETS/Podcast/intro.mp3` + `07_ASSETS/Podcast/midway.mp3`). Static assets, never change.
 3. **Is the ChatGPT project for episode notes something we should replicate in Claude** (simpler, we have the key) — confirm with Sai. Default assumption: yes, replicate in Claude.
 4. **RSS.com has no documented public API** — before committing to Playwright, inspect network traffic during a manual upload for an undocumented internal endpoint.
 5. **2FA / session handling on RSS.com** — unknown; will surface on first Playwright run.
