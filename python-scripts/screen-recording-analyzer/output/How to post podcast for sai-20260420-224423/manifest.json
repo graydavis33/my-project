@@ -1,0 +1,69 @@
+{
+  "video": "D:\\Sai\\Sai's Screen Recording Tutorials\\How to post podcast for sai.mp4",
+  "duration_sec": 318.798211,
+  "generated_at": "2026-04-20T22:45:41.498226",
+  "frame_mode": "scene-change",
+  "frames": [
+    {
+      "file": "frames/frame_00001.jpg",
+      "timestamp_sec": 24.56
+    },
+    {
+      "file": "frames/frame_00002.jpg",
+      "timestamp_sec": 26.1
+    },
+    {
+      "file": "frames/frame_00003.jpg",
+      "timestamp_sec": 26.4
+    },
+    {
+      "file": "frames/frame_00004.jpg",
+      "timestamp_sec": 177.66
+    },
+    {
+      "file": "frames/frame_00005.jpg",
+      "timestamp_sec": 177.7
+    },
+    {
+      "file": "frames/frame_00006.jpg",
+      "timestamp_sec": 179.16
+    },
+    {
+      "file": "frames/frame_00007.jpg",
+      "timestamp_sec": 181.83
+    },
+    {
+      "file": "frames/frame_00008.jpg",
+      "timestamp_sec": 181.93
+    },
+    {
+      "file": "frames/frame_00009.jpg",
+      "timestamp_sec": 188.0
+    },
+    {
+      "file": "frames/frame_00010.jpg",
+      "timestamp_sec": 188.36
+    },
+    {
+      "file": "frames/frame_00011.jpg",
+      "timestamp_sec": 298.76
+    },
+    {
+      "file": "frames/frame_00012.jpg",
+      "timestamp_sec": 302.93
+    },
+    {
+      "file": "frames/frame_00013.jpg",
+      "timestamp_sec": 317.33
+    },
+    {
+      "file": "frames/frame_00014.jpg",
+      "timestamp_sec": 317.36
+    },
+    {
+      "file": "frames/frame_00015.jpg",
+      "timestamp_sec": 317.4
+    }
+  ],
+  "transcript_segments": 105
+}
