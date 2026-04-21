@@ -158,12 +158,19 @@
 
 ---
 
-## ⚠ Open Questions
+## Resolved (2026-04-20)
 
-1. **Where does the raw pod recording come from?** Tutorial shows `pod.mp3` already in macOS Downloads. Is it a Zoom cloud export? A Rode/Shure mic recording? A Descript export? This determines the start of the pipeline.
-2. **Where do the intro and midway stingers live?** Pre-made files — need the canonical path so the automation can grab them.
-3. **Is the ChatGPT project for episode notes something we should replicate in Claude**, or does Sai want to keep using it and just hand over the transcript? Simpler for us to rebuild in Claude with the same intent.
-4. **RSS.com has no documented public API** — confirm before committing to Playwright. Check for an undocumented internal API by inspecting network traffic during a manual upload.
+- **Raw pod delivery:** Sai sends it → Gray drops in a Google Drive podcast folder → automation pulls from there
+- **Intro placement:** always immediately after the hook. Locked rule, no judgment.
+- **Midway placement:** at a mini-hook / engaging moment in the middle of the pod. Claude picks the timestamp.
+- **Auto-publish:** yes. Once the automation kicks off it runs all the way to Publish.
+- **SOP ownership:** Gray and Claude update this doc together as rules evolve. This file is the source of truth.
+
+## ⚠ Still Open
+
+1. **Canonical Drive folder path** — needs to be set before the first run. Candidate: `Google Drive / Sai / Podcasts / Incoming`.
+2. **Where do the intro and midway stinger files live?** Pre-made — need a canonical path. Candidate: `Google Drive / Sai / Podcasts / Stingers / intro.mp3` + `midway.mp3`.
+3. **Is the ChatGPT project for episode notes something we should replicate in Claude** (simpler, we have the key) — confirm with Sai. Default assumption: yes, replicate in Claude.
+4. **RSS.com has no documented public API** — before committing to Playwright, inspect network traffic during a manual upload for an undocumented internal endpoint.
 5. **2FA / session handling on RSS.com** — unknown; will surface on first Playwright run.
-6. **Cadence** — how often does a new episode drop? Weekly? Daily? This sets the priority of automation.
-7. **Does Sai want the automation to Publish automatically, or always stop at "Save Draft" for his review?** Current SOP assumes draft-only; Sai clicks Publish.
+6. **Cadence** — how often does a new episode drop? Weekly? Daily? Sets automation priority.
