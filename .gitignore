@@ -78,5 +78,8 @@ pending_drafts.json
 # Footage organizer — local test-set has machine-specific paths
 python-scripts/footage-organizer/test-set.csv
 
+# Asset generator — rendered output (PNG sequences, MOVs) is regenerable from code
+python-scripts/asset-generator/output/
+
 # Note: analytical.db is intentionally tracked (cross-machine sync)
 # Will be removed + .gitignored once Analytical has real users (PII concern)
