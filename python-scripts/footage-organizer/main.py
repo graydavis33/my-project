@@ -41,6 +41,7 @@ Usage:
 import argparse
 import os
 import shutil
+import subprocess
 import sys
 from collections import defaultdict
 from datetime import date
@@ -109,6 +110,53 @@ def parse_args():
         help="Create full folder structure for this client (run once on first use)"
     )
     return parser.parse_args()
+
+
+def check_cache_synced():
+    """Warn if the remote has newer .cache.json not yet pulled. Prevents the
+    2026-04-16 misc/ bug — running archive on Windows without pulling the Mac's
+    cache updates caused all 40 clips to fall back to misc/.
+
+    Read-only: runs `git fetch` only, never pulls or modifies anything.
+    Silently skips if git is unavailable or no upstream is configured.
+    """
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    cache_rel = "python-scripts/footage-organizer/.cache.json"
+    try:
+        subprocess.run(
+            ["git", "fetch", "--quiet"],
+            cwd=repo_root, check=True, timeout=20,
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        result = subprocess.run(
+            ["git", "log", "--oneline", "HEAD..@{u}", "--", cache_rel],
+            cwd=repo_root, capture_output=True, text=True, timeout=10,
+        )
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError):
+        return
+    if result.returncode != 0 or not result.stdout.strip():
+        return
+
+    print("\n  " + "=" * 56)
+    print("  WARNING: Remote has newer .cache.json not yet pulled")
+    print("  " + "=" * 56)
+    print("  Running now risks re-categorizing clips and losing cache hits")
+    print("  (this is what caused the 2026-04-16 misc/ incident).")
+    print()
+    print("  Incoming commits touching .cache.json:")
+    for line in result.stdout.strip().split("\n"):
+        print(f"    {line}")
+    print()
+    print("  Recommended: abort, run `git pull`, then re-run this command.")
+    print()
+    try:
+        answer = input("  Continue anyway? [y/N]: ").strip().lower()
+    except EOFError:
+        answer = ""
+    if answer != "y":
+        print("  Aborted — run `git pull` and try again.\n")
+        sys.exit(0)
+    print()
 
 
 def get_library(client):
@@ -396,6 +444,8 @@ if __name__ == "__main__":
         print("\n  Error: ffmpeg and ffprobe are required but not found in PATH.")
         print("  Install: https://ffmpeg.org/download.html\n")
         sys.exit(1)
+
+    check_cache_synced()
 
     if args.mark_used:
         run_mark_used(args.client, args.mark_used)
