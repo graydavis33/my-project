@@ -28,13 +28,11 @@ CLIENT_ROOTS = {
 FOLDER_TEMPLATES      = "00_TEMPLATES"      # Reusable project templates, LUTs, title cards
 FOLDER_RAW            = "01_RAW_INCOMING"   # Temporary card dumps — deleted after organize
 FOLDER_ORGANIZED      = "02_ORGANIZED"      # AI-sorted output, dated subfolders
-FOLDER_PROJECTS       = "03_PROJECTS"       # Active editing projects
-FOLDER_DELIVERED      = "04_DELIVERED"      # Finished exports by format, then date
-FOLDER_ARCHIVE        = "05_ARCHIVE"        # Retired project files, dated subfolders
-FOLDER_FOOTAGE_LIB    = "06_FOOTAGE_LIBRARY" # All reusable footage: unused/ and used/
-FOLDER_FOOTAGE_UNUSED = "unused"            # Clips not yet used in a published video
-FOLDER_FOOTAGE_USED   = "used"             # Clips that appeared in a delivered video
-FOLDER_ASSETS         = "07_ASSETS"         # Brand assets, fonts, music, SFX
+FOLDER_PROJECTS       = "03_ACTIVE_PROJECTS" # Active editing projects
+FOLDER_DELIVERED      = "04_DELIVERED"       # Finished exports by format, then date
+FOLDER_ARCHIVE        = "05_ARCHIVE"         # Retired project files, dated subfolders
+FOLDER_FOOTAGE_LIB    = "06_FOOTAGE_LIBRARY" # Reusable footage: category/ → week/
+FOLDER_ASSETS         = "07_ASSETS"          # Brand assets, fonts, music, SFX
 
 # Format detection — orientation only (horizontal=long-form, vertical=short-form)
 # As of 2026-04-19: long-form is shot 1080p horizontal, short-form is shot vertical.
