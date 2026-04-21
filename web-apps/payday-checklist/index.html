@@ -166,7 +166,7 @@
     }
     .budget-label-sub {
       font-size: 8px; color: var(--color-gray-mid);
-      margin-top: 0; width: 100%; text-align: right;
+      margin-top: 0; width: 100%; text-align: center;
     }
     .budget-inline-input {
       background: transparent; border: none; border-bottom: 1px solid transparent;
@@ -175,11 +175,13 @@
     }
     .budget-inline-input:focus { outline: none; border-bottom-color: var(--color-yellow); }
     .goal-inline-input {
-      background: transparent; border: none; border-bottom: 1px solid transparent;
+      background: transparent; border: none;
+      border-bottom: 1px dashed rgba(255,255,255,0.25);
       color: var(--color-gray-light); font-size: 11px; font-weight: 500;
-      width: 55px; text-align: left; font-family: var(--font-base); padding: 0; cursor: text;
+      width: 55px; text-align: left; font-family: var(--font-base); padding: 0 2px; cursor: text;
     }
-    .goal-inline-input:focus { outline: none; border-bottom-color: var(--color-yellow); }
+    .goal-inline-input:hover { border-bottom-color: var(--color-yellow); color: var(--color-white); }
+    .goal-inline-input:focus { outline: none; border-bottom-style: solid; border-bottom-color: var(--color-yellow); color: var(--color-white); }
     .ok { color: var(--color-green); }
     .over { color: var(--color-red); }
     .expense-total-row {
