@@ -87,9 +87,9 @@ def parse_args():
         help="Folder name to process (YYYY-MM-DD or any label like 'old-broll'). Defaults to today."
     )
     parser.add_argument(
-        "--move",
+        "--copy",
         action="store_true",
-        help="Move files instead of copying (default: copy)"
+        help="Copy files instead of moving (default: move and delete RAW folder)"
     )
     parser.add_argument(
         "--archive",
@@ -247,7 +247,7 @@ def run_organize(client, date_str, move):
     print(f"  {'=' * 56}")
     print(f"  Input:  {raw_folder}")
     print(f"  Output: {organized_dir}/{date_str}/")
-    print(f"  Mode:   {'MOVE' if move else 'COPY (originals stay in RAW/)'}")
+    print(f"  Mode:   {'COPY (originals stay in RAW/)' if not move else 'MOVE (RAW folder deleted after)'}")
     print()
 
     videos = find_videos(raw_folder)
@@ -453,4 +453,4 @@ if __name__ == "__main__":
         run_archive(args.client, args.archive)
     else:
         date_str = args.date or date.today().strftime("%Y-%m-%d")
-        run_organize(args.client, date_str, args.move)
+        run_organize(args.client, date_str, move=not args.copy)
