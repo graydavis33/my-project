@@ -1,6 +1,6 @@
 # Workflow: Content Researcher
 
-**Status:** LIVE on Mac
+**Status:** LIVE on Mac + Windows
 **Cost:** ~$0.04–0.06/run | Same concept within 7 days = $0 (cached)
 **Script:** `python-scripts/content-researcher/`
 
@@ -8,7 +8,7 @@
 
 ## Objective
 
-Given a video concept, find the top-performing YouTube Shorts on that topic and generate a full research report: hooks, keywords, script outline, full draft, and pacing notes.
+Given a video concept, Claude runs an agentic loop — calling search tools on YouTube + Reddit, then writing a 10-section research report: hooks, keywords, script outline, full draft, and pacing notes.
 
 ---
 
@@ -30,13 +30,16 @@ Output: styled HTML report auto-opens in browser + `.md` backup saved to `result
 
 ---
 
-## What It Does (Step by Step)
+## What It Does (Agentic Loop)
 
-1. Claude Haiku generates 4 YouTube search query variants from the concept
-2. Searches YouTube, collects ~60 videos, fetches subscriber counts
-3. Filters: Shorts only (≤3 min, ≥1k views), ranks by views÷subscribers ratio
-4. Pulls first 90s transcripts from top 10 outlier videos
-5. Claude Sonnet generates 9-section report: hooks, keywords, script outline, full draft, pacing
+Claude Sonnet drives the research via a tool-use loop — it decides when to search, what to pull, and when it has enough context to write the final report. The tools available to it:
+
+- `search_youtube(query)` — generates query variants, runs them, returns ranked Shorts (≤3 min, ranked by views÷subscribers)
+- `fetch_transcripts(video_ids)` — pulls first 90s of transcripts for hook extraction
+- `search_reddit(query)` — surfaces top-relevant Reddit discussions on the concept
+- `finish(report)` — hands back the final 10-section report
+
+Typical run: 3–6 tool calls, then a single final Sonnet completion for the report. Cache (`results/.cache.json`) is a 7-day TTL keyed by normalized concept — same phrasing = $0 instant rerun.
 
 ---
 
@@ -62,5 +65,5 @@ Output: styled HTML report auto-opens in browser + `.md` backup saved to `result
 
 ## V2 Backlog (Not Yet Built)
 
-- Reddit layer — search Reddit for top posts on the concept to surface what people are actually asking
 - Google Trends integration — validate topic momentum before producing content
+- Longform mode — toggle `MAX_DURATION_SECONDS` to allow 4–20 min research targets (currently hard-locked to Shorts)

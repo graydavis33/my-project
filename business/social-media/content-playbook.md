@@ -16,6 +16,31 @@ Your goal: own that intersection. Every piece of content either shows the craft,
 
 ---
 
+## CAPACITY & CONSTRAINTS
+
+This playbook is designed around reality, not a fantasy production schedule.
+
+### Time budget
+- Sai Karra job: ~40h/week (varies with his schedule) — primary income, non-negotiable
+- Content production for Graydient: estimated 5-10h/week realistic ceiling
+- No daily uploads. Cadence is volume-capped, not ambition-capped.
+
+### Posting rule (one-video-all-platforms)
+Every short-form video gets posted to ALL three short platforms:
+- TikTok
+- Instagram Reels
+- YouTube Shorts
+
+No platform-specific variants. No per-platform re-cuts. Same video, three uploads. Captions can vary, video cannot.
+
+### Burnout rule
+If a week hits its capacity ceiling, we cut content — never Sai, never sleep, never research. Missed uploads < burned-out creator.
+
+### Automation target
+Every stage in Layers 1-7 aims to run without human input except where human-in-loop is explicitly required (filming myself, on-camera talking, creative decisions). The goal is not "Gray does less." The goal is "Gray does only what Gray uniquely can do."
+
+---
+
 ## LAYER 1 — RESEARCH SYSTEM
 
 This runs before any content gets made. Without this, you're guessing. With it, every video has a reason to exist.
@@ -141,33 +166,60 @@ Target: maintain a bank of 50+ hooks at all times. Add 5 new hooks every Friday 
 
 Series create return viewers. Someone who watches Episode 1 will come back for Episode 2. These are your audience retention machines.
 
-**Series 1: "Claude Edits" — weekly**
-- Pick one editing task. Run it through Claude Code. Show the result.
-- Episode format: problem → Claude workflow → result → takeaway
-- Example episodes: "Claude picked my best clips from 3 hours of footage", "I automated my color grading workflow with AI", "Claude wrote my entire video script — here's what happened"
-- Build to 10 episodes → compile into YouTube long-form: "I automated my entire video editing workflow for 10 weeks"
+| # | Series | Format | Cadence | Production Style | Long-form Path |
+|---|---|---|---|---|---|
+| 1 | **Claude Edits** | Short-form | Weekly | Script pulled from Obsidian vault session history ("one quick Claude edit I did") | 10 episodes → long-form: "I automated my [workflow]" |
+| 2 | **60-Second Effect** | Short-form | Capacity-based | Screen recording, no narration, music-only | N/A (standalone shorts) |
+| 3 | **Videographer's Week** | Short-form | Weekly (Friday) | Phone-at-self, "what I filmed / what I learned / what I'm testing" | 4 weeks → "Month One" long-form |
+| 4 | **Month One as NYC Videographer** | Long-form | Monthly | Phone-at-self + B-roll, minimal editing | Cut DOWN into 4-6 follow-up shorts |
+| 5 | **Tool Report** | Long-form primary, occasional short teaser | Bi-weekly | Review one tool (CapCut, Claude Code plugins, gear, AI editing) | Long-form base → cut into shorts |
+| 6 | **BTS as Personal Videographer** | Short-form | Weekly (from Sai shoot days) | Film-style tutorial shot during/after Sai shoots | Every 10 episodes → long-form "Filming for a CEO: what I learned" |
+| 7 | **Social Media Growth Update** | Short-form | Weekly | Phone-at-self, "here's my growth this week + what I tried" | Quarterly → "Growing from 0 to Xk" long-form recap |
 
-**Series 2: "60-Second Effect" — daily or 3x/week**
-- One editing effect. 60 seconds. Start to finish.
-- No narration required — just screen recording with music
-- High volume, low effort, builds algorithm momentum
-- Works as TikTok + Reels + YouTube Short simultaneously
+### Cross-series rules
 
-**Series 3: "Videographer's Week" — weekly recap**
-- Shot on iPhone or GoPro, casual vlog format
-- 60-90 seconds. What did you film this week, one lesson learned, one thing you're testing
-- Posts every Friday. Builds weekly habit for viewers.
+- **One-video-all-platforms** — every short posts to TikTok + IG Reels + YouTube Shorts
+- **Bi-directional repurposing:**
+  - 10 related shorts → 1 long-form compilation
+  - Any standalone long-form → cut DOWN into follow-up shorts
 
-**Series 4: "$X Challenge" — monthly**
-- Build the best video possible with a constraint (budget, time, one camera, no editing, etc.)
-- "I edited an entire video using only my phone"
-- "I filmed a CEO's week with only a $300 camera"
-- High shareability, natural cliffhanger (will it work?)
+### Series Flex Rules
 
-**Series 5: "Tool Report" — bi-weekly**
-- Review one tool (CapCut feature, Adobe plugin, AI tool, gear piece)
-- Honest verdict: worth it or not
-- Becomes a searchable resource that drives long-term YouTube traffic
+This series list is a living design. Expect it to change.
+
+**Triggers that prompt a series change:**
+- **Performance:** flops 3x in a row → tagged for review via Layer 7
+- **Capacity:** if a series takes too long to produce AND isn't pulling weight, it gets cut or paused — no guilt
+- **Trend-hop:** a trending topic/sound can spawn a TEMPORARY series (2-week duration cap) without joining the permanent list
+- **Fatigue:** if Gray no longer enjoys making it, that alone is valid reason to cut — burnt-out creator > missed format
+
+**Each series has 4 possible states:** Active / Testing / Paused / Killed
+
+**When a series is Killed:**
+- Tagged in Layer 7 registry with reason + performance data
+- Never auto-suggested again by agents (see Layer 7)
+- A candidate from the "Pending Series Ideas" list rotates in
+
+**Monthly review** (last Sunday of month, 15 min):
+- Check performance of every Active series
+- Move stragglers to Testing or Paused
+- Promote a Testing series to Active if it's earning its slot
+- Pull one from Pending if a slot opens
+
+### Pending Series Ideas
+
+_(Empty — populated as ideas emerge. Candidates rotate in when an Active slot opens.)_
+
+### Killed Series Archive
+
+_(Empty — populated when a series is killed. Links to Layer 7 registry once that system exists.)_
+
+### Sai Karra Content
+
+Sai Karra has his own content playbook, strategy, and series list.
+See: `business/sai/content-playbook.md` (sub-project B — in progress).
+
+Graydient Media and Sai Karra content are separate brands with separate strategies. Cross-pollination (BTS from Sai shoots for Graydient's "BTS as Personal Videographer" series) is encouraged, but the content calendars, analytics, and iteration systems are independent.
 
 ---
 
@@ -226,6 +278,21 @@ Extend it to also output:
 - **YouTube description** — with timestamps, gear links, related videos
 
 Add a new `export_all_formats.py` function that takes one processed video and outputs all of the above to a `content-pipeline/drafts/YYYY-MM-DD-video-title/` folder.
+
+### Long-Form Production Paths
+
+**Path 1: Shorts → Long-form (compilation)**
+Record a mini-series of 8-12 shorts on one theme. Once complete, stitch into a single long-form with:
+- New intro (30s, re-contextualize the journey)
+- Original shorts as chapters (light re-edit for flow)
+- New outro with takeaway + CTA
+
+Example: 10 episodes of "Claude Edits" on editing automation → one YouTube video: "I automated my entire editing workflow"
+
+**Path 2: Long-form → Shorts (repurpose down)**
+Film a standalone long-form (Tool Report, Month One recap, etc.). After publishing, cut 4-6 highlight clips as follow-up shorts. These shorts drive traffic BACK to the long-form.
+
+**Rule:** never film a long-form that can't produce at least 3 shorts as a byproduct. If it can't, it's too narrow.
 
 ---
 

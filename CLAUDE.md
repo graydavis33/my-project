@@ -84,11 +84,11 @@ Each skill = a folder with a SKILL.md file (YAML frontmatter + instructions). Bu
 
 Three tools run 24/7 on a Hostinger VPS (`72.61.10.152`) without your local machine being on:
 
-- **email-agent** — systemd service, runs hourly 7am–8pm
-- **morning-briefing** — systemd service, fires daily at 8am
-- **invoice-system** — cron job, runs daily at 9am (scan-all)
+- **email-agent** — systemd daemon (`Restart=always`). The Python script handles its own internal 7am–8pm hourly cadence via the `schedule` library. Do NOT also schedule this via cron, launchd, or Task Scheduler — stacking schedulers spawns duplicate daemons. One canonical runner (VPS), period.
+- **morning-briefing** — cron job at 8am daily (installed by `deploy/vps-setup.sh`)
+- **invoice-system** — cron job at 9am daily, runs `scan-all`
 
-VPS deployment files live in `deploy/`. Re-deploy from scratch: `bash deploy/vps-setup.sh` (run from local).
+VPS deployment files live in `deploy/`. Re-deploy from scratch: `bash deploy/vps-setup.sh` (run from local). Note: `vps-setup.sh` writes its own inline email-agent systemd service — it does NOT use the committed `deploy/email-agent.service` file. If you edit one, verify the other.
 
 ---
 

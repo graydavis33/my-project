@@ -18,23 +18,44 @@ Track all income and expenses, scan Gmail for receipts, generate and email profe
 ```bash
 cd python-scripts/invoice-system
 
-python main.py setup-sheet              # First time only — creates Sheet tabs + headers
-python main.py import-csv --file X --source venmo   # Import Venmo transactions
-python main.py import-csv --file X --source bank    # Import bank CSV
-python main.py scan-receipts            # Scan Gmail for receipts (last 30 days default)
-python main.py scan-receipts --days 7   # Scan last 7 days only
-python main.py create-invoice           # Interactive: pick template → fill details → PDF + email
+# Setup (run once)
+python main.py setup-sheet
+
+# CSV imports
+python main.py import-csv --file X --source venmo
+python main.py import-csv --file X --source bank
+
+# Gmail scans
+python main.py scan-receipts                     # expense receipts → Business Expenses, default 30d
+python main.py scan-receipts --days 7
+python main.py scan-payments                     # income payments → Transactions, default 30d
+python main.py scan-payments --days 90
+python main.py scan-all                          # runs both scan-receipts + scan-payments once
+python main.py scan-all --schedule               # daemon mode — runs daily at 08:00 (override with --time HH:MM)
+python main.py scan-all --schedule --time 09:00  # VPS runs this at 9am via cron
+
+# Manual entry
+python main.py add-expense                       # interactive prompt: date, vendor, category, amount, notes
+python main.py create-invoice                    # pick template → fill details → PDF + email
 ```
+
+Note: the email-agent automatically fires `scan-payments --days 2` after every hourly email check. So if email-agent is running on the VPS, you rarely need to call `scan-payments` manually.
 
 ---
 
 ## Sheet Structure
 
+Sheet name: **Business Finance Tracker**
+
 | Tab | What's In It |
 |-----|-------------|
 | Transactions | Date, Payer, Source, Amount ($), Notes |
-| Business Expenses | Date, Vendor, Category, Amount ($), Notes |
+| Business Expenses | Date, Vendor, Category (9 options), Amount ($), Notes |
+| Invoices | Invoice-level metadata |
+| Invoice Line Items | Per-line-item breakdown for each invoice |
 | Tax Summary | Auto-calculated totals |
+
+The 9 expense categories (defined in `config.py → CATEGORIES`): Groceries, Dining Out, Software & Tools, Streaming, Utilities, Transport, Health & Wellness, Shopping, Misc.
 
 ---
 
@@ -63,4 +84,5 @@ GMAIL_CREDENTIALS_PATH
 
 - Invoices save to `~/Desktop/Invoices/`
 - Fill in rates in `invoice_templates.json` before first invoice
-- TODO: Schedule `scan-receipts` to run daily automatically
+- VPS runs `scan-all` daily at 9am via cron (set by `deploy/vps-setup.sh`)
+- Payment scanner also fires from the email-agent loop every hour — double-coverage is intentional
