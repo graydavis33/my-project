@@ -1,17 +1,17 @@
 # SOP: Edit and Publish "Building Blocks with Sai Karra" Episode
 
-**Trigger:** Sai finishes a new podcast recording and the raw audio/video is available (location not shown in tutorial — confirm with Sai)
+**Trigger:** Sai sends a new podcast recording; Gray drops it into the shared Google Drive folder for podcasts (path TBD — set on first run). Automation watches/pulls from that folder.
 **Frequency:** ~1 episode per week (confirm cadence)
-**Owner today:** Sai Karra → **Future owner:** AI agent (with Gray reviewing the draft before Publish)
+**Owner today:** Sai Karra → **Future owner:** AI agent — **fully autonomous, auto-publishes at the end.** No human checkpoint.
 **Expected runtime:** ~15 minutes manual today; target ~2 minutes with automation
 
 ---
 
 ## Inputs
 
-- Raw pod recording (file name shown in tutorial: `pod.mp3` in macOS Downloads — exact source channel not shown)
-- "Building Blocks intro" stinger audio (pre-made — location not shown)
-- "Building Blocks midway" stinger audio (pre-made — location not shown)
+- Raw pod recording — Sai delivers; Gray drops in the Google Drive podcast folder; automation pulls from there
+- "Building Blocks intro" stinger audio (pre-made — location TBD, see Open Questions)
+- "Building Blocks midway" stinger audio (pre-made — location TBD, see Open Questions)
 - Episode title (free-form, formula: "What I learned from my $100m mentor"-style)
 - Episode notes (formula: 1-sentence premise + "These are the X biggest takeaways" list)
 - RSS.com login (Sai will share when handoff happens — reference only, never pasted in chat)
@@ -45,15 +45,17 @@
    - Action: drag the main pod onto the timeline. Scrub to just after the opening hook sentence ("I was fortunate enough to get lunch today with my mentor…")
    - Expected result: playhead sits immediately after the hook line ends
 
-4. **Split the pod and insert the intro stinger after the hook**
-   - Action: split (cut) the pod at the end of the hook → drag the **intro stinger** into the gap so it plays right after the hook
+4. **Split the pod and insert the intro stinger — always right after the hook**
+   - Action: split (cut) the pod at the end of the opening hook sentence → drop the **intro stinger** in the split
+   - **Rule (locked):** intro ALWAYS goes immediately after the hook — never before, never later. No judgment call.
    - Transcript reference: **[01:06]** "And then you find the intro, like, right after the hook. You cut it, and then drag that intro in there."
    - Expected result: timeline order is `hook → intro stinger → rest of pod`
 
-5. **Find a tension point mid-episode and insert the midway stinger**
-   - Action: scrub to a tension/curiosity moment in the pod ("the point in which I'm about to drop some sauce") → split → drag the **midway stinger** into the split
+5. **Find a mini-hook mid-podcast and insert the midway stinger**
+   - Action: scrub into the middle of the pod → find an engaging "mini hook" moment (a line that makes you want to keep listening) → split → drop the **midway stinger** in
+   - **Rule (locked):** the midway placement is at a **mini-hook / engaging moment somewhere in the middle** of the episode — not the exact midpoint, but a narrative peak in the middle third
    - Transcript reference: **[01:58]** "find a midway point, somewhere where it's, like, tension-causing"
-   - Expected result: midway stinger plays at a narrative peak
+   - Expected result: midway stinger plays at an engaging mid-episode moment
 
 6. **Cut dead space throughout**
    - Action: scrub through the full timeline and delete obvious silence / dead air. No creative edits, no music, no effects.
