@@ -468,11 +468,10 @@
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
             <div class="step-label">Transfer to emergency fund</div>
-            <div class="step-sub">$1,500/mo goal — update tracker on the right</div>
           </div>
           <div class="step-right">
-            <div class="step-amount positive">+$1,500</div>
-            <div class="step-balance">Monthly savings</div>
+            <div class="step-amount positive" id="step-fund-goal">$9,000</div>
+            <div class="step-balance">Savings goal</div>
           </div>
         </div>
 
@@ -784,6 +783,8 @@
     document.getElementById('fund-pct').textContent = pct.toFixed(0) + '% there';
     const monthsLeft = Math.ceil((goal - val) / 1500);
     document.getElementById('fund-months').textContent = val >= goal ? 'Goal reached!' : monthsLeft + ' month' + (monthsLeft === 1 ? '' : 's') + ' to go';
+    const stepEl = document.getElementById('step-fund-goal');
+    if (stepEl) stepEl.textContent = '$' + goal.toLocaleString();
     const data = load(); data.fundBalance = val; data.fundGoal = goal; save(data);
   }
 
