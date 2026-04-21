@@ -33,7 +33,7 @@ When something breaks:
 
 ## Session End
 
-- Auto-push to GitHub: `cd ~/Desktop/my-project && git add . && git commit -m "Session update" && git push`
+- Auto-push to GitHub happens automatically via the Stop hook (configured in `~/.claude/settings.json`). Manual fallback: `cd "c:/Users/Gray Davis/my-project" && git add . && git commit -m "Session update" && git push`
 - Update context/priorities.md if anything changed
 - Log any meaningful decisions in decisions/log.md
 
