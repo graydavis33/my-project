@@ -28,7 +28,7 @@ You are Gray Davis's AI operator and executive assistant. Read context files to 
 - `templates/` — reusable templates (currently session-summary.md)
 - `.claude/commands/` — slash commands: /prime, /create-plan, /implement, /save
 - `.claude/rules/` — behavior rules loaded every session (communication, code, habits)
-- `.claude/skills/` — custom skills (4 active — see below)
+- `.claude/skills/` — custom skills (3 active — see below)
 
 **Root files:**
 - `dashboard.html` — project status dashboard, served at graydavis33.github.io/my-project/dashboard.html
@@ -70,12 +70,11 @@ Three Claude Code plugins enabled in `~/.claude/settings.json`:
 
 ## Custom Skills
 
-Four custom skills live in `.claude/skills/`:
+Three custom skills live in `.claude/skills/`:
 
 - **google-oauth-refresh** — re-auth flow for when token.json expires (7-day testing-mode expiry). Triggers on 401s / RefreshError.
 - **invoice-expense-logger** — workflow for `python-scripts/invoice-system/main.py` (scan-receipts, scan-payments, add-expense, import-csv, create-invoice).
 - **analytical-feature-builder** — house style for Analytical SaaS (Chart.js + barGlow plugin, --accent-rgb theming, glass variants, preview-real.html prototype-first).
-- **ui-ux-pro-max** — third-party design intelligence skill (rarely invoked day-to-day).
 
 Each skill = a folder with a SKILL.md file (YAML frontmatter + instructions). Build new ones as recurring workflows emerge.
 
@@ -95,16 +94,16 @@ VPS deployment files live in `deploy/`. Re-deploy from scratch: `bash deploy/vps
 
 ## MCP Servers
 
-Six MCP servers configured in `~/.claude/settings.json`:
+Six MCP servers configured in `~/.claude.json` (VS Code extension uses `--strict-mcp-config` and reads this file, not `settings.json`):
 
 | Server | Purpose |
 |---|---|
-| filesystem | Access to `C:/Users/Gray Davis/my-project` and `G:/` |
+| filesystem | Access to `C:/Users/Gray Davis/my-project` and `G:/` (project scope) |
 | github | GitHub repo access via GITHUB_TOKEN |
-| fetch | Web URL fetching |
 | gdrive | Google Drive access |
-| puppeteer | Browser automation (NOT callable from Claude — Python Playwright used in scripts instead) |
 | obsidian | Read/write to `Obsidian/Graydient Media` vault |
+| slack | Slack workspace access (bot token + team ID) |
+| sequential-thinking | Structured multi-step reasoning |
 
 ---
 
