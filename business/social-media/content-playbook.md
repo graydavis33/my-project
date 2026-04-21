@@ -113,6 +113,16 @@ Use your Hook Optimizer to test hooks before committing. Run the top 3 candidate
 
 Target: maintain a bank of 50+ hooks at all times. Add 5 new hooks every Friday based on what performed that week.
 
+### Audio Strategy (upstream research signal)
+
+Trending audio is one of the fastest ways to get pushed by the algorithm. But most creators use audio randomly. Do this instead:
+
+**Every Monday:** pull the top 10 trending sounds in the "Creator/Education" category on TikTok and save them in a `trending-audio-log.md`. Use them within 48h of adding them — sounds have a short trending window.
+
+Extend Content Researcher to add: trending audio monitoring. Use TikTok Creative Center's trending sounds API (or scrape the public Creative Center page) and Slack DM you the top 5 sounds Monday morning.
+
+Audio lives in Layer 1 (not Layer 4) because it drives WHAT gets made — the trending sound often dictates the edit style, pacing, and topic.
+
 ---
 
 ## LAYER 2 — CONTENT STRATEGY
@@ -300,38 +310,32 @@ Film a standalone long-form (Tool Report, Month One recap, etc.). After publishi
 
 ### Upload Workflow
 
-**TikTok** — upload first. This is your primary discovery platform.
-- Optimal times: 7-9am, 12-3pm, 7-10pm (EST)
-- Caption: 1-2 sentences max. Keywords naturally in the sentence (not a hashtag dump).
-- Hashtags: 3-5 max — one broad (#videography), one niche (#capcut), one trending if relevant
-- Pin your 3 best performing videos
+**The rule: one video, three platforms.**
+- Upload order: TikTok first (primary discovery), then Instagram Reels 30-60 min later, then YouTube Shorts
+- Same video file. No re-cuts. No re-renders.
+- Captions CAN vary per platform (keywords shift), video CANNOT.
 
-**Instagram** — upload same video 30-60 min after TikTok. Remove TikTok watermark (use SnapTik or the native no-watermark download).
-- Reels: same video, slightly different caption written for Instagram audience
-- Carousels: post 3x/week — best performing long-form advice repackaged as slides
-- Stories: post 3x/day minimum — mix of behind the scenes, polls, reposts of your Reels
+### Caption delta (per platform)
 
-**YouTube Shorts** — upload same video again. No watermark. YouTube-optimized title (searchable keyword first).
+| Platform | Caption style | Hashtags |
+|---|---|---|
+| TikTok | 1-2 sentences, keywords naturally in sentence | 3-5 max |
+| Instagram Reels | Slightly more personal tone | 3-5 niche + 1 trending |
+| YouTube Shorts | Searchable keyword FIRST | 3-5, search-focused |
 
-**YouTube Long-form** — separate content. But you can build it from your short-form. Every 4-6 Shorts in the same series = one long-form compilation or expanded deep-dive.
+### Watermark removal
 
-**X/Twitter** — text threads only. Take the lesson from your video, write it as a 5-tweet thread. Link the YouTube video at the end. No cross-posting vertical video here — it performs terribly.
+Always remove TikTok watermark before posting to IG Reels and YT Shorts. Use SnapTik or native no-watermark download.
 
-### Scheduling Automation
+### Long-form (YouTube)
 
-Use Buffer (free plan supports 3 channels) or Later for scheduling Reels and TikTok in advance. Batch-schedule the whole week on Sunday.
+Separate pipeline from shorts. Can be BUILT FROM shorts (compilation) or CUT INTO shorts (repurposed down). See series list long-form paths.
 
-Build a new Python script: `content-pipeline/schedule_week.py`
-- Input: folder of processed videos + generated captions
-- Output: scheduled posts via Buffer API (or at minimum, a posting checklist with copy-pasted captions ready)
+### X/Twitter
 
-### Audio Strategy (TikTok/Reels)
+Text threads only. Take the video's core lesson, write as 5-tweet thread. Link the YouTube version at end. Do NOT cross-post vertical video to X.
 
-Trending audio is one of the fastest ways to get pushed by the algorithm. But most creators use audio randomly. Do this instead:
-
-**Every Monday:** pull the top 10 trending sounds in the "Creator/Education" category on TikTok and save them in a `trending-audio-log.md`. Use them within 48h of adding them — sounds have a short trending window.
-
-Extend Content Researcher to add: trending audio monitoring. Use TikTok Creative Center's trending sounds API (or scrape the public Creative Center page) and Slack DM you the top 5 sounds Monday morning.
+_Note: Scheduling automation (Buffer/`schedule_week.py`) is deferred to sub-project E (Content OS command-center). Audio/trending-sound strategy has moved upstream to Layer 1 (Research) since it drives what we make, not how we distribute._
 
 ---
 
@@ -416,6 +420,68 @@ Every 30 days, run a full audit:
 ### The 90-Day Pivot Rule
 
 If a content pillar or series hasn't broken through after 90 days and 20+ videos, you pivot. Not quit — pivot. Change the hook style, change the format, change the angle. The topic might be right but the execution wrong, or vice versa. Test one variable at a time.
+
+---
+
+## LAYER 7 — ITERATION & TAGGING SYSTEM
+
+### The 3-Strike Rule
+
+Any series, format, or hook style that underperforms 3 consecutive times gets flagged for review. "Underperform" = below your rolling average on the primary metric for that format:
+- Shorts: views + saves
+- Long-form: watch time + subscriber conversions
+- Carousels: saves + shares
+
+3 strikes triggers a DECISION, not an auto-kill. Options:
+1. **Kill it** → moves to Killed Archive, never re-suggested
+2. **Pivot it** → change hook style, format, or angle (resets strike count)
+3. **Keep it** → override with reason logged (e.g., "brand-building, not metrics-driven")
+
+### Tagging Structure
+
+Every video gets tagged at upload in the tracking system:
+- Series name
+- Pillar (AI+Camera, BTS, Tutorial, Before/After, Journey)
+- Hook style used
+- Format (talking head, screen recording, B-roll montage, etc.)
+- Performance tier after 7 days: HIT / OK / MISS
+
+Tags live in two places:
+1. **Obsidian vault:** `content-os/video-log/` (one note per video, tagged with properties for search/filter)
+2. **File system:** `business/social-media/video-log.csv` (flat file for Claude to query without MCP)
+
+### Killed Archive
+
+When a series or format is killed:
+- Entry in Obsidian: `content-os/killed-archive/` with:
+  - Series/format name
+  - Date range it ran
+  - Number of videos produced
+  - Why it was killed (performance data + subjective note)
+  - What replaced it
+- Mirrored to: `business/social-media/killed-archive.md`
+
+**Purpose:** agents and Claude sessions query this BEFORE suggesting new ideas. If a suggestion resembles a killed format, it gets flagged: _"This is similar to [killed format] which was cut on [date] for [reason]. Still want to try it?"_
+
+### Winning Patterns Registry
+
+Opposite of the Killed Archive. When something works:
+- Entry in Obsidian: `content-os/winning-patterns/` with:
+  - What worked (series, hook, format, topic)
+  - Performance data
+  - Why it worked (hypothesis)
+  - How to replicate it
+- Mirrored to: `business/social-media/winning-patterns.md`
+
+Agents query this to PRIORITIZE proven patterns over experiments. Target ratio: 70% proven patterns, 30% new experiments.
+
+### Monthly Iteration Review (last Sunday, folded into Layer 6 review)
+
+1. Check 3-strike candidates — decide: kill, pivot, or override
+2. Review Killed Archive — anything worth retrying with a new angle?
+3. Review Winning Patterns — are we doubling down enough?
+4. Update series states: Active / Testing / Paused / Killed
+5. Rotate Pending Series Ideas into open slots
 
 ---
 
