@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T11:59:38Z",
+  "generated_at": "2026-04-22T11:59:56Z",
   "month": "2026-04",
   "expenses": [
     {
@@ -19,7 +19,7 @@
     {
       "email_id": "19d8841d7d520d4f",
       "date": "2026-04-13",
-      "vendor": "Google Play",
+      "vendor": "Google One",
       "amount": 0.49,
       "category": "Software & Tools"
     },
