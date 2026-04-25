@@ -1,7 +1,21 @@
 {
-  "generated_at": "2026-04-24T11:56:38Z",
+  "generated_at": "2026-04-25T11:38:05Z",
   "month": "2026-04",
   "expenses": [
+    {
+      "email_id": "19dc3b9b7a814a46",
+      "date": "2026-04-25",
+      "vendor": "Empower",
+      "amount": 29.67,
+      "category": "Transport"
+    },
+    {
+      "email_id": "19da749d8320b220",
+      "date": "2026-04-19",
+      "vendor": "Epidemic Sound",
+      "amount": 17.99,
+      "category": "Software & Tools"
+    },
     {
       "email_id": "19d9c1ed173d0ba3",
       "date": "2026-04-17",
