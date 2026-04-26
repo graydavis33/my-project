@@ -56,8 +56,8 @@ PAGES = [
 ORANGE_RGB = {'red': 242 / 255, 'green': 129 / 255, 'blue': 41 / 255}
 DOC_TITLE = 'Trendify Props - Title Pages'
 
-ICON_SIZE_PT = 320     # ~4.4 inches square
-TITLE_PT = 72          # ~1 inch tall caps
+ICON_SIZE_PT = 80      # ~1.1 inches square (quarter of original 320)
+TITLE_PT = 18          # ~0.25 inches tall caps (quarter of original 72)
 LOGO_FOOTER_W_PT = 110
 LOGO_FOOTER_H_PT = 30  # ~3.7:1 aspect to match the trendify logo
 
