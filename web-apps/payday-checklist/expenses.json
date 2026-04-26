@@ -1,7 +1,14 @@
 {
-  "generated_at": "2026-04-25T11:38:05Z",
+  "generated_at": "2026-04-26T11:38:54Z",
   "month": "2026-04",
   "expenses": [
+    {
+      "email_id": "19dc5028e937fb6a",
+      "date": "2026-04-25",
+      "vendor": "Cason Roberts",
+      "amount": 30.0,
+      "category": "Misc"
+    },
     {
       "email_id": "19dc3b9b7a814a46",
       "date": "2026-04-25",
@@ -26,7 +33,7 @@
     {
       "email_id": "19d8841d7d520d4f",
       "date": "2026-04-13",
-      "vendor": "Google Play",
+      "vendor": "Google One",
       "amount": 0.49,
       "category": "Software & Tools"
     },
