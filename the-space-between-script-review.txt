@@ -1,0 +1,115 @@
+THE SPACE BETWEEN — SCRIPT REVIEW
+By Ari Goren
+Reviewed: April 25, 2026
+13-page short film draft
+
+
+SUMMARY
+
+The story works. The emotional spine is clear, the central image (the stone, the reflection in the glass) is strong, and the restraint of the final scene lands. Below is a categorized punch list of fixable issues — typos through structure.
+
+
+WHAT'S WORKING
+
+  • The opening breakfast / inhaler / pinky promise exchange establishes Sarah's character entirely through small instructions. Show, don't tell.
+
+  • The window-reflection beat on pages 5–6, where Sarah and James "occupy the same space in the glass," is a strong central image.
+
+  • The tunnel echo on page 9 — voiceover only audible in darkness — is a beautiful restraint choice.
+
+  • The two pockets / two hands ending gives the audience the metaphor without telegraphing it.
+
+
+TYPOS & SPELLING
+
+  Page 3   "There hands drop"                  →  Their hands drop
+  Page 3   "quieter than he ment to"           →  meant
+  Page 4   "I love you to mommy"               →  too
+  Page 8   "Im sorry. Im sorry"                →  I'm sorry. I'm sorry.
+  Page 11  "Its ok buddy. Its yours"           →  It's okay, buddy. It's yours.
+  Page 11  "turns toward the window agin"      →  again
+
+
+GRAMMAR & PUNCTUATION
+
+  • Page 2 — "But what if its really early?" → it's (same fix twice on this page).
+
+  • Page 4 — "I love you too, Mommy." Add comma of direct address; capitalize Mommy.
+
+  • Page 13 — last action line is missing a period: "...like he's still deciding what it means"
+
+
+CAPITALIZATION
+
+  • Page 2 — JAMES's dialogue: "even on Saturdays?" → "Even on Saturdays?" (dialogue lines start uppercase).
+
+  • Pages 3 and 4 — "beat." appears lowercase, but it's "Beat." everywhere else. Pick one (industry standard is Beat.).
+
+  • Page 4 — "mommy" used as direct address → Mommy.
+
+  • Page 11 — "offering the stone to dan" → Dan.
+
+  • Page 11 — "Something flicks In his mind." Mid-sentence In should be lowercase.
+
+
+CONTINUITY ERROR
+
+  Eyes opening twice. End of page 9: "James opens his eyes." Then page 11
+  opens with: "James opens his eyes, looks down at the stone." — but his
+  eyes were already open from page 10's "What is that?" exchange.
+
+  Fix: delete the second "opens his eyes," OR change page 9 to keep his
+  eyes closed through Dan's question.
+
+
+FORMAT / SCREENPLAY CONVENTION
+
+  Page 13 — Broken V.O. block. As laid out, the dialogue is split awkwardly:
+
+      JAMES (V.O.)
+      I'll call Mommy tonight. Tell
+
+      her all about the train ride. Beat.
+
+  The orphan line and trailing "Beat." should be:
+
+      JAMES (V.O.)
+      I'll call Mommy tonight. Tell her all about the train ride.
+
+      Beat.
+
+  • Page 7 — The spreadsheet description is a dense paragraph of action.
+    Cleaner: lead with INSERT - LAPTOP SCREEN and break it into 2–3 short
+    visual lines so the reader knows they're meant to read the screen.
+
+  • Page 5 — Three INT. TRAIN - CONTINUOUS headers stack within seconds.
+    Some directors love the rhythm; a script reader may flag it. Could
+    collapse two into one.
+
+  • Page 12 — "mid type" → "mid-type" (or "mid-typing").
+
+
+VERIFY WITH THE WRITER (NOT ERRORS)
+
+  • Surname mismatch. James and Dan are SHNIDER; Sarah is ORCHIN.
+    Intentional (kept maiden name / already separated)? If yes, fine. If
+    no, align them.
+
+  • "SHNIDER" spelling. Unusual vs. Schneider / Snider — stylized on
+    purpose?
+
+  • Dan's Bloomington/limestone speech (page 4). Dan says "the ground
+    they're standing on" while they're 200 miles away in Kentucky. Reads
+    slightly off geographically. Probably intentional (nervous trivia-
+    dumping) — but a director may push back.
+
+  • Buried backstory. Lines like "a man who knows exactly what he's done"
+    (page 3), "older than this argument" (page 4), the phone photo (page
+    9), and the undealt business cards (page 13) all hint at something
+    specific — affair, forced career move, betrayal. The ambiguity is a
+    craft choice. If the writer wants the audience to land on a specific
+    read, one or two of these may need to point harder.
+
+
+—
+Notes prepared for Ari Goren. Page numbers reference the script's internal numbering.
