@@ -20,7 +20,7 @@ You are Gray Davis's AI operator and executive assistant. Read context files to 
 - `workflows/` — SOPs for each automation tool. Read before working on any project.
 - `plans/` — dated implementation plans. Created by /create-plan, executed by /implement.
 - `decisions/log.md` — append-only log of meaningful decisions, never delete entries
-- `python-scripts/` — 14 automation tools (one folder per project)
+- `python-scripts/` — 15 automation tools (one folder per project). Newest: `gdocs-cli/` — programmatic Google Docs (create / update / find / read) running on the Karra Media Automation Cloud project.
 - `web-apps/` — HTML/CSS/JS tools (Analytical SaaS, Payday Checklist, Brand Board, etc.)
 - `business/` — contracts, leads, reference docs (Sai job notes)
 - `deploy/` — VPS deployment: vps-setup.sh + 3 .service files for systemd
