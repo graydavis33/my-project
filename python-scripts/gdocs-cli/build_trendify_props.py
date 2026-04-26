@@ -56,8 +56,8 @@ PAGES = [
 ORANGE_RGB = {'red': 242 / 255, 'green': 129 / 255, 'blue': 41 / 255}
 DOC_TITLE = 'Trendify Props - Title Pages'
 
-ICON_SIZE_PT = 80      # ~1.1 inches square (quarter of original 320)
-TITLE_PT = 18          # ~0.25 inches tall caps (quarter of original 72)
+ICON_SIZE_PT = 255.375  # matches manual sizing on KEEP THINGS SAFE page
+TITLE_PT = 32           # matches manual sizing on KEEP THINGS SAFE page
 LOGO_FOOTER_W_PT = 110
 LOGO_FOOTER_H_PT = 30  # ~3.7:1 aspect to match the trendify logo
 
@@ -147,10 +147,17 @@ def main():
         print(f'  Page {i+1} (idx {insert_at}): {title}')
 
         requests = [
-            # 1. Image
+            # 1. Two empty newlines (vertical position spacer)
+            {
+                'insertText': {
+                    'location': {'index': insert_at},
+                    'text': '\n\n',
+                },
+            },
+            # 2. Image
             {
                 'insertInlineImage': {
-                    'location': {'index': insert_at},
+                    'location': {'index': insert_at + 2},
                     'uri': image_urls[filename],
                     'objectSize': {
                         'width':  {'magnitude': ICON_SIZE_PT, 'unit': 'PT'},
@@ -158,33 +165,35 @@ def main():
                     },
                 },
             },
-            # 2. Newline + title + newline
+            # 3. Newline (end image paragraph) + title + newline
             {
                 'insertText': {
-                    'location': {'index': insert_at + 1},
+                    'location': {'index': insert_at + 3},
                     'text': '\n' + title + '\n',
                 },
             },
         ]
 
-        # After both inserts:
-        #   insert_at:                                  image (1 char)
-        #   insert_at + 1:                              \n  (start of inserted text)
-        #   insert_at + 2 .. + 1 + len(title):          title characters
-        #   insert_at + 2 + len(title):                 \n  (end of inserted text)
-        title_start = insert_at + 2
+        # After all 3 inserts:
+        #   insert_at:                empty paragraph 1 (\n)
+        #   insert_at + 1:            empty paragraph 2 (\n)
+        #   insert_at + 2:            image
+        #   insert_at + 3:            \n (end image paragraph)
+        #   insert_at + 4 ..:         title chars
+        #   insert_at + 4 + len:      \n (end title paragraph)
+        title_start = insert_at + 4
         title_end_excl = title_start + len(title)
 
-        # 3. Center the image paragraph
+        # Center alignment for all 4 paragraphs (the 2 empties + image + title)
         requests.append({
             'updateParagraphStyle': {
-                'range': {'startIndex': insert_at, 'endIndex': insert_at + 1},
+                'range': {'startIndex': insert_at, 'endIndex': title_end_excl + 1},
                 'paragraphStyle': {'alignment': 'CENTER'},
                 'fields': 'alignment',
             },
         })
 
-        # 4. Style title text
+        # Style title text
         requests.append({
             'updateTextStyle': {
                 'range': {'startIndex': title_start, 'endIndex': title_end_excl},
@@ -197,16 +206,7 @@ def main():
             },
         })
 
-        # 5. Center title paragraph
-        requests.append({
-            'updateParagraphStyle': {
-                'range': {'startIndex': title_start, 'endIndex': title_end_excl + 1},
-                'paragraphStyle': {'alignment': 'CENTER'},
-                'fields': 'alignment',
-            },
-        })
-
-        # 6. Page break (skip after last page)
+        # Page break (skip after last page)
         if not is_last:
             requests.append({
                 'insertPageBreak': {'location': {'index': title_end_excl + 1}},
