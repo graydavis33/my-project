@@ -123,13 +123,13 @@ def icon_wrench():
     img = Image.new('RGBA', (DRAW_SIZE, DRAW_SIZE), TRANSPARENT)
     d = ImageDraw.Draw(img)
 
-    # Handle (horizontal)
+    # Handle (horizontal) — thicker
     handle_left = CX - 1300
     handle_right = CX + 1300
-    handle_top = CY - 160
-    handle_bottom = CY + 160
+    handle_top = CY - 250
+    handle_bottom = CY + 250
     d.rounded_rectangle([handle_left, handle_top, handle_right, handle_bottom],
-                        radius=140, fill=ORANGE)
+                        radius=180, fill=ORANGE)
 
     # Right head: closed-loop (box-end) wrench
     rh_cx = handle_right + 200
@@ -167,12 +167,12 @@ def icon_broom():
     img, d = new_canvas()
     handle_top = CY - 1700
     handle_bottom = CY + 200
-    handle_w = 90
+    handle_w = 180
     d.rectangle([CX - handle_w, handle_top, CX + handle_w, handle_bottom], fill=ORANGE)
     # Binding band
     band_top = handle_bottom
-    band_bottom = handle_bottom + 220
-    band_w = 700
+    band_bottom = handle_bottom + 260
+    band_w = 750
     d.rectangle([CX - band_w, band_top, CX + band_w, band_bottom], fill=ORANGE)
     # Bristles (trapezoid)
     bristles_top = band_bottom
@@ -211,9 +211,9 @@ def icon_padlock():
     body_w = 1150
     d.rounded_rectangle([CX - body_w, body_top, CX + body_w, body_bottom],
                         radius=200, fill=ORANGE)
-    # Shackle: outer U
-    shackle_outer = 850
-    shackle_inner = 620
+    # Shackle: outer U — thicker arms
+    shackle_outer = 880
+    shackle_inner = 480
     shackle_cy_top = body_top - 50
     # Outer arc top
     d.pieslice(
@@ -266,14 +266,14 @@ def icon_key():
     hole_r = 280
     d.ellipse([head_cx - hole_r, head_cy - hole_r,
                head_cx + hole_r, head_cy + hole_r], fill=TRANSPARENT)
-    # Shaft going right
-    shaft_top = CY - 130
-    shaft_bottom = CY + 130
+    # Shaft going right — thicker
+    shaft_top = CY - 200
+    shaft_bottom = CY + 200
     shaft_end = CX + 1500
     d.rectangle([head_cx + head_r - 50, shaft_top, shaft_end, shaft_bottom], fill=ORANGE)
-    # Teeth (two downward notches near right end)
-    d.rectangle([CX + 700, shaft_bottom, CX + 900, shaft_bottom + 280], fill=ORANGE)
-    d.rectangle([CX + 1150, shaft_bottom, CX + 1350, shaft_bottom + 380], fill=ORANGE)
+    # Teeth (two downward notches near right end) — chunkier
+    d.rectangle([CX + 650, shaft_bottom, CX + 920, shaft_bottom + 360], fill=ORANGE)
+    d.rectangle([CX + 1100, shaft_bottom, CX + 1370, shaft_bottom + 460], fill=ORANGE)
     save(img, '08-key-terms-to-know')
 
 
