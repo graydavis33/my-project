@@ -24,3 +24,16 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - Don't restore the old 4K-based format detection.
 - Don't add a `voiceover` category — Gray explicitly rejected it.
 - Don't let the model invent categories or land files in unknown folders. The CATEGORIES list is the contract.
+
+## v2 Architecture (2026-04-27)
+
+**Folders are primary classification:**
+> The existing 8-folder library (00_TEMPLATES through 07_ASSETS) is unchanged. Vision-classified clips land in `06_FOOTAGE_LIBRARY/<category>/<date>/`. Folders are how Premiere browses, how Gray browses manually, and how categories are defined. The index does NOT replace folders — it sits beside them.
+
+**SQLite index = orthogonal metadata:**
+> `.footage-index.sqlite` lives at the library root. One row per clip with: `path, category, format (vertical/horizontal), filmed_date, upload_date, duration_s, width, height, codec, sha1`. Filmed date comes from camera metadata (ffprobe `creation_time`), falling back to file mtime. Built/refreshed via `python cli_index.py --client sai index`.
+
+**Pull builds Premiere-ready folders via hardlinks:**
+> `python cli_index.py --client sai pull --orientation vertical --filmed-date 2026-04-16` filters the index → hardlinks matching files into `_pulls/<slug>/`. Hardlinks on NTFS = zero extra disk; Premiere treats them as normal files. Falls back to copy on cross-drive (`OSError` from `os.link`). Files are never moved or deleted by `pull`.
+
+> **One clip → one category.** Vision-classifier output is single-label (unchanged from v1). Hardlinks only appear when `pull` builds an output folder.
