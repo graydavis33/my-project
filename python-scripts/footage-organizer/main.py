@@ -92,6 +92,13 @@ def parse_args():
         action="store_true",
         help="Create full folder structure for this client (run once on first use)"
     )
+    parser.add_argument(
+        "--source",
+        metavar="PATH",
+        help="Process this folder directly instead of RAW_INCOMING/<date>/. "
+             "Useful for one-off cleanup of loose footage already in the library. "
+             "Forces --copy mode so originals are preserved.",
+    )
     return parser.parse_args()
 
 
@@ -212,11 +219,11 @@ def detect_format(filepath):
     return fmt, width, height
 
 
-def run_organize(client, date_str, move):
+def run_organize(client, date_str, move, source_folder=None):
     log_run("footage-organizer")
     library = get_library(client)
 
-    raw_folder   = os.path.join(library, FOLDER_RAW, date_str)
+    raw_folder   = source_folder or os.path.join(library, FOLDER_RAW, date_str)
     organized_dir = os.path.join(library, FOLDER_ORGANIZED)
 
     if not os.path.isdir(raw_folder):
@@ -284,8 +291,12 @@ def run_organize(client, date_str, move):
 
     _print_organize_summary(results, skipped, organized_dir, date_str, move, client)
 
+    if source_folder is not None:
+        print(f"  --source mode: originals NOT deleted from {source_folder}")
+        print(f"  Review the output, then delete the source folder manually if you're happy.\n")
+
     real_skips = [s for s in skipped if not s.startswith("._")]
-    if not real_skips:
+    if not real_skips and source_folder is None:
         shutil.rmtree(raw_folder)
         print(f"  Deleted RAW folder: {raw_folder}\n")
 
@@ -395,4 +406,13 @@ if __name__ == "__main__":
         run_archive(args.client, args.archive)
     else:
         date_str = args.date or date.today().strftime("%Y-%m-%d")
-        run_organize(args.client, date_str, move=not args.copy)
+        if args.source:
+            from pathlib import Path
+            src = Path(args.source).expanduser()
+            if not src.is_dir():
+                print(f"\n  Error: --source path not found: {src}")
+                sys.exit(1)
+            # In --source mode, always copy (preserve originals for Gray's review).
+            run_organize(args.client, date_str, move=False, source_folder=str(src))
+        else:
+            run_organize(args.client, date_str, move=not args.copy)
