@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Billionaire",
+    "text_style": "Bright green, bold sans-serif font, centered horizontally in middle of frame",
+    "shot_type": "medium",
+    "framing": "Bald man with glasses in center frame, smiling at camera, with other pedestrians visible in background on a shopping street",
+    "subject_appearance": "Older man, bald with wire-frame glasses, wearing a dark navy patterned blazer over a dark shirt.",
+    "setting": "Upscale shopping mall or street",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "It was mobile phones.",
+    "text_style": "White sans-serif font, bold weight, centered lower-middle portion of frame",
+    "shot_type": "medium",
+    "framing": "Bald man with glasses in profile facing right, holding a small device in right hand, indoor retail/gallery setting with blurred storefront background",
+    "subject_appearance": "Older man wearing blue patterned jacket over black shirt, gold-framed glasses, bald head with goatee",
+    "setting": "Retail storefront, indoor mall",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You know they don't teach this",
+    "text_style": "White bold sans-serif, center-bottom position, high contrast black outline",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile, facing right, gesturing with left hand raised, modern interior with glass and window backdrop",
+    "subject_appearance": "Young man wearing a white ribbed short-sleeve t-shirt, dark hair with undercut style, casual demeanor.",
+    "setting": "Modern indoor lobby or office",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "a better place than you found it.",
+    "text_style": "white, bold, sans-serif, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "older male subject in profile, facing right, holding microphone toward his chin, framed from upper torso up against blurred indoor background",
+    "subject_appearance": "bald man with light facial hair, wearing gold-rimmed glasses and a dark jacket with blue pattern over black shirt.",
+    "setting": "indoor, blurred background",
+    "broll": false,
+    "energy": "medium"
+  }
+]

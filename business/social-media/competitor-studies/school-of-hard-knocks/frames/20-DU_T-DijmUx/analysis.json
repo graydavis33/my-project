@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Can you ask him??",
+    "text_style": "white, bold, sans-serif, centered in lower-middle portion of frame",
+    "shot_type": "medium",
+    "framing": "One male subject in profile facing left, partially visible hand/arm of another person (interviewer) on left edge, standing in front of glass storefront/building entrance",
+    "subject_appearance": "Young man wearing dark blue/navy zip-up hoodie or sweatshirt, short dark hair, appears casual",
+    "setting": "Urban street, storefront entrance",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "billionaires have car washes?",
+    "text_style": "White sans-serif font, bold weight, centered lower-third position",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing right, holding microphone, positioned in front of illuminated storefront with address number visible above",
+    "subject_appearance": "Bald man wearing dark navy collared shirt over white undershirt, holding microphone in right hand",
+    "setting": "Street storefront, evening",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "about business right here...",
+    "text_style": "white, bold, sans-serif, center-bottom position with black outline",
+    "shot_type": "medium close-up",
+    "framing": "bald man in profile facing right, being interviewed with microphone visible on right edge; building storefront and neon signage in blurred background",
+    "subject_appearance": "bald man wearing dark navy button-up shirt over light blue undershirt, holding microphone.",
+    "setting": "street outside commercial building",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Would you do a live call and",
+    "text_style": "white sans-serif font, bold, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile facing left, positioned right of center against modern building backdrop with white pillar and teal-green door frame",
+    "subject_appearance": "young man with dark undercut hairstyle wearing dark navy zip-up hoodie/jacket, appearing to speak animatedly",
+    "setting": "urban street, modern building entrance",
+    "broll": false,
+    "energy": "high"
+  }
+]

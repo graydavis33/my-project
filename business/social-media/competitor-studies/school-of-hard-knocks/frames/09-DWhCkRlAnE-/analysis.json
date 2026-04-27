@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "I grew a channel to...",
+    "text_style": "White serif font, centered lower third, medium weight",
+    "shot_type": "medium",
+    "framing": "Two men standing on an urban street outside a building with glass storefront. Man in foreground (left) wearing black hoodie, man in background (right) in white shirt and tie, both in profile facing right",
+    "subject_appearance": "Main subject wears a black hoodie with short dark hair styled up; secondary subject wears a white dress shirt with blue tie and has lighter colored hair.",
+    "setting": "Urban street, storefront building",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Are you happy with what I said?",
+    "text_style": "white serif font, bold, centered lower-third position with black outline for contrast",
+    "shot_type": "medium",
+    "framing": "rear view of older man walking away from camera in outdoor courtyard setting, host/interviewer partially visible in background",
+    "subject_appearance": "Older man with gray hair wearing a light blue and white striped long-sleeve sweater over dark pants.",
+    "setting": "outdoor courtyard, modern building",
+    "broll": true,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "What do people need to understand",
+    "text_style": "White sans-serif font, bold, positioned at bottom center in two lines with slight shadow/outline effect",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, speaking animatedly; partial view of another person's arm on left edge; storefront background with glass and warm interior lighting",
+    "subject_appearance": "Young male with dark slicked-back hair wearing a navy blue jacket with white piping trim and visible 'School of Hard Knocks' logo patch",
+    "setting": "Street storefront or mall entrance",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "That which I touch...",
+    "text_style": "White bold sans-serif font with black outline, positioned in lower third of frame, center-aligned",
+    "shot_type": "medium close-up",
+    "framing": "Older man in profile/three-quarter view facing left, holding microphone in right hand, urban cityscape backdrop with warm evening lighting",
+    "subject_appearance": "Older man with gray hair wearing a color-block athletic jacket in gray, white, and blue with white undershirt, holding a microphone",
+    "setting": "Urban street, city evening",
+    "broll": false,
+    "energy": "low"
+  }
+]

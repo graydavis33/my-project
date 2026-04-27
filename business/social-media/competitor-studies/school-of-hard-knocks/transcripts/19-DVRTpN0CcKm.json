@@ -1,0 +1,2924 @@
+{
+  "duration": 113.3,
+  "language": "en",
+  "text": "Excuse me sir, sir, are you a millionaire? Not anymore. Did you go broke? No, I became a billionaire. You're a billionaire? How did you become a billionaire? Yeah, but who are you? I'm a billionaire all over the world. I've been even 44 billionaires as of right now. Can I interview you for a minute? Yeah, sure. Did you come from a lot of money? Were your parents rich? Definitely not. Definitely not rich. I always knew I was going to be successful. Do you have to be a little crazy to become this successful? Do I have to be crazy? Are you crazy? Tell me, tell me, are you crazy? No, I'm very level. But I did work 22 hours a day because I started that business and it was worth zero. And I sold it 20 years later for 1.5 billion. What business made you a billionaire? It was mobile phones. Mobile phones like Apple. No, not like Apple, no. I was a retailer and wholesaler all over the world. Are you a good salesman? No, I don't think you're going to get to where I am without being a good salesman. So what was your secret to sales? It's not a very comfortable word to use but you've got to be very manipulative because you've got to make the buyer realize you won't be beaten up. Were you ever afraid of competition? No, I was afraid of my suppliers because when you became too big the suppliers wanted to cut you off and they wanted to axe you and grow competitors to you because they had a favorite expression which is they don't want the tail wagging the dog and I became the dog. You know they don't teach this in school, right? They don't teach anything in school about entrepreneurship. Correct me if I'm wrong. Taxes are crazy in the UK. Do you have a tax hack for anybody in business? I believe that you should pay your taxes in the country that you've made your money in. So you paid your taxes. I paid all my taxes on the sale of the business. What's the most amount of money you paid in taxes in one year? 200 million. You paid 200 million in taxes? Yeah, and I could have avoided it. How? By moving to Monaco. Why did you not do that? Because I feel that the poor people need help. Why? A childhood dream I had when I was eight years old was that I would be driving around in a chauffeur-driven Rolls-Royce handing five pound notes out to poor people and that dream had to be fulfilled. Like I told my kids, I'm not bothered about you being rich. I want you to leave the world a better place than you found it and be happy. Thank you so much for your time, man. Thank you. I connect with all the billionaires at IndieView. Could I get your contact? Sure.",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 2.1,
+      "text": "Excuse me sir, sir, are you a millionaire?"
+    },
+    {
+      "start": 2.8,
+      "end": 3.4,
+      "text": "Not anymore."
+    },
+    {
+      "start": 3.8,
+      "end": 4.3,
+      "text": "Did you go broke?"
+    },
+    {
+      "start": 4.6,
+      "end": 5.7,
+      "text": "No, I became a billionaire."
+    },
+    {
+      "start": 6.1,
+      "end": 6.5,
+      "text": "You're a billionaire?"
+    },
+    {
+      "start": 7.0,
+      "end": 7.9,
+      "text": "How did you become a billionaire?"
+    },
+    {
+      "start": 8.1,
+      "end": 8.5,
+      "text": "Yeah, but who are you?"
+    },
+    {
+      "start": 8.7,
+      "end": 9.9,
+      "text": "I'm a billionaire all over the world."
+    },
+    {
+      "start": 10.0,
+      "end": 12.2,
+      "text": "I've been even 44 billionaires as of right now."
+    },
+    {
+      "start": 12.3,
+      "end": 13.5,
+      "text": "Can I interview you for a minute?"
+    },
+    {
+      "start": 13.7,
+      "end": 14.0,
+      "text": "Yeah, sure."
+    },
+    {
+      "start": 14.2,
+      "end": 15.1,
+      "text": "Did you come from a lot of money?"
+    },
+    {
+      "start": 15.2,
+      "end": 15.9,
+      "text": "Were your parents rich?"
+    },
+    {
+      "start": 16.2,
+      "end": 16.8,
+      "text": "Definitely not."
+    },
+    {
+      "start": 17.0,
+      "end": 17.6,
+      "text": "Definitely not rich."
+    },
+    {
+      "start": 17.7,
+      "end": 19.3,
+      "text": "I always knew I was going to be successful."
+    },
+    {
+      "start": 19.6,
+      "end": 20.7,
+      "text": "Do you have to be a little crazy"
+    },
+    {
+      "start": 20.7,
+      "end": 21.6,
+      "text": "to become this successful?"
+    },
+    {
+      "start": 21.9,
+      "end": 22.7,
+      "text": "Do I have to be crazy?"
+    },
+    {
+      "start": 23.0,
+      "end": 23.5,
+      "text": "Are you crazy?"
+    },
+    {
+      "start": 23.8,
+      "end": 24.7,
+      "text": "Tell me, tell me, are you crazy?"
+    },
+    {
+      "start": 24.7,
+      "end": 25.5,
+      "text": "No, I'm very level."
+    },
+    {
+      "start": 25.7,
+      "end": 27.1,
+      "text": "But I did work 22 hours a day"
+    },
+    {
+      "start": 27.1,
+      "end": 28.4,
+      "text": "because I started that business"
+    },
+    {
+      "start": 28.4,
+      "end": 29.5,
+      "text": "and it was worth zero."
+    },
+    {
+      "start": 29.5,
+      "end": 32.0,
+      "text": "And I sold it 20 years later for 1.5 billion."
+    },
+    {
+      "start": 32.3,
+      "end": 33.4,
+      "text": "What business made you a billionaire?"
+    },
+    {
+      "start": 33.6,
+      "end": 34.3,
+      "text": "It was mobile phones."
+    },
+    {
+      "start": 34.4,
+      "end": 35.3,
+      "text": "Mobile phones like Apple."
+    },
+    {
+      "start": 35.4,
+      "end": 36.6,
+      "text": "No, not like Apple, no."
+    },
+    {
+      "start": 36.7,
+      "end": 39.2,
+      "text": "I was a retailer and wholesaler all over the world."
+    },
+    {
+      "start": 39.4,
+      "end": 40.2,
+      "text": "Are you a good salesman?"
+    },
+    {
+      "start": 40.4,
+      "end": 42.0,
+      "text": "No, I don't think you're going to get"
+    },
+    {
+      "start": 42.0,
+      "end": 44.0,
+      "text": "to where I am without being a good salesman."
+    },
+    {
+      "start": 44.2,
+      "end": 45.3,
+      "text": "So what was your secret to sales?"
+    },
+    {
+      "start": 45.4,
+      "end": 47.3,
+      "text": "It's not a very comfortable word to use"
+    },
+    {
+      "start": 47.3,
+      "end": 48.9,
+      "text": "but you've got to be very manipulative"
+    },
+    {
+      "start": 48.9,
+      "end": 51.0,
+      "text": "because you've got to make the buyer"
+    },
+    {
+      "start": 51.0,
+      "end": 53.1,
+      "text": "realize you won't be beaten up."
+    },
+    {
+      "start": 53.2,
+      "end": 54.2,
+      "text": "Were you ever afraid of competition?"
+    },
+    {
+      "start": 54.7,
+      "end": 56.0,
+      "text": "No, I was afraid of my suppliers"
+    },
+    {
+      "start": 56.0,
+      "end": 57.9,
+      "text": "because when you became too big"
+    },
+    {
+      "start": 57.9,
+      "end": 59.5,
+      "text": "the suppliers wanted to cut you off"
+    },
+    {
+      "start": 59.5,
+      "end": 60.9,
+      "text": "and they wanted to axe you"
+    },
+    {
+      "start": 60.9,
+      "end": 62.4,
+      "text": "and grow competitors to you"
+    },
+    {
+      "start": 62.4,
+      "end": 64.2,
+      "text": "because they had a favorite expression"
+    },
+    {
+      "start": 64.2,
+      "end": 66.5,
+      "text": "which is they don't want the tail wagging the dog"
+    },
+    {
+      "start": 66.5,
+      "end": 67.7,
+      "text": "and I became the dog."
+    },
+    {
+      "start": 67.8,
+      "end": 69.1,
+      "text": "You know they don't teach this in school, right?"
+    },
+    {
+      "start": 69.2,
+      "end": 70.5,
+      "text": "They don't teach anything in school"
+    },
+    {
+      "start": 70.5,
+      "end": 71.4,
+      "text": "about entrepreneurship."
+    },
+    {
+      "start": 71.8,
+      "end": 72.5,
+      "text": "Correct me if I'm wrong."
+    },
+    {
+      "start": 72.7,
+      "end": 74.2,
+      "text": "Taxes are crazy in the UK."
+    },
+    {
+      "start": 74.5,
+      "end": 76.2,
+      "text": "Do you have a tax hack for anybody in business?"
+    },
+    {
+      "start": 76.5,
+      "end": 78.1,
+      "text": "I believe that you should pay your taxes"
+    },
+    {
+      "start": 78.1,
+      "end": 79.8,
+      "text": "in the country that you've made your money in."
+    },
+    {
+      "start": 79.9,
+      "end": 80.7,
+      "text": "So you paid your taxes."
+    },
+    {
+      "start": 80.8,
+      "end": 82.7,
+      "text": "I paid all my taxes on the sale of the business."
+    },
+    {
+      "start": 83.0,
+      "end": 83.9,
+      "text": "What's the most amount of money"
+    },
+    {
+      "start": 83.9,
+      "end": 84.9,
+      "text": "you paid in taxes in one year?"
+    },
+    {
+      "start": 85.0,
+      "end": 85.7,
+      "text": "200 million."
+    },
+    {
+      "start": 86.3,
+      "end": 87.4,
+      "text": "You paid 200 million in taxes?"
+    },
+    {
+      "start": 87.4,
+      "end": 88.9,
+      "text": "Yeah, and I could have avoided it."
+    },
+    {
+      "start": 89.0,
+      "end": 89.2,
+      "text": "How?"
+    },
+    {
+      "start": 89.3,
+      "end": 90.2,
+      "text": "By moving to Monaco."
+    },
+    {
+      "start": 90.4,
+      "end": 91.2,
+      "text": "Why did you not do that?"
+    },
+    {
+      "start": 91.3,
+      "end": 93.2,
+      "text": "Because I feel that the poor people need help."
+    },
+    {
+      "start": 93.4,
+      "end": 93.5,
+      "text": "Why?"
+    },
+    {
+      "start": 93.7,
+      "end": 95.8,
+      "text": "A childhood dream I had when I was eight years old"
+    },
+    {
+      "start": 95.8,
+      "end": 97.7,
+      "text": "was that I would be driving around"
+    },
+    {
+      "start": 97.7,
+      "end": 99.3,
+      "text": "in a chauffeur-driven Rolls-Royce"
+    },
+    {
+      "start": 99.3,
+      "end": 101.3,
+      "text": "handing five pound notes out to poor people"
+    },
+    {
+      "start": 101.3,
+      "end": 103.0,
+      "text": "and that dream had to be fulfilled."
+    },
+    {
+      "start": 103.3,
+      "end": 104.1,
+      "text": "Like I told my kids,"
+    },
+    {
+      "start": 104.3,
+      "end": 105.6,
+      "text": "I'm not bothered about you being rich."
+    },
+    {
+      "start": 106.0,
+      "end": 107.8,
+      "text": "I want you to leave the world a better place"
+    },
+    {
+      "start": 107.8,
+      "end": 109.2,
+      "text": "than you found it and be happy."
+    },
+    {
+      "start": 109.4,
+      "end": 110.5,
+      "text": "Thank you so much for your time, man."
+    },
+    {
+      "start": 110.6,
+      "end": 110.8,
+      "text": "Thank you."
+    },
+    {
+      "start": 110.8,
+      "end": 112.2,
+      "text": "I connect with all the billionaires at IndieView."
+    },
+    {
+      "start": 112.3,
+      "end": 112.9,
+      "text": "Could I get your contact?"
+    },
+    {
+      "start": 113.1,
+      "end": 113.2,
+      "text": "Sure."
+    }
+  ],
+  "words": [
+    {
+      "start": 0.0,
+      "end": 0.24,
+      "word": "Excuse"
+    },
+    {
+      "start": 0.24,
+      "end": 0.44,
+      "word": "me"
+    },
+    {
+      "start": 0.44,
+      "end": 0.66,
+      "word": "sir,"
+    },
+    {
+      "start": 0.96,
+      "end": 1.16,
+      "word": "sir,"
+    },
+    {
+      "start": 1.54,
+      "end": 1.7,
+      "word": "are"
+    },
+    {
+      "start": 1.7,
+      "end": 1.82,
+      "word": "you"
+    },
+    {
+      "start": 1.82,
+      "end": 1.92,
+      "word": "a"
+    },
+    {
+      "start": 1.92,
+      "end": 2.1,
+      "word": "millionaire?"
+    },
+    {
+      "start": 2.84,
+      "end": 3.12,
+      "word": "Not"
+    },
+    {
+      "start": 3.12,
+      "end": 3.4,
+      "word": "anymore."
+    },
+    {
+      "start": 3.8,
+      "end": 3.9,
+      "word": "Did"
+    },
+    {
+      "start": 3.9,
+      "end": 4.02,
+      "word": "you"
+    },
+    {
+      "start": 4.02,
+      "end": 4.16,
+      "word": "go"
+    },
+    {
+      "start": 4.16,
+      "end": 4.34,
+      "word": "broke?"
+    },
+    {
+      "start": 4.58,
+      "end": 4.74,
+      "word": "No,"
+    },
+    {
+      "start": 4.86,
+      "end": 4.98,
+      "word": "I"
+    },
+    {
+      "start": 4.98,
+      "end": 5.26,
+      "word": "became"
+    },
+    {
+      "start": 5.26,
+      "end": 5.46,
+      "word": "a"
+    },
+    {
+      "start": 5.46,
+      "end": 5.68,
+      "word": "billionaire."
+    },
+    {
+      "start": 6.1,
+      "end": 6.22,
+      "word": "You're"
+    },
+    {
+      "start": 6.22,
+      "end": 6.26,
+      "word": "a"
+    },
+    {
+      "start": 6.26,
+      "end": 6.48,
+      "word": "billionaire?"
+    },
+    {
+      "start": 7.02,
+      "end": 7.3,
+      "word": "How"
+    },
+    {
+      "start": 7.3,
+      "end": 7.38,
+      "word": "did"
+    },
+    {
+      "start": 7.38,
+      "end": 7.46,
+      "word": "you"
+    },
+    {
+      "start": 7.46,
+      "end": 7.62,
+      "word": "become"
+    },
+    {
+      "start": 7.62,
+      "end": 7.74,
+      "word": "a"
+    },
+    {
+      "start": 7.74,
+      "end": 7.9,
+      "word": "billionaire?"
+    },
+    {
+      "start": 8.1,
+      "end": 8.1,
+      "word": "Yeah,"
+    },
+    {
+      "start": 8.1,
+      "end": 8.12,
+      "word": "but"
+    },
+    {
+      "start": 8.12,
+      "end": 8.28,
+      "word": "who"
+    },
+    {
+      "start": 8.28,
+      "end": 8.38,
+      "word": "are"
+    },
+    {
+      "start": 8.38,
+      "end": 8.54,
+      "word": "you?"
+    },
+    {
+      "start": 8.74,
+      "end": 8.9,
+      "word": "I'm"
+    },
+    {
+      "start": 8.9,
+      "end": 8.9,
+      "word": "a"
+    },
+    {
+      "start": 8.9,
+      "end": 9.16,
+      "word": "billionaire"
+    },
+    {
+      "start": 9.16,
+      "end": 9.48,
+      "word": "all"
+    },
+    {
+      "start": 9.48,
+      "end": 9.62,
+      "word": "over"
+    },
+    {
+      "start": 9.62,
+      "end": 9.7,
+      "word": "the"
+    },
+    {
+      "start": 9.7,
+      "end": 9.9,
+      "word": "world."
+    },
+    {
+      "start": 9.96,
+      "end": 10.06,
+      "word": "I've"
+    },
+    {
+      "start": 10.06,
+      "end": 10.08,
+      "word": "been"
+    },
+    {
+      "start": 10.08,
+      "end": 10.18,
+      "word": "even"
+    },
+    {
+      "start": 10.18,
+      "end": 10.74,
+      "word": "44"
+    },
+    {
+      "start": 10.74,
+      "end": 11.44,
+      "word": "billionaires"
+    },
+    {
+      "start": 11.44,
+      "end": 11.72,
+      "word": "as"
+    },
+    {
+      "start": 11.72,
+      "end": 11.84,
+      "word": "of"
+    },
+    {
+      "start": 11.84,
+      "end": 11.98,
+      "word": "right"
+    },
+    {
+      "start": 11.98,
+      "end": 12.22,
+      "word": "now."
+    },
+    {
+      "start": 12.32,
+      "end": 12.42,
+      "word": "Can"
+    },
+    {
+      "start": 12.42,
+      "end": 12.56,
+      "word": "I"
+    },
+    {
+      "start": 12.56,
+      "end": 12.8,
+      "word": "interview"
+    },
+    {
+      "start": 12.8,
+      "end": 13.04,
+      "word": "you"
+    },
+    {
+      "start": 13.04,
+      "end": 13.16,
+      "word": "for"
+    },
+    {
+      "start": 13.16,
+      "end": 13.32,
+      "word": "a"
+    },
+    {
+      "start": 13.32,
+      "end": 13.46,
+      "word": "minute?"
+    },
+    {
+      "start": 13.66,
+      "end": 13.78,
+      "word": "Yeah,"
+    },
+    {
+      "start": 13.8,
+      "end": 14.02,
+      "word": "sure."
+    },
+    {
+      "start": 14.16,
+      "end": 14.28,
+      "word": "Did"
+    },
+    {
+      "start": 14.28,
+      "end": 14.38,
+      "word": "you"
+    },
+    {
+      "start": 14.38,
+      "end": 14.54,
+      "word": "come"
+    },
+    {
+      "start": 14.54,
+      "end": 14.66,
+      "word": "from"
+    },
+    {
+      "start": 14.66,
+      "end": 14.8,
+      "word": "a"
+    },
+    {
+      "start": 14.8,
+      "end": 14.88,
+      "word": "lot"
+    },
+    {
+      "start": 14.88,
+      "end": 14.94,
+      "word": "of"
+    },
+    {
+      "start": 14.94,
+      "end": 15.08,
+      "word": "money?"
+    },
+    {
+      "start": 15.2,
+      "end": 15.28,
+      "word": "Were"
+    },
+    {
+      "start": 15.28,
+      "end": 15.44,
+      "word": "your"
+    },
+    {
+      "start": 15.44,
+      "end": 15.7,
+      "word": "parents"
+    },
+    {
+      "start": 15.7,
+      "end": 15.9,
+      "word": "rich?"
+    },
+    {
+      "start": 16.18,
+      "end": 16.46,
+      "word": "Definitely"
+    },
+    {
+      "start": 16.46,
+      "end": 16.76,
+      "word": "not."
+    },
+    {
+      "start": 16.96,
+      "end": 17.18,
+      "word": "Definitely"
+    },
+    {
+      "start": 17.18,
+      "end": 17.46,
+      "word": "not"
+    },
+    {
+      "start": 17.46,
+      "end": 17.62,
+      "word": "rich."
+    },
+    {
+      "start": 17.72,
+      "end": 17.8,
+      "word": "I"
+    },
+    {
+      "start": 17.8,
+      "end": 18.12,
+      "word": "always"
+    },
+    {
+      "start": 18.12,
+      "end": 18.36,
+      "word": "knew"
+    },
+    {
+      "start": 18.36,
+      "end": 18.46,
+      "word": "I"
+    },
+    {
+      "start": 18.46,
+      "end": 18.54,
+      "word": "was"
+    },
+    {
+      "start": 18.54,
+      "end": 18.68,
+      "word": "going"
+    },
+    {
+      "start": 18.68,
+      "end": 18.78,
+      "word": "to"
+    },
+    {
+      "start": 18.78,
+      "end": 18.9,
+      "word": "be"
+    },
+    {
+      "start": 18.9,
+      "end": 19.32,
+      "word": "successful."
+    },
+    {
+      "start": 19.64,
+      "end": 19.7,
+      "word": "Do"
+    },
+    {
+      "start": 19.7,
+      "end": 19.84,
+      "word": "you"
+    },
+    {
+      "start": 19.84,
+      "end": 19.96,
+      "word": "have"
+    },
+    {
+      "start": 19.96,
+      "end": 20.04,
+      "word": "to"
+    },
+    {
+      "start": 20.04,
+      "end": 20.16,
+      "word": "be"
+    },
+    {
+      "start": 20.16,
+      "end": 20.24,
+      "word": "a"
+    },
+    {
+      "start": 20.24,
+      "end": 20.38,
+      "word": "little"
+    },
+    {
+      "start": 20.38,
+      "end": 20.66,
+      "word": "crazy"
+    },
+    {
+      "start": 20.66,
+      "end": 20.82,
+      "word": "to"
+    },
+    {
+      "start": 20.82,
+      "end": 21.04,
+      "word": "become"
+    },
+    {
+      "start": 21.04,
+      "end": 21.18,
+      "word": "this"
+    },
+    {
+      "start": 21.18,
+      "end": 21.64,
+      "word": "successful?"
+    },
+    {
+      "start": 21.9,
+      "end": 22.0,
+      "word": "Do"
+    },
+    {
+      "start": 22.0,
+      "end": 22.12,
+      "word": "I"
+    },
+    {
+      "start": 22.12,
+      "end": 22.24,
+      "word": "have"
+    },
+    {
+      "start": 22.24,
+      "end": 22.32,
+      "word": "to"
+    },
+    {
+      "start": 22.32,
+      "end": 22.44,
+      "word": "be"
+    },
+    {
+      "start": 22.44,
+      "end": 22.74,
+      "word": "crazy?"
+    },
+    {
+      "start": 23.04,
+      "end": 23.16,
+      "word": "Are"
+    },
+    {
+      "start": 23.16,
+      "end": 23.28,
+      "word": "you"
+    },
+    {
+      "start": 23.28,
+      "end": 23.52,
+      "word": "crazy?"
+    },
+    {
+      "start": 23.8,
+      "end": 23.9,
+      "word": "Tell"
+    },
+    {
+      "start": 23.9,
+      "end": 24.04,
+      "word": "me,"
+    },
+    {
+      "start": 24.1,
+      "end": 24.22,
+      "word": "tell"
+    },
+    {
+      "start": 24.22,
+      "end": 24.3,
+      "word": "me,"
+    },
+    {
+      "start": 24.36,
+      "end": 24.46,
+      "word": "are"
+    },
+    {
+      "start": 24.46,
+      "end": 24.58,
+      "word": "you"
+    },
+    {
+      "start": 24.58,
+      "end": 24.68,
+      "word": "crazy?"
+    },
+    {
+      "start": 24.7,
+      "end": 24.88,
+      "word": "No,"
+    },
+    {
+      "start": 24.9,
+      "end": 25.0,
+      "word": "I'm"
+    },
+    {
+      "start": 25.0,
+      "end": 25.22,
+      "word": "very"
+    },
+    {
+      "start": 25.22,
+      "end": 25.54,
+      "word": "level."
+    },
+    {
+      "start": 25.68,
+      "end": 25.78,
+      "word": "But"
+    },
+    {
+      "start": 25.78,
+      "end": 25.9,
+      "word": "I"
+    },
+    {
+      "start": 25.9,
+      "end": 26.02,
+      "word": "did"
+    },
+    {
+      "start": 26.02,
+      "end": 26.22,
+      "word": "work"
+    },
+    {
+      "start": 26.22,
+      "end": 26.64,
+      "word": "22"
+    },
+    {
+      "start": 26.64,
+      "end": 26.82,
+      "word": "hours"
+    },
+    {
+      "start": 26.82,
+      "end": 26.96,
+      "word": "a"
+    },
+    {
+      "start": 26.96,
+      "end": 27.08,
+      "word": "day"
+    },
+    {
+      "start": 27.08,
+      "end": 27.3,
+      "word": "because"
+    },
+    {
+      "start": 27.3,
+      "end": 27.46,
+      "word": "I"
+    },
+    {
+      "start": 27.46,
+      "end": 27.76,
+      "word": "started"
+    },
+    {
+      "start": 27.76,
+      "end": 28.04,
+      "word": "that"
+    },
+    {
+      "start": 28.04,
+      "end": 28.4,
+      "word": "business"
+    },
+    {
+      "start": 28.4,
+      "end": 28.7,
+      "word": "and"
+    },
+    {
+      "start": 28.7,
+      "end": 28.78,
+      "word": "it"
+    },
+    {
+      "start": 28.78,
+      "end": 28.88,
+      "word": "was"
+    },
+    {
+      "start": 28.88,
+      "end": 29.1,
+      "word": "worth"
+    },
+    {
+      "start": 29.1,
+      "end": 29.46,
+      "word": "zero."
+    },
+    {
+      "start": 29.46,
+      "end": 29.8,
+      "word": "And"
+    },
+    {
+      "start": 29.8,
+      "end": 29.92,
+      "word": "I"
+    },
+    {
+      "start": 29.92,
+      "end": 30.12,
+      "word": "sold"
+    },
+    {
+      "start": 30.12,
+      "end": 30.24,
+      "word": "it"
+    },
+    {
+      "start": 30.24,
+      "end": 30.46,
+      "word": "20"
+    },
+    {
+      "start": 30.46,
+      "end": 30.7,
+      "word": "years"
+    },
+    {
+      "start": 30.7,
+      "end": 30.96,
+      "word": "later"
+    },
+    {
+      "start": 30.96,
+      "end": 31.14,
+      "word": "for"
+    },
+    {
+      "start": 31.14,
+      "end": 31.28,
+      "word": "1"
+    },
+    {
+      "start": 31.28,
+      "end": 31.68,
+      "word": ".5"
+    },
+    {
+      "start": 31.68,
+      "end": 32.02,
+      "word": "billion."
+    },
+    {
+      "start": 32.28,
+      "end": 32.34,
+      "word": "What"
+    },
+    {
+      "start": 32.34,
+      "end": 32.62,
+      "word": "business"
+    },
+    {
+      "start": 32.62,
+      "end": 32.88,
+      "word": "made"
+    },
+    {
+      "start": 32.88,
+      "end": 33.0,
+      "word": "you"
+    },
+    {
+      "start": 33.0,
+      "end": 33.1,
+      "word": "a"
+    },
+    {
+      "start": 33.1,
+      "end": 33.38,
+      "word": "billionaire?"
+    },
+    {
+      "start": 33.56,
+      "end": 33.6,
+      "word": "It"
+    },
+    {
+      "start": 33.6,
+      "end": 33.7,
+      "word": "was"
+    },
+    {
+      "start": 33.7,
+      "end": 33.88,
+      "word": "mobile"
+    },
+    {
+      "start": 33.88,
+      "end": 34.34,
+      "word": "phones."
+    },
+    {
+      "start": 34.42,
+      "end": 34.6,
+      "word": "Mobile"
+    },
+    {
+      "start": 34.6,
+      "end": 34.84,
+      "word": "phones"
+    },
+    {
+      "start": 34.84,
+      "end": 35.0,
+      "word": "like"
+    },
+    {
+      "start": 35.0,
+      "end": 35.28,
+      "word": "Apple."
+    },
+    {
+      "start": 35.42,
+      "end": 35.54,
+      "word": "No,"
+    },
+    {
+      "start": 35.58,
+      "end": 35.72,
+      "word": "not"
+    },
+    {
+      "start": 35.72,
+      "end": 35.96,
+      "word": "like"
+    },
+    {
+      "start": 35.96,
+      "end": 36.34,
+      "word": "Apple,"
+    },
+    {
+      "start": 36.5,
+      "end": 36.6,
+      "word": "no."
+    },
+    {
+      "start": 36.72,
+      "end": 36.82,
+      "word": "I"
+    },
+    {
+      "start": 36.82,
+      "end": 36.9,
+      "word": "was"
+    },
+    {
+      "start": 36.9,
+      "end": 37.0,
+      "word": "a"
+    },
+    {
+      "start": 37.0,
+      "end": 37.38,
+      "word": "retailer"
+    },
+    {
+      "start": 37.38,
+      "end": 37.92,
+      "word": "and"
+    },
+    {
+      "start": 37.92,
+      "end": 38.44,
+      "word": "wholesaler"
+    },
+    {
+      "start": 38.44,
+      "end": 38.68,
+      "word": "all"
+    },
+    {
+      "start": 38.68,
+      "end": 38.88,
+      "word": "over"
+    },
+    {
+      "start": 38.88,
+      "end": 38.96,
+      "word": "the"
+    },
+    {
+      "start": 38.96,
+      "end": 39.2,
+      "word": "world."
+    },
+    {
+      "start": 39.36,
+      "end": 39.44,
+      "word": "Are"
+    },
+    {
+      "start": 39.44,
+      "end": 39.64,
+      "word": "you"
+    },
+    {
+      "start": 39.64,
+      "end": 39.74,
+      "word": "a"
+    },
+    {
+      "start": 39.74,
+      "end": 39.84,
+      "word": "good"
+    },
+    {
+      "start": 39.84,
+      "end": 40.22,
+      "word": "salesman?"
+    },
+    {
+      "start": 40.42,
+      "end": 40.7,
+      "word": "No,"
+    },
+    {
+      "start": 40.8,
+      "end": 41.12,
+      "word": "I"
+    },
+    {
+      "start": 41.12,
+      "end": 41.3,
+      "word": "don't"
+    },
+    {
+      "start": 41.3,
+      "end": 41.46,
+      "word": "think"
+    },
+    {
+      "start": 41.46,
+      "end": 41.66,
+      "word": "you're"
+    },
+    {
+      "start": 41.66,
+      "end": 41.76,
+      "word": "going"
+    },
+    {
+      "start": 41.76,
+      "end": 41.84,
+      "word": "to"
+    },
+    {
+      "start": 41.84,
+      "end": 42.0,
+      "word": "get"
+    },
+    {
+      "start": 42.0,
+      "end": 42.2,
+      "word": "to"
+    },
+    {
+      "start": 42.2,
+      "end": 42.34,
+      "word": "where"
+    },
+    {
+      "start": 42.34,
+      "end": 42.58,
+      "word": "I"
+    },
+    {
+      "start": 42.58,
+      "end": 42.76,
+      "word": "am"
+    },
+    {
+      "start": 42.76,
+      "end": 42.94,
+      "word": "without"
+    },
+    {
+      "start": 42.94,
+      "end": 43.22,
+      "word": "being"
+    },
+    {
+      "start": 43.22,
+      "end": 43.38,
+      "word": "a"
+    },
+    {
+      "start": 43.38,
+      "end": 43.48,
+      "word": "good"
+    },
+    {
+      "start": 43.48,
+      "end": 44.04,
+      "word": "salesman."
+    },
+    {
+      "start": 44.18,
+      "end": 44.3,
+      "word": "So"
+    },
+    {
+      "start": 44.3,
+      "end": 44.4,
+      "word": "what"
+    },
+    {
+      "start": 44.4,
+      "end": 44.52,
+      "word": "was"
+    },
+    {
+      "start": 44.52,
+      "end": 44.64,
+      "word": "your"
+    },
+    {
+      "start": 44.64,
+      "end": 44.84,
+      "word": "secret"
+    },
+    {
+      "start": 44.84,
+      "end": 45.04,
+      "word": "to"
+    },
+    {
+      "start": 45.04,
+      "end": 45.28,
+      "word": "sales?"
+    },
+    {
+      "start": 45.42,
+      "end": 45.6,
+      "word": "It's"
+    },
+    {
+      "start": 45.6,
+      "end": 45.76,
+      "word": "not"
+    },
+    {
+      "start": 45.76,
+      "end": 45.9,
+      "word": "a"
+    },
+    {
+      "start": 45.9,
+      "end": 46.04,
+      "word": "very"
+    },
+    {
+      "start": 46.04,
+      "end": 46.46,
+      "word": "comfortable"
+    },
+    {
+      "start": 46.46,
+      "end": 46.84,
+      "word": "word"
+    },
+    {
+      "start": 46.84,
+      "end": 47.1,
+      "word": "to"
+    },
+    {
+      "start": 47.1,
+      "end": 47.34,
+      "word": "use"
+    },
+    {
+      "start": 47.34,
+      "end": 47.52,
+      "word": "but"
+    },
+    {
+      "start": 47.52,
+      "end": 47.68,
+      "word": "you've"
+    },
+    {
+      "start": 47.68,
+      "end": 47.78,
+      "word": "got"
+    },
+    {
+      "start": 47.78,
+      "end": 47.88,
+      "word": "to"
+    },
+    {
+      "start": 47.88,
+      "end": 47.96,
+      "word": "be"
+    },
+    {
+      "start": 47.96,
+      "end": 48.14,
+      "word": "very"
+    },
+    {
+      "start": 48.14,
+      "end": 48.94,
+      "word": "manipulative"
+    },
+    {
+      "start": 48.94,
+      "end": 49.42,
+      "word": "because"
+    },
+    {
+      "start": 49.42,
+      "end": 49.7,
+      "word": "you've"
+    },
+    {
+      "start": 49.7,
+      "end": 49.84,
+      "word": "got"
+    },
+    {
+      "start": 49.84,
+      "end": 50.06,
+      "word": "to"
+    },
+    {
+      "start": 50.06,
+      "end": 50.28,
+      "word": "make"
+    },
+    {
+      "start": 50.28,
+      "end": 50.58,
+      "word": "the"
+    },
+    {
+      "start": 50.58,
+      "end": 51.04,
+      "word": "buyer"
+    },
+    {
+      "start": 51.04,
+      "end": 51.68,
+      "word": "realize"
+    },
+    {
+      "start": 51.68,
+      "end": 52.2,
+      "word": "you"
+    },
+    {
+      "start": 52.2,
+      "end": 52.58,
+      "word": "won't"
+    },
+    {
+      "start": 52.58,
+      "end": 52.7,
+      "word": "be"
+    },
+    {
+      "start": 52.7,
+      "end": 52.96,
+      "word": "beaten"
+    },
+    {
+      "start": 52.96,
+      "end": 53.12,
+      "word": "up."
+    },
+    {
+      "start": 53.22,
+      "end": 53.34,
+      "word": "Were"
+    },
+    {
+      "start": 53.34,
+      "end": 53.44,
+      "word": "you"
+    },
+    {
+      "start": 53.44,
+      "end": 53.62,
+      "word": "ever"
+    },
+    {
+      "start": 53.62,
+      "end": 53.86,
+      "word": "afraid"
+    },
+    {
+      "start": 53.86,
+      "end": 53.92,
+      "word": "of"
+    },
+    {
+      "start": 53.92,
+      "end": 54.22,
+      "word": "competition?"
+    },
+    {
+      "start": 54.7,
+      "end": 54.88,
+      "word": "No,"
+    },
+    {
+      "start": 54.9,
+      "end": 54.96,
+      "word": "I"
+    },
+    {
+      "start": 54.96,
+      "end": 55.06,
+      "word": "was"
+    },
+    {
+      "start": 55.06,
+      "end": 55.28,
+      "word": "afraid"
+    },
+    {
+      "start": 55.28,
+      "end": 55.4,
+      "word": "of"
+    },
+    {
+      "start": 55.4,
+      "end": 55.54,
+      "word": "my"
+    },
+    {
+      "start": 55.54,
+      "end": 56.02,
+      "word": "suppliers"
+    },
+    {
+      "start": 56.02,
+      "end": 56.42,
+      "word": "because"
+    },
+    {
+      "start": 56.42,
+      "end": 56.66,
+      "word": "when"
+    },
+    {
+      "start": 56.66,
+      "end": 56.84,
+      "word": "you"
+    },
+    {
+      "start": 56.84,
+      "end": 57.24,
+      "word": "became"
+    },
+    {
+      "start": 57.24,
+      "end": 57.6,
+      "word": "too"
+    },
+    {
+      "start": 57.6,
+      "end": 57.88,
+      "word": "big"
+    },
+    {
+      "start": 57.88,
+      "end": 58.1,
+      "word": "the"
+    },
+    {
+      "start": 58.1,
+      "end": 58.5,
+      "word": "suppliers"
+    },
+    {
+      "start": 58.5,
+      "end": 58.74,
+      "word": "wanted"
+    },
+    {
+      "start": 58.74,
+      "end": 58.94,
+      "word": "to"
+    },
+    {
+      "start": 58.94,
+      "end": 59.14,
+      "word": "cut"
+    },
+    {
+      "start": 59.14,
+      "end": 59.28,
+      "word": "you"
+    },
+    {
+      "start": 59.28,
+      "end": 59.52,
+      "word": "off"
+    },
+    {
+      "start": 59.52,
+      "end": 59.7,
+      "word": "and"
+    },
+    {
+      "start": 59.7,
+      "end": 59.8,
+      "word": "they"
+    },
+    {
+      "start": 59.8,
+      "end": 60.0,
+      "word": "wanted"
+    },
+    {
+      "start": 60.0,
+      "end": 60.28,
+      "word": "to"
+    },
+    {
+      "start": 60.28,
+      "end": 60.66,
+      "word": "axe"
+    },
+    {
+      "start": 60.66,
+      "end": 60.9,
+      "word": "you"
+    },
+    {
+      "start": 60.9,
+      "end": 61.14,
+      "word": "and"
+    },
+    {
+      "start": 61.14,
+      "end": 61.38,
+      "word": "grow"
+    },
+    {
+      "start": 61.38,
+      "end": 61.84,
+      "word": "competitors"
+    },
+    {
+      "start": 61.84,
+      "end": 62.24,
+      "word": "to"
+    },
+    {
+      "start": 62.24,
+      "end": 62.38,
+      "word": "you"
+    },
+    {
+      "start": 62.38,
+      "end": 62.7,
+      "word": "because"
+    },
+    {
+      "start": 62.7,
+      "end": 62.98,
+      "word": "they"
+    },
+    {
+      "start": 62.98,
+      "end": 63.16,
+      "word": "had"
+    },
+    {
+      "start": 63.16,
+      "end": 63.28,
+      "word": "a"
+    },
+    {
+      "start": 63.28,
+      "end": 63.64,
+      "word": "favorite"
+    },
+    {
+      "start": 63.64,
+      "end": 64.2,
+      "word": "expression"
+    },
+    {
+      "start": 64.2,
+      "end": 64.52,
+      "word": "which"
+    },
+    {
+      "start": 64.52,
+      "end": 64.64,
+      "word": "is"
+    },
+    {
+      "start": 64.64,
+      "end": 64.76,
+      "word": "they"
+    },
+    {
+      "start": 64.76,
+      "end": 64.94,
+      "word": "don't"
+    },
+    {
+      "start": 64.94,
+      "end": 65.12,
+      "word": "want"
+    },
+    {
+      "start": 65.12,
+      "end": 65.28,
+      "word": "the"
+    },
+    {
+      "start": 65.28,
+      "end": 65.58,
+      "word": "tail"
+    },
+    {
+      "start": 65.58,
+      "end": 66.08,
+      "word": "wagging"
+    },
+    {
+      "start": 66.08,
+      "end": 66.24,
+      "word": "the"
+    },
+    {
+      "start": 66.24,
+      "end": 66.48,
+      "word": "dog"
+    },
+    {
+      "start": 66.48,
+      "end": 66.7,
+      "word": "and"
+    },
+    {
+      "start": 66.7,
+      "end": 66.86,
+      "word": "I"
+    },
+    {
+      "start": 66.86,
+      "end": 67.14,
+      "word": "became"
+    },
+    {
+      "start": 67.14,
+      "end": 67.38,
+      "word": "the"
+    },
+    {
+      "start": 67.38,
+      "end": 67.66,
+      "word": "dog."
+    },
+    {
+      "start": 67.78,
+      "end": 67.86,
+      "word": "You"
+    },
+    {
+      "start": 67.86,
+      "end": 67.98,
+      "word": "know"
+    },
+    {
+      "start": 67.98,
+      "end": 68.08,
+      "word": "they"
+    },
+    {
+      "start": 68.08,
+      "end": 68.18,
+      "word": "don't"
+    },
+    {
+      "start": 68.18,
+      "end": 68.36,
+      "word": "teach"
+    },
+    {
+      "start": 68.36,
+      "end": 68.56,
+      "word": "this"
+    },
+    {
+      "start": 68.56,
+      "end": 68.7,
+      "word": "in"
+    },
+    {
+      "start": 68.7,
+      "end": 68.9,
+      "word": "school,"
+    },
+    {
+      "start": 69.02,
+      "end": 69.14,
+      "word": "right?"
+    },
+    {
+      "start": 69.22,
+      "end": 69.34,
+      "word": "They"
+    },
+    {
+      "start": 69.34,
+      "end": 69.52,
+      "word": "don't"
+    },
+    {
+      "start": 69.52,
+      "end": 69.7,
+      "word": "teach"
+    },
+    {
+      "start": 69.7,
+      "end": 69.94,
+      "word": "anything"
+    },
+    {
+      "start": 69.94,
+      "end": 70.24,
+      "word": "in"
+    },
+    {
+      "start": 70.24,
+      "end": 70.5,
+      "word": "school"
+    },
+    {
+      "start": 70.5,
+      "end": 70.78,
+      "word": "about"
+    },
+    {
+      "start": 70.78,
+      "end": 71.42,
+      "word": "entrepreneurship."
+    },
+    {
+      "start": 71.76,
+      "end": 71.94,
+      "word": "Correct"
+    },
+    {
+      "start": 71.94,
+      "end": 72.06,
+      "word": "me"
+    },
+    {
+      "start": 72.06,
+      "end": 72.22,
+      "word": "if"
+    },
+    {
+      "start": 72.22,
+      "end": 72.28,
+      "word": "I'm"
+    },
+    {
+      "start": 72.28,
+      "end": 72.48,
+      "word": "wrong."
+    },
+    {
+      "start": 72.74,
+      "end": 73.04,
+      "word": "Taxes"
+    },
+    {
+      "start": 73.04,
+      "end": 73.2,
+      "word": "are"
+    },
+    {
+      "start": 73.2,
+      "end": 73.66,
+      "word": "crazy"
+    },
+    {
+      "start": 73.66,
+      "end": 73.9,
+      "word": "in"
+    },
+    {
+      "start": 73.9,
+      "end": 74.0,
+      "word": "the"
+    },
+    {
+      "start": 74.0,
+      "end": 74.2,
+      "word": "UK."
+    },
+    {
+      "start": 74.46,
+      "end": 74.54,
+      "word": "Do"
+    },
+    {
+      "start": 74.54,
+      "end": 74.6,
+      "word": "you"
+    },
+    {
+      "start": 74.6,
+      "end": 74.72,
+      "word": "have"
+    },
+    {
+      "start": 74.72,
+      "end": 74.88,
+      "word": "a"
+    },
+    {
+      "start": 74.88,
+      "end": 75.12,
+      "word": "tax"
+    },
+    {
+      "start": 75.12,
+      "end": 75.36,
+      "word": "hack"
+    },
+    {
+      "start": 75.36,
+      "end": 75.54,
+      "word": "for"
+    },
+    {
+      "start": 75.54,
+      "end": 75.74,
+      "word": "anybody"
+    },
+    {
+      "start": 75.74,
+      "end": 75.96,
+      "word": "in"
+    },
+    {
+      "start": 75.96,
+      "end": 76.18,
+      "word": "business?"
+    },
+    {
+      "start": 76.48,
+      "end": 76.72,
+      "word": "I"
+    },
+    {
+      "start": 76.72,
+      "end": 77.04,
+      "word": "believe"
+    },
+    {
+      "start": 77.04,
+      "end": 77.3,
+      "word": "that"
+    },
+    {
+      "start": 77.3,
+      "end": 77.4,
+      "word": "you"
+    },
+    {
+      "start": 77.4,
+      "end": 77.5,
+      "word": "should"
+    },
+    {
+      "start": 77.5,
+      "end": 77.66,
+      "word": "pay"
+    },
+    {
+      "start": 77.66,
+      "end": 77.78,
+      "word": "your"
+    },
+    {
+      "start": 77.78,
+      "end": 78.06,
+      "word": "taxes"
+    },
+    {
+      "start": 78.06,
+      "end": 78.28,
+      "word": "in"
+    },
+    {
+      "start": 78.28,
+      "end": 78.38,
+      "word": "the"
+    },
+    {
+      "start": 78.38,
+      "end": 78.74,
+      "word": "country"
+    },
+    {
+      "start": 78.74,
+      "end": 78.96,
+      "word": "that"
+    },
+    {
+      "start": 78.96,
+      "end": 79.16,
+      "word": "you've"
+    },
+    {
+      "start": 79.16,
+      "end": 79.3,
+      "word": "made"
+    },
+    {
+      "start": 79.3,
+      "end": 79.44,
+      "word": "your"
+    },
+    {
+      "start": 79.44,
+      "end": 79.62,
+      "word": "money"
+    },
+    {
+      "start": 79.62,
+      "end": 79.84,
+      "word": "in."
+    },
+    {
+      "start": 79.94,
+      "end": 80.04,
+      "word": "So"
+    },
+    {
+      "start": 80.04,
+      "end": 80.14,
+      "word": "you"
+    },
+    {
+      "start": 80.14,
+      "end": 80.3,
+      "word": "paid"
+    },
+    {
+      "start": 80.3,
+      "end": 80.4,
+      "word": "your"
+    },
+    {
+      "start": 80.4,
+      "end": 80.7,
+      "word": "taxes."
+    },
+    {
+      "start": 80.84,
+      "end": 80.98,
+      "word": "I"
+    },
+    {
+      "start": 80.98,
+      "end": 81.18,
+      "word": "paid"
+    },
+    {
+      "start": 81.18,
+      "end": 81.34,
+      "word": "all"
+    },
+    {
+      "start": 81.34,
+      "end": 81.44,
+      "word": "my"
+    },
+    {
+      "start": 81.44,
+      "end": 81.8,
+      "word": "taxes"
+    },
+    {
+      "start": 81.8,
+      "end": 81.98,
+      "word": "on"
+    },
+    {
+      "start": 81.98,
+      "end": 82.08,
+      "word": "the"
+    },
+    {
+      "start": 82.08,
+      "end": 82.28,
+      "word": "sale"
+    },
+    {
+      "start": 82.28,
+      "end": 82.4,
+      "word": "of"
+    },
+    {
+      "start": 82.4,
+      "end": 82.5,
+      "word": "the"
+    },
+    {
+      "start": 82.5,
+      "end": 82.72,
+      "word": "business."
+    },
+    {
+      "start": 82.98,
+      "end": 83.3,
+      "word": "What's"
+    },
+    {
+      "start": 83.3,
+      "end": 83.38,
+      "word": "the"
+    },
+    {
+      "start": 83.38,
+      "end": 83.56,
+      "word": "most"
+    },
+    {
+      "start": 83.56,
+      "end": 83.7,
+      "word": "amount"
+    },
+    {
+      "start": 83.7,
+      "end": 83.72,
+      "word": "of"
+    },
+    {
+      "start": 83.72,
+      "end": 83.86,
+      "word": "money"
+    },
+    {
+      "start": 83.86,
+      "end": 83.94,
+      "word": "you"
+    },
+    {
+      "start": 83.94,
+      "end": 84.08,
+      "word": "paid"
+    },
+    {
+      "start": 84.08,
+      "end": 84.16,
+      "word": "in"
+    },
+    {
+      "start": 84.16,
+      "end": 84.42,
+      "word": "taxes"
+    },
+    {
+      "start": 84.42,
+      "end": 84.6,
+      "word": "in"
+    },
+    {
+      "start": 84.6,
+      "end": 84.72,
+      "word": "one"
+    },
+    {
+      "start": 84.72,
+      "end": 84.92,
+      "word": "year?"
+    },
+    {
+      "start": 85.0,
+      "end": 85.3,
+      "word": "200"
+    },
+    {
+      "start": 85.3,
+      "end": 85.7,
+      "word": "million."
+    },
+    {
+      "start": 86.3,
+      "end": 86.44,
+      "word": "You"
+    },
+    {
+      "start": 86.44,
+      "end": 86.58,
+      "word": "paid"
+    },
+    {
+      "start": 86.58,
+      "end": 86.76,
+      "word": "200"
+    },
+    {
+      "start": 86.76,
+      "end": 86.98,
+      "word": "million"
+    },
+    {
+      "start": 86.98,
+      "end": 87.1,
+      "word": "in"
+    },
+    {
+      "start": 87.1,
+      "end": 87.44,
+      "word": "taxes?"
+    },
+    {
+      "start": 87.44,
+      "end": 87.74,
+      "word": "Yeah,"
+    },
+    {
+      "start": 87.98,
+      "end": 88.08,
+      "word": "and"
+    },
+    {
+      "start": 88.08,
+      "end": 88.18,
+      "word": "I"
+    },
+    {
+      "start": 88.18,
+      "end": 88.28,
+      "word": "could"
+    },
+    {
+      "start": 88.28,
+      "end": 88.38,
+      "word": "have"
+    },
+    {
+      "start": 88.38,
+      "end": 88.68,
+      "word": "avoided"
+    },
+    {
+      "start": 88.68,
+      "end": 88.94,
+      "word": "it."
+    },
+    {
+      "start": 89.02,
+      "end": 89.18,
+      "word": "How?"
+    },
+    {
+      "start": 89.32,
+      "end": 89.46,
+      "word": "By"
+    },
+    {
+      "start": 89.46,
+      "end": 89.72,
+      "word": "moving"
+    },
+    {
+      "start": 89.72,
+      "end": 89.92,
+      "word": "to"
+    },
+    {
+      "start": 89.92,
+      "end": 90.24,
+      "word": "Monaco."
+    },
+    {
+      "start": 90.36,
+      "end": 90.54,
+      "word": "Why"
+    },
+    {
+      "start": 90.54,
+      "end": 90.66,
+      "word": "did"
+    },
+    {
+      "start": 90.66,
+      "end": 90.76,
+      "word": "you"
+    },
+    {
+      "start": 90.76,
+      "end": 90.88,
+      "word": "not"
+    },
+    {
+      "start": 90.88,
+      "end": 91.04,
+      "word": "do"
+    },
+    {
+      "start": 91.04,
+      "end": 91.2,
+      "word": "that?"
+    },
+    {
+      "start": 91.26,
+      "end": 91.46,
+      "word": "Because"
+    },
+    {
+      "start": 91.46,
+      "end": 91.6,
+      "word": "I"
+    },
+    {
+      "start": 91.6,
+      "end": 91.82,
+      "word": "feel"
+    },
+    {
+      "start": 91.82,
+      "end": 92.06,
+      "word": "that"
+    },
+    {
+      "start": 92.06,
+      "end": 92.22,
+      "word": "the"
+    },
+    {
+      "start": 92.22,
+      "end": 92.38,
+      "word": "poor"
+    },
+    {
+      "start": 92.38,
+      "end": 92.72,
+      "word": "people"
+    },
+    {
+      "start": 92.72,
+      "end": 93.02,
+      "word": "need"
+    },
+    {
+      "start": 93.02,
+      "end": 93.24,
+      "word": "help."
+    },
+    {
+      "start": 93.36,
+      "end": 93.52,
+      "word": "Why?"
+    },
+    {
+      "start": 93.66,
+      "end": 93.82,
+      "word": "A"
+    },
+    {
+      "start": 93.82,
+      "end": 94.1,
+      "word": "childhood"
+    },
+    {
+      "start": 94.1,
+      "end": 94.48,
+      "word": "dream"
+    },
+    {
+      "start": 94.48,
+      "end": 94.64,
+      "word": "I"
+    },
+    {
+      "start": 94.64,
+      "end": 94.76,
+      "word": "had"
+    },
+    {
+      "start": 94.76,
+      "end": 94.88,
+      "word": "when"
+    },
+    {
+      "start": 94.88,
+      "end": 95.0,
+      "word": "I"
+    },
+    {
+      "start": 95.0,
+      "end": 95.12,
+      "word": "was"
+    },
+    {
+      "start": 95.12,
+      "end": 95.28,
+      "word": "eight"
+    },
+    {
+      "start": 95.28,
+      "end": 95.52,
+      "word": "years"
+    },
+    {
+      "start": 95.52,
+      "end": 95.82,
+      "word": "old"
+    },
+    {
+      "start": 95.82,
+      "end": 96.18,
+      "word": "was"
+    },
+    {
+      "start": 96.18,
+      "end": 96.54,
+      "word": "that"
+    },
+    {
+      "start": 96.54,
+      "end": 96.76,
+      "word": "I"
+    },
+    {
+      "start": 96.76,
+      "end": 96.86,
+      "word": "would"
+    },
+    {
+      "start": 96.86,
+      "end": 97.0,
+      "word": "be"
+    },
+    {
+      "start": 97.0,
+      "end": 97.32,
+      "word": "driving"
+    },
+    {
+      "start": 97.32,
+      "end": 97.68,
+      "word": "around"
+    },
+    {
+      "start": 97.68,
+      "end": 97.92,
+      "word": "in"
+    },
+    {
+      "start": 97.92,
+      "end": 98.04,
+      "word": "a"
+    },
+    {
+      "start": 98.04,
+      "end": 98.32,
+      "word": "chauffeur"
+    },
+    {
+      "start": 98.32,
+      "end": 98.52,
+      "word": "-driven"
+    },
+    {
+      "start": 98.52,
+      "end": 98.92,
+      "word": "Rolls"
+    },
+    {
+      "start": 98.92,
+      "end": 99.26,
+      "word": "-Royce"
+    },
+    {
+      "start": 99.26,
+      "end": 99.5,
+      "word": "handing"
+    },
+    {
+      "start": 99.5,
+      "end": 99.84,
+      "word": "five"
+    },
+    {
+      "start": 99.84,
+      "end": 100.1,
+      "word": "pound"
+    },
+    {
+      "start": 100.1,
+      "end": 100.4,
+      "word": "notes"
+    },
+    {
+      "start": 100.4,
+      "end": 100.66,
+      "word": "out"
+    },
+    {
+      "start": 100.66,
+      "end": 100.84,
+      "word": "to"
+    },
+    {
+      "start": 100.84,
+      "end": 101.04,
+      "word": "poor"
+    },
+    {
+      "start": 101.04,
+      "end": 101.3,
+      "word": "people"
+    },
+    {
+      "start": 101.3,
+      "end": 101.44,
+      "word": "and"
+    },
+    {
+      "start": 101.44,
+      "end": 101.58,
+      "word": "that"
+    },
+    {
+      "start": 101.58,
+      "end": 101.92,
+      "word": "dream"
+    },
+    {
+      "start": 101.92,
+      "end": 102.24,
+      "word": "had"
+    },
+    {
+      "start": 102.24,
+      "end": 102.42,
+      "word": "to"
+    },
+    {
+      "start": 102.42,
+      "end": 102.56,
+      "word": "be"
+    },
+    {
+      "start": 102.56,
+      "end": 102.98,
+      "word": "fulfilled."
+    },
+    {
+      "start": 103.26,
+      "end": 103.4,
+      "word": "Like"
+    },
+    {
+      "start": 103.4,
+      "end": 103.54,
+      "word": "I"
+    },
+    {
+      "start": 103.54,
+      "end": 103.64,
+      "word": "told"
+    },
+    {
+      "start": 103.64,
+      "end": 103.88,
+      "word": "my"
+    },
+    {
+      "start": 103.88,
+      "end": 104.14,
+      "word": "kids,"
+    },
+    {
+      "start": 104.28,
+      "end": 104.46,
+      "word": "I'm"
+    },
+    {
+      "start": 104.46,
+      "end": 104.58,
+      "word": "not"
+    },
+    {
+      "start": 104.58,
+      "end": 104.78,
+      "word": "bothered"
+    },
+    {
+      "start": 104.78,
+      "end": 105.04,
+      "word": "about"
+    },
+    {
+      "start": 105.04,
+      "end": 105.2,
+      "word": "you"
+    },
+    {
+      "start": 105.2,
+      "end": 105.4,
+      "word": "being"
+    },
+    {
+      "start": 105.4,
+      "end": 105.64,
+      "word": "rich."
+    },
+    {
+      "start": 105.96,
+      "end": 106.0,
+      "word": "I"
+    },
+    {
+      "start": 106.0,
+      "end": 106.22,
+      "word": "want"
+    },
+    {
+      "start": 106.22,
+      "end": 106.36,
+      "word": "you"
+    },
+    {
+      "start": 106.36,
+      "end": 106.54,
+      "word": "to"
+    },
+    {
+      "start": 106.54,
+      "end": 106.82,
+      "word": "leave"
+    },
+    {
+      "start": 106.82,
+      "end": 107.0,
+      "word": "the"
+    },
+    {
+      "start": 107.0,
+      "end": 107.18,
+      "word": "world"
+    },
+    {
+      "start": 107.18,
+      "end": 107.32,
+      "word": "a"
+    },
+    {
+      "start": 107.32,
+      "end": 107.48,
+      "word": "better"
+    },
+    {
+      "start": 107.48,
+      "end": 107.82,
+      "word": "place"
+    },
+    {
+      "start": 107.82,
+      "end": 108.0,
+      "word": "than"
+    },
+    {
+      "start": 108.0,
+      "end": 108.08,
+      "word": "you"
+    },
+    {
+      "start": 108.08,
+      "end": 108.38,
+      "word": "found"
+    },
+    {
+      "start": 108.38,
+      "end": 108.56,
+      "word": "it"
+    },
+    {
+      "start": 108.56,
+      "end": 108.76,
+      "word": "and"
+    },
+    {
+      "start": 108.76,
+      "end": 108.92,
+      "word": "be"
+    },
+    {
+      "start": 108.92,
+      "end": 109.18,
+      "word": "happy."
+    },
+    {
+      "start": 109.38,
+      "end": 109.56,
+      "word": "Thank"
+    },
+    {
+      "start": 109.56,
+      "end": 109.68,
+      "word": "you"
+    },
+    {
+      "start": 109.68,
+      "end": 109.84,
+      "word": "so"
+    },
+    {
+      "start": 109.84,
+      "end": 109.98,
+      "word": "much"
+    },
+    {
+      "start": 109.98,
+      "end": 110.1,
+      "word": "for"
+    },
+    {
+      "start": 110.1,
+      "end": 110.18,
+      "word": "your"
+    },
+    {
+      "start": 110.18,
+      "end": 110.42,
+      "word": "time,"
+    },
+    {
+      "start": 110.48,
+      "end": 110.54,
+      "word": "man."
+    },
+    {
+      "start": 110.56,
+      "end": 110.6,
+      "word": "Thank"
+    },
+    {
+      "start": 110.6,
+      "end": 110.78,
+      "word": "you."
+    },
+    {
+      "start": 110.84,
+      "end": 110.94,
+      "word": "I"
+    },
+    {
+      "start": 110.94,
+      "end": 111.12,
+      "word": "connect"
+    },
+    {
+      "start": 111.12,
+      "end": 111.32,
+      "word": "with"
+    },
+    {
+      "start": 111.32,
+      "end": 111.42,
+      "word": "all"
+    },
+    {
+      "start": 111.42,
+      "end": 111.5,
+      "word": "the"
+    },
+    {
+      "start": 111.5,
+      "end": 111.88,
+      "word": "billionaires"
+    },
+    {
+      "start": 111.88,
+      "end": 111.96,
+      "word": "at"
+    },
+    {
+      "start": 111.96,
+      "end": 112.18,
+      "word": "IndieView."
+    },
+    {
+      "start": 112.26,
+      "end": 112.3,
+      "word": "Could"
+    },
+    {
+      "start": 112.3,
+      "end": 112.42,
+      "word": "I"
+    },
+    {
+      "start": 112.42,
+      "end": 112.5,
+      "word": "get"
+    },
+    {
+      "start": 112.5,
+      "end": 112.6,
+      "word": "your"
+    },
+    {
+      "start": 112.6,
+      "end": 112.9,
+      "word": "contact?"
+    },
+    {
+      "start": 113.1,
+      "end": 113.22,
+      "word": "Sure."
+    }
+  ]
+}

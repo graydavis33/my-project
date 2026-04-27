@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "I know you...",
+    "text_style": "White, bold, sans-serif, centered at bottom of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman in center frame, positioned next to a dark vehicle, looking slightly off-camera with an animated expression",
+    "subject_appearance": "Woman wearing a black lace/textured blazer over dark clothing, holding a black crocodile-textured handbag, short brown feathered haircut, necklace with pendant, smiling.",
+    "setting": "Parking lot or street with vehicles",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Most of them stay there...",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman in profile facing right, holding microphone, indoor setting with shelving and pink wall visible behind her",
+    "subject_appearance": "Middle-aged woman with short dark layered hair, wearing black sequined cardigan over black top, pendant necklace, holding interview microphone",
+    "setting": "Indoor studio or gym facility",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Don't ask for permission...",
+    "text_style": "white, bold, sans-serif, centered lower third with drop shadow",
+    "shot_type": "medium close-up",
+    "framing": "Woman in profile facing right, positioned left of center with palm tree trunk and landscaped background behind her",
+    "subject_appearance": "Woman with short, layered brown hair wearing a black textured jacket over dark clothing, visible necklace.",
+    "setting": "outdoor street, palm tree lined",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "the younger generation...",
+    "text_style": "white, bold, centered lower-third caption",
+    "shot_type": "medium close-up",
+    "framing": "single woman looking downward, shot from front-left angle, park setting visible behind her",
+    "subject_appearance": "Middle-aged woman with short, textured brown hair wearing a black lace cardigan over dark clothing, holding a phone in her right hand.",
+    "setting": "park or tree-lined street",
+    "broll": false,
+    "energy": "medium"
+  }
+]

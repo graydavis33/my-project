@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "White and red circular logo with black text, positioned in lower right corner",
+    "shot_type": "medium",
+    "framing": "Two male subjects facing each other in conversation; subject on left wearing light gray cap and white/gray shirt, subject on right in dark shirt holding microphone; framed against white building with green awning and yellow vehicle",
+    "subject_appearance": "Left subject wears a light gray New Era cap, white t-shirt, and gray pants; right subject wears a dark shirt and holds a microphone for the interview.",
+    "setting": "Urban street, storefront area",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "What business was that primarily?",
+    "text_style": "White sans-serif font, bold, positioned lower third of frame with black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing right, holding microphone, partially visible second person on right edge; urban storefront background with flowering plant",
+    "subject_appearance": "Young man wearing black short-sleeve t-shirt with small gold logo, brown styled hair with undercut",
+    "setting": "Urban street, storefront",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "What's more important",
+    "text_style": "White, bold, sans-serif font; centered lower third of frame; drop shadow for contrast",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, speaking animatedly; second person partially visible on right edge; ornamental plants and building entrance in background",
+    "subject_appearance": "Man wearing black crew neck t-shirt with small gold logo detail, short dark hair with textured styling, clean-shaven",
+    "setting": "Outdoor street entrance, residential",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "And then I would spend it on myself.",
+    "text_style": "White sans-serif font, bold, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject facing camera, speaking directly, centered in frame with decorated entrance/porch behind him",
+    "subject_appearance": "Asian male wearing light gray/blue cap with embroidered logo, light gray/blue zip-up jacket over white t-shirt, holding small black objects in hand",
+    "setting": "Residential entrance, decorated porch",
+    "broll": false,
+    "energy": "medium"
+  }
+]

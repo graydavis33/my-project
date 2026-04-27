@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "I'm not a millionaire.",
+    "text_style": "White text with red word 'not', sans-serif font, positioned center-lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single female subject positioned left of frame, speaking toward camera, parked cars and building visible in background",
+    "subject_appearance": "Blonde wavy hair, colorful floral blazer over pink top, red pants, gold button details, engaged expression",
+    "setting": "Residential driveway or parking area",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You know...",
+    "text_style": "White sans-serif font, medium weight, centered lower third of frame, typical burned-in subtitle styling",
+    "shot_type": "medium close-up",
+    "framing": "Woman in profile facing right, speaking to off-camera interviewer; parked car visible behind her; microphone held in frame by interviewer",
+    "subject_appearance": "Blonde wavy hair, colorful floral patterned shirt over red dress, gold ring visible, animated hand gesture near mouth",
+    "setting": "Street, parked vehicle area",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "And I said \"okay\"",
+    "text_style": "White sans-serif font, bold, centered lower third of frame",
+    "shot_type": "close-up",
+    "framing": "Single woman facing camera, speaking animatedly, holding microphone, shot from shoulders up",
+    "subject_appearance": "Blonde shoulder-length wavy hair, wearing a colorful abstract print shirt in white with multicolored shapes, pearl earrings, natural makeup with reddish eyeshadow.",
+    "setting": "Street or outdoor area",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Believe in yourself",
+    "text_style": "White, bold, sans-serif font; centered in lower portion of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman facing camera with animated expression, upper body centered in frame; partial view of another person's shoulder on right side; ornate architectural background",
+    "subject_appearance": "Blonde wavy hair, large dangling gold chandelier earrings, colorful floral button-up jacket with red/blue/yellow pattern over tan/beige top, gold pendant necklace",
+    "setting": "Upscale lobby or hallway",
+    "broll": false,
+    "energy": "high"
+  }
+]

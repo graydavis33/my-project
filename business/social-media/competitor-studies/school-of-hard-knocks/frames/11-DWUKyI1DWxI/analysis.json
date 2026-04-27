@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "18 million\nfollowers...",
+    "text_style": "bright lime green (\"18 million\") and white (\"followers...\"), sans-serif bold font, positioned center-lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile facing right, standing against brick building wall, holding what appears to be a yellow pole or stick",
+    "subject_appearance": "young male with short dark hair, clean-shaven, wearing a black quilted/puffer jacket over light-colored undershirt",
+    "setting": "urban alley, brick building",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You can't fail",
+    "text_style": "White sans-serif font with red word 'fail', centered lower third, bold weight",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile, left-facing, holding microphone, urban buildings and greenery in soft-focus background",
+    "subject_appearance": "Middle-aged man wearing light blue button-up shirt over cream t-shirt, wearing SXSW lanyard with credentials badge, holding black microphone.",
+    "setting": "Urban street, downtown area",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "that changed your life?",
+    "text_style": "white sans-serif font, bold, centered lower-third placement with slight shadow for readability",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile facing left, holding microphone toward chest, urban high-rise buildings and greenery in background",
+    "subject_appearance": "young man with dark hair styled in undercut/fade with longer top, wearing black windbreaker jacket with white trim over white shirt",
+    "setting": "downtown urban street, daytime",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "That was excellent man.",
+    "text_style": "White, bold sans-serif font, centered horizontally, positioned in lower half of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing right, smiling while holding microphone, urban high-rise buildings and green foliage in background, other people partially visible on right edge",
+    "subject_appearance": "Man with dark slicked-back hair wearing black zip-up jacket with white trim, holding microphone, appearing engaged and positive",
+    "setting": "Urban street, downtown area",
+    "broll": false,
+    "energy": "high"
+  }
+]
