@@ -4,7 +4,7 @@ _Created: 2026-04-27. Goal: extract every replicable pattern from their top 30 r
 
 ## Phase 1 — Data Collection
 
-- **Target:** top 30 reels from SOHK's main IG (handle TBD by Gray)
+- **Target:** top 30 reels from `@theschoolofhardknockz` (https://www.instagram.com/theschoolofhardknockz/)
 - **Selection:** ranked by view count visible on each reel thumbnail
 - **Method:** Gray collects URLs into Notes → pastes into chat → yt-dlp batch download
 - **Output:** `urls.txt` + 30 `.mp4` files numbered by popularity rank (`01-...`, `02-...`)
