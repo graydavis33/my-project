@@ -82,6 +82,43 @@ This way the global B-roll library stays category-first but you can still see ro
 | config.py | API key, model, categories, constants |
 | eval.py | Eval harness — measures accuracy vs a hand-labeled CSV |
 
+## v2 — Index + Pull (Search & Premiere-ready folders)
+
+v2 adds a SQLite index of every clip in your library + a `pull` command that builds Premiere-ready folders via hardlinks. Folders stay the source of truth; the index makes them queryable.
+
+```bash
+# Refresh the index (run after every organize)
+python cli_index.py --client sai index
+
+# Pull all vertical clips from April 16, 2026
+python cli_index.py --client sai pull --orientation vertical --filmed-date 2026-04-16
+
+# Pull every interview-solo clip from the past week
+python cli_index.py --client sai pull --category interview-solo --filmed-after 2026-04-20
+```
+
+### Daily Sai loop
+
+```
+1. Dump card → 01_RAW_INCOMING/<today>/
+2. python main.py --client sai          (Vision categorizes + files into FOOTAGE_LIBRARY/)
+3. python cli_index.py --client sai index   (refresh the SQLite index)
+4. As you edit, pull working sets:
+   python cli_index.py --client sai pull --orientation vertical --filmed-date <day>
+   python cli_index.py --client sai pull --category interview-solo --filmed-date <day>
+   etc.
+```
+
+## --source flag (cleanup mode)
+
+For loose footage already in your library that needs to be classified:
+
+```bash
+python main.py --client sai --source "G:/Sai/loose-april-stuff" --date 2026-04-16
+```
+
+Forces --copy mode. Originals are NEVER deleted. Review the output, then delete the source folder manually.
+
 ## Iteration / Eval Loop
 
 Goal: get classification reliable enough that nothing gets manually re-sorted.
