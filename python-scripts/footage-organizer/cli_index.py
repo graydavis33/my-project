@@ -10,7 +10,7 @@ import argparse
 import hashlib
 import os
 import sys
-from datetime import date, datetime
+from datetime import datetime
 from pathlib import Path
 
 # Force UTF-8 — Windows console hits cp1252 by default.
@@ -23,6 +23,7 @@ except Exception:
 from config import (
     CLIENT_ROOTS, VIDEO_EXTENSIONS, INDEX_DB_NAME, PULL_FOLDER_NAME,
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
+    FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED,
 )
 from extractor import get_resolution, get_duration, get_shoot_date
 import index
@@ -34,7 +35,12 @@ def _library(client: str) -> Path:
     if not root:
         print(f"Error: {client.upper()}_LIBRARY_ROOT not set in .env")
         sys.exit(1)
-    return Path(root)
+    lib = Path(root)
+    if not lib.exists():
+        print(f"Error: {client.upper()}_LIBRARY_ROOT does not exist on disk: {lib}")
+        print("  (drive not mounted? path typo in .env?)")
+        sys.exit(1)
+    return lib
 
 
 def _db(client: str) -> Path:
@@ -54,9 +60,9 @@ def _category_from_path(filepath: Path, library: Path) -> str:
     rel = filepath.relative_to(library).parts
     # FOOTAGE_LIBRARY/{category}/{date}/clip.mp4   → rel[1] is category
     # ORGANIZED/{date}/{format}/{category}/clip.mp4 → rel[3] is category
-    if len(rel) >= 4 and rel[0].lower().startswith("06_") :
+    if len(rel) >= 4 and rel[0] == FOLDER_FOOTAGE_LIB:
         return rel[1]
-    if len(rel) >= 5 and rel[0].lower().startswith("02_"):
+    if len(rel) >= 5 and rel[0] == FOLDER_ORGANIZED:
         return rel[3]
     return "misc"
 
@@ -66,8 +72,11 @@ def _format_from_resolution(w: int, h: int) -> str:
 
 
 def _sha1_head(filepath: Path, n_bytes: int = 1_048_576) -> str:
-    """Hash first 1 MB — fast pseudo-fingerprint, sufficient for dedup of identical clips."""
+    """Hash first 1 MB + filesize — fast pseudo-fingerprint, sufficient for dedup of identical clips.
+    Filesize is mixed in because two distinct clips can share the same intro card (first MB)
+    but they cannot share the same total length."""
     h = hashlib.sha1()
+    h.update(str(filepath.stat().st_size).encode())
     with open(filepath, "rb") as f:
         h.update(f.read(n_bytes))
     return h.hexdigest()
@@ -79,7 +88,6 @@ def cmd_index(args):
     db_path = _db(client)
     index.init(db_path)
 
-    scanned = 0
     added = 0
     skipped = 0
 
@@ -88,7 +96,6 @@ def cmd_index(args):
         if not root.exists():
             continue
         for clip in _walk_videos(root):
-            scanned += 1
             try:
                 w, h = get_resolution(str(clip))
                 duration = get_duration(str(clip))
