@@ -17,7 +17,6 @@ Run:
 
 import os, sys, json, base64, subprocess, csv
 from pathlib import Path
-from openai import OpenAI
 from anthropic import Anthropic
 from dotenv import load_dotenv
 
@@ -27,11 +26,19 @@ TRANSCRIPTS = ROOT / "transcripts"
 FRAMES = ROOT / "frames"
 CUTS = ROOT / "cuts"
 
-# Reuse content-pipeline's .env (has both ANTHROPIC + OPENAI keys)
 load_dotenv("/Users/graydavis28/Desktop/my-project/python-scripts/content-pipeline/.env")
 
-openai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 anthropic_client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+
+# faster-whisper model (local, free, no API key). Loaded lazily on first call.
+_whisper_model = None
+def _get_whisper():
+    global _whisper_model
+    if _whisper_model is None:
+        from faster_whisper import WhisperModel
+        print("  Loading faster-whisper 'small' model (one-time, ~470MB download on first run)...")
+        _whisper_model = WhisperModel("small", device="cpu", compute_type="int8")
+    return _whisper_model
 
 LABELS = {}
 with open(ROOT / "labels.csv") as f:
@@ -52,31 +59,31 @@ def transcribe_reel(rank, reel_id, mp4):
     if out.exists():
         return
 
-    # Whisper API has a 25MB file limit — extract audio if reel is bigger.
-    audio_path = mp4
-    if mp4.stat().st_size / (1024 * 1024) > 25:
-        audio_path = mp4.with_suffix(".mp3")
-        if not audio_path.exists():
-            subprocess.run([
-                "ffmpeg", "-y", "-i", str(mp4),
-                "-vn", "-ar", "16000", "-ac", "1", "-b:a", "64k",
-                str(audio_path)
-            ], capture_output=True, check=True)
-
     print(f"  [{rank:02d}] Transcribing {reel_id}...")
-    with open(audio_path, "rb") as f:
-        result = openai_client.audio.transcriptions.create(
-            model="whisper-1",
-            file=f,
-            response_format="verbose_json",
-            timestamp_granularities=["segment", "word"],
-        )
+    model = _get_whisper()
+    segments_iter, info = model.transcribe(
+        str(mp4),
+        beam_size=5,
+        word_timestamps=True,
+        vad_filter=True,
+    )
+
+    segments = []
+    words = []
+    full_text = []
+    for seg in segments_iter:
+        text = seg.text.strip()
+        segments.append({"start": round(seg.start, 1), "end": round(seg.end, 1), "text": text})
+        full_text.append(text)
+        for w in (seg.words or []):
+            words.append({"start": round(w.start, 2), "end": round(w.end, 2), "word": w.word.strip()})
 
     out.write_text(json.dumps({
-        "duration": result.duration,
-        "text": result.text,
-        "segments": [{"start": s.start, "end": s.end, "text": s.text} for s in result.segments],
-        "words": [{"start": w.start, "end": w.end, "word": w.word} for w in (result.words or [])],
+        "duration": round(info.duration, 1),
+        "language": info.language,
+        "text": " ".join(full_text),
+        "segments": segments,
+        "words": words,
     }, indent=2))
 
 
