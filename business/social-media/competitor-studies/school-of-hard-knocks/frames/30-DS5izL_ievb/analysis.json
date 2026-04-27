@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "I'm going all over\nHong Kong",
+    "text_style": "White sans-serif font on top line, bright green sans-serif font on bottom line, positioned center-lower third of frame",
+    "shot_type": "medium",
+    "framing": "Two men facing each other in conversation on a street, one gesturing expressively while speaking to the other",
+    "subject_appearance": "Left subject wears black baseball cap and black jacket; right subject wears brown jacket with white piping and holds a phone",
+    "setting": "Street exterior, storefront",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "a lunch with Warren Buffett?",
+    "text_style": "white sans-serif font, bold, centered lower-third position with black outline",
+    "shot_type": "medium close-up",
+    "framing": "man in profile facing left, holding phone toward camera, storefronts and signage visible in blurred background",
+    "subject_appearance": "Asian male wearing brown and cream/beige color-blocked jacket with white lining, dark short hair, clean-shaven",
+    "setting": "urban street, commercial storefront",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "They will understand Bitcoin",
+    "text_style": "White, bold, sans-serif font; centered horizontally across lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject facing slightly left, holding microphone near chest, positioned against blurred modern building backdrop",
+    "subject_appearance": "Asian male in navy blazer, light blue dress shirt, navy and red striped tie, holding microphone with windscreen",
+    "setting": "Urban street, modern building",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You got amazing advice man...",
+    "text_style": "White, bold, sans-serif font, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile facing left, holding microphone, positioned against storefront background with partial signage visible",
+    "subject_appearance": "Asian male wearing brown and white/cream colored windbreaker jacket, holding a microphone with black foam windscreen.",
+    "setting": "Urban street, storefront",
+    "broll": false,
+    "energy": "medium"
+  }
+]

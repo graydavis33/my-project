@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "I got a channel with",
+    "text_style": "White bold sans-serif font, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Young man in profile facing left, holding phone, standing outside modern black building with landscaping visible behind",
+    "subject_appearance": "Male wearing brown and white color-block windbreaker jacket with modern fade hairstyle",
+    "setting": "Exterior street or building entrance",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "with my wife last night...",
+    "text_style": "White, bold, sans-serif font; centered lower-third of frame with slight drop shadow",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject facing camera, speaking directly to interviewer; brick wall background; 'School of Hard Knocks' logo visible in lower right corner",
+    "subject_appearance": "Middle-aged man with shoulder-length light brown/blonde hair, wearing black polo shirt with microphone clipped to collar, holding interview microphone in right hand",
+    "setting": "Outdoor brick wall, street interview",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Two friends died this week.",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Middle-aged man in profile facing left, brick building background, urban street setting",
+    "subject_appearance": "Older man with shoulder-length blonde/gray hair wearing a dark polo shirt with 'School of Hard Knocks' logo and lanyard with credential badge",
+    "setting": "Urban street, brick building",
+    "broll": false,
+    "energy": "low"
+  },
+  {
+    "on_screen_text": "Go do whatever the f*ck",
+    "text_style": "white serif font, centered lower third, medium weight",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile looking left, brick building background, sunglasses hanging on shirt",
+    "subject_appearance": "middle-aged man with shoulder-length blonde/gray hair wearing black button-up shirt, casual and somewhat weathered appearance.",
+    "setting": "urban street with brick building",
+    "broll": false,
+    "energy": "medium"
+  }
+]
