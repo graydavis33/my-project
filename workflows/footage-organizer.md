@@ -155,3 +155,37 @@ See `python-scripts/footage-organizer/CLAUDE.md` for the rules when improving th
 | 20 clips | ~$0.06 | $0 |
 | 100 clips | ~$0.30 | $0 |
 | 1,000 clips | ~$3.00 | $0 |
+
+---
+
+## v2: Index + Pull
+
+A SQLite index (`.footage-index.sqlite` at the library root) makes the library queryable. `pull` builds Premiere-ready folders via hardlinks — folders stay the source of truth.
+
+### Commands
+
+- `python cli_index.py --client sai index` — refresh SQLite index from library
+- `python cli_index.py --client sai pull --orientation vertical --filmed-date YYYY-MM-DD` — Premiere-ready folder of vertical clips from that day
+- `python cli_index.py --client sai pull --category interview-solo --filmed-after YYYY-MM-DD` — all solo interviews since that date
+
+All `pull` filters: `--category`, `--orientation`, `--filmed-date`, `--filmed-after`, `--filmed-before`, `--min-duration`, `--max-duration`
+
+### Talking to Claude in chat
+
+> Gray says: "pull all vertical clips from April 16"
+> Claude translates to: `python cli_index.py --client sai pull --orientation vertical --filmed-date 2026-04-16`
+>
+> Gray says: "give me every solo interview from this past week"
+> Claude translates to: `python cli_index.py --client sai pull --category interview-solo --filmed-after 2026-04-20`
+
+### Daily Sai loop
+
+```
+1. Dump card → 01_RAW_INCOMING/<today>/
+2. python main.py --client sai          (Vision categorizes + files into FOOTAGE_LIBRARY/)
+3. python cli_index.py --client sai index   (refresh the SQLite index)
+4. As you edit, pull working sets:
+   python cli_index.py --client sai pull --orientation vertical --filmed-date <day>
+   python cli_index.py --client sai pull --category interview-solo --filmed-date <day>
+   etc.
+```
