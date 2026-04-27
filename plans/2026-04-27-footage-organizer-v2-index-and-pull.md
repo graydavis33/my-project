@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a SQLite index + `pull` command on top of the existing footage-organizer pipeline so Gray can natural-language-query "all vertical clips from April 16, filmed date" and get a Premiere-ready hardlink folder. Also: enable one clip to live in multiple shot-type folders via hardlinks; backfill filmed-date into the index.
+**Goal:** Add a SQLite index + `pull` command on top of the existing footage-organizer pipeline so Gray can natural-language-query "all vertical clips from April 16" and get a Premiere-ready hardlink folder. Also: backfill filmed-date into the index, and add a `--source` flag so loose footage already in the library can be organized in place without first being relocated to `RAW_INCOMING/`.
 
-**Architecture:** Folders stay the primary classification (existing `06_FOOTAGE_LIBRARY/{category}/{week}/` tree, augmented to `{category}/{filmed-date}/`). A new SQLite database (`.footage-index.sqlite` at the library root) is the orthogonal-metadata layer — one row per clip with `path, category, format, filmed_date, upload_date, duration_s, width, height, codec, sha1`. A `pull` command filters the index and hardlinks results into `_pulls/<slug>/`. The classifier is upgraded to return a list of categories (primary + optional secondary); the organizer hardlinks secondaries instead of moving. Claude Code chat is the NL → CLI translator — no MCP yet.
+**Architecture:** Folders stay the primary classification (existing `06_FOOTAGE_LIBRARY/{category}/{week}/` tree). One clip → one category — the existing single-label classifier is unchanged. A new SQLite database (`.footage-index.sqlite` at the library root) is the orthogonal-metadata layer — one row per clip with `path, category, format, filmed_date, upload_date, duration_s, width, height, codec, sha1`. A `pull` command filters the index and hardlinks results into `_pulls/<slug>/` for Premiere. Claude Code chat is the NL → CLI translator — no MCP yet.
 
-**Tech Stack:** Python 3, SQLite (`sqlite3` stdlib), ffprobe (already a dependency), anthropic SDK (already wired), PyYAML for the taxonomy file (deferred — current `CATEGORIES` constant is fine for v1). All work extends the existing tool — nothing replaced.
+**Tech Stack:** Python 3, SQLite (`sqlite3` stdlib), ffprobe (already a dependency), anthropic SDK (already wired). All work extends the existing tool — nothing replaced. `pytest` added for index/pull tests.
 
-**Out of scope (Phase 2, separate plan):** Whisper transcripts, face recognition / person ID, semantic embeddings, MCP server wrapper, voice input.
+**Out of scope (Phase 2, separate plan):** Whisper transcripts (search by spoken content), richer Vision descriptions + embeddings (semantic search like "at the computer" matching `screens-and-text`), MCP server wrapper, voice input. **Not planned: face recognition / person-ID** — Gray queries by what's in the clip, not by who.
 
 ---
 
@@ -23,16 +23,13 @@
 
 **Modify:**
 - `python-scripts/footage-organizer/config.py` — add `INDEX_DB_NAME`, `PULL_FOLDER_NAME`, `INDEX_SCAN_ROOTS` constants
-- `python-scripts/footage-organizer/analyzer.py` — return `list[str]` (primary first, secondary optional) instead of `str`
-- `python-scripts/footage-organizer/organizer.py` — accept `categories: list[str]`, move primary, hardlink secondaries (with copy fallback for cross-drive)
-- `python-scripts/footage-organizer/main.py` — pass through list semantics; allow `--source <folder>` flag for organizing the existing un-organized Sai footage
-- `python-scripts/footage-organizer/cache.py` — store list instead of single string (back-compat: read string-form too)
+- `python-scripts/footage-organizer/main.py` — add `--source <folder>` flag for organizing loose footage in-place
 - `python-scripts/footage-organizer/README.md` — new usage section
 - `python-scripts/footage-organizer/CLAUDE.md` — architecture explanation
 - `python-scripts/footage-organizer/requirements.txt` — add `pytest>=8.0`
 - `workflows/footage-organizer.md` — SOP update with `index` + `pull` commands and the daily Sai workflow
 
-**Untouched:** `extractor.py` (its `get_shoot_date` already exists — we just call it). The 8-folder library scaffold, RAW_INCOMING flow, archive flow, cache file location.
+**Untouched:** `extractor.py` (its `get_shoot_date` already exists — we just call it). `analyzer.py`, `organizer.py`, `cache.py` — single-category behavior is preserved. The 8-folder library scaffold, RAW_INCOMING flow, archive flow.
 
 ---
 
@@ -703,142 +700,7 @@ git commit -m "feat(footage-organizer): index + pull CLI — scan library to SQL
 
 ---
 
-## Task 5: Multi-category clips (classifier returns list, organizer hardlinks secondaries)
-
-**Files:**
-- Modify: `python-scripts/footage-organizer/analyzer.py`
-- Modify: `python-scripts/footage-organizer/organizer.py`
-- Modify: `python-scripts/footage-organizer/cache.py`
-- Modify: `python-scripts/footage-organizer/main.py`
-
-- [ ] **Step 1: Read all four files first**
-
-```bash
-# Use Read tool on each; do not skip — the wiring touches every step
-```
-
-- [ ] **Step 2: Update `analyzer.py` to return a list**
-
-Replace the prompt's "exactly ONE" rule and the `classify_video` return.
-
-In the `_PROMPT` string, change the rule block to:
-
-```text
-Your job: pick the PRIMARY category. If a SECOND category also clearly applies (e.g. a wide office shot with someone on camera = `interview-solo` + `establishing-interior`), return both — primary first, secondary second, comma-separated. Maximum two. If only one fits, return one. When in doubt: `misc` only.
-
-Output rules:
-- Reply with ONE OR TWO category names, comma-separated. Nothing else.
-- Use only the exact strings from the category list above.
-- Primary first, secondary second.
-- When in doubt: just `misc`.
-```
-
-Update `classify_video` signature + parsing:
-
-```python
-def classify_video(frames_b64: list[str], filename: str) -> list[str]:
-    # ... unchanged content + API call ...
-    raw = response.content[0].text.strip().lower()
-    parts = [p.strip() for p in raw.split(",") if p.strip()]
-    valid = [p for p in parts if p in CATEGORIES]
-    if not valid:
-        print(f"         [warn] unexpected label '{raw}' — using 'misc'")
-        return ["misc"]
-    return valid[:2]   # cap at two
-```
-
-- [ ] **Step 3: Update `cache.py` to read/write list, back-compat with strings**
-
-```python
-# In cache.py — adjust load + store helpers
-def get_cached(filepath):
-    raw = _load().get(_key(filepath))
-    if raw is None:
-        return None
-    if isinstance(raw, str):
-        return [raw]      # legacy string entries
-    return raw            # already a list
-
-
-def store_cached(filepath, categories):
-    if isinstance(categories, str):
-        categories = [categories]
-    data = _load()
-    data[_key(filepath)] = categories
-    _save(data)
-```
-
-(Inspect actual `cache.py` first — adapt the snippet to existing function names.)
-
-- [ ] **Step 4: Update `organizer.py` to accept a list**
-
-Add a new function alongside `organize_file`:
-
-```python
-def organize_file_multi(src_path, output_dir, format_type, date_str, categories: list[str], move=True):
-    """
-    Place src in the PRIMARY category folder, then hardlink it into each SECONDARY
-    category folder. Returns the primary destination path.
-    """
-    primary, *secondaries = categories
-    primary_dest = organize_file(src_path, output_dir, format_type, date_str, primary, move=move)
-
-    for cat in secondaries:
-        secondary_dir = os.path.join(output_dir, date_str, format_type, cat)
-        os.makedirs(secondary_dir, exist_ok=True)
-        secondary_path = os.path.join(secondary_dir, os.path.basename(primary_dest))
-        if os.path.exists(secondary_path):
-            continue
-        try:
-            os.link(primary_dest, secondary_path)
-        except OSError:
-            shutil.copy2(primary_dest, secondary_path)
-
-    return primary_dest
-```
-
-- [ ] **Step 5: Update `main.py` `run_organize` loop**
-
-In the loop where `category = classify_video(...)` is called, change it to:
-
-```python
-categories = classify_video(frames_b64, filename)
-print(f"         → {', '.join(categories)}")
-store_cached(filepath, categories)
-dest = organize_file_multi(filepath, organized_dir, fmt, date_str, categories, move=move)
-results.append((filename, fmt, categories[0], dest, False))
-```
-
-And update the cache hit branch similarly:
-
-```python
-cached = get_cached(filepath)   # now returns list[str] | None
-if cached:
-    print(f"         (cached) → {', '.join(cached)}")
-    dest = organize_file_multi(filepath, organized_dir, fmt, date_str, cached, move=move)
-    results.append((filename, fmt, cached[0], dest, True))
-    continue
-```
-
-- [ ] **Step 6: Smoke test**
-
-Pick a small RAW folder with 2-3 clips of mixed type (e.g. one office wide, one interview), then:
-
-```bash
-python main.py --client sai --date <test-date>
-```
-Expected: at least one clip prints `→ interview-solo, establishing-interior` and appears in BOTH folders. Verify with `dir` / `ls`.
-
-- [ ] **Step 7: Commit**
-
-```bash
-git add python-scripts/footage-organizer/{analyzer.py,organizer.py,cache.py,main.py}
-git commit -m "feat(footage-organizer): multi-category clips — primary + optional secondary via hardlink"
-```
-
----
-
-## Task 6: Migrate existing un-organized footage in the Sai folder
+## Task 5: Organize existing loose Sai footage (`--source` flag)
 
 **Files:**
 - Modify: `python-scripts/footage-organizer/main.py` — add `--source <folder>` flag
@@ -922,7 +784,7 @@ git commit -m "feat(footage-organizer): --source flag for migrating loose footag
 
 ---
 
-## Task 7: Workflow doc + README
+## Task 6: Workflow doc + README
 
 **Files:**
 - Modify: `python-scripts/footage-organizer/README.md`
@@ -960,7 +822,7 @@ git commit -m "docs(footage-organizer): v2 — index + pull workflow"
 
 ---
 
-## Task 8: Final integration test
+## Task 7: Final integration test
 
 - [ ] **Step 1: End-to-end run on a real Sai folder**
 
@@ -1005,17 +867,17 @@ git push
 ## Decisions Locked
 
 - **Filmed date wins** (over upload date) for `filmed_date` field. Falls back to file mtime only when ffprobe `creation_time` is missing. Upload date is also stored separately for cases where Gray remembers "the day I dumped the card."
+- **One clip → one category.** No multi-category, no hardlinks for classification. The existing single-label classifier is unchanged. (Hardlinks only appear in `pull` for building Premiere-ready folders.)
 - **Folders = primary classification.** Index is orthogonal metadata, not a replacement.
-- **Hardlinks for multi-category.** Same physical file, two folder appearances, zero extra disk on NTFS.
 - **No MCP yet.** Claude Code chat translates Gray's NL to CLI calls. MCP only if other clients (Claude Desktop) need access later.
 - **Taxonomy = existing `CATEGORIES` constant** for v1. Promote to `taxonomy.yaml` only when Gray wants to add categories without code edits.
-- **Cache file format upgraded to list.** Back-compat read for old string-form entries.
-- **Loose footage migrated via `--source` flag in `--copy` mode.** Gray reviews before deleting originals.
+- **Loose footage organized via `--source` flag in `--copy` mode.** Gray reviews before deleting originals.
 
 ## Phase 2 (separate plan, not now)
 
 - Whisper transcripts → search by spoken content
-- Face recognition / person ID → "find clips with Sai"
-- Embeddings of frame descriptions → "at the computer" semantic match
+- Richer Vision descriptions + embeddings → semantic queries like "at the computer" matching `screens-and-text` clips
 - Voice input wrapper → mic → Whisper → CLI args
 - Optional MCP server for cross-client access
+
+**Explicitly not planned:** face recognition / person-ID. Gray queries by what's in the clip, not by who.
