@@ -57,3 +57,30 @@ def test_pull_empty_result(tmp_path):
     assert result.count == 0
     # Empty result should NOT create the folder
     assert not out.exists()
+
+
+def test_pull_count_reflects_actually_linked_not_matched(tmp_path):
+    """If a source file is missing on disk, PullResult.count should NOT include it."""
+    db = tmp_path / "idx.sqlite"; index.init(db)
+    src = tmp_path / "src"; src.mkdir()
+
+    # Two clips: one exists on disk, one is a ghost row
+    real = src / "real.mp4"; real.write_bytes(b"x")
+    ghost_path = str(src / "ghost.mp4")  # never created
+
+    index.upsert(db, index.ClipRecord(
+        path=str(real), category="misc", format="short-form",
+        filmed_date="2026-04-16", upload_date="2026-04-16",
+        duration_s=1.0, width=1, height=1, codec="x", sha1="real-sha",
+    ))
+    index.upsert(db, index.ClipRecord(
+        path=ghost_path, category="misc", format="short-form",
+        filmed_date="2026-04-16", upload_date="2026-04-16",
+        duration_s=1.0, width=1, height=1, codec="x", sha1="ghost-sha",
+    ))
+
+    out = tmp_path / "_pulls" / "missing-src"
+    result = pull.pull(db, out, filmed_date="2026-04-16")
+
+    assert result.count == 1, f"Expected 1 (only real file linked), got {result.count}"
+    assert len(list(out.iterdir())) == 1
