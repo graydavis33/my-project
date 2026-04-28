@@ -33,7 +33,7 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 **SQLite index = orthogonal metadata:**
 > `.footage-index.sqlite` lives at the library root. One row per clip with: `path, category, format (vertical/horizontal), filmed_date, upload_date, duration_s, width, height, codec, sha1`. Filmed date comes from camera metadata (ffprobe `creation_time`), falling back to file mtime. Built/refreshed via `python cli_index.py --client sai index`.
 
-**Pull builds Premiere-ready folders via hardlinks:**
-> `python cli_index.py --client sai pull --orientation vertical --filmed-date 2026-04-16` filters the index → hardlinks matching files into `_pulls/<slug>/`. Hardlinks on NTFS = zero extra disk; Premiere treats them as normal files. Falls back to copy on cross-drive (`OSError` from `os.link`). Files are never moved or deleted by `pull`.
+**Pull builds Premiere-ready folders via hardlinks (NTFS) or copies (exFAT):**
+> `python cli_index.py --client sai pull --orientation vertical --filmed-date 2026-04-16` filters the index → hardlinks matching files into `_pulls/<slug>/`. Hardlinks on NTFS = zero extra disk. Falls back to copy when `os.link` raises `OSError`, which happens on cross-drive AND on exFAT-formatted drives (Windows error 1 "Incorrect function"). **Gray's D:/Sai is exFAT, so pulls always copy** — clear `_pulls/` after each edit to reclaim disk. Files are never moved or deleted by `pull`. `result.fallback_copies` reports the count.
 
 > **One clip → one category.** Vision-classifier output is single-label (unchanged from v1). Hardlinks only appear when `pull` builds an output folder.
