@@ -53,8 +53,13 @@ python main.py --client sai --date 2026-04-15
 # Organize old/undated footage (any label works as the subfolder name)
 python main.py --client sai --date old-broll
 
-# Move instead of copy (frees disk — only use when sure)
-python main.py --client sai --move
+# Default mode is MOVE (RAW folder deleted after). Pass --copy to keep originals.
+python main.py --client sai --copy
+
+# Process loose footage already in the library (e.g., 02_ORGANIZED/<date>/ flat dump).
+# --source defaults to MOVE; --format overrides orientation detection; --top-level-only
+# skips subdirs (existing categorized output, Premiere project files, etc.)
+python main.py --client sai --source "D:/Sai/02_ORGANIZED/2026-04-21" --date 2026-04-21 --format short-form --top-level-only
 
 # Archive an organized date into the Footage Library as "unused"
 # Run after pulling selects into 03_PROJECTS/. Deletes 02_ORGANIZED/{date}/.
