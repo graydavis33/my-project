@@ -1,0 +1,5 @@
+venv/
+reels/
+frames/
+*.log
+.DS_Store
