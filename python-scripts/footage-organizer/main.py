@@ -97,7 +97,19 @@ def parse_args():
         metavar="PATH",
         help="Process this folder directly instead of RAW_INCOMING/<date>/. "
              "Useful for one-off cleanup of loose footage already in the library. "
-             "Forces --copy mode so originals are preserved.",
+             "Defaults to MOVE; pass --copy if you want originals preserved.",
+    )
+    parser.add_argument(
+        "--format",
+        choices=[FORMAT_LONG_FORM, FORMAT_SHORT_FORM],
+        help="Override format detection. Use when shooting horizontal shorts "
+             "(orientation no longer reliably signals format).",
+    )
+    parser.add_argument(
+        "--top-level-only",
+        action="store_true",
+        help="Only process .mp4/.mov at the top level of the source folder. "
+             "Skips subdirs (existing categorized output, Premiere project files, etc.).",
     )
     return parser.parse_args()
 
@@ -201,25 +213,33 @@ def setup_structure(library, client):
     print(f"  Then run:  python main.py --client {client}\n")
 
 
-def find_videos(folder):
+def find_videos(folder, recursive=True):
     files = []
-    for root, _, filenames in os.walk(folder):
-        for name in filenames:
-            if os.path.splitext(name)[1] in VIDEO_EXTENSIONS:
-                files.append(os.path.join(root, name))
+    if recursive:
+        for root, _, filenames in os.walk(folder):
+            for name in filenames:
+                if os.path.splitext(name)[1] in VIDEO_EXTENSIONS:
+                    files.append(os.path.join(root, name))
+    else:
+        for name in os.listdir(folder):
+            full = os.path.join(folder, name)
+            if os.path.isfile(full) and os.path.splitext(name)[1] in VIDEO_EXTENSIONS:
+                files.append(full)
     return sorted(files)
 
 
-def detect_format(filepath):
+def detect_format(filepath, override=None):
     width, height = get_resolution(filepath)
-    if height > width:
+    if override:
+        fmt = override
+    elif height > width:
         fmt = FORMAT_SHORT_FORM
     else:
         fmt = FORMAT_LONG_FORM
     return fmt, width, height
 
 
-def run_organize(client, date_str, move, source_folder=None):
+def run_organize(client, date_str, move, source_folder=None, format_override=None, top_level_only=False):
     log_run("footage-organizer")
     library = get_library(client)
 
@@ -238,9 +258,13 @@ def run_organize(client, date_str, move, source_folder=None):
     print(f"  Input:  {raw_folder}")
     print(f"  Output: {organized_dir}/{date_str}/")
     print(f"  Mode:   {'COPY (originals stay in RAW/)' if not move else 'MOVE (RAW folder deleted after)'}")
+    if format_override:
+        print(f"  Format: {format_override} (overriding orientation detection)")
+    if top_level_only:
+        print(f"  Scan:   top-level only (subdirs skipped)")
     print()
 
-    videos = find_videos(raw_folder)
+    videos = find_videos(raw_folder, recursive=not top_level_only)
     if not videos:
         print(f"  No .mp4 or .mov files found in {raw_folder}")
         sys.exit(0)
@@ -255,7 +279,7 @@ def run_organize(client, date_str, move, source_folder=None):
         print(f"  [{i}/{len(videos)}] {filename}")
 
         try:
-            fmt, w, h = detect_format(filepath)
+            fmt, w, h = detect_format(filepath, override=format_override)
             print(f"         {w}x{h} → {fmt}")
         except Exception as e:
             print(f"         [skip] Could not read resolution: {e}")
@@ -427,7 +451,18 @@ if __name__ == "__main__":
             if not src.is_dir():
                 print(f"\n  Error: --source path not found: {src}")
                 sys.exit(1)
-            # In --source mode, always copy (preserve originals for Gray's review).
-            run_organize(args.client, date_str, move=False, source_folder=str(src))
+            # --source defaults to MOVE; pass --copy to preserve originals.
+            run_organize(
+                args.client, date_str,
+                move=not args.copy,
+                source_folder=str(src),
+                format_override=args.format,
+                top_level_only=args.top_level_only,
+            )
         else:
-            run_organize(args.client, date_str, move=not args.copy)
+            run_organize(
+                args.client, date_str,
+                move=not args.copy,
+                format_override=args.format,
+                top_level_only=args.top_level_only,
+            )

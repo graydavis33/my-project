@@ -117,7 +117,19 @@ For loose footage already in your library that needs to be classified:
 python main.py --client sai --source "G:/Sai/loose-april-stuff" --date 2026-04-16
 ```
 
-Forces --copy mode. Originals are NEVER deleted. Review the output, then delete the source folder manually.
+Defaults to MOVE (clips relocate into `02_ORGANIZED/<date>/<format>/<category>/`). Pass `--copy` if you want originals preserved at the source.
+
+## --format and --top-level-only flags
+
+For shoots where orientation no longer signals format (horizontal shorts, etc.) and folders that contain stuff you don't want walked recursively (Premiere project files, existing categorized output):
+
+```bash
+# Override format detection — tag the whole batch as short-form
+python main.py --client sai --source "D:/Sai/02_ORGANIZED/2026-04-21" --date 2026-04-21 --format short-form --top-level-only
+```
+
+- `--format short-form|long-form` skips orientation detection
+- `--top-level-only` processes only `.mp4`/`.mov` at the top level of the source folder (no recursion into subdirs)
 
 ## Iteration / Eval Loop
 
