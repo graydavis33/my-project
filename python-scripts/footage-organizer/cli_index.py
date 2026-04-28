@@ -47,8 +47,18 @@ def _db(client: str) -> Path:
     return _library(client) / INDEX_DB_NAME
 
 
+_PREMIERE_DIR_PREFIXES = ("Adobe Premiere Pro",)
+
+
 def _walk_videos(root: Path):
-    for dirpath, _, filenames in os.walk(root):
+    for dirpath, dirnames, filenames in os.walk(root):
+        # Prune Premiere project subdirs — they generate .mp4 preview renders
+        # that are NOT real footage. Skip names like "Adobe Premiere Pro Video
+        # Previews/" and any "*.PRV" sidecar dirs.
+        dirnames[:] = [
+            d for d in dirnames
+            if not d.startswith(_PREMIERE_DIR_PREFIXES) and not d.endswith(".PRV")
+        ]
         for name in filenames:
             if Path(name).suffix in VIDEO_EXTENSIONS:
                 yield Path(dirpath) / name
