@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-27T12:20:11Z",
+  "generated_at": "2026-04-28T12:25:16Z",
   "month": "2026-04",
   "expenses": [
     {
@@ -22,13 +22,6 @@
       "vendor": "Epidemic Sound",
       "amount": 17.99,
       "category": "Software & Tools"
-    },
-    {
-      "email_id": "19da139756fb3554",
-      "date": "2026-04-18",
-      "vendor": "Netflix",
-      "amount": 8.99,
-      "category": "Streaming"
     },
     {
       "email_id": "19d9c1ed173d0ba3",
