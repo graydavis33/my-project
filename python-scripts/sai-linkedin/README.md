@@ -41,10 +41,27 @@ linkedin/
 
 Time per post: ~5 minutes once the reel is rendered.
 
+## Reference Materials
+
+The tool auto-loads two reference folders into the cached system prompt:
+
+```
+reference/
+├── posts/          ← LinkedIn posts that show good FORMAT/STRUCTURE (e.g. Justin Welsh swipe file)
+└── voice/          ← Sai's actual video transcripts — show how he speaks (his VOICE)
+```
+
+Drop any `.md` or `.txt` files into either folder and the tool picks them up on the next run.
+
+- **`posts/` →** wrapped in `<linkedin_examples>` — Claude studies the rhythm, hooks, line-break density, contrast structures
+- **`voice/` →** wrapped in `<sai_voice_corpus>` — Claude matches Sai's actual word choice and phrasing
+
+Both blocks are cached — pay once, reuse free across runs.
+
 ## Stack
 
 - Python 3
-- `anthropic` SDK with prompt caching on the system prompt
+- `anthropic` SDK with prompt caching on reference blocks
 - Reads `master.srt` directly (no transcription cost — `video-use` already did it)
 
 ## Cost

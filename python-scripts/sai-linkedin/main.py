@@ -27,18 +27,21 @@ load_dotenv(Path(__file__).parent / ".env")
 
 MODEL = "claude-sonnet-4-6"
 
-SYSTEM_PROMPT = """You are a LinkedIn copywriter for Sai Karra, a 21-year-old second-time agency founder (Trendify, prev. BuiltGen). Sai's audience is founders, marketers, and operators. His voice is direct, tactical, no-fluff — he shares frameworks and lessons from building agencies, not motivational platitudes.
+SYSTEM_PROMPT_CORE = """You are a LinkedIn copywriter for Sai Karra, a 21-year-old second-time agency founder (Trendify, prev. BuiltGen). Sai's audience is founders, marketers, and operators. His voice is direct, tactical, no-fluff — he shares frameworks and lessons from building agencies, not motivational platitudes.
 
 You will be given the transcript of a short-form video Sai just posted. Your job is to produce a LinkedIn post that pairs with that short — same idea, but reformatted for the LinkedIn feed.
 
 LinkedIn formatting rules:
-- HOOK: First line must stop the scroll. One short, punchy sentence. No "In today's post" or "I want to talk about". Lead with the contrarian take or the specific number.
-- LINE BREAKS: Single sentences per line. Lots of whitespace. LinkedIn rewards skimmability.
-- LENGTH: 800–1300 characters. Long enough to deliver value, short enough to read in 20 seconds.
-- STRUCTURE: Hook → tension/why-this-matters → the framework (numbered or bulleted) → close with a question or callback.
-- VOICE: First-person Sai. "I do this every day" not "you should do this".
-- AVOID: emojis, hashtag spam, "agree?", "thoughts?", "🚀", motivational filler, "in conclusion".
-- CTA: One subtle question at the end OR a one-line callback to the hook. Not "comment below 👇".
+- HOOK: First line must stop the scroll. One short, punchy sentence. No "In today's post" or "I want to talk about". Lead with the contrarian take, a specific number, or a sharp observation.
+- LINE BREAKS: Single sentences per line. Lots of whitespace. LinkedIn rewards skimmability. Each idea gets its own breath.
+- LENGTH: 800–1500 characters. Long enough to deliver value, short enough to read in 20 seconds.
+- STRUCTURE: Hook → tension/why-this-matters → the framework (numbered or bulleted) → close with a callback, question, or sharp one-liner.
+- VOICE: First-person Sai. "I do this every day" not "you should do this". Use casual sharp phrasing — "C'mon, man", "Smh", "Nah", "Hell yeah" are fine if they fit. Founder voice, not corporate voice.
+- AVOID: emojis (one MAX, only if it lands hard), hashtag spam, "agree?", "thoughts?", "🚀", motivational filler ("you got this!", "the grind!"), "in conclusion", AI-flavored phrasing like "in today's fast-paced world", "let me unpack this", "here's the thing".
+- HUMAN TELLS: contractions, occasional sentence fragments, varied rhythm (short / short / longer sentence / short), specific details over generic ones.
+- CTA: One subtle question at the end OR a one-line callback to the hook. Never "comment below 👇" or "drop a comment".
+
+STYLE STUDY — proven viral LinkedIn structures (provided separately as <linkedin_examples>): study the rhythm, hook style, line-break density, contrast structures, and CTA patterns. These are NOT Sai's voice — they are the format/structure Sai's audience responds to. Match the SHAPE, not the words.
 
 Return ONLY a valid JSON object with these keys, no markdown, no commentary:
 {
@@ -50,6 +53,30 @@ Return ONLY a valid JSON object with these keys, no markdown, no commentary:
 
 Visual ideas should be specific things to look for in Sai's footage library — e.g. "Sai at his desk with notebook open", "close-up of pen on paper with handwritten notes", "Sai in a meeting whiteboarding", "screenshot of a calendar blocked into 3 work blocks", "shot of a kitchen timer or stopwatch".
 """
+
+
+def load_reference_posts() -> str:
+    """Read every .md/.txt file in reference/posts/ and concat into one block."""
+    posts_dir = Path(__file__).parent / "reference" / "posts"
+    if not posts_dir.exists():
+        return ""
+    chunks = []
+    for f in sorted(posts_dir.glob("*")):
+        if f.suffix.lower() in (".md", ".txt"):
+            chunks.append(f"=== {f.name} ===\n{f.read_text(encoding='utf-8')}")
+    return "\n\n".join(chunks)
+
+
+def load_voice_corpus() -> str:
+    """Read every .md/.txt file in reference/voice/ — Sai's actual transcripts."""
+    voice_dir = Path(__file__).parent / "reference" / "voice"
+    if not voice_dir.exists():
+        return ""
+    chunks = []
+    for f in sorted(voice_dir.glob("*")):
+        if f.suffix.lower() in (".md", ".txt"):
+            chunks.append(f"=== {f.name} ===\n{f.read_text(encoding='utf-8')}")
+    return "\n\n".join(chunks)
 
 
 def parse_srt(srt_path: Path) -> str:
@@ -86,11 +113,30 @@ def main():
 
     client = Anthropic(api_key=api_key)
 
+    examples = load_reference_posts()
+    voice = load_voice_corpus()
+
+    system_blocks = [{"type": "text", "text": SYSTEM_PROMPT_CORE}]
+    if examples:
+        system_blocks.append({
+            "type": "text",
+            "text": f"<linkedin_examples>\n{examples}\n</linkedin_examples>",
+            "cache_control": {"type": "ephemeral"},
+        })
+        print(f"[sai-linkedin] Loaded {len(examples)} chars of LinkedIn reference posts")
+    if voice:
+        system_blocks.append({
+            "type": "text",
+            "text": f"<sai_voice_corpus>\n{voice}\n</sai_voice_corpus>",
+            "cache_control": {"type": "ephemeral"},
+        })
+        print(f"[sai-linkedin] Loaded {len(voice)} chars of Sai voice corpus")
+
     print(f"[sai-linkedin] Calling {MODEL}...")
     resp = client.messages.create(
         model=MODEL,
         max_tokens=2000,
-        system=[{"type": "text", "text": SYSTEM_PROMPT, "cache_control": {"type": "ephemeral"}}],
+        system=system_blocks,
         messages=[{"role": "user", "content": f"Transcript of today's short:\n\n{transcript}\n\nReturn the JSON."}],
     )
 
