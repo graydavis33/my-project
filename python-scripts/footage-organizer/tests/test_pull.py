@@ -57,7 +57,6 @@ def test_pull_empty_result(tmp_path):
     assert result.count == 0
     # Empty result should NOT create the folder
     assert not out.exists()
-<<<<<<< HEAD
 
 
 def test_pull_count_reflects_actually_linked_not_matched(tmp_path):
@@ -85,5 +84,3 @@ def test_pull_count_reflects_actually_linked_not_matched(tmp_path):
 
     assert result.count == 1, f"Expected 1 (only real file linked), got {result.count}"
     assert len(list(out.iterdir())) == 1
-=======
->>>>>>> e4ad2b2 (feat(footage-organizer): pull command — filter index, hardlink results, dedup by sha1)
