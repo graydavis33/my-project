@@ -6,12 +6,13 @@ import os
 import shutil
 
 
-def organize_file(src_path, output_dir, format_type, date_str, category, move=False):
+def organize_file(src_path, output_dir, date_str, category, move=False):
     """
-    Copy/move src into ORGANIZED/date_str/format_type/category/
+    Copy/move src into ORGANIZED/category/date_str/
+    Same shape as FOOTAGE_LIBRARY (since 2026-04-28 — format folder dropped).
     Returns destination path.
     """
-    dest_dir = os.path.join(output_dir, date_str, format_type, category)
+    dest_dir = os.path.join(output_dir, category, date_str)
     return _place_file(src_path, dest_dir, move)
 
 

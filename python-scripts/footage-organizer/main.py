@@ -265,7 +265,7 @@ def run_organize(client, date_str, move, source_folder=None):
         cached = get_cached(filepath)
         if cached:
             print(f"         (cached) → {cached}")
-            dest = organize_file(filepath, organized_dir, fmt, date_str, cached, move=move)
+            dest = organize_file(filepath, organized_dir, date_str, cached, move=move)
             results.append((filename, fmt, cached, dest, True))
             continue
 
@@ -286,7 +286,7 @@ def run_organize(client, date_str, move, source_folder=None):
 
         print(f"         → {category}")
         store_cached(filepath, category)
-        dest = organize_file(filepath, organized_dir, fmt, date_str, category, move=move)
+        dest = organize_file(filepath, organized_dir, date_str, category, move=move)
         results.append((filename, fmt, category, dest, False))
 
     _print_organize_summary(results, skipped, organized_dir, date_str, move, client)
@@ -302,43 +302,58 @@ def run_organize(client, date_str, move, source_folder=None):
 
 
 def run_archive(client, date_str):
+    """Walk every 02_ORGANIZED/<cat>/<date_str>/ and move clips to 06_FOOTAGE_LIBRARY/<cat>/<date_str>/.
+    Category is read from the path (clip.parent.parent.name) — no cache lookup needed."""
     library = get_library(client)
-    organized_date = os.path.join(library, FOLDER_ORGANIZED, date_str)
-    footage_lib    = os.path.join(library, FOLDER_FOOTAGE_LIB)
+    organized_dir = os.path.join(library, FOLDER_ORGANIZED)
+    footage_lib   = os.path.join(library, FOLDER_FOOTAGE_LIB)
 
-    if not os.path.isdir(organized_date):
-        print(f"\n  Error: No organized folder found: {organized_date}")
+    # Find every <cat>/<date_str>/ subtree under 02_ORGANIZED
+    date_subtrees = []
+    if os.path.isdir(organized_dir):
+        for cat in os.listdir(organized_dir):
+            cat_date = os.path.join(organized_dir, cat, date_str)
+            if os.path.isdir(cat_date):
+                date_subtrees.append((cat, cat_date))
+
+    if not date_subtrees:
+        print(f"\n  Error: No organized clips found for date: {date_str}")
+        print(f"  Looked under: {FOLDER_ORGANIZED}/<category>/{date_str}/")
         print(f"  Run the organizer first: python main.py --client {client} --date {date_str}")
         sys.exit(1)
 
     print(f"\n  {'=' * 56}")
     print(f"  Archive to Footage Library — {client.upper()} — {date_str}")
     print(f"  {'=' * 56}")
-    print(f"  From: {organized_date}")
-    print(f"  To:   {FOLDER_FOOTAGE_LIB}/{{category}}/{date_str}/")
+    print(f"  From: {FOLDER_ORGANIZED}/<category>/{date_str}/  ({len(date_subtrees)} categories)")
+    print(f"  To:   {FOLDER_FOOTAGE_LIB}/<category>/{date_str}/")
     print()
-
-    videos = find_videos(organized_date)
-    if not videos:
-        print("  No videos found.")
-        sys.exit(0)
 
     moved = 0
     by_category = defaultdict(int)
 
-    for filepath in videos:
-        cached_cat = get_cached(filepath)
-        category = cached_cat if cached_cat else "misc"
-        archive_file(filepath, footage_lib, os.path.join(category, date_str), move=True)
-        by_category[category] += 1
-        moved += 1
-        print(f"  {os.path.basename(filepath)} → {category}/{date_str}/")
+    for category, cat_date_dir in date_subtrees:
+        videos = find_videos(cat_date_dir)
+        for filepath in videos:
+            archive_file(filepath, footage_lib, os.path.join(category, date_str), move=True)
+            by_category[category] += 1
+            moved += 1
+            print(f"  {os.path.basename(filepath)} → {category}/{date_str}/")
+        # Prune the now-empty <cat>/<date_str>/ folder
+        shutil.rmtree(cat_date_dir)
+        # If the parent <cat>/ folder is now empty under ORGANIZED, prune it too
+        cat_dir = os.path.dirname(cat_date_dir)
+        if os.path.isdir(cat_dir) and not os.listdir(cat_dir):
+            os.rmdir(cat_dir)
 
-    shutil.rmtree(organized_date)
+    if moved == 0:
+        print("  No videos found.")
+        sys.exit(0)
+
     print(f"\n  Moved {moved} clip(s) into {FOLDER_FOOTAGE_LIB}/  ({date_str})")
     for cat, count in sorted(by_category.items()):
         print(f"    {cat:<26} {count} file(s)")
-    print(f"\n  Deleted organized folder: {organized_date}\n")
+    print()
 
 
 

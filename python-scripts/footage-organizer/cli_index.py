@@ -55,15 +55,14 @@ def _walk_videos(root: Path):
 
 
 def _category_from_path(filepath: Path, library: Path) -> str:
-    """Infer category from the folder it lives in: .../{category}/{date}/clip.mp4
-    or .../organized/{date}/{format}/{category}/clip.mp4."""
+    """Infer category from the folder it lives in.
+    Both shapes are identical since the 2026-04-28 flatten:
+      FOOTAGE_LIBRARY/{category}/{date}/clip.mp4   → rel[1] is category
+      ORGANIZED/{category}/{date}/clip.mp4         → rel[1] is category
+    """
     rel = filepath.relative_to(library).parts
-    # FOOTAGE_LIBRARY/{category}/{date}/clip.mp4   → rel[1] is category
-    # ORGANIZED/{date}/{format}/{category}/clip.mp4 → rel[3] is category
-    if len(rel) >= 4 and rel[0] == FOLDER_FOOTAGE_LIB:
+    if len(rel) >= 4 and rel[0] in (FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED):
         return rel[1]
-    if len(rel) >= 5 and rel[0] == FOLDER_ORGANIZED:
-        return rel[3]
     return "misc"
 
 
