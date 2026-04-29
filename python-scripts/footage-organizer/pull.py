@@ -44,7 +44,10 @@ def pull(
     out_folder.mkdir(parents=True, exist_ok=True)
 
     fallback_copies = 0
+<<<<<<< HEAD
     linked = 0
+=======
+>>>>>>> e4ad2b2 (feat(footage-organizer): pull command — filter index, hardlink results, dedup by sha1)
     for r in rows:
         src = Path(r.path)
         if not src.exists():
@@ -61,6 +64,11 @@ def pull(
         except OSError:
             shutil.copy2(src, dst)
             fallback_copies += 1
+<<<<<<< HEAD
         linked += 1
 
     return PullResult(folder=out_folder, count=linked, records=rows, fallback_copies=fallback_copies)
+=======
+
+    return PullResult(folder=out_folder, count=len(rows), records=rows, fallback_copies=fallback_copies)
+>>>>>>> e4ad2b2 (feat(footage-organizer): pull command — filter index, hardlink results, dedup by sha1)
