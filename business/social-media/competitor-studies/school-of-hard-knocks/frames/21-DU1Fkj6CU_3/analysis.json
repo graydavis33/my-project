@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Yes...",
+    "text_style": "white bold sans-serif, center-bottom position",
+    "shot_type": "medium",
+    "framing": "Young male subject in profile facing left, partially visible person on left edge holding phone/device, waterfront background with boats and houses",
+    "subject_appearance": "Young man wearing light blue/gray short-sleeve t-shirt with casual styling and a watch.",
+    "setting": "waterfront, tropical location",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "Orange and red circular logo badge, lower right corner, bold serif font",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, upper body visible, positioned against waterfront cityscape background",
+    "subject_appearance": "Young man wearing a white ribbed polo shirt with short sleeves, dark styled hair with fade undercut.",
+    "setting": "Waterfront harbor, daytime",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "every entrepreneur needs to",
+    "text_style": "white, bold, sans-serif, centered lower third",
+    "shot_type": "medium close-up",
+    "framing": "man in profile facing right, speaking directly, waterfront and city skyline blurred in background",
+    "subject_appearance": "middle-aged man with dark hair wearing black v-neck t-shirt, holding a School of Hard Knocks badge/emblem",
+    "setting": "waterfront, city harbor",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "That's the biggest mistake",
+    "text_style": "White, bold, sans-serif font; centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, holding microphone in right hand, waterfront cityscape and docks blurred in background",
+    "subject_appearance": "Middle-aged man with brown hair, wearing black v-neck t-shirt, holding a microphone",
+    "setting": "Waterfront dock area, city skyline",
+    "broll": false,
+    "energy": "medium"
+  }
+]

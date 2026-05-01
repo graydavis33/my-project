@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "So was the sacrifice worth it",
+    "text_style": "White sans-serif font, bold weight, centered lower-third position with black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile facing left, holding a microphone, with urban storefront and signage blurred in background",
+    "subject_appearance": "Young man wearing a white crew-neck t-shirt and silver chain necklace, styled with a modern undercut hairstyle",
+    "setting": "Urban street, retail storefront",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "f*cked over in business before?",
+    "text_style": "white, bold, all-caps, centered lower third with censored asterisk",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile facing left, storefront with glass doors and signage visible behind him",
+    "subject_appearance": "young male wearing white short-sleeved t-shirt, short dark hair with faded sides",
+    "setting": "commercial storefront, street level",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "And somebody asked him",
+    "text_style": "White sans-serif font, bold weight, positioned in lower third of frame, black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "Older man in profile facing left, gesturing with hands while speaking, microphone visible in frame held by interviewer",
+    "subject_appearance": "Older man with gray/white hair wearing a cream-colored blazer over a light blue checkered shirt.",
+    "setting": "Urban street storefront",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You know why he didn't fall.",
+    "text_style": "white text with black outline, bold sans-serif, positioned lower-third of frame",
+    "shot_type": "medium close-up",
+    "framing": "older man in beige blazer with raised fist, holding microphone, shown from chest up in profile against glass storefront background",
+    "subject_appearance": "Older male with white/gray hair, reddish complexion, wearing cream-colored blazer over blue checked shirt, holding microphone.",
+    "setting": "street storefront, glass window",
+    "broll": false,
+    "energy": "high"
+  }
+]

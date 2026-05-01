@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Thank you homie.",
+    "text_style": "White bold sans-serif font, center-positioned on lower half of frame",
+    "shot_type": "medium",
+    "framing": "Single male subject walking away from camera toward brick building with dark-framed windows and doors",
+    "subject_appearance": "Man wearing tan/camel overcoat, tan/cream cap, light blue jeans, carrying a tan/brown leather bag",
+    "setting": "Urban street, brick building facade",
+    "broll": true,
+    "energy": "low"
+  },
+  {
+    "on_screen_text": "I was like Imma produce",
+    "text_style": "white text with black outline, bold font, positioned in lower center of frame",
+    "shot_type": "medium close-up",
+    "framing": "single male subject facing camera, holding microphone, standing against brick wall with window visible in background",
+    "subject_appearance": "man wearing tan/camel blazer over pink v-neck shirt, tan baseball cap with leather patch, full dark beard, holding small microphone",
+    "setting": "brick alley or street corner",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "If we are created in the image of God...",
+    "text_style": "White sans-serif font, bold, centered lower-third overlay",
+    "shot_type": "medium close-up",
+    "framing": "Man in profile facing left, holding microphone, positioned against brick building backdrop. Partial view of interviewer's hand with mic visible on left edge.",
+    "subject_appearance": "Bearded man wearing tan/camel blazer over pink shirt, tan baseball cap with brown leather patch, small branded pin on collar.",
+    "setting": "Urban alley, brick buildings",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "over a thousand millionaires",
+    "text_style": "white sans-serif font, all caps, center-positioned lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing right, shot from shoulders up, urban street with buildings and trees in background",
+    "subject_appearance": "Male with short dark hair and fade haircut, wearing black zip-up hoodie with School of Hard Knocks logo patch visible",
+    "setting": "urban street, downtown",
+    "broll": false,
+    "energy": "medium"
+  }
+]

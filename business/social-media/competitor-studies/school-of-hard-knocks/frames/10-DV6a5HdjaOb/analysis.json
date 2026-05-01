@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "",
+    "text_style": "",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in center frame holding microphone, being interviewed outdoors; other people visible in background left and right",
+    "subject_appearance": "Man with short styled hair and beard wearing black t-shirt with white graphic design, holding a small microphone.",
+    "setting": "outdoor street storefront",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Now for the people watching...",
+    "text_style": "White sans-serif font, bold, positioned at lower-center of frame with drop shadow",
+    "shot_type": "medium close-up",
+    "framing": "Young male subject in profile, turned slightly toward camera, positioned left-center of frame with urban plaza and multi-story buildings blurred in background",
+    "subject_appearance": "Male wearing black and white track jacket with white trim, short dark hair, animated facial expression with mouth open mid-speech.",
+    "setting": "Urban plaza, city street",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "You're not afraid to say that either?",
+    "text_style": "White, bold, sans-serif font with black outline; positioned in lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, partially visible second person on right edge; urban street with buildings behind",
+    "subject_appearance": "Young man with short dark hair and fade haircut, wearing brown jacket with white collar trim, smiling while speaking.",
+    "setting": "Urban street, downtown",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Grateful that God uses screw ups...",
+    "text_style": "white sans-serif font, medium weight, centered lower third of frame, with signature-style script below",
+    "shot_type": "medium close-up",
+    "framing": "male subject in profile facing left, speaking expressively, urban street setting with colorful buildings in soft focus background",
+    "subject_appearance": "man with dark styled hair and facial stubble wearing a charcoal gray t-shirt with 'School of Hard Knocks' logo patch",
+    "setting": "urban street, downtown district",
+    "broll": false,
+    "energy": "high"
+  }
+]

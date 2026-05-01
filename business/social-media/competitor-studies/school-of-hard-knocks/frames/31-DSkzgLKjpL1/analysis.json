@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "You're in the car business?",
+    "text_style": "White, bold, sans-serif font with black outline/shadow, positioned in lower third of frame, centered horizontally",
+    "shot_type": "medium",
+    "framing": "Interview subject shown from behind in foreground, facing a large luxury yacht; host and other people visible on yacht decks in background",
+    "subject_appearance": "Man wearing black t-shirt with 'School of Hard Knocks' logo on back and white shorts, with a visible bracelet",
+    "setting": "Marina, docked yacht",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "successful entrepreneur?",
+    "text_style": "white, bold, sans-serif, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Young male subject in profile facing left, speaking or reacting; interviewer's hand visible at frame edge holding microphone; 'School of Hard Knocks' logo watermark in lower right",
+    "subject_appearance": "Young man wearing black textured t-shirt with blue beaded bracelet on wrist, modern undercut hairstyle.",
+    "setting": "indoor lobby or modern building",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "I just feel I'm too young to retire...",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame, black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "Single middle-aged man facing camera, gesturing with hands while speaking, framed from shoulders up against a high-rise window/building backdrop",
+    "subject_appearance": "Older man wearing a white button-up shirt with large black floral sunflower print pattern, gold chain necklace, slicked-back gray hair.",
+    "setting": "High-rise office or penthouse interior",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You got amazing advice sir...",
+    "text_style": "White, bold, sans-serif font, centered at bottom third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile facing left, shoulders and head visible, positioned slightly right of center with blurred interior background and palm tree visible",
+    "subject_appearance": "Young man wearing a black geometric-patterned t-shirt with short dark hair and a neutral expression.",
+    "setting": "Indoor location with windows",
+    "broll": false,
+    "energy": "low"
+  }
+]
