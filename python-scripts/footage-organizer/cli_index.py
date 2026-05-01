@@ -9,8 +9,9 @@ Commands:
 import argparse
 import hashlib
 import os
+import shutil
 import sys
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 # Force UTF-8 — Windows console hits cp1252 by default.
@@ -21,11 +22,12 @@ except Exception:
     pass
 
 from config import (
-    CLIENT_ROOTS, VIDEO_EXTENSIONS, INDEX_DB_NAME, PULL_FOLDER_NAME,
+    CATEGORIES, CLIENT_ROOTS, VIDEO_EXTENSIONS, INDEX_DB_NAME, PULL_FOLDER_NAME,
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
-    FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED,
+    FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
 )
 from extractor import get_resolution, get_duration, get_shoot_date
+from week_utils import week_label_for, current_week_label
 import index
 import pull as pull_mod
 
@@ -65,13 +67,13 @@ def _walk_videos(root: Path):
 
 
 def _category_from_path(filepath: Path, library: Path) -> str:
-    """Infer category from the folder it lives in.
-    Both shapes are identical since the 2026-04-28 flatten:
-      FOOTAGE_LIBRARY/{category}/{date}/clip.mp4   → rel[1] is category
-      ORGANIZED/{category}/{date}/clip.mp4         → rel[1] is category
+    """Infer category from the folder it lives in. Accepts both shapes:
+      FOOTAGE_LIBRARY/{category}/{week_or_date}/clip.mp4
+      ORGANIZED/{category}/{date}/clip.mp4
+    The `rel[1] in CATEGORIES` guard means new W##_MMM-DD-DD week folders parse correctly.
     """
     rel = filepath.relative_to(library).parts
-    if len(rel) >= 4 and rel[0] in (FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED):
+    if len(rel) >= 4 and rel[0] in (FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED) and rel[1] in CATEGORIES:
         return rel[1]
     return "misc"
 
@@ -176,6 +178,69 @@ def cmd_pull(args):
     print(f"  {result.folder}\n")
 
 
+def cmd_create_week(args):
+    """Create the current (or specified) week's folder under every category in FOOTAGE_LIBRARY.
+    Idempotent — folders that already exist are skipped."""
+    library = _library(args.client)
+    footage_lib = library / FOLDER_FOOTAGE_LIB
+    target = date.fromisoformat(args.week) if args.week else date.today()
+    label = week_label_for(target)
+
+    created = 0
+    skipped = 0
+    for category in CATEGORIES:
+        path = footage_lib / category / label
+        if path.exists():
+            skipped += 1
+            continue
+        path.mkdir(parents=True)
+        created += 1
+
+    print(f"\n  Week {label} ({args.client.upper()})")
+    print(f"  Created {created} folder(s), skipped {skipped} existing")
+    print(f"  Library: {footage_lib}\n")
+
+
+def cmd_pull_cleanup(args):
+    """List query-pull folders, prompt per-folder keep/delete.
+    With --older-than N: delete pulls N+ days old non-interactively."""
+    library = _library(args.client)
+    pulls_root = library / FOLDER_QUERY_PULLS
+    if not pulls_root.is_dir():
+        print(f"\n  No {FOLDER_QUERY_PULLS}/ folder yet. Nothing to clean.\n")
+        return
+
+    folders = sorted(p for p in pulls_root.iterdir() if p.is_dir())
+    if not folders:
+        print(f"\n  {FOLDER_QUERY_PULLS}/ is empty.\n")
+        return
+
+    today = date.today()
+    deleted = 0
+    print(f"\n  Pull cleanup ({args.client.upper()})")
+    print(f"  Root: {pulls_root}\n")
+
+    for folder in folders:
+        mtime = date.fromtimestamp(folder.stat().st_mtime)
+        age_days = (today - mtime).days
+        clip_count = sum(1 for _ in folder.rglob("*") if _.is_file())
+
+        if args.older_than is not None:
+            if age_days >= args.older_than:
+                shutil.rmtree(folder)
+                deleted += 1
+                print(f"    deleted {folder.name} ({clip_count} files, {age_days}d old)")
+            continue
+
+        ans = input(f"  Delete {folder.name}? ({clip_count} files, {age_days}d old) [y/N]: ").strip().lower()
+        if ans == "y":
+            shutil.rmtree(folder)
+            deleted += 1
+            print(f"    deleted {folder.name}")
+
+    print(f"\n  Done. Deleted {deleted} of {len(folders)} folder(s).\n")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Footage index + pull (v2)")
     ap.add_argument("--client", "-c", required=True, choices=list(CLIENT_ROOTS.keys()))
@@ -183,7 +248,7 @@ def main():
 
     sub.add_parser("index", help="Scan library and refresh the SQLite index").set_defaults(func=cmd_index)
 
-    p = sub.add_parser("pull", help="Filter index → hardlink folder")
+    p = sub.add_parser("pull", help="Filter index → output folder under 08_QUERY_PULLS/")
     p.add_argument("--category")
     p.add_argument("--orientation", choices=["vertical", "horizontal"])
     p.add_argument("--filmed-date", help="YYYY-MM-DD")
@@ -192,6 +257,14 @@ def main():
     p.add_argument("--min-duration", type=float)
     p.add_argument("--max-duration", type=float)
     p.set_defaults(func=cmd_pull)
+
+    cw = sub.add_parser("create-week", help="Create this week's folder under every category in FOOTAGE_LIBRARY")
+    cw.add_argument("--week", help="YYYY-MM-DD; defaults to today")
+    cw.set_defaults(func=cmd_create_week)
+
+    pc = sub.add_parser("pull-cleanup", help="Delete query-pull folders after the edit ships")
+    pc.add_argument("--older-than", type=int, help="Auto-delete pulls N+ days old (no prompts)")
+    pc.set_defaults(func=cmd_pull_cleanup)
 
     args = ap.parse_args()
     args.func(args)
