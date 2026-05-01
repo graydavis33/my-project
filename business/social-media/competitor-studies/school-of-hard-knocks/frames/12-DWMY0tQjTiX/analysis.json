@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "My dad.",
+    "text_style": "White text with black outline, bold sans-serif font, positioned center-left of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile facing right, positioned left of center, urban storefront background with glass windows",
+    "subject_appearance": "Young man wearing light gray t-shirt and black baseball cap with logo, casual street wear",
+    "setting": "Urban street, storefront entrance",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "with all your heart.",
+    "text_style": "White, bold, sans-serif font; centered at bottom third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Man in profile speaking passionately, partially visible second person holding microphone on left edge, interior setting with window behind",
+    "subject_appearance": "Middle-aged man with short gray-brown hair wearing a teal/green patterned button-up shirt with skull and crossbones design",
+    "setting": "Indoor lobby or storefront",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "How long have you been married?",
+    "text_style": "White sans-serif font, bold, centered lower third with black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "Young man in profile facing left, speaking; partial view of another person in white shirt on right edge; large glass windows and building interior behind",
+    "subject_appearance": "Young male with short dark hair faded on sides, wearing brown and white color-blocked track jacket with white trim",
+    "setting": "Urban street interview, storefront",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "spent some time living in a car.",
+    "text_style": "white, bold, sans-serif, centered lower third with black outline",
+    "shot_type": "medium close-up",
+    "framing": "male subject in profile speaking animatedly, partial view of interviewer's hand/arm holding microphone on left edge, large windows with grid pattern background",
+    "subject_appearance": "middle-aged man with gray hair wearing a teal green button-up shirt with skull and crossbones pattern",
+    "setting": "indoor urban lobby or building",
+    "broll": false,
+    "energy": "high"
+  }
+]

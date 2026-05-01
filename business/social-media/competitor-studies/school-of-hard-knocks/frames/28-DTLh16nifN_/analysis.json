@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Million when I was...",
+    "text_style": "White, bold, serif font (likely Times New Roman), centered in lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject facing camera, speaking directly, holding blue mobile device. Framed from chest up with manicured hedge and palm tree trunk visible in background.",
+    "subject_appearance": "Older male wearing black short-sleeved polo shirt, black baseball cap with white cloud logo, holding blue phone device.",
+    "setting": "Residential backyard, manicured landscaping",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "We're all equal as souls...",
+    "text_style": "White, bold, serif font, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject seated, holding microphone, facing camera with ocean and palm tree in background; School of Hard Knocks logo visible in lower right corner",
+    "subject_appearance": "Middle-aged man wearing black polo shirt, black cap with white clover and 'Live Lucky' text, white ring on left wrist",
+    "setting": "Beachfront, tropical setting",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "What you need is to get results",
+    "text_style": "White bold sans-serif font, center-bottom placement; word 'results' highlighted in neon green",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, being interviewed with microphone held by off-screen hand; palm tree trunk and ocean visible in background",
+    "subject_appearance": "Middle-aged man wearing black 'Live Lucky' baseball cap, black polo shirt, white digital watch, and gold ring; gray stubble and facial hair",
+    "setting": "Outdoor beach, near water",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Become the creator of your own life.",
+    "text_style": "White serif font, bold, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject seated, facing camera slightly left, ocean and palm tree trunk visible behind him, microphone held by interviewer's hand in frame",
+    "subject_appearance": "Older man with gray beard wearing black polo shirt, black cap with white clover logo, white watch, dark bracelet",
+    "setting": "Oceanside, tropical beach location",
+    "broll": false,
+    "energy": "medium"
+  }
+]

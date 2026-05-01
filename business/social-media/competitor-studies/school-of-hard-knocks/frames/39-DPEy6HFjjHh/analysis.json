@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "So what's the difference",
+    "text_style": "White sans-serif font, bold weight, center-aligned over lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, gesturing with hands while speaking, holding small object in right hand. Second person partially visible in background left wearing light blue shirt.",
+    "subject_appearance": "Man wearing black ribbed t-shirt with short dark hair styled upward, engaged hand gestures suggesting active conversation.",
+    "setting": "Indoor lobby or corridor",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Middle class people",
+    "text_style": "White sans-serif font, bold weight, centered lower-third position",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject facing camera, holding microphone, gesturing with hand while speaking, against plain gray wall backdrop",
+    "subject_appearance": "Middle-aged man wearing black t-shirt with silver chain necklace and large pendant, dark sunglasses with gold accents, salt-and-pepper styled hair, holding mobile phone",
+    "setting": "Street or building exterior",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "that's worth\n$10 million.\nNOT GEN POP",
+    "text_style": "White sans-serif font, bold weight, center-lower positioned; yellow text 'NOT GEN POP' below; 'School of Hard Knocks' logo bottom right",
+    "shot_type": "close-up",
+    "framing": "Single male subject facing camera, holding microphone to chest, positioned center-frame against plain gray/metal background",
+    "subject_appearance": "Middle-aged man wearing black t-shirt with 'School of Hard Knocks' logo, diamond chain necklace, oversized black sunglasses with gold hardware, slicked-back dark hair with gray",
+    "setting": "Street or outdoor concrete area",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "If you step\nNOT GENTIL UP\nin that",
+    "text_style": "White and yellow sans-serif font, bold weight, centered lower third overlay with semi-transparent background",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject from waist up, centered in frame against neutral gray metal wall background, holding microphone to chest level",
+    "subject_appearance": "Middle-aged man wearing black t-shirt with large silver chain necklace and \"2600\" pendant, dark short hair with gray, holding small microphone",
+    "setting": "Urban street or building exterior",
+    "broll": false,
+    "energy": "medium"
+  }
+]

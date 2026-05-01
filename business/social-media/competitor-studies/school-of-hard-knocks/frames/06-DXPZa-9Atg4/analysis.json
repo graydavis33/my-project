@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "How did you get rich?",
+    "text_style": "White, bold, sans-serif font; centered in lower third of frame; drop shadow for readability",
+    "shot_type": "medium close-up",
+    "framing": "Rear view of male subject wearing white hoodie, facing away from camera toward an off-screen person; street storefront and parked cars visible in background",
+    "subject_appearance": "Man with dark hair wearing a white hoodie with visible branding on the back.",
+    "setting": "Outdoor shopping center or street",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "a bank account with...",
+    "text_style": "white, bold, sans-serif font, centered lower third with ellipsis indicating speech continuation",
+    "shot_type": "medium close-up",
+    "framing": "profile view of a woman speaking, microphone visible in lower left, green building/storefront blurred in background",
+    "subject_appearance": "Black woman with short black pixie cut, bold magenta lipstick, large gold triangular hoop earrings, black blazer over dark top.",
+    "setting": "urban street, storefront location",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Meaning from the very beginning",
+    "text_style": "White, bold, sans-serif, center-bottom position with drop shadow",
+    "shot_type": "medium close-up",
+    "framing": "Woman being interviewed with microphone held by interviewer's hand (partial frame left), urban building background with neutral panels and green accents",
+    "subject_appearance": "Black short pixie cut hairstyle, gold teardrop earrings, black blazer with deep V-neckline, professional polished makeup",
+    "setting": "Urban street, building exterior",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "blessing down the hall.",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman in profile facing left, holding microphone, speaking to camera with animated hand gesture, white tiled wall and green door visible in background",
+    "subject_appearance": "Black short pixie cut with bangs, gold triangular hoop earrings, plum lipstick, black blazer, microphone in hand",
+    "setting": "Street or building hallway exterior",
+    "broll": false,
+    "energy": "high"
+  }
+]
