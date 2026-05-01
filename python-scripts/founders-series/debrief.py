@@ -173,7 +173,7 @@ Begin research now."""
 
 def generate_debrief(founder: str, company: str, linkedin: str) -> str:
     """Run Claude with web search to generate the debrief."""
-    load_dotenv(Path.home() / "Desktop/my-project/python-scripts/founders-series/.env")
+    load_dotenv(Path(__file__).parent / ".env")
     api_key = os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
         print("\n⚠️  No ANTHROPIC_API_KEY found in .env file.")
