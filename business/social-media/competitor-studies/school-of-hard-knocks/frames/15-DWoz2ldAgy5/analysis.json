@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "That is my Rolls Royce...",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman in foreground center, facing camera with slight smile, partial view of interviewer's hand/arm on left edge, blurred pedestrians and storefront in background",
+    "subject_appearance": "Black sleeveless Nike tank top, navy Armani baseball cap, dark sunglasses, long black hair, silver chain necklace, multiple rings",
+    "setting": "Urban street, storefront area",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Why not?",
+    "text_style": "White sans-serif font, bold, center-bottom position with black outline",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, positioned left-center of frame with tree canopy and parked vehicles in background",
+    "subject_appearance": "Young man with short dark hair, fade haircut, wearing dark gray t-shirt with 'School of Hard Knocks' logo patch, silver chain necklace visible.",
+    "setting": "Street with parked cars",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Always be in preparation mode",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman in foreground looking slightly off-camera, holding microphone, with street and parked car behind her; blurred figure visible in background left",
+    "subject_appearance": "Black long straight hair, dark sunglasses, navy 'FARMA' baseball cap, black sleeveless top, silver chain necklace, and visible arm tattoos.",
+    "setting": "Urban street, storefront",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Thank you so much.",
+    "text_style": "White, bold, sans-serif font positioned at bottom center of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman in profile facing left, smiling, with street and parked cars visible in soft focus background",
+    "subject_appearance": "Black long braided hair, black decorative cap with embellishment, sunglasses, black sleeveless top, silver chain necklace",
+    "setting": "Street, urban outdoor",
+    "broll": false,
+    "energy": "high"
+  }
+]

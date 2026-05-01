@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Yes you have...",
+    "text_style": "white, bold, sans-serif, center-bottom position with slight shadow/outline",
+    "shot_type": "medium",
+    "framing": "interviewer in foreground (profile, right side) holding microphone, interview subject visible in background left, urban plaza setting with high-rise buildings",
+    "subject_appearance": "man in black jacket holding a microphone conducting street interview",
+    "setting": "urban downtown plaza",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "built for entrepreneurship?",
+    "text_style": "white sans-serif font, medium weight, centered lower-third position with black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile facing left, holding a smartphone, with high-rise buildings and urban plaza in background",
+    "subject_appearance": "young man with dark brown textured hair, wearing a black jacket with 'alo' branding visible, holding a phone in his left hand",
+    "setting": "urban downtown plaza, daytime",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "to grind from day one...",
+    "text_style": "white serif font, bold, centered lower third overlay with black outline",
+    "shot_type": "medium close-up",
+    "framing": "man in profile facing right, holding microphone, speaking animatedly with urban high-rise buildings blurred in background",
+    "subject_appearance": "man with dark facial hair wearing traditional white thobe and black/white ghutra headpiece, holding microphone in right hand",
+    "setting": "urban street with skyscrapers",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "My friend...",
+    "text_style": "white, bold, sans-serif, centered lower-third with black outline",
+    "shot_type": "medium close-up",
+    "framing": "male subject in profile facing left, holding phone, urban cityscape with tall buildings and parked cars in background",
+    "subject_appearance": "man with dark hair styled back, wearing black long-sleeve shirt, holding a smartphone",
+    "setting": "city street, parking area",
+    "broll": false,
+    "energy": "medium"
+  }
+]

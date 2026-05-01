@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Have you ever had to call a plumber?",
+    "text_style": "White sans-serif font, bold, centered at bottom third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Man in profile facing left, gesturing with hands while speaking, street interview setup with Parisian buildings and parked cars in background",
+    "subject_appearance": "Middle-aged man wearing dark navy blazer, light blue dress shirt, brown-tinted glasses, reddish-brown hair with beard",
+    "setting": "Paris street, urban sidewalk",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Because you hire people that",
+    "text_style": "white sans-serif font, bold, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "man in profile facing right, speaking animatedly with hand gestures, urban buildings blurred in background",
+    "subject_appearance": "older man with gray hair, glasses, navy blazer over light blue shirt, holding microphone/device",
+    "setting": "city street, urban downtown",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "There are nine steps.",
+    "text_style": "White text with green highlight on 'nine', positioned at bottom center, sans-serif font, burned-in subtitle style",
+    "shot_type": "medium",
+    "framing": "Man in profile facing left, speaking animatedly on urban street, partially visible hand holding microphone at right edge, School of Hard Knocks logo in lower right corner",
+    "subject_appearance": "Middle-aged man with reddish-brown hair and beard, wearing dark navy blazer over light blue shirt, gold-rimmed glasses",
+    "setting": "Urban street, European city",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "You've got to make it happen.",
+    "text_style": "White, bold, sans-serif font; centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Man in profile facing right, speaking with hand gestures; holding microphone; Parisian street buildings in soft focus background",
+    "subject_appearance": "Man with sandy blonde hair, light beard, wearing tortoiseshell glasses, navy blazer, and light blue shirt",
+    "setting": "Parisian street, urban plaza",
+    "broll": false,
+    "energy": "high"
+  }
+]

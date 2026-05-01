@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "to pursue a career in?",
+    "text_style": "White sans-serif font with black outline, positioned across lower center of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject centered in frame, interview subject on left side of frame with partial view of interviewer's hand holding phone on right",
+    "subject_appearance": "Tall bald Black male with facial hair wearing a light gray hoodie with drawstrings, engaged expression",
+    "setting": "Urban street or exterior building",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "Orange and red circular badge logo, bottom right corner, white text outline",
+    "shot_type": "medium close-up",
+    "framing": "Man being interviewed holding microphone, partial view of interviewer's arm and hand holding mic on right side of frame",
+    "subject_appearance": "Tall Black man, bald head, dark beard, wearing gray hoodie with white drawstrings, engaged facial expression",
+    "setting": "Street, outdoor urban location",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "I can't be in 155 places",
+    "text_style": "White, bold, sans-serif font; positioned in lower-center area of frame; high contrast against dark background",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject facing slightly left, speaking directly toward camera; indoor background with dark doors/windows visible behind him; 'School of Hard Knocks' logo watermark in lower right corner",
+    "subject_appearance": "Tall bald man with full beard wearing a light gray hoodie, holding a microphone, appears mid-conversation",
+    "setting": "Residential or facility entryway, indoor",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Because I'm a big fan of yours.",
+    "text_style": "White bold sans-serif font, centered lower third of frame, typical meme subtitle style",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject facing slightly left, speaking/gesturing with hand raised, indoor background with dark walls and window visible",
+    "subject_appearance": "Bald Black man with full beard wearing a light gray hoodie with 'School of Hard Knocks' logo visible on chest",
+    "setting": "Indoor facility, warehouse or gym",
+    "broll": false,
+    "energy": "medium"
+  }
+]

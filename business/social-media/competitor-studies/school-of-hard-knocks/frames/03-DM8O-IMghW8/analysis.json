@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "you ever had...",
+    "text_style": "white bold sans-serif font, lower-third position, standard subtitle placement",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, holding microphone, positioned against colorful backdrop with hardware store shelving visible behind him",
+    "subject_appearance": "Young man with dark undercut hairstyle wearing white quarter-zip athletic jacket, holding what appears to be interview microphone.",
+    "setting": "Hardware or home improvement store",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "red and white circular logo with orange/gold border, positioned lower right corner",
+    "shot_type": "medium close-up",
+    "framing": "single male subject facing camera, holding small black device, positioned slightly left of center with industrial metallic background",
+    "subject_appearance": "man wearing beige/tan collared polo shirt with lavalier microphone, tortoiseshell-frame glasses, dark brown hair, genuine smile",
+    "setting": "industrial facility or studio",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "If you quit...",
+    "text_style": "White, bold, sans-serif font, positioned at bottom center of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile-to-camera view, speaking expressively while holding a microphone, seated in front of white industrial/mechanical equipment",
+    "subject_appearance": "Man wearing tan/beige polo shirt and amber-tinted glasses, dark hair, appearing to be in his 30s-40s",
+    "setting": "Indoor studio or gym setting",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "of caring and joy...",
+    "text_style": "White bold sans-serif font, center-bottom placement, typical subtitle styling",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile/three-quarter view, speaking while holding a microphone, positioned against a white circular backdrop with metallic elements",
+    "subject_appearance": "Man wearing tan/beige polo shirt and amber-tinted glasses, holding a small black microphone.",
+    "setting": "Indoor studio or interview space",
+    "broll": false,
+    "energy": "medium"
+  }
+]

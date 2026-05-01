@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "That was my company.",
+    "text_style": "White sans-serif font, bold weight, centered at lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Older man in profile facing right, being interviewed with microphone visible in frame, stadium seating blurred in background",
+    "subject_appearance": "Older gentleman with gray/white hair wearing a bright blue blazer over a striped dress shirt",
+    "setting": "Stadium field, interview location",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "How did your upbringing",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame, typical interview subtitle styling",
+    "shot_type": "medium close-up",
+    "framing": "Single older male subject in profile/three-quarter view, seated indoors with stadium seating visible in soft focus background",
+    "subject_appearance": "Elderly man with gray/white hair wearing a bright blue velvet blazer, light blue striped dress shirt, and dark bow tie, with a gold lapel pin.",
+    "setting": "Stadium or sports venue interior",
+    "broll": false,
+    "energy": "low"
+  },
+  {
+    "on_screen_text": "I used to say at Home Depot...",
+    "text_style": "White sans-serif font, bold, centered lower-third placement with slight drop shadow for readability",
+    "shot_type": "medium close-up",
+    "framing": "Older man in profile facing left, seated in stadium setting with red and black seating visible blurred in background",
+    "subject_appearance": "Older gentleman wearing a bright blue velvet blazer over a light blue striped dress shirt, gray pants, and a wedding ring visible on his hand.",
+    "setting": "Stadium, daytime interior",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Thank you so much for your time.",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Man in profile facing left, shot from side angle in stadium setting with blurred field background",
+    "subject_appearance": "Man wearing tan/caramel colored hoodie or jacket, dark pants, short styled hair, speaking gesture with hands visible",
+    "setting": "Stadium, football field",
+    "broll": false,
+    "energy": "medium"
+  }
+]

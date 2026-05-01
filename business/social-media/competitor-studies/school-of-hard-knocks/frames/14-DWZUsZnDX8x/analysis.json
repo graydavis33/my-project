@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "How did you become wealthy?",
+    "text_style": "White, bold, sans-serif font; centered lower-third placement with subtle drop shadow",
+    "shot_type": "medium",
+    "framing": "Single male subject in profile, facing left, positioned in left-center of frame with urban street and architecture in soft focus background",
+    "subject_appearance": "Young man wearing a black hoodie, holding a beverage cup, with short dark hair and casual demeanor",
+    "setting": "Urban street, historic architecture",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Of course...",
+    "text_style": "white, bold, sans-serif, center-bottom position with slight shadow",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile/three-quarter view, speaking directly, storefront with yellow and teal architectural elements visible in background",
+    "subject_appearance": "Black male wearing dark navy quilted puffer jacket with white earbuds in ear",
+    "setting": "street storefront, evening",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "20 years ago...",
+    "text_style": "white, bold, sans-serif, lower third centered",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile, facing left, upper body visible, holding microphone in lower right corner",
+    "subject_appearance": "middle-aged Black male wearing dark navy puffy vest over dark shirt, white wireless earbud visible, short dark hair, engaged expression",
+    "setting": "indoor lobby or hallway",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Sure you give me your card or?",
+    "text_style": "White sans-serif font, bold, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject positioned left-center, facing slightly toward camera, storefront with yellow trim and partial signage visible in background",
+    "subject_appearance": "Black man wearing dark navy puffer jacket with white earbuds, engaged expression mid-speech",
+    "setting": "Street, storefront entrance",
+    "broll": false,
+    "energy": "medium"
+  }
+]

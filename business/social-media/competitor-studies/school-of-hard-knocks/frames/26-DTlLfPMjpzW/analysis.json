@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "I was...",
+    "text_style": "white text with black outline, bold, center-lower portion of frame",
+    "shot_type": "medium close-up",
+    "framing": "woman in profile speaking to camera on left side; second person partially visible in background right; storefront with glass doors behind",
+    "subject_appearance": "Woman wearing a tan/camel-colored oversized blazer with black trim, long dark hair parted to the side, minimal visible accessories.",
+    "setting": "street storefront, urban retail",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Boot strapped the whole thing,..",
+    "text_style": "white text with black outline, all caps, positioned at bottom center of frame, medium-large font weight",
+    "shot_type": "medium close-up",
+    "framing": "woman in profile facing left, holding microphone in lower left portion of frame, glass building with windows in soft-focus background",
+    "subject_appearance": "woman with long straight black hair, wearing tan/beige colored sweatshirt with 'School of Hard Knocks' logo, holding wireless microphone",
+    "setting": "urban street, glass storefront",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Don't put all your eggs in one basket...",
+    "text_style": "White sans-serif font, bold weight, bottom third of frame, center-aligned",
+    "shot_type": "medium close-up",
+    "framing": "Woman in profile facing left, holding microphone, interviewed against glass storefront background with blurred interior lights",
+    "subject_appearance": "Woman with long black hair, tan/camel colored blazer, black choker necklace, holding a microphone for street interview",
+    "setting": "Street, storefront, urban",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You got amazing advice...",
+    "text_style": "White text with black outline, positioned in lower third of frame, sans-serif bold font",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile/three-quarter view, positioned left-center, storefront windows and signage blurred in background",
+    "subject_appearance": "Young man wearing a beige/cream puffer jacket over white t-shirt with short dark hair, smiling and speaking",
+    "setting": "Urban street, storefront",
+    "broll": false,
+    "energy": "high"
+  }
+]
