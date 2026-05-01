@@ -33,6 +33,8 @@ FOLDER_DELIVERED      = "04_DELIVERED"       # Finished exports by format, then 
 FOLDER_ARCHIVE        = "05_ARCHIVE"         # Retired project files, dated subfolders
 FOLDER_FOOTAGE_LIB    = "06_FOOTAGE_LIBRARY" # Reusable footage: category/ → week/
 FOLDER_ASSETS         = "07_ASSETS"          # Brand assets, fonts, music, SFX
+FOLDER_QUERY_PULLS    = "08_QUERY_PULLS"     # Temp query result folders — deleted after publish
+FOLDER_AI_EDITS       = "09_AI_EDITS"        # AI pipeline outputs grouped by source clip
 
 # Format detection — orientation only (horizontal=long-form, vertical=short-form)
 # As of 2026-04-19: long-form is shot 1080p horizontal, short-form is shot vertical.
@@ -83,6 +85,6 @@ VIDEO_EXTENSIONS = {".mp4", ".mov", ".MP4", ".MOV"}
 
 # v2 — index + pull
 INDEX_DB_NAME    = ".footage-index.sqlite"   # lives at the client library root
-PULL_FOLDER_NAME = "_pulls"                  # _pulls/<slug>/ — Premiere-ready hardlink folders
+PULL_FOLDER_NAME = FOLDER_QUERY_PULLS        # 08_QUERY_PULLS/<slug>/ — Premiere-ready output folders
 # Roots inside the library that the index scans (ORGANIZED is dated; FOOTAGE_LIBRARY is permanent).
 INDEX_SCAN_ROOTS = [FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED]

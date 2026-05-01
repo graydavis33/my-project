@@ -44,23 +44,47 @@ Mutually exclusive — each clip lands in exactly one. When the model can't choo
 - **Movement:** `action-sport-fitness`, `transit-vehicles`
 - **Catch-all:** `miscellaneous` (manual review)
 
-## B-Roll Library Structure
+## Footage Library Structure (2026-05-01)
 
-When you run `--archive DATE`, clips move from `02_ORGANIZED/{date}/` into `06_BROLL_LIBRARY/{category}/{week-of-date}/`. The week label is the Monday of the ISO week.
+When you run `--archive DATE`, clips move from `02_ORGANIZED/<category>/<date>/` into `06_FOOTAGE_LIBRARY/<category>/<W##_MMM-DD-DD>/`. The week label is computed from the date — W01 = ISO week containing 2026-04-15 (Sai project Day 1).
 
 ```
-06_BROLL_LIBRARY/
+06_FOOTAGE_LIBRARY/
   interview-solo/
-    2026-04-13/     ← week of April 13 (Monday) — clips archived from any day Mon–Sun that week
+    W01_Apr-15-19/     ← Project week 1
       C0001.MP4
-    2026-04-20/
+    W02_Apr-20-26/     ← Project week 2
       C0034.MP4
   insert-hands/
-    2026-04-13/
+    W01_Apr-15-19/
       C0019.MP4
 ```
 
-This way the global B-roll library stays category-first but you can still see roughly when something was shot.
+Library is category-first then week-second — sorts perfectly chronologically AND tells you which week of the Sai project at a glance.
+
+### Weekly workflow
+
+```bash
+# Every Monday — scaffold the new week's folders across all 17 categories
+python cli_index.py --client sai create-week
+
+# Backfill a specific week
+python cli_index.py --client sai create-week --week 2026-04-13
+```
+
+Idempotent — safe to run twice. Only weeks that have been started exist on disk; future weeks aren't pre-scaffolded.
+
+### Hard rule: no permanent duplication
+
+Every clip exists in exactly ONE permanent location. Duplicates only live temporarily in `08_QUERY_PULLS/<slug>/` during active editing. After the video ships:
+
+```bash
+# Interactive — prompts per-folder keep/delete
+python cli_index.py --client sai pull-cleanup
+
+# Bulk-delete pulls older than N days (no prompts)
+python cli_index.py --client sai pull-cleanup --older-than 30
+```
 
 ## Setup
 1. Copy `.env.example` to `.env` and add `ANTHROPIC_API_KEY`

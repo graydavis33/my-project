@@ -14,24 +14,49 @@ Reliability bar: **Gray never has to manually re-sort a clip.**
 
 ---
 
-## Library Structure (per client)
+## Library Structure (per client) — updated 2026-05-01
 
-The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIENT_LIBRARY_ROOT` in `.env`). Each library has eight top-level folders:
+The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIENT_LIBRARY_ROOT` in `.env`). Each library has ten top-level folders:
 
 ```
-00_TEMPLATES/                  ← LUTs, title cards, Premiere templates
-01_RAW_INCOMING/{YYYY-MM-DD}/  ← dump card here each shoot day
-02_ORGANIZED/{YYYY-MM-DD}/     ← AI-sorted output (long-form/ and short-form/ subtrees)
-03_PROJECTS/episodes · shorts · linkedin · misc/   ← active edits
-04_DELIVERED/shorts · linkedin · episodes/          ← finished published exports, format-first
-05_ARCHIVE/                    ← retired projects
-06_FOOTAGE_LIBRARY/
-  ├─ unused/{category}/{YYYY-MM-DD}/   ← archived but still pullable
-  └─ used/{category}/{YYYY-MM-DD}/     ← shipped in a published video
-07_ASSETS/brand · fonts · music · sfx/ ← reusable assets, intro.mp3 etc.
+00_TEMPLATES/                                    LUTs, title cards, Premiere templates
+01_RAW_INCOMING/<date>/                          dump card here each shoot day; deleted after organize
+02_ORGANIZED/<category>/<date>/                  AI-sorted, awaiting edit + archive
+03_ACTIVE_PROJECTS/                              active editing projects
+04_DELIVERED/shorts · linkedin · episodes/       finished published exports
+05_ARCHIVE/                                      retired projects
+06_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
+07_ASSETS/brand · fonts · music · sfx/           reusable assets
+08_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
+09_AI_EDITS/<source>/<pipeline>/                 AI pipeline outputs grouped by source clip
+.footage-index.sqlite                            SQLite index of every clip
 ```
 
-Archive subfolders use the **exact shoot date** (`YYYY-MM-DD`), not Monday-of-week — per decision 2026-04-20.
+Archive subfolders now use the **week label** (`W##_MMM-DD-DD`), not the exact shoot date. Week numbering: W01 = the ISO week containing 2026-04-15 (Sai project Day 1). All archive operations route through `week_utils.week_label_for(date)`.
+
+### Weekly Workflow
+
+```bash
+# Every Monday: create this week's folders under all 17 categories
+python cli_index.py --client sai create-week
+
+# Backfill a specific past week
+python cli_index.py --client sai create-week --week 2026-04-13
+```
+
+Idempotent. Future weeks are not pre-scaffolded — only weeks that have started exist on disk.
+
+### Pull Lifecycle (no-duplication rule)
+
+Every clip lives in ONE permanent location. Pull operations create temp duplicates in `08_QUERY_PULLS/<slug>/`. After the edit ships, run cleanup:
+
+```bash
+# Interactive: prompts per-folder
+python cli_index.py --client sai pull-cleanup
+
+# Bulk-delete pulls 30+ days old (no prompts)
+python cli_index.py --client sai pull-cleanup --older-than 30
+```
 
 ---
 

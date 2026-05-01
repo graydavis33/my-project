@@ -59,6 +59,7 @@ from extractor import ffmpeg_available, get_duration, get_resolution, extract_fr
 from analyzer import classify_video
 from organizer import organize_file, archive_file
 from cache import get_cached, store_cached
+from week_utils import week_label_for
 
 
 def parse_args():
@@ -333,11 +334,14 @@ def run_organize(client, date_str, move, source_folder=None, format_override=Non
 
 
 def run_archive(client, date_str):
-    """Walk every 02_ORGANIZED/<cat>/<date_str>/ and move clips to 06_FOOTAGE_LIBRARY/<cat>/<date_str>/.
-    Category is read from the path (clip.parent.parent.name) — no cache lookup needed."""
+    """Walk every 02_ORGANIZED/<cat>/<date_str>/ and move clips to
+    06_FOOTAGE_LIBRARY/<cat>/<W##_MMM-DD-DD>/. The week folder is computed from date_str
+    via week_utils. Folder may pre-exist (created by `create-week`) — that's fine."""
     library = get_library(client)
     organized_dir = os.path.join(library, FOLDER_ORGANIZED)
     footage_lib   = os.path.join(library, FOLDER_FOOTAGE_LIB)
+
+    week_label = week_label_for(date.fromisoformat(date_str))
 
     # Find every <cat>/<date_str>/ subtree under 02_ORGANIZED
     date_subtrees = []
@@ -357,7 +361,7 @@ def run_archive(client, date_str):
     print(f"  Archive to Footage Library — {client.upper()} — {date_str}")
     print(f"  {'=' * 56}")
     print(f"  From: {FOLDER_ORGANIZED}/<category>/{date_str}/  ({len(date_subtrees)} categories)")
-    print(f"  To:   {FOLDER_FOOTAGE_LIB}/<category>/{date_str}/")
+    print(f"  To:   {FOLDER_FOOTAGE_LIB}/<category>/{week_label}/")
     print()
 
     moved = 0
@@ -366,10 +370,10 @@ def run_archive(client, date_str):
     for category, cat_date_dir in date_subtrees:
         videos = find_videos(cat_date_dir)
         for filepath in videos:
-            archive_file(filepath, footage_lib, os.path.join(category, date_str), move=True)
+            archive_file(filepath, footage_lib, os.path.join(category, week_label), move=True)
             by_category[category] += 1
             moved += 1
-            print(f"  {os.path.basename(filepath)} → {category}/{date_str}/")
+            print(f"  {os.path.basename(filepath)} → {category}/{week_label}/")
         # Prune the now-empty <cat>/<date_str>/ folder
         shutil.rmtree(cat_date_dir)
         # If the parent <cat>/ folder is now empty under ORGANIZED, prune it too
@@ -381,7 +385,7 @@ def run_archive(client, date_str):
         print("  No videos found.")
         sys.exit(0)
 
-    print(f"\n  Moved {moved} clip(s) into {FOLDER_FOOTAGE_LIB}/  ({date_str})")
+    print(f"\n  Moved {moved} clip(s) into {FOLDER_FOOTAGE_LIB}/  ({week_label})")
     for cat, count in sorted(by_category.items()):
         print(f"    {cat:<26} {count} file(s)")
     print()
