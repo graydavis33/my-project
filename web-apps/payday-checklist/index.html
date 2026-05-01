@@ -645,8 +645,9 @@
             <span id="expense-total-remaining" class="ok">$975</span>
           </div>
 
-          <div class="sync-badge" id="sync-badge" style="display:none">
-            Last synced: <span id="sync-time"></span> &mdash; <a onclick="clearAutoExpenses()">clear auto-fill</a>
+          <div class="sync-badge" id="sync-badge">
+            <span id="sync-status">Checking auto-sync&hellip;</span>
+            <span id="sync-actions" style="display:none"> &mdash; <a onclick="clearAutoExpenses()">refresh</a></span>
           </div>
 
         </div>
@@ -1004,20 +1005,54 @@
   let autoTotals = Array(NUM_CATEGORIES).fill(0);
   let autoTransactions = Array.from({length: NUM_CATEGORIES}, () => []);
 
+  function setSyncStatus(text, showActions) {
+    const status = document.getElementById('sync-status');
+    const actions = document.getElementById('sync-actions');
+    if (status) status.innerHTML = text;
+    if (actions) actions.style.display = showActions ? 'inline' : 'none';
+  }
+
+  function fmtSyncTime(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      + ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  }
+
   async function loadAutoExpenses() {
     try {
-      const res = await fetch(EXPENSES_JSON_URL);
-      if (!res.ok) return;
+      const res = await fetch(EXPENSES_JSON_URL, { cache: 'no-store' });
+      if (!res.ok) {
+        setSyncStatus('&#9888; Auto-sync unavailable (HTTP ' + res.status + ')', false);
+        return;
+      }
       const data = await res.json();
 
-      // Only apply data from the current month
       const today = new Date();
       const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-      if (data.month !== currentMonth) return;
+      const monthName = today.toLocaleDateString('en-US', { month: 'long' });
+      const syncedAt = data.generated_at ? fmtSyncTime(data.generated_at) : 'unknown';
 
-      // Sum by category
+      // Reset autoTotals/autoTransactions every load so old values don't linger
       autoTotals = Array(NUM_CATEGORIES).fill(0);
       autoTransactions = Array.from({length: NUM_CATEGORIES}, () => []);
+
+      // Stale-data case: JSON is for a previous month (workflow hasn't run yet today).
+      // Don't apply expenses, but tell the user clearly that auto-sync is alive.
+      if (data.month !== currentMonth) {
+        setSyncStatus(
+          `&#9203; Last sync: ${syncedAt} (for ${data.month}). Waiting for ${monthName} ${today.getFullYear()} sync &mdash; runs daily at 7am ET.`,
+          false
+        );
+        for (let i = 0; i < NUM_CATEGORIES; i++) {
+          const input = document.getElementById('spent-input-' + i);
+          if (input) input.value = '';
+          renderTxnList(i);
+        }
+        updateExpenses();
+        return;
+      }
+
+      // Current month — sum by category
       for (const exp of (data.expenses || [])) {
         const idx = CATEGORY_INDEX[exp.category];
         if (idx === undefined) continue;
@@ -1025,7 +1060,7 @@
         autoTransactions[idx].push(exp);
       }
 
-      // Always auto-fill all inputs from the JSON
+      // Auto-fill inputs from JSON
       for (let i = 0; i < NUM_CATEGORIES; i++) {
         const input = document.getElementById('spent-input-' + i);
         if (!input) continue;
@@ -1033,19 +1068,24 @@
         renderTxnList(i);
       }
 
-      // Show sync badge
-      const badge = document.getElementById('sync-badge');
-      const timeEl = document.getElementById('sync-time');
-      if (badge && timeEl && data.generated_at) {
-        const genAt = new Date(data.generated_at);
-        timeEl.textContent = genAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-          + ' at ' + genAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-        badge.style.display = 'block';
+      // Status line — populated month vs empty month
+      const totalCount = (data.expenses || []).length;
+      if (totalCount === 0) {
+        setSyncStatus(
+          `&#10003; Synced ${syncedAt} &middot; No expenses for ${monthName} yet (auto-syncs daily at 7am ET).`,
+          true
+        );
+      } else {
+        setSyncStatus(
+          `&#10003; Last synced: ${syncedAt} &middot; ${totalCount} expense${totalCount === 1 ? '' : 's'} this month.`,
+          true
+        );
       }
 
       updateExpenses();
     } catch (err) {
       console.log('Expense sync unavailable:', err.message);
+      setSyncStatus('&#9888; Auto-sync unavailable: ' + err.message, false);
     }
   }
 
@@ -1058,7 +1098,7 @@
     const toggle = document.getElementById('txn-toggle-' + i);
     const txns = autoTransactions[i];
     if (!list || !toggle) return;
-    if (txns.length === 0) { toggle.style.display = 'none'; return; }
+    if (txns.length === 0) { toggle.style.display = 'none'; list.innerHTML = ''; return; }
     toggle.style.display = 'inline';
     const n = txns.length;
     toggle.textContent = n + ' transaction' + (n > 1 ? 's' : '') + ' \u25be';
