@@ -111,6 +111,13 @@ def parse_args():
         help="Only process .mp4/.mov at the top level of the source folder. "
              "Skips subdirs (existing categorized output, Premiere project files, etc.).",
     )
+    parser.add_argument(
+        "--allow-today",
+        action="store_true",
+        help="Permit organizing today's date. By convention the day-of folder "
+             "stays flat (it's the editing scratchpad). This flag is the escape "
+             "hatch when you genuinely want to categorize today's footage.",
+    )
     return parser.parse_args()
 
 
@@ -445,6 +452,13 @@ if __name__ == "__main__":
         run_archive(args.client, args.archive)
     else:
         date_str = args.date or date.today().strftime("%Y-%m-%d")
+        today_str = date.today().strftime("%Y-%m-%d")
+        if date_str == today_str and not args.allow_today:
+            print(f"\n  Refusing to organize today's date ({date_str}).")
+            print(f"  By convention, the day-of folder stays flat — it's your editing scratchpad.")
+            print(f"  Categorize tomorrow once the day's selects are pulled.")
+            print(f"  Override: pass --allow-today if you really want to organize today now.\n")
+            sys.exit(1)
         if args.source:
             from pathlib import Path
             src = Path(args.source).expanduser()
