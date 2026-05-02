@@ -38,22 +38,24 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 
 > **One clip → one category.** Vision-classifier output is single-label (unchanged from v1). Hardlinks only appear when `pull` builds an output folder.
 
-## Disk Structure (2026-05-01)
+## Disk Structure (2026-05-01, renumbered later same day — RAW_INCOMING dropped)
 
 **Library root (`/Volumes/Footage/Sai/` on Mac, `D:/Sai/` on Windows):**
 ```
 00_TEMPLATES/                                    project templates, LUTs, title cards
-01_RAW_INCOMING/<date>/                          temp card dumps, deleted after organize
-02_ORGANIZED/<category>/<date>/                  AI-sorted, awaiting edit + archive
-03_ACTIVE_PROJECTS/                              active editing projects
-04_DELIVERED/                                    finished published exports by format
-05_ARCHIVE/                                      retired projects
-06_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
-07_ASSETS/                                       brand assets, fonts, music, SFX
-08_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
-09_AI_EDITS/<source>/<pipeline>/                 AI pipeline outputs grouped by source clip
+01_ORGANIZED/<date>/                             drop loose footage here for the day's shoot
+01_ORGANIZED/<category>/<date>/                  AI-categorized output (post-organize)
+02_ACTIVE_PROJECTS/                              active editing projects
+03_DELIVERED/                                    finished published exports
+04_ARCHIVE/                                      retired projects
+05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
+06_ASSETS/                                       brand assets, fonts, music, SFX
+07_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
+08_AI_EDITS/<pipeline>/<source>/                 AI pipeline outputs grouped by pipeline
 .footage-index.sqlite                            SQLite index of all clips
 ```
+
+`RAW_INCOMING` was eliminated 2026-05-01: Gray drops loose footage directly into `01_ORGANIZED/<date>/` instead. Running the organizer categorizes those loose files in place into `01_ORGANIZED/<category>/<date>/`.
 
 **Hard rules:**
 - Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
