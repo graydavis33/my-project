@@ -25,7 +25,10 @@ from config import (
     CATEGORIES, CLIENT_ROOTS, VIDEO_EXTENSIONS, INDEX_DB_NAME, PULL_FOLDER_NAME,
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
     FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
+    FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE,
 )
+
+PROJECT_FORMAT_BUCKETS = ["episodes", "linkedin", "shorts"]
 from extractor import get_resolution, get_duration, get_shoot_date
 from week_utils import week_label_for, current_week_label
 import index
@@ -179,17 +182,28 @@ def cmd_pull(args):
 
 
 def cmd_create_week(args):
-    """Create the current (or specified) week's folder under every category in FOOTAGE_LIBRARY.
+    """Create the current (or specified) week's folder across:
+      - 05_FOOTAGE_LIBRARY/<category>/<W##>/   (17 categories)
+      - 02_ACTIVE_PROJECTS/<format>/<W##>/      (3 format buckets)
+      - 03_DELIVERED/<format>/<W##>/            (3 format buckets)
+      - 04_ARCHIVE/<format>/<W##>/              (3 format buckets)
     Idempotent — folders that already exist are skipped."""
     library = _library(args.client)
-    footage_lib = library / FOLDER_FOOTAGE_LIB
     target = date.fromisoformat(args.week) if args.week else date.today()
     label = week_label_for(target)
 
+    targets = []
+    # Footage library: one folder per category
+    for category in CATEGORIES:
+        targets.append(library / FOLDER_FOOTAGE_LIB / category / label)
+    # Project folders: one per format bucket per top-level
+    for top in (FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE):
+        for fmt in PROJECT_FORMAT_BUCKETS:
+            targets.append(library / top / fmt / label)
+
     created = 0
     skipped = 0
-    for category in CATEGORIES:
-        path = footage_lib / category / label
+    for path in targets:
         if path.exists():
             skipped += 1
             continue
@@ -198,7 +212,8 @@ def cmd_create_week(args):
 
     print(f"\n  Week {label} ({args.client.upper()})")
     print(f"  Created {created} folder(s), skipped {skipped} existing")
-    print(f"  Library: {footage_lib}\n")
+    print(f"  Spans: FOOTAGE_LIBRARY ({len(CATEGORIES)} categories) + ACTIVE/DELIVERED/ARCHIVE ({len(PROJECT_FORMAT_BUCKETS)} formats × 3 = {len(PROJECT_FORMAT_BUCKETS) * 3})")
+    print(f"  Library: {library}\n")
 
 
 def cmd_pull_cleanup(args):
