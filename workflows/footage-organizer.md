@@ -19,18 +19,22 @@ Reliability bar: **Gray never has to manually re-sort a clip.**
 The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIENT_LIBRARY_ROOT` in `.env`). Each library has nine top-level folders:
 
 ```
-00_TEMPLATES/                                    LUTs, title cards, Premiere templates
-01_ORGANIZED/<date>/                             drop loose footage here for the day's shoot
-01_ORGANIZED/<category>/<date>/                  AI-categorized output (post-organize)
-02_ACTIVE_PROJECTS/                              active editing projects
-03_DELIVERED/shorts · linkedin · episodes/       finished published exports
-04_ARCHIVE/                                      retired projects
-05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
-06_ASSETS/brand · fonts · music · sfx/           reusable assets
-07_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
-08_AI_EDITS/<pipeline>/<source>/                 AI pipeline outputs grouped by pipeline
-.footage-index.sqlite                            SQLite index of every clip
+00_TEMPLATES/                                            LUTs, title cards, Premiere templates
+01_ORGANIZED/<date>/                                     drop loose footage here for the day's shoot
+01_ORGANIZED/<category>/<date>/                          AI-categorized output (post-organize)
+02_ACTIVE_PROJECTS/<format>/W##_MMM-DD-DD/               active editing projects, weekly
+03_DELIVERED/<format>/W##_MMM-DD-DD/                     finished published exports, weekly
+04_ARCHIVE/<format>/W##_MMM-DD-DD/                       retired projects, weekly
+05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/             permanent reusable footage, weekly
+06_ASSETS/brand · fonts · music · sfx/                   reusable assets
+07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
+08_AI_EDITS/<pipeline>/<source>/                         AI pipeline outputs grouped by pipeline
+.footage-index.sqlite                                    SQLite index of every clip
 ```
+
+**Format buckets** under `02_ACTIVE_PROJECTS/`, `03_DELIVERED/`, `04_ARCHIVE/`: `episodes/`, `shorts/`, `linkedin/`. Same shape across all three.
+
+**Legacy capitalized folders** (`Longform/`, `Shortform/`, `Paid Ads/`, `Onboarding/`) sit alongside the format buckets and are left alone — they hold pre-restructure mixed content.
 
 `RAW_INCOMING` was removed in the 2026-05-01 restructure — Gray now drops loose footage directly into `01_ORGANIZED/<date>/` and the organize command categorizes in place.
 
@@ -39,7 +43,12 @@ Archive subfolders now use the **week label** (`W##_MMM-DD-DD`), not the exact s
 ### Weekly Workflow
 
 ```bash
-# Every Monday: create this week's folders under all 17 categories
+# Every Monday: create this week's W##_MMM-DD-DD folder across:
+#   - 05_FOOTAGE_LIBRARY/<category>/W##/  (17 categories)
+#   - 02_ACTIVE_PROJECTS/<format>/W##/    (3 formats)
+#   - 03_DELIVERED/<format>/W##/          (3 formats)
+#   - 04_ARCHIVE/<format>/W##/            (3 formats)
+# Total: 26 folders per week, scaffolded ready for content
 python cli_index.py --client sai create-week
 
 # Backfill a specific past week

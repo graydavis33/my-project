@@ -38,24 +38,30 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 
 > **One clip → one category.** Vision-classifier output is single-label (unchanged from v1). Hardlinks only appear when `pull` builds an output folder.
 
-## Disk Structure (2026-05-01, renumbered later same day — RAW_INCOMING dropped)
+## Disk Structure (2026-05-01, renumbered later same day — RAW_INCOMING dropped; weekly scheme extended to project folders)
 
 **Library root (`/Volumes/Footage/Sai/` on Mac, `D:/Sai/` on Windows):**
 ```
-00_TEMPLATES/                                    project templates, LUTs, title cards
-01_ORGANIZED/<date>/                             drop loose footage here for the day's shoot
-01_ORGANIZED/<category>/<date>/                  AI-categorized output (post-organize)
-02_ACTIVE_PROJECTS/                              active editing projects
-03_DELIVERED/                                    finished published exports
-04_ARCHIVE/                                      retired projects
-05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
-06_ASSETS/                                       brand assets, fonts, music, SFX
-07_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
-08_AI_EDITS/<pipeline>/<source>/                 AI pipeline outputs grouped by pipeline
-.footage-index.sqlite                            SQLite index of all clips
+00_TEMPLATES/                                            project templates, LUTs, title cards
+01_ORGANIZED/<date>/                                     drop loose footage here for the day's shoot
+01_ORGANIZED/<category>/<date>/                          AI-categorized output (post-organize)
+02_ACTIVE_PROJECTS/<format>/W##_MMM-DD-DD/               active editing projects, weekly
+03_DELIVERED/<format>/W##_MMM-DD-DD/                     finished published exports, weekly
+04_ARCHIVE/<format>/W##_MMM-DD-DD/                       retired projects, weekly
+05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/             permanent reusable footage, weekly
+06_ASSETS/                                               brand assets, fonts, music, SFX
+07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
+08_AI_EDITS/<pipeline>/<source>/                         AI pipeline outputs grouped by pipeline
+.footage-index.sqlite                                    SQLite index of all clips
 ```
 
+**Format buckets** (used in 02/03/04): `episodes/`, `shorts/`, `linkedin/`. Same scheme across all three project folders for symmetry.
+
+**Legacy capitalized folders** (`Longform/`, `Shortform/`, `Paid Ads/` in archive; `Onboarding/` in delivered) are **left alone** — they pre-date the weekly scheme and contain mixed content.
+
 `RAW_INCOMING` was eliminated 2026-05-01: Gray drops loose footage directly into `01_ORGANIZED/<date>/` instead. Running the organizer categorizes those loose files in place into `01_ORGANIZED/<category>/<date>/`.
+
+**`create-week` now scaffolds across all four W##-bucketed locations** (FOOTAGE_LIBRARY × 17 categories + ACTIVE/DELIVERED/ARCHIVE × 3 formats = 26 folders per week). Run every Monday.
 
 **Hard rules:**
 - Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
