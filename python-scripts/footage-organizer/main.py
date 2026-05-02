@@ -175,7 +175,9 @@ def get_library(client):
     root = CLIENT_ROOTS.get(client, "")
     if not root:
         print(f"\n  Error: {client.upper()}_LIBRARY_ROOT is not set in your .env file.")
-        print(f"  Add it like: SAI_LIBRARY_ROOT=/Volumes/SSD/Sai")
+        print(f"  Add it like:")
+        print(f"    Mac:     SAI_LIBRARY_ROOT=/Volumes/Footage/Sai")
+        print(f"    Windows: SAI_LIBRARY_ROOT=D:/Sai")
         sys.exit(1)
     return root
 
