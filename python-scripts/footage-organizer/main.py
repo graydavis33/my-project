@@ -3,30 +3,32 @@ Auto Footage Organizer
 Analyzes raw video using Claude AI and organizes by format + content type.
 
 Folder structure (inside each client's library root):
-  00_TEMPLATES/                        ← LUTs, title cards, Premiere templates
-  01_RAW_INCOMING/YYYY-MM-DD/          ← dump card here each shoot day
-  02_ORGANIZED/YYYY-MM-DD/             ← AI-sorted output (long-form/ or short-form/ → category/)
-  03_ACTIVE_PROJECTS/                  ← active editing projects by format → week
-  04_DELIVERED/                        ← finished published exports by format → week
-  05_ARCHIVE/                          ← Premiere files by long-form/short-form → week
-  06_FOOTAGE_LIBRARY/category/week/    ← reusable footage library
-  07_ASSETS/                           ← brand assets, fonts, music, SFX
+  00_TEMPLATES/                                    LUTs, title cards, Premiere templates
+  01_ORGANIZED/<date>/                             drop loose footage here; categorizes in place
+  01_ORGANIZED/<category>/<date>/                  categorized output (post-organize)
+  02_ACTIVE_PROJECTS/                              active editing projects
+  03_DELIVERED/                                    finished published exports
+  04_ARCHIVE/                                      retired projects
+  05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
+  06_ASSETS/                                       brand assets, fonts, music, SFX
+  07_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
+  08_AI_EDITS/<source>/<pipeline>/                 AI pipeline outputs grouped by source clip
 
 Usage:
   # First-time setup — create all folders
   python main.py --client sai --setup
 
-  # Organize today's RAW footage (moves files, deletes RAW folder after)
+  # Organize today's drop (defaults to 01_ORGANIZED/<today>/)
   python main.py --client sai
 
   # Organize a specific date
   python main.py --client sai --date 2026-04-15
 
-  # Keep originals in RAW (copy instead of move)
+  # Keep originals in source folder (copy instead of move)
   python main.py --client sai --copy
 
-  # Archive an organized date → 06_FOOTAGE_LIBRARY/{category}/{date}/
-  # Run after you've pulled your selects into ACTIVE_PROJECTS/. Deletes ORGANIZED/{date}/.
+  # Archive an organized date → 05_FOOTAGE_LIBRARY/<category>/W##_*/
+  # Run after the video for that date has been published.
   python main.py --client sai --archive 2026-04-16
 """
 import argparse
@@ -50,7 +52,7 @@ from usage_logger import log_run
 
 from config import (
     CLIENT_ROOTS, VIDEO_EXTENSIONS,
-    FOLDER_TEMPLATES, FOLDER_RAW, FOLDER_ORGANIZED, FOLDER_PROJECTS,
+    FOLDER_TEMPLATES, FOLDER_ORGANIZED, FOLDER_PROJECTS,
     FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_FOOTAGE_LIB, FOLDER_ASSETS,
     CATEGORIES,
     FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
@@ -96,7 +98,7 @@ def parse_args():
     parser.add_argument(
         "--source",
         metavar="PATH",
-        help="Process this folder directly instead of RAW_INCOMING/<date>/. "
+        help="Process this folder directly instead of 01_ORGANIZED/<date>/. "
              "Useful for one-off cleanup of loose footage already in the library. "
              "Defaults to MOVE; pass --copy if you want originals preserved.",
     )
@@ -181,7 +183,6 @@ def get_library(client):
 def setup_structure(library, client):
     dirs = [
         os.path.join(library, FOLDER_TEMPLATES),
-        os.path.join(library, FOLDER_RAW),
         os.path.join(library, FOLDER_ORGANIZED),
         os.path.join(library, FOLDER_PROJECTS, "episodes"),
         os.path.join(library, FOLDER_PROJECTS, "shorts"),
@@ -209,15 +210,14 @@ def setup_structure(library, client):
     print()
     print(f"  Folders created:")
     print(f"    {FOLDER_TEMPLATES}/    ← LUTs, Premiere templates, title cards")
-    print(f"    {FOLDER_RAW}/  ← dump card footage here each day (dated)")
-    print(f"    {FOLDER_ORGANIZED}/   ← AI-sorted output (dated)")
+    print(f"    {FOLDER_ORGANIZED}/   ← drop loose footage in <date>/, AI categorizes in place")
     print(f"    {FOLDER_PROJECTS}/    ← active edits")
     print(f"    {FOLDER_DELIVERED}/   ← finished published exports")
     print(f"    {FOLDER_ARCHIVE}/     ← old/retired projects")
     print(f"    {FOLDER_FOOTAGE_LIB}/  ← {len(CATEGORIES)} category folders, each with week subfolders")
     print(f"    {FOLDER_ASSETS}/      ← brand assets, fonts, music, SFX")
     print()
-    print(f"  Next step: copy today's card into {FOLDER_RAW}/{date.today().strftime('%Y-%m-%d')}/")
+    print(f"  Next step: drop today's card into {FOLDER_ORGANIZED}/{date.today().strftime('%Y-%m-%d')}/")
     print(f"  Then run:  python main.py --client {client}\n")
 
 
@@ -251,30 +251,32 @@ def run_organize(client, date_str, move, source_folder=None, format_override=Non
     log_run("footage-organizer")
     library = get_library(client)
 
-    raw_folder   = source_folder or os.path.join(library, FOLDER_RAW, date_str)
+    # Default source = 01_ORGANIZED/<date>/ (the loose-drop subfolder).
+    # After organize, files move into 01_ORGANIZED/<category>/<date>/ — same parent folder, just nested.
+    drop_folder   = source_folder or os.path.join(library, FOLDER_ORGANIZED, date_str)
     organized_dir = os.path.join(library, FOLDER_ORGANIZED)
 
-    if not os.path.isdir(raw_folder):
-        print(f"\n  Error: RAW folder not found: {raw_folder}")
-        print(f"  Dump your card footage there first, then re-run.")
-        print(f"  Expected path: {FOLDER_RAW}/{date_str}/")
+    if not os.path.isdir(drop_folder):
+        print(f"\n  Error: drop folder not found: {drop_folder}")
+        print(f"  Drop your loose footage there first, then re-run.")
+        print(f"  Expected path: {FOLDER_ORGANIZED}/{date_str}/")
         sys.exit(1)
 
     print(f"\n  {'=' * 56}")
     print(f"  Footage Organizer — {client.upper()} — {date_str}")
     print(f"  {'=' * 56}")
-    print(f"  Input:  {raw_folder}")
-    print(f"  Output: {organized_dir}/{date_str}/")
-    print(f"  Mode:   {'COPY (originals stay in RAW/)' if not move else 'MOVE (RAW folder deleted after)'}")
+    print(f"  Input:  {drop_folder}")
+    print(f"  Output: {organized_dir}/<category>/{date_str}/")
+    print(f"  Mode:   {'COPY (originals stay in source)' if not move else 'MOVE (drop folder deleted after)'}")
     if format_override:
         print(f"  Format: {format_override} (overriding orientation detection)")
     if top_level_only:
         print(f"  Scan:   top-level only (subdirs skipped)")
     print()
 
-    videos = find_videos(raw_folder, recursive=not top_level_only)
+    videos = find_videos(drop_folder, recursive=not top_level_only)
     if not videos:
-        print(f"  No .mp4 or .mov files found in {raw_folder}")
+        print(f"  No .mp4 or .mov files found in {drop_folder}")
         sys.exit(0)
 
     print(f"  Found {len(videos)} video file(s)\n")
@@ -329,13 +331,16 @@ def run_organize(client, date_str, move, source_folder=None, format_override=Non
 
     real_skips = [s for s in skipped if not s.startswith("._")]
     if not real_skips and source_folder is None:
-        shutil.rmtree(raw_folder)
-        print(f"  Deleted RAW folder: {raw_folder}\n")
+        # Default-mode cleanup: drop folder is 01_ORGANIZED/<date>/ — empty after MOVE.
+        # Only delete if truly empty (don't want to nuke a category folder by accident).
+        if os.path.isdir(drop_folder) and not os.listdir(drop_folder):
+            os.rmdir(drop_folder)
+            print(f"  Deleted empty drop folder: {drop_folder}\n")
 
 
 def run_archive(client, date_str):
-    """Walk every 02_ORGANIZED/<cat>/<date_str>/ and move clips to
-    06_FOOTAGE_LIBRARY/<cat>/<W##_MMM-DD-DD>/. The week folder is computed from date_str
+    """Walk every 01_ORGANIZED/<cat>/<date_str>/ and move clips to
+    05_FOOTAGE_LIBRARY/<cat>/<W##_MMM-DD-DD>/. The week folder is computed from date_str
     via week_utils. Folder may pre-exist (created by `create-week`) — that's fine."""
     library = get_library(client)
     organized_dir = os.path.join(library, FOLDER_ORGANIZED)
@@ -343,7 +348,7 @@ def run_archive(client, date_str):
 
     week_label = week_label_for(date.fromisoformat(date_str))
 
-    # Find every <cat>/<date_str>/ subtree under 02_ORGANIZED
+    # Find every <cat>/<date_str>/ subtree under 01_ORGANIZED
     date_subtrees = []
     if os.path.isdir(organized_dir):
         for cat in os.listdir(organized_dir):

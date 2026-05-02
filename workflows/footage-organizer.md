@@ -16,21 +16,23 @@ Reliability bar: **Gray never has to manually re-sort a clip.**
 
 ## Library Structure (per client) — updated 2026-05-01
 
-The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIENT_LIBRARY_ROOT` in `.env`). Each library has ten top-level folders:
+The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIENT_LIBRARY_ROOT` in `.env`). Each library has nine top-level folders:
 
 ```
 00_TEMPLATES/                                    LUTs, title cards, Premiere templates
-01_RAW_INCOMING/<date>/                          dump card here each shoot day; deleted after organize
-02_ORGANIZED/<category>/<date>/                  AI-sorted, awaiting edit + archive
-03_ACTIVE_PROJECTS/                              active editing projects
-04_DELIVERED/shorts · linkedin · episodes/       finished published exports
-05_ARCHIVE/                                      retired projects
-06_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
-07_ASSETS/brand · fonts · music · sfx/           reusable assets
-08_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
-09_AI_EDITS/<source>/<pipeline>/                 AI pipeline outputs grouped by source clip
+01_ORGANIZED/<date>/                             drop loose footage here for the day's shoot
+01_ORGANIZED/<category>/<date>/                  AI-categorized output (post-organize)
+02_ACTIVE_PROJECTS/                              active editing projects
+03_DELIVERED/shorts · linkedin · episodes/       finished published exports
+04_ARCHIVE/                                      retired projects
+05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
+06_ASSETS/brand · fonts · music · sfx/           reusable assets
+07_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
+08_AI_EDITS/<pipeline>/<source>/                 AI pipeline outputs grouped by pipeline
 .footage-index.sqlite                            SQLite index of every clip
 ```
+
+`RAW_INCOMING` was removed in the 2026-05-01 restructure — Gray now drops loose footage directly into `01_ORGANIZED/<date>/` and the organize command categorizes in place.
 
 Archive subfolders now use the **week label** (`W##_MMM-DD-DD`), not the exact shoot date. Week numbering: W01 = the ISO week containing 2026-04-15 (Sai project Day 1). All archive operations route through `week_utils.week_label_for(date)`.
 
@@ -69,7 +71,7 @@ cd python-scripts/footage-organizer
 python main.py --client sai --setup
 python main.py --client graydient --setup
 
-# Organize today's card (reads from 01_RAW_INCOMING/{today})
+# Organize today's card (reads from 01_ORGANIZED/{today})
 python main.py --client sai
 
 # Organize a specific date
@@ -81,13 +83,13 @@ python main.py --client sai --date old-broll
 # Default mode is MOVE (RAW folder deleted after). Pass --copy to keep originals.
 python main.py --client sai --copy
 
-# Process loose footage already in the library (e.g., 02_ORGANIZED/<date>/ flat dump).
+# Process loose footage already in the library (e.g., 01_ORGANIZED/<date>/ flat dump).
 # --source defaults to MOVE; --format overrides orientation detection; --top-level-only
 # skips subdirs (existing categorized output, Premiere project files, etc.)
-python main.py --client sai --source "D:/Sai/02_ORGANIZED/2026-04-21" --date 2026-04-21 --format short-form --top-level-only
+python main.py --client sai --source "D:/Sai/01_ORGANIZED/2026-04-21" --date 2026-04-21 --format short-form --top-level-only
 
 # Archive an organized date into the Footage Library as "unused"
-# Run after pulling selects into 03_PROJECTS/. Deletes 02_ORGANIZED/{date}/.
+# Run after pulling selects into 02_ACTIVE_PROJECTS/. Deletes 01_ORGANIZED/{date}/.
 python main.py --client sai --archive 2026-04-16
 
 # Mark clips from a shoot date as used (unused/ → used/)
@@ -113,20 +115,20 @@ Category names map directly to folder names. Use the eval harness before adding 
 
 ## What It Does (Step by Step)
 
-1. Reads `01_RAW_INCOMING/{date}/` (recursive — finds `.mp4` / `.mov`)
+1. Reads `01_ORGANIZED/{date}/` (recursive — finds `.mp4` / `.mov`)
 2. Reads width/height with ffprobe → picks `long-form/` or `short-form/`
 3. Checks `.cache.json` (keyed by filename + filesize) — skips analysis if hit
 4. Extracts 4 frames per clip at 20/40/60/80% via ffmpeg
 5. Sends all 4 frames to Claude Haiku Vision in one call; model returns exactly one category from the CATEGORIES list
-6. Copies (or moves with `--move`) into `02_ORGANIZED/{date}/{format}/{category}/`
+6. Copies (or moves with `--move`) into `01_ORGANIZED/{category}/{date}/`
 7. Writes the cache so the clip is never analyzed twice
-8. Deletes `01_RAW_INCOMING/{date}/` automatically on success (no dangling RAW)
+8. Deletes `01_ORGANIZED/{date}/` automatically on success (no dangling RAW)
 
 ---
 
 ## Archive + Mark-Used Flow
 
-- **`--archive {date}`** moves everything from `02_ORGANIZED/{date}/` into `06_FOOTAGE_LIBRARY/unused/{category}/{date}/` using the cached category from step 5. Deletes the organized folder afterwards.
+- **`--archive {date}`** moves everything from `01_ORGANIZED/{date}/` into `05_FOOTAGE_LIBRARY/unused/{category}/{date}/` using the cached category from step 5. Deletes the organized folder afterwards.
 - **`--mark-used {date}`** promotes all clips from `unused/*/{date}/` into `used/*/{date}/`. Run this after you publish a video that pulled from that shoot day.
 
 ---
@@ -211,7 +213,7 @@ All `pull` filters: `--category`, `--orientation`, `--filmed-date`, `--filmed-af
 ### Daily Sai loop
 
 ```
-1. Dump card → 01_RAW_INCOMING/<today>/
+1. Dump card → 01_ORGANIZED/<today>/
 2. python main.py --client sai          (Vision categorizes + files into FOOTAGE_LIBRARY/)
 3. python cli_index.py --client sai index   (refresh the SQLite index)
 4. As you edit, pull working sets:
