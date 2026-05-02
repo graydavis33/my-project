@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "almost every industry.",
+    "text_style": "white, bold, serif font, centered lower-third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile-facing right, speaking animatedly with hand gestures, against neutral gray wall backdrop",
+    "subject_appearance": "Man with shoulder-length dark brown hair wearing a dark navy button-up shirt, holding a small dark object in his right hand.",
+    "setting": "indoor studio or plain wall",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Going for that level of...",
+    "text_style": "white serif font, centered lower third, standard subtitle positioning",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile/three-quarter view, speaking animatedly, holding microphone, plain wall background with mounted fixture",
+    "subject_appearance": "middle-aged man with shoulder-length dark brown hair, wearing black collared polo shirt with 'School of Hard Knocks' logo patch",
+    "setting": "indoor hallway or corridor",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "I'm someone when I hear...",
+    "text_style": "white sans-serif font, bold, positioned at lower third of frame, center-aligned",
+    "shot_type": "close-up",
+    "framing": "single male subject in profile-to-camera angle, head and shoulders, neutral beige wall background with lamp and artwork",
+    "subject_appearance": "middle-aged man with shoulder-length dark brown hair, wearing dark navy blue polo shirt with 'School of Hard Knocks' emblem patch",
+    "setting": "indoor studio or office space",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "That's kind of what I do...",
+    "text_style": "White sans-serif font, bold, center-bottom position with drop shadow for legibility",
+    "shot_type": "close-up",
+    "framing": "Single male subject in profile-to-camera angle, speaking directly, indoor background with light-colored walls and mirror",
+    "subject_appearance": "Middle-aged man with shoulder-length dark brown hair, wearing a dark navy button-up shirt, with a thoughtful, engaged expression.",
+    "setting": "Indoor studio or office space",
+    "broll": false,
+    "energy": "medium"
+  }
+]

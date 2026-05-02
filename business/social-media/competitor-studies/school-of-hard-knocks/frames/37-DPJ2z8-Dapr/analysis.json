@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "Red and white circular badge/logo in bottom right corner, bold sans-serif font",
+    "shot_type": "medium",
+    "framing": "Host (right, holding microphone) conducting street interview with female subject (left, center-frame), with bystander visible in background left. Urban storefront setting with concrete and glass visible.",
+    "subject_appearance": "Woman wearing navy Howard University football jersey, white shorts, silver chain necklace, hoop earrings, and gold bracelets; male host wearing brown and white windbreaker with striped trim.",
+    "setting": "Urban street, storefront entrance",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "80% of their money typically",
+    "text_style": "white sans-serif font, bold, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "single woman speaking to camera, angled slightly left, urban building/storefront in background",
+    "subject_appearance": "Black woman wearing navy blue sports-style jersey with red/white trim and gold hoop earrings, holding pink object in hands",
+    "setting": "street, urban storefront",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "about the 1% on Wall Street...",
+    "text_style": "white sans-serif font, bold, center-bottom placement with slight shadow effect",
+    "shot_type": "medium close-up",
+    "framing": "single female subject positioned left-center against colorful green and white wall backdrop, holding microphone, looking off-camera",
+    "subject_appearance": "black woman wearing navy and red sports-style jersey, gold hoop earrings, gold rings and bracelets, black shoulder-length hair with waves",
+    "setting": "street interview with colored wall",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You got amazing advice.",
+    "text_style": "White, bold, sans-serif font with black outline; centered lower-third positioning",
+    "shot_type": "medium close-up",
+    "framing": "Subject in profile facing left, interviewed on street with turquoise storefront background; microphone visible at frame edge suggesting host off-camera",
+    "subject_appearance": "Young male with dark fade haircut, wearing brown and white windbreaker jacket over white shirt",
+    "setting": "Street storefront, turquoise wall",
+    "broll": false,
+    "energy": "medium"
+  }
+]

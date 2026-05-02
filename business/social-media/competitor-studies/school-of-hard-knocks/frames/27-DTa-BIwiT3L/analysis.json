@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "Orange and red circular badge logo with white text, positioned lower right corner",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile-facing right, centered in frame against bare winter trees background",
+    "subject_appearance": "Man wearing black knit beanie, silver chain necklace, and layered dark and gray jackets.",
+    "setting": "Outdoor park with bare trees",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Through the choices and decisions",
+    "text_style": "White serif font, center-bottom position, moderate weight",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject facing slightly right, shot from chest up, bare trees in soft focus background",
+    "subject_appearance": "Black beanie, black jacket with white stripe trim, gray button-up shirt, gold chain necklace, animated hand gesture",
+    "setting": "Outdoor street, winter/late fall",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Jesus Christ died on the cross for us.",
+    "text_style": "White serif font, bold, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject facing camera, speaking directly to camera with hand gesture, bare trees and building in soft focus background",
+    "subject_appearance": "Black male wearing black ribbed beanie, black jacket over gray shirt, gold chain necklace, gesturing with right hand while speaking",
+    "setting": "Outdoor street, residential area",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "I appreciate you.",
+    "text_style": "white, sans-serif, all-caps, centered lower third, standard subtitle formatting",
+    "shot_type": "medium close-up",
+    "framing": "single male subject looking off-camera to the left, waist-up composition, bare trees in soft-focus background",
+    "subject_appearance": "man wearing black ribbed beanie, gold chain necklace, gray button-up shirt under black jacket with 'School of Hard Knocks' logo patch",
+    "setting": "outdoor park, winter",
+    "broll": false,
+    "energy": "medium"
+  }
+]

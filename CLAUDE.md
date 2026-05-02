@@ -120,7 +120,7 @@ Six MCP servers configured in `~/.claude.json` (VS Code extension uses `--strict
 
 **Security:** `.env`, `token.json`, `client_secret*.json`, `credentials.json` are always gitignored. API keys live in `.env` only, never hardcoded.
 
-**GitHub:** `https://github.com/graydavis33/my-project`. Auto-commit + auto-push happen on `Stop` and `PreCompact` hooks (configured in `~/.claude/settings.json`).
+**GitHub:** `https://github.com/graydavis33/my-project`. Auto-commit + auto-push happen on `Stop` and `PreCompact` hooks (configured in `~/.claude/settings.json`). Both hooks call `.claude/scripts/safe-session-commit.sh`, which **aborts** the auto-commit if it would delete ≥5 files OR ≥200 lines (added 2026-05-01 after a rebase mass-deletion incident wiped 3,217 lines from main). Aborted runs leave changes unstaged and append to `.claude/auto-commit-skipped.log` — check it at session start.
 
 ---
 
