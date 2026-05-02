@@ -1,7 +1,7 @@
 filepath,correct_category
 # Fill this in with absolute paths to clips you've manually labeled.
 # Save your real test set as test-set.csv (gitignored — paths are local to your machine).
-# Example rows (delete these comment lines and the example rows when you start):
-# /Volumes/Footage/Sai/01_RAW_INCOMING/2026-04-17/C0001.MP4,interview-solo
-# /Volumes/Footage/Sai/01_RAW_INCOMING/2026-04-17/C0014.MP4,insert-hands
-# /Volumes/Footage/Sai/01_RAW_INCOMING/2026-04-17/C0023.MP4,establishing-exterior
+# Format: full_path_to_clip,expected_category
+# Examples (paths can be Mac or Windows-style — script uses pathlib):
+# /Volumes/Footage/Sai/01_ORGANIZED/2026-04-17/C0001.MP4,interview-solo
+# D:/Sai/01_ORGANIZED/2026-04-17/C0001.MP4,interview-solo
