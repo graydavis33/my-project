@@ -1,28 +1,45 @@
 """
 organizer.py
 Handles placing video files into the correct destination folder.
+Sidecars (Sony XML, Adobe .xmp) travel with their video by stem match.
 """
 import os
 import shutil
 
 
+# Suffixes that pair with a video file by matching stem.
+# Sony cameras produce C####M01.XML alongside C####.MP4; Adobe writes .xmp.
+SIDECAR_SUFFIXES = ["M01.XML", ".XML", ".xmp"]
+
+
 def organize_file(src_path, output_dir, date_str, category, move=False):
-    """
-    Copy/move src into ORGANIZED/category/date_str/
-    Same shape as FOOTAGE_LIBRARY (since 2026-04-28 — format folder dropped).
-    Returns destination path.
-    """
+    """Copy/move src into ORGANIZED/category/date_str/.
+    Same shape as FOOTAGE_LIBRARY. Sidecars with matching stem follow the video.
+    Returns the destination path of the main file."""
     dest_dir = os.path.join(output_dir, category, date_str)
-    return _place_file(src_path, dest_dir, move)
+    main_dest = _place_file(src_path, dest_dir, move)
+    _move_sidecars(src_path, dest_dir, move)
+    return main_dest
 
 
 def archive_file(src_path, archive_dir, category, move=True):
-    """
-    Move/copy src into ARCHIVE/category/ — global, no dates.
-    Returns destination path.
-    """
+    """Move/copy src into ARCHIVE/category/. Sidecars with matching stem follow.
+    Returns the destination path of the main file."""
     dest_dir = os.path.join(archive_dir, category)
-    return _place_file(src_path, dest_dir, move)
+    main_dest = _place_file(src_path, dest_dir, move)
+    _move_sidecars(src_path, dest_dir, move)
+    return main_dest
+
+
+def _move_sidecars(src_path, dest_dir, move):
+    """Find sidecar files next to src_path (same stem, known suffixes) and place them alongside.
+    Silently skips suffixes that don't exist — most clips have only one or two sidecars."""
+    src_dir = os.path.dirname(src_path)
+    stem = os.path.splitext(os.path.basename(src_path))[0]
+    for suffix in SIDECAR_SUFFIXES:
+        candidate = os.path.join(src_dir, f"{stem}{suffix}")
+        if os.path.exists(candidate):
+            _place_file(candidate, dest_dir, move)
 
 
 def _place_file(src_path, dest_dir, move):
