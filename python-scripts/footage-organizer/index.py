@@ -135,7 +135,7 @@ def has_legacy_paths(db_path: Path) -> bool:
     """True if any row's path is absolute (legacy pre-migration format).
     Detects both POSIX (`/Volumes/...`) and Windows (`D:/...`, `C:\\...`) absolutes."""
     with sqlite3.connect(db_path) as conn:
-        rows = conn.execute("SELECT path FROM clips LIMIT 50").fetchall()
+        rows = conn.execute("SELECT path FROM clips").fetchall()
     for (p,) in rows:
         # PurePosixPath("/Volumes/...").is_absolute() -> True
         # PurePosixPath("D:/Sai/...").is_absolute() -> False, but contains ":"

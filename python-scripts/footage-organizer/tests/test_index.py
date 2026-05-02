@@ -1,4 +1,6 @@
+import sqlite3
 from pathlib import Path
+
 import index
 
 
@@ -63,11 +65,13 @@ def test_index_query_filters(tmp_path):
 
 def test_remove_missing_resolves_against_library(tmp_path):
     """remove_missing now takes library_root and joins before checking existence."""
-    db = tmp_path / "idx.sqlite"; index.init(db)
+    db = tmp_path / "idx.sqlite"
+    index.init(db)
     library = tmp_path / "library"
     real_dir = library / "05_FOOTAGE_LIBRARY" / "misc" / "W01_Apr-15-19"
     real_dir.mkdir(parents=True)
-    real_file = real_dir / "real.mp4"; real_file.write_bytes(b"x")
+    real_file = real_dir / "real.mp4"
+    real_file.write_bytes(b"x")
 
     index.upsert(db, index.ClipRecord(
         path="05_FOOTAGE_LIBRARY/misc/W01_Apr-15-19/real.mp4",
@@ -93,7 +97,6 @@ def test_has_legacy_paths_detects_absolute(tmp_path):
     """has_legacy_paths returns True if any stored path is absolute."""
     db = tmp_path / "idx.sqlite"; index.init(db)
     # Insert one legacy-format absolute path directly (simulating pre-migration DB)
-    import sqlite3
     with sqlite3.connect(db) as conn:
         conn.execute(
             "INSERT INTO clips VALUES (?,?,?,?,?,?,?,?,?,?)",
