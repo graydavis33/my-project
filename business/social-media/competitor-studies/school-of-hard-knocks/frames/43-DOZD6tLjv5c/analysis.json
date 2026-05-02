@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "to a big company called...",
+    "text_style": "white, bold, sans-serif, centered lower-third subtitle",
+    "shot_type": "medium close-up",
+    "framing": "man speaking to camera, gesturing with hands, holding a product bottle, garage interior background",
+    "subject_appearance": "Middle-aged man with dark hair and facial stubble wearing a navy blue t-shirt with text/logo and a green wristband, holding a BodyArmor drink bottle.",
+    "setting": "garage or warehouse interior",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Failing means...",
+    "text_style": "white, bold, sans-serif, center-bottom positioned with black outline",
+    "shot_type": "medium close-up",
+    "framing": "male subject in profile/three-quarter view, holding microphone, speaking; garage/indoor setting with white walls and equipment in background",
+    "subject_appearance": "middle-aged man with dark hair and facial stubble wearing a dark navy t-shirt with graphic design",
+    "setting": "garage or workshop interior",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "better to be an investor",
+    "text_style": "white sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "single male subject looking downward, upper body in frame, industrial/garage setting with ceiling fixtures visible behind",
+    "subject_appearance": "middle-aged man with dark hair and facial stubble wearing a dark navy t-shirt and green wristband",
+    "setting": "garage or warehouse interior",
+    "broll": false,
+    "energy": "low"
+  },
+  {
+    "on_screen_text": "Trust me.",
+    "text_style": "White, bold, sans-serif font, centered lower-third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing right, shot from shoulders up against indoor institutional background with visible doorframe and ceiling",
+    "subject_appearance": "Middle-aged man with dark hair, facial stubble, wearing dark navy t-shirt with partial graphic visible",
+    "setting": "Indoor institutional/gym facility",
+    "broll": false,
+    "energy": "medium"
+  }
+]

@@ -24,3 +24,56 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - Don't restore the old 4K-based format detection.
 - Don't add a `voiceover` category — Gray explicitly rejected it.
 - Don't let the model invent categories or land files in unknown folders. The CATEGORIES list is the contract.
+
+## v2 Architecture (2026-04-27)
+
+**Folders are primary classification:**
+> The existing 8-folder library (00_TEMPLATES through 07_ASSETS) is unchanged. Vision-classified clips land in `06_FOOTAGE_LIBRARY/<category>/<date>/`. Folders are how Premiere browses, how Gray browses manually, and how categories are defined. The index does NOT replace folders — it sits beside them.
+
+**SQLite index = orthogonal metadata:**
+> `.footage-index.sqlite` lives at the library root. One row per clip with: `path, category, format (vertical/horizontal), filmed_date, upload_date, duration_s, width, height, codec, sha1`. Filmed date comes from camera metadata (ffprobe `creation_time`), falling back to file mtime. Built/refreshed via `python cli_index.py --client sai index`.
+
+**Pull builds Premiere-ready folders via hardlinks (NTFS) or copies (exFAT):**
+> `python cli_index.py --client sai pull --orientation vertical --filmed-date 2026-04-16` filters the index → hardlinks matching files into `_pulls/<slug>/`. Hardlinks on NTFS = zero extra disk. Falls back to copy when `os.link` raises `OSError`, which happens on cross-drive AND on exFAT-formatted drives (Windows error 1 "Incorrect function"). **Gray's D:/Sai is exFAT, so pulls always copy** — clear `_pulls/` after each edit to reclaim disk. Files are never moved or deleted by `pull`. `result.fallback_copies` reports the count.
+
+> **One clip → one category.** Vision-classifier output is single-label (unchanged from v1). Hardlinks only appear when `pull` builds an output folder.
+
+## Disk Structure (2026-05-01, renumbered later same day — RAW_INCOMING dropped; weekly scheme extended to project folders)
+
+**Library root (`/Volumes/Footage/Sai/` on Mac, `D:/Sai/` on Windows):**
+```
+00_TEMPLATES/                                            project templates, LUTs, title cards
+01_ORGANIZED/<date>/                                     drop loose footage here for the day's shoot
+01_ORGANIZED/<category>/<date>/                          AI-categorized output (post-organize)
+02_ACTIVE_PROJECTS/<format>/W##_MMM-DD-DD/               active editing projects, weekly
+03_DELIVERED/<format>/W##_MMM-DD-DD/                     finished published exports, weekly
+04_ARCHIVE/<format>/W##_MMM-DD-DD/                       retired projects, weekly
+05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/             permanent reusable footage, weekly
+06_ASSETS/                                               brand assets, fonts, music, SFX
+07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
+08_AI_EDITS/<pipeline>/<source>/                         AI pipeline outputs grouped by pipeline
+.footage-index.sqlite                                    SQLite index of all clips
+```
+
+**Format buckets** (used in 02/03/04): `episodes/`, `shorts/`, `linkedin/`. Same scheme across all three project folders for symmetry.
+
+**Legacy capitalized folders** (`Longform/`, `Shortform/`, `Paid Ads/` in archive; `Onboarding/` in delivered) are **left alone** — they pre-date the weekly scheme and contain mixed content.
+
+`RAW_INCOMING` was eliminated 2026-05-01: Gray drops loose footage directly into `01_ORGANIZED/<date>/` instead. Running the organizer categorizes those loose files in place into `01_ORGANIZED/<category>/<date>/`.
+
+**`create-week` now scaffolds across all four W##-bucketed locations** (FOOTAGE_LIBRARY × 17 categories + ACTIVE/DELIVERED/ARCHIVE × 3 formats = 26 folders per week). Run every Monday.
+
+**Hard rules:**
+- Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
+- `08_QUERY_PULLS/` is the ONLY place duplicates are tolerated — and only temporarily, until the edit ships
+- `pull-cleanup` deletes pull folders after publish, restoring the no-duplication invariant
+
+**Weekly workflow:**
+- Every Monday: `python cli_index.py --client sai create-week` creates `<category>/W##_MMM-DD-DD/` under all 17 categories
+- After editing + publishing a video: `python cli_index.py --client sai pull-cleanup` deletes the pull folder used for that edit
+- Week numbering: W01 = ISO week of Apr 15, 2026 (Sai project Day 1). W01 label uses Apr 15-19 (partial week starting at project day 1)
+
+**Cross-platform:**
+- All paths use `pathlib.Path`, no drive-letter assumptions. Drive root is read from `<CLIENT>_LIBRARY_ROOT` env var (`.env` differs per machine: `/Volumes/Footage/Sai` on Mac, `D:/Sai` on Windows).
+- All scripts force UTF-8 stdout/stderr (Windows defaults to cp1252).
+- Folder names contain no spaces or non-ASCII (`W01_Apr-15-19` — hyphen-separated).

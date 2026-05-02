@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "$6 Billion",
+    "text_style": "bright green font, bold, centered horizontally across middle of frame",
+    "shot_type": "medium close-up",
+    "framing": "single male subject positioned center-right, holding microphone, speaking directly to camera with urban storefront background",
+    "subject_appearance": "middle-aged man with gray hair wearing a lavender/mauve blazer, white crew neck sweater, and decorative chain bracelet",
+    "setting": "urban street, storefront",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "So great meeting you 7.5 minutes ago.",
+    "text_style": "White, bold sans-serif font, centered lower third with black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject shown from chest up, positioned left-center, gesturing with hands while speaking. Building storefront with signage visible behind him.",
+    "subject_appearance": "Man with gray/silver short hair wearing a pink/lavender blazer over a cream turtleneck, dark wristband on left wrist.",
+    "setting": "Storefront, urban street location",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "apartments or sell buildings...",
+    "text_style": "white sans-serif font, bold, centered lower third with black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "single male subject facing camera, slightly off-center, torso visible with blurred storefront signage and industrial/warehouse background",
+    "subject_appearance": "middle-aged man with gray swept-back hair wearing a lavender/mauve blazer over cream crew-neck sweater, holding a microphone in right hand",
+    "setting": "urban street, storefront/warehouse",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "So...",
+    "text_style": "white, sans-serif, bold, center-bottom positioned",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile facing right, holding microphone, green foliage blurred in background",
+    "subject_appearance": "middle-aged man with gray hair wearing a mauve/dusty rose blazer over cream crew-neck sweater, holding a branded microphone.",
+    "setting": "outdoor garden or park area",
+    "broll": false,
+    "energy": "medium"
+  }
+]

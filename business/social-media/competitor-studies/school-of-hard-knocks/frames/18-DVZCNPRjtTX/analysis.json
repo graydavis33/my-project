@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "How did you buy a jet?",
+    "text_style": "White serif font (likely Times New Roman), bold, centered in lower half of frame",
+    "shot_type": "medium",
+    "framing": "Rear view of a young man in black jacket standing in front of a parked SUV against clear blue sky, with airplane visible in background",
+    "subject_appearance": "Young male wearing black zip-up jacket and dark pants, short dark hair styled upward",
+    "setting": "Parking lot, outdoors, daytime",
+    "broll": true,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "have a diversified portfolio.",
+    "text_style": "white text with black outline, bold, centered in lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "male subject seated in airplane cabin, facing slightly right, gesturing with hands while speaking, airplane windows and cyan accent lighting visible in background",
+    "subject_appearance": "man in white crew neck t-shirt and light gray pants, wearing a turquoise wristband, dark styled hair",
+    "setting": "airplane cabin interior",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "One of the most important decisions",
+    "text_style": "White text with black outline, bold sans-serif font, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Man seated in aircraft cabin, facing slightly right of camera, gesturing with hands while speaking",
+    "subject_appearance": "Middle-aged man with styled dark hair, wearing light gray t-shirt and matching sweatpants, wearing a teal/turquoise bracelet on wrist",
+    "setting": "Aircraft cabin interior",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "where they mentor my audience...",
+    "text_style": "white, bold, sans-serif, center-bottom position with School of Hard Knocks logo (red and white circular badge) in lower right",
+    "shot_type": "medium close-up",
+    "framing": "young male subject in profile/three-quarter view, seated indoors, holding a mobile device, gesturing while speaking",
+    "subject_appearance": "Young man wearing black zip-up hoodie and silver chain necklace, dark hair styled back, casual modern streetwear aesthetic.",
+    "setting": "modern interior with teal/cyan lighting",
+    "broll": false,
+    "energy": "high"
+  }
+]

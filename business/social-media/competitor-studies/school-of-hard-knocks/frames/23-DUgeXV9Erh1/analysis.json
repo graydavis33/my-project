@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "You're Myles Garrett right?",
+    "text_style": "White text with black outline, bold, centered in lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Man in white shirt shown from behind in a doorway, partially visible person in gray shirt to the right edge, interior hallway setting",
+    "subject_appearance": "Male wearing a white ribbed long-sleeve shirt, dark hair with fade haircut, viewed from behind.",
+    "setting": "Indoor hallway or building entrance",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Was that motivation for you?",
+    "text_style": "White text with black outline, bold sans-serif, centered in lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing left, captured from shoulders up. Another person partially visible blurred in background right. Interior setting with signage behind.",
+    "subject_appearance": "Young man wearing white ribbed crew-neck sweater, short dark hair with fade haircut, neutral expression",
+    "setting": "Indoor lobby or hallway",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "If I want it to be great...",
+    "text_style": "white, bold, sans-serif, centered in middle-lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "male subject in profile view facing left, microphone visible in lower left corner held by interviewer's hand, neutral wall background",
+    "subject_appearance": "African American male with facial hair wearing a gray zip-up hoodie over a white t-shirt, holding a microphone near his mouth.",
+    "setting": "indoor, neutral hallway or lobby",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "You got amazing advice my friend.",
+    "text_style": "White text with black outline, bold serif font, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing right, positioned left-center of frame against plain wall with partial text visible in background",
+    "subject_appearance": "Man wearing white ribbed crew neck sweater with short dark hair styled with volume on top and tapered sides.",
+    "setting": "Indoor lobby or hallway",
+    "broll": false,
+    "energy": "medium"
+  }
+]

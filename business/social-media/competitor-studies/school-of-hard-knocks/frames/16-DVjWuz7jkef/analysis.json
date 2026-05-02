@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Do not tell him I told you this...",
+    "text_style": "White, bold, sans-serif font; positioned in lower third of frame with black outline for contrast",
+    "shot_type": "medium close-up",
+    "framing": "Man in sunglasses and black blazer speaking to someone off-camera (partially visible on left); yellow building and ivy in background",
+    "subject_appearance": "Black blazer over olive/yellow shirt, dark sunglasses, holding phone to ear, well-groomed appearance",
+    "setting": "Outdoor street, building facade",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "When you were =$13 million",
+    "text_style": "White text with black outline, bold sans-serif, positioned center-lower portion of frame",
+    "shot_type": "medium close-up",
+    "framing": "Profile view of young man speaking, shot from left side; indoor setting with decorative ceiling and doorways visible behind",
+    "subject_appearance": "Male wearing white zip-up hoodie or sweatshirt, dark hair with high fade haircut, clean-shaven.",
+    "setting": "Indoor lobby or building hallway",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "your company\nin order",
+    "text_style": "white text with black outline, bold sans-serif, positioned center-lower portion of frame",
+    "shot_type": "medium close-up",
+    "framing": "male subject in profile facing right, speaking/gesturing, indoor venue setting with blurred background figures and yellow/beige ceiling visible",
+    "subject_appearance": "young man with dark slicked-back hair and fade, wearing white zip-up jacket over light blue shirt",
+    "setting": "indoor venue, event space",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "And so...",
+    "text_style": "white sans-serif font, medium weight, positioned center-lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "middle-aged man in profile/three-quarter view, holding microphone, speaking; decorative ceiling with striped pattern visible behind",
+    "subject_appearance": "Older man with gray hair and goatee beard, wearing black polo shirt with sports logos and patches",
+    "setting": "indoor venue, lobby or hall",
+    "broll": false,
+    "energy": "medium"
+  }
+]

@@ -25,14 +25,18 @@ CLIENT_ROOTS = {
 }
 
 # Top-level folder names inside each client library root
+# Workflow: drop loose footage into 01_ORGANIZED/<date>/ → run organize → clips
+# get categorized into 01_ORGANIZED/<category>/<date>/ → after publishing video,
+# run --archive <date> → clips move to 05_FOOTAGE_LIBRARY/<category>/W##_*/.
 FOLDER_TEMPLATES      = "00_TEMPLATES"      # Reusable project templates, LUTs, title cards
-FOLDER_RAW            = "01_RAW_INCOMING"   # Temporary card dumps — deleted after organize
-FOLDER_ORGANIZED      = "02_ORGANIZED"      # AI-sorted output, dated subfolders
-FOLDER_PROJECTS       = "03_ACTIVE_PROJECTS" # Active editing projects
-FOLDER_DELIVERED      = "04_DELIVERED"       # Finished exports by format, then date
-FOLDER_ARCHIVE        = "05_ARCHIVE"         # Retired project files, dated subfolders
-FOLDER_FOOTAGE_LIB    = "06_FOOTAGE_LIBRARY" # Reusable footage: category/ → week/
-FOLDER_ASSETS         = "07_ASSETS"          # Brand assets, fonts, music, SFX
+FOLDER_ORGANIZED      = "01_ORGANIZED"      # Drop loose footage here; AI categorizes in place
+FOLDER_PROJECTS       = "02_ACTIVE_PROJECTS" # Active editing projects
+FOLDER_DELIVERED      = "03_DELIVERED"       # Finished exports by format, then date
+FOLDER_ARCHIVE        = "04_ARCHIVE"         # Retired project files, dated subfolders
+FOLDER_FOOTAGE_LIB    = "05_FOOTAGE_LIBRARY" # Reusable footage: category/ → week/
+FOLDER_ASSETS         = "06_ASSETS"          # Brand assets, fonts, music, SFX
+FOLDER_QUERY_PULLS    = "07_QUERY_PULLS"     # Temp query result folders — deleted after publish
+FOLDER_AI_EDITS       = "08_AI_EDITS"        # AI pipeline outputs grouped by source clip
 
 # Format detection — orientation only (horizontal=long-form, vertical=short-form)
 # As of 2026-04-19: long-form is shot 1080p horizontal, short-form is shot vertical.
@@ -80,3 +84,9 @@ CATEGORIES = [
 FRAME_POSITIONS = [0.20, 0.40, 0.60, 0.80]
 
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".MP4", ".MOV"}
+
+# v2 — index + pull
+INDEX_DB_NAME    = ".footage-index.sqlite"   # lives at the client library root
+PULL_FOLDER_NAME = FOLDER_QUERY_PULLS        # 08_QUERY_PULLS/<slug>/ — Premiere-ready output folders
+# Roots inside the library that the index scans (ORGANIZED is dated; FOOTAGE_LIBRARY is permanent).
+INDEX_SCAN_ROOTS = [FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED]
