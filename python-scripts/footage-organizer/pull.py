@@ -23,8 +23,14 @@ def pull(
     out_folder: Path,
     *,
     dedup_by_sha1: bool = True,
+    subfolder_fn=None,
     **filters,
 ) -> PullResult:
+    """Filter the index and build a Premiere-ready folder.
+
+    subfolder_fn: optional callable(record) -> str. If provided, each clip lands
+    inside out_folder/<subfolder>/. Used by --by-week to group clips by W## label.
+    """
     rows = index.query(db_path, **filters)
 
     if dedup_by_sha1:
@@ -49,12 +55,18 @@ def pull(
         src = Path(r.path)
         if not src.exists():
             continue
-        dst = out_folder / src.name
+        dest_dir = out_folder
+        if subfolder_fn is not None:
+            sub = subfolder_fn(r)
+            if sub:
+                dest_dir = out_folder / sub
+                dest_dir.mkdir(parents=True, exist_ok=True)
+        dst = dest_dir / src.name
         if dst.exists():
             stem, ext = dst.stem, dst.suffix
             n = 2
             while dst.exists():
-                dst = out_folder / f"{stem}_{n}{ext}"
+                dst = dest_dir / f"{stem}_{n}{ext}"
                 n += 1
         try:
             os.link(src, dst)
