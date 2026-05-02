@@ -24,12 +24,12 @@ python main.py --client sai --archive 2026-04-17
 ```
 
 ## How It Works
-1. Scans the dated `01_RAW_INCOMING/{date}/` folder for `.mp4` / `.mov` files
+1. Scans the dated `01_ORGANIZED/{date}/` folder for `.mp4` / `.mov` files
 2. Detects format by orientation: horizontal → `long-form`, vertical → `short-form`
 3. Extracts 4 frames per video (at 20/40/60/80% through the clip) via ffmpeg
 4. Sends all 4 frames to Claude Haiku Vision in one API call
 5. Claude returns one category label
-6. File is copied (default) or moved into `02_ORGANIZED/{date}/{format}/{category}/`
+6. File is copied (default) or moved into `01_ORGANIZED/{category}/{date}/`
 7. Results cached by filename+filesize — re-runs are free
 
 ## Output Categories (17)
@@ -46,10 +46,10 @@ Mutually exclusive — each clip lands in exactly one. When the model can't choo
 
 ## Footage Library Structure (2026-05-01)
 
-When you run `--archive DATE`, clips move from `02_ORGANIZED/<category>/<date>/` into `06_FOOTAGE_LIBRARY/<category>/<W##_MMM-DD-DD>/`. The week label is computed from the date — W01 = ISO week containing 2026-04-15 (Sai project Day 1).
+When you run `--archive DATE`, clips move from `01_ORGANIZED/<category>/<date>/` into `05_FOOTAGE_LIBRARY/<category>/<W##_MMM-DD-DD>/`. The week label is computed from the date — W01 = ISO week containing 2026-04-15 (Sai project Day 1).
 
 ```
-06_FOOTAGE_LIBRARY/
+05_FOOTAGE_LIBRARY/
   interview-solo/
     W01_Apr-15-19/     ← Project week 1
       C0001.MP4
@@ -124,7 +124,7 @@ python cli_index.py --client sai pull --category interview-solo --filmed-after 2
 ### Daily Sai loop
 
 ```
-1. Dump card → 01_RAW_INCOMING/<today>/
+1. Dump card → 01_ORGANIZED/<today>/
 2. python main.py --client sai          (Vision categorizes + files into FOOTAGE_LIBRARY/)
 3. python cli_index.py --client sai index   (refresh the SQLite index)
 4. As you edit, pull working sets:
@@ -141,7 +141,7 @@ For loose footage already in your library that needs to be classified:
 python main.py --client sai --source "G:/Sai/loose-april-stuff" --date 2026-04-16
 ```
 
-Defaults to MOVE (clips relocate into `02_ORGANIZED/<date>/<format>/<category>/`). Pass `--copy` if you want originals preserved at the source.
+Defaults to MOVE (clips relocate into `01_ORGANIZED/<category>/<date>/`). Pass `--copy` if you want originals preserved at the source.
 
 ## --format and --top-level-only flags
 
@@ -149,7 +149,7 @@ For shoots where orientation no longer signals format (horizontal shorts, etc.) 
 
 ```bash
 # Override format detection — tag the whole batch as short-form
-python main.py --client sai --source "D:/Sai/02_ORGANIZED/2026-04-21" --date 2026-04-21 --format short-form --top-level-only
+python main.py --client sai --source "D:/Sai/01_ORGANIZED/2026-04-21" --date 2026-04-21 --format short-form --top-level-only
 ```
 
 - `--format short-form|long-form` skips orientation detection
@@ -163,8 +163,8 @@ Goal: get classification reliable enough that nothing gets manually re-sorted.
 
 ```csv
 filepath,correct_category
-/Volumes/Footage/Sai/01_RAW_INCOMING/2026-04-17/C0001.MP4,interview-solo
-/Volumes/Footage/Sai/01_RAW_INCOMING/2026-04-17/C0014.MP4,insert-hands
+/Volumes/Footage/Sai/01_ORGANIZED/2026-04-17/C0001.MP4,interview-solo
+/Volumes/Footage/Sai/01_ORGANIZED/2026-04-17/C0014.MP4,insert-hands
 ```
 
 Use [test-set-template.csv](test-set-template.csv) as a starting point. Save your real test set as `test-set.csv` (gitignored — paths are local).
