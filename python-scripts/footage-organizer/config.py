@@ -17,8 +17,10 @@ ANTHROPIC_API_KEY = _require("ANTHROPIC_API_KEY")
 
 MODEL = "claude-haiku-4-5-20251001"
 
-# Client library roots — set in .env to the root of each client's SSD folder
-# e.g. SAI_LIBRARY_ROOT=/Volumes/SSD/Sai
+# Client library roots — set in .env to the root of each client's SSD folder.
+# Same physical exFAT drive across machines:
+#   Mac:     SAI_LIBRARY_ROOT=/Volumes/Footage/Sai
+#   Windows: SAI_LIBRARY_ROOT=D:/Sai
 CLIENT_ROOTS = {
     "sai":       os.getenv("SAI_LIBRARY_ROOT", ""),
     "graydient": os.getenv("GRAYDIENT_LIBRARY_ROOT", ""),
