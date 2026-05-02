@@ -7,8 +7,7 @@ def _seed(db, library, n=3, **overrides):
     and insert matching index rows with RELATIVE paths."""
     cat = overrides.get("category", "interview-solo")
     week = "W01_Apr-15-19"
-    src_dir = library / "05_FOOTAGE_LIBRARY" / cat / week
-    src_dir.mkdir(parents=True, exist_ok=True)
+    (library / "05_FOOTAGE_LIBRARY" / cat / week).mkdir(parents=True, exist_ok=True)
     for i in range(n):
         rel = f"05_FOOTAGE_LIBRARY/{cat}/{week}/clip_{i}.mp4"
         f = library / rel
@@ -96,4 +95,5 @@ def test_pull_count_reflects_actually_linked_not_matched(tmp_path):
     result = pull.pull(db, out, library_root=library, filmed_date="2026-04-16")
 
     assert result.count == 1, f"Expected 1 (only real file linked), got {result.count}"
+    assert len(result.records) == 2, "records should include ghost rows; only count reflects actual links"
     assert len(list(out.iterdir())) == 1

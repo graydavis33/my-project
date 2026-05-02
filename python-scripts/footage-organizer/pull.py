@@ -14,7 +14,7 @@ import index
 class PullResult:
     folder: Path
     count: int
-    records: list
+    records: list      # all deduped query matches; may include rows whose file was missing on disk
     fallback_copies: int
 
 
