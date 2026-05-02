@@ -194,8 +194,12 @@ def cmd_pull(args):
         max_duration=args.max_duration,
     )
 
-    print(f"\n  Pull → {result.folder}")
-    print(f"  Linked {result.count} clip(s); fallback copies: {result.fallback_copies}\n")
+    if result.count == 0:
+        print(f"\n  Pull → {result.folder}")
+        print(f"  Linked 0 clip(s). Run 'index' first if this is unexpected.\n")
+    else:
+        print(f"\n  Pull → {result.folder}")
+        print(f"  Linked {result.count} clip(s); fallback copies: {result.fallback_copies}\n")
 
 
 def cmd_create_week(args):
