@@ -158,6 +158,17 @@ def cmd_pull(args):
     fmt_map = {"vertical": FORMAT_SHORT_FORM, "horizontal": FORMAT_LONG_FORM}
     fmt = fmt_map.get(args.orientation) if args.orientation else None
 
+    subfolder_fn = None
+    if args.by_week:
+        def by_week(record):
+            if not record.filmed_date:
+                return "unknown-week"
+            try:
+                return week_label_for(date.fromisoformat(record.filmed_date))
+            except (ValueError, TypeError):
+                return "unknown-week"
+        subfolder_fn = by_week
+
     result = pull_mod.pull(
         db_path,
         out,
@@ -168,6 +179,7 @@ def cmd_pull(args):
         filmed_before=args.filmed_before,
         min_duration=args.min_duration,
         max_duration=args.max_duration,
+        subfolder_fn=subfolder_fn,
     )
 
     if result.count == 0:
@@ -271,6 +283,8 @@ def main():
     p.add_argument("--filmed-before", help="YYYY-MM-DD")
     p.add_argument("--min-duration", type=float)
     p.add_argument("--max-duration", type=float)
+    p.add_argument("--by-week", action="store_true",
+                   help="Group results into W##_MMM-DD-DD subfolders by filmed date")
     p.set_defaults(func=cmd_pull)
 
     cw = sub.add_parser("create-week", help="Create this week's folder under every category in FOOTAGE_LIBRARY")
