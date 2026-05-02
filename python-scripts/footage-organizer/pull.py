@@ -1,6 +1,6 @@
 """
 Filter the index → build a Premiere-ready folder of hardlinks.
-Falls back to copy if hardlink isn't possible (cross-drive on Windows, etc).
+Falls back to copy if hardlink isn't possible (cross-drive on Windows, exFAT, etc).
 """
 import os
 import shutil
@@ -22,9 +22,11 @@ def pull(
     db_path: Path,
     out_folder: Path,
     *,
+    library_root: Path,
     dedup_by_sha1: bool = True,
     **filters,
 ) -> PullResult:
+    library_root = Path(library_root)
     rows = index.query(db_path, **filters)
 
     if dedup_by_sha1:
@@ -46,7 +48,7 @@ def pull(
     fallback_copies = 0
     linked = 0
     for r in rows:
-        src = Path(r.path)
+        src = library_root / r.path        # resolve relative path against library
         if not src.exists():
             continue
         dst = out_folder / src.name
