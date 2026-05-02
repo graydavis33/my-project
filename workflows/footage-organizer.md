@@ -194,6 +194,13 @@ See `python-scripts/footage-organizer/CLAUDE.md` for the rules when improving th
 
 A SQLite index (`.footage-index.sqlite` at the library root) makes the library queryable. `pull` builds Premiere-ready folders via hardlinks — folders stay the source of truth.
 
+The index stores **paths relative to the library root** (POSIX style, e.g.
+`05_FOOTAGE_LIBRARY/interview-solo/W01_Apr-15-19/C0001.MP4`). The same
+`.footage-index.sqlite` file on the shared external SSD is portable —
+whichever machine reads it (Mac mounted at `/Volumes/Footage/Sai/`, Windows
+mounted at `D:/Sai/`) joins the relative path with its own library root at
+read time.
+
 ### Commands
 
 - `python cli_index.py --client sai index` — refresh SQLite index from library
