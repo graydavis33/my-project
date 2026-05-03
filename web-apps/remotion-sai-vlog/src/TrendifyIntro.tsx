@@ -5,6 +5,7 @@ import {
   staticFile,
   interpolate,
   useCurrentFrame,
+  random,
   Easing,
 } from "remotion";
 import { z } from "zod";
@@ -22,7 +23,8 @@ export const trendifyIntroSchema = z.object({
 export type TrendifyIntroProps = z.infer<typeof trendifyIntroSchema>;
 
 const TEXT_SIZE = 44;
-const ABERRATION_DUR = 18;
+const ABERRATION_DUR = 48;
+const GLITCH_DUR = 30;
 
 const daysSince = (startDate: string): number => {
   const [y, m, d] = startDate.split("-").map(Number);
@@ -66,11 +68,22 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
   textColor,
 }) => {
   const frame = useCurrentFrame();
-  const offset = interpolate(frame, [0, ABERRATION_DUR], [18, 0], {
+  const offset = interpolate(frame, [0, ABERRATION_DUR], [22, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
+  const inGlitch = frame < GLITCH_DUR;
+  const glitchFalloff = interpolate(frame, [0, GLITCH_DUR], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const jitterX = inGlitch ? (random(`jx-${frame}`) - 0.5) * 14 * glitchFalloff : 0;
+  const jitterY = inGlitch ? (random(`jy-${frame}`) - 0.5) * 8 * glitchFalloff : 0;
+  const flickerOn = inGlitch
+    ? random(`flick-${Math.floor(frame / 2)}`) > 0.25 * glitchFalloff
+    : true;
+  const opacity = flickerOn ? 1 : 0.2;
 
   return (
     <div
@@ -82,6 +95,8 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
         lineHeight: 1.1,
         color: textColor,
         letterSpacing: "-0.04em",
+        opacity,
+        transform: `translate(${jitterX}px, ${jitterY}px)`,
         filter: `drop-shadow(${offset}px 0 0 rgba(255,0,80,0.85)) drop-shadow(${-offset}px 0 0 rgba(0,200,255,0.85))`,
       }}
     >
@@ -136,14 +151,14 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
   const todayCount = daysSince(startDate);
   const yesterdayCount = todayCount - 1;
 
-  const dayLabelStart = 14;
+  const dayLabelStart = 32;
   const dayLabelDur = 8;
-  const numberStart = 22;
+  const numberStart = 40;
   const numberDur = 12;
-  const missionStart = 38;
-  const missionDur = 20;
-  const locAgeStart = 60;
-  const locAgeDur = 18;
+  const missionStart = 56;
+  const missionDur = 24;
+  const locAgeStart = 84;
+  const locAgeDur = 22;
 
   const dayLabel = useSlice("Day ", dayLabelStart, dayLabelDur);
   const mission = useSlice("Mission: most creative ad agency", missionStart, missionDur);
