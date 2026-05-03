@@ -5,7 +5,6 @@ import {
   staticFile,
   interpolate,
   useCurrentFrame,
-  random,
   Easing,
 } from "remotion";
 import { z } from "zod";
@@ -23,10 +22,7 @@ export const trendifyIntroSchema = z.object({
 export type TrendifyIntroProps = z.infer<typeof trendifyIntroSchema>;
 
 const TEXT_SIZE = 44;
-const ABERRATION_DUR = 28;
-const GLITCH_DUR = 16;
-const BLUR_DUR = 24;
-const BLUR_START_PX = 14;
+const LOGO_TYPE_DUR = 14;
 
 const daysSince = (startDate: string): number => {
   const [y, m, d] = startDate.split("-").map(Number);
@@ -70,31 +66,8 @@ const TrendifyLogo: React.FC<{
   textColor: string;
   startFrame: number;
 }> = ({ accent, textColor, startFrame }) => {
-  const frame = useCurrentFrame();
-  if (frame < startFrame) return null;
-  const local = frame - startFrame;
-
-  const offset = interpolate(local, [0, ABERRATION_DUR], [22, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: Easing.out(Easing.cubic),
-  });
-  const blurPx = interpolate(local, [0, BLUR_DUR], [BLUR_START_PX, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: Easing.out(Easing.cubic),
-  });
-  const inGlitch = local < GLITCH_DUR;
-  const falloff = interpolate(local, [0, GLITCH_DUR], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const jitterX = inGlitch ? (random(`jx-${frame}`) - 0.5) * 14 * falloff : 0;
-  const jitterY = inGlitch ? (random(`jy-${frame}`) - 0.5) * 8 * falloff : 0;
-  const flickerOn = inGlitch
-    ? random(`flick-${Math.floor(frame / 2)}`) > 0.25 * falloff
-    : true;
-  const opacity = flickerOn ? 1 : 0.2;
+  const typed = useSlice("trendify", startFrame, LOGO_TYPE_DUR);
+  if (typed.length === 0) return null;
 
   return (
     <span
@@ -107,9 +80,6 @@ const TrendifyLogo: React.FC<{
         lineHeight: 1.1,
         color: textColor,
         letterSpacing: "-0.04em",
-        opacity,
-        transform: `translate(${jitterX}px, ${jitterY}px)`,
-        filter: `blur(${blurPx}px) drop-shadow(${offset}px 0 0 rgba(255,0,80,0.85)) drop-shadow(${-offset}px 0 0 rgba(0,200,255,0.85))`,
         marginLeft: 22,
       }}
     >
@@ -124,7 +94,7 @@ const TrendifyLogo: React.FC<{
           clipPath: "polygon(0 0, 100% 0, 70% 100%, 0 100%)",
         }}
       />
-      trendify
+      {typed}
     </span>
   );
 };
@@ -225,10 +195,9 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
               textColor={textColor}
               startFrame={logoStart}
             />
-            {showCursor(dayPrefixStart, buildingStart + buildingDur - dayPrefixStart) &&
-              frame < logoStart && (
-                <Cursor color={textColor} size={TEXT_SIZE} />
-              )}
+            {showCursor(dayPrefixStart, logoStart + LOGO_TYPE_DUR - dayPrefixStart) && (
+              <Cursor color={textColor} size={TEXT_SIZE} />
+            )}
           </div>
 
           <div style={lineStyle}>
