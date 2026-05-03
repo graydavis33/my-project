@@ -80,7 +80,7 @@ const TrendifyLogo: React.FC<{
         lineHeight: 1.1,
         color: textColor,
         letterSpacing: "-0.04em",
-        marginLeft: 22,
+        marginLeft: 10,
       }}
     >
       <span
@@ -165,7 +165,7 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
   };
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "black" }}>
+    <AbsoluteFill style={{ backgroundColor: "#00FF00" }}>
       {bgVideoSrc && <Video src={staticFile(bgVideoSrc)} muted />}
       <AbsoluteFill style={{ pointerEvents: "none" }}>
         <div
