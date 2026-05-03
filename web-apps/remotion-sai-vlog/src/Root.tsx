@@ -19,7 +19,7 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
-        durationInFrames={120}
+        durationInFrames={150}
         defaultProps={{
           startDate: "2021-05-17",
           bgVideoSrc: undefined,
