@@ -65,37 +65,42 @@ const Cursor: React.FC<{ color: string; size: number }> = ({ color, size }) => {
   );
 };
 
-const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
-  accent,
-  textColor,
-}) => {
+const TrendifyLogo: React.FC<{
+  accent: string;
+  textColor: string;
+  startFrame: number;
+}> = ({ accent, textColor, startFrame }) => {
   const frame = useCurrentFrame();
-  const offset = interpolate(frame, [0, ABERRATION_DUR], [22, 0], {
+  if (frame < startFrame) return null;
+  const local = frame - startFrame;
+
+  const offset = interpolate(local, [0, ABERRATION_DUR], [22, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
-  const blurPx = interpolate(frame, [0, BLUR_DUR], [BLUR_START_PX, 0], {
+  const blurPx = interpolate(local, [0, BLUR_DUR], [BLUR_START_PX, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
-  const inGlitch = frame < GLITCH_DUR;
-  const glitchFalloff = interpolate(frame, [0, GLITCH_DUR], [1, 0], {
+  const inGlitch = local < GLITCH_DUR;
+  const falloff = interpolate(local, [0, GLITCH_DUR], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const jitterX = inGlitch ? (random(`jx-${frame}`) - 0.5) * 14 * glitchFalloff : 0;
-  const jitterY = inGlitch ? (random(`jy-${frame}`) - 0.5) * 8 * glitchFalloff : 0;
+  const jitterX = inGlitch ? (random(`jx-${frame}`) - 0.5) * 14 * falloff : 0;
+  const jitterY = inGlitch ? (random(`jy-${frame}`) - 0.5) * 8 * falloff : 0;
   const flickerOn = inGlitch
-    ? random(`flick-${Math.floor(frame / 2)}`) > 0.25 * glitchFalloff
+    ? random(`flick-${Math.floor(frame / 2)}`) > 0.25 * falloff
     : true;
   const opacity = flickerOn ? 1 : 0.2;
 
   return (
-    <div
+    <span
       style={{
         position: "relative",
+        display: "inline-block",
         fontFamily,
         fontWeight: 600,
         fontSize: TEXT_SIZE,
@@ -105,6 +110,7 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
         opacity,
         transform: `translate(${jitterX}px, ${jitterY}px)`,
         filter: `blur(${blurPx}px) drop-shadow(${offset}px 0 0 rgba(255,0,80,0.85)) drop-shadow(${-offset}px 0 0 rgba(0,200,255,0.85))`,
+        marginLeft: 4,
       }}
     >
       <span
@@ -119,7 +125,7 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
         }}
       />
       trendify
-    </div>
+    </span>
   );
 };
 
@@ -158,18 +164,25 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
   const todayCount = daysSince(startDate);
   const yesterdayCount = todayCount - 1;
 
-  const dayLabelStart = 22;
-  const dayLabelDur = 8;
-  const numberStart = 30;
-  const numberDur = 12;
-  const missionStart = 46;
-  const missionDur = 24;
-  const locAgeStart = 74;
-  const locAgeDur = 22;
+  const dayPrefixStart = 6;
+  const dayPrefixDur = 6;
+  const numberStart = 14;
+  const numberDur = 14;
+  const buildingStart = 30;
+  const buildingDur = 14;
+  const logoStart = 46;
+  const ageStart = 78;
+  const ageDur = 8;
+  const locStart = 90;
+  const locDur = 12;
+  const missionStart = 106;
+  const missionDur = 28;
 
-  const dayLabel = useSlice("Day ", dayLabelStart, dayLabelDur);
-  const mission = useSlice("Mission: most creative ad agency", missionStart, missionDur);
-  const locAge = useSlice("Location: NYC  ·  Age: 21", locAgeStart, locAgeDur);
+  const dayPrefix = useSlice("Day ", dayPrefixStart, dayPrefixDur);
+  const buildingText = useSlice(" of building", buildingStart, buildingDur);
+  const age = useSlice("Age 21", ageStart, ageDur);
+  const location = useSlice("Location NYC", locStart, locDur);
+  const mission = useSlice("Mission: build the most creative ad agency", missionStart, missionDur);
   const frame = useCurrentFrame();
 
   const showCursor = (s: number, d: number) =>
@@ -197,10 +210,8 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
             color: textColor,
           }}
         >
-          <TrendifyLogo accent={accent} textColor={textColor} />
-
           <div style={lineStyle}>
-            {dayLabel}
+            {dayPrefix}
             <SlotNumber
               from={yesterdayCount}
               to={todayCount}
@@ -208,22 +219,35 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
               durationFrames={numberDur}
               accent={accent}
             />
-            {showCursor(dayLabelStart, dayLabelDur + numberDur) &&
-              frame < numberStart + numberDur && (
+            {buildingText}
+            <TrendifyLogo
+              accent={accent}
+              textColor={textColor}
+              startFrame={logoStart}
+            />
+            {showCursor(dayPrefixStart, buildingStart + buildingDur - dayPrefixStart) &&
+              frame < logoStart && (
                 <Cursor color={textColor} size={TEXT_SIZE} />
               )}
           </div>
 
           <div style={lineStyle}>
-            {mission}
-            {showCursor(missionStart, missionDur) && (
+            {age}
+            {showCursor(ageStart, ageDur) && (
               <Cursor color={textColor} size={TEXT_SIZE} />
             )}
           </div>
 
           <div style={lineStyle}>
-            {locAge}
-            {showCursor(locAgeStart, locAgeDur) && (
+            {location}
+            {showCursor(locStart, locDur) && (
+              <Cursor color={textColor} size={TEXT_SIZE} />
+            )}
+          </div>
+
+          <div style={lineStyle}>
+            {mission}
+            {showCursor(missionStart, missionDur) && (
               <Cursor color={textColor} size={TEXT_SIZE} />
             )}
           </div>
