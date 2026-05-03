@@ -110,7 +110,7 @@ const TrendifyLogo: React.FC<{
         opacity,
         transform: `translate(${jitterX}px, ${jitterY}px)`,
         filter: `blur(${blurPx}px) drop-shadow(${offset}px 0 0 rgba(255,0,80,0.85)) drop-shadow(${-offset}px 0 0 rgba(0,200,255,0.85))`,
-        marginLeft: 4,
+        marginLeft: 22,
       }}
     >
       <span
@@ -180,8 +180,8 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
 
   const dayPrefix = useSlice("Day ", dayPrefixStart, dayPrefixDur);
   const buildingText = useSlice(" of building", buildingStart, buildingDur);
-  const age = useSlice("Age 21", ageStart, ageDur);
-  const location = useSlice("Location NYC", locStart, locDur);
+  const age = useSlice("Age: 21", ageStart, ageDur);
+  const location = useSlice("Location: NYC", locStart, locDur);
   const mission = useSlice("Mission: build the most creative ad agency", missionStart, missionDur);
   const frame = useCurrentFrame();
 
