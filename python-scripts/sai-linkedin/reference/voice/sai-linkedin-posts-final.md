@@ -42,3 +42,27 @@ It's going to take way longer than you think.
 That's the whole point.
 
 What would you go back and tell yourself?
+
+---
+
+## 2026-05-03 — "Pre-Workout Meditation"
+
+Source short: `03_DELIVERED/shorts/W02_Apr-20-26/pre workout meditation.mp4`
+
+Meditation is pre-workout for your brain, minus the side effects.
+
+Before I started meditating, my nervous system was all over the place.
+
+Stressed about the future.
+Scattered in meetings.
+Thinking in circles.
+
+Then I started meditating. 10 minutes a day.
+
+Now I try to be a lot more calm going into meetings.
+Less reactive about what's ahead.
+Actually clear in my thinking when it matters.
+
+No crash, definitely no jitters.
+
+Just 10 minutes.
