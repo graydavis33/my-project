@@ -23,8 +23,10 @@ export const trendifyIntroSchema = z.object({
 export type TrendifyIntroProps = z.infer<typeof trendifyIntroSchema>;
 
 const TEXT_SIZE = 44;
-const ABERRATION_DUR = 48;
-const GLITCH_DUR = 30;
+const ABERRATION_DUR = 28;
+const GLITCH_DUR = 16;
+const BLUR_DUR = 24;
+const BLUR_START_PX = 14;
 
 const daysSince = (startDate: string): number => {
   const [y, m, d] = startDate.split("-").map(Number);
@@ -73,6 +75,11 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
     extrapolateRight: "clamp",
     easing: Easing.out(Easing.cubic),
   });
+  const blurPx = interpolate(frame, [0, BLUR_DUR], [BLUR_START_PX, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
+  });
   const inGlitch = frame < GLITCH_DUR;
   const glitchFalloff = interpolate(frame, [0, GLITCH_DUR], [1, 0], {
     extrapolateLeft: "clamp",
@@ -97,7 +104,7 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
         letterSpacing: "-0.04em",
         opacity,
         transform: `translate(${jitterX}px, ${jitterY}px)`,
-        filter: `drop-shadow(${offset}px 0 0 rgba(255,0,80,0.85)) drop-shadow(${-offset}px 0 0 rgba(0,200,255,0.85))`,
+        filter: `blur(${blurPx}px) drop-shadow(${offset}px 0 0 rgba(255,0,80,0.85)) drop-shadow(${-offset}px 0 0 rgba(0,200,255,0.85))`,
       }}
     >
       <span
@@ -151,13 +158,13 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
   const todayCount = daysSince(startDate);
   const yesterdayCount = todayCount - 1;
 
-  const dayLabelStart = 32;
+  const dayLabelStart = 22;
   const dayLabelDur = 8;
-  const numberStart = 40;
+  const numberStart = 30;
   const numberDur = 12;
-  const missionStart = 56;
+  const missionStart = 46;
   const missionDur = 24;
-  const locAgeStart = 84;
+  const locAgeStart = 74;
   const locAgeDur = 22;
 
   const dayLabel = useSlice("Day ", dayLabelStart, dayLabelDur);
