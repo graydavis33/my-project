@@ -78,8 +78,8 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
         position: "relative",
         fontFamily,
         fontWeight: 600,
-        fontSize: 110,
-        lineHeight: 1,
+        fontSize: TEXT_SIZE,
+        lineHeight: 1.1,
         color: textColor,
         letterSpacing: "-0.04em",
         filter: `drop-shadow(${offset}px 0 0 rgba(255,0,80,0.85)) drop-shadow(${-offset}px 0 0 rgba(0,200,255,0.85))`,
@@ -88,10 +88,10 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
       <span
         style={{
           position: "absolute",
-          top: -22,
-          left: 14,
-          width: 38,
-          height: 24,
+          top: -9,
+          left: 6,
+          width: 16,
+          height: 10,
           backgroundColor: accent,
           clipPath: "polygon(0 0, 100% 0, 70% 100%, 0 100%)",
         }}
@@ -142,15 +142,12 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
   const numberDur = 12;
   const missionStart = 38;
   const missionDur = 20;
-  const locationStart = 60;
-  const locationDur = 12;
-  const ageStart = 74;
-  const ageDur = 10;
+  const locAgeStart = 60;
+  const locAgeDur = 18;
 
-  const dayLabel = useSlice("day ", dayLabelStart, dayLabelDur);
+  const dayLabel = useSlice("Day ", dayLabelStart, dayLabelDur);
   const mission = useSlice("Mission: most creative ad agency", missionStart, missionDur);
-  const location = useSlice("Location: nyc", locationStart, locationDur);
-  const age = useSlice("Age: 21", ageStart, ageDur);
+  const locAge = useSlice("Location: NYC  ·  Age: 21", locAgeStart, locAgeDur);
   const frame = useCurrentFrame();
 
   const showCursor = (s: number, d: number) =>
@@ -203,15 +200,8 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
           </div>
 
           <div style={lineStyle}>
-            {location}
-            {showCursor(locationStart, locationDur) && (
-              <Cursor color={textColor} size={TEXT_SIZE} />
-            )}
-          </div>
-
-          <div style={lineStyle}>
-            {age}
-            {showCursor(ageStart, ageDur) && (
+            {locAge}
+            {showCursor(locAgeStart, locAgeDur) && (
               <Cursor color={textColor} size={TEXT_SIZE} />
             )}
           </div>
