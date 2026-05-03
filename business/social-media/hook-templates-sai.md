@@ -1,4 +1,4 @@
-# 40 Hook Templates — Sai's Niche
+# 70 Hook Templates — Sai's Niche
 
 **Audience:** founders, entrepreneurs, agency owners, gen z builders, hardworking 18–28 year olds chasing the founder path.
 **Identity:** 21-year-old founder running an ad agency. Discipline-coded, schedule-coded, anti-hustle-culture-but-pro-grind.
@@ -35,6 +35,36 @@
 | 18 | "Why does [DOING X AT Y] hit different?" | "Why does building a company at 21 hit different?" *(reframed from punch-down) |
 | 19 | "[A] vs [B] — which wins at [AGE/STAGE]?" | "Agency vs SaaS — which actually wins at 21?" |
 | 20 | "Hot take: [POLARIZING OPINION ABOUT IDEA, NOT PEERS]." | "Hot take: most agency advice on Twitter is wrong." |
+| 21 | "[NUMBER] things [VERB] my [BUSINESS] in [TIMEFRAME]." | "3 things doubled my agency in 6 months." |
+| 22 | "If I had to start over, I'd [ACTION] first." | "If I had to start over, I'd build a sales pipeline before a portfolio." |
+| 23 | "Read this if you're [SITUATION]." | "Read this if you're 21 and burnt out from your 9-5." |
+| 24 | "What [TIMEFRAME] of [DOING X] taught me." | "What 6 months of 5am wake-ups taught me about momentum." |
+| 25 | "The day I stopped [BAD HABIT], my [OUTCOME] changed." | "The day I stopped checking Slack at midnight, my close rate doubled." |
+| 26 | "Nobody's [DOING X] anymore. That's exactly why I am." | "Nobody's cold-emailing anymore. That's exactly why I am." |
+| 27 | "[NUMBER] habits that built my [OUTCOME]." | "4 habits that built my agency before I turned 22." |
+| 28 | "Here's what nobody tells you about [MILESTONE]." | "Here's what nobody tells you about your first $20k month." |
+| 29 | "My honest take on [POPULAR NARRATIVE]." | "My honest take on the 'agency is dead' narrative." |
+| 30 | "I'll never [ACTION] again. Here's why." | "I'll never take a retainer under $5k again. Here's why." |
+| 31 | "Day [NUMBER] of [HABIT/CHALLENGE]." | "Day 47 of 5am wake-ups as a founder." |
+| 32 | "Reminder: [REFRAME]." | "Reminder: discipline isn't punishment, it's leverage." |
+| 33 | "[OUTCOME] doesn't come from [COMMON BELIEF]. It comes from [REAL THING]." | "Money doesn't come from working harder. It comes from picking better clients." |
+| 34 | "You don't need [COMMON CRUTCH]. You need [REAL THING]." | "You don't need another course. You need to send 50 cold DMs today." |
+| 35 | "How I [OUTCOME] without [COMMON ASSUMPTION]." | "How I built a 6-figure agency without a degree or a team." |
+| 36 | "The only [METRIC] that actually matters at [STAGE]." | "The only metric that actually matters under $50k MRR." |
+| 37 | "What changed when I started [DECISION]." | "What changed when I started firing clients instead of chasing them." |
+| 38 | "[NUMBER] questions every [ROLE] should answer in 10 seconds." | "5 questions every founder should answer in 10 seconds." |
+| 39 | "Stop trying to [GOAL]. Start [BETTER ACTION]." | "Stop trying to scale. Start charging more." |
+| 40 | "Here's what my [THING] looked like before I [OUTCOME]." | "Here's what my calendar looked like before I hit $30k MRR." |
+| 41 | "[ROUTINE/HABIT] is the closest thing I've found to a cheat code." | "Calendar blocking is the closest thing I've found to a cheat code." |
+| 42 | "You're not [SURFACE PROBLEM]. You're [ACTUAL PROBLEM]." | "You're not unmotivated. You're under-scheduled." |
+| 43 | "Why I [DECISION] even though everyone said [OPPOSITE]." | "Why I niched down at $10k MRR even though everyone said go broader." |
+| 44 | "[TIMEFRAME] in and here's what's actually working." | "12 months into running an agency and here's what's actually working in 2026." |
+| 45 | "Here's the [NUMBER]-step framework I use to [TASK]." | "Here's the 3-step framework I use to close every sales call." |
+| 46 | "What I learned from [NUMBER] [REPS]." | "What I learned from 100 sales calls before I turned 22." |
+| 47 | "If you're stuck at [BENCHMARK], do this." | "If you're stuck under $10k MRR, fire your worst client this week." |
+| 48 | "I tracked [METRIC] for [TIMEFRAME]. Here's what I found." | "I tracked every minute of my week for 30 days. Here's what I found." |
+| 49 | "[NUMBER] signs you're [READY/STUCK]." | "3 signs you're ready to quit your 9-5 and go full-time on your agency." |
+| 50 | "[ACTION] is the cheapest [OUTCOME] I've ever bought." | "Meditation is the cheapest hour of work I've ever bought back." |
 
 ---
 
