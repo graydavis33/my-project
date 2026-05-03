@@ -5,7 +5,6 @@ import {
   staticFile,
   interpolate,
   useCurrentFrame,
-  random,
   Easing,
 } from "remotion";
 import { z } from "zod";
@@ -21,6 +20,9 @@ export const trendifyIntroSchema = z.object({
 });
 
 export type TrendifyIntroProps = z.infer<typeof trendifyIntroSchema>;
+
+const TEXT_SIZE = 44;
+const ABERRATION_DUR = 18;
 
 const daysSince = (startDate: string): number => {
   const [y, m, d] = startDate.split("-").map(Number);
@@ -64,19 +66,10 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
   textColor,
 }) => {
   const frame = useCurrentFrame();
-  const glitchEnd = 14;
-  const inGlitch = frame < glitchEnd;
-  const flicker = inGlitch
-    ? random(`flick-${Math.floor(frame / 2)}`) > 0.4
-      ? 1
-      : 0.15
-    : 1;
-  const jitterX = inGlitch ? (random(`jx-${frame}`) - 0.5) * 14 : 0;
-  const jitterY = inGlitch ? (random(`jy-${frame}`) - 0.5) * 6 : 0;
-  const splitX = inGlitch ? (random(`sx-${frame}`) - 0.5) * 10 : 0;
-  const settle = interpolate(frame, [glitchEnd, glitchEnd + 6], [flicker, 1], {
+  const offset = interpolate(frame, [0, ABERRATION_DUR], [18, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
+    easing: Easing.out(Easing.cubic),
   });
 
   return (
@@ -88,12 +81,8 @@ const TrendifyLogo: React.FC<{ accent: string; textColor: string }> = ({
         fontSize: 110,
         lineHeight: 1,
         color: textColor,
-        opacity: inGlitch ? flicker : settle,
-        transform: `translate(${jitterX}px, ${jitterY}px)`,
         letterSpacing: "-0.04em",
-        textShadow: inGlitch
-          ? `${splitX}px 0 0 ${accent}, ${-splitX}px 0 0 rgba(0,200,255,0.6)`
-          : "none",
+        filter: `drop-shadow(${offset}px 0 0 rgba(255,0,80,0.85)) drop-shadow(${-offset}px 0 0 rgba(0,200,255,0.85))`,
       }}
     >
       <span
@@ -147,22 +136,31 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
   const todayCount = daysSince(startDate);
   const yesterdayCount = todayCount - 1;
 
-  const dayLabelStart = 12;
+  const dayLabelStart = 14;
   const dayLabelDur = 8;
-  const numberStart = 20;
-  const numberDur = 14;
+  const numberStart = 22;
+  const numberDur = 12;
   const missionStart = 38;
-  const missionDur = 24;
-  const statsStart = 64;
-  const statsDur = 18;
+  const missionDur = 20;
+  const locationStart = 60;
+  const locationDur = 12;
+  const ageStart = 74;
+  const ageDur = 10;
 
-  const dayLabel = useSlice("DAY ", dayLabelStart, dayLabelDur);
-  const mission = useSlice("the most creative ad agency", missionStart, missionDur);
-  const stats = useSlice("21  ·  NYC", statsStart, statsDur);
+  const dayLabel = useSlice("day ", dayLabelStart, dayLabelDur);
+  const mission = useSlice("Mission: most creative ad agency", missionStart, missionDur);
+  const location = useSlice("Location: nyc", locationStart, locationDur);
+  const age = useSlice("Age: 21", ageStart, ageDur);
   const frame = useCurrentFrame();
 
   const showCursor = (s: number, d: number) =>
     frame >= s && frame < s + d + 4;
+
+  const lineStyle = {
+    fontSize: TEXT_SIZE,
+    fontWeight: 600 as const,
+    lineHeight: 1.1,
+  };
 
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
@@ -175,21 +173,14 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
             bottom: 60,
             display: "flex",
             flexDirection: "column",
-            gap: 22,
+            gap: 18,
             fontFamily,
             color: textColor,
           }}
         >
           <TrendifyLogo accent={accent} textColor={textColor} />
 
-          <div
-            style={{
-              fontSize: 96,
-              fontWeight: 600,
-              lineHeight: 1,
-              letterSpacing: "-0.02em",
-            }}
-          >
+          <div style={lineStyle}>
             {dayLabel}
             <SlotNumber
               from={yesterdayCount}
@@ -200,28 +191,28 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
             />
             {showCursor(dayLabelStart, dayLabelDur + numberDur) &&
               frame < numberStart + numberDur && (
-                <Cursor color={textColor} size={96} />
+                <Cursor color={textColor} size={TEXT_SIZE} />
               )}
           </div>
 
-          <div style={{ fontSize: 44, fontWeight: 600, lineHeight: 1.1 }}>
+          <div style={lineStyle}>
             {mission}
             {showCursor(missionStart, missionDur) && (
-              <Cursor color={textColor} size={44} />
+              <Cursor color={textColor} size={TEXT_SIZE} />
             )}
           </div>
 
-          <div
-            style={{
-              fontSize: 36,
-              fontWeight: 600,
-              lineHeight: 1.1,
-              opacity: 0.85,
-            }}
-          >
-            {stats}
-            {showCursor(statsStart, statsDur) && (
-              <Cursor color={textColor} size={36} />
+          <div style={lineStyle}>
+            {location}
+            {showCursor(locationStart, locationDur) && (
+              <Cursor color={textColor} size={TEXT_SIZE} />
+            )}
+          </div>
+
+          <div style={lineStyle}>
+            {age}
+            {showCursor(ageStart, ageDur) && (
+              <Cursor color={textColor} size={TEXT_SIZE} />
             )}
           </div>
         </div>
