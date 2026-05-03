@@ -134,21 +134,24 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
   const todayCount = daysSince(startDate);
   const yesterdayCount = todayCount - 1;
 
-  const dayPrefixStart = 6;
+  const ageStart = 6;
+  const ageDur = 8;
+  const locStart = 49;
+  const locDur = 12;
+  const dayPrefixStart = 96;
   const dayPrefixDur = 6;
-  const numberStart = 14;
+  const numberStart = 102;
   const numberDur = 14;
-  const buildingStart = 30;
+  const buildingStart = 116;
   const buildingDur = 14;
-  const logoStart = 46;
-  const ageLocStart = 95;
-  const ageLocDur = 20;
-  const missionStart = 150;
+  const logoStart = 130;
+  const missionStart = 179;
   const missionDur = 30;
 
+  const age = useSlice("Age: 21", ageStart, ageDur);
+  const location = useSlice("Location: NYC", locStart, locDur);
   const dayPrefix = useSlice("Day ", dayPrefixStart, dayPrefixDur);
   const buildingText = useSlice(" of building", buildingStart, buildingDur);
-  const ageLoc = useSlice("Age: 21  ·  Location: NYC", ageLocStart, ageLocDur);
   const mission = useSlice("Mission: build the most creative ad agency", missionStart, missionDur);
   const frame = useCurrentFrame();
 
@@ -178,6 +181,20 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
           }}
         >
           <div style={lineStyle}>
+            {age}
+            {showCursor(ageStart, ageDur) && (
+              <Cursor color={textColor} size={TEXT_SIZE} />
+            )}
+          </div>
+
+          <div style={lineStyle}>
+            {location}
+            {showCursor(locStart, locDur) && (
+              <Cursor color={textColor} size={TEXT_SIZE} />
+            )}
+          </div>
+
+          <div style={lineStyle}>
             {dayPrefix}
             <SlotNumber
               from={yesterdayCount}
@@ -193,13 +210,6 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
               startFrame={logoStart}
             />
             {showCursor(dayPrefixStart, logoStart + LOGO_TYPE_DUR - dayPrefixStart) && (
-              <Cursor color={textColor} size={TEXT_SIZE} />
-            )}
-          </div>
-
-          <div style={lineStyle}>
-            {ageLoc}
-            {showCursor(ageLocStart, ageLocDur) && (
               <Cursor color={textColor} size={TEXT_SIZE} />
             )}
           </div>
