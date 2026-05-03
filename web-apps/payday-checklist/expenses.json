@@ -1,5 +1,13 @@
 {
-  "generated_at": "2026-05-02T11:44:54Z",
+  "generated_at": "2026-05-03T11:42:16Z",
   "month": "2026-05",
-  "expenses": []
+  "expenses": [
+    {
+      "email_id": "19dea72c2a6d1d5f",
+      "date": "2026-05-02",
+      "vendor": "Anthropic",
+      "amount": 10.03,
+      "category": "Software & Tools"
+    }
+  ]
 }
