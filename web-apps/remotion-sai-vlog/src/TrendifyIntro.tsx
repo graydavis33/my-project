@@ -136,16 +136,16 @@ export const TrendifyIntro: React.FC<TrendifyIntroProps> = ({
 
   const ageStart = 6;
   const ageDur = 8;
-  const locStart = 49;
+  const locStart = 32;
   const locDur = 12;
-  const dayPrefixStart = 96;
+  const dayPrefixStart = 62;
   const dayPrefixDur = 6;
-  const numberStart = 102;
+  const numberStart = 68;
   const numberDur = 14;
-  const buildingStart = 116;
+  const buildingStart = 82;
   const buildingDur = 14;
-  const logoStart = 130;
-  const missionStart = 179;
+  const logoStart = 96;
+  const missionStart = 128;
   const missionDur = 30;
 
   const age = useSlice("Age: 21", ageStart, ageDur);
