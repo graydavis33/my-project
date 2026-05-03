@@ -2,6 +2,7 @@ import React from "react";
 import { Composition } from "remotion";
 import { DayInLife, dayInLifeSchema, DayInLifeProps } from "./DayInLife";
 import { TrendifyIntro, trendifyIntroSchema } from "./TrendifyIntro";
+import { IGReelPreview, igReelPreviewSchema } from "./IGReelPreview";
 import { CLIPS, FPS, WIDTH, HEIGHT } from "./clips";
 
 const computeDuration = ({ props }: { props: DayInLifeProps }) => {
@@ -16,6 +17,21 @@ export const RemotionRoot: React.FC = () => {
         id="TrendifyIntro"
         component={TrendifyIntro}
         schema={trendifyIntroSchema}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        durationInFrames={150}
+        defaultProps={{
+          startDate: "2021-05-17",
+          bgVideoSrc: undefined,
+          accent: "#f28129",
+          textColor: "#FFFFFF",
+        }}
+      />
+      <Composition
+        id="TrendifyIntroIGPreview"
+        component={IGReelPreview}
+        schema={igReelPreviewSchema}
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
