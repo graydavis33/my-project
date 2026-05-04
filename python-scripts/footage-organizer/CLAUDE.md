@@ -77,3 +77,5 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - All paths use `pathlib.Path`, no drive-letter assumptions. Drive root is read from `<CLIENT>_LIBRARY_ROOT` env var (`.env` differs per machine: `/Volumes/Footage/Sai` on Mac, `D:/Sai` on Windows).
 - All scripts force UTF-8 stdout/stderr (Windows defaults to cp1252).
 - Folder names contain no spaces or non-ASCII (`W01_Apr-15-19` — hyphen-separated).
+- **SQLite index stores POSIX-relative paths** (`05_FOOTAGE_LIBRARY/...`) so the same `.footage-index.sqlite` on the shared SSD works from either machine. `cli_index.py` resolves against the current machine's library root at read time. First run on the upgraded code (post-2026-05-02) auto-wipes any pre-migration DB containing absolute paths and rebuilds — symmetrical, runs once per machine, free.
+- Walker filters Mac AppleDouble files (`._*`) and `.DS_Store` so they don't pollute the index when the drive is mounted on Mac.
