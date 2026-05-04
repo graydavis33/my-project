@@ -1,21 +1,20 @@
-"""
-find_visuals.py — pair sai-linkedin visual_ideas with footage-library frames.
+"""find_visuals.py — Vision-scored frame finder for sai-linkedin posts.
+
+For each line in <input_folder>/linkedin/visual_ideas.txt:
+  1. Map the idea to candidate footage categories in D:/Sai/.footage-index.sqlite
+  2. Sample N frames from the top M candidate clips
+  3. Send all frames + the idea description to Claude Haiku 4.5 in one batched call
+  4. Pick the highest-scored frame per idea
+  5. Extract HQ JPG to <input_folder>/visuals/
 
 Usage:
-    python find_visuals.py "/Volumes/Footage/Sai/08_AI_EDITS/linkedin/<draft-folder>"
-
-Reads linkedin/visual_ideas.txt, samples candidate clips from the SQLite footage
-index, scores them with Claude Haiku Vision, and extracts the winning HQ JPG
-per idea into linkedin/visuals/.
-
-Frames only, not full MP4s.
+    python find_visuals.py "D:/Sai/08_AI_EDITS/linkedin/2026-04-16-input-over-output"
 """
 
 import argparse
 import base64
 import json
 import os
-import random
 import re
 import sqlite3
 import subprocess
@@ -27,201 +26,176 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent / ".env")
 
-FOOTAGE_ROOT = Path("/Volumes/Footage/Sai")
-INDEX_DB = FOOTAGE_ROOT / ".footage-index.sqlite"
+ROOT = Path("D:/Sai")
+INDEX = ROOT / ".footage-index.sqlite"
 MODEL = "claude-haiku-4-5-20251001"
+N_CLIPS_PER_IDEA = 3
+N_FRAMES_PER_CLIP = 3
+MIN_DATE = "2026-04-15"
 
-CANDIDATES_PER_IDEA = 8
-THUMB_WIDTH = 512
-
-
-def map_idea_to_categories(idea: str) -> list[str]:
-    """Heuristic: map idea text to plausible candidate categories."""
-    t = idea.lower()
-    cats = set()
-    if any(k in t for k in ["meditat", "cross-legged", "eyes closed", "still", "quiet", "calm"]):
-        cats.update(["candid-people", "misc", "action-sport-fitness", "interview-solo"])
-    if any(k in t for k in ["phone", "timer", "screen", "watch", "stopwatch", "clock"]):
-        cats.update(["insert-product", "insert-hands", "screens-and-text", "insert-detail"])
-    if any(k in t for k in ["desk", "notebook", "laptop", "office", "workspace", "meeting"]):
-        cats.update(["interview-solo", "establishing-interior", "insert-hands", "insert-detail"])
-    if any(k in t for k in ["morning", "light", "routine", "wake", "early"]):
-        cats.update(["establishing-interior", "candid-people", "walk-and-talk", "misc"])
-    if any(k in t for k in ["room", "interior", "home", "bedroom", "kitchen"]):
-        cats.update(["establishing-interior", "misc"])
-    if not cats:
-        cats.update(["misc", "interview-solo", "establishing-interior", "candid-people"])
-    return list(cats)
+# Map each visual-idea (loosely) to a SQL WHERE clause over `category`.
+# Order matters — first matching keyword wins.
+KEYWORD_TO_WHERE = [
+    (r"closeup|close-up|hand|notebook|pen|writing|paper|list|checklist", "category IN ('insert-hands','insert-detail','screens-and-text')"),
+    (r"screen|monitor|dashboard|laptop|computer|spreadsheet", "category IN ('screens-and-text','insert-detail')"),
+    (r"team|meeting|call|conversation|reviewing|together|with .* member", "category IN ('interview-duo','crowd-group','candid-people')"),
+    (r"walk|hallway|street|outside|exterior", "category IN ('walk-and-talk','establishing-exterior')"),
+    (r"office|interior|inside|background", "category IN ('establishing-interior','interview-solo')"),
+    (r"sai|founder|desk|sitting|talking", "category IN ('interview-solo','reaction-listening')"),
+]
 
 
-def sample_candidates(idea: str, n: int) -> list[dict]:
-    cats = map_idea_to_categories(idea)
-    placeholders = ",".join("?" * len(cats))
-    conn = sqlite3.connect(INDEX_DB)
-    rows = conn.execute(
-        f"SELECT path, category, duration_s FROM clips WHERE category IN ({placeholders}) AND duration_s > 1.5",
-        cats,
-    ).fetchall()
-    conn.close()
-    random.shuffle(rows)
-    return [{"path": r[0], "category": r[1], "duration": r[2]} for r in rows[:n]]
+def map_idea_to_where(idea: str) -> str:
+    """Pick the best WHERE clause for this visual idea based on keywords."""
+    s = idea.lower()
+    for pattern, where in KEYWORD_TO_WHERE:
+        if re.search(pattern, s):
+            return where
+    return "category IN ('interview-solo','candid-people')"  # fallback
 
 
-def extract_thumb(clip_path: Path, out_path: Path, width: int = THUMB_WIDTH) -> bool:
-    """Extract a mid-frame JPG thumbnail."""
-    try:
-        duration = float(subprocess.check_output([
-            "ffprobe", "-v", "error", "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1", str(clip_path)
-        ]).decode().strip())
-    except Exception:
-        return False
-    mid = duration / 2
-    try:
-        subprocess.run([
-            "ffmpeg", "-y", "-ss", f"{mid:.2f}", "-i", str(clip_path),
-            "-frames:v", "1", "-vf", f"scale={width}:-2", "-q:v", "4",
-            str(out_path)
-        ], check=True, capture_output=True)
-        return out_path.exists()
-    except subprocess.CalledProcessError:
-        return False
+def candidate_clips(con: sqlite3.Connection, idea: str) -> list[tuple[str, float]]:
+    where = map_idea_to_where(idea)
+    sql = f"""SELECT path, duration_s FROM clips
+              WHERE {where} AND filmed_date >= ?
+              ORDER BY duration_s DESC LIMIT {N_CLIPS_PER_IDEA}"""
+    return [(p, d) for p, d in con.execute(sql, (MIN_DATE,))]
 
 
-def extract_hq_frame(clip_path: Path, out_path: Path) -> bool:
-    """Extract a hi-res mid-frame JPG (no scaling)."""
-    try:
-        duration = float(subprocess.check_output([
-            "ffprobe", "-v", "error", "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1", str(clip_path)
-        ]).decode().strip())
-    except Exception:
-        return False
-    mid = duration / 2
-    try:
-        subprocess.run([
-            "ffmpeg", "-y", "-ss", f"{mid:.2f}", "-i", str(clip_path),
-            "-frames:v", "1", "-q:v", "2", str(out_path)
-        ], check=True, capture_output=True)
-        return out_path.exists()
-    except subprocess.CalledProcessError:
-        return False
-
-
-def b64_image(path: Path) -> dict:
-    data = base64.standard_b64encode(path.read_bytes()).decode()
-    return {
-        "type": "image",
-        "source": {"type": "base64", "media_type": "image/jpeg", "data": data},
-    }
-
-
-def score_candidates(client: Anthropic, idea: str, candidates: list[dict], thumb_dir: Path) -> list[dict]:
-    """Send all candidate thumbs in one Haiku call, get JSON scores 0-10."""
-    content = []
-    valid = []
-    for i, c in enumerate(candidates):
-        thumb = thumb_dir / f"cand_{i}.jpg"
-        if extract_thumb(FOOTAGE_ROOT / c["path"], thumb):
-            content.append({"type": "text", "text": f"Candidate {i}:"})
-            content.append(b64_image(thumb))
-            valid.append(c)
-
-    if not valid:
+def sample_frames(rel_path: str, duration: float, work_dir: Path, slot: str) -> list[Path]:
+    """Extract N evenly-spaced frames from clip into work_dir/<slot>_*.jpg."""
+    abs_path = ROOT / rel_path
+    if not abs_path.exists():
         return []
+    frames = []
+    times = [duration * (i + 1) / (N_FRAMES_PER_CLIP + 1) for i in range(N_FRAMES_PER_CLIP)]
+    for i, t in enumerate(times):
+        out = work_dir / f"{slot}_t{i}.jpg"
+        try:
+            subprocess.run(
+                ["ffmpeg", "-y", "-loglevel", "error", "-ss", str(t),
+                 "-i", str(abs_path), "-frames:v", "1",
+                 "-vf", "scale=480:-1",   # downscale for vision API
+                 "-q:v", "5", str(out)],
+                check=True,
+            )
+            frames.append(out)
+        except subprocess.CalledProcessError:
+            continue
+    return frames
 
-    content.append({
-        "type": "text",
-        "text": (
-            f'Score each candidate frame 0-10 for how well it visually represents this concept:\n\n'
-            f'"{idea}"\n\n'
-            f'10 = perfect match, 5 = somewhat related, 0 = unrelated. '
-            f'Return ONLY a JSON array of objects with keys "i" (candidate index) and "score" (0-10) and "reason" (one short sentence). '
-            f'No commentary, no markdown.'
-        ),
-    })
 
-    resp = client.messages.create(
-        model=MODEL,
-        max_tokens=1000,
+def b64(p: Path) -> str:
+    return base64.standard_b64encode(p.read_bytes()).decode()
+
+
+def score_frames(client: Anthropic, idea: str, frames: list[tuple[str, Path]]) -> dict[str, int]:
+    """frames is list of (label, path). Returns {label: score 0-10}."""
+    content = [{"type": "text", "text": (
+        f"VISUAL IDEA: \"{idea}\"\n\n"
+        f"Below are {len(frames)} candidate frames labeled F0..F{len(frames)-1}. "
+        "For each frame, score 0-10 how well it matches the visual idea above. "
+        "Score by SUBJECT match first (does the frame depict what the idea describes?), "
+        "then by IMAGE QUALITY (in focus, well-composed, usable as a still). "
+        "Skip blurry, out-of-focus, motion-blurred, or otherwise unusable frames (score them 0-2). "
+        "Return ONLY a JSON object mapping label to integer score, like {\"F0\": 7, \"F1\": 2, ...}. "
+        "No prose."
+    )}]
+    for label, path in frames:
+        content.append({"type": "text", "text": f"Frame {label}:"})
+        content.append({"type": "image", "source": {
+            "type": "base64", "media_type": "image/jpeg", "data": b64(path),
+        }})
+    msg = client.messages.create(
+        model=MODEL, max_tokens=2000,
         messages=[{"role": "user", "content": content}],
     )
-    raw = resp.content[0].text.strip()
-    raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw, flags=re.MULTILINE).strip()
-    try:
-        scores = json.loads(raw)
-    except json.JSONDecodeError:
-        print(f"  [warn] Haiku returned non-JSON: {raw[:200]}")
-        return []
+    raw = msg.content[0].text.strip()
+    if raw.startswith("```"):
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```$", "", raw)
+    return json.loads(raw)
 
-    for s in scores:
-        if 0 <= s["i"] < len(valid):
-            valid[s["i"]]["score"] = s["score"]
-            valid[s["i"]]["reason"] = s.get("reason", "")
-    return [v for v in valid if "score" in v]
+
+def extract_hq_frame(rel_path: str, time_s: float, out_path: Path):
+    abs_path = ROOT / rel_path
+    subprocess.run(
+        ["ffmpeg", "-y", "-loglevel", "error", "-ss", str(time_s),
+         "-i", str(abs_path), "-frames:v", "1", "-q:v", "2", str(out_path)],
+        check=True,
+    )
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("folder", help="Path to draft folder containing linkedin/visual_ideas.txt")
-    args = parser.parse_args()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("folder")
+    args = ap.parse_args()
 
     folder = Path(args.folder)
     ideas_path = folder / "linkedin" / "visual_ideas.txt"
     if not ideas_path.exists():
-        sys.exit(f"Not found: {ideas_path}")
+        sys.exit(f"missing {ideas_path}")
 
-    ideas = [
-        re.sub(r"^[-*\d.\s]+", "", line).strip()
-        for line in ideas_path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-    print(f"[find_visuals] {len(ideas)} ideas loaded")
+    visuals_dir = folder / "visuals"
+    visuals_dir.mkdir(exist_ok=True)
+    work = visuals_dir / "_candidates"
+    work.mkdir(exist_ok=True)
 
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    ideas = [l.lstrip("- ").strip() for l in ideas_path.read_text(encoding="utf-8").splitlines() if l.strip()]
+    print(f"Loaded {len(ideas)} visual ideas")
+
+    api_key = os.environ.get("ANTHROPIC_API_KEY") or _env("ANTHROPIC_API_KEY")
     if not api_key:
-        sys.exit("ANTHROPIC_API_KEY missing")
+        sys.exit("ANTHROPIC_API_KEY not set")
     client = Anthropic(api_key=api_key)
+    con = sqlite3.connect(str(INDEX))
 
-    out_dir = folder / "linkedin" / "visuals"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    thumb_dir = Path("/tmp/sai-find-visuals")
-    thumb_dir.mkdir(exist_ok=True)
-
-    manifest = []
+    results = []
     for idx, idea in enumerate(ideas, 1):
-        print(f"\n[idea {idx}] {idea}")
-        candidates = sample_candidates(idea, CANDIDATES_PER_IDEA)
-        print(f"  sampled {len(candidates)} candidates from {set(c['category'] for c in candidates)}")
-        if not candidates:
-            continue
+        print(f"\n--- Idea {idx}: {idea[:60]}{'...' if len(idea) > 60 else ''} ---")
+        clips = candidate_clips(con, idea)
+        if not clips:
+            print("  no candidate clips"); continue
+        # Sample frames + track which clip/time each came from
+        frames = []
+        meta = {}
+        for c_idx, (rel, dur) in enumerate(clips):
+            slot = f"i{idx}_c{c_idx}"
+            sampled = sample_frames(rel, dur, work, slot)
+            for f_idx, fpath in enumerate(sampled):
+                label = f"F{len(frames)}"
+                t_s = dur * (f_idx + 1) / (N_FRAMES_PER_CLIP + 1)
+                frames.append((label, fpath))
+                meta[label] = (rel, t_s, Path(rel).stem)
+                print(f"    {label}: {Path(rel).name} @ {t_s:.1f}s")
+        if not frames:
+            print("  no frames extracted"); continue
 
-        scored = score_candidates(client, idea, candidates, thumb_dir)
-        scored.sort(key=lambda x: x["score"], reverse=True)
-        if not scored:
-            print(f"  no scores returned")
-            continue
+        scores = score_frames(client, idea, frames)
+        ranked = sorted(scores.items(), key=lambda kv: -kv[1])
+        print("  scores:", ", ".join(f"{l}={s}" for l, s in ranked))
+        winner_label, winner_score = ranked[0]
+        rel, t_s, stem = meta[winner_label]
+        out_name = f"idea{idx}_score{winner_score}_{stem}.jpg"
+        out_path = visuals_dir / out_name
+        extract_hq_frame(rel, t_s, out_path)
+        results.append({"idea": idea, "winner": out_name, "score": winner_score,
+                        "source": rel, "time_s": t_s})
+        print(f"  WINNER: {out_name} (score {winner_score}/10)")
 
-        winner = scored[0]
-        print(f"  winner: {winner['path']} (score {winner['score']}/10) — {winner.get('reason','')}")
+    summary = visuals_dir / "_summary.json"
+    summary.write_text(json.dumps(results, indent=2))
+    print(f"\nDone — {len(results)} winners in {visuals_dir}")
 
-        clip_path = FOOTAGE_ROOT / winner["path"]
-        out_jpg = out_dir / f"idea{idx}_score{winner['score']}_{Path(winner['path']).stem}.jpg"
-        if extract_hq_frame(clip_path, out_jpg):
-            print(f"  saved: {out_jpg.name}")
-            manifest.append({
-                "idea_index": idx,
-                "idea": idea,
-                "winner_clip": winner["path"],
-                "score": winner["score"],
-                "reason": winner.get("reason", ""),
-                "output_jpg": out_jpg.name,
-                "runner_ups": [{"clip": s["path"], "score": s["score"]} for s in scored[1:4]],
-            })
 
-    manifest_path = out_dir / "manifest.json"
-    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    print(f"\n[done] {len(manifest)} visuals saved to {out_dir}")
+def _env(name):
+    p = Path(__file__).parent / ".env"
+    if not p.exists():
+        return None
+    for line in p.read_text(encoding="utf-8").splitlines():
+        if line.startswith(f"{name}="):
+            return line.split("=", 1)[1].strip().strip('"').strip("'")
+    return None
 
 
 if __name__ == "__main__":

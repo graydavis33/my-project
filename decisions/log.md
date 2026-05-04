@@ -226,3 +226,36 @@ Format: `[YYYY-MM-DD] DECISION: ... | REASONING: ... | CONTEXT: ...`
 [2026-05-01] DECISION: Sai-revised LinkedIn captions go into `python-scripts/sai-linkedin/reference/voice/sai-linkedin-posts-final.md`, AND specific revision patterns get encoded as AVOID rules in SYSTEM_PROMPT_CORE | REASONING: First production run of sai-linkedin (2026-04-23 "Do Over" post) produced a draft Sai revised in 8 distinct ways — em-dashes cut, AI-essay headers replaced, poetic verbs flattened, declarative claims hedged, etc. Two-layer feedback: (a) cached corpus learns Sai's voice via pattern-matching, (b) explicit AVOID rules catch the failure modes harder. Both compound — corpus addition is free per run (cached); SYSTEM_PROMPT_CORE growth from ~6.2K to ~7.2K chars adds ~$0.005/run cost, trivially offset by fewer revisions needed. | CONTEXT: 8 patterns documented in memory `feedback_sai_linkedin_voice_revisions.md`. Watch next 2-3 runs for over-correction (rule overload → mechanical output); fix would be tightening rules, not adding more. SYSTEM_PROMPT_CORE itself still uncached — adding cache_control on the core block is a one-line follow-up if cost ever matters.
 
 [2026-05-01] DECISION: Long-form dual-cam pad defaults are 0ms head + 400ms tail, snapped to Whisper word boundaries; outputs forced to common fps + 48kHz audio when source cams differ | REASONING: 04-30 v1 used 50ms head / 100ms tail which chopped the last syllable of trailing words (Whisper word-end timestamps run a hair early) and left dead air at clip starts. Re-render with 0ms head / 400ms tail fixed both — tighter cut-ins, last word + breath finishes naturally. Frame-rate lock matters: A-cam C2313 = 23.976fps, B-cam = 25fps; without forcing both segments to 24000/1001 + 48kHz audio, drift accumulated 0.78s across 79 cuts (broke multicam frame-lock in Premiere). | CONTEXT: Re-render uses saved artifacts (`edit/claude_keep.json` + `edit/words.json` + `edit/sync.json`) — no Whisper or Claude re-pay. Script lives at `python-scripts/multicam-mirror/longform_rerender.py`. Output: `D:/Sai/AI Edits/2026-04-30/long-form-v2/final_Aroll.mp4` + `final_Broll.mp4`, both 529.59s, frame-locked to within 0.25ms. 5 tail picks dropped + 1 clamped because B-cam stopped recording 54s before A. If padding feels wrong on future runs, change `HEAD_PAD` / `TAIL_PAD` constants at the top of the script and re-run.
+
+
+## 2026-05-02 — Footage Organizer index uses relative paths for cross-machine compat
+
+The SQLite index (`.footage-index.sqlite`) at the library root now stores
+clip paths relative to the library root (`05_FOOTAGE_LIBRARY/...`) in POSIX
+form, instead of machine-absolute strings. Resolution to absolute happens at
+read time using the current machine's `<CLIENT>_LIBRARY_ROOT` env var.
+
+**Why:** `D:/Sai` on Windows is the same physical exFAT SSD as
+`/Volumes/Footage/Sai` on Mac. Storing absolute paths meant the index was
+single-machine — switching machines made `Path(p).exists()` return False for
+every row, `remove_missing()` deleted them all, and `pull` returned zero
+results until re-indexed.
+
+**Migration:** symmetrical + automatic. `cli_index._check_legacy_db()` detects
+absolute paths in the existing DB and wipes the `clips` table; the next
+`index` run repopulates with relative paths. No manual migration step. First
+run on either machine after the upgrade triggers it; subsequent runs on
+either machine short-circuit.
+
+**Why this is safe for the existing Mac workflow:** The `clips` table is the
+only thing wiped. `.cache.json` (vision-classification cache) is unaffected
+— its keys are filename + filesize and were already portable. The vision
+cache prevents any paid Claude API re-classification; rebuilding the index is
+just ffprobe + sha1 of the first 1 MB per clip, ~30 seconds for 238 clips at
+zero cost.
+
+[2026-05-02] DECISION: Manual-edit + Claude-asset-generation is the locked workflow for Sai long-form (NOT collaborative timeline editing) | REASONING: Tried collaborative AI editing (custom EDL tools, Remotion, multi-cam pipeline). Friction was high — Claude's creative-judgment errors cost more time than they saved. Gray edits faster and with better creative judgment than any model. Asset generation is where Claude actually adds value (deterministic, parameterized, instant N-variations). | CONTEXT: After Gray manually edited C2313.MP4 down to 6:43.5 vs my AI v4 at 10:51, the diff exposed how much over-inclusion the take-selection model produces. Not fixable by better prompting — fixable by changing who does what. Workflow saved in `~/.claude/.../memory/workflow_sai_video_assets.md`.
+
+[2026-05-02] DECISION: For templated/recurring video assets, prefer PIL+ffmpeg over After Effects | REASONING: PIL+ffmpeg gives pixel-identical N-variations from one parameterized script (lesson cards 1/2/3 = swap NUMBER + TEXT + SLOT_NAME, re-run, done in 2min). After Effects requires per-card manual tweaking, no version control, no batch generation. AE still wins for one-off creative animations, footage compositing, MOGRT templates Gray reuses across multiple Premiere projects. | CONTEXT: First proof in `D:/Sai/08_AI_EDITS/long-form/A-Roll Long Lessons.../edit/assets/lesson_cards/build_lesson_card.py` — produces ProRes 4444 .mov with alpha (transparent numeral cutout, no chroma key needed in Premiere). Hybrid going forward: Claude renders the templated chrome, Gray uses AE for the creative one-offs that deserve manual craft.
+
+[2026-05-03] DECISION: Two short-form Graydient content formats, not three (Growth Recap weekly + "Day X creative director" weekly). Monthly recap killed. | REASONING: Three formats fragments weekly output and dilutes serialization. Monthly reflection has more room inside the long-form YouTube vlog. Shorts reward serialization — the "Day X" counter does the milestone job ("Day 30 — first month done") without needing a standalone format. | CONTEXT: Locked during 2026-05-03 session. Gray at 328 total followers (IG 153, TT 165, YT 10), goal 10K by end of summer. Day 1 = 2026-04-16 (Sai start). Format spine: 45s, iPhone-in-room, B-roll/screen-rec overlays, hook in first 3s, same opener every week.

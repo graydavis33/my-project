@@ -1,6 +1,6 @@
 """
 Filter the index → build a Premiere-ready folder of hardlinks.
-Falls back to copy if hardlink isn't possible (cross-drive on Windows, etc).
+Falls back to copy if hardlink isn't possible (cross-drive on Windows, exFAT, etc).
 """
 import os
 import shutil
@@ -14,7 +14,7 @@ import index
 class PullResult:
     folder: Path
     count: int
-    records: list
+    records: list      # all deduped query matches; may include rows whose file was missing on disk
     fallback_copies: int
 
 
@@ -22,6 +22,7 @@ def pull(
     db_path: Path,
     out_folder: Path,
     *,
+    library_root: Path,
     dedup_by_sha1: bool = True,
     subfolder_fn=None,
     **filters,
@@ -31,6 +32,7 @@ def pull(
     subfolder_fn: optional callable(record) -> str. If provided, each clip lands
     inside out_folder/<subfolder>/. Used by --by-week to group clips by W## label.
     """
+    library_root = Path(library_root)
     rows = index.query(db_path, **filters)
 
     if dedup_by_sha1:
@@ -52,7 +54,7 @@ def pull(
     fallback_copies = 0
     linked = 0
     for r in rows:
-        src = Path(r.path)
+        src = library_root / r.path        # resolve relative path against library
         if not src.exists():
             continue
         dest_dir = out_folder
