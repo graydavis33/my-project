@@ -2,16 +2,22 @@
 SQLite index of every clip in the footage library.
 Schema: one row per (path) — UNIQUE on path so re-scans are idempotent.
 Query is a small DSL: keyword args → AND-joined filters.
+
+Path storage: paths are stored RELATIVE to the library root (POSIX style,
+forward slashes). Caller is responsible for joining against library_root
+when an absolute path is needed (e.g. existence checks, hardlink source).
+This makes the DB portable across Mac (`/Volumes/Footage/Sai`) and Windows
+(`D:/Sai`) — same physical drive, different mount paths.
 """
 import sqlite3
 from dataclasses import dataclass, asdict
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Optional
 
 
 @dataclass
 class ClipRecord:
-    path: str
+    path: str             # RELATIVE to library root, POSIX style ("05_FOOTAGE_LIBRARY/...")
     category: str
     format: str           # "short-form" | "long-form"
     filmed_date: str      # YYYY-MM-DD
@@ -113,11 +119,33 @@ def query(
     return [ClipRecord(*r) for r in rows]
 
 
-def remove_missing(db_path: Path) -> int:
-    """Delete index rows whose file no longer exists. Returns count removed."""
+def remove_missing(db_path: Path, library_root: Path) -> int:
+    """Delete index rows whose file no longer exists on disk.
+    Resolves each row's relative path against library_root. Returns count removed."""
+    library_root = Path(library_root)
     with sqlite3.connect(db_path) as conn:
         all_paths = [r[0] for r in conn.execute("SELECT path FROM clips").fetchall()]
-        gone = [p for p in all_paths if not Path(p).exists()]
+        gone = [p for p in all_paths if not (library_root / p).exists()]
         if gone:
             conn.executemany("DELETE FROM clips WHERE path = ?", [(p,) for p in gone])
     return len(gone)
+
+
+def has_legacy_paths(db_path: Path) -> bool:
+    """True if any row's path is absolute (legacy pre-migration format).
+    Detects both POSIX (`/Volumes/...`) and Windows (`D:/...`, `C:\\...`) absolutes."""
+    with sqlite3.connect(db_path) as conn:
+        rows = conn.execute("SELECT path FROM clips").fetchall()
+    for (p,) in rows:
+        # PurePosixPath("/Volumes/...").is_absolute() -> True
+        # PurePosixPath("D:/Sai/...").is_absolute() -> False, but contains ":"
+        # PurePosixPath("C:\\...").is_absolute() -> False, but contains ":"
+        if PurePosixPath(p).is_absolute() or ":" in p or "\\" in p:
+            return True
+    return False
+
+
+def wipe_clips(db_path: Path) -> None:
+    """Drop all rows from the clips table. Schema and indexes are preserved."""
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("DELETE FROM clips")

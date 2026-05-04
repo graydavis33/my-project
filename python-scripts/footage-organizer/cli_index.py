@@ -52,6 +52,24 @@ def _db(client: str) -> Path:
     return _library(client) / INDEX_DB_NAME
 
 
+def _check_legacy_db(db_path: Path) -> None:
+    """If the DB has legacy absolute paths, wipe + warn. The next index build
+    will repopulate with relative paths. Safe to run on an empty DB.
+
+    This is symmetrical: whichever machine (Mac or Windows) runs first after the
+    relative-path migration triggers the wipe; subsequent runs on either machine
+    see relative paths and short-circuit.
+    """
+    if not db_path.exists():
+        return
+    if not index.has_legacy_paths(db_path):
+        return
+    print(f"\n  ! Detected legacy absolute-path index at {db_path}")
+    print(f"  ! Wiping clips table and rebuilding with relative paths.")
+    print(f"  ! (This is safe — clip files on disk are untouched.)\n")
+    index.wipe_clips(db_path)
+
+
 _PREMIERE_DIR_PREFIXES = ("Adobe Premiere Pro",)
 
 
@@ -65,6 +83,10 @@ def _walk_videos(root: Path):
             if not d.startswith(_PREMIERE_DIR_PREFIXES) and not d.endswith(".PRV")
         ]
         for name in filenames:
+            # Mac on exFAT sprinkles `._<name>` AppleDouble sidecars + `.DS_Store`.
+            # These are not real footage — skip even if extension matches.
+            if name.startswith("._") or name == ".DS_Store":
+                continue
             if Path(name).suffix in VIDEO_EXTENSIONS:
                 yield Path(dirpath) / name
 
@@ -102,6 +124,8 @@ def cmd_index(args):
     db_path = _db(client)
     index.init(db_path)
 
+    _check_legacy_db(db_path)
+
     added = 0
     skipped = 0
 
@@ -120,8 +144,9 @@ def cmd_index(args):
                 continue
 
             upload = datetime.fromtimestamp(clip.stat().st_mtime).strftime("%Y-%m-%d")
+            rel_path = clip.relative_to(library).as_posix()
             rec = index.ClipRecord(
-                path=str(clip),
+                path=rel_path,
                 category=_category_from_path(clip, library),
                 format=_format_from_resolution(w, h),
                 filmed_date=filmed,
@@ -135,7 +160,7 @@ def cmd_index(args):
             index.upsert(db_path, rec)
             added += 1
 
-    removed = index.remove_missing(db_path)
+    removed = index.remove_missing(db_path, library_root=library)
     print(f"\n  Indexed {added} clip(s), skipped {skipped}, removed {removed} missing")
     print(f"  DB: {db_path}\n")
 
@@ -147,6 +172,8 @@ def cmd_pull(args):
     if not db_path.exists():
         print(f"Error: index not built yet. Run: python cli_index.py --client {client} index")
         sys.exit(1)
+
+    _check_legacy_db(db_path)
 
     slug_parts = []
     if args.filmed_date: slug_parts.append(args.filmed_date)
@@ -170,8 +197,8 @@ def cmd_pull(args):
         subfolder_fn = by_week
 
     result = pull_mod.pull(
-        db_path,
-        out,
+        db_path, out,
+        library_root=library,
         category=args.category,
         format=fmt,
         filmed_date=args.filmed_date,
@@ -183,14 +210,11 @@ def cmd_pull(args):
     )
 
     if result.count == 0:
-        print(f"\n  No clips matched.")
-        return
-
-    print(f"\n  Pulled {result.count} clip(s) → {result.folder}")
-    if result.fallback_copies:
-        print(f"  ({result.fallback_copies} fell back to copy — likely cross-drive)")
-    print(f"\n  Drag this folder into Premiere:")
-    print(f"  {result.folder}\n")
+        print(f"\n  Pull → {result.folder}")
+        print(f"  Linked 0 clip(s). Run 'index' first if this is unexpected.\n")
+    else:
+        print(f"\n  Pull → {result.folder}")
+        print(f"  Linked {result.count} clip(s); fallback copies: {result.fallback_copies}\n")
 
 
 def cmd_create_week(args):

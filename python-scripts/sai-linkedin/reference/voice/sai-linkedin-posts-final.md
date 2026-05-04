@@ -45,6 +45,50 @@ What would you go back and tell yourself?
 
 ---
 
+## 2026-04-16 — "Input Over Output" / Inputs Compound
+
+The more I chase the outcome, the less it comes.
+
+I've watched this play out enough times now to actually believe it.
+
+When I'm locked in on the results - the growth slows down.
+
+When I shift back to the inputs - the work, the process, the customer experience - it flows.
+
+Every time.
+
+But here's what nobody tells you:
+
+Training yourself to think this way is genuinely hard.
+
+Your brain wants to track results.
+
+It wants to know if it's working.
+
+It wants the scoreboard.
+
+So you have to actively fight it.
+
+Just obsess over your actions.
+
+Not what they might produce.
+
+Not when they'll pay off.
+
+Just: did I do the work today?
+
+Once that clicks, three things happen at the same time:
+
+1. You stop being afraid of the future
+2. You build something way better for your customers
+3. You make more money
+
+Inputs compound. Outcome-chasing just burns you out.
+
+What's the one input you keep skipping because you're too focused on the result?
+
+---
+
 ## 2026-05-03 — "Pre-Workout Meditation"
 
 Source short: `03_DELIVERED/shorts/W02_Apr-20-26/pre workout meditation.mp4`
