@@ -1,11 +1,18 @@
 {
-  "generated_at": "2026-05-07T12:29:15Z",
+  "generated_at": "2026-05-08T12:08:50Z",
   "month": "2026-05",
   "expenses": [
     {
+      "email_id": "19e04dd1a1280608",
+      "date": "2026-05-07",
+      "vendor": "Wispr Flow",
+      "amount": 15.0,
+      "category": "Software & Tools"
+    },
+    {
       "email_id": "19dea72c2a6d1d5f",
       "date": "2026-05-02",
-      "vendor": "Anthropic",
+      "vendor": "Anthropic, PBC",
       "amount": 10.03,
       "category": "Software & Tools"
     }
