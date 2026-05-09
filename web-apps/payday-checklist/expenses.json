@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08T12:08:50Z",
+  "generated_at": "2026-05-09T11:51:07Z",
   "month": "2026-05",
   "expenses": [
     {
@@ -12,7 +12,7 @@
     {
       "email_id": "19dea72c2a6d1d5f",
       "date": "2026-05-02",
-      "vendor": "Anthropic, PBC",
+      "vendor": "Anthropic",
       "amount": 10.03,
       "category": "Software & Tools"
     }
