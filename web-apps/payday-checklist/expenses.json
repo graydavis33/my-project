@@ -1,7 +1,14 @@
 {
-  "generated_at": "2026-05-10T11:51:47Z",
+  "generated_at": "2026-05-11T13:49:02Z",
   "month": "2026-05",
   "expenses": [
+    {
+      "email_id": "19e146f7b45e2230",
+      "date": "2026-05-11",
+      "vendor": "Prime Video",
+      "amount": 2.99,
+      "category": "Streaming"
+    },
     {
       "email_id": "19e04dd1a1280608",
       "date": "2026-05-07",
