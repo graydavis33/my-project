@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-05-14T12:26:14Z",
+  "generated_at": "2026-05-15T12:53:11Z",
   "month": "2026-05",
   "expenses": [
     {
       "email_id": "19e22c080aa504a6",
       "date": "2026-05-13",
-      "vendor": "Google One",
+      "vendor": "Google LLC",
       "amount": 0.49,
       "category": "Software & Tools"
     },
