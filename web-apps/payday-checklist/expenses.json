@@ -1,13 +1,20 @@
 {
-  "generated_at": "2026-05-18T14:30:05Z",
+  "generated_at": "2026-05-19T13:55:31Z",
   "month": "2026-05",
   "expenses": [
+    {
+      "email_id": "19e3cf04783d5ab7",
+      "date": "2026-05-18",
+      "vendor": "Zachary Carifa",
+      "amount": 86.0,
+      "category": "Misc"
+    },
     {
       "email_id": "19e359c433fd3848",
       "date": "2026-05-16",
       "vendor": "Hard Rock Hotel",
       "amount": 207.99,
-      "category": "Misc"
+      "category": "Shopping"
     },
     {
       "email_id": "19e22c080aa504a6",
