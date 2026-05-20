@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T13:55:31Z",
+  "generated_at": "2026-05-20T13:38:21Z",
   "month": "2026-05",
   "expenses": [
     {
@@ -14,7 +14,7 @@
       "date": "2026-05-16",
       "vendor": "Hard Rock Hotel",
       "amount": 207.99,
-      "category": "Shopping"
+      "category": "Misc"
     },
     {
       "email_id": "19e22c080aa504a6",
