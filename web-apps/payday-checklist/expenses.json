@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T13:38:21Z",
+  "generated_at": "2026-05-21T14:15:40Z",
   "month": "2026-05",
   "expenses": [
     {
@@ -14,12 +14,12 @@
       "date": "2026-05-16",
       "vendor": "Hard Rock Hotel",
       "amount": 207.99,
-      "category": "Misc"
+      "category": "Shopping"
     },
     {
       "email_id": "19e22c080aa504a6",
       "date": "2026-05-13",
-      "vendor": "Google Play",
+      "vendor": "Google LLC",
       "amount": 0.49,
       "category": "Software & Tools"
     },
