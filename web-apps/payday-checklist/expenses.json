@@ -1,7 +1,21 @@
 {
-  "generated_at": "2026-05-24T12:00:49Z",
+  "generated_at": "2026-05-25T13:59:41Z",
   "month": "2026-05",
   "expenses": [
+    {
+      "email_id": "19e5b1e359324dd2",
+      "date": "2026-05-24",
+      "vendor": "Ava Parr",
+      "amount": 50.0,
+      "category": "Misc"
+    },
+    {
+      "email_id": "19e5ad0ae42bdf16",
+      "date": "2026-05-24",
+      "vendor": "MTA Metro-North Railroad",
+      "amount": 22.0,
+      "category": "Transport"
+    },
     {
       "email_id": "19e4f5b99637f8dc",
       "date": "2026-05-22",
