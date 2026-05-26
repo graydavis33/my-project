@@ -1,63 +1,60 @@
 # Sai — Weekly Script Batch (SOP)
 
-Repeatable workflow for ideating + drafting 7 talking-head shorts per week for Sai to batch-film in one day.
+Repeatable workflow for turning Sai's weekly voice memos into 7 short-form scripts that get batch-filmed in one day.
 
-**Cadence:** Run this every week, ideally Sunday or Monday morning. Sai films Tuesday (or whichever day is "filming day" that week).
+**Cadence:**
+- **Day before filming:** Sai records voice memo(s). Gray runs this SOP, Sai reviews scripts, both finalize.
+- **Filming day (default Tuesday):** Sai batch-films all 7 in one session.
+- **Following days:** post 1/day Mon–Fri, save reserves for catch-up days.
 
-**Output:** One file at `business/social-media/sai/scripts/YYYY-MM-DD-batch.md` containing 7 scripts + research provenance + filming notes.
+**Output:** Two files per week:
+1. `business/social-media/sai/scripts/YYYY-MM-DD-batch.md` — the 7 picked scripts for that week
+2. Updates to `business/social-media/sai/script-backlog.md` — every new idea surfaced (whether picked or carried forward)
 
 ---
 
-## Inputs (read these every run)
+## Inputs
 
-These are the corpus we draw from. Re-read before drafting — Sai's lanes evolve.
+### Primary input (this week's content)
 
-1. **Sai's LinkedIn finals** → `python-scripts/sai-linkedin/reference/voice/sai-linkedin-posts-final.md`
-2. **Sai's collected newsletters** → `python-scripts/sai-linkedin/reference/voice/sai-newsletters-collected.md`
-3. **Sai-edition hook templates** → `business/social-media/hook-templates-sai.md`
-4. **Voice feedback log** → `~/.claude/projects/-Users-graydavis28/memory/feedback-sai-linkedin-voice.md`
-5. **Format/shooting scripts library** → `plans/2026-04-16-sai-format-shooting-scripts.md`
-6. **Winning patterns** (once populated) → `business/social-media/winning-patterns.md`
-7. **Killed archive** (avoid resurrecting failed angles) → `business/social-media/killed-archive.md`
+- **Voice memos** at `/Volumes/Footage/Sai/06_ASSETS/Voice Memos/` — Sai records himself answering Gray's interview questions OR riffing on what's on his mind that week. These are the canonical source of script ideas.
+
+### Reference inputs (read before drafting to stay in voice)
+
+- **Sai script backlog** → `business/social-media/sai/script-backlog.md` — every idea ever surfaced, status tracked
+- **Sai's LinkedIn finals** → `python-scripts/sai-linkedin/reference/voice/sai-linkedin-posts-final.md`
+- **Sai's collected newsletters** → `python-scripts/sai-linkedin/reference/voice/sai-newsletters-collected.md`
+- **Sai-edition hook templates** → `business/social-media/hook-templates-sai.md`
+- **Voice feedback log** → `~/.claude/projects/-Users-graydavis28/memory/feedback-sai-linkedin-voice.md`
+- **Winning patterns** → `business/social-media/winning-patterns.md`
+- **Killed archive** → `business/social-media/killed-archive.md`
 
 ---
 
 ## Default Mix (confirm with Gray each week — may shift with strategy)
 
-- **5 scripts in-lane** (75%) — proven topics from Sai's existing voice
-- **2 scripts new territory** (25%) — topics he has high-conviction takes on in writing but hasn't said on video yet
+- **5 scripts in-lane** (75%) — established Sai topics
+- **2 scripts new territory** (25%) — topics he surfaced for the first time on the memo, or topics with high conviction in writing but never on his video
 
-Adjust the split if Gray says otherwise that week.
+Adjust if Gray says otherwise that week.
 
 ---
 
-## Sai's Established Lanes (the 75%)
+## How Sai's Voice Memos Work
 
-Pull from these for in-lane scripts. Updated as Sai's voice evolves.
+Confirmed format (from the 2026-05-26 session):
 
-| Lane | Source | Conviction |
-|---|---|---|
-| Time horizon / 3-5-10 year thinking | LinkedIn 2026-04-23 | High |
-| Discipline / schedule / meditation | LinkedIn 2026-04-27, 2026-05-03 | High |
-| Inputs over outputs | LinkedIn 2026-04-16 | High |
-| Ethical business / scaling DOWN to scale up | Newsletter 1, 4 | High (his deepest moral conviction) |
-| Above-and-beyond customer obsession (with TACTICS) | Newsletter 3 | High |
-| Brother / Srikar partnership | Strategy doc + Newsletter 6 | High but underused on video — keep mining |
-| BuiltGen → Trendify story arc | Strategy doc — "2nd agency" framing | High |
-| Healthy vs unhealthy ego | Newsletter 1 | Medium |
-| Game theory / playing the long game (dice roll story) | Newsletter 2 | Medium |
-| Guaranteed success: clarity + purity | Newsletter 4 | Medium |
+- Gray and Sai sit down together
+- Gray asks open questions ("what's been on your mind?", "what did you learn this week?", "go deeper on that")
+- Sai riffs — sometimes telling a story, sometimes a framework, sometimes a tactic
+- Recording is typically split into two halves (Part 1 + Part 2) of ~15–25 min each
+- Sai may flag mid-memo when something "needs more shape" — those get marked `needs-followup` in the backlog, NOT filmed without a sharpening session
 
-## New Territory Pool (the 25%)
+**Sai's process preference (his own words from 2026-05-26 memo):**
 
-Topics Sai has strong takes on in his newsletters but hasn't said on short-form yet. Rotate through these — once aired on video, they move into the "lane" list above.
+> "As I'm saying the story, I'll come up with the new stories myself. I'll come up with each video idea where I would need your help is, like, imagining that as being an actual script. And thinking about what people might be missing from what I've already said. If there's something that you think can add more context or make a better hook — probing on that frame of mind versus, like, let's find a new video that we can add."
 
-- Fear is useless (Newsletter 6)
-- AI-proofing by going more human (Newsletter 7)
-- Mortality / "should you think about death" (Newsletter 2)
-- Politics + psychology of attention (Newsletter 4 — Charlie Kirk analysis)
-- "Learning from strangers" / knocking on dorms (Newsletter 1)
-- Game theory dice roll metaphor told as a single story (Newsletter 2)
+**Apply this on session day:** when listening live, your job is to identify what's MISSING from a script-shaped beat in his answer, then probe deeper on the same frame. Don't pivot to a new video unless the current one already lands.
 
 ---
 
@@ -65,92 +62,163 @@ Topics Sai has strong takes on in his newsletters but hasn't said on short-form 
 
 ### Step 1 — Confirm scope with Gray (2 min)
 
-- Default 5+2 mix, or does this week shift?
-- Filming day confirmed?
-- Any topic the strategy/voice memo says to lean into or avoid?
+- Default 5+2 mix this week?
+- Any constraints from strategy / Sai's calendar?
+- Anything Sai said in passing to flag for capture this week?
 
-### Step 2 — Re-read the inputs (10–15 min)
+### Step 2 — Transcribe the voice memos (5 min wall time, then walk away)
 
-Don't skip this. Sai's voice drifts — the latest LinkedIn post may reveal a fresh conviction, the newsletter you read last week may hit different now.
+```bash
+mkdir -p ~/Desktop/my-project/business/social-media/sai/voice-memos/YYYY-MM-DD-batch-recap
+cd ~/Desktop/my-project/business/social-media/sai/voice-memos/YYYY-MM-DD-batch-recap
 
-### Step 3 — Pick 7 topics (10 min)
+# Compress each .m4a → mp3 (mono, 16kHz, 64k)
+ffmpeg -i "/Volumes/Footage/Sai/06_ASSETS/Voice Memos/Part 1.m4a" -vn -ac 1 -ar 16000 -b:a 64k part1.mp3
+ffmpeg -i "/Volumes/Footage/Sai/06_ASSETS/Voice Memos/Part 2.m4a" -vn -ac 1 -ar 16000 -b:a 64k part2.mp3
+```
 
-- 5 from lanes — avoid repeating any topic that's been on video in the last 30 days (cross-check `video-log.csv`)
-- 2 from new territory pool
-- Cross-check against `killed-archive.md` — don't resurrect a failed angle without a real reason
+Copy the transcribe.py template from `voice-memos/2026-05-26-batch-recap/transcribe.py` into the new folder, adjust file names, run with the content-pipeline venv:
 
-### Step 4 — Draft each script (45–60 min total)
+```bash
+~/Desktop/my-project/python-scripts/content-pipeline/venv/bin/python transcribe.py
+```
 
-Per script, decide:
-- **Hook style** — which V-template from `hook-templates-sai.md`
-- **Visual style** — which Vis-template (Eye-Lock / Walk-and-Talk / Object Reveal etc.)
-- **Length target** — 30–60s
-- **B-roll asks** — anything to grab during the filming day
-- **Source citation** — which newsletter / LinkedIn post the conviction came from
+**Model choice:** `small` is the default for voice memos (fast, plenty accurate for clear speech). Use `medium` only if speech is noisy or accents are heavy. `large-v3` is wall-time-expensive on Mac CPU — only worth it for high-stakes long-form, not weekly recaps.
 
-Then write the script in Sai's voice. Apply the AVOID rules from voice feedback log every time:
+**API alternative:** if the OpenAI API key is set in `python-scripts/content-pipeline/.env`, transcription via Whisper API runs in ~3 min for ~$0.25 (vs ~5–10 min local). Both work; default to local for cost.
 
-- "Founder" never "CEO"
-- No "most founders…" punching down
-- No AI-flavored summary closers
-- No invented copywriter specifics (real numbers only)
-- No 3-beat "no X, no Y, no Z" — cap at 2 with intensifier
-- No identity-wrapped restatements ("for a founder, that's a cheat code")
-- Question CTAs optional; default to landing on punchline
-- Don't drop the verb in callbacks
+### Step 3 — Read both transcripts and catalog every shootable idea (15–25 min)
 
-### Step 5 — Write the batch file
+Open each `partN-transcript.md`. For every standalone shootable idea, add an entry to `business/social-media/sai/script-backlog.md`:
 
-Save to `business/social-media/sai/scripts/YYYY-MM-DD-batch.md` with sections:
+```markdown
+### N. id-slug
 
-1. Header (date, format, split, filming day, posting cadence)
-2. Ideation Method — sources consulted + any decisions about NOT running fresh research
-3. Voice Rules Applied (paste the AVOID list)
-4. The 7 Scripts — each with Source / Format / Visual / Length / script body
-5. Filming Notes — batching order, outfit changes, locations, B-roll asks, hook alternates
-6. Tracking instructions — how to populate `video-log.csv` post-publish
-7. Open Questions for Sai — anything to confirm before camera rolls
+- **status:** `backlog`
+- **topic:** one-line summary
+- **pillar:** existing lane tag (or flag NEW LANE for Gray)
+- **format:** talking-head / framework / tactic-reveal / personal-story / etc.
+- **timestamp:** [MM:SS – MM:SS]
+- **source_quote:** Sai's actual words, copied verbatim from the transcript
+- **why it works:** 1-line take on the hook / save-bait / specificity
+- **notes:** anything about pairing, conditions, follow-up needed
+```
 
-### Step 6 — Hand off to Sai (5 min)
+**Granularity rule:** one entry per shootable idea. A topic like "Learn finances yourself" is one entry, but a tactic embedded inside it like "30% of paycheck → Taxes vault" gets its own entry because it can stand alone as a 30-second short.
 
-- Drop the file link in Slack / wherever Sai reviews
-- Flag the "Open Questions" section — those gate the shoot
-- Confirm filming day + which scripts need Srikar / specific locations
+**Sai's own mid-memo flags:** if Sai says something like "I don't know if I want to use this" OR "this needs more shape" → mark `status: needs-followup` and note what would unblock it.
 
-### Step 7 — After Posting (ongoing)
+### Step 4 — Pick the 7 strongest (10 min)
 
-For each script that ships:
+Score each backlog idea against:
+- **Specificity** — concrete numbers, dates, names = save-bait
+- **Hook strength** — does it open with a line that stops the scroll
+- **Standalone** — viewer needs zero context to get the lesson
+- **Mix balance** — across the 7, want a variety of tactical / framework / story
+- **Lane / new-territory split** — 5 in-lane + 2 new (default)
 
-1. Add row to `business/social-media/video-log.csv`:
-   - `video_id`: `YYYY-MM-DD-slug`
-   - `series`: e.g. `Sai Talking Head Batch 2026-05-26`
-   - `pillar`: which lane/territory
-   - `hook_style`: V-template number
-   - `format`: `talking-head-short`
-   - Leave `performance_tier` and 7-day metrics blank until they're in
+Avoid:
+- Anything that overlaps a video Sai posted in the last 30 days (check `video-log.csv`)
+- Anything in `killed-archive.md` without a real reason it's worth resurrecting
+- Anything flagged `needs-followup` (those gate on Sai)
 
-2. After 7 days, fill in metrics. Compare to Sai's rolling average.
+Mark the picks: `status: picked-YYYY-MM-DD` in the backlog file.
 
-3. Promote winners to `winning-patterns.md`. Demote floppers to `killed-archive.md` with a retrospective note.
+### Step 5 — Draft each script (45–60 min total)
+
+**Drafting principles:**
+
+- **Use Sai's actual words.** The source quote in the backlog entry is the raw material. Tighten by removing fillers, redundancies, and Gray's interview questions — but preserve word choice.
+- **Open with Sai's strongest line.** Find the line in the transcript that would stop a scroll. That's the hook.
+- **End on a punchline.** Question CTAs only on framework-shaped posts; default is to land on the punchline.
+- **Apply voice rules every time:**
+  - "Founder" never "CEO"
+  - No "most founders…" punching down
+  - No AI-flavored summary closers
+  - No invented specifics — every number from Sai's actual mouth
+  - Keep cusses if Sai used them in voice (flag for him to choose per-post — LinkedIn finals don't cuss, voice memos do)
+  - No 3-beat "no X, no Y, no Z" — cap at 2 with intensifier
+  - Don't drop the verb in callbacks
+- **Target 30–60s** which is roughly 75–150 spoken words
+
+**When tightening would change Sai's meaning:** stop. Keep the longer Sai version. The point is HIS voice, not script efficiency.
+
+### Step 6 — Write the batch file
+
+Save to `business/social-media/sai/scripts/YYYY-MM-DD-batch.md`. Sections:
+
+1. **Header:** source material links, format decisions, length target, lane split
+2. **Voice Rules Applied:** paste the AVOID list (so Sai can verify)
+3. **Filming Day Plan:** location mix, outfit changes, filming order
+4. **The 7 Scripts:** each with backlog id link + source timestamp + format + visual notes + the script body
+5. **Open Questions for Sai:** anything that gates the shoot
+6. **How This Batch Was Built (provenance trail):** so future Claude can retrace the process
+7. **Post-filming tracking:** how to update video-log.csv + backlog statuses
+
+### Step 7 — Hand off to Sai for review (5 min)
+
+- Drop the batch file link wherever Sai reviews
+- Surface the "Open Questions" prominently — those gate the shoot
+- Confirm filming location(s) + any wardrobe / set needs
+
+### Step 8 — After Filming (status update only)
+
+For each picked script, update its backlog entry: `picked-YYYY-MM-DD` → `filmed`.
+
+### Step 9 — After Posting (tracking)
+
+For each posted video, add a row to `business/social-media/video-log.csv`:
+
+- `video_id`: `YYYY-MM-DD-{backlog-slug}`
+- `series`: `Sai Voice-Memo Batch`
+- `pillar`: from the backlog entry
+- `format`: `talking-head-short-aroll` (this batch) — adjust if format changed
+- Leave 7-day metrics blank until they're in
+
+After 7 days, fill metrics, compare to rolling average. Update the backlog entry status `filmed` → `posted`.
+
+Promote winners to `winning-patterns.md`. Demote floppers to `killed-archive.md` with retrospective.
 
 ---
 
 ## Cost / Tool Notes
 
-**Default workflow uses ZERO API spend.** All inputs are local files.
+**Default workflow uses ZERO API spend** (local Whisper + reading transcripts).
 
-When to escalate to `content-researcher` or `creator-intel`:
-- Sai's lane list feels exhausted (haven't added a new lane in 6+ weeks)
-- A new niche or platform is being tested
+**When to spend on API:**
+- Set `OPENAI_API_KEY` in `python-scripts/content-pipeline/.env` for ~$0.25/week × 4 weeks/month = $1/month in transcription. Saves ~5 min/week wall time. Pays off if Sai's memos start running longer (>30 min total) or quality becomes an issue.
+
+**When to escalate to `content-researcher` or `creator-intel`:**
+- Sai's lane list feels exhausted (no new topics in 4+ weeks of memos)
+- Strategy shift introduces a new audience
 - Sai asks for trending-topic reactive content
-- Strategy shift introduces a completely new audience
+- Otherwise: Sai's voice memos + backlog are the deeper well. Re-read first.
 
-Otherwise: Sai's own writing is a deeper well than any external research. Re-read first.
+---
+
+## File Locations (Reference)
+
+| File | Purpose |
+|---|---|
+| `/Volumes/Footage/Sai/06_ASSETS/Voice Memos/` | Raw .m4a voice memos from Sai |
+| `business/social-media/sai/voice-memos/YYYY-MM-DD-batch-recap/` | Compressed audio + transcripts + the transcribe.py script |
+| `business/social-media/sai/script-backlog.md` | Living index of every idea ever surfaced |
+| `business/social-media/sai/scripts/YYYY-MM-DD-batch.md` | This week's 7 picked scripts |
+| `business/social-media/video-log.csv` | All posted videos + performance |
+| `business/social-media/winning-patterns.md` | Patterns that crossed HIT tier |
+| `business/social-media/killed-archive.md` | Series / formats / hooks that got cut |
+| `business/social-media/hook-templates-sai.md` | 50 verbal + 20 visual hook templates for Sai |
+| `python-scripts/sai-linkedin/reference/voice/` | Sai's LinkedIn finals + newsletter corpus |
+| `memory/feedback-sai-linkedin-voice.md` | AVOID rules from Sai's actual revisions |
 
 ---
 
 ## Why This Workflow Exists
 
-Batching 7 scripts at once is 4–5x more efficient than ad-hoc daily ideation, AND ensures topic diversity (no two consecutive shorts about the same lane). The weekly cadence forces a continuous read of Sai's evolving voice — which keeps drafts in his voice instead of drifting back to AI-flavored generic founder content.
+**The core insight:** Sai's own current thinking — captured fresh in voice memo form — is a deeper well than any external research or our own newsletter mining. The 2026-05-26 session produced 18 standalone shootable ideas in 41 minutes of audio. That's a 4-week pipeline from one sitting.
 
-The 75/25 lane/new-territory split is the iteration mechanism: in-lane content compounds his existing audience's expectations, new territory tests whether a topic should join the lanes for the next iteration.
+**The backlog system means nothing valuable disappears.** Even ideas Sai mentions in passing get captured. Future weeks pick from accumulated material, not from a blank page.
+
+**The voice rules + transcript-grounded drafting means scripts sound like Sai, not like AI.** Every line in the batch file traces back to a timestamp in the transcript. If a script ever drifts off-voice, we can audit which line came from which moment.
+
+**The 75/25 lane/new-territory split is the iteration mechanism:** in-lane content compounds his existing audience's expectations; new territory tests whether a topic should join the lanes for next week's iteration.
