@@ -5,7 +5,7 @@ Runs in this folder, writes part1-transcript.md and part2-transcript.md.
 import whisper, time
 from pathlib import Path
 
-MODEL = "medium"
+MODEL = "small"
 HERE = Path(__file__).parent
 
 print(f"Loading Whisper {MODEL} model (first run downloads ~1.5GB)...")
