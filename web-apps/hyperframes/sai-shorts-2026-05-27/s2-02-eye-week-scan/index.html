@@ -50,32 +50,36 @@
         gap: 16px;
         opacity: 1;
       }
+      /* Solid white boxes with orange letters. When "lit" by the scan,
+         they invert (orange fill + white letter) and pop up slightly. */
       .day-box {
         width: 120px;
         height: 150px;
-        background: #00FF00; /* chroma-key fill so A-roll shows through in composite */
-        border: 4px solid #FFFFFF;
+        background: #FFFFFF;
         border-radius: 18px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 6px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
-        will-change: transform, opacity, border-color;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+        will-change: transform, opacity, background-color;
+        transition: background-color 0.18s ease, transform 0.18s ease;
       }
       .day-box .day-letter {
         font-size: 56px;
         font-weight: 600;
-        color: #FFFFFF;
+        color: #F28129;
         line-height: 1;
-        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        transition: color 0.18s ease;
       }
+      /* Color changes only — the pop transform is GSAP-driven
+         so it doesn't fight with GSAP's inline transform. */
       .day-box.lit {
-        border-color: #F28129;
+        background: #F28129;
       }
       .day-box.lit .day-letter {
-        color: #F28129;
+        color: #FFFFFF;
       }
 
       /* ── Peripheral lines SVG (full frame overlay) ──────────── */
@@ -103,16 +107,22 @@
         <!-- Eye -->
         <div id="eye-wrap" class="eye-wrap" data-layout-allow-overflow>
           <svg id="eye-svg" class="eye-svg" viewBox="0 0 360 180">
-            <!-- Almond outline. Fill #00FF00 = chroma-key transparent in composite,
-                 so Sai's A-roll shows through the eye interior. -->
+            <defs>
+              <!-- Clip the iris-group to the almond shape so the pupil
+                   can never visually escape the eye no matter how far it looks. -->
+              <clipPath id="almond-clip">
+                <path d="M 10 90 Q 180 -5 350 90 Q 180 185 10 90 Z" />
+              </clipPath>
+            </defs>
+            <!-- Solid white almond — opaque asset. -->
             <path id="eye-almond"
                   d="M 10 90 Q 180 -5 350 90 Q 180 185 10 90 Z"
-                  fill="#00FF00"
+                  fill="#FFFFFF"
                   stroke="#FFFFFF"
-                  stroke-width="6"
+                  stroke-width="2"
                   stroke-linejoin="round" />
-            <!-- Iris group — translates as a unit for look-around -->
-            <g id="iris-group">
+            <!-- Iris group — translates for look-around, clipped to almond. -->
+            <g id="iris-group" clip-path="url(#almond-clip)">
               <!-- Iris ring (orange stroke, hollow) -->
               <circle id="iris-ring" cx="180" cy="90" r="50"
                       fill="none" stroke="#F28129" stroke-width="6" />
@@ -279,14 +289,16 @@
         tl.to("#iris-group", { y: 18, duration: 0.30, ease: "power2.out" }, lookDownT);
 
         // 5. PERIPHERAL LINES DRAW IN.
-        // Lines emanate from eye base (eyeFinalCenterY + small offset) to the first box.
-        // We tween x2/y2 from the eye anchor to the target box corners.
-        const eyeAnchorY = eyeFinalCenterY + (eyeHeight * vars.eyeFinalScale) / 2 - 6;
-        const eyeAnchorX = 540;
+        // Left line anchors at the LEFT TIP of the eye, right line at the RIGHT TIP.
+        // Tips sit at vertical center of the almond (eyeFinalCenterY).
+        const eyeHalfW = (eyeWidth * vars.eyeFinalScale) / 2;
+        const eyeLeftTipX  = 540 - eyeHalfW;
+        const eyeRightTipX = 540 + eyeHalfW;
+        const eyeAnchorY = eyeFinalCenterY;
 
-        // Initial lines collapsed at the eye anchor.
-        gsap.set("#periph-L", { attr: { x1: eyeAnchorX, y1: eyeAnchorY, x2: eyeAnchorX, y2: eyeAnchorY }, opacity: 0 });
-        gsap.set("#periph-R", { attr: { x1: eyeAnchorX, y1: eyeAnchorY, x2: eyeAnchorX, y2: eyeAnchorY }, opacity: 0 });
+        // Lines collapsed at their respective anchor tips.
+        gsap.set("#periph-L", { attr: { x1: eyeLeftTipX,  y1: eyeAnchorY, x2: eyeLeftTipX,  y2: eyeAnchorY }, opacity: 0 });
+        gsap.set("#periph-R", { attr: { x1: eyeRightTipX, y1: eyeAnchorY, x2: eyeRightTipX, y2: eyeAnchorY }, opacity: 0 });
 
         // Box 1 corners — both lines extend toward box 1 at first.
         const box1 = boxCenters[0];
