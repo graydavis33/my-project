@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"year","type":"string","label":"Year label","default":"2026"},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Card stroke width (px)","default":2},{"id":"cornerRadius","type":"number","label":"Card corner radius (px)","default":40},{"id":"cardEnterTime","type":"number","label":"Calendar card enters at (s)","default":0.0},{"id":"firstFlipTime","type":"number","label":"First month flip (Jan→Feb) at (s)","default":0.30},{"id":"fastInterval","type":"number","label":"Interval between early flips (s)","default":0.18},{"id":"slowInterval","type":"number","label":"Interval between later flips (s)","default":0.30},{"id":"decemberHoldStart","type":"number","label":"December lands at (s)","default":2.55},{"id":"highlightTime","type":"number","label":"Orange ring on Dec 31 at (s)","default":3.20},{"id":"transitionDuration","type":"number","label":"Per-flip transition (s)","default":0.18}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* === Calendar card frame === */
+      .calendar-card {
+        position: relative;
+        width: 840px;
+        height: 1080px;
+        padding: 60px 60px 80px 60px;
+        background: transparent;
+        border-style: solid;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        will-change: transform, opacity;
+      }
+
+      /* Year label (small, above month name) */
+      .year-label {
+        font-size: 44px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        color: var(--white);
+        text-align: center;
+        opacity: 0.85;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Month stack — all 12 months absolute-positioned in the same slot */
+      .month-stack {
+        position: relative;
+        height: 140px;
+        margin-bottom: 8px;
+      }
+      .month-name {
+        position: absolute;
+        inset: 0;
+        font-size: 128px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: var(--white);
+        text-align: center;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        will-change: transform, opacity;
+        line-height: 1;
+      }
+
+      /* Divider beneath month name */
+      .divider {
+        width: 100%;
+        height: 2px;
+        background: var(--white);
+        opacity: 0.7;
+      }
+
+      /* Weekday header */
+      .weekday-row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+      .weekday-cell {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--white);
+        opacity: 0.7;
+        letter-spacing: 0.06em;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Grid stack — same model as months, all 12 grids overlap */
+      .grid-stack {
+        position: relative;
+        flex: 1;
+      }
+      .month-grid {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-auto-rows: 90px;
+        gap: 4px;
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+      .day-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        font-weight: 600;
+        color: var(--white);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+      .day-cell.empty {
+        visibility: hidden;
+      }
+
+      /* Orange highlight ring around Dec 31 */
+      .day-highlight {
+        position: absolute;
+        inset: 4px;
+        border: 4px solid var(--orange);
+        border-radius: 999px;
+        opacity: 0;
+        will-change: transform, opacity;
+        box-shadow: 0 0 18px rgba(242, 129, 41, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+        <div id="calendar-card" class="calendar-card">
+          <div id="year-label" class="year-label">2026</div>
+
+          <div class="month-stack" id="month-stack">
+            <!-- 12 month names injected here -->
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="weekday-row">
+            <div class="weekday-cell">S</div>
+            <div class="weekday-cell">M</div>
+            <div class="weekday-cell">T</div>
+            <div class="weekday-cell">W</div>
+            <div class="weekday-cell">T</div>
+            <div class="weekday-cell">F</div>
+            <div class="weekday-cell">S</div>
+          </div>
+
+          <div class="grid-stack" id="grid-stack">
+            <!-- 12 day grids injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        // Apply theme colors
+        document.documentElement.style.setProperty("--white", vars.white);
+        document.documentElement.style.setProperty("--orange", vars.orange);
+
+        // Card chrome
+        const card = document.getElementById("calendar-card");
+        card.style.borderWidth = vars.strokeWidth + "px";
+        card.style.borderColor = vars.white;
+        card.style.borderRadius = vars.cornerRadius + "px";
+        card.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)";
+
+        // Year text from variable
+        document.getElementById("year-label").textContent = vars.year;
+
+        // === 2026 calendar data (hardcoded for determinism) ===
+        // firstDay: 0=Sunday, 1=Monday, ... 6=Saturday — verified for 2026
+        const months = [
+          { name: "JANUARY",   days: 31, firstDay: 4 },
+          { name: "FEBRUARY",  days: 28, firstDay: 0 },
+          { name: "MARCH",     days: 31, firstDay: 0 },
+          { name: "APRIL",     days: 30, firstDay: 3 },
+          { name: "MAY",       days: 31, firstDay: 5 },
+          { name: "JUNE",      days: 30, firstDay: 1 },
+          { name: "JULY",      days: 31, firstDay: 3 },
+          { name: "AUGUST",    days: 31, firstDay: 6 },
+          { name: "SEPTEMBER", days: 30, firstDay: 2 },
+          { name: "OCTOBER",   days: 31, firstDay: 4 },
+          { name: "NOVEMBER",  days: 30, firstDay: 0 },
+          { name: "DECEMBER",  days: 31, firstDay: 2 },
+        ];
+
+        // Build 12 month-name elements + 12 day-grid elements
+        const monthStack = document.getElementById("month-stack");
+        const gridStack = document.getElementById("grid-stack");
+
+        months.forEach(function (m, idx) {
+          // Month name
+          const nameEl = document.createElement("div");
+          nameEl.className = "month-name";
+          nameEl.id = "month-" + idx;
+          nameEl.textContent = m.name;
+          monthStack.appendChild(nameEl);
+
+          // Day grid
+          const gridEl = document.createElement("div");
+          gridEl.className = "month-grid";
+          gridEl.id = "grid-" + idx;
+
+          // Leading empty cells (offset to first day of month)
+          for (let e = 0; e < m.firstDay; e++) {
+            const empty = document.createElement("div");
+            empty.className = "day-cell empty";
+            gridEl.appendChild(empty);
+          }
+
+          // Day numbers 1..days
+          for (let d = 1; d <= m.days; d++) {
+            const cell = document.createElement("div");
+            cell.className = "day-cell";
+            cell.textContent = d;
+
+            // Attach highlight ring to December 31 only
+            if (idx === 11 && d === 31) {
+              cell.id = "dec-31";
+              const ring = document.createElement("div");
+              ring.className = "day-highlight";
+              ring.id = "dec-31-ring";
+              cell.appendChild(ring);
+            }
+            gridEl.appendChild(cell);
+          }
+
+          gridStack.appendChild(gridEl);
+        });
+
+        // === Build flip schedule (all 12 months, 11 transitions) ===
+        // Months 0-6 use fastInterval; 7-10 use slowInterval; December lands at decemberHoldStart.
+        const flipTimes = [];
+        flipTimes.push(vars.firstFlipTime); // Jan -> Feb
+        for (let i = 1; i < 11; i++) {
+          const interval = i < 6 ? vars.fastInterval : vars.slowInterval;
+          flipTimes.push(flipTimes[i - 1] + interval);
+        }
+        // Override the final flip (Nov -> Dec) to land precisely on decemberHoldStart
+        flipTimes[10] = vars.decemberHoldStart;
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        const enterDur = 0.25;
+        const dur = vars.transitionDuration;
+        const slideDistance = 60; // px
+
+        // Card enters
+        tl.from(
+          "#calendar-card",
+          { opacity: 0, scale: 0.92, y: 30, duration: enterDur, ease: "power2.out" },
+          vars.cardEnterTime
+        );
+
+        // January starts visible (no fade-in needed — it's part of the card enter)
+        tl.to("#month-0", { opacity: 1, duration: 0.01 }, vars.cardEnterTime);
+        tl.to("#grid-0", { opacity: 1, duration: 0.01 }, vars.cardEnterTime);
+
+        // For each month transition: fade out current, fade in next with slide
+        for (let i = 0; i < 11; i++) {
+          const t = flipTimes[i];
+          const isDecember = i === 10;
+          const inDur = isDecember ? 0.32 : dur;
+          const inEase = isDecember ? "back.out(1.4)" : "power2.out";
+
+          // Fade out current month name + grid
+          tl.to("#month-" + i, {
+            opacity: 0,
+            y: -slideDistance,
+            duration: dur * 0.8,
+            ease: "power2.in",
+          }, t);
+          tl.to("#grid-" + i, {
+            opacity: 0,
+            duration: dur * 0.8,
+            ease: "power2.in",
+          }, t);
+
+          // Fade in next month name + grid
+          tl.fromTo("#month-" + (i + 1),
+            { opacity: 0, y: slideDistance },
+            { opacity: 1, y: 0, duration: inDur, ease: inEase },
+            t + (isDecember ? 0.04 : 0.02)
+          );
+          tl.fromTo("#grid-" + (i + 1),
+            { opacity: 0, y: isDecember ? slideDistance * 0.5 : 0 },
+            { opacity: 1, y: 0, duration: inDur, ease: inEase },
+            t + (isDecember ? 0.04 : 0.02)
+          );
+        }
+
+        // Orange ring lands on Dec 31
+        tl.fromTo("#dec-31-ring",
+          { opacity: 0, scale: 1.6 },
+          { opacity: 1, scale: 1.0, duration: 0.35, ease: "back.out(2)" },
+          vars.highlightTime
+        );
+
+        // Subtle pulse on the highlighted Dec 31 cell to draw the eye
+        tl.fromTo("#dec-31",
+          { scale: 1.0 },
+          { scale: 1.08, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1 },
+          vars.highlightTime
+        );
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
