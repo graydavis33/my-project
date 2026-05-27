@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" data-composition-variables="[{&quot;id&quot;:&quot;bankLabel&quot;,&quot;type&quot;:&quot;string&quot;,&quot;label&quot;:&quot;Bank label text&quot;,&quot;default&quot;:&quot;BANK&quot;},{&quot;id&quot;:&quot;vaultLabel&quot;,&quot;type&quot;:&quot;string&quot;,&quot;label&quot;:&quot;Vault label text&quot;,&quot;default&quot;:&quot;Taxes&quot;},{&quot;id&quot;:&quot;orange&quot;,&quot;type&quot;:&quot;color&quot;,&quot;label&quot;:&quot;Accent orange&quot;,&quot;default&quot;:&quot;#F28129&quot;},{&quot;id&quot;:&quot;white&quot;,&quot;type&quot;:&quot;color&quot;,&quot;label&quot;:&quot;White&quot;,&quot;default&quot;:&quot;#FFFFFF&quot;},{&quot;id&quot;:&quot;strokeWidth&quot;,&quot;type&quot;:&quot;number&quot;,&quot;label&quot;:&quot;Stroke width (px)&quot;,&quot;default&quot;:2},{&quot;id&quot;:&quot;cornerRadius&quot;,&quot;type&quot;:&quot;number&quot;,&quot;label&quot;:&quot;Corner radius (px)&quot;,&quot;default&quot;:40},{&quot;id&quot;:&quot;bankEnterTime&quot;,&quot;type&quot;:&quot;number&quot;,&quot;label&quot;:&quot;Bank rises from bottom at (s)&quot;,&quot;default&quot;:0.2},{&quot;id&quot;:&quot;vaultEnterTime&quot;,&quot;type&quot;:&quot;number&quot;,&quot;label&quot;:&quot;Vault emerges from bank at (s)&quot;,&quot;default&quot;:1.1},{&quot;id&quot;:&quot;arrowEnterTime&quot;,&quot;type&quot;:&quot;number&quot;,&quot;label&quot;:&quot;Arrow draws in at (s)&quot;,&quot;default&quot;:2.0},{&quot;id&quot;:&quot;moneyStartTime&quot;,&quot;type&quot;:&quot;number&quot;,&quot;label&quot;:&quot;Money starts falling at (s)&quot;,&quot;default&quot;:2.6},{&quot;id&quot;:&quot;moneyCount&quot;,&quot;type&quot;:&quot;number&quot;,&quot;label&quot;:&quot;Number of bills falling&quot;,&quot;default&quot;:12},{&quot;id&quot;:&quot;moneyFallDuration&quot;,&quot;type&quot;:&quot;number&quot;,&quot;label&quot;:&quot;Each bill falls for (s)&quot;,&quot;default&quot;:1.4}]">
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"bankLabel","type":"string","label":"Bank label text","default":"BANK"},{"id":"vaultLabel","type":"string","label":"Vault label text","default":"Taxes"},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Stroke width (px)","default":2},{"id":"cornerRadius","type":"number","label":"Corner radius (px)","default":40},{"id":"bankEnterTime","type":"number","label":"Bank rises from bottom at (s)","default":0.2},{"id":"vaultEnterTime","type":"number","label":"Vault emerges from bank at (s)","default":1.1},{"id":"arrowEnterTime","type":"number","label":"Arrow draws in at (s)","default":2.0},{"id":"moneyStartTime","type":"number","label":"Money starts falling at (s)","default":2.6},{"id":"moneyCount","type":"number","label":"Number of bills falling","default":12},{"id":"moneyFallDuration","type":"number","label":"Each bill falls for (s)","default":1.4}]'>
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=1080, height=1920">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -11,14 +11,14 @@
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background: #00FF00; /* chroma key green — Gray keys this out in Premiere */
+        background: #00FF00; /* chroma key green */
         font-family: "Montserrat", system-ui, sans-serif;
       }
 
-      /* === Scene container fills the full frame ===
-         column-reverse puts the first child (bank) at the BOTTOM.
-         Visual order top→bottom is: vault, arrow, bank.
-         Vault sits in the middle, bank anchors the bottom third. */
+      /* === Scene container ===
+         column-reverse: first HTML child renders at BOTTOM visually.
+         HTML order: bank → arrow → vault.
+         Visual order top→bottom: VAULT (middle) → ARROW → BANK (bottom third). */
       .scene {
         position: relative;
         width: 100%;
@@ -31,7 +31,7 @@
         gap: 80px;
       }
 
-      /* === Bank card (anchors the BOTTOM third) === */
+      /* === Bank card — anchors the BOTTOM third === */
       .bank-card {
         display: flex;
         flex-direction: column;
@@ -43,15 +43,8 @@
         border-style: solid;
         gap: 24px;
       }
-      .bank-icon {
-        width: 96px;
-        height: 96px;
-        position: relative;
-      }
-      .bank-icon svg {
-        width: 100%;
-        height: 100%;
-      }
+      .bank-icon { width: 96px; height: 96px; position: relative; }
+      .bank-icon svg { width: 100%; height: 100%; }
       .bank-label {
         font-size: 56px;
         font-weight: 600;
@@ -60,7 +53,7 @@
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
       }
 
-      /* === Arrow between bank and vault === */
+      /* === Arrow connector (between bank below and vault above) === */
       .arrow {
         width: 12px;
         height: 200px;
@@ -74,9 +67,9 @@
         width: 4px;
         height: 100%;
         background: var(--white);
-        transform-origin: bottom center;
+        transform-origin: bottom center; /* draws from bank-side UP */
       }
-      /* Arrow now points UP — from the bank (bottom) toward the vault (above) */
+      /* Arrow points UP (toward vault above) */
       .arrow-head {
         position: absolute;
         top: 0;
@@ -88,7 +81,7 @@
         border-bottom: 4px solid var(--white);
       }
 
-      /* === Vault card (middle of frame, ABOVE the bank) === */
+      /* === Vault card — sits in MIDDLE of frame, ABOVE the bank === */
       .vault-card {
         position: relative;
         display: flex;
@@ -102,14 +95,8 @@
         gap: 24px;
         overflow: visible;
       }
-      .vault-icon {
-        width: 144px;
-        height: 144px;
-      }
-      .vault-icon svg {
-        width: 100%;
-        height: 100%;
-      }
+      .vault-icon { width: 144px; height: 144px; }
+      .vault-icon svg { width: 100%; height: 100%; }
       .vault-label {
         font-size: 72px;
         font-weight: 600;
@@ -118,7 +105,7 @@
         letter-spacing: 0.02em;
       }
 
-      /* === Money bills === */
+      /* === Money bills (absolute layer over scene) === */
       .money-layer {
         position: absolute;
         top: 0;
@@ -147,8 +134,12 @@
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
       <div id="scene" class="scene clip" data-start="0" data-duration="6" data-track-index="1">
-        <!-- Bank card — anchors BOTTOM third (column-reverse flex puts this child at bottom) -->
-        <div id="bank-card" class="bank-card">
+        <!-- HTML ORDER: bank → arrow → vault.
+             VISUAL order (because column-reverse): vault on top → arrow → bank on bottom. -->
+
+        <!-- Bank card — visually anchors the BOTTOM third.
+             Starts off-screen below at t=0 then rises into place; allow-overflow lets the linter know that's intentional. -->
+        <div id="bank-card" class="bank-card" data-layout-allow-overflow>
           <div class="bank-icon">
             <!-- Generic bank/building icon -->
             <svg viewBox="0 0 96 96" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
@@ -165,14 +156,14 @@
           <div id="bank-label" class="bank-label">BANK</div>
         </div>
 
-        <!-- Arrow -->
+        <!-- Arrow (between bank below and vault above) -->
         <div id="arrow" class="arrow">
           <div id="arrow-line" class="arrow-line"></div>
           <div id="arrow-head" class="arrow-head"></div>
         </div>
 
-        <!-- Vault card (bottom) -->
-        <div data-data-hf-studio-original-inline-translate="none" data-data-hf-studio-original-translate="" data-data-hf-studio-path-offset="true" style="--hf-studio-offset-x:-657px;--hf-studio-offset-y:626px;translate:var(--hf-studio-offset-x, 0px) var(--hf-studio-offset-y, 0px)" id="vault-card" class="vault-card">
+        <!-- Vault card — visually sits in MIDDLE of frame -->
+        <div id="vault-card" class="vault-card">
           <div class="vault-icon">
             <!-- Modern vault / safe icon -->
             <svg viewBox="0 0 144 144" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
@@ -190,9 +181,8 @@
           <div id="vault-label" class="vault-label">Taxes</div>
         </div>
 
-        <!-- Money layer (absolute over scene) -->
-        <!-- Bills start above the frame and fall into the vault — intentional off-canvas at t=0 -->
-        <div style="opacity:1" id="money-layer" class="money-layer" data-layout-allow-overflow=""></div>
+        <!-- Money layer — bills start above frame, fall into vault. Off-canvas at t=0 is intentional. -->
+        <div id="money-layer" class="money-layer" data-layout-allow-overflow></div>
       </div>
     </div>
 
@@ -200,32 +190,28 @@
       (function () {
         const vars = window.__hyperframes.getVariables();
 
-        // Apply colors as CSS custom properties on root
+        // Brand colors
         document.documentElement.style.setProperty("--white", vars.white);
         document.documentElement.style.setProperty("--orange", vars.orange);
 
-        // Apply stroke width and corner radius to cards
+        // Card styling (stroke width + corners)
         const bankCard = document.getElementById("bank-card");
         const vaultCard = document.getElementById("vault-card");
-        const arrowLine = document.getElementById("arrow-line");
-        const arrowHead = document.getElementById("arrow-head");
-
         bankCard.style.borderWidth = vars.strokeWidth + "px";
         bankCard.style.borderColor = vars.white;
         bankCard.style.borderRadius = vars.cornerRadius + "px";
         bankCard.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)";
-
         vaultCard.style.borderWidth = vars.strokeWidth + "px";
         vaultCard.style.borderColor = vars.white;
         vaultCard.style.borderRadius = vars.cornerRadius + "px";
         vaultCard.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)";
 
-        // Apply text content from variables
+        // Text content
         document.getElementById("bank-label").textContent = vars.bankLabel;
         document.getElementById("vault-label").textContent = vars.vaultLabel;
         document.getElementById("vault-label").style.color = vars.orange;
 
-        // Update SVG strokes
+        // SVG stroke colors
         document.querySelectorAll("svg [stroke]").forEach(function (el) {
           el.setAttribute("stroke", vars.white);
         });
@@ -234,22 +220,21 @@
         });
 
         // Arrow color
-        arrowLine.style.background = vars.white;
-        arrowHead.style.borderRightColor = vars.white;
-        arrowHead.style.borderBottomColor = vars.white;
+        document.getElementById("arrow-line").style.background = vars.white;
+        const ah = document.getElementById("arrow-head");
+        ah.style.borderRightColor = vars.white;
+        ah.style.borderBottomColor = vars.white;
 
-        // === Generate money bills (deterministic — no Math.random) ===
+        // === Generate money bills (deterministic — uses mulberry32 PRNG, not Math.random) ===
         const moneyLayer = document.getElementById("money-layer");
         const count = Math.max(1, Math.floor(vars.moneyCount));
 
-        // Vault target position (where money lands) — center bottom of scene
-        // Scene is full screen (1080x1920). Vault is centered horizontally,
-        // bottom region. Money falls from top into vault opening (~y=1300 center).
-        const vaultCenterX = 540; // scene center
-        const vaultCenterY = 1280; // approximate vault top edge
-        const spreadX = 280; // horizontal spread for entry points
+        // Vault is now in the MIDDLE of the frame (around y=840 center).
+        // Money should land in the vault opening — roughly the upper half of the vault card.
+        const vaultCenterX = 540; // frame horizontal center
+        const vaultLandY = 750;   // y where bills "land" (slightly above vault visual center)
+        const spreadX = 280;      // horizontal spread for bill entry points
 
-        // Mulberry32 seeded PRNG for deterministic randomness
         function mulberry32(seed) {
           return function () {
             let t = (seed += 0x6d2b79f5);
@@ -266,15 +251,14 @@
           bill.textContent = "$";
           bill.id = "bill-" + i;
 
-          // Starting position above frame, varied across width
           const startX = vaultCenterX - spreadX + rng() * (spreadX * 2) - 40;
-          const endX = vaultCenterX - 80 + rng() * 160 - 40; // converges toward vault
+          const endX = vaultCenterX - 80 + rng() * 160 - 40;
           const rotation = (rng() - 0.5) * 60;
 
           bill.style.left = startX + "px";
-          bill.style.top = "-100px";
+          bill.style.top = "-100px"; // start above frame
           bill.dataset.endX = endX;
-          bill.dataset.endY = vaultCenterY;
+          bill.dataset.endY = vaultLandY;
           bill.dataset.rotation = rotation;
           bill.dataset.staggerOffset = (rng() * 0.6).toFixed(2);
 
@@ -285,24 +269,24 @@
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // 1. Bank card rises up from the bottom third of the screen
+        // 1. Bank rises up from below the frame, settles in bottom third.
+        //    y: 1200 means it starts 1200px BELOW its final CSS position (off-screen below).
         tl.from(
           "#bank-card",
-          { y: 1100, opacity: 0, duration: 0.8, ease: "power3.out" },
+          { y: 1200, opacity: 0, duration: 0.8, ease: "power3.out" },
           vars.bankEnterTime
         );
 
         // 2. Vault is "born" from the bank's position — scales up from inside the bank
-        //    and slides down to its final position below. The y offset (-760) matches
-        //    the distance between bank-center and vault-center in the layout, so the
-        //    vault appears to emerge directly out of the bank logo.
+        //    and slides UP to its final middle-of-frame position.
+        //    y: 740 means vault starts 740px BELOW its final position (where the bank sits).
         tl.from(
           "#vault-card",
-          { y: -760, scale: 0.2, opacity: 0, duration: 0.9, ease: "power2.out" },
+          { y: 740, scale: 0.2, opacity: 0, duration: 0.9, ease: "power2.out" },
           vars.vaultEnterTime
         );
 
-        // 3. Arrow draws in AFTER the vault has settled into place
+        // 3. Arrow draws in AFTER the vault settles. Draws upward from bank toward vault.
         tl.from(
           "#arrow-line",
           { scaleY: 0, duration: 0.4, ease: "power2.out" },
@@ -314,7 +298,7 @@
           vars.arrowEnterTime + 0.3
         );
 
-        // 4. Money falls — each bill has its own stagger offset for natural cascade
+        // 4. Money falls from top into the vault (middle of frame).
         const bills = moneyLayer.querySelectorAll(".bill");
         bills.forEach(function (bill) {
           const stagger = parseFloat(bill.dataset.staggerOffset);
@@ -326,7 +310,7 @@
             bill,
             { y: 0, x: 0, opacity: 0, rotation: 0 },
             {
-              y: endY + 100,
+              y: endY + 100, // a bit past the land point for natural arc
               x: endX - parseFloat(bill.style.left),
               opacity: 1,
               rotation: rotation,
@@ -336,7 +320,7 @@
             vars.moneyStartTime + stagger
           );
 
-          // Then fade out as it "enters" the vault
+          // Fade as it "enters" the vault
           tl.to(
             bill,
             { opacity: 0, scale: 0.5, duration: 0.3, ease: "power1.in" },
