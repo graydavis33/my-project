@@ -8,17 +8,37 @@
 
 ## Voice Markers That Read As Sai (Keep These)
 
-Casual connectors he uses in voice memos. Cutting these is what makes scripts read AI-flavored.
+Casual connectors he uses in voice memos. Confirmed via 2026-05-27 revision review.
 
-- **What I used to do is / What I used to do?** — confession opener
-- **The way I think about it** — framework intro
-- **And I was like** — internal-monologue narration
-- **Here's the thing** — pattern-interrupt mid-script
-- **You want to know why I [DID X]?** — rhetorical setup for confession
-- **That's it.** / **That's the signal.** — declarative close to a beat
-- **Honestly** / **Genuinely** / **Truly** — sincerity intensifier
-- **Sometimes you need to** / **You have to** — direct address
+- **Let me explain** / **here's why** — Sai writes these into curiosity-gap hooks naturally
+- **Stupidly simple** — self-effacing voice marker (Script 4 revision)
+- **Once I changed it / I started [verb-ing]** — softer transition than "I flipped"
+- **Quickly got humbled** — softer than "slapped in the face by the gods"
+- **Trace it back** — Sai's preferred terminology over "backtrack"
+- **He's believed in me** — present-perfect tense for ongoing influence (Script 6)
+- **I used to just [verb]** — declarative confession (no rhetorical Q)
+- **Honestly** / **truly** / **really good** — sincerity intensifier
 - **The reason I built what I built is...** — attribution flex
+- **And I was like** — internal-monologue narration (from voice memos)
+- **You should focus on...** — direct YOU-prescriptive ("you must focus", "you need to block out")
+
+## Voice Markers That Read As AI (Cut These)
+
+Confirmed via 2026-05-27 revision review — these are what Sai cut from Gray's v3 drafts.
+
+- Perfect rhetorical parallel sentences (3-beat "no X, no Y, no Z")
+- Synthesized closers ("the lesson is", "what this comes down to is")
+- Identity-wrapped restatements ("for a founder, that's a [thing]")
+- Tight pre-engineered transitions ("Here's the math." / "The way I think about it" connectors he didn't naturally say)
+- **Mini-hook beats that feel like content moves** — "That's it.", "But here's the thing.", "That's the signal." — Sai cut these consistently; he sees them as scripted, not natural delivery
+- Rhetorical question setups ("What I used to do?", "You want to know why I scaled too early?") — Sai cuts these in favor of declarative
+- **Pain-address openers** ("If you hate seeing X — listen") — Sai cuts these to drop straight into the action
+- **Absolutist principles** ("there should be no thinking in them") — Sai softens to instructional ("you need to block out time for thinking and planning")
+- **Punchline-only closers** without instruction — Sai prefers instructional ("Avoid this mistake by applying this lesson") over pure principle close
+- **Implicit "they" observations** ("the people who have moats are the ones who focus") — Sai swaps to YOU-direct ("you must focus")
+- Elliptical callbacks that drop the verb
+- Punching down at peers
+- AI-flavored asides ("yes, really")
 
 ## Voice Markers That Read As AI (Cut These)
 
@@ -34,51 +54,62 @@ Casual connectors he uses in voice memos. Cutting these is what makes scripts re
 
 ## Structural Patterns That Work for Sai
 
-### Pattern 1 — Failure-Hook Framework
+### Pattern 1 — Principle-First Framework (REVISED post-Sai-2026-05-27)
 **Used in:** Script 4 (SOP cycle), Script 5 (Gods of Business)
 **Shape:**
-1. Open with personal failure (specific, no hedging) — "My first hire failed."
-2. Name the cause — "Because I had no systems."
-3. State the principle this proves
+1. **Open with the principle** ("Without proper systems, you can't scale.") — NOT with the personal failure
+2. State the framework / steps
+3. **Back-load the personal failure as context** ("To avoid the mistakes I made with my first hire, here's the stupidly simple process…")
 4. Deliver the framework / steps
-5. Close on the personal stake (vulnerable beat)
+5. Close on the **instructional viewer benefit** ("If they can't do it without you, you didn't build a system. You built a habit.")
 
-**Why it works:** The failure disarms skeptics before they decide they know better than the founder. The framework lands because it's earned. The personal close beats a generic "try this" CTA.
+**Why it works (revised):** Sai's revision showed he prefers principle-first → personal failure as context → framework → viewer instruction. Failure-first openers are still strong, but he chose to bury the failure as backstory inside the framework, not as the hook line.
 
-### Pattern 2 — Number-First Tactic Reveal
-**Used in:** Script 1 (Taxes Vault), partially Script 2 (60/40)
+### Pattern 2 — Tactic-First Reveal (REVISED post-Sai-2026-05-27)
+**Used in:** Script 1 (Taxes Vault)
 **Shape:**
-1. Open with superlative claim or specific number — "Single greatest hack of my life this year."
-2. Address the pain — "If you hate seeing a tax bill pop up..."
-3. The tactic in 3-4 short steps
-4. The "That's it." beat (declarative full-stop)
-5. The benefit in concrete terms
-6. Close on Sai's permanent state — "I never have to worry about [pain] anymore."
-7. CTA — "Try it this month."
+1. **Drop straight into the tactic** — no superlative opener, no pain-address. "Every single month, take 30% of your paycheck."
+2. The remaining tactic steps (3–4 lines)
+3. The benefit in concrete terms ("you don't lose a third of your bank account overnight")
+4. Close on the **action-framed viewer benefit** ("Adopting this skill will force you to always win against taxes")
+5. Close on the **specific superlative** ("Single greatest **financial** hack I've ever made.")
 
-**Why it works:** Highest save-rate format. Specific numbers signal truth. The "That's it." beat is the punchline AND a relief — viewer thinks "that's all I have to do?"
+**Why it works (revised):** Sai stripped the setup. The tactic IS the hook. The superlative moves to the closer (lands harder there because the viewer has just learned what makes it earn that label). Action-framed benefits ("will force you to win") beat confession-framed ("I never have to worry") for tactical scripts.
 
-### Pattern 3 — Personal Story → Universal Lesson
-**Used in:** Script 6 (Basketball Coach), Script 7 (Backtracking Fear)
+### Pattern 3 — In Medias Res Personal Story (REVISED post-Sai-2026-05-27)
+**Used in:** Script 6 (Basketball Coach)
 **Shape:**
-1. Open with the universal principle OR a specific story-fragment
-2. Drop into the personal story with grounded specifics (8th grade, $10K, 2024)
-3. The turn — the moment that mattered
-4. The reflection — what Sai understands now
-5. Close on the application for the viewer
+1. **Drop straight into the scene** — no contextual setup. "And from 6th grade, he's believed in me. Had me sign up for every weightlifting class."
+2. The turn — the inflection moment (he cut me / he believed)
+3. The reflection — what Sai understands now (use present-perfect for ongoing influence: "he's believed")
+4. **Direct viewer instruction** — "Find that person. Not for advice. For knowing what's possible."
 
-**Why it works:** Personal specifics make universal lessons land. The viewer borrows Sai's experience to validate the principle in their own life.
+**Why it works (revised):** Sai cut "My 8th grade basketball coach was also my 7th grade coach" setup. Trusts the viewer to catch up from "And from 6th grade…" — the "And" implies you've already joined a conversation in progress.
 
-### Pattern 4 — Framework Reframe
+**Important:** If a personal story has a FRAMEWORK preface ("find someone who's done what you want to do"), Sai will split it off into its own video. The story and the framework are two scripts, not one.
+
+### Pattern 4 — Framework with Routed Hooks (REVISED post-Sai-2026-05-27)
 **Used in:** Script 3 (Three Buckets)
 **Shape:**
-1. Address the pain ("If you don't know what to focus on...")
-2. Name the reframe ("Focus on improving people's experience.")
-3. Deliver the framework (3 buckets, rhythmic)
-4. The pivot ("But here's the thing.")
-5. Close on the timely / counter-narrative punchline ("In the age of AI, the moat is your people.")
+1. **Annotate which hook leads to which intro** (Sai's natural move) — different first lines for A/C vs B
+2. State the framework (3 buckets, rhythmic delivery)
+3. Bridge with **functional connector** ("To speedrun this framework,") — NOT rhetorical ("But here's the thing")
+4. **YOU-prescriptive principle** ("you must focus more than anyone else on your people") — NOT implicit-they
+5. **Closing callback** — recap the framework as the final beat ("Customers. Team. Shareholders.")
 
-**Why it works:** Frameworks are inherently save-bait. Adding a timely-relevant closer (AI moat) makes it shareable too.
+**Why it works (revised):** The closing callback gives the framework a recap landing — viewers screenshot the recap line. YOU-prescriptive doubles save rate because it tells the viewer what to do, not what other people who succeed do.
+
+### Pattern 5 — Personal Story with Added Depth (NEW from 2026-05-27)
+**Used in:** Script 7 (Backtracking Fear)
+**Shape:**
+1. State the universal observation ("when you're afraid of something, you can usually trace it back to one moment")
+2. Drop into the personal story with specifics ($10K/month, 2024, ads fatigued)
+3. **Add the deeper "why" beat** — not just what happened, but the ethical/emotional layer ("they stopped working because my product was honestly not great. I felt guilty for the money people were spending on it")
+4. The pivot — what Sai did with the lesson
+5. Present-tense stakes ("I find myself scared")
+6. Close on the universal takeaway ("the fear is almost never about the thing in front of you")
+
+**Why it works:** Sai ADDED depth in his revision rather than cutting. When Sai adds a beat, that beat ties to his deepest conviction (here: ethical business). Always make space for that added beat — don't tighten it out.
 
 ---
 
@@ -145,19 +176,27 @@ If a script is going over 65s on first draft, look for redundancy. If under 30s,
 
 ---
 
-## Closing Patterns That Land
+## Closing Patterns That Land (REVISED post-Sai-2026-05-27)
 
-- **Permanent-state declarative** — "I never have to worry about [pain] anymore." (Script 1)
-- **Self-incrimination beat** — "I wanted to be the cool guy making money." (Script 5)
-- **Application instruction** — "Find that person. Not for advice. For knowing what's possible." (Script 6)
-- **Universal takeaway** — "The fear is almost never about the thing in front of you." (Script 7)
-- **Simple CTA** — "Try it this month." (Script 1)
+Sai's revision pattern showed a strong preference for **instructional closers** over punchline-only closers. Confirmed across Scripts 1, 2, 4, 5.
 
-## Closing Patterns That Fall Flat
+- **Action-framed viewer benefit** — "Adopting this skill will force you to always win against taxes." (Script 1 — Sai swapped my "I never have to worry" for this)
+- **Specific superlative** — "Single greatest **financial** hack I've ever made." (Script 1 — note specificity in qualifier)
+- **Instructional close** — "Avoid this mistake by applying this lesson; it will save you so much time, energy, and money." (Script 5 — Sai's own addition)
+- **Closing callback** — recap the framework ("Customers. Team. Shareholders.") (Script 3 — Sai's addition)
+- **Self-incrimination beat** — "I wanted to be the cool guy making money." (Script 5 — kept by Sai)
+- **Direct application instruction** — "Find that person. Not for advice. For knowing what's possible." (Script 6)
+- **Universal takeaway with concrete instruction** — "Whatever you're afraid of right now, trace it back. The fear is almost never about the thing in front of you." (Script 7)
+- **Habit-vs-system reframe** — "If they can't do it without you, you didn't build a system. You built a habit." (Script 4 — Sai accepted this verbatim from Gray's suggestion)
 
+## Closing Patterns That Fall Flat (REVISED post-Sai-2026-05-27)
+
+- **Try it this month** / soft CTAs — Sai cut from Script 1
+- **Permanent-state confessions** ("I never have to worry") — Sai swapped for action-framed benefit
+- **Pure principle close** with no instruction — Sai consistently swapped for instructional
 - Synthesized summaries ("the lesson is...", "what this comes down to is...")
 - Restatement of what was already said
-- Question CTAs that feel engineered ("what's your biggest fear?")
+- Question CTAs that feel engineered
 - "Hope this helps" energy
 - Anything that sounds like an outro from a YouTube tutorial
 
@@ -194,4 +233,33 @@ Don't let this file stagnate. If a batch goes by and nothing new went in, someth
 - **Is the 75/25 in-lane/new-territory split right?** Will revisit after 4 weeks of performance data.
 - **Are hooks performing as predicted?** Track hook performance in `video-log.csv` and audit here monthly.
 - **Which lanes saturate?** A lane is saturated when 3+ recent scripts in it underperform Sai's rolling average. Note them here when it happens.
-- **Sai's cuss rule on camera** — voice memo cusses, LinkedIn doesn't. Resolve once we see how cussed scripts perform vs softened ones.
+- **Sai's cuss rule on camera** — RESOLVED 2026-05-27. Sai cut the cuss in his Script 5 revision. Default to no-cuss on camera unless Sai re-introduces.
+
+---
+
+## Revision Log
+
+### 2026-05-27 — Sai's first revision pass on the 2026-05-26 batch
+
+Sai went through all 7 scripts and revised. Patterns captured:
+
+- **Tactic-first openers** (skip pain-address, skip "if you hate X") — confirmed across Scripts 1, 7
+- **"Let me explain" / "Here's why" curiosity-gap hooks** — Sai writes these naturally (Scripts 2 + 4)
+- **Softer verbs** — "changed" not "flipped", "got humbled" not "slapped", "trace back" not "backtrack"
+- **No cuss on camera** — confirmed Sai's preference
+- **Instructional closers over punchline-only** — confirmed across Scripts 1, 2, 4, 5
+- **YOU-prescriptive over THEY-observation** — "you must focus" not "the ones who focus"
+- **Closing callbacks** — recap framework as final beat (Script 3 "Customers. Team. Shareholders.")
+- **Hook-routing annotations** — Sai writes different intros depending on which hook is picked. Build this into batch file format.
+- **Drops in medias res** — Script 6, no setup, "And from 6th grade…"
+- **"Stupidly simple"** — Sai's natural self-effacing voice marker (new)
+- **Splits scripts when needed** — Script 6 framework + story → 2 separate scripts (Sai's call)
+- **Added depth, not cut** — Script 7's "felt guilty for the money" beat. When Sai adds, it's tied to his deepest conviction. Don't tighten that out.
+- **Present-perfect for ongoing influence** — "he's believed in me" not "he believed in me"
+- **Reduced self-flagellation** — kept ONE self-incriminating line ("cool guy making money"), cut the rest of the customers-unhappy / team-unhappy detail
+- **Cuts pattern-interrupt content moves** — "That's it.", "But here's the thing.", "That's the signal." — Sai sees these as scripted, not natural
+- **Inline meta-flags** — Sai marks uncertainty in the doc ("correct this if wrong")
+
+**Co-write accepted:** Sai kept Gray's proposed Script 4 closer verbatim — "If they can't do it without you, you didn't build a system. You built a habit." Indicates Gray can propose closer lines and Sai will integrate them when they're sharp.
+
+**Open at end of revision:** Script 5 Hook A mismatch flagged for Sai (hook = systems, body = customer/team happiness).
