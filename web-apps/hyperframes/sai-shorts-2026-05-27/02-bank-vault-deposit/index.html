@@ -1,24 +1,8 @@
-<!doctype html>
-<html
-  lang="en"
-  data-composition-variables='[
-    {"id":"bankLabel","type":"string","label":"Bank label text","default":"BANK"},
-    {"id":"vaultLabel","type":"string","label":"Vault label text","default":"Taxes"},
-    {"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},
-    {"id":"white","type":"color","label":"White","default":"#FFFFFF"},
-    {"id":"strokeWidth","type":"number","label":"Stroke width (px)","default":2},
-    {"id":"cornerRadius","type":"number","label":"Corner radius (px)","default":40},
-    {"id":"bankEnterTime","type":"number","label":"Bank slides in at (s)","default":0.2},
-    {"id":"vaultEnterTime","type":"number","label":"Vault fades in at (s)","default":1.0},
-    {"id":"arrowEnterTime","type":"number","label":"Arrow draws in at (s)","default":1.2},
-    {"id":"moneyStartTime","type":"number","label":"Money starts falling at (s)","default":2.0},
-    {"id":"moneyCount","type":"number","label":"Number of bills falling","default":12},
-    {"id":"moneyFallDuration","type":"number","label":"Each bill falls for (s)","default":1.4}
-  ]'
->
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"bankLabel","type":"string","label":"Bank label text","default":"BANK"},{"id":"vaultLabel","type":"string","label":"Vault label text","default":"Taxes"},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Stroke width (px)","default":2},{"id":"cornerRadius","type":"number","label":"Corner radius (px)","default":40},{"id":"bankEnterTime","type":"number","label":"Bank rises from bottom at (s)","default":0.2},{"id":"vaultEnterTime","type":"number","label":"Vault emerges from bank at (s)","default":1.1},{"id":"arrowEnterTime","type":"number","label":"Arrow draws in at (s)","default":2.0},{"id":"moneyStartTime","type":"number","label":"Money starts falling at (s)","default":2.6},{"id":"moneyCount","type":"number","label":"Number of bills falling","default":12},{"id":"moneyFallDuration","type":"number","label":"Each bill falls for (s)","default":1.4}]'>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1080, height=1920" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -157,14 +141,7 @@
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="6"
-      data-width="1080"
-      data-height="1920"
-    >
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
       <div id="scene" class="scene clip" data-start="0" data-duration="6" data-track-index="1">
         <!-- Bank card (top) -->
         <div id="bank-card" class="bank-card">
@@ -211,7 +188,7 @@
 
         <!-- Money layer (absolute over scene) -->
         <!-- Bills start above the frame and fall into the vault — intentional off-canvas at t=0 -->
-        <div id="money-layer" class="money-layer" data-layout-allow-overflow></div>
+        <div style="opacity:1" id="money-layer" class="money-layer" data-layout-allow-overflow=""></div>
       </div>
     </div>
 
@@ -304,14 +281,24 @@
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // 1. Bank card slides in from left (ease-out)
+        // 1. Bank card rises up from the bottom third of the screen
         tl.from(
           "#bank-card",
-          { x: -800, opacity: 0, duration: 0.7, ease: "power3.out" },
+          { y: 1100, opacity: 0, duration: 0.8, ease: "power3.out" },
           vars.bankEnterTime
         );
 
-        // 2. Arrow draws in (scale from 0 height)
+        // 2. Vault is "born" from the bank's position — scales up from inside the bank
+        //    and slides down to its final position below. The y offset (-760) matches
+        //    the distance between bank-center and vault-center in the layout, so the
+        //    vault appears to emerge directly out of the bank logo.
+        tl.from(
+          "#vault-card",
+          { y: -760, scale: 0.2, opacity: 0, duration: 0.9, ease: "power2.out" },
+          vars.vaultEnterTime
+        );
+
+        // 3. Arrow draws in AFTER the vault has settled into place
         tl.from(
           "#arrow-line",
           { scaleY: 0, duration: 0.4, ease: "power2.out" },
@@ -321,13 +308,6 @@
           "#arrow-head",
           { scale: 0, opacity: 0, duration: 0.3, ease: "back.out(2)" },
           vars.arrowEnterTime + 0.3
-        );
-
-        // 3. Vault card fades+rises into view
-        tl.from(
-          "#vault-card",
-          { y: 80, opacity: 0, duration: 0.6, ease: "expo.out" },
-          vars.vaultEnterTime
         );
 
         // 4. Money falls — each bill has its own stagger offset for natural cascade
