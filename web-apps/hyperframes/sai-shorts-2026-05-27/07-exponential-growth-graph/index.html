@@ -65,23 +65,23 @@
         <div id="camera" class="camera" data-layout-allow-overflow>
           <svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
             <g id="grid">
-              <line class="grid-line" id="grid-h-1" x1="160" y1="1400" x2="1020" y2="1400" data-axis="y" data-pos="1400"/>
-              <line class="grid-line" id="grid-h-2" x1="160" y1="1140" x2="1020" y2="1140" data-axis="y" data-pos="1140"/>
-              <line class="grid-line" id="grid-h-3" x1="160" y1="880"  x2="1020" y2="880"  data-axis="y" data-pos="880"/>
-              <line class="grid-line" id="grid-h-4" x1="160" y1="620"  x2="1020" y2="620"  data-axis="y" data-pos="620"/>
-              <line class="grid-line" id="grid-h-5" x1="160" y1="360"  x2="1020" y2="360"  data-axis="y" data-pos="360"/>
-              <line class="grid-line" id="grid-v-1" x1="332" y1="240" x2="332" y2="1660" data-axis="x" data-pos="332"/>
-              <line class="grid-line" id="grid-v-2" x1="504" y1="240" x2="504" y2="1660" data-axis="x" data-pos="504"/>
-              <line class="grid-line" id="grid-v-3" x1="676" y1="240" x2="676" y2="1660" data-axis="x" data-pos="676"/>
-              <line class="grid-line" id="grid-v-4" x1="848" y1="240" x2="848" y2="1660" data-axis="x" data-pos="848"/>
+              <line class="grid-line" id="grid-h-1" x1="140" y1="1247" x2="940" y2="1247" data-axis="y" data-pos="1247"/>
+              <line class="grid-line" id="grid-h-2" x1="140" y1="1113" x2="940" y2="1113" data-axis="y" data-pos="1113"/>
+              <line class="grid-line" id="grid-h-3" x1="140" y1="980"  x2="940" y2="980"  data-axis="y" data-pos="980"/>
+              <line class="grid-line" id="grid-h-4" x1="140" y1="847"  x2="940" y2="847"  data-axis="y" data-pos="847"/>
+              <line class="grid-line" id="grid-h-5" x1="140" y1="713"  x2="940" y2="713"  data-axis="y" data-pos="713"/>
+              <line class="grid-line" id="grid-v-1" x1="300" y1="580" x2="300" y2="1380" data-axis="x" data-pos="300"/>
+              <line class="grid-line" id="grid-v-2" x1="460" y1="580" x2="460" y2="1380" data-axis="x" data-pos="460"/>
+              <line class="grid-line" id="grid-v-3" x1="620" y1="580" x2="620" y2="1380" data-axis="x" data-pos="620"/>
+              <line class="grid-line" id="grid-v-4" x1="780" y1="580" x2="780" y2="1380" data-axis="x" data-pos="780"/>
             </g>
 
-            <line id="axis-y" class="axis" x1="160" y1="240"  x2="160"  y2="1660"/>
-            <line id="axis-x" class="axis" x1="160" y1="1660" x2="1020" y2="1660"/>
+            <line id="axis-y" class="axis" x1="140" y1="580"  x2="140" y2="1380"/>
+            <line id="axis-x" class="axis" x1="140" y1="1380" x2="940" y2="1380"/>
 
             <path id="curve" class="curve" d=""/>
 
-            <circle id="head-dot" class="head-dot" r="18" cx="160" cy="1620"/>
+            <circle id="head-dot" class="head-dot" r="18" cx="140" cy="1340"/>
           </svg>
         </div>
       </div>
@@ -102,8 +102,8 @@
         headDot.setAttribute("fill", vars.orange);
 
         // === Build exponential curve path ===
-        const X0 = 160, X1 = 1020;
-        const Y_BOT = 1620, Y_TOP = 280;
+        const X0 = 140, X1 = 940;
+        const Y_BOT = 1340, Y_TOP = 620;
         const k = 3.2;
         const STEPS = 80;
 
