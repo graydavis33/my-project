@@ -39,7 +39,11 @@
         z-index: 1;
       }
 
-      /* === Bank card (LEFT) === */
+      /* === Bank card (LEFT) ===
+         background: chroma green so bills passing behind it are occluded.
+         Green is keyed out in Premiere; in final composite the card is "transparent"
+         (showing Sai's A-roll through it), but bills behind it are NEVER rendered
+         orange in source, so they don't reappear when green is keyed out. */
       .bank-card {
         display: flex;
         flex-direction: column;
@@ -47,7 +51,7 @@
         justify-content: center;
         width: 280px;
         height: 300px;
-        background: transparent;
+        background: #00FF00;
         border-style: solid;
         gap: 18px;
       }
@@ -89,7 +93,9 @@
         border-bottom: 4px solid var(--white);
       }
 
-      /* === Vault card (RIGHT) === */
+      /* === Vault card (RIGHT) ===
+         Chroma-green fill so bills passing behind it are occluded.
+         "Immediately disappear" at the edge — the green covers them sharply. */
       .vault-card {
         position: relative;
         display: flex;
@@ -98,7 +104,7 @@
         justify-content: center;
         width: 280px;
         height: 300px;
-        background: transparent;
+        background: #00FF00;
         border-style: solid;
         gap: 18px;
         overflow: visible;
@@ -283,6 +289,11 @@
           moneyLayer.appendChild(bill);
         }
 
+        // Pre-state: hide all bills before the timeline starts.
+        // Lets the motion tween run while bills are still invisible,
+        // and the fade-in (delayed) reveals them mid-motion.
+        gsap.set(".bill", { opacity: 0, scale: 0.7 });
+
         // === Timeline ===
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
@@ -329,19 +340,13 @@
           const rotation = parseFloat(bill.dataset.rotation);
 
           const billStart = vars.moneyStartTime + stagger;
-          const fadeInDuration = 0.3;
           const fallDuration = vars.moneyFallDuration;
+          const fadeInDelay = 0.2;  // motion has a 0.2s head start — bill is already moving when it appears
+          const fadeInDuration = 0.25;
           const landTime = billStart + fallDuration;
 
-          // (a1) Fade in — runs in PARALLEL with the fall so the bill is already moving when visible
-          tl.fromTo(
-            bill,
-            { opacity: 0, scale: 0.7 },
-            { opacity: 1, scale: 1, duration: fadeInDuration, ease: "power2.out" },
-            billStart
-          );
-
-          // (a2) Fall toward the vault — STARTS at the same time as fade-in
+          // (a1) MOTION starts first — bill is moving (invisibly) before it fades in.
+          //      power1.in gives more uniform velocity so visible motion is pronounced from the start.
           tl.to(
             bill,
             {
@@ -349,9 +354,16 @@
               x: endX - startX,
               rotation: rotation,
               duration: fallDuration,
-              ease: "power2.in",
+              ease: "power1.in",
             },
             billStart
+          );
+
+          // (a2) FADE-IN delayed — by the time the bill becomes visible, it's mid-fall.
+          tl.to(
+            bill,
+            { opacity: 1, scale: 1, duration: fadeInDuration, ease: "power2.out" },
+            billStart + fadeInDelay
           );
 
           // (b) No explicit fade-out — the bill is occluded by the vault card (z-index)
