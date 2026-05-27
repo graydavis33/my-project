@@ -116,8 +116,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="3.5" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="3.5" data-track-index="1">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4.5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4.5" data-track-index="1">
         <div class="row" data-layout-allow-overflow="">
           <div id="cal-col-1" class="cal-col">
             <div class="ring" style="left: 14%;"></div>
@@ -206,6 +206,12 @@
         });
 
         // 2. Orange "30%" fades in with a soft glow, then breathes (gentle pulse)
+        //    Finite repeat count for deterministic capture (no `repeat: -1`).
+        const compositionDuration = 4.5;
+        const pulseStart = vars.highlightStartTime + vars.highlightFadeIn;
+        const pulseAvailable = compositionDuration - pulseStart;
+        const pulseRepeats = Math.max(0, Math.floor(pulseAvailable / vars.pulseDuration) - 1);
+
         fills.forEach(function (sel) {
           // Fade the glow in
           tl.to(
@@ -224,10 +230,10 @@
               opacity: 0.78,
               duration: vars.pulseDuration,
               ease: "sine.inOut",
-              repeat: -1,
+              repeat: pulseRepeats,
               yoyo: true,
             },
-            vars.highlightStartTime + vars.highlightFadeIn
+            pulseStart
           );
         });
 
