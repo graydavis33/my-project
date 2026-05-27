@@ -31,36 +31,34 @@
         flex-direction: row;
         align-items: flex-end;
         justify-content: center;
-        gap: 80px;
+        gap: 60px;
       }
 
       /* Per-calendar column (animates as a unit) */
       .cal-col {
         position: relative;
-        width: 280px;
+        width: 300px;
+        height: 300px;
         will-change: transform, opacity;
       }
 
-      /* Calendar binding tabs (two small white rings on top — wall-calendar feel) */
-      .binding {
+      /* Spiral-binding rings (4 oval pills sticking up from top of frame) */
+      .ring {
         position: absolute;
-        top: -22px;
-        width: 14px;
-        height: 36px;
+        top: -28px;
+        width: 28px;
+        height: 76px;
         background: var(--white);
-        border-radius: 6px 6px 0 0;
+        border-radius: 9999px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-        z-index: 1;
+        z-index: 3;
       }
-      .binding-left  { left: 32%; transform: translateX(-50%); }
-      .binding-right { left: 68%; transform: translateX(-50%); }
 
-      /* The "round calendar" — circle with clipped 30% fill */
-      .calendar {
-        position: relative;
-        width: 280px;
-        height: 280px;
-        border-radius: 50%;
+      /* Outer calendar shell — rounded square frame, clips the orange fill */
+      .cal-shell {
+        position: absolute;
+        inset: 0;
+        border-radius: 44px;
         background: transparent;
         border-style: solid;
         border-color: var(--white);
@@ -68,7 +66,7 @@
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
       }
 
-      /* Orange highlight — bottom chord, clipped by circle, blinks in */
+      /* Orange bottom-fill — clipped by shell, blinks via opacity */
       .cal-fill {
         position: absolute;
         left: 0;
@@ -77,22 +75,37 @@
         height: 0%;            /* set from variable in JS */
         background: var(--orange);
         opacity: 0;            /* shown via blink timeline */
+        z-index: 1;
         will-change: opacity;
       }
 
-      /* Month label sits above the fill */
+      /* Inner cutout window — smaller rounded rect, transparent so green/orange show through */
+      .cal-window {
+        position: absolute;
+        top: 22%;
+        left: 14%;
+        right: 14%;
+        bottom: 14%;
+        border-radius: 24px;
+        border-style: solid;
+        border-color: var(--white);
+        background: transparent;
+        z-index: 2;
+      }
+
+      /* Month label centered in the window */
       .cal-label {
         position: absolute;
         inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 64px;
+        font-size: 60px;
         font-weight: 600;
         letter-spacing: 0.06em;
         color: var(--white);
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-        z-index: 2;
+        z-index: 4;
       }
     </style>
   </head>
@@ -101,26 +114,35 @@
       <div id="scene" class="scene clip" data-start="0" data-duration="3.5" data-track-index="1">
         <div class="row" data-layout-allow-overflow="">
           <div id="cal-col-1" class="cal-col">
-            <div class="binding binding-left"></div>
-            <div class="binding binding-right"></div>
-            <div class="calendar">
+            <div class="ring" style="left: 14%;"></div>
+            <div class="ring" style="left: 38%;"></div>
+            <div class="ring" style="left: 62%;"></div>
+            <div class="ring" style="left: 86%;"></div>
+            <div class="cal-shell">
               <div id="fill-1" class="cal-fill"></div>
+              <div class="cal-window"></div>
               <div id="label-1" class="cal-label">MAY</div>
             </div>
           </div>
           <div id="cal-col-2" class="cal-col">
-            <div class="binding binding-left"></div>
-            <div class="binding binding-right"></div>
-            <div class="calendar">
+            <div class="ring" style="left: 14%;"></div>
+            <div class="ring" style="left: 38%;"></div>
+            <div class="ring" style="left: 62%;"></div>
+            <div class="ring" style="left: 86%;"></div>
+            <div class="cal-shell">
               <div id="fill-2" class="cal-fill"></div>
+              <div class="cal-window"></div>
               <div id="label-2" class="cal-label">JUN</div>
             </div>
           </div>
           <div id="cal-col-3" class="cal-col">
-            <div class="binding binding-left"></div>
-            <div class="binding binding-right"></div>
-            <div class="calendar">
+            <div class="ring" style="left: 14%;"></div>
+            <div class="ring" style="left: 38%;"></div>
+            <div class="ring" style="left: 62%;"></div>
+            <div class="ring" style="left: 86%;"></div>
+            <div class="cal-shell">
               <div id="fill-3" class="cal-fill"></div>
+              <div class="cal-window"></div>
               <div id="label-3" class="cal-label">JUL</div>
             </div>
           </div>
@@ -136,8 +158,12 @@
         document.documentElement.style.setProperty("--white", vars.white);
         document.documentElement.style.setProperty("--orange", vars.orange);
 
-        // Apply calendar stroke width
-        document.querySelectorAll(".calendar").forEach(function (el) {
+        // Apply stroke widths
+        document.querySelectorAll(".cal-shell").forEach(function (el) {
+          el.style.borderWidth = vars.strokeWidth + "px";
+          el.style.borderColor = vars.white;
+        });
+        document.querySelectorAll(".cal-window").forEach(function (el) {
           el.style.borderWidth = vars.strokeWidth + "px";
           el.style.borderColor = vars.white;
         });
@@ -174,8 +200,7 @@
         });
 
         // 2. Orange "30%" blinks in on all 3 simultaneously
-        //    Pattern: ON → OFF → ON → OFF → ON (settles visible).
-        //    5 steps × blinkOnDuration each.
+        //    Pattern: ON → OFF → ON → OFF → ON (settles visible). 5 steps.
         const step = vars.blinkOnDuration;
         fills.forEach(function (sel) {
           const t = vars.blinkStartTime;
