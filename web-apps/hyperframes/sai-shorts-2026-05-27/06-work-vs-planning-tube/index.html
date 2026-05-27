@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"workColor","type":"color","label":"Work liquid color","default":"#F28129"},{"id":"planColor","type":"color","label":"Planning liquid color","default":"#3FC1C9"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Tube stroke (px)","default":5},{"id":"tubeRevealStart","type":"number","label":"Tube reveal starts at (s)","default":0.0},{"id":"tubeRevealDuration","type":"number","label":"Tube reveal duration (s)","default":0.8},{"id":"liquidFillStart","type":"number","label":"Liquids start filling at (s)","default":1.0},{"id":"liquidFillDuration","type":"number","label":"Initial fill duration (s)","default":0.7},{"id":"workInitialPct","type":"number","label":"Work initial fill %","default":90},{"id":"planInitialPct","type":"number","label":"Planning initial fill %","default":10},{"id":"transitionStart","type":"number","label":"Transition to new ratio at (s)","default":4.5},{"id":"transitionDuration","type":"number","label":"Transition duration (s)","default":1.0},{"id":"workFinalPct","type":"number","label":"Work final fill %","default":40},{"id":"planFinalPct","type":"number","label":"Planning final fill %","default":60},{"id":"shimmerPeriod","type":"number","label":"Shimmer cycle (s)","default":1.5}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green — Gray keys this out in Premiere */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* === Horizontal 3D tube === */
+      .tube {
+        position: absolute;
+        width: 800px;
+        height: 200px;
+        left: 50%;
+        bottom: 600px;
+        transform: translateX(-50%);
+        border-radius: 9999px;
+        border-style: solid;
+        border-color: var(--white);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.03);  /* very faint tint, helps glass feel */
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        clip-path: inset(100% 0% 0% 0%);  /* animated reveal from bottom up */
+        will-change: clip-path;
+      }
+
+      /* Liquid base layer — both liquids live in the tube, clipped by it */
+      .liquid {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        overflow: hidden;
+        will-change: width;
+      }
+      .liquid-work {
+        left: 0;
+        width: 0%;                  /* animated */
+        background: var(--work-color);
+        z-index: 1;
+      }
+      .liquid-plan {
+        right: 0;
+        width: 0%;                  /* animated */
+        background: var(--plan-color);
+        z-index: 1;
+      }
+
+      /* Shimmer — moving highlight band inside each liquid (looks like flowing liquid) */
+      .shimmer {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 220%;
+        pointer-events: none;
+        will-change: transform;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.22) 14%,
+          transparent 28%,
+          rgba(255, 255, 255, 0.10) 50%,
+          transparent 64%,
+          rgba(255, 255, 255, 0.18) 80%,
+          transparent 100%
+        );
+      }
+
+      /* 3D shading overlay — cylindrical depth (top bright, bottom dark) */
+      .tube-3d {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.32) 0%,
+          rgba(255, 255, 255, 0.08) 30%,
+          rgba(255, 255, 255, 0.00) 55%,
+          rgba(0, 0, 0, 0.18) 100%
+        );
+      }
+
+      /* Gloss strip — thin specular highlight near the top */
+      .tube-gloss {
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        top: 14px;
+        height: 22px;
+        border-radius: 9999px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.45) 30%,
+          rgba(255, 255, 255, 0.55) 50%,
+          rgba(255, 255, 255, 0.45) 70%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        filter: blur(2px);
+        z-index: 4;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="7" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="7" data-track-index="1">
+        <div id="tube" class="tube">
+          <div id="liquid-work" class="liquid liquid-work">
+            <div id="shimmer-work" class="shimmer" data-layout-allow-overflow=""></div>
+          </div>
+          <div id="liquid-plan" class="liquid liquid-plan">
+            <div id="shimmer-plan" class="shimmer" data-layout-allow-overflow=""></div>
+          </div>
+          <div class="tube-3d"></div>
+          <div class="tube-gloss"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        // Colors via CSS custom properties
+        document.documentElement.style.setProperty("--white", vars.white);
+        document.documentElement.style.setProperty("--work-color", vars.workColor);
+        document.documentElement.style.setProperty("--plan-color", vars.planColor);
+
+        // Tube stroke
+        const tube = document.getElementById("tube");
+        tube.style.borderWidth = vars.strokeWidth + "px";
+        tube.style.borderColor = vars.white;
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // 1. Tube reveals from bottom up via clip-path inset
+        tl.fromTo(
+          "#tube",
+          { clipPath: "inset(100% 0% 0% 0%)" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: vars.tubeRevealDuration,
+            ease: "power3.out",
+          },
+          vars.tubeRevealStart
+        );
+
+        // 2. Liquids fill in to initial proportions (90% work, 10% planning)
+        tl.to(
+          "#liquid-work",
+          {
+            width: vars.workInitialPct + "%",
+            duration: vars.liquidFillDuration,
+            ease: "power2.out",
+          },
+          vars.liquidFillStart
+        );
+        tl.to(
+          "#liquid-plan",
+          {
+            width: vars.planInitialPct + "%",
+            duration: vars.liquidFillDuration,
+            ease: "power2.out",
+          },
+          vars.liquidFillStart
+        );
+
+        // 3. Transition — work shrinks to 40%, planning expands to 60%
+        tl.to(
+          "#liquid-work",
+          {
+            width: vars.workFinalPct + "%",
+            duration: vars.transitionDuration,
+            ease: "power2.inOut",
+          },
+          vars.transitionStart
+        );
+        tl.to(
+          "#liquid-plan",
+          {
+            width: vars.planFinalPct + "%",
+            duration: vars.transitionDuration,
+            ease: "power2.inOut",
+          },
+          vars.transitionStart
+        );
+
+        // 4. Shimmer — continuous horizontal scroll across both liquids.
+        //    Finite repeat count for deterministic capture.
+        const compositionDuration = 7;
+        const shimmerStart = vars.liquidFillStart;
+        const shimmerAvailable = compositionDuration - shimmerStart;
+        const shimmerRepeats = Math.max(
+          0,
+          Math.floor(shimmerAvailable / vars.shimmerPeriod) - 1
+        );
+
+        ["#shimmer-work", "#shimmer-plan"].forEach(function (sel) {
+          tl.fromTo(
+            sel,
+            { xPercent: 0 },
+            {
+              xPercent: -55,        // scroll just over half of the 220% width
+              duration: vars.shimmerPeriod,
+              ease: "none",
+              repeat: shimmerRepeats,
+            },
+            shimmerStart
+          );
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
