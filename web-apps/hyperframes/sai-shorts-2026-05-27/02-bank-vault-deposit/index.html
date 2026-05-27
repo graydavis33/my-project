@@ -147,8 +147,8 @@
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
       <div id="scene" class="scene clip" data-start="0" data-duration="6" data-track-index="1">
-        <!-- Bank card (top) -->
-        <div data-data-hf-studio-original-inline-translate="none" data-data-hf-studio-original-translate="" data-data-hf-studio-path-offset="true" style="--hf-studio-offset-x:922px;--hf-studio-offset-y:82px;translate:var(--hf-studio-offset-x, 0px) var(--hf-studio-offset-y, 0px)" id="bank-card" class="bank-card">
+        <!-- Bank card — anchors BOTTOM third (column-reverse flex puts this child at bottom) -->
+        <div id="bank-card" class="bank-card">
           <div class="bank-icon">
             <!-- Generic bank/building icon -->
             <svg viewBox="0 0 96 96" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
@@ -172,7 +172,7 @@
         </div>
 
         <!-- Vault card (bottom) -->
-        <div id="vault-card" class="vault-card">
+        <div data-data-hf-studio-original-inline-translate="none" data-data-hf-studio-original-translate="" data-data-hf-studio-path-offset="true" style="--hf-studio-offset-x:-657px;--hf-studio-offset-y:626px;translate:var(--hf-studio-offset-x, 0px) var(--hf-studio-offset-y, 0px)" id="vault-card" class="vault-card">
           <div class="vault-icon">
             <!-- Modern vault / safe icon -->
             <svg viewBox="0 0 144 144" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
