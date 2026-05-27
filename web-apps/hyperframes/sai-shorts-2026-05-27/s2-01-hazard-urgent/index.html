@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Hazard fill","default":"#E53935"},{"id":"white","type":"color","label":"Stroke / exclamation (white)","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Border stroke width (px)","default":6},{"id":"signSize","type":"number","label":"Hazard sign size (px)","default":520},{"id":"topY","type":"number","label":"Final Y from top (px)","default":340},{"id":"enterStart","type":"number","label":"Enter starts at (s)","default":0.15},{"id":"enterDuration","type":"number","label":"Rise + fade-in duration (s)","default":1.1},{"id":"shakeStart","type":"number","label":"Shake starts at (s)","default":1.35},{"id":"shakeDuration","type":"number","label":"Shake duration (s)","default":0.9},{"id":"shakeIntensity","type":"number","label":"Shake intensity (px)","default":40},{"id":"shakeRotation","type":"number","label":"Shake rotation (deg)","default":9}]'>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Hazard fill","default":"#E53935"},{"id":"white","type":"color","label":"Stroke / exclamation (white)","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Border stroke width (px)","default":6},{"id":"signSize","type":"number","label":"Hazard sign size (px)","default":520},{"id":"topY","type":"number","label":"Final Y from top (px)","default":340},{"id":"enterStart","type":"number","label":"Enter starts at (s)","default":0.15},{"id":"enterDuration","type":"number","label":"Rise + fade-in duration (s)","default":1.1},{"id":"shakeStart","type":"number","label":"Shake starts at (s)","default":1.35},{"id":"shakeDuration","type":"number","label":"Shake duration (s)","default":0.5},{"id":"shakeIntensity","type":"number","label":"Shake intensity (px)","default":40},{"id":"shakeRotation","type":"number","label":"Shake rotation (deg)","default":9}]'>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
@@ -105,12 +105,12 @@
 
         // 2. Shake — short horizontal + rotational jitter once settled.
         //    Deterministic chained tweens (no Math.random — framework requires determinism).
-        // 14 sharp alternations holding near-full intensity, then quick decay at the tail.
-        // Aggressive feel: most of the shake stays at ~1.0 amplitude instead of decaying.
-        const shakeSteps = 14;
+        // 10 sharp alternations holding near-full intensity, then a quick tail decay.
+        // Fewer steps so each oscillation reads at the shorter duration.
+        const shakeSteps = 10;
         const stepDur = vars.shakeDuration / shakeSteps;
-        const offsets =    [1, -1, 1, -1, 1, -1, 1, -1, 0.9, -0.9, 0.7, -0.5, 0.3, 0];
-        const rotOffsets = [1, -1, 1, -1, 1, -1, 1, -1, 0.8, -0.8, 0.6, -0.4, 0.2, 0];
+        const offsets =    [1, -1, 1, -1, 1, -1, 0.8, -0.5, 0.3, 0];
+        const rotOffsets = [1, -1, 1, -1, 1, -1, 0.7, -0.4, 0.2, 0];
 
         for (let i = 0; i < shakeSteps; i++) {
           tl.to(
