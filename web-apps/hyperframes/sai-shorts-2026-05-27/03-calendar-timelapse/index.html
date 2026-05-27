@@ -154,9 +154,10 @@
         background: var(--ink);
         margin: 14px auto 18px auto;
       }
-      /* Hero — big bold month name (analog to giant day number "14") */
+      /* Hero — bold month name. Sized so SEPTEMBER (longest, 9 chars) fits the
+         page width with breathing room — all 12 months render at the same size. */
       .page-month {
-        font-size: 130px;
+        font-size: 86px;
         font-weight: 900;
         color: var(--ink);
         letter-spacing: 0.01em;
@@ -271,10 +272,6 @@
           const month = document.createElement("div");
           month.className = "page-month";
           month.id = "month-text-" + i;
-          // shorter abbreviation for the long ones so it doesn't break the layout
-          if (monthName.length > 8) {
-            month.style.fontSize = "92px";
-          }
           month.textContent = monthName;
           page.appendChild(month);
 
