@@ -83,51 +83,45 @@
       .punch.left  { left: 28%; }
       .punch.right { right: 28%; }
 
-      /* === Page = 3D rotating wrapper with front + back faces === */
+      /* === Page = single-face card, peeled from bottom-right corner === */
       .page {
         position: absolute;
         top: 0; left: 0; right: 0; bottom: 0;
-        transform-origin: 50% 0%; /* hinge at top edge — flip pivot */
-        transform-style: preserve-3d;
-        will-change: transform;
-      }
-
-      .page-face {
-        position: absolute;
-        inset: 0;
+        background: var(--paper);
         border-radius: var(--corner);
         border: 2px solid var(--orange);
-        backface-visibility: hidden;
-        background: var(--paper);
-        box-shadow:
-          0 2px 0 rgba(0, 0, 0, 0.04) inset,
-          0 12px 28px rgba(0, 0, 0, 0.20);
-      }
-
-      .page-front {
         padding: 130px 70px 60px 70px;
         display: flex;
         flex-direction: column;
         gap: 18px;
+        transform-origin: 0% 0%; /* anchor at top-left — bottom-right is "grabbed" */
+        will-change: transform, opacity;
+        box-shadow:
+          0 2px 0 rgba(0, 0, 0, 0.04) inset,
+          0 12px 28px rgba(0, 0, 0, 0.20);
         background-image:
           radial-gradient(circle at 22% 28%, rgba(0,0,0,0.020) 0, transparent 60%),
           radial-gradient(circle at 78% 72%, rgba(0,0,0,0.020) 0, transparent 60%);
       }
 
-      .page-back {
-        transform: rotateX(180deg);
-        background-color: var(--paper-back);
-        /* faint horizontal rule lines suggest the back of a paper page */
-        background-image:
-          repeating-linear-gradient(
-            to bottom,
-            transparent 0px,
-            transparent 56px,
-            rgba(0, 0, 0, 0.05) 56px,
-            rgba(0, 0, 0, 0.05) 57px
-          ),
-          radial-gradient(circle at 30% 30%, rgba(0,0,0,0.025) 0, transparent 65%),
-          radial-gradient(circle at 70% 70%, rgba(0,0,0,0.025) 0, transparent 65%);
+      /* Curl-shadow overlay: diagonal gradient that fades in during the peel,
+         giving the illusion of paper bending toward the bottom-right corner. */
+      .page-curl {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: var(--corner);
+        background:
+          linear-gradient(
+            to bottom right,
+            transparent 0%,
+            transparent 35%,
+            rgba(0, 0, 0, 0.05) 55%,
+            rgba(0, 0, 0, 0.22) 75%,
+            rgba(0, 0, 0, 0.38) 100%
+          );
+        opacity: 0;
+        will-change: opacity;
       }
 
       .year-label {
@@ -244,34 +238,29 @@
         const bindingStrip = binder.querySelector(".binding-strip");
 
         // Build pages in REVERSE so December sits at the bottom of the stack
-        // (rendered first, lowest z-index) and January sits on top (flips first).
+        // (rendered first, lowest z-index) and January sits on top (peels first).
         for (let i = months.length - 1; i >= 0; i--) {
           const m = months[i];
 
-          // Outer page wrapper (rotates in 3D)
           const page = document.createElement("div");
           page.className = "page";
           page.id = "page-" + i;
           page.style.zIndex = String(months.length - i);
-          page.setAttribute("data-layout-allow-overflow", ""); // flips swing above binder
-
-          // Front face — calendar content
-          const front = document.createElement("div");
-          front.className = "page-face page-front";
+          page.setAttribute("data-layout-allow-overflow", ""); // peeled corner exits frame
 
           const year = document.createElement("div");
           year.className = "year-label";
           year.textContent = vars.year;
-          front.appendChild(year);
+          page.appendChild(year);
 
           const name = document.createElement("div");
           name.className = "month-name";
           name.textContent = m.name;
-          front.appendChild(name);
+          page.appendChild(name);
 
           const div = document.createElement("div");
           div.className = "divider";
-          front.appendChild(div);
+          page.appendChild(div);
 
           const week = document.createElement("div");
           week.className = "weekday-row";
@@ -281,7 +270,7 @@
             c.textContent = d;
             week.appendChild(c);
           });
-          front.appendChild(week);
+          page.appendChild(week);
 
           const grid = document.createElement("div");
           grid.className = "month-grid";
@@ -303,13 +292,13 @@
             }
             grid.appendChild(cell);
           }
-          front.appendChild(grid);
-          page.appendChild(front);
+          page.appendChild(grid);
 
-          // Back face — blank lined paper, rotated 180° to face viewer during flip
-          const back = document.createElement("div");
-          back.className = "page-face page-back";
-          page.appendChild(back);
+          // Curl-shadow overlay (fades in during peel — fakes the paper bending)
+          const curl = document.createElement("div");
+          curl.className = "page-curl";
+          curl.id = "curl-" + i;
+          page.appendChild(curl);
 
           binder.insertBefore(page, bindingStrip);
         }
@@ -334,23 +323,42 @@
           vars.cardEnterTime
         );
 
-        // Each page flip: small lift, then full fold-up rotation
+        // Corner peel: grabbed at bottom-right, pulled diagonally toward top-left.
+        // rotateY (around left edge) + rotateX (around top edge) combine so that
+        // bottom-right lifts toward viewer and arcs up-left. transform-origin is
+        // top-left (0% 0%), so that corner stays pinned the whole time.
         for (let i = 0; i < 11; i++) {
           const t = flipTimes[i];
 
-          // Lift: page rises slightly off the stack (gravity-release feel)
+          // 1. Grab / initial lift — small bend at bottom-right
           tl.to("#page-" + i, {
-            rotationX: 12,
-            duration: 0.08,
+            rotationY: -8,
+            rotationX: -6,
+            duration: 0.10,
             ease: "power2.out",
           }, t);
 
-          // Full fold: rotates forward/down past the binder, ease-in (gravity)
+          // 2. Curl-shadow fades in across the diagonal as the page bends
+          tl.to("#curl-" + i, {
+            opacity: 0.85,
+            duration: vars.flipDuration * 0.7,
+            ease: "power1.in",
+          }, t + 0.10);
+
+          // 3. Full peel — bottom-right corner sweeps up and across diagonally
           tl.to("#page-" + i, {
-            rotationX: 175,
+            rotationY: -55,
+            rotationX: -48,
             duration: vars.flipDuration,
             ease: "power2.in",
-          }, t + 0.08);
+          }, t + 0.10);
+
+          // 4. Opacity fade — starts halfway through the peel, finishes with it
+          tl.to("#page-" + i, {
+            opacity: 0,
+            duration: vars.flipDuration * 0.55,
+            ease: "power2.in",
+          }, t + 0.10 + vars.flipDuration * 0.45);
         }
 
         // Dec 31 orange ring
