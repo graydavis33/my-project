@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-composition-variables='[{"id":"bankLabel","type":"string","label":"Bank label text","default":"BANK"},{"id":"vaultLabel","type":"string","label":"Vault label text","default":"Taxes"},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Stroke width (px)","default":2},{"id":"cornerRadius","type":"number","label":"Corner radius (px)","default":32},{"id":"bankEnterTime","type":"number","label":"Bank rises from bottom at (s)","default":0.2},{"id":"vaultEnterTime","type":"number","label":"Vault emerges from bank at (s)","default":1.1},{"id":"arrowEnterTime","type":"number","label":"Arrow draws in at (s)","default":2.0},{"id":"moneyStartTime","type":"number","label":"Money starts falling at (s)","default":2.6},{"id":"moneyCount","type":"number","label":"Number of bills falling","default":12},{"id":"moneyFallDuration","type":"number","label":"Each bill falls for (s)","default":1.4}]'>
+<html lang="en" data-composition-variables='[{"id":"bankLabel","type":"string","label":"Bank label text","default":"BANK"},{"id":"vaultLabel","type":"string","label":"Vault label text","default":"Taxes"},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Stroke width (px)","default":2},{"id":"cornerRadius","type":"number","label":"Corner radius (px)","default":32},{"id":"bankEnterTime","type":"number","label":"Bank slides in from left at (s)","default":0.2},{"id":"vaultEnterTime","type":"number","label":"Vault emerges from bank at (s)","default":1.1},{"id":"arrowEnterTime","type":"number","label":"Arrow draws in at (s)","default":2.0},{"id":"moneyStartTime","type":"number","label":"Money starts appearing at (s)","default":2.6},{"id":"moneyCount","type":"number","label":"Number of bills falling","default":12},{"id":"moneyFallDuration","type":"number","label":"Each bill falls for (s)","default":0.8},{"id":"vaultBlinkScale","type":"number","label":"Vault blink scale on bill arrival","default":1.08}]'>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
@@ -234,15 +234,12 @@
         const moneyLayer = document.getElementById("money-layer");
         const count = Math.max(1, Math.floor(vars.moneyCount));
 
-        // With side-by-side layout, vault is on the RIGHT side of the frame.
-        // Row of cards is centered horizontally; vault sits to the right of center.
-        // Frame: 1080 wide. Row total: 280 + 30 + 140 + 30 + 280 = 760, centered → starts at x=160.
-        // Vault left edge: 160 + 280 + 30 + 140 + 30 = 640. Vault center: 640 + 140 = 780.
-        // Row sits in bottom area; padding-bottom: 280, card height: 300, so card top ≈ 1920-280-300 = 1340.
-        // Vault center y ≈ 1340 + 150 = 1490. Money should land near vault top edge (~y=1380).
+        // Vault sits at x ≈ 780 (right side of bottom row), card top ≈ 1340.
+        // Money APPEARS at middle of screen above the row, then falls into the vault.
         const vaultCenterX = 780;
-        const vaultLandY = 1380;
-        const spreadX = 180;
+        const vaultLandY = 1380; // y where bills land (near vault top edge)
+        const moneyOriginY = 900; // middle of screen — where bills fade in
+        const spreadX = 130; // tighter spread since they start close to vault
 
         function mulberry32(seed) {
           return function () {
@@ -260,12 +257,17 @@
           bill.textContent = "$";
           bill.id = "bill-" + i;
 
+          // Start position: middle of screen, above the bank-vault row.
+          // Bills appear here (fade in) then fall down to the vault.
           const startX = vaultCenterX - spreadX + rng() * (spreadX * 2) - 32;
+          const startY = moneyOriginY + (rng() - 0.5) * 60; // slight vertical variation
           const endX = vaultCenterX - 60 + rng() * 120 - 32;
-          const rotation = (rng() - 0.5) * 60;
+          const rotation = (rng() - 0.5) * 30; // less rotation since fall is shorter
 
           bill.style.left = startX + "px";
-          bill.style.top = "-100px";
+          bill.style.top = startY + "px";
+          bill.dataset.startX = startX;
+          bill.dataset.startY = startY;
           bill.dataset.endX = endX;
           bill.dataset.endY = vaultLandY;
           bill.dataset.rotation = rotation;
@@ -278,10 +280,10 @@
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // 1. Bank rises up from off-screen below into the bottom-left.
+        // 1. Bank slides in from off-screen LEFT into the bottom-left.
         tl.from(
           "#bank-card",
-          { y: 1000, opacity: 0, duration: 0.8, ease: "power3.out" },
+          { x: -800, opacity: 0, duration: 0.8, ease: "power3.out" },
           vars.bankEnterTime
         );
 

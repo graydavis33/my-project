@@ -52,10 +52,11 @@
           return seed / 233280;
         }
 
-        // Two confetti cannons firing diagonally toward upper-center
+        // Two confetti cannons positioned OFF-SCREEN (below + outside the 1080×1920 frame)
+        // so the origin points are never visible — particles fly INTO frame from out of view.
         const cannons = [
-          { x: 80,   y: 1880, baseAngleDeg: -68 }, // bottom-left  → up & right
-          { x: 1000, y: 1880, baseAngleDeg: -112 } // bottom-right → up & left
+          { x: -60,   y: 2060, baseAngleDeg: -62 }, // off bottom-left  → up & right
+          { x: 1140,  y: 2060, baseAngleDeg: -118 } // off bottom-right → up & left
         ];
 
         const shapes = ["rect", "square", "strip"];
