@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Curve color","default":"#F28129"},{"id":"white","type":"color","label":"Axes / grid color","default":"#FFFFFF"},{"id":"curveDuration","type":"number","label":"Curve draw duration (s)","default":1.8},{"id":"strokeWidth","type":"number","label":"Curve stroke width (px)","default":14}]'>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Curve color","default":"#F28129"},{"id":"white","type":"color","label":"Axes / grid color","default":"#FFFFFF"},{"id":"curveDuration","type":"number","label":"Curve draw duration (s)","default":2.2},{"id":"strokeWidth","type":"number","label":"Curve stroke width (px)","default":14},{"id":"startZoom","type":"number","label":"Start zoom level","default":3.2},{"id":"endZoom","type":"number","label":"End zoom level","default":1.0}]'>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -19,11 +19,23 @@
         position: relative;
         width: 100%;
         height: 100%;
+        overflow: hidden;
+      }
+
+      /* Camera wrapper — handles the zoom + pan transform.
+         transform-origin: 0 0 so scale/translate math is simple. */
+      .camera {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        transform-origin: 0 0;
+        will-change: transform;
       }
 
       svg {
-        position: absolute;
-        inset: 0;
+        display: block;
         width: 1080px;
         height: 1920px;
         overflow: visible;
@@ -45,37 +57,39 @@
       }
 
       .head-dot {
-        filter: drop-shadow(0 0 18px rgba(242, 129, 41, 0.9));
+        filter: drop-shadow(0 0 22px rgba(242, 129, 41, 1.0));
       }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="3.0" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="3.0" data-track-index="1">
-        <svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
-          <!-- Gridlines (drawn first so they sit under axes / curve) -->
-          <g id="grid">
-            <line class="grid-line" id="grid-h-1" x1="160" y1="1400" x2="940" y2="1400" data-axis="y" data-pos="1400"/>
-            <line class="grid-line" id="grid-h-2" x1="160" y1="1140" x2="940" y2="1140" data-axis="y" data-pos="1140"/>
-            <line class="grid-line" id="grid-h-3" x1="160" y1="880"  x2="940" y2="880"  data-axis="y" data-pos="880"/>
-            <line class="grid-line" id="grid-h-4" x1="160" y1="620"  x2="940" y2="620"  data-axis="y" data-pos="620"/>
-            <line class="grid-line" id="grid-h-5" x1="160" y1="360"  x2="940" y2="360"  data-axis="y" data-pos="360"/>
-            <line class="grid-line" id="grid-v-1" x1="316" y1="240" x2="316" y2="1660" data-axis="x" data-pos="316"/>
-            <line class="grid-line" id="grid-v-2" x1="472" y1="240" x2="472" y2="1660" data-axis="x" data-pos="472"/>
-            <line class="grid-line" id="grid-v-3" x1="628" y1="240" x2="628" y2="1660" data-axis="x" data-pos="628"/>
-            <line class="grid-line" id="grid-v-4" x1="784" y1="240" x2="784" y2="1660" data-axis="x" data-pos="784"/>
-          </g>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3.4" data-track-index="1">
+        <div id="camera" class="camera" data-layout-allow-overflow>
+          <svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+            <!-- Gridlines -->
+            <g id="grid">
+              <line class="grid-line" id="grid-h-1" x1="160" y1="1400" x2="940" y2="1400" data-axis="y" data-pos="1400"/>
+              <line class="grid-line" id="grid-h-2" x1="160" y1="1140" x2="940" y2="1140" data-axis="y" data-pos="1140"/>
+              <line class="grid-line" id="grid-h-3" x1="160" y1="880"  x2="940" y2="880"  data-axis="y" data-pos="880"/>
+              <line class="grid-line" id="grid-h-4" x1="160" y1="620"  x2="940" y2="620"  data-axis="y" data-pos="620"/>
+              <line class="grid-line" id="grid-h-5" x1="160" y1="360"  x2="940" y2="360"  data-axis="y" data-pos="360"/>
+              <line class="grid-line" id="grid-v-1" x1="316" y1="240" x2="316" y2="1660" data-axis="x" data-pos="316"/>
+              <line class="grid-line" id="grid-v-2" x1="472" y1="240" x2="472" y2="1660" data-axis="x" data-pos="472"/>
+              <line class="grid-line" id="grid-v-3" x1="628" y1="240" x2="628" y2="1660" data-axis="x" data-pos="628"/>
+              <line class="grid-line" id="grid-v-4" x1="784" y1="240" x2="784" y2="1660" data-axis="x" data-pos="784"/>
+            </g>
 
-          <!-- Axes — solid from frame 0, no draw-on animation -->
-          <line id="axis-y" class="axis" x1="160" y1="240"  x2="160" y2="1660"/>
-          <line id="axis-x" class="axis" x1="160" y1="1660" x2="940" y2="1660"/>
+            <!-- Axes — solid from frame 0 -->
+            <line id="axis-y" class="axis" x1="160" y1="240"  x2="160" y2="1660"/>
+            <line id="axis-x" class="axis" x1="160" y1="1660" x2="940" y2="1660"/>
 
-          <!-- Exponential curve (path filled in by JS) -->
-          <path id="curve" class="curve" d=""/>
+            <!-- Exponential curve -->
+            <path id="curve" class="curve" d=""/>
 
-          <!-- Head dot at the leading edge of the curve -->
-          <circle id="head-dot" class="head-dot" r="18" cx="0" cy="0" opacity="0"/>
-        </svg>
+            <!-- Head dot tracks the leading edge of the curve -->
+            <circle id="head-dot" class="head-dot" r="18" cx="160" cy="1620"/>
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -89,6 +103,7 @@
         });
         const curveEl = document.getElementById("curve");
         const headDot = document.getElementById("head-dot");
+        const cameraEl = document.getElementById("camera");
         curveEl.setAttribute("stroke", vars.orange);
         curveEl.setAttribute("stroke-width", vars.strokeWidth);
         headDot.setAttribute("fill", vars.orange);
@@ -119,21 +134,57 @@
         curveEl.style.strokeDasharray  = pathLen;
         curveEl.style.strokeDashoffset = pathLen;
 
-        const last = points[points.length - 1];
-        headDot.setAttribute("cx", last[0]);
-        headDot.setAttribute("cy", last[1]);
+        // === Sample dot positions + camera transforms along the curve ===
+        const N = 36;
+        const SCREEN_CX = 540, SCREEN_CY = 960; // viewport center
+        const CHART_CX = 540, CHART_CY = 960;   // final settle point (chart center)
 
-        // === Compute path-length fraction at which the curve crosses each gridline ===
-        // Walk the path with getPointAtLength so fractions match the actual stroke draw.
+        const dotCxs = [], dotCys = [];
+        const camXs  = [], camYs  = [], camScales = [];
+
+        for (let i = 0; i <= N; i++) {
+          const t = i / N; // linear progress over curveDuration
+
+          // Dot position = leading edge of curve at this progress
+          const pt = curveEl.getPointAtLength(t * pathLen);
+          dotCxs.push(pt.x);
+          dotCys.push(pt.y);
+
+          // Camera: zoom linearly from startZoom → endZoom
+          const scale = vars.startZoom + (vars.endZoom - vars.startZoom) * t;
+
+          // Camera center: lerp from dot position (t=0) → chart center (t=1)
+          // Early frames keep the dot locked to screen center; later frames
+          // release toward the natural chart framing so the wide shot sits right.
+          const camCx = pt.x   + (CHART_CX - pt.x)   * t;
+          const camCy = pt.y   + (CHART_CY - pt.y)   * t;
+
+          // Translate so camCx,camCy lands at screen center under the chosen scale
+          const tx = SCREEN_CX - camCx * scale;
+          const ty = SCREEN_CY - camCy * scale;
+
+          camXs.push(tx);
+          camYs.push(ty);
+          camScales.push(scale);
+        }
+
+        // Initial state — frame 0
+        gsap.set(cameraEl, {
+          transformOrigin: "0 0",
+          x: camXs[0],
+          y: camYs[0],
+          scale: camScales[0]
+        });
+        gsap.set(headDot, { attr: { cx: dotCxs[0], cy: dotCys[0] } });
+
+        // === Find path-length fraction where curve crosses each gridline ===
         const SAMPLES = 400;
         const crossings = {};
         const gridEls = document.querySelectorAll(".grid-line");
-
         let lastX = points[0][0], lastY = points[0][1];
         for (let s = 1; s <= SAMPLES; s++) {
           const len = (s / SAMPLES) * pathLen;
           const pt  = curveEl.getPointAtLength(len);
-
           gridEls.forEach(function (g) {
             if (crossings[g.id] !== undefined) return;
             const axis = g.getAttribute("data-axis");
@@ -144,51 +195,64 @@
               if (lastY > pos && pt.y <= pos) crossings[g.id] = len / pathLen;
             }
           });
-
           lastX = pt.x;
           lastY = pt.y;
         }
-
-        // Start each gridline invisible
         gsap.set(".grid-line", { opacity: 0 });
 
         // === Timeline ===
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // Curve draws linearly along arc length — the exponential SHAPE of the path
-        // gives the natural "starts slow, blows up fast" visual feel without easing.
-        const CURVE_START = 0.3;
+        const CURVE_START = 0.25;
+        const segDur = vars.curveDuration / N;
+
+        // Curve draw — linear along arc length
         tl.to(curveEl, {
           strokeDashoffset: 0,
           duration: vars.curveDuration,
           ease: "none"
         }, CURVE_START);
 
-        // Each gridline fades in exactly when the curve's leading edge crosses it
+        // Head dot tracks the leading edge — one tween per sample segment
+        for (let i = 1; i <= N; i++) {
+          tl.to(headDot, {
+            attr: { cx: dotCxs[i], cy: dotCys[i] },
+            duration: segDur,
+            ease: "none"
+          }, CURVE_START + (i - 1) * segDur);
+        }
+
+        // Camera (zoom + pan) — same N segments, same timing
+        for (let i = 1; i <= N; i++) {
+          tl.to(cameraEl, {
+            x: camXs[i],
+            y: camYs[i],
+            scale: camScales[i],
+            duration: segDur,
+            ease: "none"
+          }, CURVE_START + (i - 1) * segDur);
+        }
+
+        // Each gridline fades in when curve passes it
         gridEls.forEach(function (g) {
           const frac = crossings[g.id];
           if (frac === undefined) return;
-          const startTime = CURVE_START + frac * vars.curveDuration;
           tl.to(g, {
             opacity: 0.35,
-            duration: 0.25,
+            duration: 0.3,
             ease: "power2.out"
-          }, startTime);
+          }, CURVE_START + frac * vars.curveDuration);
         });
 
-        // Head dot pops in at the end of the curve
-        tl.fromTo(headDot,
-          { attr: { r: 0 }, opacity: 0 },
-          { attr: { r: 22 }, opacity: 1, duration: 0.35, ease: "back.out(3)" },
-          CURVE_START + vars.curveDuration - 0.05
-        );
-
-        // Subtle pulse on head dot during hold
-        tl.to(headDot,
-          { attr: { r: 30 }, duration: 0.45, ease: "power2.inOut", yoyo: true, repeat: 1 },
-          CURVE_START + vars.curveDuration + 0.35
-        );
+        // Subtle pulse on head dot during final hold
+        tl.to(headDot, {
+          attr: { r: 28 },
+          duration: 0.45,
+          ease: "power2.inOut",
+          yoyo: true,
+          repeat: 1
+        }, CURVE_START + vars.curveDuration + 0.25);
 
         window.__timelines["main"] = tl;
       })();
