@@ -308,32 +308,66 @@
           vars.arrowEnterTime + 0.3
         );
 
-        // 4. Money falls from above and lands in the vault (right side, bottom area).
+        // 4. Money lifecycle per bill:
+        //    a) Fade in at middle-of-screen origin (above the bank-vault row)
+        //    b) Fall down toward the vault (right side, bottom area)
+        //    c) Fade out + scale down as it "enters" the vault
+        //    d) Vault scale-blinks at the moment each bill arrives (impact feedback)
         const bills = moneyLayer.querySelectorAll(".bill");
         bills.forEach(function (bill) {
           const stagger = parseFloat(bill.dataset.staggerOffset);
+          const startX = parseFloat(bill.dataset.startX);
+          const startY = parseFloat(bill.dataset.startY);
           const endX = parseFloat(bill.dataset.endX);
           const endY = parseFloat(bill.dataset.endY);
           const rotation = parseFloat(bill.dataset.rotation);
 
+          const billStart = vars.moneyStartTime + stagger;
+          const fadeInDuration = 0.3;
+          const fallDuration = vars.moneyFallDuration;
+          const fadeOutDuration = 0.18;
+          const fallStart = billStart + fadeInDuration;
+          const landTime = fallStart + fallDuration;
+
+          // (a) Fade in at start position
           tl.fromTo(
             bill,
-            { y: 0, x: 0, opacity: 0, rotation: 0 },
-            {
-              y: endY + 80,
-              x: endX - parseFloat(bill.style.left),
-              opacity: 1,
-              rotation: rotation,
-              duration: vars.moneyFallDuration,
-              ease: "power2.in",
-            },
-            vars.moneyStartTime + stagger
+            { opacity: 0, scale: 0.7 },
+            { opacity: 1, scale: 1, duration: fadeInDuration, ease: "power2.out" },
+            billStart
           );
 
+          // (b) Fall to vault (deltas from CSS-defined start position)
           tl.to(
             bill,
-            { opacity: 0, scale: 0.5, duration: 0.3, ease: "power1.in" },
-            vars.moneyStartTime + stagger + vars.moneyFallDuration
+            {
+              y: endY - startY,
+              x: endX - startX,
+              rotation: rotation,
+              duration: fallDuration,
+              ease: "power2.in",
+            },
+            fallStart
+          );
+
+          // (c) Fade into the vault — opacity to 0, scale down
+          tl.to(
+            bill,
+            { opacity: 0, scale: 0.4, duration: fadeOutDuration, ease: "power1.in" },
+            landTime
+          );
+
+          // (d) Vault BLINK — scale-up pulse on bill arrival.
+          //     Using overwrite so successive blinks chain cleanly without conflict.
+          tl.to(
+            "#vault-card",
+            { scale: vars.vaultBlinkScale, duration: 0.08, ease: "power2.out", overwrite: "auto" },
+            landTime
+          );
+          tl.to(
+            "#vault-card",
+            { scale: 1.0, duration: 0.18, ease: "elastic.out(1, 0.4)" },
+            landTime + 0.08
           );
         });
 
