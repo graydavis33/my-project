@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-composition-variables='[{"id":"word","type":"string","label":"Word","default":"WIN"},{"id":"fontSize","type":"number","label":"Font size (px)","default":260},{"id":"color","type":"color","label":"Trendify orange","default":"#F28129"},{"id":"holdDuration","type":"number","label":"Hold (s) after bounce in","default":1.2},{"id":"verticalPosition","type":"number","label":"Y position (px from top)","default":960}]'>
+<html lang="en" data-composition-variables='[{"id":"word","type":"string","label":"Word","default":"WIN"},{"id":"fontSize","type":"number","label":"Font size (px)","default":280},{"id":"color","type":"color","label":"Trendify orange","default":"#F28129"},{"id":"holdDuration","type":"number","label":"Hold (s) after bounce","default":1.2},{"id":"verticalPosition","type":"number","label":"Y position (px from top)","default":960}]'>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -21,79 +21,129 @@
         height: 100%;
       }
 
-      .word {
+      /* Outer wrapper handles position + opacity + motion blur (filter).
+         Inner element handles transform (scale, rotate, y). This split keeps
+         filter performance clean and lets us animate them independently. */
+      .word-wrap {
         position: absolute;
         left: 50%;
         top: 0;
         transform: translate(-50%, -50%);
+        will-change: filter, opacity;
+      }
+
+      .word {
         font-family: "Montserrat", system-ui, sans-serif;
-        font-weight: 700; /* bold */
-        letter-spacing: 0.02em;
+        font-weight: 800; /* extra bold — reads heavier, feels more physical */
+        letter-spacing: 0.01em;
         white-space: nowrap;
+        line-height: 1;
+        /* Multi-layer shadow for real depth:
+           - sharp close shadow = contact / weight
+           - soft mid shadow    = volume
+           - deep wide shadow   = ambient grounding */
         text-shadow:
-          0 4px 14px rgba(0, 0, 0, 0.35),
-          0 2px 4px rgba(0, 0, 0, 0.25);
-        will-change: transform, opacity;
+          0 2px 0   rgba(0, 0, 0, 0.55),
+          0 6px 14px rgba(0, 0, 0, 0.45),
+          0 18px 38px rgba(0, 0, 0, 0.30);
+        will-change: transform;
+        transform-origin: center center;
       }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="2.0" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="2.0" data-track-index="1">
-        <div id="word" class="word"></div>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="2.2" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="2.2" data-track-index="1">
+        <div id="wrap" class="word-wrap">
+          <div id="word" class="word"></div>
+        </div>
       </div>
     </div>
 
     <script>
       (function () {
         const vars = window.__hyperframes.getVariables();
-        const wordEl = document.getElementById("word");
+        const wrap = document.getElementById("wrap");
+        const word = document.getElementById("word");
 
-        wordEl.textContent = vars.word;
-        wordEl.style.fontSize = vars.fontSize + "px";
-        wordEl.style.color = vars.color;
-        wordEl.style.top = vars.verticalPosition + "px";
+        word.textContent = vars.word;
+        word.style.fontSize = vars.fontSize + "px";
+        word.style.color = vars.color;
+        wrap.style.top = vars.verticalPosition + "px";
 
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // Start: invisible, scaled down, slightly below resting position
-        gsap.set(wordEl, {
-          opacity: 0,
-          scale: 0.4,
-          y: 40
-        });
+        // === Initial state — small, blurred, off-position, invisible ===
+        gsap.set(wrap, { opacity: 0, filter: "blur(14px)" });
+        gsap.set(word, { scaleX: 0.45, scaleY: 0.45, y: 70, rotation: -4 });
 
-        // Fade in + bounce in — back.out gives the overshoot/bounce feel
-        tl.to(wordEl, {
+        // === 1. FLY IN (0.00 → 0.32s) ===
+        // Fast snap to position with rotation kick. Overshoots intentionally.
+        tl.to(wrap, {
           opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.55,
-          ease: "back.out(2.6)"
+          filter: "blur(0px)",
+          duration: 0.28,
+          ease: "power2.out"
         }, 0);
 
-        // Subtle settle wiggle — tiny scale pulse for personality
-        tl.to(wordEl, {
-          scale: 1.04,
-          duration: 0.12,
-          ease: "power2.out"
-        }, 0.55);
-        tl.to(wordEl, {
-          scale: 1.0,
-          duration: 0.18,
-          ease: "power2.inOut"
-        }, 0.67);
+        tl.to(word, {
+          y: -18,                 // overshoots above resting line
+          rotation: 1.5,          // tiny opposite-direction tilt
+          scaleX: 1.18,           // stretched vertically as it drops in
+          scaleY: 1.22,
+          duration: 0.32,
+          ease: "back.out(2.4)"
+        }, 0);
 
-        // Hold (no animation, just sits on screen)
-        // Then fade out at the tail so Gray has a clean exit if needed
-        const fadeOutStart = 0.55 + vars.holdDuration;
-        tl.to(wordEl, {
-          opacity: 0,
-          scale: 1.08,
-          duration: 0.25,
+        // === 2. IMPACT SQUASH (0.32 → 0.44s) ===
+        // Hits resting position — squashes wide & short (gravity impact)
+        tl.to(word, {
+          y: 0,
+          rotation: -0.6,
+          scaleX: 1.14,           // wider on impact
+          scaleY: 0.86,           // shorter — squashed by gravity
+          duration: 0.12,
           ease: "power2.in"
-        }, fadeOutStart);
+        }, 0.32);
+
+        // === 3. REBOUND (0.44 → 0.58s) ===
+        // Recoils — taller & thinner as it springs back up
+        tl.to(word, {
+          y: -6,
+          rotation: 0.3,
+          scaleX: 0.96,
+          scaleY: 1.06,
+          duration: 0.14,
+          ease: "power2.out"
+        }, 0.44);
+
+        // === 4. SETTLE (0.58 → 0.78s) ===
+        // Damped return to rest
+        tl.to(word, {
+          y: 0,
+          rotation: 0,
+          scaleX: 1.0,
+          scaleY: 1.0,
+          duration: 0.20,
+          ease: "power2.inOut"
+        }, 0.58);
+
+        // === 5. HOLD + FADE OUT ===
+        const fadeStart = 0.78 + vars.holdDuration;
+        tl.to(wrap, {
+          opacity: 0,
+          filter: "blur(6px)",
+          duration: 0.22,
+          ease: "power2.in"
+        }, fadeStart);
+        tl.to(word, {
+          scaleX: 1.08,
+          scaleY: 1.08,
+          y: -10,
+          duration: 0.22,
+          ease: "power2.in"
+        }, fadeStart);
 
         window.__timelines["main"] = tl;
       })();
