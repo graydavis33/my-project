@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"particleCount","type":"number","label":"Particle count","default":100},{"id":"burstDuration","type":"number","label":"Burst phase (s)","default":0.45},{"id":"fallDuration","type":"number","label":"Fall phase (s)","default":2.25},{"id":"gravityStrength","type":"number","label":"Gravity multiplier","default":1.0},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"seed","type":"number","label":"Random seed","default":42}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key — Gray keys this out in Premiere */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .particle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        will-change: transform;
+        transform-origin: center center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .particle.rect   { width: 26px; height: 10px; border-radius: 2px; }
+      .particle.square { width: 18px; height: 18px; border-radius: 3px; }
+      .particle.strip  { width: 34px; height: 6px;  border-radius: 3px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="2.8" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="2.8" data-track-index="1"></div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+        const scene = document.getElementById("scene");
+
+        // Deterministic seeded LCG — no Math.random() allowed in HyperFrames
+        let seed = vars.seed | 0;
+        function rand() {
+          seed = (seed * 9301 + 49297) % 233280;
+          return seed / 233280;
+        }
+
+        // Two confetti cannons — fire diagonally toward upper-center
+        const cannons = [
+          { x: 80,   y: 1880, baseAngleDeg: -65 }, // bottom-left  → up & right
+          { x: 1000, y: 1880, baseAngleDeg: -115 } // bottom-right → up & left
+        ];
+
+        const shapes = ["rect", "square", "strip"];
+        const colors = [vars.orange, vars.white];
+
+        const particles = [];
+        for (let i = 0; i < vars.particleCount; i++) {
+          const cannon  = cannons[i % 2];
+          const shape   = shapes[i % 3];
+          const color   = colors[(i + Math.floor(i / 2)) % 2];
+
+          // ±28° spread around base angle
+          const angleDeg  = cannon.baseAngleDeg + (rand() - 0.5) * 56;
+          const angleRad  = angleDeg * Math.PI / 180;
+
+          // initial burst distance
+          const burstDist = 720 + rand() * 480;
+          const peakX     = cannon.x + Math.cos(angleRad) * burstDist;
+          const peakY     = cannon.y + Math.sin(angleRad) * burstDist;
+
+          // gravity carries it down past the bottom of frame
+          const fallY     = peakY + (2400 + rand() * 400) * vars.gravityStrength;
+          const driftX    = peakX + (rand() - 0.5) * 220;
+
+          const startRot  = rand() * 360;
+          const totalRot  = startRot + (rand() < 0.5 ? -1 : 1) * (540 + rand() * 540);
+
+          const delay     = rand() * 0.12;
+
+          const el = document.createElement("div");
+          el.className = "particle " + shape;
+          el.style.background = color;
+          el.style.left = cannon.x + "px";
+          el.style.top  = cannon.y + "px";
+          scene.appendChild(el);
+
+          // GSAP sets transform from here on
+          gsap.set(el, { x: 0, y: 0, rotation: startRot });
+
+          particles.push({ el, cannon, peakX, peakY, driftX, fallY, startRot, totalRot, delay });
+        }
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        particles.forEach(function (p) {
+          // Burst — rapid outward fling, eases out (decelerates as it peaks)
+          tl.to(p.el, {
+            x: p.peakX - p.cannon.x,
+            y: p.peakY - p.cannon.y,
+            rotation: (p.startRot + p.totalRot) / 2,
+            duration: vars.burstDuration,
+            ease: "power2.out"
+          }, p.delay);
+
+          // Fall — gravity accelerates it down, ease.in
+          tl.to(p.el, {
+            x: p.driftX - p.cannon.x,
+            y: p.fallY  - p.cannon.y,
+            rotation: p.totalRot,
+            duration: vars.fallDuration,
+            ease: "power1.in"
+          }, p.delay + vars.burstDuration);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

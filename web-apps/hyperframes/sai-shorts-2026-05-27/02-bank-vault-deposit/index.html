@@ -15,20 +15,23 @@
         font-family: "Montserrat", system-ui, sans-serif;
       }
 
-      /* === Scene container fills the full frame === */
+      /* === Scene container fills the full frame ===
+         column-reverse puts the first child (bank) at the BOTTOM.
+         Visual order top→bottom is: vault, arrow, bank.
+         Vault sits in the middle, bank anchors the bottom third. */
       .scene {
         position: relative;
         width: 100%;
         height: 100%;
         display: flex;
-        flex-direction: column;
+        flex-direction: column-reverse;
         align-items: center;
-        justify-content: center;
-        padding: 120px 80px;
+        justify-content: flex-start;
+        padding: 160px 80px 200px 80px;
         gap: 80px;
       }
 
-      /* === Bank card (top) === */
+      /* === Bank card (anchors the BOTTOM third) === */
       .bank-card {
         display: flex;
         flex-direction: column;
@@ -66,25 +69,26 @@
       .arrow-line {
         position: absolute;
         left: 50%;
-        top: 0;
+        bottom: 0;
         transform: translateX(-50%);
         width: 4px;
         height: 100%;
         background: var(--white);
-        transform-origin: top center;
+        transform-origin: bottom center;
       }
+      /* Arrow now points UP — from the bank (bottom) toward the vault (above) */
       .arrow-head {
         position: absolute;
-        bottom: 0;
+        top: 0;
         left: 50%;
-        transform: translateX(-50%) rotate(45deg);
+        transform: translateX(-50%) rotate(-135deg);
         width: 24px;
         height: 24px;
         border-right: 4px solid var(--white);
         border-bottom: 4px solid var(--white);
       }
 
-      /* === Vault card (bottom) === */
+      /* === Vault card (middle of frame, ABOVE the bank) === */
       .vault-card {
         position: relative;
         display: flex;
