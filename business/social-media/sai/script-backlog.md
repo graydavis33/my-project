@@ -176,14 +176,25 @@ Source file: [voice-memos/2026-05-26-batch-recap/part2-transcript.md](voice-memo
 
 ### 14. mentor-belief-basketball-coach
 
-- **status:** `picked-2026-05-26`
-- **topic:** Find a mentor not for advice but to know what's possible. The 8th grade basketball coach who believed in Sai before Sai believed in himself.
+- **status:** `picked-2026-05-26` — filming as STORY ONLY (split from framework on 2026-05-27)
+- **topic:** The 8th grade basketball coach story — 6th grade saw potential, 7th grade cut him, 8th grade made the team. "He believed in me when I didn't even believe in myself."
 - **pillar:** `mentorship`
-- **format:** Personal story / narrative-driven
+- **format:** Personal story / in medias res
 - **timestamp:** [07:13 – 09:30]
-- **source_quote:** "Find someone who's done what you wanted to do — not to get advice, but to know what's possible. My 8th grade basketball coach was also the 7th grade coach. From 6th grade, he believed in me. He saw my talent. He had me sign up for all the weightlifting classes. He was the same person who cut me in 7th grade because I wasn't good enough. But he told me to keep trying, that he believes in me. And in 8th grade I made the team. I don't know if I would have been able to do that without his belief in me. It's not that he was a million times better at basketball than me. It's that he believed in me when I didn't even believe in myself."
-- **why it works:** Personal, specific story arc (6th → cut in 7th → made it in 8th). Universal lesson. Different emotional register from his usual founder content. New-territory candidate.
-- **notes:** Pull out the cut-then-believed-in-me beat. That's the heart. Sai's own framing — "not for advice, but to know what's possible" — is the killer line.
+- **source_quote:** "My 8th grade basketball coach was also the 7th grade coach. From 6th grade, he believed in me. He saw my talent... He was the same person who cut me in 7th grade because I wasn't good enough. But he told me to keep trying... in 8th grade I made the team... It's that he believed in me when I didn't even believe in myself."
+- **why it works:** Personal, specific story arc (6th → cut in 7th → made it in 8th). Universal lesson. Different emotional register from his usual founder content.
+- **notes:** Sai's 2026-05-27 revision split off the framework opener ("find someone who's done what you want to do, and have them believe in you before you even believe in yourself") into its own video. See entry #19 below. This entry is now JUST the story.
+
+### 19. find-someone-whos-done-it-framework
+
+- **status:** `backlog` — split off from #14 by Sai on 2026-05-27
+- **topic:** "Find someone who's done what you want to do. And have them believe in you before you even believe in yourself." The framework / principle that the basketball coach story illustrates.
+- **pillar:** `mentorship`
+- **format:** Framework / direct-address principle (no story attached — that's a separate video)
+- **timestamp:** [07:13 – 07:30] (the opening framework piece of the basketball segment)
+- **source_quote:** "Sometimes you need to find someone who's done what you've wanted to do. And have them be your mentor. Not for the reason of getting advice, but for knowing what's possible. And having them believe in you before you even believe in yourself."
+- **why it works:** Strong standalone principle. Save-bait without needing the story attached. Sai's own framing — "not for advice, but to know what's possible" — is the killer line.
+- **notes:** Sai explicitly flagged this needs to be its own script. Next batch candidate. The story version (#14) and this framework version can post in the same week as a 1-2 punch.
 
 ### 15. family-support-blessing
 
