@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"month1Label","type":"string","label":"Month 1 label","default":"MAY"},{"id":"month2Label","type":"string","label":"Month 2 label","default":"JUN"},{"id":"month3Label","type":"string","label":"Month 3 label","default":"JUL"},{"id":"highlightPercent","type":"number","label":"Bottom fill %","default":30},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Pill stroke (px)","default":4},{"id":"entryStartTime","type":"number","label":"First pill enters at (s)","default":0.2},{"id":"entryStagger","type":"number","label":"Stagger between pills (s)","default":0.18},{"id":"highlightStartTime","type":"number","label":"Orange fill starts at (s)","default":1.6}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green — Gray keys this out in Premiere */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      /* === Scene container — graphic lives in lower half of frame === */
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .pill-row {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 280px;          /* sits in lower half, leaves room for Sai's face above */
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 80px;
+      }
+
+      .pill-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 36px;
+        will-change: transform, opacity;
+      }
+
+      /* === The "round box" pill — vertical capsule === */
+      .pill {
+        position: relative;
+        width: 200px;
+        height: 360px;
+        background: transparent;
+        border-style: solid;
+        border-color: var(--white);
+        border-radius: 9999px;   /* full capsule */
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Orange fill — sits inside pill, anchored to bottom, height animated */
+      .pill-fill {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 0%;
+        background: var(--orange);
+        will-change: height;
+      }
+
+      .month-label {
+        font-size: 56px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        color: var(--white);
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3.5" data-track-index="1">
+        <div class="pill-row" data-layout-allow-overflow="">
+          <div id="pill-col-1" class="pill-col">
+            <div class="pill"><div id="fill-1" class="pill-fill"></div></div>
+            <div id="label-1" class="month-label">MAY</div>
+          </div>
+          <div id="pill-col-2" class="pill-col">
+            <div class="pill"><div id="fill-2" class="pill-fill"></div></div>
+            <div id="label-2" class="month-label">JUN</div>
+          </div>
+          <div id="pill-col-3" class="pill-col">
+            <div class="pill"><div id="fill-3" class="pill-fill"></div></div>
+            <div id="label-3" class="month-label">JUL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        // Apply colors as CSS custom properties on root
+        document.documentElement.style.setProperty("--white", vars.white);
+        document.documentElement.style.setProperty("--orange", vars.orange);
+
+        // Apply pill stroke width
+        document.querySelectorAll(".pill").forEach(function (el) {
+          el.style.borderWidth = vars.strokeWidth + "px";
+          el.style.borderColor = vars.white;
+        });
+
+        // Apply month labels
+        document.getElementById("label-1").textContent = vars.month1Label;
+        document.getElementById("label-2").textContent = vars.month2Label;
+        document.getElementById("label-3").textContent = vars.month3Label;
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        const cols = ["#pill-col-1", "#pill-col-2", "#pill-col-3"];
+        const fills = ["#fill-1", "#fill-2", "#fill-3"];
+
+        // 1. Each pill slides up from below + bounces at the top
+        cols.forEach(function (sel, i) {
+          tl.from(
+            sel,
+            {
+              y: 600,
+              opacity: 0,
+              duration: 0.9,
+              ease: "back.out(2.2)", // bounce/overshoot when it reaches top
+            },
+            vars.entryStartTime + i * vars.entryStagger
+          );
+        });
+
+        // 2. Orange "30%" fill rises inside each pill (all together — instant read)
+        fills.forEach(function (sel) {
+          tl.to(
+            sel,
+            {
+              height: vars.highlightPercent + "%",
+              duration: 0.6,
+              ease: "power2.out",
+            },
+            vars.highlightStartTime
+          );
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
