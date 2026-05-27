@@ -55,21 +55,19 @@
         <svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
           <!-- Gridlines (drawn first so they sit under axes / curve) -->
           <g id="grid">
-            <!-- horizontal grid lines -->
-            <line class="grid-line" id="grid-h-1" x1="160" y1="1400" x2="940" y2="1400"/>
-            <line class="grid-line" id="grid-h-2" x1="160" y1="1140" x2="940" y2="1140"/>
-            <line class="grid-line" id="grid-h-3" x1="160" y1="880"  x2="940" y2="880"/>
-            <line class="grid-line" id="grid-h-4" x1="160" y1="620"  x2="940" y2="620"/>
-            <line class="grid-line" id="grid-h-5" x1="160" y1="360"  x2="940" y2="360"/>
-            <!-- vertical grid lines -->
-            <line class="grid-line" id="grid-v-1" x1="316" y1="240" x2="316" y2="1660"/>
-            <line class="grid-line" id="grid-v-2" x1="472" y1="240" x2="472" y2="1660"/>
-            <line class="grid-line" id="grid-v-3" x1="628" y1="240" x2="628" y2="1660"/>
-            <line class="grid-line" id="grid-v-4" x1="784" y1="240" x2="784" y2="1660"/>
+            <line class="grid-line" id="grid-h-1" x1="160" y1="1400" x2="940" y2="1400" data-axis="y" data-pos="1400"/>
+            <line class="grid-line" id="grid-h-2" x1="160" y1="1140" x2="940" y2="1140" data-axis="y" data-pos="1140"/>
+            <line class="grid-line" id="grid-h-3" x1="160" y1="880"  x2="940" y2="880"  data-axis="y" data-pos="880"/>
+            <line class="grid-line" id="grid-h-4" x1="160" y1="620"  x2="940" y2="620"  data-axis="y" data-pos="620"/>
+            <line class="grid-line" id="grid-h-5" x1="160" y1="360"  x2="940" y2="360"  data-axis="y" data-pos="360"/>
+            <line class="grid-line" id="grid-v-1" x1="316" y1="240" x2="316" y2="1660" data-axis="x" data-pos="316"/>
+            <line class="grid-line" id="grid-v-2" x1="472" y1="240" x2="472" y2="1660" data-axis="x" data-pos="472"/>
+            <line class="grid-line" id="grid-v-3" x1="628" y1="240" x2="628" y2="1660" data-axis="x" data-pos="628"/>
+            <line class="grid-line" id="grid-v-4" x1="784" y1="240" x2="784" y2="1660" data-axis="x" data-pos="784"/>
           </g>
 
-          <!-- Axes -->
-          <line id="axis-y" class="axis" x1="160" y1="240" x2="160" y2="1660"/>
+          <!-- Axes — solid from frame 0, no draw-on animation -->
+          <line id="axis-y" class="axis" x1="160" y1="240"  x2="160" y2="1660"/>
           <line id="axis-x" class="axis" x1="160" y1="1660" x2="940" y2="1660"/>
 
           <!-- Exponential curve (path filled in by JS) -->
@@ -85,103 +83,111 @@
       (function () {
         const vars = window.__hyperframes.getVariables();
 
-        // Apply colors from variables
+        // Apply colors
         document.querySelectorAll(".axis, .grid-line").forEach(function (el) {
           el.setAttribute("stroke", vars.white);
         });
-        const curveEl  = document.getElementById("curve");
-        const headDot  = document.getElementById("head-dot");
+        const curveEl = document.getElementById("curve");
+        const headDot = document.getElementById("head-dot");
         curveEl.setAttribute("stroke", vars.orange);
         curveEl.setAttribute("stroke-width", vars.strokeWidth);
         headDot.setAttribute("fill", vars.orange);
 
         // === Build exponential curve path ===
-        // Graph plot area: x ∈ [160, 940], y ∈ [240, 1660] (SVG: top=240, bottom=1660)
-        // Curve: y(x) = ymax - amplitude * (e^(k*xNorm) - 1) / (e^k - 1)
-        // Starts flat at bottom-left, accelerates upward to top-right.
         const X0 = 160, X1 = 940;
         const Y_BOT = 1620, Y_TOP = 280;
-        const k = 3.2; // exponential steepness — higher = more aggressive hockey-stick
+        const k = 3.2;
         const STEPS = 80;
 
         const points = [];
         for (let i = 0; i <= STEPS; i++) {
-          const t = i / STEPS;                       // 0 → 1 along x-axis
-          const norm = (Math.exp(k * t) - 1) / (Math.exp(k) - 1); // 0 → 1, exponential
-          const px = X0 + t * (X1 - X0);
-          const py = Y_BOT - norm * (Y_BOT - Y_TOP);
-          points.push([px, py]);
+          const t = i / STEPS;
+          const norm = (Math.exp(k * t) - 1) / (Math.exp(k) - 1);
+          points.push([
+            X0 + t * (X1 - X0),
+            Y_BOT - norm * (Y_BOT - Y_TOP)
+          ]);
         }
 
-        // Smooth path: M then C cubic bezier segments using neighbor tangents
         let d = `M ${points[0][0].toFixed(2)} ${points[0][1].toFixed(2)}`;
         for (let i = 1; i < points.length; i++) {
-          const prev = points[i - 1];
-          const curr = points[i];
-          // Simple line segments — enough density for it to read as a smooth curve
-          d += ` L ${curr[0].toFixed(2)} ${curr[1].toFixed(2)}`;
+          d += ` L ${points[i][0].toFixed(2)} ${points[i][1].toFixed(2)}`;
         }
         curveEl.setAttribute("d", d);
 
-        // Compute path length for stroke-dashoffset draw-on
         const pathLen = curveEl.getTotalLength();
         curveEl.style.strokeDasharray  = pathLen;
         curveEl.style.strokeDashoffset = pathLen;
 
-        // Final head-dot position (end of curve)
         const last = points[points.length - 1];
         headDot.setAttribute("cx", last[0]);
         headDot.setAttribute("cy", last[1]);
+
+        // === Compute path-length fraction at which the curve crosses each gridline ===
+        // Walk the path with getPointAtLength so fractions match the actual stroke draw.
+        const SAMPLES = 400;
+        const crossings = {};
+        const gridEls = document.querySelectorAll(".grid-line");
+
+        let lastX = points[0][0], lastY = points[0][1];
+        for (let s = 1; s <= SAMPLES; s++) {
+          const len = (s / SAMPLES) * pathLen;
+          const pt  = curveEl.getPointAtLength(len);
+
+          gridEls.forEach(function (g) {
+            if (crossings[g.id] !== undefined) return;
+            const axis = g.getAttribute("data-axis");
+            const pos  = parseFloat(g.getAttribute("data-pos"));
+            if (axis === "x") {
+              if (lastX < pos && pt.x >= pos) crossings[g.id] = len / pathLen;
+            } else {
+              if (lastY > pos && pt.y <= pos) crossings[g.id] = len / pathLen;
+            }
+          });
+
+          lastX = pt.x;
+          lastY = pt.y;
+        }
+
+        // Start each gridline invisible
+        gsap.set(".grid-line", { opacity: 0 });
 
         // === Timeline ===
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // 1. Y-axis draws in from bottom to top
-        gsap.set("#axis-y", { attr: { y2: 1660 } });
-        tl.fromTo("#axis-y",
-          { attr: { y2: 1660 } },
-          { attr: { y2: 240 }, duration: 0.35, ease: "power2.out" },
-          0
-        );
+        // Curve draws linearly along arc length — the exponential SHAPE of the path
+        // gives the natural "starts slow, blows up fast" visual feel without easing.
+        const CURVE_START = 0.3;
+        tl.to(curveEl, {
+          strokeDashoffset: 0,
+          duration: vars.curveDuration,
+          ease: "none"
+        }, CURVE_START);
 
-        // 2. X-axis draws in from left to right (right after y-axis starts)
-        gsap.set("#axis-x", { attr: { x2: 160 } });
-        tl.fromTo("#axis-x",
-          { attr: { x2: 160 } },
-          { attr: { x2: 940 }, duration: 0.35, ease: "power2.out" },
-          0.1
-        );
+        // Each gridline fades in exactly when the curve's leading edge crosses it
+        gridEls.forEach(function (g) {
+          const frac = crossings[g.id];
+          if (frac === undefined) return;
+          const startTime = CURVE_START + frac * vars.curveDuration;
+          tl.to(g, {
+            opacity: 0.35,
+            duration: 0.25,
+            ease: "power2.out"
+          }, startTime);
+        });
 
-        // 3. Gridlines fade in (staggered, subtle)
-        tl.from(".grid-line",
-          { opacity: 0, duration: 0.4, stagger: 0.04, ease: "power1.out" },
-          0.35
-        );
-
-        // 4. Curve draws on — slow start, accelerating with curve shape itself
-        //    Using power3.in gives the visual "starts slow, blows up fast" effect
-        //    that matches what an exponential growth feels like.
-        tl.to(curveEl,
-          {
-            strokeDashoffset: 0,
-            duration: vars.curveDuration,
-            ease: "power3.in"
-          },
-          0.55
-        );
-
-        // 5. Head dot pops in at the end of the curve draw
+        // Head dot pops in at the end of the curve
         tl.fromTo(headDot,
           { attr: { r: 0 }, opacity: 0 },
           { attr: { r: 22 }, opacity: 1, duration: 0.35, ease: "back.out(3)" },
-          0.55 + vars.curveDuration - 0.05
+          CURVE_START + vars.curveDuration - 0.05
         );
 
-        // 6. Subtle pulse on the head dot during the hold
+        // Subtle pulse on head dot during hold
         tl.to(headDot,
           { attr: { r: 30 }, duration: 0.45, ease: "power2.inOut", yoyo: true, repeat: 1 },
-          0.55 + vars.curveDuration + 0.35
+          CURVE_START + vars.curveDuration + 0.35
         );
 
         window.__timelines["main"] = tl;
