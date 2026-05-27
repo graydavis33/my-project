@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-composition-variables='[{"id":"month1Label","type":"string","label":"Month 1 label","default":"MAY"},{"id":"month2Label","type":"string","label":"Month 2 label","default":"JUN"},{"id":"month3Label","type":"string","label":"Month 3 label","default":"JUL"},{"id":"highlightPercent","type":"number","label":"Bottom fill %","default":30},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Pill stroke (px)","default":4},{"id":"entryStartTime","type":"number","label":"First pill enters at (s)","default":0.2},{"id":"entryStagger","type":"number","label":"Stagger between pills (s)","default":0.18},{"id":"highlightStartTime","type":"number","label":"Orange fill starts at (s)","default":1.6}]'>
+<html lang="en" data-composition-variables='[{"id":"month1Label","type":"string","label":"Month 1 label","default":"MAY"},{"id":"month2Label","type":"string","label":"Month 2 label","default":"JUN"},{"id":"month3Label","type":"string","label":"Month 3 label","default":"JUL"},{"id":"highlightPercent","type":"number","label":"Bottom highlight %","default":30},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Calendar stroke (px)","default":4},{"id":"entryStartTime","type":"number","label":"First calendar enters at (s)","default":0.2},{"id":"entryStagger","type":"number","label":"Stagger between calendars (s)","default":0.18},{"id":"blinkStartTime","type":"number","label":"Orange blink starts at (s)","default":1.6},{"id":"blinkOnDuration","type":"number","label":"Blink on/off step (s)","default":0.08}]'>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -22,11 +22,11 @@
         height: 100%;
       }
 
-      .pill-row {
+      .row {
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 280px;          /* sits in lower half, leaves room for Sai's face above */
+        bottom: 280px;
         display: flex;
         flex-direction: row;
         align-items: flex-end;
@@ -34,62 +34,95 @@
         gap: 80px;
       }
 
-      .pill-col {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 36px;
+      /* Per-calendar column (animates as a unit) */
+      .cal-col {
+        position: relative;
+        width: 280px;
         will-change: transform, opacity;
       }
 
-      /* === The "round box" pill — vertical capsule === */
-      .pill {
+      /* Calendar binding tabs (two small white rings on top — wall-calendar feel) */
+      .binding {
+        position: absolute;
+        top: -22px;
+        width: 14px;
+        height: 36px;
+        background: var(--white);
+        border-radius: 6px 6px 0 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        z-index: 1;
+      }
+      .binding-left  { left: 32%; transform: translateX(-50%); }
+      .binding-right { left: 68%; transform: translateX(-50%); }
+
+      /* The "round calendar" — circle with clipped 30% fill */
+      .calendar {
         position: relative;
-        width: 200px;
-        height: 360px;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
         background: transparent;
         border-style: solid;
         border-color: var(--white);
-        border-radius: 9999px;   /* full capsule */
         overflow: hidden;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
       }
 
-      /* Orange fill — sits inside pill, anchored to bottom, height animated */
-      .pill-fill {
+      /* Orange highlight — bottom chord, clipped by circle, blinks in */
+      .cal-fill {
         position: absolute;
         left: 0;
         right: 0;
         bottom: 0;
-        height: 0%;
+        height: 0%;            /* set from variable in JS */
         background: var(--orange);
-        will-change: height;
+        opacity: 0;            /* shown via blink timeline */
+        will-change: opacity;
       }
 
-      .month-label {
-        font-size: 56px;
+      /* Month label sits above the fill */
+      .cal-label {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
         font-weight: 600;
-        letter-spacing: 0.12em;
+        letter-spacing: 0.06em;
         color: var(--white);
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        z-index: 2;
       }
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="3.5" data-width="1080" data-height="1920">
       <div id="scene" class="scene clip" data-start="0" data-duration="3.5" data-track-index="1">
-        <div class="pill-row" data-layout-allow-overflow="">
-          <div id="pill-col-1" class="pill-col">
-            <div class="pill"><div id="fill-1" class="pill-fill"></div></div>
-            <div id="label-1" class="month-label">MAY</div>
+        <div class="row" data-layout-allow-overflow="">
+          <div id="cal-col-1" class="cal-col">
+            <div class="binding binding-left"></div>
+            <div class="binding binding-right"></div>
+            <div class="calendar">
+              <div id="fill-1" class="cal-fill"></div>
+              <div id="label-1" class="cal-label">MAY</div>
+            </div>
           </div>
-          <div id="pill-col-2" class="pill-col">
-            <div class="pill"><div id="fill-2" class="pill-fill"></div></div>
-            <div id="label-2" class="month-label">JUN</div>
+          <div id="cal-col-2" class="cal-col">
+            <div class="binding binding-left"></div>
+            <div class="binding binding-right"></div>
+            <div class="calendar">
+              <div id="fill-2" class="cal-fill"></div>
+              <div id="label-2" class="cal-label">JUN</div>
+            </div>
           </div>
-          <div id="pill-col-3" class="pill-col">
-            <div class="pill"><div id="fill-3" class="pill-fill"></div></div>
-            <div id="label-3" class="month-label">JUL</div>
+          <div id="cal-col-3" class="cal-col">
+            <div class="binding binding-left"></div>
+            <div class="binding binding-right"></div>
+            <div class="calendar">
+              <div id="fill-3" class="cal-fill"></div>
+              <div id="label-3" class="cal-label">JUL</div>
+            </div>
           </div>
         </div>
       </div>
@@ -103,8 +136,8 @@
         document.documentElement.style.setProperty("--white", vars.white);
         document.documentElement.style.setProperty("--orange", vars.orange);
 
-        // Apply pill stroke width
-        document.querySelectorAll(".pill").forEach(function (el) {
+        // Apply calendar stroke width
+        document.querySelectorAll(".calendar").forEach(function (el) {
           el.style.borderWidth = vars.strokeWidth + "px";
           el.style.borderColor = vars.white;
         });
@@ -114,14 +147,19 @@
         document.getElementById("label-2").textContent = vars.month2Label;
         document.getElementById("label-3").textContent = vars.month3Label;
 
+        // Set the orange fill height from the variable (default 30%)
+        const fills = ["#fill-1", "#fill-2", "#fill-3"];
+        fills.forEach(function (sel) {
+          document.querySelector(sel).style.height = vars.highlightPercent + "%";
+        });
+
         // === Timeline ===
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        const cols = ["#pill-col-1", "#pill-col-2", "#pill-col-3"];
-        const fills = ["#fill-1", "#fill-2", "#fill-3"];
+        const cols = ["#cal-col-1", "#cal-col-2", "#cal-col-3"];
 
-        // 1. Each pill slides up from below + bounces at the top
+        // 1. Each calendar slides up from below + bounces at the top
         cols.forEach(function (sel, i) {
           tl.from(
             sel,
@@ -129,23 +167,23 @@
               y: 600,
               opacity: 0,
               duration: 0.9,
-              ease: "back.out(2.2)", // bounce/overshoot when it reaches top
+              ease: "back.out(2.2)",
             },
             vars.entryStartTime + i * vars.entryStagger
           );
         });
 
-        // 2. Orange "30%" fill rises inside each pill (all together — instant read)
+        // 2. Orange "30%" blinks in on all 3 simultaneously
+        //    Pattern: ON → OFF → ON → OFF → ON (settles visible).
+        //    5 steps × blinkOnDuration each.
+        const step = vars.blinkOnDuration;
         fills.forEach(function (sel) {
-          tl.to(
-            sel,
-            {
-              height: vars.highlightPercent + "%",
-              duration: 0.6,
-              ease: "power2.out",
-            },
-            vars.highlightStartTime
-          );
+          const t = vars.blinkStartTime;
+          tl.set(sel, { opacity: 1 }, t);
+          tl.set(sel, { opacity: 0 }, t + step);
+          tl.set(sel, { opacity: 1 }, t + step * 2);
+          tl.set(sel, { opacity: 0 }, t + step * 3);
+          tl.set(sel, { opacity: 1 }, t + step * 4);
         });
 
         window.__timelines["main"] = tl;
