@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-composition-variables='[{"id":"workColor","type":"color","label":"Work liquid color","default":"#F28129"},{"id":"planColor","type":"color","label":"Planning liquid color","default":"#3FC1C9"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Tube stroke (px)","default":5},{"id":"liquidHeightPct","type":"number","label":"Liquid height % of tube (rest is air)","default":70},{"id":"tubeRevealStart","type":"number","label":"Tube fade-in starts at (s)","default":0.0},{"id":"tubeRevealDuration","type":"number","label":"Tube fade-in duration (s)","default":0.8},{"id":"liquidFillStart","type":"number","label":"Liquids start pouring at (s)","default":1.0},{"id":"liquidFillDuration","type":"number","label":"Pour-in duration (s)","default":0.8},{"id":"workInitialPct","type":"number","label":"Work initial fill %","default":90},{"id":"planInitialPct","type":"number","label":"Planning initial fill %","default":10},{"id":"transitionStart","type":"number","label":"Transition to new ratio at (s)","default":4.5},{"id":"transitionDuration","type":"number","label":"Transition duration (s)","default":1.0},{"id":"workFinalPct","type":"number","label":"Work final fill %","default":40},{"id":"planFinalPct","type":"number","label":"Planning final fill %","default":60},{"id":"waveFrontCycle","type":"number","label":"Front wave cycle (s)","default":1.5},{"id":"waveBackCycle","type":"number","label":"Back wave cycle (s)","default":2.0},{"id":"waveAmplitude","type":"number","label":"Wave peak-to-trough height (viewBox units)","default":18},{"id":"labelFontSize","type":"number","label":"Percent label font size (px)","default":80}]'>
+<html lang="en" data-composition-variables='[{"id":"workColor","type":"color","label":"Work liquid color","default":"#F28129"},{"id":"planColor","type":"color","label":"Planning liquid color","default":"#3FC1C9"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Tube stroke (px)","default":5},{"id":"liquidHeightPct","type":"number","label":"Liquid height % of tube (rest is air)","default":70},{"id":"tubeRevealStart","type":"number","label":"Tube fade-in starts at (s)","default":0.0},{"id":"tubeRevealDuration","type":"number","label":"Tube fade-in duration (s)","default":0.8},{"id":"liquidFillStart","type":"number","label":"Liquids start pouring at (s)","default":1.0},{"id":"liquidFillDuration","type":"number","label":"Pour-in duration (s)","default":0.8},{"id":"workInitialPct","type":"number","label":"Work initial fill %","default":90},{"id":"planInitialPct","type":"number","label":"Planning initial fill %","default":10},{"id":"transitionStart","type":"number","label":"Transition to new ratio at (s)","default":4.5},{"id":"transitionDuration","type":"number","label":"Transition duration (s)","default":1.0},{"id":"workFinalPct","type":"number","label":"Work final fill %","default":40},{"id":"planFinalPct","type":"number","label":"Planning final fill %","default":60},{"id":"waveCycle","type":"number","label":"Wave scroll cycle (s)","default":1.6},{"id":"waveAmplitude","type":"number","label":"Wave peak-to-trough height (viewBox units)","default":18},{"id":"labelFontSize","type":"number","label":"Percent label font size (px)","default":80}]'>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -34,45 +34,62 @@
         border-color: var(--white);
         overflow: hidden;
         background: transparent;
-        opacity: 0;              /* animated to 1 by timeline */
+        opacity: 0;             /* animated to 1 */
         will-change: opacity;
       }
 
-      /* Liquid container — sits in the bottom portion of the tube */
-      .liquid {
+      /* Water container — animates height (pour-in from bottom up) */
+      .water-container {
         position: absolute;
-        bottom: 0;
-        height: 0%;              /* starts empty, animated up to liquidHeightPct (pour-in) */
-        overflow: hidden;
-        background: transparent;
-        will-change: width, height;
-      }
-      .liquid-work {
         left: 0;
-        width: 0%;               /* set by JS init */
-        color: var(--work-color);
-        z-index: 1;
-      }
-      .liquid-plan {
         right: 0;
-        width: 0%;               /* set by JS init */
-        color: var(--plan-color);
-        z-index: 1;
+        bottom: 0;
+        height: 0%;             /* animated 0 → liquidHeightPct */
+        overflow: hidden;
+        will-change: height;
       }
 
-      /* Water wave layers — fixed pixel dimensions so wave shape is consistent
-         regardless of liquid width (no aspect-ratio squish on narrow liquids). */
-      .water {
+      /* Water layer — a single wave mask applied to a row of color fills.
+         The wave SHAPE is continuous across the whole tube; only the colors
+         change at the meniscus. Mask-position-x scrolls horizontally for
+         the moving-water effect. */
+      .water-layer {
+        position: absolute;
+        inset: 0;
+        -webkit-mask-image: var(--wave-mask);
+                mask-image: var(--wave-mask);
+        -webkit-mask-repeat: repeat-x;
+                mask-repeat: repeat-x;
+        -webkit-mask-size: 1600px 200px;
+                mask-size: 1600px 200px;
+        -webkit-mask-position-x: 0;
+                mask-position-x: 0;
+        -webkit-mask-position-y: 0;
+                mask-position-y: 0;
+        will-change: mask-position;
+      }
+
+      .color-row {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      .work-fill, .plan-fill {
         position: absolute;
         top: 0;
-        left: 0;
-        width: 1600px;
-        height: 200px;
-        pointer-events: none;
-        will-change: transform;
+        bottom: 0;
+        will-change: width;
       }
-      .water-front path { fill: currentColor; }
-      .water-back  path { fill: currentColor; opacity: 0.55; }
+      .work-fill {
+        left: 0;
+        width: 0%;              /* set by JS init */
+        background: var(--work-color);
+      }
+      .plan-fill {
+        right: 0;
+        width: 0%;              /* set by JS init */
+        background: var(--plan-color);
+      }
 
       /* 3D shading overlay — cylindrical depth (top bright, bottom dark) */
       .tube-3d {
@@ -137,13 +154,13 @@
     <div id="root" data-composition-id="main" data-start="0" data-duration="7" data-width="1080" data-height="1920">
       <div id="scene" class="scene clip" data-start="0" data-duration="7" data-track-index="1">
         <div id="tube" class="tube">
-          <div id="liquid-work" class="liquid liquid-work">
-            <svg id="water-back-work" class="water water-back" viewBox="0 0 1600 200" data-layout-allow-overflow=""><path></path></svg>
-            <svg id="water-front-work" class="water water-front" viewBox="0 0 1600 200" data-layout-allow-overflow=""><path></path></svg>
-          </div>
-          <div id="liquid-plan" class="liquid liquid-plan">
-            <svg id="water-back-plan" class="water water-back" viewBox="0 0 1600 200" data-layout-allow-overflow=""><path></path></svg>
-            <svg id="water-front-plan" class="water water-front" viewBox="0 0 1600 200" data-layout-allow-overflow=""><path></path></svg>
+          <div id="water-container" class="water-container">
+            <div id="water-layer" class="water-layer">
+              <div class="color-row">
+                <div id="work-fill" class="work-fill"></div>
+                <div id="plan-fill" class="plan-fill"></div>
+              </div>
+            </div>
           </div>
           <div class="tube-3d"></div>
           <div class="tube-gloss"></div>
@@ -169,44 +186,37 @@
         tube.style.borderWidth = vars.strokeWidth + "px";
         tube.style.borderColor = vars.white;
 
-        // Liquids: width set to their target percentages at init
-        // (pour-in happens via height animation, not width).
-        document.getElementById("liquid-work").style.width = vars.workInitialPct + "%";
-        document.getElementById("liquid-plan").style.width = vars.planInitialPct + "%";
+        // Color fills start at their target widths — pour-in is via height, not width
+        document.getElementById("work-fill").style.width = vars.workInitialPct + "%";
+        document.getElementById("plan-fill").style.width = vars.planInitialPct + "%";
 
-        // === Build wave SVG paths ===
-        // Viewbox 1600x200, wavelength 200 → 8 full waves across viewBox
-        // → seamless translateX(-50%) loop (the wave at x=0 matches x=800).
+        // === Build the wave mask (single SVG, used as CSS mask-image) ===
+        // ViewBox 1600x200, wavelength 200 → 8 full waves → seamless tile.
+        // The mask is BLACK (visible) below the wave line, TRANSPARENT above.
         const VIEW_W = 1600;
         const VIEW_H = 200;
         const WAVELENGTH = 200;
+        const amp = vars.waveAmplitude;
+        const baseY = amp / 2; // peaks land at y=0 (at the very top of the water)
 
-        // baseY = y of the wave's centerline.
-        // peakOffset = control-point distance above baseY (visible peak = baseY - peakOffset/2,
-        // visible trough = baseY + peakOffset/2). So visible peak-to-trough range = peakOffset.
-        function buildWavePath(baseY, peakOffset) {
+        function buildWavePathD(baseY, peakOffset) {
           const halfW = WAVELENGTH / 2;
           let d = "M0," + baseY;
-          // First quadratic bezier — initial peak
           d += " Q" + (halfW / 2) + "," + (baseY - peakOffset) + " " + halfW + "," + baseY;
-          // Subsequent T commands alternate peak/trough automatically (smooth mirror)
           for (let x = halfW; x < VIEW_W; x += halfW) {
             d += " T" + (x + halfW) + "," + baseY;
           }
-          // Close down to bottom and back to origin
           d += " L" + VIEW_W + "," + VIEW_H + " L0," + VIEW_H + " Z";
           return d;
         }
 
-        const amp = vars.waveAmplitude;                       // visual peak-to-trough range
-        // Front wave: peaks at y=0 (right at the liquid top), troughs at y=amp
-        const frontPath = buildWavePath(amp / 2, amp);
-        // Back wave: slightly lower baseline + smaller amplitude → parallax depth
-        const backAmp = Math.max(4, amp - 6);
-        const backPath = buildWavePath(amp / 2 + 4, backAmp);
-
-        document.querySelectorAll(".water-front path").forEach(function (p) { p.setAttribute("d", frontPath); });
-        document.querySelectorAll(".water-back  path").forEach(function (p) { p.setAttribute("d", backPath);  });
+        const pathD = buildWavePathD(baseY, amp);
+        const maskSvg =
+          "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 " + VIEW_W + " " + VIEW_H + "' width='" + VIEW_W + "' height='" + VIEW_H + "'>" +
+            "<path d='" + pathD + "' fill='black'/>" +
+          "</svg>";
+        const maskUri = "url(\"data:image/svg+xml;utf8," + encodeURIComponent(maskSvg) + "\")";
+        document.documentElement.style.setProperty("--wave-mask", maskUri);
 
         // Label init
         const workLabel = document.getElementById("label-work");
@@ -229,13 +239,8 @@
           vars.tubeRevealStart
         );
 
-        // 2. Liquids pour in — height 0 → liquidHeightPct (rising from the bottom)
-        tl.fromTo("#liquid-work",
-          { height: "0%" },
-          { height: vars.liquidHeightPct + "%", duration: vars.liquidFillDuration, ease: "power2.out" },
-          vars.liquidFillStart
-        );
-        tl.fromTo("#liquid-plan",
+        // 2. Pour-in — water container height 0 → liquidHeightPct%
+        tl.fromTo("#water-container",
           { height: "0%" },
           { height: vars.liquidHeightPct + "%", duration: vars.liquidFillDuration, ease: "power2.out" },
           vars.liquidFillStart
@@ -245,12 +250,13 @@
         const labelFadeStart = vars.liquidFillStart + vars.liquidFillDuration;
         tl.to([workLabel, planLabel], { opacity: 1, duration: 0.35, ease: "power2.out" }, labelFadeStart);
 
-        // 4. Transition — width animates 90→40 and 10→60. Labels track + count.
+        // 4. Transition — work shrinks 90→40, planning grows 10→60.
+        //    Color fill widths animate; the wave above remains a single continuous surface.
         const workCounter = { value: vars.workInitialPct };
         const planCounter = { value: vars.planInitialPct };
 
-        tl.to("#liquid-work", { width: vars.workFinalPct + "%", duration: vars.transitionDuration, ease: "power2.inOut" }, vars.transitionStart);
-        tl.to("#liquid-plan", { width: vars.planFinalPct + "%", duration: vars.transitionDuration, ease: "power2.inOut" }, vars.transitionStart);
+        tl.to("#work-fill", { width: vars.workFinalPct + "%", duration: vars.transitionDuration, ease: "power2.inOut" }, vars.transitionStart);
+        tl.to("#plan-fill", { width: vars.planFinalPct + "%", duration: vars.transitionDuration, ease: "power2.inOut" }, vars.transitionStart);
 
         tl.to(workCounter, {
           value: vars.workFinalPct,
@@ -272,33 +278,33 @@
           },
         }, vars.transitionStart);
 
-        // 5. Water wave animations — front + back layers scroll at different speeds.
-        //    Wave starts as soon as the liquid begins pouring (so the surface
-        //    moves even during pour-in).
+        // 5. Wave scrolls horizontally via mask-position-x.
+        //    Single continuous wave across the whole tube — meniscus aligned.
+        //    One full wavelength shift per cycle = seamless loop.
         const compositionDuration = 7;
         const waveStart = vars.liquidFillStart;
         const waveAvailable = compositionDuration - waveStart;
+        const waveRepeats = Math.max(0, Math.floor(waveAvailable / vars.waveCycle) - 1);
 
-        const frontRepeats = Math.max(0, Math.floor(waveAvailable / vars.waveFrontCycle) - 1);
-        const backRepeats  = Math.max(0, Math.floor(waveAvailable / vars.waveBackCycle)  - 1);
-
-        // Front waves scroll left
-        ["#water-front-work", "#water-front-plan"].forEach(function (sel) {
-          tl.fromTo(sel,
-            { x: 0 },
-            { x: -800, duration: vars.waveFrontCycle, ease: "none", repeat: frontRepeats },
-            waveStart
-          );
-        });
-
-        // Back waves scroll right (opposite direction) for added depth
-        ["#water-back-work", "#water-back-plan"].forEach(function (sel) {
-          tl.fromTo(sel,
-            { x: -800 },
-            { x: 0, duration: vars.waveBackCycle, ease: "none", repeat: backRepeats },
-            waveStart
-          );
-        });
+        // Animate a CSS custom property and read it into both prefixed + unprefixed
+        // mask-position-x via a tiny onUpdate. GSAP can't tween mask-position-x directly.
+        const waveLayer = document.getElementById("water-layer");
+        const wavePos = { x: 0 };
+        tl.fromTo(wavePos,
+          { x: 0 },
+          {
+            x: -WAVELENGTH,
+            duration: vars.waveCycle,
+            ease: "none",
+            repeat: waveRepeats,
+            onUpdate: function () {
+              const v = wavePos.x + "px";
+              waveLayer.style.webkitMaskPositionX = v;
+              waveLayer.style.maskPositionX = v;
+            },
+          },
+          waveStart
+        );
 
         window.__timelines["main"] = tl;
       })();

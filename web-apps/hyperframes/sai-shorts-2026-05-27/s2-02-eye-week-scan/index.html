@@ -359,14 +359,15 @@
           sweepStart
         );
 
-        // 7. BOX HIGHLIGHTS — toggle .lit class as scan passes each box.
-        // Use deterministic .call() at evenly-spaced times.
+        // 7. BOX HIGHLIGHTS — at each evenly-spaced scan time, add .lit class
+        //    (CSS-transitions handle bg + letter color) AND GSAP-pop the box.
         const boxes = document.querySelectorAll(".day-box");
         for (let i = 0; i < boxCount; i++) {
           const t = sweepStart + (i / (boxCount - 1)) * vars.scanDuration;
-          tl.call(function () {
-            boxes[i].classList.add("lit");
-          }, null, t);
+          const box = boxes[i];
+          tl.call(function () { box.classList.add("lit"); }, null, t);
+          tl.to(box, { y: -10, scale: 1.08, duration: 0.18, ease: "back.out(2)", overwrite: "auto" }, t);
+          tl.to(box, { y: 0,   scale: 1.0,  duration: 0.30, ease: "power2.out", overwrite: "auto" }, t + 0.18);
         }
 
         window.__timelines["main"] = tl;
