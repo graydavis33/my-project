@@ -27,12 +27,16 @@
         padding: 0 80px 280px 80px;
       }
 
-      /* === Row: bank | arrow | vault, side-by-side === */
+      /* === Row: bank | arrow | vault, side-by-side ===
+         position: relative + z-index 1 puts the row ABOVE the money-layer
+         so bills disappear BEHIND the cards as they fall in. */
       .row {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 30px;
+        position: relative;
+        z-index: 1;
       }
 
       /* === Bank card (LEFT) === */
@@ -109,7 +113,9 @@
         letter-spacing: 0.02em;
       }
 
-      /* === Money bills (absolute layer over scene) === */
+      /* === Money bills layer ===
+         z-index 0 keeps it BEHIND the row (z-index 1), so bills are occluded
+         by the bank/vault cards as they fall in — they disappear naturally into the vault. */
       .money-layer {
         position: absolute;
         top: 0;
@@ -118,6 +124,7 @@
         height: 100%;
         pointer-events: none;
         overflow: hidden;
+        z-index: 0;
       }
       .bill {
         position: absolute;
@@ -309,10 +316,9 @@
         );
 
         // 4. Money lifecycle per bill:
-        //    a) Fade in at middle-of-screen origin (above the bank-vault row)
-        //    b) Fall down toward the vault (right side, bottom area)
-        //    c) Fade out + scale down as it "enters" the vault
-        //    d) Vault scale-blinks at the moment each bill arrives (impact feedback)
+        //    a) Fade in AND fall START at the same moment (bills are already moving as they appear)
+        //    b) The bill naturally disappears behind the vault card (z-index occlusion)
+        //    c) Vault scale-blinks at the moment each bill arrives (impact feedback)
         const bills = moneyLayer.querySelectorAll(".bill");
         bills.forEach(function (bill) {
           const stagger = parseFloat(bill.dataset.staggerOffset);
@@ -325,11 +331,9 @@
           const billStart = vars.moneyStartTime + stagger;
           const fadeInDuration = 0.3;
           const fallDuration = vars.moneyFallDuration;
-          const fadeOutDuration = 0.18;
-          const fallStart = billStart + fadeInDuration;
-          const landTime = fallStart + fallDuration;
+          const landTime = billStart + fallDuration;
 
-          // (a) Fade in at start position
+          // (a1) Fade in — runs in PARALLEL with the fall so the bill is already moving when visible
           tl.fromTo(
             bill,
             { opacity: 0, scale: 0.7 },
@@ -337,7 +341,7 @@
             billStart
           );
 
-          // (b) Fall to vault (deltas from CSS-defined start position)
+          // (a2) Fall toward the vault — STARTS at the same time as fade-in
           tl.to(
             bill,
             {
@@ -347,17 +351,13 @@
               duration: fallDuration,
               ease: "power2.in",
             },
-            fallStart
+            billStart
           );
 
-          // (c) Fade into the vault — opacity to 0, scale down
-          tl.to(
-            bill,
-            { opacity: 0, scale: 0.4, duration: fadeOutDuration, ease: "power1.in" },
-            landTime
-          );
+          // (b) No explicit fade-out — the bill is occluded by the vault card (z-index)
+          //     when it arrives at the landing position. Visually it "disappears into" the vault.
 
-          // (d) Vault BLINK — scale-up pulse on bill arrival.
+          // (c) Vault BLINK — scale-up pulse on bill arrival.
           //     overwrite: "auto" on BOTH phases so rapid successive blinks chain cleanly.
           tl.to(
             "#vault-card",
