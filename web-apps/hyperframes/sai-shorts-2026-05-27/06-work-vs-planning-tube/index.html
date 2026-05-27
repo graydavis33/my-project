@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-composition-variables='[{"id":"workColor","type":"color","label":"Work liquid color","default":"#F28129"},{"id":"planColor","type":"color","label":"Planning liquid color","default":"#3FC1C9"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Tube stroke (px)","default":5},{"id":"tubeRevealStart","type":"number","label":"Tube reveal starts at (s)","default":0.0},{"id":"tubeRevealDuration","type":"number","label":"Tube reveal duration (s)","default":0.8},{"id":"liquidFillStart","type":"number","label":"Liquids start filling at (s)","default":1.0},{"id":"liquidFillDuration","type":"number","label":"Initial fill duration (s)","default":0.7},{"id":"workInitialPct","type":"number","label":"Work initial fill %","default":90},{"id":"planInitialPct","type":"number","label":"Planning initial fill %","default":10},{"id":"transitionStart","type":"number","label":"Transition to new ratio at (s)","default":4.5},{"id":"transitionDuration","type":"number","label":"Transition duration (s)","default":1.0},{"id":"workFinalPct","type":"number","label":"Work final fill %","default":40},{"id":"planFinalPct","type":"number","label":"Planning final fill %","default":60},{"id":"shimmerPeriod","type":"number","label":"Shimmer cycle (s)","default":1.5}]'>
+<html lang="en" data-composition-variables='[{"id":"workColor","type":"color","label":"Work liquid color","default":"#F28129"},{"id":"planColor","type":"color","label":"Planning liquid color","default":"#3FC1C9"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Tube stroke (px)","default":5},{"id":"liquidHeightPct","type":"number","label":"Liquid height % of tube (rest is air)","default":70},{"id":"tubeRevealStart","type":"number","label":"Tube reveal starts at (s)","default":0.0},{"id":"tubeRevealDuration","type":"number","label":"Tube reveal duration (s)","default":0.8},{"id":"liquidFillStart","type":"number","label":"Liquids start filling at (s)","default":1.0},{"id":"liquidFillDuration","type":"number","label":"Initial fill duration (s)","default":0.7},{"id":"workInitialPct","type":"number","label":"Work initial fill %","default":90},{"id":"planInitialPct","type":"number","label":"Planning initial fill %","default":10},{"id":"transitionStart","type":"number","label":"Transition to new ratio at (s)","default":4.5},{"id":"transitionDuration","type":"number","label":"Transition duration (s)","default":1.0},{"id":"workFinalPct","type":"number","label":"Work final fill %","default":40},{"id":"planFinalPct","type":"number","label":"Planning final fill %","default":60},{"id":"shimmerPeriod","type":"number","label":"Shimmer cycle (s)","default":1.5},{"id":"labelFontSize","type":"number","label":"Percent label font size (px)","default":80}]'>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -33,35 +33,33 @@
         border-style: solid;
         border-color: var(--white);
         overflow: hidden;
-        background: rgba(255, 255, 255, 0.03);  /* very faint tint, helps glass feel */
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        background: transparent;
         clip-path: inset(100% 0% 0% 0%);  /* animated reveal from bottom up */
         will-change: clip-path;
       }
 
-      /* Liquid base layer — both liquids live in the tube, clipped by it */
+      /* Liquid base layer — sits in the bottom portion of the tube, top is air */
       .liquid {
         position: absolute;
-        top: 0;
         bottom: 0;
-        height: 100%;
+        height: 70%;              /* overridden from variable in JS */
         overflow: hidden;
         will-change: width;
       }
       .liquid-work {
         left: 0;
-        width: 0%;                  /* animated */
+        width: 0%;                /* animated */
         background: var(--work-color);
         z-index: 1;
       }
       .liquid-plan {
         right: 0;
-        width: 0%;                  /* animated */
+        width: 0%;                /* animated */
         background: var(--plan-color);
         z-index: 1;
       }
 
-      /* Shimmer — moving highlight band inside each liquid (looks like flowing liquid) */
+      /* Shimmer — moving highlight band inside each liquid (flowing-liquid feel) */
       .shimmer {
         position: absolute;
         top: 0;
@@ -113,9 +111,31 @@
           rgba(255, 255, 255, 0.45) 70%,
           rgba(255, 255, 255, 0) 100%
         );
-        filter: blur(2px);
         z-index: 4;
         pointer-events: none;
+      }
+
+      /* === Percent labels above the tube === */
+      .label-row {
+        position: absolute;
+        width: 800px;
+        height: 100px;
+        left: 50%;
+        bottom: 820px;            /* sits just above tube top (tube ends at bottom:800) */
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+      .label {
+        position: absolute;
+        bottom: 0;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-size: 80px;
+        font-weight: 600;
+        color: var(--white);
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        opacity: 0;               /* fades in after liquid fill */
+        will-change: left, opacity;
       }
     </style>
   </head>
@@ -131,6 +151,10 @@
           </div>
           <div class="tube-3d"></div>
           <div class="tube-gloss"></div>
+        </div>
+        <div class="label-row">
+          <div id="label-work" class="label">90%</div>
+          <div id="label-plan" class="label">10%</div>
         </div>
       </div>
     </div>
@@ -148,6 +172,22 @@
         const tube = document.getElementById("tube");
         tube.style.borderWidth = vars.strokeWidth + "px";
         tube.style.borderColor = vars.white;
+
+        // Liquid fill height (rest is air)
+        document.querySelectorAll(".liquid").forEach(function (el) {
+          el.style.height = vars.liquidHeightPct + "%";
+        });
+
+        // Label font size + initial positions + initial text
+        const workLabel = document.getElementById("label-work");
+        const planLabel = document.getElementById("label-plan");
+        workLabel.style.fontSize = vars.labelFontSize + "px";
+        planLabel.style.fontSize = vars.labelFontSize + "px";
+        workLabel.textContent = Math.round(vars.workInitialPct) + "%";
+        planLabel.textContent = Math.round(vars.planInitialPct) + "%";
+        // Center each label above the center of its respective liquid section
+        workLabel.style.left = (vars.workInitialPct / 2) + "%";
+        planLabel.style.left = (100 - vars.planInitialPct / 2) + "%";
 
         // === Timeline ===
         window.__timelines = window.__timelines || {};
@@ -185,7 +225,19 @@
           vars.liquidFillStart
         );
 
-        // 3. Transition — work shrinks to 40%, planning expands to 60%
+        // 3. Percent labels fade in once the liquids have settled
+        const labelFadeStart = vars.liquidFillStart + vars.liquidFillDuration;
+        tl.to(
+          [workLabel, planLabel],
+          { opacity: 1, duration: 0.35, ease: "power2.out" },
+          labelFadeStart
+        );
+
+        // 4. Transition — work shrinks 90→40, planning expands 10→60.
+        //    Labels track each liquid's center AND count up/down in sync.
+        const workCounter = { value: vars.workInitialPct };
+        const planCounter = { value: vars.planInitialPct };
+
         tl.to(
           "#liquid-work",
           {
@@ -205,7 +257,36 @@
           vars.transitionStart
         );
 
-        // 4. Shimmer — continuous horizontal scroll across both liquids.
+        tl.to(
+          workCounter,
+          {
+            value: vars.workFinalPct,
+            duration: vars.transitionDuration,
+            ease: "power2.inOut",
+            onUpdate: function () {
+              const pct = workCounter.value;
+              workLabel.textContent = Math.round(pct) + "%";
+              workLabel.style.left = (pct / 2) + "%";
+            },
+          },
+          vars.transitionStart
+        );
+        tl.to(
+          planCounter,
+          {
+            value: vars.planFinalPct,
+            duration: vars.transitionDuration,
+            ease: "power2.inOut",
+            onUpdate: function () {
+              const pct = planCounter.value;
+              planLabel.textContent = Math.round(pct) + "%";
+              planLabel.style.left = (100 - pct / 2) + "%";
+            },
+          },
+          vars.transitionStart
+        );
+
+        // 5. Shimmer — continuous horizontal scroll across both liquids.
         //    Finite repeat count for deterministic capture.
         const compositionDuration = 7;
         const shimmerStart = vars.liquidFillStart;
@@ -220,7 +301,7 @@
             sel,
             { xPercent: 0 },
             {
-              xPercent: -55,        // scroll just over half of the 220% width
+              xPercent: -55,
               duration: vars.shimmerPeriod,
               ease: "none",
               repeat: shimmerRepeats,
