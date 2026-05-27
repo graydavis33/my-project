@@ -284,7 +284,9 @@
         const compositionDuration = 7;
         const waveStart = vars.liquidFillStart;
         const waveAvailable = compositionDuration - waveStart;
-        const waveRepeats = Math.max(0, Math.floor(waveAvailable / vars.waveCycle) - 1);
+        // Math.ceil so the wave runs for the FULL composition (extends slightly
+        // past the end; HyperFrames clips at composition duration anyway).
+        const waveRepeats = Math.max(0, Math.ceil(waveAvailable / vars.waveCycle));
 
         // Animate a CSS custom property and read it into both prefixed + unprefixed
         // mask-position-x via a tiny onUpdate. GSAP can't tween mask-position-x directly.
