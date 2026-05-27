@@ -21,6 +21,7 @@ Repeatable workflow for turning Sai's weekly voice memos into 7 short-form scrip
 
 ### Reference inputs (read before drafting to stay in voice)
 
+- **Sai script style guide** → `business/social-media/sai/sai-script-style-guide.md` — **READ THIS FIRST.** Living tracker of voice markers, structural patterns, theme lanes, hook-to-script-shape matches, length norms, closing patterns. Updates every batch.
 - **Sai script backlog** → `business/social-media/sai/script-backlog.md` — every idea ever surfaced, status tracked
 - **Sai-edition hook templates** → `business/social-media/hook-templates-sai.md` (2026 edition — short list of survivors)
 - **Voice feedback log** → `~/.claude/projects/-Users-graydavis28/memory/feedback-sai-linkedin-voice.md` (AVOID rules only — DON'T mine for voice patterns)
@@ -157,15 +158,43 @@ Read each script aloud. If it reads like a polished LinkedIn post — perfect pa
 
 ### Step 6 — Write the batch file
 
-Save to `business/social-media/sai/scripts/YYYY-MM-DD-batch.md`. Sections:
+Save to `business/social-media/sai/scripts/YYYY-MM-DD-batch.md`.
 
-1. **Header:** source material links, format decisions, length target, lane split
-2. **Voice Rules Applied:** paste the AVOID list (so Sai can verify)
-3. **Filming Day Plan:** location mix, outfit changes, filming order
-4. **The 7 Scripts:** each with backlog id link + source timestamp + format + visual notes + the script body
-5. **Open Questions for Sai:** anything that gates the shoot
-6. **How This Batch Was Built (provenance trail):** so future Claude can retrace the process
-7. **Post-filming tracking:** how to update video-log.csv + backlog statuses
+**Required format per script (locked 2026-05-27):**
+
+```
+### N — Script Title
+
+A. Hook option A (no quotation marks)
+
+B. Hook option B
+
+C. Hook option C
+
+**Script:**
+
+> Body of the script in blockquote.
+>
+> Mini-hooks **bolded** inline (NO ★ or asterisk markers).
+
+**What I'd add:**
+
+- Gray's opinion on what's missing
+- Or what could be sharpened
+```
+
+**Format rules — DO NOT add:**
+- ❌ "Hook options (pick one):" label
+- ❌ `---` separator lines above or below the script title
+- ❌ Quotation marks around hook lines
+- ❌ ★ or asterisk markers for mini-hooks
+- ❌ Lane / Format / Length / Visual metadata headers above each script
+
+**Top of the file (above all scripts) — keep brief:**
+1. Header — source material links + length target
+2. Open Questions for Sai (after Script 7) — anything that gates the shoot
+
+Don't add provenance trails, voice rules sections, filming plan sections, post-filming tracking sections. Those live in the SOP and the style guide — not in the script doc Sai reads.
 
 ### Step 7 — Hand off to Sai for review (5 min)
 
@@ -173,11 +202,29 @@ Save to `business/social-media/sai/scripts/YYYY-MM-DD-batch.md`. Sections:
 - Surface the "Open Questions" prominently — those gate the shoot
 - Confirm filming location(s) + any wardrobe / set needs
 
-### Step 8 — After Filming (status update only)
+### Step 8 — Update the style guide (compound the craft)
+
+After drafting the batch — BEFORE handing off to Sai — open `business/social-media/sai/sai-script-style-guide.md` and update:
+- New voice markers observed in the voice memo (add to "Voice Markers That Read As Sai")
+- New structural patterns that worked (add to "Structural Patterns That Work for Sai")
+- New theme lanes that surfaced (add to "Theme Territories")
+- Anything that read as AI-flavored and got cut (add to "Voice Markers That Read As AI")
+
+After Sai gives revisions — update again:
+- What he changed and why (specific patterns, not just the line)
+- Lines he kept that you thought he might cut (positive confirmations)
+
+After videos post (7 days later) — update again:
+- Which patterns crossed performance threshold (cross-reference `winning-patterns.md`)
+- Which patterns underperformed (cross-reference `killed-archive.md`)
+
+This file compounds the craft — skipping these updates means each week starts from scratch.
+
+### Step 9 — After Filming (status update only)
 
 For each picked script, update its backlog entry: `picked-YYYY-MM-DD` → `filmed`.
 
-### Step 9 — After Posting (tracking)
+### Step 10 — After Posting (tracking)
 
 For each posted video, add a row to `business/social-media/video-log.csv`:
 
