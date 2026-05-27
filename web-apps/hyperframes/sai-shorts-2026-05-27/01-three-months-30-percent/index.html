@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-composition-variables='[{"id":"month1Label","type":"string","label":"Month 1 label","default":"MAY"},{"id":"month2Label","type":"string","label":"Month 2 label","default":"JUN"},{"id":"month3Label","type":"string","label":"Month 3 label","default":"JUL"},{"id":"highlightPercent","type":"number","label":"Bottom highlight %","default":30},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Calendar stroke (px)","default":4},{"id":"entryStartTime","type":"number","label":"First calendar enters at (s)","default":0.2},{"id":"entryStagger","type":"number","label":"Stagger between calendars (s)","default":0.18},{"id":"blinkStartTime","type":"number","label":"Orange blink starts at (s)","default":1.6},{"id":"blinkOnDuration","type":"number","label":"Blink on/off step (s)","default":0.08}]'>
+<html lang="en" data-composition-variables='[{"id":"month1Label","type":"string","label":"Month 1 label","default":"MAY"},{"id":"month2Label","type":"string","label":"Month 2 label","default":"JUN"},{"id":"month3Label","type":"string","label":"Month 3 label","default":"JUL"},{"id":"highlightPercent","type":"number","label":"Bottom highlight %","default":30},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Calendar stroke (px)","default":4},{"id":"entryStartTime","type":"number","label":"First calendar enters at (s)","default":0.2},{"id":"entryStagger","type":"number","label":"Stagger between calendars (s)","default":0.18},{"id":"highlightStartTime","type":"number","label":"Orange highlight starts at (s)","default":1.6},{"id":"highlightFadeIn","type":"number","label":"Glow fade-in duration (s)","default":0.45},{"id":"pulseDuration","type":"number","label":"Glow pulse half-cycle (s)","default":1.1}]'>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -66,7 +66,7 @@
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
       }
 
-      /* Orange bottom-fill — clipped by shell, blinks via opacity */
+      /* Orange bottom-fill — clipped by shell, fades in then breathes a soft glow */
       .cal-fill {
         position: absolute;
         left: 0;
@@ -74,8 +74,14 @@
         bottom: 0;
         height: 0%;            /* set from variable in JS */
         background: var(--orange);
-        opacity: 0;            /* shown via blink timeline */
+        opacity: 0;            /* shown via highlight timeline */
         z-index: 1;
+        /* Inner-clipped glow — halo radiates upward into the window area.
+           Both shadows are clipped by .cal-shell's overflow:hidden, so they
+           stay inside the calendar shape (no chroma-key bleed). */
+        box-shadow:
+          0 -16px 70px 12px var(--orange),
+          0 0 36px 4px rgba(242, 129, 41, 0.65);
         will-change: opacity;
       }
 
@@ -199,16 +205,30 @@
           );
         });
 
-        // 2. Orange "30%" blinks in on all 3 simultaneously
-        //    Pattern: ON → OFF → ON → OFF → ON (settles visible). 5 steps.
-        const step = vars.blinkOnDuration;
+        // 2. Orange "30%" fades in with a soft glow, then breathes (gentle pulse)
         fills.forEach(function (sel) {
-          const t = vars.blinkStartTime;
-          tl.set(sel, { opacity: 1 }, t);
-          tl.set(sel, { opacity: 0 }, t + step);
-          tl.set(sel, { opacity: 1 }, t + step * 2);
-          tl.set(sel, { opacity: 0 }, t + step * 3);
-          tl.set(sel, { opacity: 1 }, t + step * 4);
+          // Fade the glow in
+          tl.to(
+            sel,
+            {
+              opacity: 1,
+              duration: vars.highlightFadeIn,
+              ease: "power2.out",
+            },
+            vars.highlightStartTime
+          );
+          // Then loop a subtle breathing pulse — opacity drifts between 1.0 and 0.78
+          tl.to(
+            sel,
+            {
+              opacity: 0.78,
+              duration: vars.pulseDuration,
+              ease: "sine.inOut",
+              repeat: -1,
+              yoyo: true,
+            },
+            vars.highlightStartTime + vars.highlightFadeIn
+          );
         });
 
         window.__timelines["main"] = tl;
