@@ -22,12 +22,19 @@ Repeatable workflow for turning Sai's weekly voice memos into 7 short-form scrip
 ### Reference inputs (read before drafting to stay in voice)
 
 - **Sai script backlog** → `business/social-media/sai/script-backlog.md` — every idea ever surfaced, status tracked
-- **Sai's LinkedIn finals** → `python-scripts/sai-linkedin/reference/voice/sai-linkedin-posts-final.md`
-- **Sai's collected newsletters** → `python-scripts/sai-linkedin/reference/voice/sai-newsletters-collected.md`
-- **Sai-edition hook templates** → `business/social-media/hook-templates-sai.md`
-- **Voice feedback log** → `~/.claude/projects/-Users-graydavis28/memory/feedback-sai-linkedin-voice.md`
+- **Sai-edition hook templates** → `business/social-media/hook-templates-sai.md` (2026 edition — short list of survivors)
+- **Voice feedback log** → `~/.claude/projects/-Users-graydavis28/memory/feedback-sai-linkedin-voice.md` (AVOID rules only — DON'T mine for voice patterns)
 - **Winning patterns** → `business/social-media/winning-patterns.md`
 - **Killed archive** → `business/social-media/killed-archive.md`
+
+### Sources EXPLICITLY NOT to use
+
+- ❌ `python-scripts/sai-linkedin/reference/voice/sai-linkedin-posts-final.md` — LinkedIn voice
+- ❌ `python-scripts/sai-linkedin/reference/voice/sai-newsletters-collected.md` — newsletter voice
+
+**Why these are off-limits for shorts drafting:** Sai's LinkedIn voice and newsletter voice are *written* voice — they've been polished, structured, and edited. Pulling phrasing or rhythm from them is the #1 source of AI-flavored shorts scripts. Sai's short-form video voice is the *voice memo voice* — looser, more conversational, with connectors and natural repetition. Stay only in the voice memo transcripts for shorts.
+
+These references are still useful for LinkedIn caption work (handled by `python-scripts/sai-linkedin/`) — just not for shorts.
 
 ---
 
@@ -128,20 +135,25 @@ Mark the picks: `status: picked-YYYY-MM-DD` in the backlog file.
 
 **Drafting principles:**
 
-- **Use Sai's actual words.** The source quote in the backlog entry is the raw material. Tighten by removing fillers, redundancies, and Gray's interview questions — but preserve word choice.
-- **Open with Sai's strongest line.** Find the line in the transcript that would stop a scroll. That's the hook.
-- **End on a punchline.** Question CTAs only on framework-shaped posts; default is to land on the punchline.
+- **Use Sai's actual words.** The transcript timestamps in the backlog entry are the raw material. The voice memo transcript IS the script — your job is mostly to trim and arrange, not to write.
+- **What to remove:** Gray's interview questions. Pure filler ("um", false starts, repeated words). Tangents that go off the script's topic.
+- **What to KEEP that you'll be tempted to remove:** Sai's connectors ("I was like", "what I used to do is", "the way I think about it", "so"). His repetition where he repeated. His casual phrasing and run-on energy. These are voice markers — removing them is what makes scripts sound AI-flavored.
+- **Open with Sai's strongest line from the transcript.** Don't write a new opener — find his.
+- **End where his thought naturally lands.** Question CTAs only on framework-shaped posts; default is to land on the punchline. Don't synthesize a closer ("the lesson is…") that he didn't say.
 - **Apply voice rules every time:**
   - "Founder" never "CEO"
   - No "most founders…" punching down
   - No AI-flavored summary closers
   - No invented specifics — every number from Sai's actual mouth
-  - Keep cusses if Sai used them in voice (flag for him to choose per-post — LinkedIn finals don't cuss, voice memos do)
+  - Keep cusses if Sai used them in voice memo (flag for him to choose per-post)
   - No 3-beat "no X, no Y, no Z" — cap at 2 with intensifier
   - Don't drop the verb in callbacks
 - **Target 30–60s** which is roughly 75–150 spoken words
 
-**When tightening would change Sai's meaning:** stop. Keep the longer Sai version. The point is HIS voice, not script efficiency.
+**The "is this AI-flavored?" check before submitting:**
+Read each script aloud. If it reads like a polished LinkedIn post — perfect parallel sentences, every line tightened, every transition rhetorically clean — it's been over-edited. Go back to the transcript. Put back the connectors. Put back the repetition. Sai's voice memo voice is looser than his written voice on purpose.
+
+**When tightening would change Sai's meaning OR remove a voice marker:** stop. Keep the longer Sai version. The point is HIS voice, not script efficiency.
 
 ### Step 6 — Write the batch file
 
