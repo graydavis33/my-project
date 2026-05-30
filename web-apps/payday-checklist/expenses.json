@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-05-29T13:59:29Z",
+  "generated_at": "2026-05-30T12:04:55Z",
   "month": "2026-05",
   "expenses": [
+    {
+      "email_id": "19e761f57357367e",
+      "date": "2026-05-29",
+      "vendor": "Garrett ODell",
+      "amount": 67.0,
+      "category": "Dining Out"
+    },
     {
       "email_id": "19e6011124b024c8",
       "date": "2026-05-25",
       "vendor": "Sean Costello",
       "amount": 150.0,
-      "category": "Misc"
-    },
-    {
-      "email_id": "19e5b1e359324dd2",
-      "date": "2026-05-24",
-      "vendor": "Ava Parr",
-      "amount": 50.0,
       "category": "Misc"
     },
     {
@@ -28,7 +28,7 @@
       "date": "2026-05-22",
       "vendor": "La Quinta by Wyndham",
       "amount": 534.58,
-      "category": "Misc"
+      "category": "Shopping"
     },
     {
       "email_id": "19e4da2126e8a797",
@@ -49,12 +49,12 @@
       "date": "2026-05-16",
       "vendor": "Hard Rock Hotel",
       "amount": 207.99,
-      "category": "Misc"
+      "category": "Shopping"
     },
     {
       "email_id": "19e22c080aa504a6",
       "date": "2026-05-13",
-      "vendor": "Google LLC",
+      "vendor": "Google Play",
       "amount": 0.49,
       "category": "Software & Tools"
     },
