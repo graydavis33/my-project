@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T12:04:55Z",
+  "generated_at": "2026-05-31T12:12:08Z",
   "month": "2026-05",
   "expenses": [
     {
@@ -17,6 +17,13 @@
       "category": "Misc"
     },
     {
+      "email_id": "19e5b1e359324dd2",
+      "date": "2026-05-24",
+      "vendor": "Ava Parr",
+      "amount": 50.0,
+      "category": "Misc"
+    },
+    {
       "email_id": "19e5ad0ae42bdf16",
       "date": "2026-05-24",
       "vendor": "MTA Metro-North Railroad",
@@ -28,7 +35,7 @@
       "date": "2026-05-22",
       "vendor": "La Quinta by Wyndham",
       "amount": 534.58,
-      "category": "Shopping"
+      "category": "Misc"
     },
     {
       "email_id": "19e4da2126e8a797",
@@ -54,7 +61,7 @@
     {
       "email_id": "19e22c080aa504a6",
       "date": "2026-05-13",
-      "vendor": "Google Play",
+      "vendor": "Google One",
       "amount": 0.49,
       "category": "Software & Tools"
     },
