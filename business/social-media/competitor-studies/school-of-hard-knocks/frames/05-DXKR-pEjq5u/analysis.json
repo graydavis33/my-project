@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "White and red circular logo badge, bottom right corner, bold serif font",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject positioned left-center, holding bicycle handlebars, yellow and green branded signage visible in background left",
+    "subject_appearance": "Middle-aged man wearing navy blue headband, black hoodie with red triangle logo and '29025' text, gray pants, holding a bike",
+    "setting": "Urban street, brick wall backdrop",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "What's the biggest year",
+    "text_style": "White, bold, serif font, centered lower-third overlay",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing right, green wall background with yellow logo visible behind, lower third contains interview question text and 'School of Hard Knocks' badge",
+    "subject_appearance": "Middle-aged man with curly brown hair, dark blue headband, black Everest hoodie with red graphic design, smiling/laughing expression",
+    "setting": "Street interview with branded backdrop",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Hunger",
+    "text_style": "bright lime green, bold, all-caps, centered horizontally over subject's chest area",
+    "shot_type": "medium close-up",
+    "framing": "single male subject positioned left-center, speaking with animated expression, holding small device in left hand, green wall backdrop with yellow graphic element",
+    "subject_appearance": "middle-aged man wearing dark navy headband, black hoodie with red/orange graphic text, speaking with open mouth in engaged expression",
+    "setting": "studio or controlled interior set",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Thank you...",
+    "text_style": "White, bold, serif font, centered horizontally across middle of frame",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject from chest up, smiling and looking down-left, against solid turquoise background with yellow graphic element visible behind",
+    "subject_appearance": "Middle-aged man wearing navy blue headband, black hoodie with red mountain/Everest 29029 graphic, gray shorts, displaying a genuine warm smile.",
+    "setting": "Studio with colored backdrop",
+    "broll": false,
+    "energy": "high"
+  }
+]

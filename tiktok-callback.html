@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TikTok Auth Callback</title>
+</head>
+<body>
+  <p>Connecting TikTok... please wait.</p>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code  = params.get('code');
+    const state = params.get('state');
+    const error = params.get('error');
+
+    if (code && state) {
+      // Relay to local backend
+      window.location.href =
+        'http://localhost:8000/api/connect/tiktok/callback?code=' +
+        encodeURIComponent(code) + '&state=' + encodeURIComponent(state);
+    } else if (error) {
+      document.body.innerHTML = '<p style="color:red">TikTok error: ' + error + '</p>';
+    } else {
+      document.body.innerHTML = '<p style="color:red">No auth code received.</p>';
+    }
+  </script>
+</body>
+</html>

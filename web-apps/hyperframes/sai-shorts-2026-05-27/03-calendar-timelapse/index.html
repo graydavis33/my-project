@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"year","type":"string","label":"Year label","default":"2026"},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"red","type":"color","label":"Header red","default":"#C8252C"},{"id":"paper","type":"color","label":"Paper color","default":"#FFFFFF"},{"id":"ink","type":"color","label":"Primary text (ink)","default":"#0A0A0A"},{"id":"inkSoft","type":"color","label":"Secondary text","default":"#6E6E6E"},{"id":"cardEnterTime","type":"number","label":"Calendar enters at (s)","default":0.0},{"id":"firstFlipTime","type":"number","label":"First tear (Jan→Feb) at (s)","default":0.35},{"id":"fastInterval","type":"number","label":"Interval between early tears (s)","default":0.22},{"id":"slowInterval","type":"number","label":"Interval between later tears (s)","default":0.34},{"id":"decemberHoldStart","type":"number","label":"December lands at (s)","default":2.80},{"id":"highlightTime","type":"number","label":"Orange accent on December at (s)","default":3.20},{"id":"tearDuration","type":"number","label":"Per-page tear duration (s)","default":0.70}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* === Calendar = compact vertical block, centered === */
+      .calendar {
+        position: relative;
+        width: 560px;
+        height: 920px;
+        perspective: 2000px;
+        perspective-origin: 50% -20%;
+        transform-style: preserve-3d;
+        will-change: transform, opacity;
+      }
+
+      /* 3D stack thickness — visible white edges + red spine offset behind/below */
+      .stack-depth {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        transform: translate(14px, 14px);
+        background: var(--paper);
+        border-radius: 6px;
+        /* horizontal hairlines suggest individual page edges */
+        background-image: repeating-linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.10) 0px,
+          rgba(0,0,0,0.10) 1px,
+          transparent 1px,
+          transparent 5px
+        );
+        box-shadow:
+          0 26px 50px rgba(0, 0, 0, 0.45),
+          0 8px 18px rgba(0, 0, 0, 0.35);
+      }
+      .stack-depth::before {
+        /* red spine running down the left side of the visible stack thickness */
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -14px;
+        width: 14px;
+        height: 100%;
+        background: var(--red);
+        box-shadow: inset -2px 0 4px rgba(0,0,0,0.3);
+      }
+
+      /* Red header — sits above pages, holds grommet + metal rod */
+      .header-red {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 200px;
+        background: var(--red);
+        border-radius: 6px 6px 0 0;
+        z-index: 1000;
+        box-shadow:
+          inset 0 -4px 0 rgba(0, 0, 0, 0.15),
+          0 6px 8px -3px rgba(0, 0, 0, 0.25);
+      }
+
+      /* White grommet hole around the brass rod */
+      .grommet {
+        position: absolute;
+        top: 38px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 180px;
+        height: 64px;
+        background: var(--paper);
+        border-radius: 999px;
+        box-shadow:
+          inset 0 4px 8px rgba(0, 0, 0, 0.25),
+          inset 0 -2px 4px rgba(255, 255, 255, 0.6);
+      }
+      /* Brass / gold rod across the grommet */
+      .grommet-rod {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 110px;
+        height: 24px;
+        background: linear-gradient(
+          to bottom,
+          #d4a955 0%,
+          #f7d68a 25%,
+          #b88b32 55%,
+          #8a6420 100%
+        );
+        border-radius: 999px;
+        box-shadow:
+          0 2px 4px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      }
+
+      /* === Page (one per month) === */
+      .page {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: var(--paper);
+        border-radius: 6px;
+        padding: 240px 50px 60px 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        transform-origin: 50% 200px; /* hinge just below the red header */
+        will-change: transform, opacity;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        /* Permanent ragged top edge — hidden behind the red header until torn */
+        clip-path: polygon(
+          0% 4%, 3% 1%, 6% 5%, 11% 2%, 14% 6%, 19% 3%, 22% 1%, 26% 5%, 31% 2%, 35% 7%,
+          38% 3%, 42% 1%, 47% 5%, 50% 2%, 55% 6%, 58% 1%, 63% 4%, 67% 2%, 71% 6%, 74% 3%,
+          78% 1%, 82% 5%, 86% 2%, 90% 6%, 93% 3%, 96% 1%, 100% 4%,
+          100% 100%, 0% 100%
+        );
+      }
+
+      /* small top label "MONTH NN" — analog to "March" position in reference */
+      .page-top-label {
+        font-size: 36px;
+        font-weight: 800;
+        color: var(--ink);
+        letter-spacing: 0.08em;
+        text-align: center;
+      }
+      .page-divider {
+        width: 78%;
+        height: 4px;
+        background: var(--ink);
+        margin: 14px auto 18px auto;
+      }
+      /* Hero — bold month name. Sized so SEPTEMBER (longest, 9 chars) fits the
+         page width with breathing room — all 12 months render at the same size. */
+      .page-month {
+        font-size: 86px;
+        font-weight: 900;
+        color: var(--ink);
+        letter-spacing: 0.01em;
+        line-height: 0.95;
+        text-align: center;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-shadow: 0 2px 0 rgba(0,0,0,0.06);
+      }
+      .page-year {
+        font-size: 48px;
+        font-weight: 800;
+        color: var(--ink);
+        letter-spacing: 0.06em;
+        text-align: center;
+      }
+
+      /* Curl-shadow overlay — fades in during the tear, fakes the page bending */
+      .page-curl {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: 6px;
+        background: linear-gradient(
+          165deg,
+          transparent 0%,
+          transparent 35%,
+          rgba(0, 0, 0, 0.10) 60%,
+          rgba(0, 0, 0, 0.32) 88%,
+          rgba(0, 0, 0, 0.48) 100%
+        );
+        opacity: 0;
+        will-change: opacity;
+        clip-path: inherit; /* match the ragged top */
+      }
+
+      /* Orange accent that appears under DECEMBER on the punch */
+      .dec-underline {
+        position: absolute;
+        bottom: 130px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        transform-origin: 50% 50%;
+        width: 380px;
+        height: 8px;
+        background: var(--orange);
+        border-radius: 999px;
+        box-shadow: 0 0 16px rgba(242, 129, 41, 0.6);
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+        <div id="calendar" class="calendar">
+          <div class="stack-depth"></div>
+          <!-- pages injected below the header so they fall in front of it -->
+          <div class="header-red">
+            <div class="grommet">
+              <div class="grommet-rod"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        // Theme tokens
+        document.documentElement.style.setProperty("--paper", vars.paper);
+        document.documentElement.style.setProperty("--ink", vars.ink);
+        document.documentElement.style.setProperty("--ink-soft", vars.inkSoft);
+        document.documentElement.style.setProperty("--orange", vars.orange);
+        document.documentElement.style.setProperty("--red", vars.red);
+
+        const months = [
+          "JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE",
+          "JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER",
+        ];
+
+        const calendar = document.getElementById("calendar");
+        const headerRed = calendar.querySelector(".header-red");
+
+        // Build pages in REVERSE so December sits at the bottom of the stack
+        // and January is on top (tears first). Insert each page BEFORE the header
+        // so the header always renders above the pages.
+        for (let i = months.length - 1; i >= 0; i--) {
+          const monthName = months[i];
+          const num = String(i + 1).padStart(2, "0");
+
+          const page = document.createElement("div");
+          page.className = "page";
+          page.id = "page-" + i;
+          page.style.zIndex = String(months.length - i);
+          page.setAttribute("data-layout-allow-overflow", "");
+
+          const topLabel = document.createElement("div");
+          topLabel.className = "page-top-label";
+          topLabel.textContent = "MONTH " + num;
+          page.appendChild(topLabel);
+
+          const divider = document.createElement("div");
+          divider.className = "page-divider";
+          page.appendChild(divider);
+
+          const month = document.createElement("div");
+          month.className = "page-month";
+          month.id = "month-text-" + i;
+          month.textContent = monthName;
+          page.appendChild(month);
+
+          const yearEl = document.createElement("div");
+          yearEl.className = "page-year";
+          yearEl.textContent = vars.year;
+          page.appendChild(yearEl);
+
+          // Orange accent (only meaningful on December but cheap to add to all)
+          if (i === 11) {
+            const decUnder = document.createElement("div");
+            decUnder.className = "dec-underline";
+            decUnder.id = "dec-underline";
+            page.appendChild(decUnder);
+          }
+
+          // Curl-shadow overlay for the bend illusion during the tear
+          const curl = document.createElement("div");
+          curl.className = "page-curl";
+          curl.id = "curl-" + i;
+          page.appendChild(curl);
+
+          calendar.insertBefore(page, headerRed);
+        }
+
+        // Flip schedule
+        const flipTimes = [];
+        flipTimes.push(vars.firstFlipTime);
+        for (let i = 1; i < 11; i++) {
+          const interval = i < 6 ? vars.fastInterval : vars.slowInterval;
+          flipTimes.push(flipTimes[i - 1] + interval);
+        }
+        flipTimes[10] = vars.decemberHoldStart;
+
+        // Timeline
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Whole calendar enters with a subtle pop
+        tl.from(
+          "#calendar",
+          { opacity: 0, scale: 0.94, y: 22, duration: 0.30, ease: "power2.out" },
+          vars.cardEnterTime
+        );
+
+        // Each page tears at the top, curls/bends forward, falls and fades
+        for (let i = 0; i < 11; i++) {
+          const t = flipTimes[i];
+          // alternate left/right fall direction so torn pages don't all stack identically
+          const direction = i % 2 === 0 ? -1 : 1;
+          const rotEnd = direction * (14 + (i % 3) * 4); // 14, 18, 22 deg
+
+          // 1. Tear-loose nudge — page rips at the top, tilts forward slightly
+          tl.to("#page-" + i, {
+            rotationX: 14,
+            y: -4,
+            duration: 0.10,
+            ease: "power2.out",
+          }, t);
+
+          // 2. Curl-shadow fades in as the page bends forward
+          tl.to("#curl-" + i, {
+            opacity: 0.95,
+            duration: vars.tearDuration * 0.6,
+            ease: "power1.in",
+          }, t + 0.10);
+
+          // 3. Page falls forward + rotates + drifts sideways
+          tl.to("#page-" + i, {
+            rotationX: 72,
+            rotationZ: rotEnd,
+            y: 1400,
+            x: direction * 90,
+            duration: vars.tearDuration,
+            ease: "power2.in",
+          }, t + 0.10);
+
+          // 4. Fade out — late, only the final ~30% of the fall
+          tl.to("#page-" + i, {
+            opacity: 0,
+            duration: vars.tearDuration * 0.32,
+            ease: "power2.in",
+          }, t + 0.10 + vars.tearDuration * 0.70);
+        }
+
+        // December punch — orange underline sweeps in
+        tl.fromTo("#dec-underline",
+          { opacity: 0, scaleX: 0 },
+          { opacity: 1, scaleX: 1, duration: 0.40, ease: "back.out(2)" },
+          vars.highlightTime
+        );
+
+        // Subtle DECEMBER pulse to land the moment
+        tl.fromTo("#month-text-11",
+          { scale: 1.0 },
+          { scale: 1.06, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1 },
+          vars.highlightTime
+        );
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

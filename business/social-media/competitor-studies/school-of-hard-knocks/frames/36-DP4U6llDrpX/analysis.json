@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "New York Stock Exchange.",
+    "text_style": "White sans-serif font, centered, positioned in lower-middle portion of frame",
+    "shot_type": "medium close-up",
+    "framing": "Older man being interviewed outdoors, facing left, with interviewer's hand holding microphone visible at frame edge",
+    "subject_appearance": "Elderly man with white hair, blue-tinted glasses, black jacket with logo patch, and light pink shirt",
+    "setting": "New York Stock Exchange exterior",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "watching this right now.",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile, facing left, holding phone, seated at outdoor table with neon sign and storefront in background",
+    "subject_appearance": "Young man wearing dark blue tracksuit with white piping and collar, short dark textured hair, looking down at phone",
+    "setting": "Street-facing storefront, outdoor",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "your money work for you...",
+    "text_style": "bright lime green, bold sans-serif, centered lower-third overlay",
+    "shot_type": "medium close-up",
+    "framing": "elderly man in profile facing left, gesturing with hands while speaking; brick wall background; partial view of another person's arm in red on right edge",
+    "subject_appearance": "older man with white hair, blue-framed glasses, black zip-up jacket with emblem patch, gold wedding ring visible",
+    "setting": "urban street, brick building",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Get really good at it",
+    "text_style": "white, bold, centered, mid-frame position",
+    "shot_type": "medium close-up",
+    "framing": "elderly man in profile facing right, speaking animatedly while holding a red object; 'School of Hard Knocks' logo visible in lower right corner",
+    "subject_appearance": "Older man with white hair, dark sunglasses, goatee, wearing black jacket with zipper detail and visible ring on hand.",
+    "setting": "urban street or outdoor venue",
+    "broll": false,
+    "energy": "high"
+  }
+]

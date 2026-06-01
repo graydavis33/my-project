@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Stroke width (px)","default":6},{"id":"cornerRadius","type":"number","label":"Box corner radius (px)","default":18},{"id":"enterStart","type":"number","label":"Eye enter start (s)","default":0.1},{"id":"eyeFinalScale","type":"number","label":"Eye final scale (after boxes appear)","default":0.55},{"id":"boxAppearStart","type":"number","label":"Boxes start appearing at (s)","default":2.3},{"id":"boxStagger","type":"number","label":"Box stagger (s)","default":0.06},{"id":"scanStart","type":"number","label":"Scan start (s)","default":3.4},{"id":"scanDuration","type":"number","label":"Scan sweep duration (s)","default":1.5},{"id":"periphOpacity","type":"number","label":"Peripheral line opacity (0-1)","default":0.9}]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* ── Eye wrapper ──────────────────────────────────────────
+         left: 50% + xPercent: -50 (in JS) = horizontally centered.
+         GSAP owns transform — animates top/scale/xPercent. */
+      .eye-wrap {
+        position: absolute;
+        left: 50%;
+        width: 360px;
+        height: 180px;
+        will-change: transform, opacity, top;
+        filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+      }
+      .eye-svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      /* ── Day-box row ──────────────────────────────────────────
+         Row absolutely positioned; boxes flex-laid-out. */
+      .boxes {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 940px;
+        display: flex;
+        gap: 16px;
+        opacity: 1;
+      }
+      /* Solid white boxes with orange letters. When "lit" by the scan,
+         they invert (orange fill + white letter) and pop up slightly. */
+      .day-box {
+        width: 120px;
+        height: 150px;
+        background: #FFFFFF;
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.28);
+        will-change: transform, opacity, background-color;
+        transition: background-color 0.18s ease, transform 0.18s ease;
+      }
+      .day-box .day-letter {
+        font-size: 56px;
+        font-weight: 600;
+        color: #F28129;
+        line-height: 1;
+        transition: color 0.18s ease;
+      }
+      /* Color changes only — the pop transform is GSAP-driven
+         so it doesn't fight with GSAP's inline transform. */
+      .day-box.lit {
+        background: #F28129;
+      }
+      .day-box.lit .day-letter {
+        color: #FFFFFF;
+      }
+
+      /* ── Peripheral lines SVG (full frame overlay) ──────────── */
+      .periph {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        pointer-events: none;
+      }
+      .periph-line {
+        stroke: #FFFFFF;
+        stroke-width: 4;
+        stroke-linecap: round;
+        fill: none;
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="6" data-track-index="1">
+
+        <!-- Eye -->
+        <div id="eye-wrap" class="eye-wrap" data-layout-allow-overflow>
+          <svg id="eye-svg" class="eye-svg" viewBox="0 0 360 180">
+            <defs>
+              <!-- Clip the iris-group to the almond shape so the pupil
+                   can never visually escape the eye no matter how far it looks. -->
+              <clipPath id="almond-clip">
+                <path d="M 10 90 Q 180 -5 350 90 Q 180 185 10 90 Z" />
+              </clipPath>
+            </defs>
+            <!-- Solid white almond — opaque asset. -->
+            <path id="eye-almond"
+                  d="M 10 90 Q 180 -5 350 90 Q 180 185 10 90 Z"
+                  fill="#FFFFFF"
+                  stroke="#FFFFFF"
+                  stroke-width="2"
+                  stroke-linejoin="round" />
+            <!-- Iris group — translates for look-around, clipped to almond. -->
+            <g id="iris-group" clip-path="url(#almond-clip)">
+              <!-- Iris ring (orange stroke, hollow) -->
+              <circle id="iris-ring" cx="180" cy="90" r="50"
+                      fill="none" stroke="#F28129" stroke-width="6" />
+              <!-- Pupil (orange fill) -->
+              <circle id="pupil" cx="180" cy="90" r="26" fill="#F28129" />
+              <!-- Catchlight (white) -->
+              <circle id="catchlight" cx="190" cy="80" r="7" fill="#FFFFFF" />
+            </g>
+          </svg>
+        </div>
+
+        <!-- Peripheral lines (drawn from eye outward to box row) -->
+        <svg id="periph" class="periph" viewBox="0 0 1080 1920" preserveAspectRatio="none" data-layout-allow-overflow>
+          <line id="periph-L" class="periph-line" x1="540" y1="0" x2="0" y2="0" />
+          <line id="periph-R" class="periph-line" x1="540" y1="0" x2="0" y2="0" />
+        </svg>
+
+        <!-- Day-of-week boxes -->
+        <div id="boxes" class="boxes" data-layout-allow-overflow>
+          <div class="day-box" id="day-0"><div class="day-letter">M</div></div>
+          <div class="day-box" id="day-1"><div class="day-letter">T</div></div>
+          <div class="day-box" id="day-2"><div class="day-letter">W</div></div>
+          <div class="day-box" id="day-3"><div class="day-letter">T</div></div>
+          <div class="day-box" id="day-4"><div class="day-letter">F</div></div>
+          <div class="day-box" id="day-5"><div class="day-letter">S</div></div>
+          <div class="day-box" id="day-6"><div class="day-letter">S</div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        // ── Brand colors / strokes applied to elements ───────────────
+        document.getElementById("eye-almond").setAttribute("stroke", vars.white);
+        document.getElementById("eye-almond").setAttribute("stroke-width", vars.strokeWidth);
+        document.getElementById("iris-ring").setAttribute("stroke", vars.orange);
+        document.getElementById("iris-ring").setAttribute("stroke-width", vars.strokeWidth);
+        document.getElementById("pupil").setAttribute("fill", vars.orange);
+        document.getElementById("catchlight").setAttribute("fill", vars.white);
+
+        document.querySelectorAll(".day-box").forEach(function (b) {
+          b.style.borderColor = vars.white;
+          b.style.borderRadius = vars.cornerRadius + "px";
+        });
+        document.querySelectorAll(".day-letter").forEach(function (l) {
+          l.style.color = vars.white;
+        });
+
+        document.querySelectorAll(".periph-line").forEach(function (l) {
+          l.setAttribute("stroke", vars.white);
+        });
+
+        // ── Geometry ─────────────────────────────────────────────────
+        // Eye initial center (after enter): X=540, Y=900
+        // Eye final center (after shrink): X=540, Y=560
+        // Boxes: top at Y=940, each box is 120 wide; row total = 7*120 + 6*16 = 936
+        // Row centered → first box left edge = (1080 - 936) / 2 = 72
+        // Each box center X = 72 + 60 + i*(120+16) = 132 + i*136
+        const eyeInitialCenterY = 900;
+        const eyeFinalCenterY = 540;
+        const eyeStartY = 1920 + 100; // below frame
+        const eyeWidth = 360;
+        const eyeHeight = 180;
+
+        const boxCount = 7;
+        const boxW = 120;
+        const boxGap = 16;
+        const boxRowTop = 940;
+        const boxCenterY = boxRowTop + 75;
+        const rowFirstLeft = (1080 - (boxCount * boxW + (boxCount - 1) * boxGap)) / 2;
+        const boxCenters = [];
+        for (let i = 0; i < boxCount; i++) {
+          boxCenters.push({
+            x: rowFirstLeft + boxW / 2 + i * (boxW + boxGap),
+            y: boxCenterY,
+          });
+        }
+
+        // ── Pre-state ────────────────────────────────────────────────
+        // Eye: below frame, invisible, full scale.
+        // xPercent: -50 bakes horizontal centering into GSAP transform.
+        gsap.set("#eye-wrap", {
+          top: eyeStartY + "px",
+          xPercent: -50,
+          x: 0,
+          scale: 1,
+          opacity: 0,
+        });
+        // Iris starts at center (no offset)
+        gsap.set("#iris-group", { x: 0, y: 0 });
+
+        // Eyelid blink simulated via scaleY on the SVG (the almond squashes).
+        gsap.set("#eye-svg", { transformOrigin: "50% 50%", scaleY: 1 });
+
+        // Boxes: hidden + translated down a little for entrance
+        gsap.set(".day-box", { opacity: 0, y: 30, scale: 0.85 });
+
+        // Periph lines: invisible until drawn-in (use opacity + length-coords)
+        gsap.set(".periph-line", { opacity: 0 });
+
+        // ── Timeline ─────────────────────────────────────────────────
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // 1. EYE ENTERS — rises from below, bouncy settle into initial position.
+        tl.to(
+          "#eye-wrap",
+          {
+            top: (eyeInitialCenterY - eyeHeight / 2) + "px",
+            opacity: 1,
+            duration: 0.85,
+            ease: "back.out(1.6)",
+          },
+          vars.enterStart
+        );
+
+        // 2. EYE LOOKS AROUND — left, right, blink, up, back to center.
+        const lookT = vars.enterStart + 0.95;
+        tl.to("#iris-group", { x: -20, duration: 0.25, ease: "power2.out" }, lookT);
+        tl.to("#iris-group", { x: 0,   duration: 0.20, ease: "power2.inOut" }, lookT + 0.30);
+
+        tl.to("#iris-group", { x: 22, duration: 0.25, ease: "power2.out" }, lookT + 0.55);
+        tl.to("#iris-group", { x: 0,  duration: 0.20, ease: "power2.inOut" }, lookT + 0.85);
+
+        // Blink — quick scaleY collapse and back.
+        tl.to("#eye-svg", { scaleY: 0.05, duration: 0.10, ease: "power2.in" },  lookT + 1.05);
+        tl.to("#eye-svg", { scaleY: 1.0,  duration: 0.12, ease: "power2.out" }, lookT + 1.15);
+
+        // Glance up
+        tl.to("#iris-group", { y: -15, duration: 0.22, ease: "power2.out" }, lookT + 1.30);
+        tl.to("#iris-group", { y: 0,   duration: 0.20, ease: "power2.inOut" }, lookT + 1.55);
+
+        // 3. BOXES APPEAR + EYE SHRINKS to make space (simultaneous).
+        // Eye scales down and slides UP to the upper position.
+        tl.to(
+          "#eye-wrap",
+          {
+            top: (eyeFinalCenterY - eyeHeight / 2) + "px",
+            scale: vars.eyeFinalScale,
+            duration: 0.55,
+            ease: "power3.inOut",
+          },
+          vars.boxAppearStart
+        );
+        // Boxes stagger in
+        tl.to(
+          ".day-box",
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.4,
+            ease: "back.out(1.6)",
+            stagger: vars.boxStagger,
+          },
+          vars.boxAppearStart + 0.1
+        );
+
+        // 4. EYE LOOKS DOWN (iris translates +y) — preparing to scan.
+        const lookDownT = vars.scanStart - 0.25;
+        tl.to("#iris-group", { y: 18, duration: 0.30, ease: "power2.out" }, lookDownT);
+
+        // 5. PERIPHERAL LINES DRAW IN.
+        // Left line anchors at the LEFT TIP of the eye, right line at the RIGHT TIP.
+        // Tips sit at vertical center of the almond (eyeFinalCenterY).
+        const eyeHalfW = (eyeWidth * vars.eyeFinalScale) / 2;
+        const eyeLeftTipX  = 540 - eyeHalfW;
+        const eyeRightTipX = 540 + eyeHalfW;
+        const eyeAnchorY = eyeFinalCenterY;
+
+        // Lines collapsed at their respective anchor tips.
+        gsap.set("#periph-L", { attr: { x1: eyeLeftTipX,  y1: eyeAnchorY, x2: eyeLeftTipX,  y2: eyeAnchorY }, opacity: 0 });
+        gsap.set("#periph-R", { attr: { x1: eyeRightTipX, y1: eyeAnchorY, x2: eyeRightTipX, y2: eyeAnchorY }, opacity: 0 });
+
+        // Box 1 corners — both lines extend toward box 1 at first.
+        const box1 = boxCenters[0];
+        const boxLeftEdgeOffset = -boxW / 2;
+        const boxRightEdgeOffset = boxW / 2;
+        const boxTopOffset = -75;
+
+        // Fade in + extend to box 1 left and right edges.
+        tl.to(
+          "#periph-L",
+          {
+            attr: { x2: box1.x + boxLeftEdgeOffset, y2: box1.y + boxTopOffset },
+            opacity: vars.periphOpacity,
+            duration: 0.35,
+            ease: "power2.out",
+          },
+          vars.scanStart
+        );
+        tl.to(
+          "#periph-R",
+          {
+            attr: { x2: box1.x + boxRightEdgeOffset, y2: box1.y + boxTopOffset },
+            opacity: vars.periphOpacity,
+            duration: 0.35,
+            ease: "power2.out",
+          },
+          vars.scanStart
+        );
+
+        // 6. SCAN — sweep both line tips from box 1 to box 7.
+        // Iris also tracks horizontally during the scan.
+        const sweepStart = vars.scanStart + 0.4;
+        const lastBox = boxCenters[boxCount - 1];
+
+        tl.to(
+          "#periph-L",
+          {
+            attr: { x2: lastBox.x + boxLeftEdgeOffset, y2: lastBox.y + boxTopOffset },
+            duration: vars.scanDuration,
+            ease: "power1.inOut",
+          },
+          sweepStart
+        );
+        tl.to(
+          "#periph-R",
+          {
+            attr: { x2: lastBox.x + boxRightEdgeOffset, y2: lastBox.y + boxTopOffset },
+            duration: vars.scanDuration,
+            ease: "power1.inOut",
+          },
+          sweepStart
+        );
+        // Iris tracks across (left=-22 → right=+22)
+        tl.fromTo(
+          "#iris-group",
+          { x: -22 },
+          { x: 22, duration: vars.scanDuration, ease: "power1.inOut" },
+          sweepStart
+        );
+
+        // 7. BOX HIGHLIGHTS — at each evenly-spaced scan time, add .lit class
+        //    (CSS-transitions handle bg + letter color) AND GSAP-pop the box.
+        const boxes = document.querySelectorAll(".day-box");
+        for (let i = 0; i < boxCount; i++) {
+          const t = sweepStart + (i / (boxCount - 1)) * vars.scanDuration;
+          const box = boxes[i];
+          tl.call(function () { box.classList.add("lit"); }, null, t);
+          tl.to(box, { y: -10, scale: 1.08, duration: 0.18, ease: "back.out(2)", overwrite: "auto" }, t);
+          tl.to(box, { y: 0,   scale: 1.0,  duration: 0.30, ease: "power2.out", overwrite: "auto" }, t + 0.18);
+        }
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

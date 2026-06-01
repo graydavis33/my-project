@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "The soda company??",
+    "text_style": "white sans-serif font, bold, positioned in upper-middle area of frame",
+    "shot_type": "medium close-up",
+    "framing": "female subject facing slightly left, white textured wall background behind her, partial view of interviewer's hand/phone on right edge",
+    "subject_appearance": "woman wearing denim jacket with chain necklace, dark hair styled back, pink lipstick, composed expression",
+    "setting": "urban street, building exterior",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "We did everything we could...",
+    "text_style": "white text with black outline, center-bottom placement, medium-weight sans-serif",
+    "shot_type": "medium close-up",
+    "framing": "woman in center-right, speaking animatedly with hand gesture; partially visible man in profile on left side; concrete textured wall background",
+    "subject_appearance": "woman wearing denim jacket with silver chain necklaces, silver hoop earrings, and rings; dark hair pulled back; pink/mauve makeup",
+    "setting": "urban street, concrete building",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Marriage is not 50/50",
+    "text_style": "white, bold, sans-serif, center-lower third; 'School of Hard Knocks' logo with red and gold circular badge in bottom right",
+    "shot_type": "medium close-up",
+    "framing": "male subject in profile facing right, mid-speech gesture with hand raised, modern building storefront background with glass and warm lighting",
+    "subject_appearance": "man with slicked-back blonde/light brown hair wearing dark navy blazer over light blue/white dress shirt",
+    "setting": "urban street, modern storefront",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "So go make a fool of yourself.",
+    "text_style": "White, bold, sans-serif font; centered at lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman speaking directly to camera, shot from waist up, positioned against textured white/gray brick wall with horizontal metal piping",
+    "subject_appearance": "Woman wearing denim jacket over white shirt, gold chain necklace, silver hoop earrings, and decorative ring; dark hair pulled back with blonde highlights",
+    "setting": "Urban street, brick wall",
+    "broll": false,
+    "energy": "high"
+  }
+]

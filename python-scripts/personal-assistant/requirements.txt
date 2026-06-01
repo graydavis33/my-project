@@ -1,0 +1,4 @@
+anthropic
+slack-sdk
+python-dotenv
+schedule

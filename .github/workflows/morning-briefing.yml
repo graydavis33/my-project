@@ -1,0 +1,33 @@
+name: Morning Briefing
+
+on:
+  schedule:
+    # 8am EDT (UTC-4) = 12:00 UTC — adjusts to 7am in winter when clocks fall back
+    - cron: "0 12 * * *"
+  workflow_dispatch:  # allows manual trigger from GitHub UI for testing
+
+jobs:
+  send-briefing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r python-scripts/morning-briefing/requirements.txt
+
+      - name: Send morning briefing
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_USER_ID: ${{ secrets.SLACK_USER_ID }}
+        run: |
+          cd python-scripts/morning-briefing
+          python main_lite.py

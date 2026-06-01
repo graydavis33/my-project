@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "beautiful buildings around you?",
+    "text_style": "white text, bold, centered lower-third of frame",
+    "shot_type": "medium close-up",
+    "framing": "male subject on right side of frame, partially visible second person on left, yellow and blue building facade in background, street-level setting",
+    "subject_appearance": "middle-aged man wearing a light gray/beige button-up shirt, holding what appears to be a blue object in his right hand",
+    "setting": "urban street, downtown area",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "stupidest investment you could make.",
+    "text_style": "white font with black outline, bold, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "middle-aged male subject in profile facing left, positioned slightly off-center, with potted plant blurred in background",
+    "subject_appearance": "Older man with salt-and-pepper slicked-back hair wearing a crisp white button-up shirt, speaking animatedly with hand gesture visible.",
+    "setting": "indoor studio with greenery",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "today's world?",
+    "text_style": "white sans-serif font with black outline, positioned center-lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "single male subject centered in frame, looking downward with slight head tilt, holding colorful items in hands, indoor setting with plant and wall backdrop",
+    "subject_appearance": "older man with gray hair wearing a beige/cream colored button-up shirt, appearing contemplative or slightly confused",
+    "setting": "indoor residential or casual venue",
+    "broll": false,
+    "energy": "low"
+  },
+  {
+    "on_screen_text": "As long as you're making forward",
+    "text_style": "White sans-serif font with black outline, positioned in lower third of frame, medium weight",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in profile/three-quarter view, speaking, with blurred foliage and wall in background",
+    "subject_appearance": "Older man with slicked-back gray hair wearing a crisp white button-up shirt and visible wristwatch.",
+    "setting": "Outdoor urban patio or courtyard",
+    "broll": false,
+    "energy": "medium"
+  }
+]

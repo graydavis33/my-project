@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Curve color","default":"#F28129"},{"id":"white","type":"color","label":"Axes / grid color","default":"#FFFFFF"},{"id":"curveDuration","type":"number","label":"Curve draw duration (s)","default":2.4},{"id":"strokeWidth","type":"number","label":"Curve stroke width (px)","default":14},{"id":"startZoom","type":"number","label":"Start zoom level","default":2.6},{"id":"endZoom","type":"number","label":"End zoom level","default":1.0}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key — Gray keys this out in Premiere */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .camera {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        transform-origin: 0 0;
+        will-change: transform;
+      }
+
+      svg {
+        display: block;
+        width: 1080px;
+        height: 1920px;
+        overflow: visible;
+      }
+
+      .axis, .grid-line {
+        fill: none;
+        stroke-linecap: round;
+      }
+
+      .axis      { stroke-width: 6; }
+      .grid-line { stroke-width: 2; opacity: 0.35; }
+
+      .curve {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.3));
+      }
+
+      .head-dot {
+        filter: drop-shadow(0 0 22px rgba(242, 129, 41, 1.0));
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.6" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3.6" data-track-index="1">
+        <div id="camera" class="camera" data-layout-allow-overflow>
+          <svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+            <g id="grid">
+              <line class="grid-line" id="grid-h-1" x1="140" y1="1247" x2="940" y2="1247" data-axis="y" data-pos="1247"/>
+              <line class="grid-line" id="grid-h-2" x1="140" y1="1113" x2="940" y2="1113" data-axis="y" data-pos="1113"/>
+              <line class="grid-line" id="grid-h-3" x1="140" y1="980"  x2="940" y2="980"  data-axis="y" data-pos="980"/>
+              <line class="grid-line" id="grid-h-4" x1="140" y1="847"  x2="940" y2="847"  data-axis="y" data-pos="847"/>
+              <line class="grid-line" id="grid-h-5" x1="140" y1="713"  x2="940" y2="713"  data-axis="y" data-pos="713"/>
+              <line class="grid-line" id="grid-v-1" x1="300" y1="580" x2="300" y2="1380" data-axis="x" data-pos="300"/>
+              <line class="grid-line" id="grid-v-2" x1="460" y1="580" x2="460" y2="1380" data-axis="x" data-pos="460"/>
+              <line class="grid-line" id="grid-v-3" x1="620" y1="580" x2="620" y2="1380" data-axis="x" data-pos="620"/>
+              <line class="grid-line" id="grid-v-4" x1="780" y1="580" x2="780" y2="1380" data-axis="x" data-pos="780"/>
+            </g>
+
+            <line id="axis-y" class="axis" x1="140" y1="580"  x2="140" y2="1380"/>
+            <line id="axis-x" class="axis" x1="140" y1="1380" x2="940" y2="1380"/>
+
+            <path id="curve" class="curve" d=""/>
+
+            <circle id="head-dot" class="head-dot" r="18" cx="140" cy="1340"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        document.querySelectorAll(".axis, .grid-line").forEach(function (el) {
+          el.setAttribute("stroke", vars.white);
+        });
+        const curveEl  = document.getElementById("curve");
+        const headDot  = document.getElementById("head-dot");
+        const cameraEl = document.getElementById("camera");
+        curveEl.setAttribute("stroke", vars.orange);
+        curveEl.setAttribute("stroke-width", vars.strokeWidth);
+        headDot.setAttribute("fill", vars.orange);
+
+        // === Build exponential curve path ===
+        const X0 = 140, X1 = 940;
+        const Y_BOT = 1340, Y_TOP = 620;
+        const k = 3.2;
+        const STEPS = 80;
+
+        const points = [];
+        for (let i = 0; i <= STEPS; i++) {
+          const t = i / STEPS;
+          const norm = (Math.exp(k * t) - 1) / (Math.exp(k) - 1);
+          points.push([
+            X0 + t * (X1 - X0),
+            Y_BOT - norm * (Y_BOT - Y_TOP)
+          ]);
+        }
+
+        let d = `M ${points[0][0].toFixed(2)} ${points[0][1].toFixed(2)}`;
+        for (let i = 1; i < points.length; i++) {
+          d += ` L ${points[i][0].toFixed(2)} ${points[i][1].toFixed(2)}`;
+        }
+        curveEl.setAttribute("d", d);
+
+        const pathLen = curveEl.getTotalLength();
+        curveEl.style.strokeDasharray  = pathLen;
+        curveEl.style.strokeDashoffset = pathLen;
+
+        // === Geometry constants ===
+        const SCREEN_CX = 540, SCREEN_CY = 960;
+        const CHART_CX  = 540, CHART_CY  = 960;
+
+        // Apply the dot/camera state for a given curve progress p ∈ [0,1].
+        // Pulled out so initial gsap.set and the proxy tween's onUpdate
+        // share one source of truth (no drift).
+        function applyProgress(p) {
+          // Curve dash offset — leading edge at p * pathLen
+          curveEl.style.strokeDashoffset = pathLen * (1 - p);
+
+          // Dot at leading edge
+          const pt = curveEl.getPointAtLength(p * pathLen);
+          headDot.setAttribute("cx", pt.x);
+          headDot.setAttribute("cy", pt.y);
+
+          // Camera: zoom level lerps startZoom → endZoom
+          const scale = vars.startZoom + (vars.endZoom - vars.startZoom) * p;
+
+          // Camera center: starts on the dot, eases toward chart center
+          // as the camera pulls back, so the wide shot lands on natural framing
+          const camCx = pt.x + (CHART_CX - pt.x) * p;
+          const camCy = pt.y + (CHART_CY - pt.y) * p;
+
+          const tx = SCREEN_CX - camCx * scale;
+          const ty = SCREEN_CY - camCy * scale;
+          cameraEl.style.transform = "translate(" + tx + "px, " + ty + "px) scale(" + scale + ")";
+        }
+
+        // Frame 0 state
+        applyProgress(0);
+
+        // === Find path-length fraction at which curve crosses each gridline ===
+        const SAMPLES = 400;
+        const crossings = {};
+        const gridEls = document.querySelectorAll(".grid-line");
+        let lastX = points[0][0], lastY = points[0][1];
+        for (let s = 1; s <= SAMPLES; s++) {
+          const len = (s / SAMPLES) * pathLen;
+          const pt  = curveEl.getPointAtLength(len);
+          gridEls.forEach(function (g) {
+            if (crossings[g.id] !== undefined) return;
+            const axis = g.getAttribute("data-axis");
+            const pos  = parseFloat(g.getAttribute("data-pos"));
+            if (axis === "x") {
+              if (lastX < pos && pt.x >= pos) crossings[g.id] = len / pathLen;
+            } else {
+              if (lastY > pos && pt.y <= pos) crossings[g.id] = len / pathLen;
+            }
+          });
+          lastX = pt.x;
+          lastY = pt.y;
+        }
+        gsap.set(".grid-line", { opacity: 0 });
+
+        // Invert power2.inOut so a gridline scheduled at curve progress p
+        // fires at the matching TIME within the curve animation.
+        // power2.inOut: progress(t) = 2t² for t<0.5;  1 - 2(1-t)² for t>=0.5
+        // inverse:      t(p)        = √(p/2) for p<0.5; 1 - √((1-p)/2) for p>=0.5
+        function inversePower2InOut(p) {
+          if (p < 0.5) return Math.sqrt(p / 2);
+          return 1 - Math.sqrt((1 - p) / 2);
+        }
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        const CURVE_START = 0.3;
+
+        // ONE proxy tween drives curve, dot, AND camera simultaneously
+        // through a single power2.inOut ease — everything stays in sync.
+        const proxy = { progress: 0 };
+        tl.to(proxy, {
+          progress: 1,
+          duration: vars.curveDuration,
+          ease: "power2.inOut",
+          onUpdate: function () { applyProgress(proxy.progress); }
+        }, CURVE_START);
+
+        // Each gridline fades in at the eased time when its crossing happens
+        gridEls.forEach(function (g) {
+          const frac = crossings[g.id];
+          if (frac === undefined) return;
+          const easedTime = inversePower2InOut(frac) * vars.curveDuration;
+          tl.to(g, {
+            opacity: 0.35,
+            duration: 0.35,
+            ease: "power2.inOut"
+          }, CURVE_START + easedTime);
+        });
+
+        // Settled pulse on head dot after camera lands
+        tl.to(headDot, {
+          attr: { r: 28 },
+          duration: 0.55,
+          ease: "power2.inOut",
+          yoyo: true,
+          repeat: 1
+        }, CURVE_START + vars.curveDuration + 0.2);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

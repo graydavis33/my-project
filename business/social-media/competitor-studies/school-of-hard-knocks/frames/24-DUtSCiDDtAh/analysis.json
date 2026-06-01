@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "I actually grew up...",
+    "text_style": "White sans-serif font, bold weight, centered lower-third placement",
+    "shot_type": "medium",
+    "framing": "Single male subject standing on a modern residential driveway, facing camera with slight leftward angle, background shows contemporary architecture with white walls and metal railing",
+    "subject_appearance": "Older gentleman with white/silver hair, glasses, wearing a bright red windbreaker jacket over a light pink dress shirt and dark navy pants",
+    "setting": "Modern residential driveway/courtyard",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "8 billion people down the line...",
+    "text_style": "white, bold, sans-serif, centered lower third with drop shadow",
+    "shot_type": "medium close-up",
+    "framing": "man in red jacket speaking directly to camera, holding microphone, colonial architecture and palm trees in soft focus background",
+    "subject_appearance": "older man with white/gray hair, glasses, red windbreaker over pink/white shirt, holding microphone",
+    "setting": "colonial town square courtyard",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "like the movie theater...",
+    "text_style": "white sans-serif, bold, center-positioned subtitle",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in center frame, speaking to camera while holding microphone, colonial architecture and palm tree visible in background",
+    "subject_appearance": "older man with slicked-back gray hair, wearing rectangular glasses, bright red nylon jacket over pink button-up shirt, holding wireless microphone.",
+    "setting": "outdoor colonial plaza",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "Never give up.",
+    "text_style": "White sans-serif font, bold weight, centered lower-third position with subtle shadow",
+    "shot_type": "medium close-up",
+    "framing": "Single male subject in three-quarter profile facing left, holding microphone, urban courtyard background with beige building and green foliage",
+    "subject_appearance": "Older man with gray hair, clear-framed glasses, wearing bright red windbreaker jacket over pink and white dress shirt, holding a microphone",
+    "setting": "Urban courtyard, Mediterranean architecture",
+    "broll": false,
+    "energy": "medium"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "I'm so proud of you.",
+    "text_style": "White, bold sans-serif font, centered at bottom third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Two men facing each other in conversation inside a vehicle with striped awning visible overhead; a third person partially visible in background right",
+    "subject_appearance": "Man on left has reddish-blonde curly hair, sunglasses, shirtless; man on right has dark hair, black shirt, smiling",
+    "setting": "Inside vehicle or tent",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "Jesse Itzler bro...",
+    "text_style": "White sans-serif font, center-bottom positioned, medium weight",
+    "shot_type": "medium close-up",
+    "framing": "Man in profile seated in car holding championship wrestling belts, framed from chest up with striped awning visible behind",
+    "subject_appearance": "Blonde wavy hair, black sunglasses, gold chain necklace, black sleeveless tank top, holding ornate gold and red wrestling championship belts",
+    "setting": "Inside car, convertible",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "I came to the very healthy realization",
+    "text_style": "White, bold, sans-serif font, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Male subject in profile facing right, holding microphone, speaking during interview; striped awning visible overhead, outdoor setting with trees in background",
+    "subject_appearance": "Blonde wavy hair, light facial hair, black sleeveless tank top, silver chain necklace, athletic build.",
+    "setting": "Outdoor covered patio area",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "to find that talent...",
+    "text_style": "white, sans-serif, bold, centered lower third with drop shadow",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in convertible car speaking directly to camera, striped awning visible overhead, hand gestures mid-speech",
+    "subject_appearance": "blonde wavy hair, light beard, black sleeveless tank top, gold chain necklace, holding small device/microphone in hand",
+    "setting": "convertible car, outdoors",
+    "broll": false,
+    "energy": "high"
+  }
+]
