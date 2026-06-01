@@ -101,5 +101,8 @@ python-scripts/sai-captions/workspace/
 # Story-arc-playbook — raw VTT subtitle dumps (cleaned .txt transcripts are kept)
 business/social-media/story-arc-playbook/_transcripts/*.vtt
 
+# Memory sync — NEVER commit github.md (contains credentials)
+_memory/github.md
+
 # Note: analytical.db is intentionally tracked (cross-machine sync)
 # Will be removed + .gitignored once Analytical has real users (PII concern)
