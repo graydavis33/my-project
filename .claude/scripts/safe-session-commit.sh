@@ -13,7 +13,10 @@
 
 set -uo pipefail
 
-REPO="c:/Users/Gray Davis/my-project"
+# Derive repo path from the script's own location so this works on Mac + Windows + Linux.
+# Script lives at <repo>/.claude/scripts/safe-session-commit.sh → repo is two levels up.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$REPO" || exit 0
 
 # Nothing tracked-modified or untracked? exit silently.
