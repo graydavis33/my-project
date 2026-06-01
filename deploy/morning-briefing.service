@@ -1,0 +1,16 @@
+[Unit]
+Description=Graydient Media Morning Briefing
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/my-project/python-scripts/morning-briefing
+ExecStart=/root/my-project/python-scripts/morning-briefing/venv/bin/python main.py --schedule
+Restart=always
+RestartSec=15
+StandardOutput=append:/root/my-project/python-scripts/morning-briefing/briefing.log
+StandardError=append:/root/my-project/python-scripts/morning-briefing/briefing.log
+
+[Install]
+WantedBy=multi-user.target

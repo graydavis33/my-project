@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"ink","type":"color","label":"Tick / number color","default":"#1A1A1A"},{"id":"faceFill","type":"color","label":"Clock face fill","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Face stroke width (px)","default":10},{"id":"clockEnterTime","type":"number","label":"Clock enters at (s)","default":0.0},{"id":"clockEnterDuration","type":"number","label":"Enter (fade up) duration (s)","default":0.55},{"id":"spinStartTime","type":"number","label":"Hand spin starts at (s)","default":0.60},{"id":"spinDuration","type":"number","label":"24-hour spin duration (s)","default":2.60},{"id":"holdAfterSpin","type":"number","label":"Hold after spin completes (s)","default":0.35}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* === Clock container — enters from below === */
+      .clock {
+        position: relative;
+        width: 800px;
+        height: 800px;
+        will-change: transform, opacity;
+      }
+
+      /* Outer face circle: solid white with orange stroke */
+      .face {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--face-fill);
+        border: var(--stroke-w) solid var(--orange);
+        box-shadow:
+          0 12px 32px rgba(0, 0, 0, 0.28),
+          inset 0 4px 0 rgba(0, 0, 0, 0.03);
+      }
+
+      /* Hour ticks — 12 of them, positioned around the rim */
+      .tick {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 6px;
+        height: 32px;
+        background: var(--ink);
+        border-radius: 2px;
+        transform-origin: 50% calc(380px); /* radius from center to outer ring */
+      }
+      .tick.major {
+        width: 10px;
+        height: 52px;
+        background: var(--ink);
+      }
+
+      /* Quarter-hour numbers */
+      .num {
+        position: absolute;
+        font-size: 78px;
+        font-weight: 800;
+        color: var(--ink);
+        line-height: 1;
+        text-align: center;
+        width: 100px;
+        height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .num.n12 { top: 60px;   left: 50%; transform: translateX(-50%); }
+      .num.n3  { right: 60px;  top: 50%; transform: translateY(-50%); }
+      .num.n6  { bottom: 60px; left: 50%; transform: translateX(-50%); }
+      .num.n9  { left: 60px;   top: 50%; transform: translateY(-50%); }
+
+      /* Hands — both pivot from the clock center */
+      .hand {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background: var(--ink);
+        border-radius: 8px 8px 2px 2px;
+        transform-origin: 50% 100%;
+        will-change: transform;
+      }
+      .hand.hour {
+        width: 16px;
+        height: 200px;
+        margin-left: -8px;
+        margin-top: -200px;
+      }
+      .hand.minute {
+        width: 10px;
+        height: 290px;
+        margin-left: -5px;
+        margin-top: -290px;
+      }
+
+      /* Center hub — orange dot */
+      .hub {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 40px; height: 40px;
+        margin-left: -20px;
+        margin-top: -20px;
+        background: var(--orange);
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 6px var(--white),
+          0 0 14px rgba(242, 129, 41, 0.55);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+        <div id="clock" class="clock">
+          <div class="face"></div>
+          <!-- 12 hour ticks injected by JS -->
+          <div class="num n12">12</div>
+          <div class="num n3">3</div>
+          <div class="num n6">6</div>
+          <div class="num n9">9</div>
+          <!-- Hands -->
+          <div id="hand-hour" class="hand hour"></div>
+          <div id="hand-minute" class="hand minute"></div>
+          <div class="hub"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        // Theme tokens
+        document.documentElement.style.setProperty("--orange", vars.orange);
+        document.documentElement.style.setProperty("--white", vars.white);
+        document.documentElement.style.setProperty("--ink", vars.ink);
+        document.documentElement.style.setProperty("--face-fill", vars.faceFill);
+        document.documentElement.style.setProperty("--stroke-w", vars.strokeWidth + "px");
+
+        // Generate 12 hour ticks around the rim
+        const clock = document.getElementById("clock");
+        for (let i = 0; i < 12; i++) {
+          const tick = document.createElement("div");
+          // 4 cardinal positions (12/3/6/9) get major-style ticks
+          tick.className = "tick" + (i % 3 === 0 ? " major" : "");
+          // Rotate around clock center; transform-origin places each tick at the rim
+          tick.style.transform = "translate(-50%, -50%) rotate(" + (i * 30) + "deg) translateY(-340px)";
+          tick.style.transformOrigin = "center center";
+          clock.appendChild(tick);
+        }
+
+        // Timeline
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Phase 1 — clock fades in from bottom
+        tl.from(
+          "#clock",
+          {
+            opacity: 0,
+            y: 160,
+            scale: 0.92,
+            duration: vars.clockEnterDuration,
+            ease: "power2.out",
+          },
+          vars.clockEnterTime
+        );
+
+        // Phase 2 — hands spin through 24 hours
+        // Minute hand: 24 full rotations (24 * 360 = 8640deg)
+        // Hour hand:    2 full rotations (2  * 360 =  720deg)
+        // Both land back at 12:00 (0deg mod 360).
+        tl.to("#hand-minute", {
+          rotation: 8640,
+          duration: vars.spinDuration,
+          ease: "power2.inOut",
+        }, vars.spinStartTime);
+
+        tl.to("#hand-hour", {
+          rotation: 720,
+          duration: vars.spinDuration,
+          ease: "power2.inOut",
+        }, vars.spinStartTime);
+
+        // Phase 3 — small celebratory pop on the orange hub as the day completes
+        tl.fromTo(".hub",
+          { scale: 1 },
+          {
+            scale: 1.25,
+            duration: 0.18,
+            ease: "back.out(2)",
+            yoyo: true,
+            repeat: 1,
+          },
+          vars.spinStartTime + vars.spinDuration - 0.05
+        );
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

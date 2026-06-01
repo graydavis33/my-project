@@ -1,0 +1,65 @@
+{
+  "https://www.tiktok.com/@graydient_media/video/7569771678402661662?utm_campaign=tt4d_open_api&utm_source=sbaww2ncdzuogcxdhv": {
+    "date": "2026-04-07",
+    "type": "best",
+    "reasons": [
+      "**Problem-solution framing with immediate relevance**: The title directly addresses a common creator pain point (sideways footage) with a promised fix, making viewers who experienced this issue immediately stop scrolling and engage with the content.",
+      "**Low barrier to consumption**: The \"6 quick steps\" format signals brevity and actionability, which combined with the 11,250 views indicates the algorithm favored the thumbnail/hook enough to push it widely before engagement metrics kicked in.",
+      "**Creator-focused niche targeting**: The hashtags (#CapCutTutorial #CreatorTools #GraydientMedia) and subject matter tap directly into TikTok's creator community, a highly engaged demographic actively seeking practical tools and tutorials."
+    ]
+  },
+  "https://www.tiktok.com/@graydient_media/video/7531065549862882590?utm_campaign=tt4d_open_api&utm_source=sbaww2ncdzuogcxdhv": {
+    "date": "2026-04-07",
+    "type": "best",
+    "reasons": [
+      "**Educational value with clear step-by-step breakdown** – The structured, easy-to-follow tutorial format with numbered steps and actionable tips made the content immediately useful and shareable, driving the 11 shares and comments from creators seeking to learn the technique.",
+      "**Trending creator appeal and niche relevance** – Crediting @jaidrenj and positioning this as a recreation/twist on existing popular effects tapped into an engaged community already interested in VFX, causing the high view count (7.7K) within the short-form video niche.",
+      "**Hashtag strategy targeting active search terms** – The combination of 13 relevant hashtags (#FrameByFrame, #VideoEditing, #PremierePro, #VFXTips, etc.) positioned the post to reach both beginners and intermediate creators actively searching for editing tutorials, maximizing discoverability and the 2."
+    ]
+  },
+  "https://www.tiktok.com/@graydient_media/video/7568312472189390111?utm_campaign=tt4d_open_api&utm_source=sbaww2ncdzuogcxdhv": {
+    "date": "2026-03-26",
+    "type": "best",
+    "reasons": [
+      "**Trending format capitalization**: The post leveraged the \"#floatingeffect #videotrend #editingchallenge\" hashtags that tap into high-volume searches for visual effects content, driving the 1,443 views through discoverability rather than audience engagement.",
+      "**Creator niche targeting**: The combination of \"#premierepro #graydientmedia #filmmaking\" attracted a specific community of video editors and creators actively searching for editing tutorials and technique demonstrations, generating views from the right audience segment.",
+      "**Authentic personal voice**: The casual tone (\"Lowkey one of my favorite\") paired with a concrete, demonstrable skill (the floating effect transition) created relatability that resonated enough to drive views, despite low interaction metrics indicating the audience watched but didn't need to engage further."
+    ]
+  },
+  "https://www.instagram.com/dgdoutdoors/reel/DLWANlJMy3G/": {
+    "date": "2026-04-07",
+    "type": "worst",
+    "reasons": [
+      "The incomplete title (\"thanks to everyone who\") appears cut off, creating confusion and failing to deliver a clear message about the tournament recap, which likely deterred users from engaging.",
+      "An engagement rate of 100% with only 1 view and 1 like indicates the post reached virtually no audience—the algorithm likely suppressed distribution due to weak initial performance or poor timing.",
+      "Zero retention (0.0%), no comments, and no shares show the content failed to spark conversation or compel sharing, suggesting the post lacked compelling visuals, storytelling, or a clear call-to-action that would motivate engagement."
+    ]
+  },
+  "https://www.instagram.com/graydient_media/reel/DKufgUHx_vQ/": {
+    "date": "2026-04-07",
+    "type": "worst",
+    "reasons": [
+      "**Extremely limited reach**: Only 1 view indicates the post was shown to virtually no one, suggesting poor algorithmic distribution due to weak initial engagement signals or posting at a suboptimal time.",
+      "**No click-through or conversion potential**: 0% CTR means the call-to-action (if present) failed to drive any traffic, and the post provided no incentive for followers to take external action.",
+      "**Zero audience retention or sharing**: 0% average retention and zero shares indicate viewers found no value in the content worth rewatching or recommending, despite the 100% engagement rate being artificially inflated by the single viewer."
+    ]
+  },
+  "https://www.facebook.com/reel/": {
+    "date": "2026-04-07",
+    "type": "worst",
+    "reasons": [
+      "The post received zero impressions on Facebook's feed, suggesting it either failed to be distributed by the algorithm or was posted to an inactive audience with no visibility.",
+      "The title \"Number of unread notifications\" lacks compelling hooks or emotional triggers that would motivate users to engage, making it unappealing even if seen.",
+      "With 0% engagement across all metrics, the post generated no initial interactions to create momentum, indicating it failed to resonate with or reach the intended audience entirely."
+    ]
+  },
+  "https://youtu.be/9DghVHRTxVA": {
+    "date": "2026-04-07",
+    "type": "best",
+    "reasons": [
+      "**Exceptional retention (81.5%) indicates the title's curiosity hook—the \"MAGIC arm\" mystery and suggestive emoji—compelled viewers to watch the full content, even though CTR was 0%, meaning the title alone drove clicks organically rather than through paid promotion**",
+      "**The post achieved top views (1,681) with minimal engagement metrics (10 likes, 1 comment), proving the algorithm prioritizes watch time and retention over likes; YouTube's recommendation system heavily weights viewer retention, making the 81.5% figure the primary success driver**",
+      "**The casual, intriguing tone with the smirk emoji created psychological curiosity that matched audience expectations for short-form entertainment content, resulting in organic shareability through recommendations rather than manual shares**"
+    ]
+  }
+}

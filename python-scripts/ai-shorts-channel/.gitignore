@@ -1,0 +1,9 @@
+.env
+.tmp/
+output/
+state.json
+agent.log
+yt_token.json
+client_secret*.json
+__pycache__/
+*.pyc

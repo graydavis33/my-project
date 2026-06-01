@@ -1,0 +1,86 @@
+"""
+classifier.py
+Uses Claude AI to read each email and decide:
+  - needs_reply  → real person, requires a response
+  - fyi_only     → informational, no reply needed
+  - ignore       → newsletter, promo, receipt, social notification
+"""
+
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.join(_os.path.dirname(__file__), '..', 'shared'))
+from usage_logger import track_response
+
+import anthropic
+from config import ANTHROPIC_API_KEY, CATEGORY_NEEDS_REPLY, CATEGORY_FYI_ONLY, CATEGORY_IGNORE
+
+client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+
+SYSTEM_PROMPT = """You are an email assistant helping Gray Davis, a freelance videographer and Creative Director at Graydient Media.
+His clients are businesses and individuals who hire him to film and edit video content.
+Your job is to classify each email into one of three categories:
+
+- needs_reply: A real person sent this and expects or would appreciate a response.
+  Examples: clients asking questions, potential clients inquiring about services,
+  collaborators following up, business inquiries, personal contacts reaching out,
+  anyone asking Gray a question directly.
+
+- fyi_only: Informational email from a real person or service that does NOT need a reply.
+  Examples: shipping updates for something Gray ordered, CC'd replies, meeting confirmations,
+  payment confirmations, scheduling confirmations.
+
+- ignore: Automated or bulk email that should be ignored entirely.
+  Examples: newsletters, promotional emails, sales/discounts, order receipts,
+  Instagram/TikTok/LinkedIn/YouTube notifications, Substack digests, marketing blasts.
+
+When in doubt between needs_reply and fyi_only, choose needs_reply.
+
+Respond in this exact format on one line:
+category|one short phrase explaining why (max 8 words)
+
+Example: needs_reply|client asking about project timeline
+Example: ignore|promotional newsletter from software company"""
+
+
+def classify_email(email):
+    """
+    Pass an email to Claude and get back its category and reason.
+    Returns a tuple: (category, reason)
+    category is one of: 'needs_reply', 'fyi_only', 'ignore'
+    """
+    attachment_section = ""
+    if email.get("attachments"):
+        parts = [f"=== {a['name']} ===\n{a['text']}" for a in email["attachments"]]
+        attachment_section = "\n\nAttachments:\n" + "\n\n".join(parts)
+
+    user_message = f"""
+From: {email['from']}
+Subject: {email['subject']}
+Date: {email['date']}
+
+Body:
+{email['body'][:2000]}{attachment_section}
+"""
+
+    response = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=30,
+        system=SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": user_message}],
+    )
+    track_response(response)
+
+    raw = response.content[0].text.strip().lower()
+
+    if "|" in raw:
+        parts = raw.split("|", 1)
+        category = parts[0].strip()
+        reason = parts[1].strip()
+    else:
+        category = raw
+        reason = ""
+
+    if category not in (CATEGORY_NEEDS_REPLY, CATEGORY_FYI_ONLY, CATEGORY_IGNORE):
+        category = CATEGORY_IGNORE
+        reason = reason or "unrecognized response from classifier"
+
+    return category, reason

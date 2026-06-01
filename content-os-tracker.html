@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content OS — Build Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #e8b84b;
+    --gold-soft: rgba(232,184,75,0.15);
+    --gold-border: rgba(232,184,75,0.3);
+    --ice: #38BDF8;
+    --black: #080808;
+    --surface: rgba(255,255,255,0.04);
+    --surface-raised: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #fff;
+    --text-dim: rgba(255,255,255,0.6);
+    --text-faint: rgba(255,255,255,0.35);
+    --text-ghost: rgba(255,255,255,0.22);
+    --ok: #4ADE80;
+    --warn: #FBBF24;
+    --bad: #F87171;
+    --violet: #A78BFA;
+    --ok-soft: rgba(74,222,128,0.12);
+    --warn-soft: rgba(251,191,36,0.12);
+    --bad-soft: rgba(248,113,113,0.12);
+    --violet-soft: rgba(167,139,250,0.12);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--black);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 48px 24px 96px;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 5%, rgba(232,184,75,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 30%, rgba(56,189,248,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 100%, rgba(232,184,75,0.04) 0%, transparent 60%);
+    line-height: 1.55;
+  }
+
+  .wrap { max-width: 1180px; margin: 0 auto; }
+
+  /* HERO */
+  .hero { text-align: center; padding: 32px 0 48px; }
+  .wordmark {
+    font-size: 10px; font-weight: 700; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--text-ghost); margin-bottom: 24px;
+  }
+  .title {
+    font-size: clamp(36px, 6vw, 62px); font-weight: 800; letter-spacing: -2px; line-height: 1.05;
+    background: linear-gradient(135deg, #fff 20%, var(--gold) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 14px;
+  }
+  .subtitle { font-size: 15px; color: var(--text-dim); max-width: 680px; margin: 0 auto; }
+  .metabar {
+    margin-top: 28px; display: inline-flex; gap: 8px; padding: 6px;
+    border: 1px solid var(--border); border-radius: 100px; background: var(--surface);
+  }
+  .meta-pill {
+    padding: 6px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    color: var(--text-dim); border-radius: 100px;
+  }
+  .meta-pill.gold { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-border); }
+
+  /* OVERALL PROGRESS */
+  .overall {
+    background: linear-gradient(135deg, rgba(232,184,75,0.06) 0%, rgba(56,189,248,0.04) 100%);
+    border: 1px solid var(--gold-border); border-radius: 24px;
+    padding: 32px 40px; margin-bottom: 56px; position: relative; overflow: hidden;
+  }
+  .overall::before {
+    content: ""; position: absolute; top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(232,184,75,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .overall-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px; position: relative;
+  }
+  .overall-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; position: relative; }
+  .overall-num { font-size: 48px; font-weight: 800; letter-spacing: -2px; }
+  .overall-num .unit { font-size: 18px; color: var(--text-dim); margin-left: 4px; letter-spacing: 0; font-weight: 500; }
+  .overall-breakdown { font-size: 12px; color: var(--text-faint); text-align: right; line-height: 1.7; font-family: 'SF Mono','Fira Code',monospace; }
+  .overall-breakdown .ok { color: var(--ok); }
+  .overall-breakdown .warn { color: var(--warn); }
+  .overall-breakdown .bad { color: var(--bad); }
+  .overall-breakdown .neu { color: var(--text-dim); }
+
+  .bar { height: 10px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; position: relative; }
+  .bar > span {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--gold) 0%, #f2cf7a 100%);
+    border-radius: 100px; transition: width 0.6s ease;
+    box-shadow: 0 0 20px rgba(232,184,75,0.35);
+  }
+
+  /* SECTIONS */
+  section { margin-bottom: 64px; scroll-margin-top: 96px; }
+  .sec-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  }
+  .sec-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 6px;
+  }
+  .sec-title { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+  .sec-meta { font-size: 11px; color: var(--text-faint); font-family: 'SF Mono','Fira Code',monospace; }
+
+  /* SUB-PROJECT GRID */
+  .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px; }
+  .proj {
+    background: var(--surface-raised); border: 1px solid var(--border); border-radius: 18px;
+    padding: 24px; position: relative; overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .proj:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+  .proj.ship { border-color: rgba(74,222,128,0.3); }
+  .proj.ship::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--ok), transparent);
+  }
+  .proj.active { border-color: var(--gold-border); }
+  .proj.active::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+  .proj.blocked { border-color: rgba(248,113,113,0.3); }
+  .proj-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+  .proj-letter {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: var(--gold-soft); color: var(--gold);
+    border: 1px solid var(--gold-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800;
+  }
+  .proj.ship .proj-letter { background: var(--ok-soft); color: var(--ok); border-color: rgba(74,222,128,0.3); }
+  .proj.blocked .proj-letter { background: var(--bad-soft); color: var(--bad); border-color: rgba(248,113,113,0.3); }
+  .proj.pending .proj-letter { background: rgba(255,255,255,0.04); color: var(--text-faint); border-color: var(--border); }
+  .proj-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+  .proj-phase { font-size: 10px; color: var(--text-faint); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+  .proj-status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .proj-pct { font-size: 12px; color: var(--text-dim); font-family: 'SF Mono','Fira Code',monospace; }
+  .proj-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; margin-bottom: 18px; }
+  .proj-bar > span {
+    display: block; height: 100%; border-radius: 100px;
+    background: linear-gradient(90deg, var(--gold), #f2cf7a);
+    transition: width 0.6s ease;
+  }
+  .proj.ship .proj-bar > span { background: linear-gradient(90deg, var(--ok), #86efac); }
+  .proj.blocked .proj-bar > span { background: linear-gradient(90deg, var(--bad), #fca5a5); }
+  .proj.pending .proj-bar > span { background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.25)); }
+
+  .proj-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.55; }
+
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .task {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 12.5px; color: var(--text-dim); line-height: 1.5;
+  }
+  .task .box {
+    flex-shrink: 0; width: 16px; height: 16px; border-radius: 5px;
+    border: 1.5px solid var(--border-strong); margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900;
+  }
+  .task.done .box { background: var(--ok-soft); border-color: rgba(74,222,128,0.4); color: var(--ok); }
+  .task.done .box::before { content: "✓"; }
+  .task.done .label { color: var(--text-faint); text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.2); }
+  .task.wip .box { background: var(--gold-soft); border-color: var(--gold-border); color: var(--gold); }
+  .task.wip .box::before { content: "◐"; }
+  .task.wip .label { color: var(--text); font-weight: 500; }
+  .task.blocked .box { background: var(--bad-soft); border-color: rgba(248,113,113,0.4); color: var(--bad); }
+  .task.blocked .box::before { content: "✕"; }
+  .task.blocked .label { color: var(--text-faint); }
+
+  .proj-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 14px; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--text-faint);
+  }
+  .proj-foot .mono { font-family: 'SF Mono','Fira Code',monospace; }
+
+  /* BADGES */
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; border-radius: 100px; border: 1px solid transparent; white-space: nowrap;
+  }
+  .badge::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .b-ok   { color: var(--ok);   background: var(--ok-soft);   border-color: rgba(74,222,128,0.25); }
+  .b-warn { color: var(--warn); background: var(--warn-soft); border-color: rgba(251,191,36,0.25); }
+  .b-bad  { color: var(--bad);  background: var(--bad-soft);  border-color: rgba(248,113,113,0.25); }
+  .b-gold { color: var(--gold); background: var(--gold-soft); border-color: var(--gold-border); }
+  .b-neu  { color: var(--text-dim); background: rgba(255,255,255,0.04); border-color: var(--border); }
+  .b-violet { color: var(--violet); background: var(--violet-soft); border-color: rgba(167,139,250,0.25); }
+
+  /* TIMELINE */
+  .timeline { list-style: none; position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 8px; top: 4px; bottom: 4px;
+    width: 1px; background: var(--border-strong);
+  }
+  .timeline li {
+    position: relative; padding: 8px 0 18px; font-size: 13px; color: var(--text-dim);
+  }
+  .timeline li::before {
+    content: ""; position: absolute; left: -24px; top: 12px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--gold); border: 2px solid var(--black);
+    box-shadow: 0 0 0 1px var(--gold-border);
+  }
+  .timeline .date { font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--text-faint); font-family: 'SF Mono','Fira Code',monospace; margin-bottom: 4px; }
+  .timeline .msg { color: var(--text); }
+  .timeline .sub { color: var(--text-dim); font-size: 12px; margin-top: 3px; }
+
+  /* FILE REFERENCES */
+  .files-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+  .file-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 16px; font-size: 12px;
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    transition: border-color 0.2s;
+  }
+  .file-card:hover { border-color: var(--border-strong); }
+  .file-card .path { font-family: 'SF Mono','Fira Code',monospace; font-size: 11.5px; color: var(--text); }
+  .file-card .desc { color: var(--text-faint); font-size: 11px; margin-top: 2px; }
+
+  .footer { text-align: center; margin-top: 64px; font-size: 11px; color: var(--text-ghost); letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="wordmark">Graydient Media // Internal</div>
+    <h1 class="title">Content OS — Build Tracker</h1>
+    <p class="subtitle">Live status of the 6 sub-projects that turn manual creative work into an orchestrated AI operating system. Every row here is a step closer to Gray doing only what Gray uniquely can do.</p>
+    <div class="metabar" id="metabar"></div>
+  </div>
+
+  <section class="overall">
+    <div class="overall-label">Overall Progress</div>
+    <div class="overall-row">
+      <div class="overall-num" id="overallPct">0<span class="unit">%</span></div>
+      <div class="overall-breakdown" id="overallBreak"></div>
+    </div>
+    <div class="bar"><span id="overallBar" style="width:0%"></span></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">Sub-projects</div>
+        <h2 class="sec-title">A → F — The Build Plan</h2>
+      </div>
+      <div class="sec-meta" id="projMeta"></div>
+    </div>
+    <div class="proj-grid" id="projGrid"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">Activity</div>
+        <h2 class="sec-title">Recent Progress</h2>
+      </div>
+      <div class="sec-meta">chronological, newest first</div>
+    </div>
+    <ul class="timeline" id="timeline"></ul>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div>
+        <div class="sec-tag">Artifacts</div>
+        <h2 class="sec-title">File References</h2>
+      </div>
+      <div class="sec-meta">source of truth</div>
+    </div>
+    <div class="files-grid" id="filesGrid"></div>
+  </section>
+
+  <div class="footer">Edit the DATA object at the top of this file to update the dashboard.</div>
+</div>
+
+<script>
+// ============================================================
+// DATA — edit this object and reload to update the dashboard.
+// Task state: "done" | "wip" | "pending" | "blocked"
+// Sub-project state: "ship" | "active" | "pending" | "blocked"
+// ============================================================
+const DATA = {
+  lastUpdated: "2026-04-21",
+  projects: [
+    {
+      letter: "A",
+      title: "Playbook Edits (Graydient)",
+      phase: "Week 1",
+      state: "ship",
+      badge: { text: "Shipped", cls: "b-ok" },
+      desc: "Surgical edits to the Creative Director Playbook: capacity rules, 7-series list, Layer 7, long-form paths, Sai pointer, one-video-all-platforms.",
+      tasks: [
+        { label: "Insert Capacity & Constraints section", status: "done" },
+        { label: "Expand Content Series 5 → 7 + Flex Rules", status: "done" },
+        { label: "Add Long-Form Production Paths to Layer 3", status: "done" },
+        { label: "Simplify Layer 4 Distribution (one-video-all-platforms)", status: "done" },
+        { label: "Move Audio Strategy to Layer 1", status: "done" },
+        { label: "Insert Layer 7 — Iteration & Tagging System", status: "done" },
+        { label: "Add Sai Karra content pointer", status: "done" }
+      ],
+      target: "Shipped 2026-04-21",
+      link: "business/social-media/content-playbook.md"
+    },
+    {
+      letter: "B",
+      title: "Sai Playbook v1",
+      phase: "Week 2–4",
+      state: "pending",
+      badge: { text: "Awaiting Data", cls: "b-violet" },
+      desc: "Stand up a separate playbook for the Sai Karra brand. Needs post-Week-1 performance data before it can be written accurately.",
+      tasks: [
+        { label: "Complete Sai Week 1 filming + posts", status: "wip" },
+        { label: "Pull 7-day analytics for Sai outputs", status: "pending" },
+        { label: "Draft Sai series list (separate from Graydient)", status: "pending" },
+        { label: "Write business/sai/content-playbook.md", status: "pending" },
+        { label: "Cross-link from Graydient playbook Sai pointer", status: "pending" }
+      ],
+      target: "Week 2–4 of Sai engagement",
+      link: "business/sai/ (pending)"
+    },
+    {
+      letter: "C",
+      title: "Iteration & Tagging System",
+      phase: "Week 1–2",
+      state: "active",
+      badge: { text: "Half Shipped", cls: "b-gold" },
+      desc: "Build the Layer 7 infrastructure — video-log, killed-archive, winning-patterns — in both the file system and the Obsidian vault.",
+      tasks: [
+        { label: "video-log.csv with schema + enums", status: "done" },
+        { label: "killed-archive.md template", status: "done" },
+        { label: "winning-patterns.md template", status: "done" },
+        { label: "Obsidian content-os/video-log/ folder", status: "pending" },
+        { label: "Obsidian content-os/killed-archive/ folder", status: "pending" },
+        { label: "Obsidian content-os/winning-patterns/ folder", status: "pending" },
+        { label: "Script: auto-tag video from Social Analytics pull", status: "pending" }
+      ],
+      target: "Week 1–2",
+      link: "business/social-media/"
+    },
+    {
+      letter: "D",
+      title: "Workflow Inventory + Tool Iteration",
+      phase: "Week 3–4",
+      state: "active",
+      badge: { text: "Inventory Done", cls: "b-gold" },
+      desc: "Rank all 14 tools against the Agent Evolution Framework. Iterate the 6 that pass the hybrid filter — research, hook, pipeline, creator intel, analytics, footage.",
+      tasks: [
+        { label: "Tool inventory doc (all 14 ranked)", status: "done" },
+        { label: "6 SKILL.md skeletons for priority-tier tools", status: "done" },
+        { label: "Content Researcher: daily_trend_brief()", status: "pending" },
+        { label: "Hook Optimizer: batch CLI + Slack", status: "pending" },
+        { label: "Content Pipeline: export_all_formats.py", status: "pending" },
+        { label: "Creator Intel: weekly_outlier_report.py", status: "pending" },
+        { label: "Social Analytics → Analytical SaaS backend", status: "pending" },
+        { label: "Footage Organizer eval.py + test-set.csv", status: "pending" }
+      ],
+      target: "Week 3–4",
+      link: "docs/tool-inventory.md"
+    },
+    {
+      letter: "E",
+      title: "Content OS Command-Center",
+      phase: "Month 2",
+      state: "pending",
+      badge: { text: "Scoped", cls: "b-neu" },
+      desc: "Wrapper tool + manager-agent design. `content-os.py --mode=daily|weekly` ties all of the above into one command. Also absorbs schedule_week.py.",
+      tasks: [
+        { label: "Spec: content-os.py --daily mode", status: "pending" },
+        { label: "Spec: content-os.py --weekly mode", status: "pending" },
+        { label: "Design: manager-agent orchestration shape", status: "pending" },
+        { label: "Build: daily Slack DM integration", status: "pending" },
+        { label: "Build: schedule_week.py (Buffer/Later API)", status: "pending" }
+      ],
+      target: "Month 2",
+      link: "python-scripts/content-os/ (not created)"
+    },
+    {
+      letter: "F",
+      title: "Per-Workflow Skill Builds",
+      phase: "Month 2–N",
+      state: "active",
+      badge: { text: "6 Skeletons Live", cls: "b-gold" },
+      desc: "One agent per workflow. Fill in each SKILL.md with real prompts, guardrails, and cost notes as tools get run end-to-end in production.",
+      tasks: [
+        { label: "Skeletons for 6 priority-tier tools", status: "done" },
+        { label: "content-researcher SKILL.md → full SOP", status: "pending" },
+        { label: "content-pipeline SKILL.md → full SOP", status: "pending" },
+        { label: "creator-intel SKILL.md → full SOP", status: "pending" },
+        { label: "hook-optimizer SKILL.md → full SOP", status: "pending" },
+        { label: "social-media-analytics SKILL.md → full SOP", status: "pending" },
+        { label: "footage-organizer SKILL.md → full SOP", status: "pending" },
+        { label: "Stage-F pass on deferred 8 tools (with production data)", status: "pending" }
+      ],
+      target: "Month 2–N",
+      link: ".claude/skills/"
+    }
+  ],
+  activity: [
+    {
+      date: "2026-04-21",
+      msg: "Sub-projects A, C (file-system half), D shipped in one overnight build",
+      sub: "7 playbook edits • 3 Layer 7 scaffolds • tool-inventory.md • 6 SKILL.md skeletons • content-os-log.md"
+    },
+    {
+      date: "2026-04-15",
+      msg: "Content OS master roadmap approved — six sub-projects A→F",
+      sub: "Design spec at docs/superpowers/specs/2026-04-15-content-playbook-edits-design.md"
+    },
+    {
+      date: "2026-04-15",
+      msg: "All 6 edit sections for sub-project A approved in brainstorming",
+      sub: "Capacity & Constraints • 7-series list • Layer 7 • long-form paths • Sai pointer • one-video-all-platforms"
+    },
+    {
+      date: "2026-04-15",
+      msg: "Hybrid tool-iteration filter adopted (Option 3)",
+      sub: "Iterate NOW only if (1) tool is in content pipeline AND (2) has a known blocking gap"
+    },
+    {
+      date: "2026-04-15",
+      msg: "Agent Evolution Framework adopted",
+      sub: "Manual → Assisted → SOP → Agent → Orchestrated. No advancement below manual quality."
+    }
+  ],
+  files: [
+    { path: "business/social-media/content-playbook.md", desc: "The playbook itself — 7 layers, 7 series" },
+    { path: "docs/superpowers/specs/2026-04-15-content-playbook-edits-design.md", desc: "Master roadmap spec (A → F)" },
+    { path: "decisions/content-os-log.md", desc: "Content OS decision log (scoped separate from main log)" },
+    { path: "business/social-media/video-log.csv", desc: "Layer 7 video tracking (schema + enums)" },
+    { path: "business/social-media/killed-archive.md", desc: "Layer 7 killed series/format archive" },
+    { path: "business/social-media/winning-patterns.md", desc: "Layer 7 winning-patterns registry" },
+    { path: "docs/tool-inventory.md", desc: "All 14 tools ranked by Agent Evolution stage" },
+    { path: ".claude/skills/content-researcher/SKILL.md", desc: "Skeleton — trend brief + Reddit synth" },
+    { path: ".claude/skills/content-pipeline/SKILL.md", desc: "Skeleton — video → drafts folder" },
+    { path: ".claude/skills/creator-intel/SKILL.md", desc: "Skeleton — weekly outlier report" },
+    { path: ".claude/skills/hook-optimizer/SKILL.md", desc: "Skeleton — hook scoring + batch" },
+    { path: ".claude/skills/social-media-analytics/SKILL.md", desc: "Skeleton — 4-platform pull" },
+    { path: ".claude/skills/footage-organizer/SKILL.md", desc: "Skeleton — Haiku Vision clip sorter" }
+  ]
+};
+
+// ============================================================
+// RENDER
+// ============================================================
+function pctOf(tasks) {
+  if (!tasks.length) return 0;
+  const done = tasks.filter(t => t.status === "done").length;
+  const wip  = tasks.filter(t => t.status === "wip").length;
+  return Math.round(((done + wip * 0.5) / tasks.length) * 100);
+}
+
+function render() {
+  const totalTasks = DATA.projects.reduce((n, p) => n + p.tasks.length, 0);
+  const doneTasks  = DATA.projects.reduce((n, p) => n + p.tasks.filter(t => t.status === "done").length, 0);
+  const wipTasks   = DATA.projects.reduce((n, p) => n + p.tasks.filter(t => t.status === "wip").length, 0);
+  const blockTasks = DATA.projects.reduce((n, p) => n + p.tasks.filter(t => t.status === "blocked").length, 0);
+  const overallPct = Math.round(((doneTasks + wipTasks * 0.5) / totalTasks) * 100);
+
+  const ship    = DATA.projects.filter(p => p.state === "ship").length;
+  const active  = DATA.projects.filter(p => p.state === "active").length;
+  const pending = DATA.projects.filter(p => p.state === "pending").length;
+  const blocked = DATA.projects.filter(p => p.state === "blocked").length;
+
+  // Metabar
+  document.getElementById("metabar").innerHTML = `
+    <span class="meta-pill gold">${DATA.projects.length} sub-projects</span>
+    <span class="meta-pill">${ship} shipped</span>
+    <span class="meta-pill">${active} in progress</span>
+    <span class="meta-pill">${pending} pending</span>
+    <span class="meta-pill">Updated ${DATA.lastUpdated}</span>
+  `;
+
+  // Overall
+  document.getElementById("overallPct").innerHTML = `${overallPct}<span class="unit">%</span>`;
+  document.getElementById("overallBar").style.width = overallPct + "%";
+  document.getElementById("overallBreak").innerHTML = `
+    <div><span class="ok">●</span> ${doneTasks} done</div>
+    <div><span class="warn">●</span> ${wipTasks} in progress</div>
+    <div><span class="bad">●</span> ${blockTasks} blocked</div>
+    <div><span class="neu">●</span> ${totalTasks - doneTasks - wipTasks - blockTasks} pending</div>
+  `;
+
+  // Projects meta
+  document.getElementById("projMeta").textContent = `${doneTasks}/${totalTasks} tasks complete`;
+
+  // Project cards
+  document.getElementById("projGrid").innerHTML = DATA.projects.map(p => {
+    const pct = pctOf(p.tasks);
+    const tasksHtml = p.tasks.map(t =>
+      `<li class="task ${t.status}"><span class="box"></span><span class="label">${t.label}</span></li>`
+    ).join("");
+    return `
+      <article class="proj ${p.state}">
+        <div class="proj-head">
+          <div class="proj-letter">${p.letter}</div>
+          <div>
+            <div class="proj-title">${p.title}</div>
+            <div class="proj-phase">${p.phase}</div>
+          </div>
+        </div>
+        <div class="proj-status-row">
+          <span class="badge ${p.badge.cls}">${p.badge.text}</span>
+          <span class="proj-pct">${pct}%</span>
+        </div>
+        <div class="proj-bar"><span style="width:${pct}%"></span></div>
+        <p class="proj-desc">${p.desc}</p>
+        <ul class="task-list">${tasksHtml}</ul>
+        <div class="proj-foot">
+          <span>${p.target}</span>
+          <span class="mono">${p.link}</span>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  // Timeline
+  document.getElementById("timeline").innerHTML = DATA.activity.map(a => `
+    <li>
+      <div class="date">${a.date}</div>
+      <div class="msg">${a.msg}</div>
+      <div class="sub">${a.sub}</div>
+    </li>
+  `).join("");
+
+  // Files
+  document.getElementById("filesGrid").innerHTML = DATA.files.map(f => `
+    <div class="file-card">
+      <div>
+        <div class="path">${f.path}</div>
+        <div class="desc">${f.desc}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+render();
+</script>
+</body>
+</html>

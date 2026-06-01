@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1
+python-dotenv
+anthropic
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+requests
+stripe
+python-multipart

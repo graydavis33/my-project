@@ -1,0 +1,298 @@
+"""
+slack_bot.py
+Handles all Slack interactions:
+  - Sending draft notifications with Send / Edit / Skip buttons
+  - Listening for button clicks via Socket Mode
+  - Triggering Gmail send when user approves a draft
+"""
+
+import json
+import os
+import time
+import threading
+from slack_sdk import WebClient
+from slack_sdk.socket_mode import SocketModeClient
+from slack_sdk.socket_mode.response import SocketModeResponse
+from slack_sdk.socket_mode.request import SocketModeRequest
+
+from config import SLACK_BOT_TOKEN, SLACK_APP_TOKEN, SLACK_USER_ID, EMAIL_ALERTS_CHANNEL_ID
+
+web_client = WebClient(token=SLACK_BOT_TOKEN)
+
+# Stores pending drafts in memory: { email_id -> { email, draft, send_callback, created_at } }
+pending_drafts = {}
+
+_DRAFTS_FILE = os.path.join(os.path.dirname(__file__), "pending_drafts.json")
+_STATS_FILE = os.path.join(os.path.dirname(__file__), "draft_stats.json")
+_DRAFT_TTL_SECONDS = 7 * 24 * 3600  # drop drafts older than 7 days
+
+
+def _update_stats(action: str):
+    """Increment sent/skipped/edited counter in draft_stats.json."""
+    try:
+        if os.path.exists(_STATS_FILE):
+            with open(_STATS_FILE) as f:
+                stats = json.load(f)
+        else:
+            stats = {"sent": 0, "skipped": 0, "edited": 0, "last_action_at": None}
+        stats[action] = stats.get(action, 0) + 1
+        stats["last_action_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
+        with open(_STATS_FILE, "w") as f:
+            json.dump(stats, f, indent=2)
+    except Exception:
+        pass  # stats are non-critical, never crash over them
+
+
+def _save_pending_drafts():
+    """Persist email+draft data to disk. Callbacks can't be serialized so they're excluded."""
+    serializable = {
+        k: {"email": v["email"], "draft": v["draft"], "created_at": v["created_at"]}
+        for k, v in pending_drafts.items()
+    }
+    with open(_DRAFTS_FILE, "w") as f:
+        json.dump(serializable, f, indent=2)
+
+
+def load_persisted_drafts():
+    """Return drafts saved from a previous run, dropping any older than 7 days."""
+    if not os.path.exists(_DRAFTS_FILE):
+        return {}
+    try:
+        with open(_DRAFTS_FILE) as f:
+            data = json.load(f)
+        cutoff = time.time() - _DRAFT_TTL_SECONDS
+        return {k: v for k, v in data.items() if v.get("created_at", 0) > cutoff}
+    except Exception:
+        return {}
+
+
+def register_draft(email, draft, send_callback):
+    """Add a draft to pending_drafts without posting to Slack (used when restoring on startup)."""
+    pending_drafts[email["id"]] = {
+        "email": email,
+        "draft": draft,
+        "send_callback": send_callback,
+        "created_at": time.time(),
+    }
+    _save_pending_drafts()
+
+
+def send_draft_notification(email, draft, send_callback):
+    """
+    Send a Slack DM to Gray with the draft and action buttons.
+    send_callback(draft_text) is called when the user hits Send.
+    """
+    action_id = email["id"]
+    pending_drafts[action_id] = {
+        "email": email,
+        "draft": draft,
+        "send_callback": send_callback,
+        "created_at": time.time(),
+    }
+    _save_pending_drafts()
+
+    sender_name = email["from"].split("<")[0].strip() or email["from"]
+
+    blocks = [
+        {
+            "type": "header",
+            "text": {"type": "plain_text", "text": "📬 Email needs a reply"},
+        },
+        {
+            "type": "section",
+            "fields": [
+                {"type": "mrkdwn", "text": f"*From:*\n{email['from']}"},
+                {"type": "mrkdwn", "text": f"*Subject:*\n{email['subject']}"},
+            ],
+        },
+        {"type": "divider"},
+        {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": f"*Original message:*\n{email['body'][:400]}…"},
+        },
+        {"type": "divider"},
+        {
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": f"*Suggested reply:*\n```{draft}```"},
+        },
+        {
+            "type": "actions",
+            "elements": [
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "✅ Send"},
+                    "style": "primary",
+                    "action_id": f"send_{action_id}",
+                    "value": action_id,
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "✏️ Edit & Send"},
+                    "action_id": f"edit_{action_id}",
+                    "value": action_id,
+                },
+                {
+                    "type": "button",
+                    "text": {"type": "plain_text", "text": "❌ Skip"},
+                    "style": "danger",
+                    "action_id": f"skip_{action_id}",
+                    "value": action_id,
+                },
+            ],
+        },
+    ]
+
+    web_client.chat_postMessage(channel=EMAIL_ALERTS_CHANNEL_ID, blocks=blocks, text="New email draft ready")
+
+
+def handle_action(client: SocketModeClient, req: SocketModeRequest):
+    """Process button clicks from Slack."""
+    if req.type != "interactive":
+        return
+
+    client.send_socket_mode_response(SocketModeResponse(envelope_id=req.envelope_id))
+
+    payload = req.payload
+    action = payload["actions"][0]
+    action_id_full = action["action_id"]
+    email_id = action["value"]
+    channel = payload["channel"]["id"]
+    message_ts = payload["message"]["ts"]
+
+    if email_id not in pending_drafts:
+        web_client.chat_postMessage(channel=channel, text="⚠️ This draft has already been handled.")
+        return
+
+    entry = pending_drafts.pop(email_id)
+
+    if action_id_full.startswith("send_"):
+        entry["send_callback"](entry["draft"])
+        _save_pending_drafts()
+        _update_stats("sent")
+        web_client.chat_update(
+            channel=channel,
+            ts=message_ts,
+            text=f"✅ Reply sent to *{entry['email']['from']}*.",
+            blocks=[],
+        )
+
+    elif action_id_full.startswith("edit_"):
+        # Open a Slack modal for editing
+        trigger_id = payload["trigger_id"]
+        web_client.views_open(
+            trigger_id=trigger_id,
+            view={
+                "type": "modal",
+                "callback_id": f"submit_edit_{email_id}",
+                "title": {"type": "plain_text", "text": "Edit your reply"},
+                "submit": {"type": "plain_text", "text": "Send"},
+                "close": {"type": "plain_text", "text": "Cancel"},
+                "private_metadata": json.dumps({
+                    "email_id": email_id,
+                    "channel": channel,
+                    "message_ts": message_ts,
+                    "email": entry["email"],
+                    "send_callback_key": email_id,
+                }),
+                "blocks": [
+                    {
+                        "type": "input",
+                        "block_id": "reply_block",
+                        "element": {
+                            "type": "plain_text_input",
+                            "action_id": "reply_text",
+                            "multiline": True,
+                            "initial_value": entry["draft"],
+                        },
+                        "label": {"type": "plain_text", "text": "Your reply"},
+                    }
+                ],
+            },
+        )
+        # Re-add to pending so modal submit can find it
+        pending_drafts[email_id] = entry
+        _save_pending_drafts()
+
+    elif action_id_full.startswith("skip_"):
+        _save_pending_drafts()
+        _update_stats("skipped")
+        web_client.chat_update(
+            channel=channel,
+            ts=message_ts,
+            text=f"❌ Skipped email from *{entry['email']['from']}*.",
+            blocks=[],
+        )
+
+
+def handle_view_submission(client: SocketModeClient, req: SocketModeRequest):
+    """Handle the Edit modal when user submits edited text."""
+    if req.type != "interactive":
+        return
+
+    payload = req.payload
+    if payload.get("type") != "view_submission":
+        return
+
+    client.send_socket_mode_response(SocketModeResponse(envelope_id=req.envelope_id))
+
+    callback_id = payload["view"]["callback_id"]
+    if not callback_id.startswith("submit_edit_"):
+        return
+
+    metadata = json.loads(payload["view"]["private_metadata"])
+    email_id = metadata["email_id"]
+    channel = metadata["channel"]
+    message_ts = metadata["message_ts"]
+
+    edited_text = (
+        payload["view"]["state"]["values"]["reply_block"]["reply_text"]["value"]
+    )
+
+    if email_id in pending_drafts:
+        entry = pending_drafts.pop(email_id)
+        entry["send_callback"](edited_text)
+        _save_pending_drafts()
+        _update_stats("edited")
+        web_client.chat_update(
+            channel=channel,
+            ts=message_ts,
+            text=f"✅ Edited reply sent to *{entry['email']['from']}*.",
+            blocks=[],
+        )
+
+
+def send_followup_alert(entries):
+    """Send a Slack DM listing threads that haven't gotten a reply in 3+ days."""
+    if not entries:
+        return
+    from datetime import datetime
+    lines = ["*⏰ Follow-up reminders — no reply yet:*\n"]
+    for e in entries:
+        sent = datetime.fromtimestamp(e["sent_at"]).strftime("%b %d")
+        lines.append(f"• *{e['subject']}* — {e['recipient']} (your reply sent {sent})")
+    web_client.chat_postMessage(
+        channel=EMAIL_ALERTS_CHANNEL_ID,
+        text="\n".join(lines),
+    )
+
+
+def start_listener():
+    """Start the Slack Socket Mode listener in a background thread with auto-reconnect."""
+
+    def run():
+        while True:
+            try:
+                socket_client = SocketModeClient(app_token=SLACK_APP_TOKEN, web_client=web_client)
+                socket_client.socket_mode_request_listeners.append(handle_action)
+                socket_client.socket_mode_request_listeners.append(handle_view_submission)
+                socket_client.connect()
+                # Check every 30s — reconnect if connection drops
+                while socket_client.is_connected():
+                    time.sleep(30)
+                print("Slack Socket Mode disconnected. Reconnecting in 10s...")
+            except Exception as e:
+                print(f"Slack listener error: {e}. Reconnecting in 10s...")
+            time.sleep(10)
+
+    thread = threading.Thread(target=run, daemon=True)
+    thread.start()

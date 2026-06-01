@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"particleCount","type":"number","label":"Particle count","default":120},{"id":"totalDuration","type":"number","label":"Total animation (s)","default":2.7},{"id":"launchSpeed","type":"number","label":"Launch speed (px/s)","default":2400},{"id":"gravity","type":"number","label":"Gravity (px/s²)","default":2200},{"id":"seed","type":"number","label":"Random seed","default":42}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key — Gray keys this out in Premiere */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .particle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        will-change: transform;
+        transform-origin: center center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+      }
+
+      .particle.rect   { width: 26px; height: 10px; border-radius: 2px; }
+      .particle.square { width: 18px; height: 18px; border-radius: 3px; }
+      .particle.strip  { width: 34px; height: 6px;  border-radius: 3px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="2.8" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="2.8" data-track-index="1"></div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+        const scene = document.getElementById("scene");
+
+        // Deterministic seeded LCG — no Math.random() allowed in HyperFrames
+        let seed = (vars.seed | 0) || 42;
+        function rand() {
+          seed = (seed * 9301 + 49297) % 233280;
+          return seed / 233280;
+        }
+
+        // Two confetti cannons positioned OFF-SCREEN (below + outside the 1080×1920 frame)
+        // so the origin points are never visible — particles fly INTO frame from out of view.
+        const cannons = [
+          { x: -60,   y: 2060, baseAngleDeg: -62 }, // off bottom-left  → up & right
+          { x: 1140,  y: 2060, baseAngleDeg: -118 } // off bottom-right → up & left
+        ];
+
+        const shapes = ["rect", "square", "strip"];
+
+        // Vibrant confetti palette — avoids greens/yellow-greens that would
+        // get pulled by the #00FF00 chroma key in Premiere.
+        const palette = [
+          "#F28129", // brand orange
+          "#FFFFFF", // brand white
+          "#FF3B7C", // hot pink
+          "#FFD23F", // sunshine yellow
+          "#3FB8E0", // sky blue
+          "#A36BFF", // purple
+          "#FF6B35"  // coral
+        ];
+
+        // === Physics: simulate parabolic motion, sample N keyframes per particle ===
+        // y(t) = y0 + vy0 * t + 0.5 * g * t²    (downward = +y)
+        // x(t) = x0 + vx0 * t
+        const STEPS = 24; // smoothness of arc
+        const totalDur = vars.totalDuration;
+        const g = vars.gravity;
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        for (let i = 0; i < vars.particleCount; i++) {
+          const cannon = cannons[i % 2];
+          const shape  = shapes[i % shapes.length];
+          const color  = palette[(i + Math.floor(rand() * palette.length)) % palette.length];
+
+          // ±26° spread around base launch angle
+          const angleDeg = cannon.baseAngleDeg + (rand() - 0.5) * 52;
+          const angleRad = angleDeg * Math.PI / 180;
+
+          // Per-particle launch speed (some go higher, some shorter)
+          const v0 = vars.launchSpeed * (0.65 + rand() * 0.55);
+          const vx0 = Math.cos(angleRad) * v0;
+          const vy0 = Math.sin(angleRad) * v0; // negative because angle is up
+
+          // Per-particle stagger — cannon fires aren't perfectly simultaneous
+          const delay = rand() * 0.18;
+
+          // Rotation — each particle spins continuously through its flight
+          const startRot = rand() * 360;
+          const spinDir  = rand() < 0.5 ? -1 : 1;
+          const totalRot = startRot + spinDir * (540 + rand() * 720);
+
+          // Build particle DOM
+          const el = document.createElement("div");
+          el.className = "particle " + shape;
+          el.style.background = color;
+          el.style.left = cannon.x + "px";
+          el.style.top  = cannon.y + "px";
+          scene.appendChild(el);
+
+          // Sample the parabola at STEPS+1 points to give GSAP a smooth keyframe path
+          const xs = [];
+          const ys = [];
+          const rots = [];
+          for (let s = 1; s <= STEPS; s++) {
+            const t = (s / STEPS) * totalDur;
+            const x = vx0 * t;                            // offset from cannon
+            const y = vy0 * t + 0.5 * g * t * t;          // offset from cannon
+            xs.push(x);
+            ys.push(y);
+            rots.push(startRot + (totalRot - startRot) * (s / STEPS));
+          }
+
+          // Set initial transform, then one continuous tween over the full duration.
+          // ease "none" because the PHYSICS already provides realistic acceleration —
+          // the keyframes are denser at the apex and faster near the bottom.
+          gsap.set(el, { x: 0, y: 0, rotation: startRot });
+
+          tl.to(el, {
+            keyframes: { x: xs, y: ys, rotation: rots, ease: "none" },
+            duration: totalDur,
+            ease: "none"
+          }, delay);
+        }
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

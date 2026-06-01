@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "Excuse me sir...",
+    "text_style": "White font, regular weight, centered lower-middle position",
+    "shot_type": "medium",
+    "framing": "Man in black jacket and gray pants viewed from behind, approaching someone off-screen to the right; urban street corner with traffic light, buildings, and pedestrians in background",
+    "subject_appearance": "Male wearing black zip-up jacket over light colored shirt and gray/khaki pants",
+    "setting": "Urban street corner, downtown",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "orange and red circular logo with white text, positioned lower right corner",
+    "shot_type": "medium close-up",
+    "framing": "single male subject in profile facing left, positioned slightly left of center, blurred street and pedestrians in background",
+    "subject_appearance": "older male wearing dark navy blazer over light blue dress shirt, thin-framed eyeglasses, receding hairline.",
+    "setting": "urban street, crosswalk",
+    "broll": false,
+    "energy": "low"
+  },
+  {
+    "on_screen_text": "We grow old too soon...",
+    "text_style": "White sans-serif font, bold, center-bottom position with slight drop shadow for readability",
+    "shot_type": "medium close-up",
+    "framing": "Middle-aged man in profile-facing left, holding microphone toward camera, trees and park setting blurred in background",
+    "subject_appearance": "Bald man with receding hairline wearing dark navy blazer over light blue button-up shirt and dark-framed glasses.",
+    "setting": "Outdoor park or tree-lined street",
+    "broll": false,
+    "energy": "medium"
+  },
+  {
+    "on_screen_text": "whatever religion you are",
+    "text_style": "White sans-serif font, medium weight, centered lower third of frame",
+    "shot_type": "medium",
+    "framing": "Two men facing each other on a city street during an interview; man on left in black jacket, man on right in dark blazer and light blue shirt; FedEx truck and urban buildings visible in background",
+    "subject_appearance": "Left subject wears dark jacket with casual styling; right subject wears navy blazer over light blue button-up shirt and glasses.",
+    "setting": "Urban street, downtown area",
+    "broll": false,
+    "energy": "medium"
+  }
+]

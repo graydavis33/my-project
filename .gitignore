@@ -1,44 +1,105 @@
-# Python
-venv/
-.venv/
+# ============================================================
+# SECRETS & CREDENTIALS — NEVER COMMIT THESE
+# ============================================================
+.env
+.env.*
+*.env
+*.key
+
+# Google OAuth tokens (live access to your Google account)
+token.json
+token*.json
+token*.bak*
+*.bak
+*.bak.*
+
+# Google API client secrets (your app's credentials)
+client_secret*.json
+credentials.json
+*-token.txt
+
+# ============================================================
+# RUNTIME CACHE FILES (generated, not for version control)
+# ============================================================
+.analysis_cache.json
+.comment_summary_cache.json
+.scanned_receipt_ids.json
+.scanned_ids.json
+.expense_cache.json
+
+# ============================================================
+# PYTHON
+# ============================================================
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+*.egg
 .pytest_cache/
 
-# Node
+# ============================================================
+# NODE
+# ============================================================
 node_modules/
 .npm/
 
-# Logs
+# ============================================================
+# LOGS & TEMP FILES
+# ============================================================
+logs/
 *.log
-
-# Secrets — never commit these
-.env
-.env.*
-*.key
-credentials.json
-client_secret*.json
-token.json
-*-token.txt
-
-# OS
+*.tmp
+*.bak
 .DS_Store
 Thumbs.db
 
-# Editor
-.vscode/
+# ============================================================
+# EDITOR / IDE
+# ============================================================
+.vscode/settings.json
 .idea/
 *.swp
+*.swo
 
-# Intermediate artifacts (sai-captions)
+# ============================================================
+# MCP SERVER ARTIFACTS (browser sessions, screenshots, dumps)
+# ============================================================
+.playwright-mcp/
+
+# ============================================================
+# PROJECT-SPECIFIC
+# ============================================================
+# Add any output files you don't want tracked
+test.txt
+
+# Personal Assistant — runtime state files
+task_queue.json
+pending_drafts.json
+
+# Footage organizer — local test-set has machine-specific paths
+python-scripts/footage-organizer/test-set.csv
+
+# Asset generator — rendered output (PNG sequences, MOVs) is regenerable from code
+python-scripts/asset-generator/output/
+
+# Sai-captions — intermediate workspace artifacts (frame extracts, sample renders)
 python-scripts/sai-captions/workspace/
 
-# HyperFrames renders (large MP4s belong on Footage SSD, not git)
+# HyperFrames — render outputs (large MP4s belong on Footage SSD, not git)
 **/renders/
 *.mp4
 !**/.gitkeep
 
-# Story-arc-playbook: raw VTT subtitle dumps (cleaned .txt is kept)
+# Story-arc-playbook — raw VTT subtitle dumps (cleaned .txt transcripts are kept)
 business/social-media/story-arc-playbook/_transcripts/*.vtt
+
+# Note: analytical.db is intentionally tracked (cross-machine sync)
+# Will be removed + .gitignored once Analytical has real users (PII concern)

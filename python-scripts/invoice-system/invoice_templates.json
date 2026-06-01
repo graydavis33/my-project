@@ -1,0 +1,35 @@
+[
+  {
+    "name": "Videography - Half Day (4h)",
+    "description": "Videography - Half Day",
+    "type": "hourly",
+    "rate": 0,
+    "hours": 4
+  },
+  {
+    "name": "Videography - Full Day (8h)",
+    "description": "Videography - Full Day",
+    "type": "hourly",
+    "rate": 0,
+    "hours": 8
+  },
+  {
+    "name": "Video Editing (hourly)",
+    "description": "Video Editing",
+    "type": "hourly",
+    "rate": 0,
+    "hours": 0
+  },
+  {
+    "name": "Social Media Content Package (flat fee)",
+    "description": "Social Media Content Package",
+    "type": "flat",
+    "flat_fee": 0
+  },
+  {
+    "name": "Rush Delivery Fee (flat fee)",
+    "description": "Rush Delivery Fee",
+    "type": "flat",
+    "flat_fee": 0
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "on_screen_text": "SCHOOL OF HARD KNOCKS",
+    "text_style": "white and red circular logo badge, bottom right corner, bold serif font",
+    "shot_type": "medium close-up",
+    "framing": "woman in foreground center-right, smiling, engaged in conversation; second woman partially visible left edge; indoor setting with white walls and glass door behind",
+    "subject_appearance": "Woman wearing black and white floral patterned blazer, white undershirt, pearl drop earrings, and gold jewelry, holding a drink; another woman in white lace top visible on left",
+    "setting": "indoor lobby or entrance area",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "and I inherited $3 million in debt.",
+    "text_style": "White sans-serif font, bold, center-positioned lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Female subject speaking to off-camera interviewer holding microphone, partial view of another person's shoulder on left edge, indoor hallway background",
+    "subject_appearance": "Woman with shoulder-length wavy brown hair wearing an elegant black and gold floral patterned blazer, pearl necklace, pearl earrings, and light-colored pants.",
+    "setting": "Indoor hallway or building lobby",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "In the things that you can't get.",
+    "text_style": "White sans-serif font, bold weight, centered lower third of frame",
+    "shot_type": "medium close-up",
+    "framing": "Woman centered in frame, speaking directly to camera while holding a microphone, indoor setting with white paneled walls and door visible in background",
+    "subject_appearance": "Middle-aged woman with shoulder-length brown wavy hair, wearing a black and white patterned blazer, pearl earrings, and a necklace, holding a black microphone",
+    "setting": "Indoor hallway or lobby area",
+    "broll": false,
+    "energy": "high"
+  },
+  {
+    "on_screen_text": "You have amazing advice.",
+    "text_style": "white text with black outline, bold font, centered lower-middle of frame",
+    "shot_type": "medium",
+    "framing": "two people from roughly waist-up, man in foreground facing left in profile, woman in background facing camera with slight smile, indoor setting with neutral white/beige walls",
+    "subject_appearance": "man wearing white ribbed crew-neck sweater, woman wearing white V-neck top with gold chain necklace and pearl stud earring, woman has shoulder-length blonde hair",
+    "setting": "indoor lobby or corridor",
+    "broll": false,
+    "energy": "medium"
+  }
+]
