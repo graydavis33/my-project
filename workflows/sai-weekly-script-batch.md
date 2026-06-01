@@ -1,11 +1,13 @@
 # Sai — Weekly Script Batch (SOP)
 
-Repeatable workflow for turning Sai's weekly voice memos into 7 short-form scripts that get batch-filmed in one day.
+Repeatable workflow for turning Sai's weekly voice memos into short-form scripts that get batch-filmed in one day. This is **Stage 1 (scripting)** of the master pipeline — see [sai-batch-video-production.md](sai-batch-video-production.md) for the full Saturday → Sunday → Monday rhythm and the token rules.
 
-**Cadence:**
-- **Day before filming:** Sai records voice memo(s). Gray runs this SOP, Sai reviews scripts, both finalize.
-- **Filming day (default Tuesday):** Sai batch-films all 7 in one session.
-- **Following days:** post 1/day Mon–Fri, save reserves for catch-up days.
+**Cadence (current rhythm — updated 2026-06-01):**
+- **Saturday (Preproduction):** Sai recaps the week → records 30–60 min of voice memos → Gray runs this SOP → Sai reviews scripts, both finalize. Scripts must be reviewed multiple times and approved before filming.
+- **Sunday (Production):** Sai batch-films every approved script as talking-head, vertical, **3 different hooks each** (for trial reels).
+- **Monday (Post-Production):** trim → caption → graphics → review → publish. Vid 1 posts Monday; rest finished by end of day. Post the others across the week; Gray decides how many of the 3 hook variants go live.
+
+> Each script gets **3 hook options (A/B/C)** in the batch file — these are the 3 hooks filmed on Sunday. Always provide three genuinely different angles.
 
 **Output:** Two files per week:
 1. `business/social-media/sai/scripts/YYYY-MM-DD-batch.md` — the 7 picked scripts for that week
