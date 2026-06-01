@@ -1,0 +1,44 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Node
+node_modules/
+.npm/
+
+# Logs
+*.log
+
+# Secrets — never commit these
+.env
+.env.*
+*.key
+credentials.json
+client_secret*.json
+token.json
+*-token.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Intermediate artifacts (sai-captions)
+python-scripts/sai-captions/workspace/
+
+# HyperFrames renders (large MP4s belong on Footage SSD, not git)
+**/renders/
+*.mp4
+!**/.gitkeep
+
+# Story-arc-playbook: raw VTT subtitle dumps (cleaned .txt is kept)
+business/social-media/story-arc-playbook/_transcripts/*.vtt
