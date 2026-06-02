@@ -9,6 +9,7 @@
 # Google OAuth tokens (live access to your Google account)
 token.json
 token*.json
+*token*.json
 token*.bak*
 *.bak
 *.bak.*
