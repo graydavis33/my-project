@@ -12,6 +12,15 @@ Turn one weekly sit-down with Sai into a batch of finished short-form videos, on
 
 Target cadence: **7 shorts/week now → 2 videos/day by August.**
 
+## Scope — which shorts this covers
+
+There are **two tiers of Sai shorts**, and this SOP is about the first one:
+
+- **Batch / produced shorts (THIS SOP)** — the polished ones with graphics + effects, made on the Saturday→Monday rhythm. These get HyperFrames graphics, captions, the full pipeline.
+- **UGC shorts (NOT this SOP)** — when Sai grabs his phone and films something quick. Strip-down editing, **no graphics / B-roll / music**, Sai films and edits himself. Those follow the per-platform SOPs in `business/sai-karra/content-os/` (`tiktok-sop.md`, `instagram-reels-sop.md`, etc.).
+
+The detailed editing mechanics for batch shorts (exact trim rules, caption pixel positions, paths, fps) live in **[business/sai-karra/content-os/sai-shorts-editing-sop.md](../business/sai-karra/content-os/sai-shorts-editing-sop.md)** — this master SOP is the higher-level rhythm and links to it for the how.
+
 ---
 
 ## THE TOKEN RULE (read first — this is why the SOP exists)
@@ -60,7 +69,7 @@ Scripting draws on three inputs:
 - **The story-arc-playbook** (`business/social-media/story-arc-playbook/`) — structure, frameworks, hooks, viral patterns (built from 8 reference-video transcripts on 2026-06-01)
 - **The Sai style guide** (`business/social-media/sai/sai-script-style-guide.md`) — makes it sound like Sai
 
-The script-writer subagent (`.claude/agents/sai-script-writer.md`) wraps this so the big reference files load in the agent's context, not the main session — keeping tokens low.
+The `scriptwriter` subagent (`.claude/agents/scriptwriter.md`) wraps this so the big reference files load in the agent's context, not the main session — keeping tokens low. (Writes in Sai's voice-memo voice — never his LinkedIn voice — for shorts.)
 
 **Definition of done:** every script reviewed multiple times and **approved by Sai**.
 
@@ -83,6 +92,10 @@ The script-writer subagent (`.claude/agents/sai-script-writer.md`) wraps this so
 ## Stage 3 — Post-Production (Monday)
 
 **Runs on Windows** — the PC handles the heavier load and finishes far faster (RTX GPU + footage live on `D:` / the Footage SSD).
+
+**Full mechanics** (exact trim rules, caption positions, paths) → [sai-shorts-editing-sop.md](../business/sai-karra/content-os/sai-shorts-editing-sop.md). This is the rhythm overview.
+
+**Frame-rate rule:** trim, captions, and the final delivered video are **24fps (23.976)**. The ONLY thing rendered at **60fps is the HyperFrames graphics** — so Gray can speed-adjust them in Premiere without losing quality. (Note: the editing SOP's Step 3 graphic-render line should read `--fps 60`, not 24 — fixed in that doc.)
 
 **Batch logic:**
 - **Vid 1 must post Monday**; the rest are edited by end of Monday.
@@ -173,7 +186,10 @@ If a step ever feels like it's burning tokens, the cause is almost always **medi
 - [workflows/footage-organizer.md](footage-organizer.md) — pulling/organizing footage
 - `business/social-media/story-arc-playbook/` — structure/hook reference for scripting
 - `business/social-media/sai/sai-script-style-guide.md` — Sai's voice
-- `.claude/agents/sai-script-writer.md` — the script-writer subagent (built alongside this SOP)
+- [business/sai-karra/content-os/sai-shorts-editing-sop.md](../business/sai-karra/content-os/sai-shorts-editing-sop.md) — detailed editing mechanics for batch shorts
+- `business/sai-karra/content-os/` — per-platform SOPs (incl. UGC-shorts tier)
+- `workflows/caption-standards.md` — house caption rules (font/case/position)
+- `.claude/agents/scriptwriter.md` — the scriptwriter subagent
 - Memory: `sai-motion-graphics-2026-05-27`, `sai-captions-tool`, `hyperframes-usage`, `notion-content-calendar`
 </content>
 </invoke>

@@ -29,7 +29,7 @@ You are Gray Davis's AI operator and executive assistant. Read context files to 
 - `.claude/commands/` — slash commands: /prime, /create-plan, /implement, /save
 - `.claude/rules/` — behavior rules loaded every session (communication, code, habits, build-discipline)
 - `.claude/skills/` — custom skills (3 active — see below)
-- `.claude/agents/` — custom subagents. `sai-script-writer` (drafts Sai shorts scripts from a transcript using the playbook + style guide, in its own context to save tokens).
+- `.claude/agents/` — custom subagents. `scriptwriter` (writes viral scripts in Gray's OR Sai's voice, all formats, grounded in the story-arc-playbook; runs in its own context to save tokens). Implements `docs/superpowers/specs/2026-06-02-scriptwriter-subagent-design.md`.
 - `audits/` — periodic workspace audit reports. Baseline: `2026-04-20-workspace-audit.html`
 
 **Root files:**
