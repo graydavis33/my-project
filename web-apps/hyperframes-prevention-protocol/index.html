@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #050505;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      }
+      #stage {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        background: radial-gradient(ellipse 110% 90% at 50% 32%, #131005 0%, #060606 55%, #000 100%);
+        overflow: hidden;
+      }
+
+      /* perspective grid */
+      .grid-wrap {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        mix-blend-mode: screen;
+      }
+      .grid-wrap svg { width: 100%; height: 100%; display: block; }
+
+      /* subtle vignette over grid edges */
+      .vignette {
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 80% 60% at 50% 55%, transparent 0%, transparent 35%, rgba(0,0,0,0.85) 100%);
+        pointer-events: none;
+        opacity: 0.95;
+      }
+
+      /* center card */
+      .card-wrap {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+      .card {
+        position: relative;
+        width: 900px;
+        height: 480px;
+        border-radius: 36px;
+        background: linear-gradient(180deg, #0c0a09 0%, #060504 100%);
+        border: 2px solid #F28129;
+        box-shadow:
+          0 0 60px rgba(242, 129, 41, 0.55),
+          0 0 130px rgba(242, 129, 41, 0.30),
+          inset 0 0 40px rgba(242, 129, 41, 0.10);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 56px 40px;
+        gap: 36px;
+      }
+      .card-glow {
+        position: absolute;
+        inset: -8px;
+        border-radius: 44px;
+        pointer-events: none;
+        box-shadow:
+          0 0 70px 4px rgba(242, 129, 41, 0.45);
+        opacity: 0.9;
+      }
+
+      /* shield */
+      .shield {
+        width: 170px;
+        height: 200px;
+        opacity: 0;
+        transform-origin: 50% 50%;
+        will-change: transform, opacity;
+        filter: drop-shadow(0 0 14px rgba(242, 129, 41, 0.55));
+      }
+
+      /* title */
+      .title {
+        font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 56px;
+        color: #F28129;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 1;
+        opacity: 0;
+        will-change: transform, opacity;
+        text-shadow: 0 0 18px rgba(242, 129, 41, 0.55);
+      }
+
+      /* caption at bottom — matches the soft, medium-weight sans-serif of the
+         reference image's auto-captions (Inter Medium 500, modest size, tight
+         tracking; reads as friendly/legible rather than display-bold). */
+      .caption {
+        position: absolute;
+        left: 50%;
+        bottom: 250px;
+        transform: translateX(-50%);
+        font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-weight: 500;
+        font-size: 52px;
+        color: #ffffff;
+        letter-spacing: -0.005em;
+        text-align: center;
+        max-width: 880px;
+        line-height: 1.22;
+        opacity: 0;
+        will-change: transform, opacity;
+        text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="stage" class="clip" data-start="0" data-duration="5" data-track-index="1">
+        <!-- perspective grid: receding floor + ceiling halo -->
+        <div class="grid-wrap" id="grid" data-layout-allow-overflow>
+          <svg viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="vanish" cx="50%" cy="32%" r="70%">
+                <stop offset="0%" stop-color="#F28129" stop-opacity="0.55"/>
+                <stop offset="35%" stop-color="#F28129" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#F28129" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="lineFade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#F28129" stop-opacity="0"/>
+                <stop offset="22%" stop-color="#F28129" stop-opacity="0.04"/>
+                <stop offset="55%" stop-color="#F28129" stop-opacity="0.55"/>
+                <stop offset="100%" stop-color="#F28129" stop-opacity="0.85"/>
+              </linearGradient>
+            </defs>
+            <!-- subtle radial sphere/atmosphere -->
+            <circle cx="540" cy="620" r="900" fill="url(#vanish)"/>
+
+            <!-- 13 receding vertical lines from vanishing point (540, 620) to bottom edge -->
+            <g stroke="url(#lineFade)" stroke-width="1.6" fill="none" opacity="0.85">
+              <!-- vanishing point (540, 620), bottom y=1920 -->
+              <line x1="540" y1="620" x2="-200" y2="1920"/>
+              <line x1="540" y1="620" x2="-60" y2="1920"/>
+              <line x1="540" y1="620" x2="80" y2="1920"/>
+              <line x1="540" y1="620" x2="220" y2="1920"/>
+              <line x1="540" y1="620" x2="340" y2="1920"/>
+              <line x1="540" y1="620" x2="440" y2="1920"/>
+              <line x1="540" y1="620" x2="540" y2="1920"/>
+              <line x1="540" y1="620" x2="640" y2="1920"/>
+              <line x1="540" y1="620" x2="740" y2="1920"/>
+              <line x1="540" y1="620" x2="860" y2="1920"/>
+              <line x1="540" y1="620" x2="1000" y2="1920"/>
+              <line x1="540" y1="620" x2="1140" y2="1920"/>
+              <line x1="540" y1="620" x2="1280" y2="1920"/>
+            </g>
+
+            <!-- horizontal arcs receding (10 arcs growing wider as they come closer) -->
+            <g stroke="#F28129" stroke-width="1.4" fill="none" opacity="0.55" id="hgrid">
+              <!-- arcs are ellipses centered at (540, 620), getting larger -->
+              <ellipse cx="540" cy="620" rx="120" ry="34" stroke-opacity="0.10"/>
+              <ellipse cx="540" cy="620" rx="220" ry="62" stroke-opacity="0.15"/>
+              <ellipse cx="540" cy="620" rx="340" ry="100" stroke-opacity="0.22"/>
+              <ellipse cx="540" cy="620" rx="480" ry="150" stroke-opacity="0.30"/>
+              <ellipse cx="540" cy="620" rx="640" ry="210" stroke-opacity="0.38"/>
+              <ellipse cx="540" cy="620" rx="820" ry="290" stroke-opacity="0.48"/>
+              <ellipse cx="540" cy="620" rx="1020" ry="390" stroke-opacity="0.58"/>
+              <ellipse cx="540" cy="620" rx="1260" ry="520" stroke-opacity="0.70"/>
+              <ellipse cx="540" cy="620" rx="1540" ry="680" stroke-opacity="0.80"/>
+              <ellipse cx="540" cy="620" rx="1880" ry="880" stroke-opacity="0.85"/>
+            </g>
+          </svg>
+        </div>
+        <div class="vignette"></div>
+
+        <!-- card -->
+        <div class="card-wrap" id="cardWrap">
+          <div class="card" id="card" data-layout-allow-overflow>
+            <div class="card-glow" id="cardGlow" data-layout-ignore></div>
+
+            <!-- shield -->
+            <svg class="shield" id="shield" viewBox="0 0 170 200" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="shieldBody" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="100%" stop-color="#cfcfcf"/>
+                </linearGradient>
+                <linearGradient id="redBand" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#9a1a1a"/>
+                  <stop offset="100%" stop-color="#d4321f"/>
+                </linearGradient>
+                <linearGradient id="orangeBand" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#ffb147"/>
+                  <stop offset="100%" stop-color="#F28129"/>
+                </linearGradient>
+                <clipPath id="shieldClip">
+                  <path d="M85 6 L160 32 L160 100 C160 142 132 178 85 196 C38 178 10 142 10 100 L10 32 Z"/>
+                </clipPath>
+              </defs>
+              <!-- white shield body -->
+              <path d="M85 6 L160 32 L160 100 C160 142 132 178 85 196 C38 178 10 142 10 100 L10 32 Z"
+                    fill="url(#shieldBody)" stroke="#fafafa" stroke-width="3"/>
+              <!-- interior content clipped to shield shape -->
+              <g clip-path="url(#shieldClip)">
+                <!-- orange chevron/wave at top -->
+                <path d="M10 70 Q 50 50 85 70 Q 120 90 160 70 L 160 96 Q 120 116 85 96 Q 50 76 10 96 Z"
+                      fill="url(#orangeBand)"/>
+                <!-- red diagonal bands inside lower half -->
+                <path d="M10 100 L 160 100 L 160 130 Q 120 154 85 134 Q 50 114 10 134 Z"
+                      fill="url(#redBand)"/>
+                <path d="M10 138 Q 50 158 85 138 Q 120 118 160 138 L 160 175 Q 120 196 85 175 Q 50 154 10 175 Z"
+                      fill="url(#redBand)" opacity="0.95"/>
+                <!-- subtle highlight stripe -->
+                <path d="M28 16 L 60 24 L 50 60 L 22 50 Z" fill="#ffffff" opacity="0.25"/>
+              </g>
+              <!-- outer outline on top -->
+              <path d="M85 6 L160 32 L160 100 C160 142 132 178 85 196 C38 178 10 142 10 100 L10 32 Z"
+                    fill="none" stroke="#ffffff" stroke-width="3"/>
+            </svg>
+
+            <div class="title" id="title">PREVENTION PROTOCOL</div>
+          </div>
+        </div>
+
+        <!-- caption -->
+        <div class="caption" id="caption">First things first,</div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // grid fades in
+      tl.to("#grid", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.10);
+      // slow drift on the horizontal arcs — pulse out a tiny bit
+      tl.fromTo("#hgrid",
+        { scale: 0.94, transformOrigin: "540px 620px" },
+        { scale: 1.0, duration: 4.6, ease: "sine.inOut", transformOrigin: "540px 620px" },
+        0.10
+      );
+
+      // card scales in
+      tl.fromTo("#cardWrap",
+        { opacity: 0, scale: 0.86 },
+        { opacity: 1, scale: 1, duration: 0.65, ease: "back.out(1.4)" },
+        0.25
+      );
+
+      // glow pulse (finite — composition is 5s)
+      tl.fromTo("#cardGlow",
+        { opacity: 0.55 },
+        { opacity: 1.0, duration: 0.9, ease: "sine.inOut", repeat: 4, yoyo: true },
+        0.85
+      );
+
+      // shield pops in
+      tl.fromTo("#shield",
+        { opacity: 0, scale: 0.4, rotate: -8 },
+        { opacity: 1, scale: 1, rotate: 0, duration: 0.55, ease: "back.out(2.0)" },
+        0.55
+      );
+
+      // title fades in with slight y-slide
+      tl.fromTo("#title",
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.50, ease: "power3.out" },
+        0.75
+      );
+
+      // caption slides up + fades in
+      tl.fromTo("#caption",
+        { opacity: 0, y: 28 },
+        { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" },
+        1.00
+      );
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

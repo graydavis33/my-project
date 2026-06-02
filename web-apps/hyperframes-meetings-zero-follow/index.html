@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: "Montserrat", "Inter", system-ui, sans-serif;
+        color: #ffffff;
+      }
+
+      #root { position: relative; width: 1920px; height: 1080px; }
+
+      /* ── LEFT: FaceTime grid ──────────────────────────── */
+      .meeting-block {
+        position: absolute;
+        top: 240px;
+        left: 380px;
+        width: 520px;
+        height: 560px;
+      }
+      .ft-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 520px;
+        height: 540px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 22px;
+      }
+      .ft-tile {
+        position: relative;
+        border: 3px solid #ffffff;
+        border-radius: 22px;
+        overflow: hidden;
+        opacity: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .ft-figure {
+        width: 140px;
+        height: 180px;
+        margin-bottom: -8px;
+        transform-origin: 50% 95%;
+      }
+      .ft-mic {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        width: 24px;
+        height: 24px;
+        border: 2.5px solid #ffffff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ft-mic::before {
+        content: "";
+        width: 7px;
+        height: 11px;
+        background: #ffffff;
+        border-radius: 4px;
+      }
+      .speech {
+        position: absolute;
+        top: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+        border: 2.5px solid #ffffff;
+        border-radius: 14px;
+        padding: 7px 11px;
+        opacity: 0;
+      }
+      .speech .dot {
+        width: 7px;
+        height: 7px;
+        background: #ffffff;
+        border-radius: 50%;
+      }
+      .ft-name {
+        position: absolute;
+        bottom: 10px;
+        left: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #ffffff;
+      }
+
+      /* ── RIGHT: agenda cards ──────────────────────────── */
+      .cards-block {
+        position: absolute;
+        top: 240px;
+        left: 960px;
+        width: 600px;
+      }
+      .card {
+        width: 600px;
+        height: 90px;
+        border: 3px solid #ffffff;
+        border-radius: 16px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: center;
+        padding: 0 26px;
+        gap: 22px;
+        opacity: 0;
+      }
+      .mark-box {
+        width: 50px;
+        height: 50px;
+        border: 3px solid #ffffff;
+        border-radius: 8px;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .check-mark,
+      .x-mark {
+        position: absolute;
+        inset: -3px;
+        opacity: 0;
+      }
+      .check-mark path {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 5.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 50;
+        stroke-dashoffset: 50;
+      }
+      .x-mark path {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 5.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 36;
+        stroke-dashoffset: 36;
+      }
+      .card-line-track {
+        flex: 1;
+        height: 18px;
+        background: rgba(255,255,255,0.18);
+        border-radius: 9px;
+        overflow: hidden;
+      }
+      .card-line {
+        height: 100%;
+        background: #ffffff;
+        border-radius: 9px;
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+
+      /* ── decorative tick marks at bottom corners ──────── */
+      .corner-mark {
+        position: absolute;
+        width: 60px;
+        height: 6px;
+        background: #ffffff;
+        opacity: 0;
+      }
+      .corner-mark.tl { top: 60px; left: 60px; }
+      .corner-mark.tl-v { top: 60px; left: 60px; width: 6px; height: 60px; }
+      .corner-mark.tr { top: 60px; right: 60px; }
+      .corner-mark.tr-v { top: 60px; right: 60px; width: 6px; height: 60px; }
+      .corner-mark.bl { bottom: 60px; left: 60px; }
+      .corner-mark.bl-v { bottom: 60px; left: 60px; width: 6px; height: 60px; }
+      .corner-mark.br { bottom: 60px; right: 60px; }
+      .corner-mark.br-v { bottom: 60px; right: 60px; width: 6px; height: 60px; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="9"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- corner marks -->
+      <div class="corner-mark tl"></div><div class="corner-mark tl-v"></div>
+      <div class="corner-mark tr"></div><div class="corner-mark tr-v"></div>
+      <div class="corner-mark bl"></div><div class="corner-mark bl-v"></div>
+      <div class="corner-mark br"></div><div class="corner-mark br-v"></div>
+
+      <!-- LEFT: FaceTime grid -->
+      <div class="meeting-block">
+        <div class="ft-grid">
+          <div class="ft-tile" id="tile1">
+            <svg class="ft-figure figure" viewBox="0 0 140 180" data-layout-allow-overflow>
+              <circle cx="70" cy="60" r="32" fill="#ffffff"/>
+              <path d="M 18 180 Q 18 110, 70 105 Q 122 110, 122 180 Z" fill="#ffffff"/>
+            </svg>
+            <div class="speech speech1">
+              <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            <div class="ft-mic"></div>
+          </div>
+          <div class="ft-tile" id="tile2">
+            <svg class="ft-figure figure" viewBox="0 0 140 180" data-layout-allow-overflow>
+              <circle cx="70" cy="60" r="32" fill="#ffffff"/>
+              <path d="M 18 180 Q 18 110, 70 105 Q 122 110, 122 180 Z" fill="#ffffff"/>
+            </svg>
+            <div class="speech speech2">
+              <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            <div class="ft-mic"></div>
+          </div>
+          <div class="ft-tile" id="tile3">
+            <svg class="ft-figure figure" viewBox="0 0 140 180" data-layout-allow-overflow>
+              <circle cx="70" cy="60" r="32" fill="#ffffff"/>
+              <path d="M 18 180 Q 18 110, 70 105 Q 122 110, 122 180 Z" fill="#ffffff"/>
+            </svg>
+            <div class="speech speech3">
+              <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            <div class="ft-mic"></div>
+          </div>
+          <div class="ft-tile" id="tile4">
+            <svg class="ft-figure figure" viewBox="0 0 140 180" data-layout-allow-overflow>
+              <circle cx="70" cy="60" r="32" fill="#ffffff"/>
+              <path d="M 18 180 Q 18 110, 70 105 Q 122 110, 122 180 Z" fill="#ffffff"/>
+            </svg>
+            <div class="speech speech4">
+              <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            <div class="ft-mic"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: agenda cards -->
+      <div class="cards-block">
+        <div class="card" id="card1">
+          <div class="mark-box">
+            <svg class="check-mark" viewBox="0 0 50 50"><path d="M 12 25 L 22 35 L 38 16"/></svg>
+            <svg class="x-mark" viewBox="0 0 50 50"><path d="M 14 14 L 36 36"/><path d="M 36 14 L 14 36"/></svg>
+          </div>
+          <div class="card-line-track"><div class="card-line"></div></div>
+        </div>
+        <div class="card" id="card2">
+          <div class="mark-box">
+            <svg class="check-mark" viewBox="0 0 50 50"><path d="M 12 25 L 22 35 L 38 16"/></svg>
+            <svg class="x-mark" viewBox="0 0 50 50"><path d="M 14 14 L 36 36"/><path d="M 36 14 L 14 36"/></svg>
+          </div>
+          <div class="card-line-track"><div class="card-line"></div></div>
+        </div>
+        <div class="card" id="card3">
+          <div class="mark-box">
+            <svg class="check-mark" viewBox="0 0 50 50"><path d="M 12 25 L 22 35 L 38 16"/></svg>
+            <svg class="x-mark" viewBox="0 0 50 50"><path d="M 14 14 L 36 36"/><path d="M 36 14 L 14 36"/></svg>
+          </div>
+          <div class="card-line-track"><div class="card-line"></div></div>
+        </div>
+        <div class="card" id="card4">
+          <div class="mark-box">
+            <svg class="check-mark" viewBox="0 0 50 50"><path d="M 12 25 L 22 35 L 38 16"/></svg>
+            <svg class="x-mark" viewBox="0 0 50 50"><path d="M 14 14 L 36 36"/><path d="M 36 14 L 14 36"/></svg>
+          </div>
+          <div class="card-line-track"><div class="card-line"></div></div>
+        </div>
+        <div class="card" id="card5">
+          <div class="mark-box">
+            <svg class="check-mark" viewBox="0 0 50 50"><path d="M 12 25 L 22 35 L 38 16"/></svg>
+            <svg class="x-mark" viewBox="0 0 50 50"><path d="M 14 14 L 36 36"/><path d="M 36 14 L 14 36"/></svg>
+          </div>
+          <div class="card-line-track"><div class="card-line"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      /* ── corner marks scale-in ─────────────────────── */
+      tl.from(".corner-mark", {
+        scale: 0,
+        opacity: 0,
+        duration: 0.4,
+        ease: "back.out(1.8)",
+        stagger: 0.04,
+        transformOrigin: "center center"
+      }, 0.1);
+
+      /* ── FaceTime tiles ─────────────────────────────── */
+      const tileIds = ["#tile1", "#tile2", "#tile3", "#tile4"];
+      tileIds.forEach((id, i) => {
+        tl.fromTo(id,
+          { scale: 0.5, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)", transformOrigin: "center center" },
+          0.7 + i * 0.12
+        );
+      });
+
+      /* Stick figures wiggle continuously while on the call */
+      tl.to(".figure", {
+        rotation: 3,
+        duration: 0.45,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: 11,
+        transformOrigin: "50% 95%"
+      }, 1.2);
+
+      /* Speech bubbles cycle: figure 1 → 2 → 3 → 4 take turns talking */
+      const speechCues = [
+        { sel: ".speech1", t: 1.5 },
+        { sel: ".speech2", t: 2.3 },
+        { sel: ".speech3", t: 3.1 },
+        { sel: ".speech4", t: 3.9 },
+        { sel: ".speech1", t: 4.7 }
+      ];
+      speechCues.forEach(({ sel, t }) => {
+        tl.fromTo(sel,
+          { scale: 0.4, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2)", transformOrigin: "50% 100%" },
+          t
+        );
+        tl.to(sel, { scale: 0.4, opacity: 0, duration: 0.2, ease: "power2.in" }, t + 0.6);
+      });
+
+      /* Active-speaker pulse: tile borders pulse when their bubble is up */
+      const tilePulses = [
+        { sel: "#tile1", t: 1.5 },
+        { sel: "#tile2", t: 2.3 },
+        { sel: "#tile3", t: 3.1 },
+        { sel: "#tile4", t: 3.9 },
+        { sel: "#tile1", t: 4.7 }
+      ];
+      tilePulses.forEach(({ sel, t }) => {
+        tl.to(sel, {
+          scale: 1.04,
+          duration: 0.3,
+          ease: "power2.inOut",
+          yoyo: true,
+          repeat: 1,
+          transformOrigin: "center center"
+        }, t);
+      });
+
+      /* ── agenda cards: each runs full fill → check → partial empty → X → vibrate ─ */
+      /* Tighter start spread, shorter durations, partial drain to varied stop points */
+      const cardSpecs = [
+        { id: "#card1", start: 0.5,  fillDur: 0.9, holdDur: 0.30, emptyDur: 0.45, emptyTo: 0.50 },
+        { id: "#card2", start: 0.8,  fillDur: 1.0, holdDur: 0.30, emptyDur: 0.50, emptyTo: 0.25 },
+        { id: "#card3", start: 0.4,  fillDur: 0.7, holdDur: 0.35, emptyDur: 0.40, emptyTo: 0.75 },
+        { id: "#card4", start: 0.7,  fillDur: 1.2, holdDur: 0.25, emptyDur: 0.55, emptyTo: 0.40 },
+        { id: "#card5", start: 0.95, fillDur: 0.85, holdDur: 0.30, emptyDur: 0.45, emptyTo: 0.60 }
+      ];
+
+      cardSpecs.forEach(({ id, start, fillDur, holdDur, emptyDur, emptyTo }) => {
+        let t = start;
+
+        // 1. Card outline slides + fades in
+        tl.fromTo(id,
+          { x: -40, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" },
+          t
+        );
+        t += 0.25;
+
+        // 2. Bar fills full (left to right)
+        tl.to(`${id} .card-line`, {
+          scaleX: 1,
+          duration: fillDur,
+          ease: "power2.inOut"
+        }, t);
+        t += fillDur;
+
+        // 3. Check mark appears + draws
+        tl.to(`${id} .check-mark`, { opacity: 1, duration: 0.05 }, t);
+        tl.to(`${id} .check-mark path`, {
+          strokeDashoffset: 0,
+          duration: 0.32,
+          ease: "power2.out"
+        }, t);
+        t += 0.32 + holdDur;
+
+        // 4. Bar empties partway back to the left (stops at emptyTo) + check fades
+        tl.to(`${id} .card-line`, {
+          scaleX: emptyTo,
+          duration: emptyDur,
+          ease: "power2.inOut"
+        }, t);
+        tl.to(`${id} .check-mark`, {
+          opacity: 0,
+          duration: emptyDur * 0.55,
+          ease: "power2.in"
+        }, t + emptyDur * 0.35);
+        t += emptyDur;
+
+        // 5. X mark appears + draws (both strokes)
+        tl.to(`${id} .x-mark`, { opacity: 1, duration: 0.05 }, t);
+        tl.to(`${id} .x-mark path`, {
+          strokeDashoffset: 0,
+          duration: 0.30,
+          ease: "power2.out",
+          stagger: 0.08
+        }, t);
+        t += 0.45;
+
+        // 6. Vibrate the whole card
+        tl.fromTo(id,
+          { x: -4 },
+          {
+            x: 4,
+            duration: 0.05,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: 11,
+            immediateRender: false
+          },
+          t
+        );
+        tl.set(id, { x: 0 }, t + 0.62);
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

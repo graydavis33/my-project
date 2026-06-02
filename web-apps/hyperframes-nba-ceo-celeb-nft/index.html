@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+      .scene-content {
+        position: absolute;
+        inset: 0;
+      }
+      .equation-row {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
+      .icon-group {
+        width: 180px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        transform-origin: center center;
+      }
+      .icon-art {
+        width: 180px;
+        height: 180px;
+      }
+      .icon-art svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .icon-label {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.04em;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .plus {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 110px;
+        line-height: 1;
+        color: #ffffff;
+        width: 60px;
+        text-align: center;
+        transform-origin: center center;
+        margin-bottom: 56px; /* visually align with icon centers (icons have label below) */
+      }
+      .nft-group {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+      }
+      .nft-art {
+        width: 320px;
+        height: 320px;
+        transform-origin: center center;
+      }
+      .nft-art svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .nft-label {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 88px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5.5"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="equation-row" id="equation-row">
+          <!-- NBA All-Star: basketball -->
+          <div class="icon-group" id="icon-nba">
+            <div class="icon-art">
+              <svg viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round">
+                <circle cx="100" cy="100" r="86" />
+                <line x1="100" y1="14" x2="100" y2="186" />
+                <path d="M 14 100 Q 100 56, 186 100" />
+                <path d="M 14 100 Q 100 144, 186 100" />
+              </svg>
+            </div>
+            <div class="icon-label">NBA STAR</div>
+          </div>
+
+          <div class="plus" id="plus-1">+</div>
+
+          <!-- Billionaire CEO: $ in circle -->
+          <div class="icon-group" id="icon-ceo">
+            <div class="icon-art">
+              <svg viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="7">
+                <circle cx="100" cy="100" r="86" />
+                <text
+                  x="100"
+                  y="138"
+                  font-family="Montserrat, sans-serif"
+                  font-weight="700"
+                  font-size="118"
+                  fill="#ffffff"
+                  stroke="none"
+                  text-anchor="middle"
+                >$</text>
+              </svg>
+            </div>
+            <div class="icon-label">CEO</div>
+          </div>
+
+          <div class="plus" id="plus-2">+</div>
+
+          <!-- A-list Celebrity: 5-point star -->
+          <div class="icon-group" id="icon-celeb">
+            <div class="icon-art">
+              <svg viewBox="0 0 200 200" fill="#ffffff" stroke="none">
+                <polygon points="100,16 124,76 188,82 138,124 156,184 100,150 44,184 62,124 12,82 76,76" />
+              </svg>
+            </div>
+            <div class="icon-label">CELEBRITY</div>
+          </div>
+        </div>
+
+        <div class="nft-group" id="nft-group">
+          <div class="nft-art" id="nft-art">
+            <svg viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="7" stroke-linejoin="round">
+              <polygon points="100,12 178,55 178,145 100,188 22,145 22,55" />
+              <text
+                x="100"
+                y="120"
+                font-family="Montserrat, sans-serif"
+                font-weight="700"
+                font-size="56"
+                fill="#ffffff"
+                stroke="none"
+                text-anchor="middle"
+              >NFT</text>
+            </svg>
+          </div>
+          <div class="nft-label" id="nft-label">NFT PROJECT</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Initial states applied at t=0
+      tl.set(
+        "#icon-nba, #plus-1, #icon-ceo, #plus-2, #icon-celeb",
+        { scale: 0, opacity: 0 },
+        0
+      );
+      tl.set("#nft-art", { scale: 0, opacity: 0 }, 0);
+      tl.set("#nft-label", { y: 40, opacity: 0 }, 0);
+
+      // Pop ease for icons
+      const iconPop = { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2.0)" };
+      const plusPop = { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2.4)" };
+
+      // Phase 1: equation builds left-to-right
+      tl.to("#icon-nba",  iconPop, 0.15);
+      tl.to("#plus-1",    plusPop, 0.55);
+      tl.to("#icon-ceo",  iconPop, 0.85);
+      tl.to("#plus-2",    plusPop, 1.25);
+      tl.to("#icon-celeb",iconPop, 1.55);
+
+      // Phase 2: hold equation visible (~1.6s) — no exit animations during hold
+
+      // Phase 3: merge — converge to canvas center, scale down, fade
+      // x-deltas based on each element's center offset from row center
+      // row width = 180+30+60+30+180+30+60+30+180 = 780, so element centers are at:
+      //   icon-nba: -300, plus-1: -150, icon-ceo: 0, plus-2: +150, icon-celeb: +300
+      const mergeStart = 3.55;
+      const mergeEase = { duration: 0.35, ease: "power3.in", scale: 0.2, opacity: 0 };
+      tl.to("#icon-nba",   { x:  300, ...mergeEase }, mergeStart);
+      tl.to("#plus-1",     { x:  150, ...mergeEase }, mergeStart);
+      tl.to("#icon-ceo",   { x:    0, ...mergeEase }, mergeStart);
+      tl.to("#plus-2",     { x: -150, ...mergeEase }, mergeStart);
+      tl.to("#icon-celeb", { x: -300, ...mergeEase }, mergeStart);
+
+      // Phase 4: NFT bursts out from center
+      tl.to(
+        "#nft-art",
+        { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(2.0)" },
+        3.85
+      );
+      tl.to(
+        "#nft-label",
+        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+        4.15
+      );
+
+      // Phase 5: hold NFT to end (~5.5s)
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

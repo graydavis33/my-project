@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: rgba(0,0,0,0); font-family: "Montserrat", system-ui, sans-serif; }
+      .scene { position: relative; width: 100%; height: 100%; }
+      #bg { position: absolute; inset: 0; width: 1080px; height: 1920px; object-fit: cover; }
+
+      /* full-width centered caption layer (no translateX(-50%) per house rule) */
+      #cap-layer { position: absolute; left: 0; right: 0; top: 360px; text-align: center; }
+      .cap { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: center; }
+      .cap .txt {
+        display: inline-block;
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 52px;
+        line-height: 1.1;
+        color: #FFFFFF;
+        white-space: nowrap;
+        letter-spacing: 0.005em;
+        padding: 0 36px;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.9), 0 0 3px rgba(0,0,0,0.95);
+        will-change: transform, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="33.784" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="33.784" data-track-index="1">
+        <div id="cap-layer"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var GROUPS = [{"text": "I hired someone", "start": 0.0, "end": 0.48}, {"text": "for the first", "start": 0.48, "end": 0.98}, {"text": "time at the", "start": 0.98, "end": 1.36}, {"text": "age of 18", "start": 1.36, "end": 1.9}, {"text": "and it went", "start": 1.9, "end": 2.38}, {"text": "horrible", "start": 2.38, "end": 2.98}, {"text": "that's because I", "start": 2.98, "end": 3.34}, {"text": "didn't understand how", "start": 3.34, "end": 4.02}, {"text": "to build proper", "start": 4.02, "end": 4.52}, {"text": "systems while scaling", "start": 4.52, "end": 5.76}, {"text": "step one do", "start": 5.76, "end": 6.4}, {"text": "an audit of", "start": 6.4, "end": 7.1}, {"text": "everything that you", "start": 7.1, "end": 7.84}, {"text": "do as a", "start": 7.84, "end": 8.34}, {"text": "founder on a", "start": 8.34, "end": 8.88}, {"text": "daily basis", "start": 8.88, "end": 9.64}, {"text": "step two document", "start": 9.64, "end": 10.54}, {"text": "everything that you", "start": 10.54, "end": 11.28}, {"text": "do step by", "start": 11.28, "end": 11.84}, {"text": "step so even", "start": 11.84, "end": 12.48}, {"text": "a fifth grader", "start": 12.48, "end": 13.16}, {"text": "can understand how", "start": 13.16, "end": 13.9}, {"text": "to do it", "start": 13.9, "end": 14.34}, {"text": "step three hire", "start": 14.34, "end": 15.16}, {"text": "someone and walk", "start": 15.16, "end": 15.96}, {"text": "them through the", "start": 15.96, "end": 16.54}, {"text": "documentation", "start": 16.54, "end": 17.34}, {"text": "step four have", "start": 17.34, "end": 18.12}, {"text": "them shadow you", "start": 18.12, "end": 18.84}, {"text": "while you do", "start": 18.84, "end": 19.28}, {"text": "the specific tasks", "start": 19.28, "end": 20.02}, {"text": "so they understand", "start": 20.02, "end": 20.76}, {"text": "how you do", "start": 20.76, "end": 21.3}, {"text": "it", "start": 21.3, "end": 21.52}, {"text": "step five they", "start": 21.52, "end": 22.28}, {"text": "do the task", "start": 22.28, "end": 22.8}, {"text": "with your oversight", "start": 22.8, "end": 23.66}, {"text": "so they can", "start": 23.66, "end": 24.14}, {"text": "ask any questions", "start": 24.14, "end": 25.14}, {"text": "step six they", "start": 25.14, "end": 25.92}, {"text": "do the task", "start": 25.92, "end": 26.44}, {"text": "without you", "start": 26.44, "end": 27.1}, {"text": "if you nailed", "start": 27.1, "end": 27.6}, {"text": "steps one and", "start": 27.6, "end": 28.26}, {"text": "two then they", "start": 28.26, "end": 28.76}, {"text": "will nail step", "start": 28.76, "end": 29.4}, {"text": "six", "start": 29.4, "end": 30.0}, {"text": "then you just", "start": 30.0, "end": 30.52}, {"text": "repeat this framework", "start": 30.52, "end": 31.28}, {"text": "for every new", "start": 31.28, "end": 31.92}, {"text": "hire in every", "start": 31.92, "end": 32.68}, {"text": "area of the", "start": 32.68, "end": 33.2}, {"text": "business", "start": 33.2, "end": 33.784}];
+        var layer = document.getElementById("cap-layer");
+        var fit = (window.__hyperframes && window.__hyperframes.fitTextFontSize) ? window.__hyperframes.fitTextFontSize : null;
+
+        // Build one DOM node per caption group, scaled to fit one line.
+        GROUPS.forEach(function (g, i) {
+          var cap = document.createElement("div");
+          cap.className = "cap";
+          cap.id = "cg-" + i;
+          var txt = document.createElement("span");
+          txt.className = "txt";
+          txt.textContent = g.text;
+          if (fit) {
+            var r = fit(g.text, { fontFamily: "Montserrat", fontWeight: 600, maxWidth: 920, baseFontSize: 52, minFontSize: 34, step: 2 });
+            txt.style.fontSize = r.fontSize + "px";
+          }
+          cap.appendChild(txt);
+          layer.appendChild(cap);
+        });
+
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({ paused: true });
+
+        GROUPS.forEach(function (g, i) {
+          var el = document.getElementById("cg-" + i);
+          gsap.set(el, { opacity: 0, scale: 0.92, transformOrigin: "50% 50%" });
+          tl.to(el, { opacity: 1, scale: 1, duration: 0.13, ease: "back.out(1.6)" }, g.start);
+          tl.set(el, { opacity: 0, visibility: "hidden" }, g.end); // deterministic kill
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

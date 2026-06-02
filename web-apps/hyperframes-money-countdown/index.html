@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: "Inter", sans-serif;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00B140;
+        overflow: hidden;
+      }
+      .scene-content { position: absolute; inset: 0; }
+
+      /* Centered horizontal row: money-sign | number */
+      .row {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 0;
+      }
+      .money-sign { margin-right: 40px; }
+
+      .money-sign {
+        width: 260px;
+        height: 260px;
+        border: 14px solid #FFFFFF;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+      }
+      .dollar-glyph {
+        font-family: "Inter", sans-serif;
+        font-weight: 800;
+        font-size: 200px;
+        line-height: 1;
+        color: #FFFFFF;
+        margin-top: -14px; /* optical centering for $ */
+      }
+
+      .count-wrap {
+        width: 900px;
+        text-align: center;
+        opacity: 0;
+        transform-origin: 50% 50%;
+      }
+      .count-num {
+        font-family: "Inter", sans-serif;
+        font-weight: 800;
+        font-size: 220px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #FFFFFF;
+        font-variant-numeric: tabular-nums;
+        display: inline-block;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="7"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="row">
+
+          <!-- Money sign (rises from bottom, fades in) -->
+          <div class="money-sign" id="money-sign">
+            <span class="dollar-glyph">$</span>
+          </div>
+
+          <!-- Counter -->
+          <div class="count-wrap" id="count-wrap">
+            <span class="count-num" id="count-num">$500,000</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ===== Initial states (set inside timeline at t=0) =====
+      tl.set("#money-sign", { y: 480, opacity: 0 }, 0);
+      tl.set("#count-wrap", { scale: 0.7, opacity: 0 }, 0);
+
+      // ===== PHASE 1: Synchronized entrance (0.20 - 1.40s) =====
+      // Money sign rises from below + fades in. Number pure fades in alongside.
+      tl.to("#money-sign", {
+        y: 0, opacity: 1, duration: 1.20, ease: "power3.out"
+      }, 0.20);
+
+      tl.to("#count-wrap", {
+        scale: 1, opacity: 1, duration: 0.90, ease: "power2.out"
+      }, 0.20);
+
+      // ===== PHASE 2: Slot-machine countdown $500,000 → $48,000 (1.80 - 4.00s) =====
+      const counter = { val: 500000 };
+      const numEl = document.getElementById("count-num");
+      const fmt = (n) => "$" + Math.floor(n).toLocaleString("en-US");
+      tl.to(counter, {
+        val: 48000,
+        duration: 2.20,
+        ease: "power3.out",
+        immediateRender: false,
+        onUpdate: () => {
+          numEl.textContent = fmt(counter.val);
+        },
+        onComplete: () => {
+          numEl.textContent = "$48,000";
+        }
+      }, 1.80);
+
+      // ===== PHASE 3: Hold (4.00 - 7.00s) =====
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

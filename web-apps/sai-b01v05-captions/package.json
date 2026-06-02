@@ -1,0 +1,9 @@
+{
+  "name": "sai-b01v05-captions",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.6.52 preview",
+    "render": "npx --yes hyperframes@0.6.52 render --fps 24"
+  }
+}

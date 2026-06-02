@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+      }
+      .text-slide {
+        position: absolute;
+        left: 10px;
+        top: 350px;
+        width: 1900px;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 80px;
+        color: #ffffff;
+        letter-spacing: 1px;
+      }
+      /* Each .line is a clipping mask the height of one text line.
+         Words below the line baseline are hidden; sliding up reveals them
+         from the top edge first — matches the reference recording. */
+      .line {
+        overflow: hidden;
+        height: 1.22em;
+        text-align: center;
+        line-height: 1.22;
+        white-space: nowrap;
+      }
+      .w {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="text-slide">
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">So</span> <span class="w">I</span> <span class="w">thought</span> <span class="w">to</span> <span class="w">myself,</span>
+        </div>
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">regardless</span> <span class="w">of</span> <span class="w">how</span> <span class="w">a</span> <span class="w">post</span> <span class="w">does,</span>
+        </div>
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">how</span> <span class="w">do</span> <span class="w">I</span> <span class="w">guarantee</span> <span class="w">I</span> <span class="w">make</span> <span class="w">a</span> <span class="w">lot</span> <span class="w">of</span> <span class="w">money?</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Each word starts translated 100% of its own height down (hidden by the
+      // line's overflow:hidden), eases up into place. Stagger keeps the rhythm
+      // matching the reference: each new word starts while previous is mid-slide.
+      // 21 words × 0.14s stagger = 2.94s for last start; +0.34s slide → 3.28s.
+      // Composition 5s → ~1.7s final hold.
+      tl.from(".w", {
+        yPercent: 100,
+        opacity: 0,
+        duration: 0.34,
+        ease: "power3.out",
+        stagger: 0.14,
+      }, 0.15);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

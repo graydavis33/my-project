@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"headerText","type":"string","label":"Header text","default":"YOUR PAYCHECK"},{"id":"owedText","type":"string","label":"Owed callout","default":"OWED IN TAXES"},{"id":"yoursPct","type":"number","label":"Yours percentage","default":70},{"id":"owedPct","type":"number","label":"Owed percentage","default":30},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Border stroke (px)","default":3},{"id":"cornerRadius","type":"number","label":"Bar corner radius (px)","default":24},{"id":"barFillStart","type":"number","label":"Bar fills at (s)","default":0.5},{"id":"splitTime","type":"number","label":"30% segment splits to orange at (s)","default":1.65},{"id":"calloutTime","type":"number","label":"Bottom callout lands at (s)","default":2.5}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 80px;
+        gap: 80px;
+      }
+
+      /* === Header — "YOUR BANK BALANCE" === */
+      .header {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 64px;
+        letter-spacing: 0.06em;
+        color: var(--white);
+        text-align: center;
+        line-height: 1.1;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+        will-change: transform, opacity;
+      }
+
+      /* === Bar wrapper — holds outline + segments + labels === */
+      .bar-wrap {
+        position: relative;
+        width: 880px;
+        height: 220px;
+        will-change: transform, opacity;
+      }
+
+      /* Outline track (drawn first, fills with white from left) */
+      .bar-track {
+        position: absolute;
+        inset: 0;
+        border-style: solid;
+        border-color: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+
+      /* === Left segment (YOURS, white fill) ===
+         Scales horizontally from left-edge 0 -> 70% width. */
+      .seg-yours {
+        position: absolute;
+        left: 0; top: 0;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 1) 0%,
+          rgba(248, 248, 248, 1) 50%,
+          rgba(230, 230, 230, 1) 100%
+        );
+        width: 0%;            /* animated to yoursPct% */
+        box-shadow:
+          inset 0 2px 0 rgba(255, 255, 255, 0.8),
+          inset 0 -3px 12px rgba(0, 0, 0, 0.10);
+        will-change: width;
+        z-index: 1;
+      }
+
+      /* === Right segment (OWED, orange-glass) ===
+         Position to right of yours segment, scales in from 0 width. */
+      .seg-owed {
+        position: absolute;
+        right: 0; top: 0;
+        height: 100%;
+        width: 0%;            /* animated to owedPct% */
+        background:
+          radial-gradient(
+            ellipse 100% 60% at 50% 0%,
+            rgba(255, 220, 180, 0.55) 0%,
+            rgba(255, 200, 150, 0.20) 35%,
+            rgba(255, 180, 120, 0.0) 65%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(255, 168, 88, 1) 0%,
+            rgba(242, 129, 41, 1) 35%,
+            rgba(214, 100, 22, 1) 100%
+          );
+        will-change: width;
+        z-index: 2;
+        /* glass shadows set via JS for parity with bank-vault treatment */
+      }
+
+      /* Divider line between segments */
+      .seg-divider {
+        position: absolute;
+        top: -10px;
+        bottom: -10px;
+        width: 4px;
+        background: var(--white);
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+        z-index: 3;
+        opacity: 0;
+        will-change: opacity, left;
+      }
+
+      /* In-segment percentage labels */
+      .pct-label {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: "Montserrat", sans-serif;
+        font-weight: 900;
+        font-size: 88px;
+        letter-spacing: 0.005em;
+        text-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        will-change: opacity, transform;
+      }
+      .pct-label.yours {
+        color: #0A0A0A;
+        text-shadow: 0 2px 6px rgba(255, 255, 255, 0.4);
+      }
+      .pct-label.owed {
+        color: var(--white);
+      }
+
+      /* === Bottom callout — "OWED" emphasis === */
+      .callout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        will-change: transform, opacity;
+      }
+      .callout-label {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 900;
+        font-size: 142px;
+        letter-spacing: 0.05em;
+        line-height: 1;
+        color: var(--white);
+        text-shadow:
+          0 0 28px rgba(242, 129, 41, 0.95),
+          0 0 64px rgba(242, 129, 41, 0.55),
+          0 4px 0 rgba(0, 0, 0, 0.30);
+      }
+      .callout-sub {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 44px;
+        letter-spacing: 0.12em;
+        color: rgba(255, 255, 255, 0.85);
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <div id="header" class="header" data-layout-allow-overflow>YOUR PAYCHECK</div>
+
+        <div id="bar-wrap" class="bar-wrap">
+          <div id="bar-track" class="bar-track"></div>
+          <div id="seg-yours" class="seg-yours"></div>
+          <div id="seg-owed" class="seg-owed"></div>
+          <div id="seg-divider" class="seg-divider"></div>
+          <div id="pct-yours" class="pct-label yours">70%</div>
+          <div id="pct-owed" class="pct-label owed">30%</div>
+        </div>
+
+        <div id="callout" class="callout" data-layout-allow-overflow>
+          <div id="callout-label" class="callout-label">30%</div>
+          <div id="callout-sub" class="callout-sub">OWED IN TAXES</div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        document.documentElement.style.setProperty("--white", vars.white);
+        document.documentElement.style.setProperty("--orange", vars.orange);
+
+        // Apply variable-driven text
+        document.getElementById("header").textContent = vars.headerText;
+        document.getElementById("callout-sub").textContent = vars.owedText;
+        document.getElementById("pct-yours").textContent = vars.yoursPct + "%";
+        document.getElementById("pct-owed").textContent = vars.owedPct + "%";
+        document.getElementById("callout-label").textContent = vars.owedPct + "%";
+
+        // Bar track styling
+        const track = document.getElementById("bar-track");
+        track.style.borderWidth = vars.strokeWidth + "px";
+        track.style.borderRadius = vars.cornerRadius + "px";
+
+        const yoursPct = vars.yoursPct;
+        const owedPct = vars.owedPct;
+
+        // Position the % labels within their respective segments (horizontal center of each)
+        const barWidth = 880;
+        const yoursCenter = (yoursPct / 2);                   // % of bar
+        const owedCenter = yoursPct + (owedPct / 2);          // % of bar
+        document.getElementById("pct-yours").style.left = "calc(" + yoursCenter + "% - 80px)";
+        document.getElementById("pct-owed").style.left = "calc(" + owedCenter + "% - 80px)";
+
+        // Round only the LEFT corners of yours-segment and RIGHT corners of owed-segment
+        // so they meet flush at the divider line.
+        const yoursEl = document.getElementById("seg-yours");
+        const owedEl = document.getElementById("seg-owed");
+        yoursEl.style.borderRadius = vars.cornerRadius + "px 0 0 " + vars.cornerRadius + "px";
+        owedEl.style.borderRadius = "0 " + vars.cornerRadius + "px " + vars.cornerRadius + "px 0";
+
+        // Glass shadow on the owed segment
+        owedEl.style.boxShadow = [
+          "inset 0 2px 0 rgba(255, 240, 215, 0.55)",
+          "inset 0 -4px 14px rgba(140, 55, 8, 0.45)",
+          "0 0 32px rgba(242, 129, 41, 0.55)",
+        ].join(", ");
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // 1. Header — fade down + bounce
+        tl.from("#header",
+          { y: -60, opacity: 0, scale: 0.85, duration: 0.55, ease: "back.out(1.6)" },
+          0
+        );
+
+        // 2. Bar track — fade/scale in
+        tl.from("#bar-wrap",
+          { opacity: 0, y: 20, duration: 0.45, ease: "power3.out" },
+          0.30
+        );
+
+        // 3. White segment fills (left -> right) representing total balance
+        tl.to("#seg-yours",
+          { width: "100%", duration: 0.90, ease: "power2.out", overwrite: "auto" },
+          vars.barFillStart
+        );
+
+        // 4. Yours segment SHRINKS back to its actual 70% width, owed segment grows in from 0% to 30%
+        const splitTime = vars.splitTime;
+        tl.to("#seg-yours",
+          { width: yoursPct + "%", duration: 0.45, ease: "power2.inOut", overwrite: "auto" },
+          splitTime
+        );
+        tl.to("#seg-owed",
+          { width: owedPct + "%", duration: 0.45, ease: "power2.inOut", overwrite: "auto" },
+          splitTime
+        );
+
+        // 5. Divider line appears at the split point
+        tl.set("#seg-divider", { left: yoursPct + "%" }, splitTime);
+        tl.to("#seg-divider",
+          { opacity: 1, duration: 0.25, ease: "power2.out", overwrite: "auto" },
+          splitTime + 0.10
+        );
+
+        // 6. Percentage labels fade in
+        tl.to("#pct-yours",
+          { opacity: 1, duration: 0.30, ease: "power2.out", overwrite: "auto" },
+          splitTime + 0.20
+        );
+        tl.to("#pct-owed",
+          { opacity: 1, duration: 0.30, ease: "power2.out", overwrite: "auto" },
+          splitTime + 0.30
+        );
+
+        // 7. Bottom callout — bounce in with big "30% OWED"
+        tl.from("#callout",
+          { y: 60, opacity: 0, scale: 0.7, duration: 0.50, ease: "back.out(1.8)" },
+          vars.calloutTime
+        );
+
+        // 8. Subtle finite glow pulse on the orange segment + callout label after landing
+        const pulseStart = vars.calloutTime + 0.5;
+        tl.to("#seg-owed",
+          { boxShadow: [
+              "inset 0 2px 0 rgba(255, 240, 215, 0.55)",
+              "inset 0 -4px 14px rgba(140, 55, 8, 0.45)",
+              "0 0 56px rgba(242, 129, 41, 0.95)",
+            ].join(", "),
+            duration: 0.55, ease: "sine.inOut", yoyo: true, repeat: 3, overwrite: "auto" },
+          pulseStart
+        );
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

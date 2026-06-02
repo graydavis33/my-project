@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        /* Chroma BLUE — counter ends green, so default green chroma is unsafe */
+        background: #0047bb;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #0047bb;
+        overflow: hidden;
+      }
+
+      /* ===== Calendar — slides in from right ===== */
+      #calendar {
+        position: absolute;
+        left: 560px;            /* canvas center 960 - 400 (half of frame width 800) */
+        top: 200px;             /* canvas center 540 - 340 (half of frame height 680) */
+        width: 800px;
+        height: 680px;
+        z-index: 10;
+      }
+      #calendar-frame {
+        position: absolute;
+        inset: 0;
+        border: 5px solid #ffffff;
+        border-radius: 28px;
+      }
+      #calendar-grid {
+        position: absolute;
+        left: 50px;             /* frame padding */
+        top: 50px;
+        width: 700px;
+        height: 580px;
+      }
+
+      .cal-cell {
+        position: absolute;
+        width: 105px;
+        height: 105px;
+        border: 3px solid #ffffff;
+        border-radius: 14px;
+        transform-origin: 50% 50%;
+        opacity: 0;
+        background: transparent;
+      }
+      .cal-day {
+        position: absolute;
+        width: 105px;
+        height: 105px;
+        line-height: 105px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 52px;
+        color: #ffffff;
+        opacity: 0;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ===== $20,000 counter (overlaid ON calendar) ===== */
+      #counter {
+        position: absolute;
+        left: 0;
+        top: 430px;             /* visual center near canvas center 540 */
+        width: 1920px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 220px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: -0.01em;
+        font-variant-numeric: tabular-nums;
+        transform-origin: 50% 50%;
+        opacity: 0;
+        z-index: 100;
+        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Calendar with frame + grid (cells + day numbers generated below) -->
+      <div id="calendar">
+        <div id="calendar-frame"></div>
+        <div id="calendar-grid"></div>
+      </div>
+
+      <!-- $20,000 counter overlaid on top of calendar -->
+      <div id="counter">$0</div>
+    </div>
+
+    <script>
+      // ============================================================
+      // CALENDAR BUILD-OUT → $20,000
+      // 6s, 1920x1080, chroma BLUE (#0047BB) — counter ends green
+      //
+      // 0.15-0.55s : calendar (frame + grid wrapper) slides in from
+      //              RIGHT with motion blur
+      // 0.75-3.45s : 30 days pop in sequentially (cell + number)
+      // 0.90-3.30s : counter ticks $0 → $20,000 (overlaid on top)
+      // 3.30-3.40s : counter pops green + scales up
+      // 3.40-3.65s : counter eases back to scale 1.0 (stays green)
+      // 3.65-6.00s : hold
+      // ============================================================
+
+      // ============================================================
+      // Build the calendar grid: 6 cols × 5 rows = 30 days
+      // Cell 105×105, gap 14 → grid 700×580
+      // ============================================================
+      const grid = document.getElementById('calendar-grid');
+      const COLS = 6;
+      const ROWS = 5;
+      const CELL = 105;
+      const GAP = 14;
+      for (let i = 0; i < 30; i++) {
+        const col = i % COLS;
+        const row = Math.floor(i / COLS);
+        const x = col * (CELL + GAP);
+        const y = row * (CELL + GAP);
+
+        const cell = document.createElement('div');
+        cell.className = 'cal-cell';
+        cell.id = `cell-${i}`;
+        cell.style.left = x + 'px';
+        cell.style.top = y + 'px';
+        grid.appendChild(cell);
+
+        const day = document.createElement('div');
+        day.className = 'cal-day';
+        day.id = `day-${i}`;
+        day.style.left = x + 'px';
+        day.style.top = y + 'px';
+        day.textContent = (i + 1);
+        grid.appendChild(day);
+      }
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ============================================================
+      // Initial states
+      // ============================================================
+      gsap.set('#calendar', {
+        x: 2200,                    // off-screen right
+        opacity: 0,
+        filter: 'blur(28px)',
+      });
+      gsap.set('#counter', { scale: 1.0, opacity: 0, color: '#ffffff' });
+
+      // ============================================================
+      // Phase 1 (0.15s → 0.55s): calendar slides in from RIGHT
+      //   Decelerating arrival with falling motion blur.
+      // ============================================================
+      tl.to('#calendar',
+        { x: 0, duration: 0.40, ease: 'power3.out' },
+        0.15
+      );
+      tl.to('#calendar',
+        { opacity: 1, duration: 0.20, ease: 'power1.out' },
+        0.15
+      );
+      tl.to('#calendar',
+        { filter: 'blur(0px)', duration: 0.35, ease: 'power2.out' },
+        0.20
+      );
+
+      // ============================================================
+      // Phase 2 (0.75s → 3.45s): 30 days pop in sequentially
+      //   Cell scales 0→1 (back.out), day number fades in 0.06s after.
+      //   Stagger 0.090s × 30 = 2.70s build window.
+      // ============================================================
+      const DAYS_START = 0.75;
+      const DAY_STAGGER = 0.090;
+      for (let i = 0; i < 30; i++) {
+        const t = DAYS_START + i * DAY_STAGGER;
+        tl.fromTo(`#cell-${i}`,
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.28, ease: 'back.out(2.0)', immediateRender: false },
+          t
+        );
+        tl.to(`#day-${i}`,
+          { opacity: 1, duration: 0.18, ease: 'power2.out' },
+          t + 0.06
+        );
+      }
+
+      // ============================================================
+      // Phase 3 (0.85s → 3.30s): counter $0 → $20,000 (overlaid)
+      //   Pops in to scale 1.0 first, then ticks up.
+      // ============================================================
+      tl.to('#counter',
+        { opacity: 1, duration: 0.45, ease: 'power2.out' },
+        0.85
+      );
+
+      const counterEl = document.getElementById('counter');
+      const counterObj = { v: 0 };
+      tl.to(counterObj,
+        {
+          v: 20000,
+          duration: 2.20,
+          ease: 'power1.out',
+          onUpdate: () => {
+            const n = Math.round(counterObj.v);
+            counterEl.textContent = '$' + n.toLocaleString('en-US');
+          },
+        },
+        1.10
+      );
+
+      // ============================================================
+      // Phase 4 (3.30s → 3.40s): counter hits $20,000 → POP GREEN
+      //   Color tween white → green + scale up to 1.20
+      // ============================================================
+      tl.to('#counter',
+        { color: '#2ecc71', duration: 0.10, ease: 'power2.out' },
+        3.30
+      );
+      tl.to('#counter',
+        { scale: 1.20, duration: 0.10, ease: 'back.out(2.6)' },
+        3.30
+      );
+
+      // ============================================================
+      // Phase 5 (3.40s → 3.65s): counter eases back to scale 1.0
+      //   Stays green.
+      // ============================================================
+      tl.to('#counter',
+        { scale: 1.0, duration: 0.25, ease: 'power2.out', overwrite: 'auto' },
+        3.41
+      );
+
+      // ============================================================
+      // Phase 6 (3.65s → 6.00s): hold
+      // ============================================================
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

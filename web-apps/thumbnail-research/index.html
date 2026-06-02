@@ -1,0 +1,2941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thumbnail Research — Sai Karra Niche</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  background: #0a0a0b;
+  color: #e8e8e8;
+  line-height: 1.55;
+  font-size: 15px;
+}
+a { color: #F28129; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 60px 32px; }
+.hero { padding: 80px 0 40px; border-bottom: 1px solid #1f1f22; margin-bottom: 60px; }
+.hero h1 { font-size: 56px; font-weight: 900; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 18px; }
+.hero h1 span { color: #F28129; }
+.hero .sub { color: #888; font-size: 18px; max-width: 800px; margin-bottom: 24px; }
+.hero .meta { color: #555; font-size: 13px; font-family: ui-monospace, "SF Mono", Consolas, monospace; }
+nav.toc { background: #111114; border: 1px solid #1f1f22; border-radius: 12px; padding: 24px 28px; margin: 40px 0; }
+nav.toc h3 { font-size: 12px; letter-spacing: 0.12em; color: #888; text-transform: uppercase; margin-bottom: 12px; }
+nav.toc ul { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 24px; }
+nav.toc a { color: #e8e8e8; font-size: 14px; }
+nav.toc a:hover { color: #F28129; text-decoration: none; }
+section { margin: 80px 0; scroll-margin-top: 24px; }
+section h2 {
+  font-size: 36px; font-weight: 900; letter-spacing: -0.01em; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 14px;
+}
+section h2 .num {
+  display: inline-block; font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  color: #F28129; font-size: 14px; font-weight: 600; letter-spacing: 0.1em;
+  border: 1px solid #F28129; padding: 4px 10px; border-radius: 6px;
+}
+section > .lede { color: #aaa; font-size: 17px; max-width: 820px; margin-bottom: 40px; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 32px 0; }
+.stat {
+  background: #111114; border: 1px solid #1f1f22; border-radius: 10px; padding: 22px 24px;
+}
+.stat .big {
+  font-size: 36px; font-weight: 900; color: #F28129; letter-spacing: -0.02em; line-height: 1;
+  margin-bottom: 10px;
+}
+.stat .label { color: #aaa; font-size: 13px; line-height: 1.4; }
+.objective-card, .pattern-card, .creator-card {
+  background: #111114; border: 1px solid #1f1f22; border-radius: 14px;
+  padding: 32px; margin-bottom: 28px;
+}
+.objective-card h3, .pattern-card h3, .creator-card h3 {
+  font-size: 26px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: baseline; gap: 12px;
+}
+.objective-card .icon, .pattern-card .icon { font-size: 22px; }
+.objective-card .headline, .pattern-card .headline {
+  color: #F28129; font-size: 15px; font-weight: 600; margin-bottom: 14px;
+}
+.objective-card .subtext, .pattern-card .definition, .pattern-card .why {
+  color: #bbb; font-size: 15px; margin-bottom: 14px;
+}
+.pattern-card .why { color: #ddd; }
+.pattern-card .why strong { color: #F28129; font-weight: 600; }
+.pattern-card .recipe {
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 13px; color: #999; padding: 12px 14px; background: #0a0a0b;
+  border-left: 3px solid #F28129; border-radius: 4px; margin: 16px 0;
+}
+.creator-meta {
+  display: flex; flex-wrap: wrap; gap: 18px 24px; margin: 8px 0 20px;
+  font-size: 13px; color: #888;
+}
+.creator-meta span strong { color: #ccc; font-weight: 600; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 22px; }
+.tag {
+  background: #1a1a1e; color: #F28129; border: 1px solid #2a1f18;
+  padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+}
+.tag.obj { background: #1a1410; color: #F28129; border-color: #2a1f18; }
+.thumb-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px;
+  margin-top: 18px;
+}
+.thumb {
+  background: #0a0a0b; border: 1px solid #1f1f22; border-radius: 8px; overflow: hidden;
+  display: flex; flex-direction: column; transition: transform 0.15s, border-color 0.15s;
+}
+.thumb:hover { transform: translateY(-2px); border-color: #F28129; }
+.thumb .img-wrap { aspect-ratio: 16 / 9; background: #1a1a1e; position: relative; }
+.thumb .img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb .rank {
+  position: absolute; top: 8px; left: 8px;
+  background: rgba(0,0,0,0.75); color: #F28129;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace;
+  font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+}
+.thumb .best-badge {
+  position: absolute; top: 8px; right: 8px;
+  background: #F28129; color: #0a0a0b;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
+  padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
+}
+.thumb .meta { padding: 12px 14px; }
+.thumb .title { font-size: 13px; color: #ddd; line-height: 1.35; margin-bottom: 6px; }
+.thumb .yt-link { font-size: 11px; color: #666; font-family: ui-monospace, monospace; }
+.best-callout {
+  background: #1a1410; border: 1px solid #2a1f18; border-radius: 8px;
+  padding: 14px 18px; margin: 18px 0; font-size: 14px; color: #ddd;
+}
+.best-callout strong { color: #F28129; }
+.creator-grid-section { margin-bottom: 40px; }
+.creator-grid-section h4 {
+  font-size: 13px; letter-spacing: 0.1em; color: #888; text-transform: uppercase;
+  margin: 28px 0 12px;
+}
+.divider {
+  border: 0; border-top: 1px solid #1f1f22; margin: 80px 0 0;
+}
+.footer {
+  text-align: center; padding: 60px 0 40px; color: #555; font-size: 13px;
+  font-family: ui-monospace, monospace;
+}
+.toggle-row {
+  display: flex; gap: 4px; background: #111114; padding: 6px;
+  border-radius: 10px; border: 1px solid #1f1f22; width: fit-content;
+  margin-bottom: 32px;
+}
+.toggle-row button {
+  background: transparent; border: 0; color: #888; padding: 8px 16px;
+  border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;
+  font-family: inherit;
+}
+.toggle-row button.active { background: #F28129; color: #0a0a0b; }
+.view { display: none; }
+.view.active { display: block; }
+@media (max-width: 720px) {
+  .wrap { padding: 32px 16px; }
+  .hero h1 { font-size: 36px; }
+  nav.toc ul { grid-template-columns: 1fr; }
+  section h2 { font-size: 26px; }
+  .creator-meta { flex-direction: column; gap: 6px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>Thumbnail Research — <span>Sai's Niche</span></h1>
+  <p class="sub">A pattern library of the highest-performing YouTube thumbnails across 14 business / founder creators adjacent to Sai Karra. Real thumbnails pulled from each channel's top-5 popular videos. Categorized by the objective they're trying to achieve and the visual pattern they use to achieve it.</p>
+  <div class="meta">Researched 2026-05-18 · Compiled 2026-05-20 · 14 creators · 70 thumbnails</div>
+</header>
+
+<nav class="toc">
+  <h3>Sections</h3>
+  <ul>
+    <li><a href="#cheat">1. CTR Cheat Sheet</a></li>
+    <li><a href="#objectives">2. Browse by Objective</a></li>
+    <li><a href="#patterns">3. Browse by Pattern</a></li>
+    <li><a href="#creators">4. Creator Deep-Dives</a></li>
+    <li><a href="#application">5. Application to Sai</a></li>
+  </ul>
+</nav>
+
+<section id="cheat">
+  <h2><span class="num">01</span> CTR Cheat Sheet</h2>
+  <p class="lede">Hard numbers from the 1of10 / Quasa 323,000-video study (62.6B views analyzed). These are load-bearing — every pattern below rests on them.</p>
+  <div class="stat-grid">
+    <div class="stat"><div class="big">+36%</div><div class="label">CTR lift from a face in finance/business specifically — vs near-zero broadly and -3% in gaming. Faces matter MORE in Sai's niche than most.</div></div>
+    <div class="stat"><div class="big">−19%</div><div class="label">CTR penalty for thumbs with text — UNLESS the text is under 10 characters and covers less than 7% of the image. The exception is exactly what Hormozi/Gadzhi exploit.</div></div>
+    <div class="stat"><div class="big">2–5</div><div class="label">Dominant text word-count range across all top performers. 6+ is rare and usually only when one element is a captioned screenshot.</div></div>
+    <div class="stat"><div class="big">100–110</div><div class="label">Optimal brightness on the 0–255 scale. Dark thumbs disappear in feed; blown-out thumbs read flat. Goldilocks zone.</div></div>
+    <div class="stat"><div class="big">cyan / green / yellow / orange</div><div class="label">Highest-performing accent colors against YouTube's white/gray UI. Sai's brand orange is a tailwind, not a coincidence.</div></div>
+    <div class="stat"><div class="big">2026 shift</div><div class="label">Cluttered shock-face + heavy text is fatiguing. Cleaner composition, bolder contrast, more negative space is winning. Big number on minimal BG is the new dominant.</div></div>
+  </div>
+</section>
+
+<section id="objectives">
+  <h2><span class="num">02</span> Browse by Objective</h2>
+  <p class="lede">Every thumbnail is trying to <em>do</em> something. Most fall into one of 7 objectives. Pick the objective before picking the pattern — the objective dictates which pattern fits.</p>
+  
+    <div class="objective-card" id="objective-sell-authority">
+      <h3><span class="icon">🎯</span> Sell Authority</h3>
+      <div class="headline">Position the creator as the expert who has figured it out.</div>
+      <p class="subtext">These thumbnails earn the click through identity-coding — the viewer trusts the source before they trust the claim. Calm faces, restrained palettes, anchor words. The opposite of shock.</p>
+      
+    <div class="creator-card" id="creator-hormozi">
+      <h3>Alex Hormozi</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=EonibwnAEME" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_1.jpg" alt="How to Catch Up In Life (Using Logic)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to Catch Up In Life (Using Logic)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=OQf2Ba-Lp_4" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_2.jpg" alt="Building a $2,500,000 Business for a Stranger in 36 Minutes" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Building a $2,500,000 Business for a Stranger in 36 Minutes</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=3fsJFUvA6Ts" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_3.jpg" alt="What Makes The Perfect Business (5 Things)" loading="lazy">
+        <span class="rank">#3</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">What Makes The Perfect Business (5 Things)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=0EqJD2o-Mnk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_4.jpg" alt="Helping 6 Business Owners Scale in 33 Minutes" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Helping 6 Business Owners Scale in 33 Minutes</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=fr78adfAnuA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_5.jpg" alt="How to Use AI in Your Business in 2026" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to Use AI in Your Business in 2026</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    <div class="creator-card" id="creator-leila">
+      <h3>Leila Hormozi</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=DVtuTp3ykcA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_1.jpg" alt="AI Is Making Your Thinking Worse (And How to Fix It)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">AI Is Making Your Thinking Worse (And How to Fix It)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=LCc-wecNPKg" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_2.jpg" alt="Is It Time For A Change?" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Is It Time For A Change?</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=j64UB9hU6BM" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_3.jpg" alt="Do This and People Will Instantly Respect You" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Do This and People Will Instantly Respect You</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=NqtWADqiMCo" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_4.jpg" alt="How to Outsmart a Toxic Workplace" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to Outsmart a Toxic Workplace</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=e1awpbZxVnw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_5.jpg" alt="The Psychology of Making More Money" loading="lazy">
+        <span class="rank">#5</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">The Psychology of Making More Money</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    <div class="creator-card" id="creator-sharran">
+      <h3>Sharran Srivatsaa</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=ISQkh8bu6EU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_1.jpg" alt="The Millionaire Mindset I'm Teaching My Kids" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">The Millionaire Mindset I'm Teaching My Kids</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=Vx_sSMAJjNg" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_2.jpg" alt="In 16 Minutes, I’ll Make People Actually Listen to You" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">In 16 Minutes, I’ll Make People Actually Listen to You</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=OcH0864CLPs" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_3.jpg" alt="How To Stop Fearing Financial Failure" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Stop Fearing Financial Failure</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=UMiAzkNEM4U" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_4.jpg" alt="In 18 Minutes, You'll Understand Generational Wealth" loading="lazy">
+        <span class="rank">#4</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">In 18 Minutes, You'll Understand Generational Wealth</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=OWorFLIbRoo" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_5.jpg" alt="If You Only Watch One Money Video, Make It This" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">If You Only Watch One Money Video, Make It This</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    </div>
+    
+
+    <div class="objective-card" id="objective-sell-lifestyle">
+      <h3><span class="icon">🏙️</span> Sell Lifestyle</h3>
+      <div class="headline">Show the result so the viewer wants the path.</div>
+      <p class="subtext">Blurred luxury location, cinematic lighting, the implicit 'I made it, click to learn how.' Sells the destination before the lesson. Premium positioning.</p>
+      
+    <div class="creator-card" id="creator-gadzhi">
+      <h3>Iman Gadzhi</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=5BgmmGHYk1U" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_1.jpg" alt="Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential" loading="lazy">
+        <span class="rank">#1</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=pLxRBCBY1HQ" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_2.jpg" alt="10 Years of Business Knowledge In 19 Minutes" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">10 Years of Business Knowledge In 19 Minutes</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=NqPHDrQwiro" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_3.jpg" alt="Give me 16 minutes and I’ll brainwash you into thinking like a Millionaire" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Give me 16 minutes and I’ll brainwash you into thinking like a Millionaire</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=O6DrQJ5OOlU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_4.jpg" alt="How Using “Dark Motivation” Made Me Rich" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How Using “Dark Motivation” Made Me Rich</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=1QBBldKX4k8" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_5.jpg" alt="What to do when you feel like doing NOTHING" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">What to do when you feel like doing NOTHING</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    </div>
+    
+
+    <div class="objective-card" id="objective-sell-outcome">
+      <h3><span class="icon">$</span> Sell Outcome (Big Number)</h3>
+      <div class="headline">Lead with a specific dollar figure as proof.</div>
+      <p class="subtext">Specific number > generic claim. '$600,000' beats 'huge amount.' Receipts-coded — eye locks on digits. Common in agency / paid-ads / income-claim verticals.</p>
+      
+    <div class="creator-card" id="creator-morgan">
+      <h3>Charlie Morgan</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=HAQhw5HtSqI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_1.jpg" alt="How to run a hyper-profitable business partnership (like me)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to run a hyper-profitable business partnership (like me)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=J4q_DF7pSWI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_2.jpg" alt="the dark side of $1M/mo (managing 'extreme' burnout)" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">the dark side of $1M/mo (managing 'extreme' burnout)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=KnT4taIvVkk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_3.jpg" alt="Why business & finance personal brands &quot;fall off&quot; & become irrelevant" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Why business & finance personal brands "fall off" & become irrelevant</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=DTMj8eWYO2k" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_4.jpg" alt="&quot;Bulk and Cut&quot; is the best business strategy to get to $1M/mo" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">"Bulk and Cut" is the best business strategy to get to $1M/mo</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=KeL4GDir1aI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_5.jpg" alt="16 ways to make $1,000,000 with a free skool funnel (just like me!)" loading="lazy">
+        <span class="rank">#5</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">16 ways to make $1,000,000 with a free skool funnel (just like me!)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    <div class="creator-card" id="creator-welch">
+      <h3>Jordan Welch</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=7-Sg2RKNMZE" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_1.jpg" alt="How I'd Start a 1-Person Business With Claude AI in 30 Days" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How I'd Start a 1-Person Business With Claude AI in 30 Days</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=klmEkOZB9Uw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_2.jpg" alt="Day In The Life Of A Multi-Millionaire In Buenos Aires" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Day In The Life Of A Multi-Millionaire In Buenos Aires</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=4pN16Ju0Lbw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_3.jpg" alt="Millionaire Explains: How To Get Rich With $0" loading="lazy">
+        <span class="rank">#3</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">Millionaire Explains: How To Get Rich With $0</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=ieeCpOjMNeI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_4.jpg" alt="things i've learned &quot;getting rich&quot; in my 20s..." loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">things i've learned "getting rich" in my 20s...</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=5SSzRxFOM9c" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_5.jpg" alt="i sold everything" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">i sold everything</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    <div class="creator-card" id="creator-codie">
+      <h3>Codie Sanchez</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=oRpjoHJcX4s" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_1.jpg" alt="How To Replace Your Job in 30 Days from Your Couch" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Replace Your Job in 30 Days from Your Couch</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=LDPE3wa9f2k" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_2.jpg" alt="How To Grow Your Business SO Fast It Feels Illegal" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Grow Your Business SO Fast It Feels Illegal</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=NyVBWIW6vbk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_3.jpg" alt="Dollar Cost Averaging is dead... This is how to invest in 2026" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Dollar Cost Averaging is dead... This is how to invest in 2026</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=yBefMa8LydA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_4.jpg" alt="How to Manage Time Like a Top 1% CEO" loading="lazy">
+        <span class="rank">#4</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">How to Manage Time Like a Top 1% CEO</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=pD7TO-Pwlzk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_5.jpg" alt="How This Garbage Man Built A Billion Dollar Empire" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How This Garbage Man Built A Billion Dollar Empire</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    </div>
+    
+
+    <div class="objective-card" id="objective-sell-curiosity">
+      <h3><span class="icon">❓</span> Sell Curiosity (Shock / Hook)</h3>
+      <div class="headline">Trigger 'what?? that's possible??' click reflex.</div>
+      <p class="subtext">Shock-face, arrows, circles, screenshot reactions. Weaponizes pattern-interrupt. Works hard but risks prestige — Hormozi/Gadzhi specifically avoid this lane.</p>
+      
+    <div class="creator-card" id="creator-malinowski">
+      <h3>Brett Malinowski</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=8V05zvCaqZE" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_1.jpg" alt="Watch me build a $10,000+ App with AI in 1 Hour" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Watch me build a $10,000+ App with AI in 1 Hour</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=Y8kHj8LJ2sU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_2.jpg" alt="The $20M Business Hidden Inside Video Games" loading="lazy">
+        <span class="rank">#2</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">The $20M Business Hidden Inside Video Games</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=McO_xcf4IYw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_3.jpg" alt="How to Build & Sell Ai Services (Full Course)" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to Build & Sell Ai Services (Full Course)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=AArGhYdcJXk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_4.jpg" alt="The Most Profitable AI Business Isn’t Software" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">The Most Profitable AI Business Isn’t Software</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=VPQnhIfvuzg" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_5.jpg" alt="7 AI Businesses You Can Start with Claude Agents" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">7 AI Businesses You Can Start with Claude Agents</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    <div class="creator-card" id="creator-kagan">
+      <h3>Noah Kagan</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=iQ7oJRgj1-4" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_1.jpg" alt="POV: You’re Running a $96M / year Business" loading="lazy">
+        <span class="rank">#1</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">POV: You’re Running a $96M / year Business</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=mzXJDP9Hoic" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_2.jpg" alt="I make $100M/year … I’m going to die with $0" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">I make $100M/year … I’m going to die with $0</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=9Rcbt6Ydk0U" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_3.jpg" alt="I made $3.3M last year... here’s how" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">I made $3.3M last year... here’s how</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=U3EaDKXvSY8" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_4.jpg" alt="How I Turned $49k In Debt To $500 Million" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How I Turned $49k In Debt To $500 Million</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=FRbeL6rEWjY" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_5.jpg" alt="I Met 25 Billionaires… Here's 6 Lessons They Taught Me" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">I Met 25 Billionaires… Here's 6 Lessons They Taught Me</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    </div>
+    
+
+    <div class="objective-card" id="objective-sell-guest">
+      <h3><span class="icon">🎙️</span> Sell Guest (Podcast)</h3>
+      <div class="headline">Lead with the guest's name + provocative quote.</div>
+      <p class="subtext">Faces + guest-name text. The click decision is mostly about who's on the show, so the guest gets the visual hierarchy.</p>
+      
+    <div class="creator-card" id="creator-mylett">
+      <h3>Ed Mylett</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=dphaa3ql2r0" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_1.jpg" alt="Andy Frisella Breaks Down the Mindset That Creates Elite Performers!" loading="lazy">
+        <span class="rank">#1</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">Andy Frisella Breaks Down the Mindset That Creates Elite Performers!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=HNHA16qFyFI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_2.jpg" alt="Why You Haven't Met Your Full Potential (Yet) | Ed Mylett" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Why You Haven't Met Your Full Potential (Yet) | Ed Mylett</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=HcTCNOKGt-E" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_3.jpg" alt="Candace Cameron Bure Gets Real About Faith, Fame, and Starting Over!" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Candace Cameron Bure Gets Real About Faith, Fame, and Starting Over!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=v2gwPDKCtLU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_4.jpg" alt="How To Do 10 Years Of Work In 2 | Ed Mylett" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Do 10 Years Of Work In 2 | Ed Mylett</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=goAZD7X9dmk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_5.jpg" alt="What You Were Never Told About the O. J. Simpson Case Feat. Chris Todd" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">What You Were Never Told About the O. J. Simpson Case Feat. Chris Todd</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    <div class="creator-card" id="creator-doac">
+      <h3>Diary of a CEO</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=zc8Nh4TMB1s" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_1.jpg" alt="The Sugar Doctor's WARNING: The &quot;Healthy&quot; Foods Quietly Destroying Your Body! - Dr David Unwin" loading="lazy">
+        <span class="rank">#1</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">The Sugar Doctor's WARNING: The "Healthy" Foods Quietly Destroying Your Body! - Dr David Unwin</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=V-z0k5xu1hM" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_2.jpg" alt="UFO Roundtable: Former CIA Scientist Proves Aliens Exist!" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">UFO Roundtable: Former CIA Scientist Proves Aliens Exist!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=kwEtOyaFhCA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_3.jpg" alt="Pulitzer Prize Historian: You Won't Notice Until It’s Too Late - Anne Applebaum" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Pulitzer Prize Historian: You Won't Notice Until It’s Too Late - Anne Applebaum</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=BTJGr78-zyw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_4.jpg" alt="Professor Jiang: World War 3 Is About To Begin, Let Me Explain!" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Professor Jiang: World War 3 Is About To Begin, Let Me Explain!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=NdU6UdUKaYc" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_5.jpg" alt="Scott Galloway: AI Wasn’t Built For You. The Rich Don’t Need You Anymore!" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Scott Galloway: AI Wasn’t Built For You. The Rich Don’t Need You Anymore!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    </div>
+    
+
+    <div class="objective-card" id="objective-sell-wisdom">
+      <h3><span class="icon">📖</span> Sell Wisdom</h3>
+      <div class="headline">Position content as serious wisdom — book-cover energy, not hype.</div>
+      <p class="subtext">Serif type, cream palette, side-eye-smirk OR no face. Differentiates against the wealth-bro lane.</p>
+      
+    <div class="creator-card" id="creator-koe">
+      <h3>Dan Koe</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=7HM-rptYdTs" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_1.jpg" alt="How To Grow An Audience If You Have 0 Followers (It's Only 2 Habits)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Grow An Audience If You Have 0 Followers (It's Only 2 Habits)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=YM0_8mOaKic" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_2.jpg" alt="How To Completely Reinvent Yourself In 6-12 Months" loading="lazy">
+        <span class="rank">#2</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">How To Completely Reinvent Yourself In 6-12 Months</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=3rNqNvwNcrM" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_3.jpg" alt="I'm begging you to start writing essays (even if you hate writing)" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">I'm begging you to start writing essays (even if you hate writing)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=vRsO_SmCYbQ" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_4.jpg" alt="If you've lost your creative genius, watch this" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">If you've lost your creative genius, watch this</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=VXgusdDbsQE" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_5.jpg" alt="How To Build A $1M One-Person Business Faster With AI" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Build A $1M One-Person Business Faster With AI</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    <div class="creator-card" id="creator-sahil">
+      <h3>Sahil Bloom</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=lAg2-wWR5wU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_1.jpg" alt="Busy But Behind? (10 Min Fix)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Busy But Behind? (10 Min Fix)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=aA3OUCVSo8Y" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_2.jpg" alt="Feeling Stuck? (Try This 3-Min Test)" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Feeling Stuck? (Try This 3-Min Test)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=jrN-f2wEcOw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_3.jpg" alt="Still Broke? Try This Tonight" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Still Broke? Try This Tonight</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=B2IPxfoHwp8" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_4.jpg" alt="Phone Addict? (Start this tonight)" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Phone Addict? (Start this tonight)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=qsmjQGw0uiU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_5.jpg" alt="13 Innocent Mistakes Quietly Destroying Your 20s" loading="lazy">
+        <span class="rank">#5</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">13 Innocent Mistakes Quietly Destroying Your 20s</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    </div>
+    
+
+    <div class="objective-card" id="objective-sell-education">
+      <h3><span class="icon">📐</span> Sell Education</h3>
+      <div class="headline">Framework or diagram as hero — completable knowledge.</div>
+      <p class="subtext">Visual model fills the canvas, face is secondary. Teacher pose. Muted palette. The opposite of hype.</p>
+      
+    <div class="creator-card" id="creator-abdaal">
+      <h3>Ali Abdaal</h3>
+      
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=dW6pvUx4_jc" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_1.jpg" alt="What's the Point? " loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">What's the Point? </div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=6tmBB5GcOLU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_2.jpg" alt="you only need a phone" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">you only need a phone</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=CFBEih785-I" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_3.jpg" alt="The Simplest Way to Make $10k/month - Case Study" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">The Simplest Way to Make $10k/month - Case Study</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=9rRvmcDpWwA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_4.jpg" alt="The Cost of Getting Rich" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">The Cost of Getting Rich</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=bfENsVP77VQ" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_5.jpg" alt="The Only Investing Video You’ll Ever Need (Start With $0)" loading="lazy">
+        <span class="rank">#5</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">The Only Investing Video You’ll Ever Need (Start With $0)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+    </div>
+    
+</section>
+
+<section id="patterns">
+  <h2><span class="num">03</span> Browse by Pattern</h2>
+  <p class="lede">The 14 reusable visual patterns that show up across the niche. Each card explains the recipe + shows real examples from creators who do it best.</p>
+  
+    <div class="pattern-card" id="pattern-single-anchor-word">
+      <h3><span class="icon">⚓</span> Single Anchor Word</h3>
+      <div class="headline">Used by: Alex Hormozi, Dan Koe, Leila Hormozi</div>
+      <p class="definition"><strong>Definition.</strong> Exactly ONE word + face. Under 10 characters, under 7% of frame area — escapes the algorithm's text penalty entirely.</p>
+      <p class="why"><strong>Why it works.</strong> Maximum click curiosity per pixel. The 1of10/Quasa study found text adds CTR penalty UNLESS it's under 10 chars covering <7% of image — the single-anchor-word pattern hits both bounds.</p>
+      <div class="recipe">recipe: Face + black or dark BG + ONE accent (yellow #FFD93D usually).</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=3fsJFUvA6Ts" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/hormozi_3.jpg" alt="What Makes The Perfect Business (5 Things)" loading="lazy">
+            <span class="rank">Alex Hormozi</span>
+          </div>
+          <div class="meta">
+            <div class="title">What Makes The Perfect Business (5 Things)</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=YM0_8mOaKic" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/koe_2.jpg" alt="How To Completely Reinvent Yourself In 6-12 Months" loading="lazy">
+            <span class="rank">Dan Koe</span>
+          </div>
+          <div class="meta">
+            <div class="title">How To Completely Reinvent Yourself In 6-12 Months</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=e1awpbZxVnw" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/leila_5.jpg" alt="The Psychology of Making More Money" loading="lazy">
+            <span class="rank">Leila Hormozi</span>
+          </div>
+          <div class="meta">
+            <div class="title">The Psychology of Making More Money</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-authority-portrait">
+      <h3><span class="icon">🎯</span> Authority Portrait + Anchor Word</h3>
+      <div class="headline">Used by: Alex Hormozi, Iman Gadzhi, Sharran Srivatsaa, Leila Hormozi</div>
+      <p class="definition"><strong>Definition.</strong> Half-body shot of creator, calm/serious expression (NOT shock-face), occupying 40–50% of frame. Single anchor word or 2–4 word claim in the negative space on the opposite side.</p>
+      <p class="why"><strong>Why it works.</strong> In finance/business specifically, 'calm authority' reads as proof. Faces lift CTR +36% in this niche. Reads as 'I know something you don't' rather than 'look at me.'</p>
+      <div class="recipe">recipe: Desaturated/dark BG + face + 1 accent color (yellow or white).</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=3fsJFUvA6Ts" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/hormozi_3.jpg" alt="What Makes The Perfect Business (5 Things)" loading="lazy">
+            <span class="rank">Alex Hormozi</span>
+          </div>
+          <div class="meta">
+            <div class="title">What Makes The Perfect Business (5 Things)</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=5BgmmGHYk1U" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/gadzhi_1.jpg" alt="Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential" loading="lazy">
+            <span class="rank">Iman Gadzhi</span>
+          </div>
+          <div class="meta">
+            <div class="title">Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=UMiAzkNEM4U" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/sharran_4.jpg" alt="In 18 Minutes, You'll Understand Generational Wealth" loading="lazy">
+            <span class="rank">Sharran Srivatsaa</span>
+          </div>
+          <div class="meta">
+            <div class="title">In 18 Minutes, You'll Understand Generational Wealth</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=e1awpbZxVnw" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/leila_5.jpg" alt="The Psychology of Making More Money" loading="lazy">
+            <span class="rank">Leila Hormozi</span>
+          </div>
+          <div class="meta">
+            <div class="title">The Psychology of Making More Money</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-big-dollar-number">
+      <h3><span class="icon">$</span> Big Dollar Number</h3>
+      <div class="headline">Used by: Charlie Morgan, Jordan Welch, Brett Malinowski, Codie Sanchez, Noah Kagan</div>
+      <p class="definition"><strong>Definition.</strong> A specific large dollar figure ($1M, $600K, $100K/month) is the visual hero — bigger than any other text, in a bright accent, with contrasting outline. Face is secondary.</p>
+      <p class="why"><strong>Why it works.</strong> Specific number > generic adjective. '$600,000' beats 'huge amount.' The eye locks on digits because they're cognitively easier than words to process at thumbnail scale. Specificity also reads as 'real / not exaggerated.'</p>
+      <div class="recipe">recipe: Number in bright accent (yellow / green / orange) with black or contrasting outline. Face/screenshot supporting.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=KeL4GDir1aI" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/morgan_5.jpg" alt="16 ways to make $1,000,000 with a free skool funnel (just like me!)" loading="lazy">
+            <span class="rank">Charlie Morgan</span>
+          </div>
+          <div class="meta">
+            <div class="title">16 ways to make $1,000,000 with a free skool funnel (just like me!)</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=4pN16Ju0Lbw" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/welch_3.jpg" alt="Millionaire Explains: How To Get Rich With $0" loading="lazy">
+            <span class="rank">Jordan Welch</span>
+          </div>
+          <div class="meta">
+            <div class="title">Millionaire Explains: How To Get Rich With $0</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=Y8kHj8LJ2sU" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/malinowski_2.jpg" alt="The $20M Business Hidden Inside Video Games" loading="lazy">
+            <span class="rank">Brett Malinowski</span>
+          </div>
+          <div class="meta">
+            <div class="title">The $20M Business Hidden Inside Video Games</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=yBefMa8LydA" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/codie_4.jpg" alt="How to Manage Time Like a Top 1% CEO" loading="lazy">
+            <span class="rank">Codie Sanchez</span>
+          </div>
+          <div class="meta">
+            <div class="title">How to Manage Time Like a Top 1% CEO</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=iQ7oJRgj1-4" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/kagan_1.jpg" alt="POV: You’re Running a $96M / year Business" loading="lazy">
+            <span class="rank">Noah Kagan</span>
+          </div>
+          <div class="meta">
+            <div class="title">POV: You’re Running a $96M / year Business</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-transformation-arc">
+      <h3><span class="icon">→</span> Transformation Arc</h3>
+      <div class="headline">Used by: Jordan Welch, Charlie Morgan</div>
+      <p class="definition"><strong>Definition.</strong> Two states shown side-by-side or with a directional arrow. Old state (cold, gray, smaller) → new state (warm, bright, larger). Number-arrow-number is the cleanest form: '$0 → $1M', 'Year 1 → Year 5'.</p>
+      <p class="why"><strong>Why it works.</strong> Tells a micro-story in one image. The brain wants to fill the gap between the two states — that gap is the click. Especially powerful in retrospective content where you HAVE both states.</p>
+      <div class="recipe">recipe: Cold/desaturated left → warm/saturated right, with one accent color (often orange or yellow) as the arrow.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=4pN16Ju0Lbw" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/welch_3.jpg" alt="Millionaire Explains: How To Get Rich With $0" loading="lazy">
+            <span class="rank">Jordan Welch</span>
+          </div>
+          <div class="meta">
+            <div class="title">Millionaire Explains: How To Get Rich With $0</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=KeL4GDir1aI" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/morgan_5.jpg" alt="16 ways to make $1,000,000 with a free skool funnel (just like me!)" loading="lazy">
+            <span class="rank">Charlie Morgan</span>
+          </div>
+          <div class="meta">
+            <div class="title">16 ways to make $1,000,000 with a free skool funnel (just like me!)</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-arrow-and-circle">
+      <h3><span class="icon">◯</span> Arrow + Circle Emphasis</h3>
+      <div class="headline">Used by: Brett Malinowski, Jordan Welch, Charlie Morgan</div>
+      <p class="definition"><strong>Definition.</strong> Red/yellow/orange circle or arrow drawn on the thumbnail pointing at the most important visual element (a face detail, a number on a screen, a prop). YouTube-meta convention.</p>
+      <p class="why"><strong>Why it works.</strong> Weaponizes the viewer's instinct to follow visual direction. Reads as 'look HERE' — the eye is forced to land on the payoff before deciding to click.</p>
+      <div class="recipe">recipe: Red or yellow circle/arrow over an otherwise busy thumbnail.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=Y8kHj8LJ2sU" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/malinowski_2.jpg" alt="The $20M Business Hidden Inside Video Games" loading="lazy">
+            <span class="rank">Brett Malinowski</span>
+          </div>
+          <div class="meta">
+            <div class="title">The $20M Business Hidden Inside Video Games</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=4pN16Ju0Lbw" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/welch_3.jpg" alt="Millionaire Explains: How To Get Rich With $0" loading="lazy">
+            <span class="rank">Jordan Welch</span>
+          </div>
+          <div class="meta">
+            <div class="title">Millionaire Explains: How To Get Rich With $0</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=KeL4GDir1aI" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/morgan_5.jpg" alt="16 ways to make $1,000,000 with a free skool funnel (just like me!)" loading="lazy">
+            <span class="rank">Charlie Morgan</span>
+          </div>
+          <div class="meta">
+            <div class="title">16 ways to make $1,000,000 with a free skool funnel (just like me!)</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-dark-cinematic">
+      <h3><span class="icon">🌃</span> Dark Cinematic Minimalist</h3>
+      <div class="headline">Used by: Iman Gadzhi, Diary of a CEO, Alex Hormozi</div>
+      <p class="definition"><strong>Definition.</strong> Dark/cinematic backdrop (NYC skyline at night, blurred luxury location, deep navy/charcoal studio). Face well-lit with hard rim light. Single bright accent. Empty space dominates.</p>
+      <p class="why"><strong>Why it works.</strong> Hits the 'aspirational stillness' emotional read that the wealth-mentor niche has converged on. Per AmpiFire's 2026 trend study, this is beating cluttered shock-face right now. Premium positioning = premium pricing power.</p>
+      <div class="recipe">recipe: Deep navy / charcoal / black BG + rim-lit subject + ONE bright accent (white or yellow).</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=5BgmmGHYk1U" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/gadzhi_1.jpg" alt="Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential" loading="lazy">
+            <span class="rank">Iman Gadzhi</span>
+          </div>
+          <div class="meta">
+            <div class="title">Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=zc8Nh4TMB1s" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/doac_1.jpg" alt="The Sugar Doctor's WARNING: The &quot;Healthy&quot; Foods Quietly Destroying Your Body! - Dr David Unwin" loading="lazy">
+            <span class="rank">Diary of a CEO</span>
+          </div>
+          <div class="meta">
+            <div class="title">The Sugar Doctor's WARNING: The "Healthy" Foods Quietly Destroying Your Body! - Dr David Unwin</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=3fsJFUvA6Ts" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/hormozi_3.jpg" alt="What Makes The Perfect Business (5 Things)" loading="lazy">
+            <span class="rank">Alex Hormozi</span>
+          </div>
+          <div class="meta">
+            <div class="title">What Makes The Perfect Business (5 Things)</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-aspirational-bokeh">
+      <h3><span class="icon">🏙️</span> Aspirational Location Bokeh</h3>
+      <div class="headline">Used by: Iman Gadzhi</div>
+      <p class="definition"><strong>Definition.</strong> Blurred luxury location behind the creator — Dubai skyline, NYC, jets, penthouses, sports cars. The location itself does the proof work.</p>
+      <p class="why"><strong>Why it works.</strong> Sells the LIFESTYLE before the lesson. Even if you don't believe the title's promise, the bokeh reads as 'this person made it.' That's the implicit credential.</p>
+      <div class="recipe">recipe: Heavy Gaussian blur on background, sharp foreground subject, cinematic color grade.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=5BgmmGHYk1U" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/gadzhi_1.jpg" alt="Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential" loading="lazy">
+            <span class="rank">Iman Gadzhi</span>
+          </div>
+          <div class="meta">
+            <div class="title">Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-screenshot-as-prop">
+      <h3><span class="icon">📊</span> Screenshot As Prop</h3>
+      <div class="headline">Used by: Charlie Morgan, Brett Malinowski, Jordan Welch, Codie Sanchez</div>
+      <p class="definition"><strong>Definition.</strong> A real or stylized screenshot of an ad dashboard, bank balance, viral video, or calendar overlaid alongside the creator. Provides 'receipts' coding.</p>
+      <p class="why"><strong>Why it works.</strong> Receipts. Especially powerful in agency / paid-ads / income-claim videos where the audience is skeptical by default. The screenshot makes the claim harder to dismiss as bullshit.</p>
+      <div class="recipe">recipe: Dashboard or screen capture with green-up-arrows / large numbers, overlaid next to face.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=KeL4GDir1aI" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/morgan_5.jpg" alt="16 ways to make $1,000,000 with a free skool funnel (just like me!)" loading="lazy">
+            <span class="rank">Charlie Morgan</span>
+          </div>
+          <div class="meta">
+            <div class="title">16 ways to make $1,000,000 with a free skool funnel (just like me!)</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=Y8kHj8LJ2sU" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/malinowski_2.jpg" alt="The $20M Business Hidden Inside Video Games" loading="lazy">
+            <span class="rank">Brett Malinowski</span>
+          </div>
+          <div class="meta">
+            <div class="title">The $20M Business Hidden Inside Video Games</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=4pN16Ju0Lbw" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/welch_3.jpg" alt="Millionaire Explains: How To Get Rich With $0" loading="lazy">
+            <span class="rank">Jordan Welch</span>
+          </div>
+          <div class="meta">
+            <div class="title">Millionaire Explains: How To Get Rich With $0</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=yBefMa8LydA" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/codie_4.jpg" alt="How to Manage Time Like a Top 1% CEO" loading="lazy">
+            <span class="rank">Codie Sanchez</span>
+          </div>
+          <div class="meta">
+            <div class="title">How to Manage Time Like a Top 1% CEO</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-shock-face">
+      <h3><span class="icon">😲</span> Shock Face / Wide-Eyed</h3>
+      <div class="headline">Used by: Jordan Welch, Brett Malinowski, Noah Kagan</div>
+      <p class="definition"><strong>Definition.</strong> Open-mouth, wide-eyed surprised expression. MrBeast/ecom lineage. Dominant in YouTube-meta and e-com corners, weaker in pure-mentor space.</p>
+      <p class="why"><strong>Why it works.</strong> Triggers mirror-neuron emotional contagion — viewer feels the surprise, wants to know what caused it. Works HARD in entertainment but RISKS prestige in mentor space (Hormozi specifically avoids it).</p>
+      <div class="recipe">recipe: Bright saturated BG, face centered or one side, big text, often a prop in hand.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=4pN16Ju0Lbw" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/welch_3.jpg" alt="Millionaire Explains: How To Get Rich With $0" loading="lazy">
+            <span class="rank">Jordan Welch</span>
+          </div>
+          <div class="meta">
+            <div class="title">Millionaire Explains: How To Get Rich With $0</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=Y8kHj8LJ2sU" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/malinowski_2.jpg" alt="The $20M Business Hidden Inside Video Games" loading="lazy">
+            <span class="rank">Brett Malinowski</span>
+          </div>
+          <div class="meta">
+            <div class="title">The $20M Business Hidden Inside Video Games</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=iQ7oJRgj1-4" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/kagan_1.jpg" alt="POV: You’re Running a $96M / year Business" loading="lazy">
+            <span class="rank">Noah Kagan</span>
+          </div>
+          <div class="meta">
+            <div class="title">POV: You’re Running a $96M / year Business</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-dual-face-podcast">
+      <h3><span class="icon">🎙️</span> Dual Face (Podcast)</h3>
+      <div class="headline">Used by: Ed Mylett, Diary of a CEO</div>
+      <p class="definition"><strong>Definition.</strong> Host + guest faces side-by-side or stacked. Guest name as the primary text. The faces ARE the props — no overlays, no charts.</p>
+      <p class="why"><strong>Why it works.</strong> Multiple faces beat single faces per the 1of10 study — social proof + 'something is happening here' effect. In podcasts, the click decision is mostly about the guest, so guest name treatment matters as much as the host.</p>
+      <div class="recipe">recipe: Cinematic warm or dark BG, two faces, guest name in large heavy sans.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=dphaa3ql2r0" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/mylett_1.jpg" alt="Andy Frisella Breaks Down the Mindset That Creates Elite Performers!" loading="lazy">
+            <span class="rank">Ed Mylett</span>
+          </div>
+          <div class="meta">
+            <div class="title">Andy Frisella Breaks Down the Mindset That Creates Elite Performers!</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=zc8Nh4TMB1s" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/doac_1.jpg" alt="The Sugar Doctor's WARNING: The &quot;Healthy&quot; Foods Quietly Destroying Your Body! - Dr David Unwin" loading="lazy">
+            <span class="rank">Diary of a CEO</span>
+          </div>
+          <div class="meta">
+            <div class="title">The Sugar Doctor's WARNING: The "Healthy" Foods Quietly Destroying Your Body! - Dr David Unwin</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-framework-diagram">
+      <h3><span class="icon">📐</span> Framework / Diagram</h3>
+      <div class="headline">Used by: Ali Abdaal</div>
+      <p class="definition"><strong>Definition.</strong> Visual model, framework, flowchart, or labeled diagram fills 60-70% of the thumb. Creator's face the remaining 30-40%. Teacher-pose.</p>
+      <p class="why"><strong>Why it works.</strong> Signals 'completable, learnable knowledge' — what productivity/study audiences click for. Visual opposite of hype. Premium-teacher positioning.</p>
+      <div class="recipe">recipe: Muted earth tones, framework as hero in clean strokes, face with teacher gesture.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=bfENsVP77VQ" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/abdaal_5.jpg" alt="The Only Investing Video You’ll Ever Need (Start With $0)" loading="lazy">
+            <span class="rank">Ali Abdaal</span>
+          </div>
+          <div class="meta">
+            <div class="title">The Only Investing Video You’ll Ever Need (Start With $0)</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-minimalist-anti-polish">
+      <h3><span class="icon">✍️</span> Anti-Polish Minimalist</h3>
+      <div class="headline">Used by: Dan Koe, Sahil Bloom</div>
+      <p class="definition"><strong>Definition.</strong> Hand-drawn elements, whiteboard-style sketch, B&W with one accent. Deliberately positioned AGAINST polish.</p>
+      <p class="why"><strong>Why it works.</strong> In a niche full of suit-and-skyline thumbs, sketch-style reads as 'real / not marketing' — its own form of premium. Differentiation through inversion.</p>
+      <div class="recipe">recipe: B&W + one accent (red or yellow), hand-drawn arrows / scribble.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=YM0_8mOaKic" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/koe_2.jpg" alt="How To Completely Reinvent Yourself In 6-12 Months" loading="lazy">
+            <span class="rank">Dan Koe</span>
+          </div>
+          <div class="meta">
+            <div class="title">How To Completely Reinvent Yourself In 6-12 Months</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=qsmjQGw0uiU" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/sahil_5.jpg" alt="13 Innocent Mistakes Quietly Destroying Your 20s" loading="lazy">
+            <span class="rank">Sahil Bloom</span>
+          </div>
+          <div class="meta">
+            <div class="title">13 Innocent Mistakes Quietly Destroying Your 20s</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-book-cover-serif">
+      <h3><span class="icon">📚</span> Book-Cover Serif</h3>
+      <div class="headline">Used by: Sahil Bloom</div>
+      <p class="definition"><strong>Definition.</strong> Serif or semi-serif text (rare in this niche), cream/warm BG, single wisdom statement. Reads like a self-help book cover.</p>
+      <p class="why"><strong>Why it works.</strong> Audience pre-conditioned to associate serif + cream with 'serious wisdom.' Differentiated against the wealth-bro sans-serif lane.</p>
+      <div class="recipe">recipe: Cream / sage / warm-neutral, serif type, minimal palette.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=qsmjQGw0uiU" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/sahil_5.jpg" alt="13 Innocent Mistakes Quietly Destroying Your 20s" loading="lazy">
+            <span class="rank">Sahil Bloom</span>
+          </div>
+          <div class="meta">
+            <div class="title">13 Innocent Mistakes Quietly Destroying Your 20s</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+
+    <div class="pattern-card" id="pattern-executive-portrait">
+      <h3><span class="icon">💼</span> Executive Portrait</h3>
+      <div class="headline">Used by: Sharran Srivatsaa, Codie Sanchez, Iman Gadzhi</div>
+      <p class="definition"><strong>Definition.</strong> Suit, professional gesture (hand on chin, palm out), studio or clean backdrop. Reads as 'advisor / wealth manager' rather than 'creator.'</p>
+      <p class="why"><strong>Why it works.</strong> Real-estate, high-ticket, family-office audiences need 'advisor' coding more than 'shock' coding. This pattern signals the format of business books / financial advisors who already convert this audience.</p>
+      <div class="recipe">recipe: Navy / gold / cream, suit jacket, clean studio.</div>
+      <div class="thumb-grid">
+        <a class="thumb" href="https://www.youtube.com/watch?v=UMiAzkNEM4U" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/sharran_4.jpg" alt="In 18 Minutes, You'll Understand Generational Wealth" loading="lazy">
+            <span class="rank">Sharran Srivatsaa</span>
+          </div>
+          <div class="meta">
+            <div class="title">In 18 Minutes, You'll Understand Generational Wealth</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=yBefMa8LydA" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/codie_4.jpg" alt="How to Manage Time Like a Top 1% CEO" loading="lazy">
+            <span class="rank">Codie Sanchez</span>
+          </div>
+          <div class="meta">
+            <div class="title">How to Manage Time Like a Top 1% CEO</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        
+        <a class="thumb" href="https://www.youtube.com/watch?v=5BgmmGHYk1U" target="_blank" rel="noopener">
+          <div class="img-wrap">
+            <img src="thumbnails/gadzhi_1.jpg" alt="Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential" loading="lazy">
+            <span class="rank">Iman Gadzhi</span>
+          </div>
+          <div class="meta">
+            <div class="title">Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential</div>
+            <div class="yt-link">▶ youtube.com</div>
+          </div>
+        </a>
+        </div>
+    </div>
+    
+</section>
+
+<section id="creators">
+  <h2><span class="num">04</span> Creator Deep-Dives</h2>
+  <p class="lede">All 14 competitors. Each card has their handle, sub count, palette, facial lane, signature, why-it-works analysis, top-5 thumbnails, and which thumb is the textbook example of their style.</p>
+  
+    <div class="creator-card" id="creator-hormozi">
+      <h3>Alex Hormozi</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @AlexHormozi</span>
+          <span><strong>Subs:</strong> ~4.5M</span>
+          <span><strong>Palette:</strong> Black + white + yellow #FFD93D (one accent rule, religiously)</span>
+          <span><strong>Facial lane:</strong> Calm-serious / intense gaze — NEVER shock-face</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Authority</span> <span class="tag">Single Anchor Word</span> <span class="tag">Authority Portrait + Anchor Word</span> <span class="tag">Dark Cinematic Minimalist</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Half-body portrait against a flat dark background. 1–3 word anchor text in heavy condensed sans (Anton/Inter Black). Yellow accent is his calling card. Face occupies ~45% of frame; text in the opposite half. No props, no clutter — religiously minimal.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> In finance/business, faces lift CTR +36% (vs near-zero broadly per the 1of10/Quasa 323K study). Text under 10 chars dodges the -19% text penalty entirely. Hormozi has the most disciplined system on YouTube — every thumb is recognizable as his at 10% scale, which compounds brand recognition. The 'calm authority' read converts in the wealth-mentor niche where shock-face actually hurts.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #3 "What Makes The Perfect Business (5 Things)":</strong> Anchor text + face + flat BG — the textbook Hormozi formula.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=EonibwnAEME" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_1.jpg" alt="How to Catch Up In Life (Using Logic)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to Catch Up In Life (Using Logic)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=OQf2Ba-Lp_4" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_2.jpg" alt="Building a $2,500,000 Business for a Stranger in 36 Minutes" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Building a $2,500,000 Business for a Stranger in 36 Minutes</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=3fsJFUvA6Ts" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_3.jpg" alt="What Makes The Perfect Business (5 Things)" loading="lazy">
+        <span class="rank">#3</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">What Makes The Perfect Business (5 Things)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=0EqJD2o-Mnk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_4.jpg" alt="Helping 6 Business Owners Scale in 33 Minutes" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Helping 6 Business Owners Scale in 33 Minutes</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=fr78adfAnuA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/hormozi_5.jpg" alt="How to Use AI in Your Business in 2026" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to Use AI in Your Business in 2026</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-gadzhi">
+      <h3>Iman Gadzhi</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @ImanGadzhi</span>
+          <span><strong>Subs:</strong> ~5M</span>
+          <span><strong>Palette:</strong> Deep navy / charcoal / cream + ONE bright accent (yellow or white)</span>
+          <span><strong>Facial lane:</strong> Sharp, contemplative, slightly serious — never grinning</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Lifestyle</span> <span class="tag">Dark Cinematic Minimalist</span> <span class="tag">Authority Portrait + Anchor Word</span> <span class="tag">Aspirational Location Bokeh</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Face right or center, suit or fitted black tee, blurred aspirational location behind (Dubai, NYC, jets, penthouses). Short text — often a single number ('$1M', 'Year 24') in the empty half. Heavy negative space. Cinematic rim-light separating subject from BG.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Gadzhi sells the lifestyle BEFORE he sells the lesson — the blurred jet/skyline IS the proof. The 'aspirational stillness' emotional read is what the 2026 wealth-mentor niche has converged on (per AmpiFire's 2026 trend study, clean composition + bold contrast + negative space is beating cluttered shock-face). Cinematic palette = premium positioning, which lets him charge premium prices.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #1 "Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential":</strong> Aspirational bokeh + face + minimal text — Gadzhi at his most distilled.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=5BgmmGHYk1U" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_1.jpg" alt="Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential" loading="lazy">
+        <span class="rank">#1</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=pLxRBCBY1HQ" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_2.jpg" alt="10 Years of Business Knowledge In 19 Minutes" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">10 Years of Business Knowledge In 19 Minutes</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=NqPHDrQwiro" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_3.jpg" alt="Give me 16 minutes and I’ll brainwash you into thinking like a Millionaire" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Give me 16 minutes and I’ll brainwash you into thinking like a Millionaire</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=O6DrQJ5OOlU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_4.jpg" alt="How Using “Dark Motivation” Made Me Rich" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How Using “Dark Motivation” Made Me Rich</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=1QBBldKX4k8" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/gadzhi_5.jpg" alt="What to do when you feel like doing NOTHING" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">What to do when you feel like doing NOTHING</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-morgan">
+      <h3>Charlie Morgan</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @charliemorganbusiness</span>
+          <span><strong>Subs:</strong> ~310K</span>
+          <span><strong>Palette:</strong> Bright greens / yellows / occasional red — less restrained than Hormozi</span>
+          <span><strong>Facial lane:</strong> Expressive — slight grin, hand pointing, eyebrow raise</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Outcome (Big Number)</span> <span class="tag">Big Dollar Number</span> <span class="tag">Screenshot As Prop</span> <span class="tag">Authority Portrait + Anchor Word</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Specific dollar figure is the hero ('$600,000', '$1M/month'). Face occupies ~30%, dollar number ~40%, optional dashboard screenshot fills the rest. Heavy condensed sans, white with one bright accent color for the number. Outlined for legibility over busy backgrounds.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Specific number > generic adjective — the eye locks on digits. '$600,000' beats 'huge amount.' Charlie weaponizes the screenshot-as-prop pattern (real-looking ad dashboards) for receipts-coded proof, which agency / paid-ads viewers need to click. He's the cleanest practitioner of the 'big-dollar-number' school.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #5 "16 ways to make $1,000,000 with a free skool funnel (just like me!)":</strong> Big dollar figure + face — receipts coding even without a literal screenshot.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=HAQhw5HtSqI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_1.jpg" alt="How to run a hyper-profitable business partnership (like me)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to run a hyper-profitable business partnership (like me)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=J4q_DF7pSWI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_2.jpg" alt="the dark side of $1M/mo (managing 'extreme' burnout)" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">the dark side of $1M/mo (managing 'extreme' burnout)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=KnT4taIvVkk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_3.jpg" alt="Why business & finance personal brands &quot;fall off&quot; & become irrelevant" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Why business & finance personal brands "fall off" & become irrelevant</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=DTMj8eWYO2k" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_4.jpg" alt="&quot;Bulk and Cut&quot; is the best business strategy to get to $1M/mo" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">"Bulk and Cut" is the best business strategy to get to $1M/mo</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=KeL4GDir1aI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/morgan_5.jpg" alt="16 ways to make $1,000,000 with a free skool funnel (just like me!)" loading="lazy">
+        <span class="rank">#5</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">16 ways to make $1,000,000 with a free skool funnel (just like me!)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-welch">
+      <h3>Jordan Welch</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @JordanWelch</span>
+          <span><strong>Subs:</strong> ~2M</span>
+          <span><strong>Palette:</strong> Bright saturated greens / yellows; solid color or white studio backdrops</span>
+          <span><strong>Facial lane:</strong> Wide eyes, open mouth, holding-an-object pose — MrBeast/ecom lineage</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Outcome (Big Number)</span> <span class="tag">Big Dollar Number</span> <span class="tag">Screenshot As Prop</span> <span class="tag">Shock Face / Wide-Eyed</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Half-body, big expression (wide eyes, open mouth, holding a prop). Short claim + a number ('$10,000 DAY', 'I TRIED…'). White with green or yellow accent. Cash stacks, MacBook, products, dashboard screenshots as props. Bright saturated backgrounds.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Welch's lineage is e-com → MrBeast-influenced thumbnail grammar. The shock-face works in his corner because his audience is younger and ecom-coded, where shock = excitement = click. He pairs it with hard receipts (cash, dashboards) so the click survives the title-reveal sniff test.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #3 "Millionaire Explains: How To Get Rich With $0":</strong> Cash + face + number — Welch's full toolkit on display.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=7-Sg2RKNMZE" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_1.jpg" alt="How I'd Start a 1-Person Business With Claude AI in 30 Days" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How I'd Start a 1-Person Business With Claude AI in 30 Days</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=klmEkOZB9Uw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_2.jpg" alt="Day In The Life Of A Multi-Millionaire In Buenos Aires" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Day In The Life Of A Multi-Millionaire In Buenos Aires</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=4pN16Ju0Lbw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_3.jpg" alt="Millionaire Explains: How To Get Rich With $0" loading="lazy">
+        <span class="rank">#3</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">Millionaire Explains: How To Get Rich With $0</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=ieeCpOjMNeI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_4.jpg" alt="things i've learned &quot;getting rich&quot; in my 20s..." loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">things i've learned "getting rich" in my 20s...</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=5SSzRxFOM9c" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/welch_5.jpg" alt="i sold everything" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">i sold everything</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-malinowski">
+      <h3>Brett Malinowski</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @TheBrettWay</span>
+          <span><strong>Subs:</strong> ~600K</span>
+          <span><strong>Palette:</strong> Bright — cyan or red dominant, often face-vs-screenshot split</span>
+          <span><strong>Facial lane:</strong> Wide-eyed curious / shock — YouTube-meta convention</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Curiosity (Shock / Hook)</span> <span class="tag">Arrow + Circle Emphasis</span> <span class="tag">Screenshot As Prop</span> <span class="tag">Shock Face / Wide-Eyed</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Face pinned to one side, big expression. Punchy number + noun ('$100k', 'billions'). White + a single bright accent (cyan/red/yellow). Red circles + arrows pointing at numbers/charts. Often a guest's face or viral-video screenshot in the other half.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Brett studies viral mechanics on-record and applies them to himself. Arrows + circles weaponize the viewer's instinct to follow visual direction — the eye is FORCED to land on the payoff. The face-vs-screenshot split is the YouTube-meta convention that signals 'I'm reacting to / analyzing X' which is endlessly clickable.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #2 "The $20M Business Hidden Inside Video Games":</strong> Number-driven curiosity hook with a contrasting visual element.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=8V05zvCaqZE" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_1.jpg" alt="Watch me build a $10,000+ App with AI in 1 Hour" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Watch me build a $10,000+ App with AI in 1 Hour</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=Y8kHj8LJ2sU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_2.jpg" alt="The $20M Business Hidden Inside Video Games" loading="lazy">
+        <span class="rank">#2</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">The $20M Business Hidden Inside Video Games</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=McO_xcf4IYw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_3.jpg" alt="How to Build & Sell Ai Services (Full Course)" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to Build & Sell Ai Services (Full Course)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=AArGhYdcJXk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_4.jpg" alt="The Most Profitable AI Business Isn’t Software" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">The Most Profitable AI Business Isn’t Software</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=VPQnhIfvuzg" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/malinowski_5.jpg" alt="7 AI Businesses You Can Start with Claude Agents" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">7 AI Businesses You Can Start with Claude Agents</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-mylett">
+      <h3>Ed Mylett</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @EdMylettShow</span>
+          <span><strong>Subs:</strong> ~2M</span>
+          <span><strong>Palette:</strong> Warm — golds, deep reds, blacks. Cinematic lighting.</span>
+          <span><strong>Facial lane:</strong> Big smile or open laugh — warm energy, NOT intense</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Guest (Podcast)</span> <span class="tag">Dual Face (Podcast)</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Front-and-center face, often with a guest (podcast format). Guest name + topic in heavy sans serif, white. Often a yellow/red accent line. Cinematic warm lighting. Faces ARE the props — no overlays, no charts.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Podcast thumbnails live or die on the guest's name recognition + the host's warmth. Mylett's smile signals 'this is an enjoyable conversation' which is the opposite of the intense-mentor archetype. The dual-face composition broadcasts 'something is happening here' (per the 1of10 study, multiple faces beat single faces).</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #1 "Andy Frisella Breaks Down the Mindset That Creates Elite Performers!":</strong> Dual-face with guest name as the click-driver — peak podcast convention.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=dphaa3ql2r0" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_1.jpg" alt="Andy Frisella Breaks Down the Mindset That Creates Elite Performers!" loading="lazy">
+        <span class="rank">#1</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">Andy Frisella Breaks Down the Mindset That Creates Elite Performers!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=HNHA16qFyFI" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_2.jpg" alt="Why You Haven't Met Your Full Potential (Yet) | Ed Mylett" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Why You Haven't Met Your Full Potential (Yet) | Ed Mylett</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=HcTCNOKGt-E" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_3.jpg" alt="Candace Cameron Bure Gets Real About Faith, Fame, and Starting Over!" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Candace Cameron Bure Gets Real About Faith, Fame, and Starting Over!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=v2gwPDKCtLU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_4.jpg" alt="How To Do 10 Years Of Work In 2 | Ed Mylett" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Do 10 Years Of Work In 2 | Ed Mylett</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=goAZD7X9dmk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/mylett_5.jpg" alt="What You Were Never Told About the O. J. Simpson Case Feat. Chris Todd" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">What You Were Never Told About the O. J. Simpson Case Feat. Chris Todd</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-sharran">
+      <h3>Sharran Srivatsaa</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @sharran</span>
+          <span><strong>Subs:</strong> ~270K</span>
+          <span><strong>Palette:</strong> Navy + cream + gold accent — Acquisition.com house style</span>
+          <span><strong>Facial lane:</strong> Serious / executive — mid-range gesture (hand on chin, palm out)</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Authority</span> <span class="tag">Executive Portrait</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Face right or center, suit jacket, mid-range gesture. 3–4 word benefit promise ('BILLIONAIRE BLUEPRINT', 'TOP 1%') or listicle number ('5 RULES'). White on dark or contrasting block. Clean studio backdrop. Gold accent.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Sharran's audience is real-estate / high-ticket — they need 'advisor' coding more than 'shock' coding. The executive portrait + benefit promise IS the format of business books / financial advisors who already convert this audience. Listicle numbers ('5 RULES') signal completable, learnable content which lowers the click friction.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #4 "In 18 Minutes, You'll Understand Generational Wealth":</strong> Executive portrait + benefit promise — Acquisition.com visual DNA.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=ISQkh8bu6EU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_1.jpg" alt="The Millionaire Mindset I'm Teaching My Kids" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">The Millionaire Mindset I'm Teaching My Kids</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=Vx_sSMAJjNg" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_2.jpg" alt="In 16 Minutes, I’ll Make People Actually Listen to You" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">In 16 Minutes, I’ll Make People Actually Listen to You</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=OcH0864CLPs" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_3.jpg" alt="How To Stop Fearing Financial Failure" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Stop Fearing Financial Failure</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=UMiAzkNEM4U" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_4.jpg" alt="In 18 Minutes, You'll Understand Generational Wealth" loading="lazy">
+        <span class="rank">#4</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">In 18 Minutes, You'll Understand Generational Wealth</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=OWorFLIbRoo" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sharran_5.jpg" alt="If You Only Watch One Money Video, Make It This" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">If You Only Watch One Money Video, Make It This</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-kagan">
+      <h3>Noah Kagan</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @noahkagan</span>
+          <span><strong>Subs:</strong> ~1M</span>
+          <span><strong>Palette:</strong> GOBY — green / orange / blue / yellow (Kagan's signature)</span>
+          <span><strong>Facial lane:</strong> Shocked / wide-eyed — earnest, not aggressive</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Curiosity (Shock / Hook)</span> <span class="tag">Shock Face / Wide-Eyed</span> <span class="tag">Big Dollar Number</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Face dominant in center or one side, shocked expression. Big dollar number ('$96M/year', '$3.3M'). Founder logos or product screenshots as proof anchors. GOBY palette — green, orange, blue, yellow simultaneously, which would normally muddy but Kagan owns it.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Kagan's audience is solopreneur / startup-curious — the founder-logos pattern is pure social proof ('these real companies talked to him'). The GOBY palette is recognizable enough that his thumbs read as 'his' even with the multi-color approach. Shocked face is earnest in his hands — reads as 'I can't believe this either' rather than manipulative.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #1 "POV: You’re Running a $96M / year Business":</strong> Shock-face + dollar number — the Kagan business-curiosity standard.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=iQ7oJRgj1-4" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_1.jpg" alt="POV: You’re Running a $96M / year Business" loading="lazy">
+        <span class="rank">#1</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">POV: You’re Running a $96M / year Business</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=mzXJDP9Hoic" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_2.jpg" alt="I make $100M/year … I’m going to die with $0" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">I make $100M/year … I’m going to die with $0</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=9Rcbt6Ydk0U" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_3.jpg" alt="I made $3.3M last year... here’s how" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">I made $3.3M last year... here’s how</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=U3EaDKXvSY8" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_4.jpg" alt="How I Turned $49k In Debt To $500 Million" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How I Turned $49k In Debt To $500 Million</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=FRbeL6rEWjY" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/kagan_5.jpg" alt="I Met 25 Billionaires… Here's 6 Lessons They Taught Me" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">I Met 25 Billionaires… Here's 6 Lessons They Taught Me</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-koe">
+      <h3>Dan Koe</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @DanKoeTalks</span>
+          <span><strong>Subs:</strong> ~150K (channel handle changed; main @TheDanKoe ~750K)</span>
+          <span><strong>Palette:</strong> B&W + one accent (occasional red or yellow). Hand-drawn elements.</span>
+          <span><strong>Facial lane:</strong> Side-eye / smirk — calling-out energy, NOT shock</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Wisdom</span> <span class="tag">Anti-Polish Minimalist</span> <span class="tag">Single Anchor Word</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Anti-polish whiteboard or text-driven thumb. Hand-drawn arrows + scribble. Side-eye smirk OR no face at all. Single statement or anchor word ('Copycat', 'Reinvent'). B&W with one accent. Reads almost like a Twitter screenshot.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Koe deliberately positions AGAINST polish. In a niche full of suit-and-skyline thumbs, his sketch-style reads as 'real / not marketing' which is its own form of premium. Side-eye + calling-out copy ('You Are A Copycat') triggers self-implication — the viewer has to click to know if it's about them.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #2 "How To Completely Reinvent Yourself In 6-12 Months":</strong> Reinvention statement + face — Koe at his most disciplined.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=7HM-rptYdTs" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_1.jpg" alt="How To Grow An Audience If You Have 0 Followers (It's Only 2 Habits)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Grow An Audience If You Have 0 Followers (It's Only 2 Habits)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=YM0_8mOaKic" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_2.jpg" alt="How To Completely Reinvent Yourself In 6-12 Months" loading="lazy">
+        <span class="rank">#2</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">How To Completely Reinvent Yourself In 6-12 Months</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=3rNqNvwNcrM" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_3.jpg" alt="I'm begging you to start writing essays (even if you hate writing)" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">I'm begging you to start writing essays (even if you hate writing)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=vRsO_SmCYbQ" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_4.jpg" alt="If you've lost your creative genius, watch this" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">If you've lost your creative genius, watch this</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=VXgusdDbsQE" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/koe_5.jpg" alt="How To Build A $1M One-Person Business Faster With AI" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Build A $1M One-Person Business Faster With AI</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-doac">
+      <h3>Diary of a CEO</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @TheDiaryOfACEO</span>
+          <span><strong>Subs:</strong> ~10M</span>
+          <span><strong>Palette:</strong> Dark cinematic — yellow #FFD60A text accent</span>
+          <span><strong>Facial lane:</strong> Guest face dominant — serious, often direct stare</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Guest (Podcast)</span> <span class="tag">Dark Cinematic Minimalist</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Guest face front-center, dramatic rim-light separating from black BG. Yellow #FFD60A text quoting the guest's most provocative claim. Bartlett himself rarely in the thumb. Heavy cinematic treatment.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> DOAC tests 100+ thumbs per video via Meta ads BEFORE publishing — every thumb you see is the survivor of an A/B gauntlet. The provocative-quote pattern ('AI Wasn't Built For You') triggers controversy-curiosity. Rim-light makes faces pop against the dark BG like movie posters, which is exactly the prestige signal he wants.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #1 "The Sugar Doctor's WARNING: The "Healthy" Foods Quietly Destroying Your Body! - Dr David Unwin":</strong> Guest authority + provocative quote — DOAC's tested formula.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=zc8Nh4TMB1s" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_1.jpg" alt="The Sugar Doctor's WARNING: The &quot;Healthy&quot; Foods Quietly Destroying Your Body! - Dr David Unwin" loading="lazy">
+        <span class="rank">#1</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">The Sugar Doctor's WARNING: The "Healthy" Foods Quietly Destroying Your Body! - Dr David Unwin</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=V-z0k5xu1hM" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_2.jpg" alt="UFO Roundtable: Former CIA Scientist Proves Aliens Exist!" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">UFO Roundtable: Former CIA Scientist Proves Aliens Exist!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=kwEtOyaFhCA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_3.jpg" alt="Pulitzer Prize Historian: You Won't Notice Until It’s Too Late - Anne Applebaum" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Pulitzer Prize Historian: You Won't Notice Until It’s Too Late - Anne Applebaum</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=BTJGr78-zyw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_4.jpg" alt="Professor Jiang: World War 3 Is About To Begin, Let Me Explain!" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Professor Jiang: World War 3 Is About To Begin, Let Me Explain!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=NdU6UdUKaYc" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/doac_5.jpg" alt="Scott Galloway: AI Wasn’t Built For You. The Rich Don’t Need You Anymore!" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Scott Galloway: AI Wasn’t Built For You. The Rich Don’t Need You Anymore!</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-abdaal">
+      <h3>Ali Abdaal</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @aliabdaal</span>
+          <span><strong>Subs:</strong> ~6M</span>
+          <span><strong>Palette:</strong> Muted earth tones — cream, sage, soft blue; never saturated</span>
+          <span><strong>Facial lane:</strong> Friendly teacher — slight smile, open palm gesture</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Education</span> <span class="tag">Framework / Diagram</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Framework diagram or visual model fills 2/3 of the thumb, Ali's face the other 1/3. Muted earth tones. Teacher pose (open palm, gesturing at the framework). Short title text. Reads like a textbook chapter cover.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Ali's audience is productivity / study / learning — they want diagrams not dollar signs. The framework-as-hero pattern signals 'completable knowledge' which is exactly what his audience clicks for. Muted palette is the visual opposite of hype, which positions him AGAINST the wealth-bro lane — premium teacher rather than mentor.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #5 "The Only Investing Video You’ll Ever Need (Start With $0)":</strong> Framework diagram + teacher pose — Abdaal's signature.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=dW6pvUx4_jc" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_1.jpg" alt="What's the Point? " loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">What's the Point? </div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=6tmBB5GcOLU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_2.jpg" alt="you only need a phone" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">you only need a phone</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=CFBEih785-I" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_3.jpg" alt="The Simplest Way to Make $10k/month - Case Study" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">The Simplest Way to Make $10k/month - Case Study</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=9rRvmcDpWwA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_4.jpg" alt="The Cost of Getting Rich" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">The Cost of Getting Rich</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=bfENsVP77VQ" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/abdaal_5.jpg" alt="The Only Investing Video You’ll Ever Need (Start With $0)" loading="lazy">
+        <span class="rank">#5</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">The Only Investing Video You’ll Ever Need (Start With $0)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-sahil">
+      <h3>Sahil Bloom</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @sahil_bloom</span>
+          <span><strong>Subs:</strong> ~500K</span>
+          <span><strong>Palette:</strong> Cream / sage / warm-neutral — book-cover energy</span>
+          <span><strong>Facial lane:</strong> Calm contemplative — sometimes profile, sometimes face-on</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Wisdom</span> <span class="tag">Book-Cover Serif</span> <span class="tag">Anti-Polish Minimalist</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Serif or semi-serif text (rare in this niche), cream/warm BG, single wisdom statement ('The Harsh Truth', '13 Mistakes'). Sometimes a face, sometimes just type. Reads like a self-help book cover.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Sahil's audience overlaps with Sahil's book audience — they're already pre-conditioned to associate serif type + cream paper with 'serious wisdom.' He's the only creator in the niche leaning into book-cover convention, which makes him instantly recognizable. The wisdom statement + soft palette dodges the hype-fatigue that's hitting the wealth-bro lane.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #5 "13 Innocent Mistakes Quietly Destroying Your 20s":</strong> List-format wisdom statement — Sahil's most repeated pattern.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=lAg2-wWR5wU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_1.jpg" alt="Busy But Behind? (10 Min Fix)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Busy But Behind? (10 Min Fix)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=aA3OUCVSo8Y" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_2.jpg" alt="Feeling Stuck? (Try This 3-Min Test)" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Feeling Stuck? (Try This 3-Min Test)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=jrN-f2wEcOw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_3.jpg" alt="Still Broke? Try This Tonight" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Still Broke? Try This Tonight</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=B2IPxfoHwp8" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_4.jpg" alt="Phone Addict? (Start this tonight)" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Phone Addict? (Start this tonight)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=qsmjQGw0uiU" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/sahil_5.jpg" alt="13 Innocent Mistakes Quietly Destroying Your 20s" loading="lazy">
+        <span class="rank">#5</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">13 Innocent Mistakes Quietly Destroying Your 20s</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-codie">
+      <h3>Codie Sanchez</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @CodieSanchezCT</span>
+          <span><strong>Subs:</strong> ~750K</span>
+          <span><strong>Palette:</strong> Black + gold + occasional cream — luxury/main-street blend</span>
+          <span><strong>Facial lane:</strong> Confident smirk + arms-crossed OR holding a contract/cash</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Outcome (Big Number)</span> <span class="tag">Executive Portrait</span> <span class="tag">Big Dollar Number</span> <span class="tag">Screenshot As Prop</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Half-body, smirk + arms crossed or holding a business prop (contract, cash, keys). Black backdrop with gold accent. Condensed sans-serif, often with a specific outcome number. Sometimes a small business / 'boring' business photo as the secondary visual.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Codie owns the 'boring businesses' niche — laundromats, vending machines, car washes — and her thumbs sell the CONTRADICTION (luxury aesthetic + unglamorous business). The smirk + arms-crossed pose signals 'I figured something out you didn't.' Gold + black is straight Hormozi-orbit but the prop choice differentiates her instantly.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #4 "How to Manage Time Like a Top 1% CEO":</strong> Big claim + smirk + business setting — Codie's pattern in full.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=oRpjoHJcX4s" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_1.jpg" alt="How To Replace Your Job in 30 Days from Your Couch" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Replace Your Job in 30 Days from Your Couch</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=LDPE3wa9f2k" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_2.jpg" alt="How To Grow Your Business SO Fast It Feels Illegal" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How To Grow Your Business SO Fast It Feels Illegal</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=NyVBWIW6vbk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_3.jpg" alt="Dollar Cost Averaging is dead... This is how to invest in 2026" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Dollar Cost Averaging is dead... This is how to invest in 2026</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=yBefMa8LydA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_4.jpg" alt="How to Manage Time Like a Top 1% CEO" loading="lazy">
+        <span class="rank">#4</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">How to Manage Time Like a Top 1% CEO</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=pD7TO-Pwlzk" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/codie_5.jpg" alt="How This Garbage Man Built A Billion Dollar Empire" loading="lazy">
+        <span class="rank">#5</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How This Garbage Man Built A Billion Dollar Empire</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+
+    <div class="creator-card" id="creator-leila">
+      <h3>Leila Hormozi</h3>
+      
+        <div class="creator-meta">
+          <span><strong>Handle:</strong> @LeilaHormozi</span>
+          <span><strong>Subs:</strong> ~750K</span>
+          <span><strong>Palette:</strong> Beige / cream / muted neutrals — restraint as branding</span>
+          <span><strong>Facial lane:</strong> Calm-serious, looking off-camera or direct — never shock</span>
+        </div>
+        <div class="tag-row"><span class="tag obj">▸ Sell Authority</span> <span class="tag">Single Anchor Word</span></div>
+        <p style="color:#ccc; margin-bottom:16px;"><strong style="color:#F28129;">Signature:</strong> Half-body or close-up, calm expression, muted beige/cream BG. Single anchor word or short statement. Restraint is the brand — almost no color saturation, almost no props. Reads softer than Alex but with the same anchor-word discipline.</p>
+        <p style="color:#ccc; margin-bottom:12px;"><strong style="color:#F28129;">Why it works:</strong> Leila differentiates from Alex within the same Acquisition.com orbit by leaning into restraint — softer palette, less aggressive face. Hits the female-founder audience that finds the Alex shock-Hormozi lane off-putting. Same anchor-word discipline though, which keeps the brand recognizable.</p>
+        
+        <div class="best-callout">
+          <strong>Best in class — #5 "The Psychology of Making More Money":</strong> Calm authority + muted palette — Leila's restrained variant of the Hormozi formula.
+        </div>
+        
+        
+      <div class="thumb-grid">
+    <a class="thumb" href="https://www.youtube.com/watch?v=DVtuTp3ykcA" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_1.jpg" alt="AI Is Making Your Thinking Worse (And How to Fix It)" loading="lazy">
+        <span class="rank">#1</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">AI Is Making Your Thinking Worse (And How to Fix It)</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=LCc-wecNPKg" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_2.jpg" alt="Is It Time For A Change?" loading="lazy">
+        <span class="rank">#2</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Is It Time For A Change?</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=j64UB9hU6BM" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_3.jpg" alt="Do This and People Will Instantly Respect You" loading="lazy">
+        <span class="rank">#3</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">Do This and People Will Instantly Respect You</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=NqtWADqiMCo" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_4.jpg" alt="How to Outsmart a Toxic Workplace" loading="lazy">
+        <span class="rank">#4</span>
+        
+      </div>
+      <div class="meta">
+        <div class="title">How to Outsmart a Toxic Workplace</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    
+    <a class="thumb" href="https://www.youtube.com/watch?v=e1awpbZxVnw" target="_blank" rel="noopener">
+      <div class="img-wrap">
+        <img src="thumbnails/leila_5.jpg" alt="The Psychology of Making More Money" loading="lazy">
+        <span class="rank">#5</span>
+        <span class="best-badge">Best</span>
+      </div>
+      <div class="meta">
+        <div class="title">The Psychology of Making More Money</div>
+        <div class="yt-link">▶ youtube.com</div>
+      </div>
+    </a>
+    </div>
+    </div>
+    
+</section>
+
+<section id="application">
+  <h2><span class="num">05</span> Application to Sai</h2>
+  <p class="lede">Where Sai's existing "Year 5 of Business" thumbnail sits relative to the patterns above — what it does right, what it leaves on the table, and two concrete variant proposals grounded in the dominant patterns.</p>
+
+  <div class="objective-card">
+    <h3>What Sai's "Year 5" Already Does Right</h3>
+    <ul style="margin-left: 20px; color: #ccc;">
+      <li style="margin-bottom: 8px;">Big orange "5" as hero number — hits <strong style="color:#F28129;">single-anchor-word</strong> + <strong style="color:#F28129;">authority-portrait</strong></li>
+      <li style="margin-bottom: 8px;">NYC skyline = aspirational lifestyle BG — hits <strong style="color:#F28129;">aspirational-bokeh</strong></li>
+      <li style="margin-bottom: 8px;">Brand orange #F28129 is one of the algorithm's preferred accent colors against YouTube's UI</li>
+      <li style="margin-bottom: 8px;">Avoids the shock-face mistake — calm authority is correct for the wealth-mentor lane</li>
+    </ul>
+  </div>
+
+  <div class="objective-card">
+    <h3>What's Missing vs Top Performers</h3>
+    <ol style="margin-left: 20px; color: #ccc;">
+      <li style="margin-bottom: 10px;"><strong style="color:#F28129;">No specific dollar / outcome number.</strong> The "5" is years, not a result. Every other creator anchors a result — "$1M", "$600K", "30 clients". Adding a money figure or follower count unlocks <em>big-dollar-number</em>.</li>
+      <li style="margin-bottom: 10px;"><strong style="color:#F28129;">No transformation-arc.</strong> A "Year 1 → Year 5" or "$0 → $X" version IS the retrospective's natural framing.</li>
+      <li style="margin-bottom: 10px;"><strong style="color:#F28129;">No arrow / circle emphasis.</strong> Brett/Jordan/Charlie all use a red or orange marker to point at the payoff. Sai's orange brand color is begging to be used as that marker.</li>
+      <li style="margin-bottom: 10px;"><strong style="color:#F28129;">No screenshot-as-prop.</strong> A blurred dashboard, IG follower count, or calendar would add the "receipts" coding competitors have.</li>
+      <li style="margin-bottom: 10px;"><strong style="color:#F28129;">Single-side composition not maximized.</strong> Face is roughly centered; the "5" overlaps the right. A cleaner half-and-half (face left, big number right, full bleed) is the Hormozi/Gadzhi formula.</li>
+    </ol>
+  </div>
+
+  <div class="objective-card">
+    <h3>Variant A — Transformation Arc</h3>
+    <div class="headline">Pattern stack: transformation-arc + big-dollar-number + arrow-and-circle</div>
+    <p class="subtext">LEFT half: desaturated 2021-era Sai shot (B&W treatment if no archive footage). Neutral expression. Muted grey BG. RIGHT half: full-color Sai in the blue suit + orange tie. Confident smirk. NYC daylight, blurred. BETWEEN: a bold orange #F28129 arrow sweeping left→right with thin black outline. TEXT TOP-LEFT: <em>YEAR 1</em> in white. TEXT TOP-RIGHT: <em>YEAR 5</em> in orange. Optional small badge on the arrow: a specific number ($XM, follower count, "30+ HIRES").</p>
+    <p style="color:#ccc;"><strong style="color:#F28129;">Why it works:</strong> hits 3 dominant patterns simultaneously, uses Sai's orange as the arrow accent (same role Brett/Jordan use red for), year-to-year framing is the natural retrospective fit. Eye flow reads left-to-right.</p>
+  </div>
+
+  <div class="objective-card">
+    <h3>Variant B — Authority Portrait + Anchor Number</h3>
+    <div class="headline">Pattern stack: authority-portrait + dark-cinematic + single-anchor-word</div>
+    <p class="subtext">Sai LEFT 45% of frame. Tighter crop than the current version — head + shoulders + hint of chest. Heavy Gaussian blur on the NYC window so it reads cinematic bokeh, not literal NYC. RIGHT 55%: largely empty, with a GIANT orange #F28129 "5" filling ~75% of frame height in heavy condensed black sans (Anton or Inter Black) with a 4px black outline. Above: <em>YEAR</em> in Montserrat Black 72pt white. Below: <em>OF BUSINESS</em> in 56pt white. Total text: 11 chars + 1 numeric anchor — under the algorithm's text penalty threshold.</p>
+    <p style="color:#ccc;"><strong style="color:#F28129;">Why it works:</strong> this is the Hormozi/Gadzhi formula reskinned in Sai's brand. The current thumb is 80% of this — the move is: tighter face crop, cleaner half-and-half split, much bigger and more dominant "5", blurred NYC instead of crisp NYC, no overlap of face + "5". The cinematic minimalist treatment is the 2026 trend the niche is converging on.</p>
+  </div>
+
+  <div class="objective-card">
+    <h3>The A/B/C Test Framework (Any Sai Long-Form)</h3>
+    <p style="color:#ccc; margin-bottom:14px;">For any Sai long-form, ship 3 thumbnails to test:</p>
+    <ul style="margin-left: 20px; color: #ccc;">
+      <li style="margin-bottom: 10px;"><strong style="color:#F28129;">One Authority</strong> — number-as-hero, smug-smirk, current style refined (Variant B above)</li>
+      <li style="margin-bottom: 10px;"><strong style="color:#F28129;">One Lifestyle</strong> — cinematic 3/4 profile, blurred skyline as hero, minimal text (Gadzhi school)</li>
+      <li style="margin-bottom: 10px;"><strong style="color:#F28129;">One Outcome</strong> — big specific dollar figure or follower count + screenshot prop (Morgan/Welch school)</li>
+    </ul>
+    <p style="color:#888; margin-top:14px; font-size:13px;">DOAC tests 100+ thumbs via Meta ads pre-launch. We're not there yet, but 3-variant A/B testing is the minimum starting discipline.</p>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="footer">
+  Compiled from 14-creator pattern study · references/thumbnail-patterns-2026-05-18.md<br>
+  Thumbnails pulled via yt-dlp from each channel's popular tab · 70 total
+</div>
+</div>
+<script>
+document.querySelectorAll('.toggle-row').forEach(row => {
+  row.addEventListener('click', e => {
+    if (e.target.tagName !== 'BUTTON') return;
+    const target = e.target.dataset.view;
+    row.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === e.target));
+    document.querySelectorAll('.view').forEach(v => {
+      v.classList.toggle('active', v.dataset.view === target);
+    });
+  });
+});
+</script>
+</body>
+</html>

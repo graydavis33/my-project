@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      /* ===== 5 LEFT-side stick figures (full size) ===== */
+      .figure {
+        position: absolute;
+        width: 140px;
+        height: 180px;
+        top: 180px;
+        transform-origin: 50% 100%;
+      }
+      #figure-0 { left: 250px; }
+      #figure-1 { left: 570px; }
+      #figure-2 { left: 890px; }
+      #figure-3 { left: 1210px; }
+      #figure-4 { left: 1530px; }
+
+      /* ===== Client labels ===== */
+      .client-label {
+        position: absolute;
+        top: 380px;
+        width: 140px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        font-size: 24px;
+        color: #ffffff;
+        letter-spacing: 0.02em;
+        transform-origin: 50% 50%;
+      }
+      #label-0 { left: 250px; }
+      #label-1 { left: 570px; }
+      #label-2 { left: 890px; }
+      #label-3 { left: 1210px; }
+      #label-4 { left: 1530px; }
+
+      /* ===== 30 RIGHT-side small stick figures (generated at runtime) ===== */
+      .figure-small {
+        position: absolute;
+        width: 56px;
+        height: 72px;
+        transform-origin: 50% 100%;
+      }
+
+      /* ===== Buckets (LEFT and RIGHT) — both start same size ===== */
+      .receiver {
+        position: absolute;
+        top: 600px;
+        width: 480px;
+        height: 380px;
+        transform-origin: 50% 100%;
+        z-index: 10;
+      }
+      #receiver-left  { left: 240px; }   /* rim center @ x=480 (left half center) */
+      #receiver-right { left: 1200px; }  /* rim center @ x=1440 (right half center) */
+
+      .box-body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 480px;
+        height: 380px;
+        overflow: visible;
+      }
+
+      /* ===== Vertical divider line down the canvas center ===== */
+      #divider {
+        position: absolute;
+        left: 957px;
+        top: 0;
+        width: 6px;
+        height: 1080px;
+        background: #ffffff;
+        transform-origin: 50% 0%;
+        z-index: 8;
+      }
+
+      /* ===== Falling money glyphs ===== */
+      .dollar {
+        position: absolute;
+        width: 60px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 78px;
+        color: #ffffff;
+        line-height: 1;
+        opacity: 0;
+        z-index: 5;
+      }
+      .dollar-small {
+        position: absolute;
+        width: 30px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 36px;
+        color: #ffffff;
+        line-height: 1;
+        opacity: 0;
+        z-index: 5;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="9"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- 5 half-body white silhouettes (LEFT-side full-size clients) -->
+      <div class="figure" id="figure-0">
+        <svg viewBox="0 0 140 180" width="140" height="180">
+          <circle cx="70" cy="34" r="28" fill="#ffffff"/>
+          <path d="M 25 180 L 25 115 Q 25 82.5 45 69 Q 55 62 70 62 Q 85 62 95 69 Q 115 82.5 115 115 L 115 180 Z" fill="#ffffff"/>
+        </svg>
+      </div>
+      <div class="figure" id="figure-1">
+        <svg viewBox="0 0 140 180" width="140" height="180">
+          <circle cx="70" cy="34" r="28" fill="#ffffff"/>
+          <path d="M 25 180 L 25 115 Q 25 82.5 45 69 Q 55 62 70 62 Q 85 62 95 69 Q 115 82.5 115 115 L 115 180 Z" fill="#ffffff"/>
+        </svg>
+      </div>
+      <div class="figure" id="figure-2">
+        <svg viewBox="0 0 140 180" width="140" height="180">
+          <circle cx="70" cy="34" r="28" fill="#ffffff"/>
+          <path d="M 25 180 L 25 115 Q 25 82.5 45 69 Q 55 62 70 62 Q 85 62 95 69 Q 115 82.5 115 115 L 115 180 Z" fill="#ffffff"/>
+        </svg>
+      </div>
+      <div class="figure" id="figure-3">
+        <svg viewBox="0 0 140 180" width="140" height="180">
+          <circle cx="70" cy="34" r="28" fill="#ffffff"/>
+          <path d="M 25 180 L 25 115 Q 25 82.5 45 69 Q 55 62 70 62 Q 85 62 95 69 Q 115 82.5 115 115 L 115 180 Z" fill="#ffffff"/>
+        </svg>
+      </div>
+      <div class="figure" id="figure-4">
+        <svg viewBox="0 0 140 180" width="140" height="180">
+          <circle cx="70" cy="34" r="28" fill="#ffffff"/>
+          <path d="M 25 180 L 25 115 Q 25 82.5 45 69 Q 55 62 70 62 Q 85 62 95 69 Q 115 82.5 115 115 L 115 180 Z" fill="#ffffff"/>
+        </svg>
+      </div>
+
+      <!-- Client labels -->
+      <div class="client-label" id="label-0">Client 1</div>
+      <div class="client-label" id="label-1">Client 2</div>
+      <div class="client-label" id="label-2">Client 3</div>
+      <div class="client-label" id="label-3">Client 4</div>
+      <div class="client-label" id="label-4">Client 5</div>
+
+      <!-- LEFT bucket — fed by the 5 full-size clients -->
+      <div class="receiver" id="receiver-left">
+        <svg class="box-body" viewBox="0 0 480 380">
+          <g fill="none" stroke="#ffffff" stroke-width="14"
+             stroke-linejoin="round" stroke-linecap="round">
+            <path d="M 80 180 L 115 360 L 365 360 L 400 180"/>
+            <ellipse cx="240" cy="180" rx="160" ry="30"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- RIGHT bucket — fed by the 30 smaller clients -->
+      <div class="receiver" id="receiver-right">
+        <svg class="box-body" viewBox="0 0 480 380">
+          <g fill="none" stroke="#ffffff" stroke-width="14"
+             stroke-linejoin="round" stroke-linecap="round">
+            <path d="M 80 180 L 115 360 L 365 360 L 400 180"/>
+            <ellipse cx="240" cy="180" rx="160" ry="30"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Vertical divider down the canvas center -->
+      <div id="divider"></div>
+    </div>
+
+    <script>
+      // ============================================================
+      // Constants — 16:9 canvas (1920×1080).
+      //   Left half: 0–960 (center 480). Right half: 960–1920 (center 1440).
+      // ============================================================
+      const root = document.getElementById('root');
+
+      const NUM_LEFT_CLIENTS = 5;
+      const NUM_LEFT_DROPS_PER_CLIENT = 4;
+      const LEFT_ORIG_CENTERS_X = [320, 640, 960, 1280, 1600];   // before slide (spread across full canvas)
+      const LEFT_NEW_CENTERS_X  = [160, 320, 480, 640, 800];      // after slide (left half)
+      const LEFT_SLIDE_SCALE = 0.7;
+      const LEFT_SOURCE_Y = 440;
+      const LEFT_TARGET_X = 480;            // left bucket rim center x
+      const LEFT_TARGET_Y = 780;            // bucket rim center y (receiver y=180 + receiver top 600)
+      const LEFT_DOLLAR_TOP_OFFSET = 39;
+      const LEFT_DOLLAR_LEFT_OFFSET = 30;
+
+      // RIGHT side: 30 clients in 6-col x 5-row grid in right half (960–1920)
+      const RIGHT_COLS = 6;
+      const RIGHT_ROWS = 5;
+      const NUM_RIGHT_CLIENTS = RIGHT_COLS * RIGHT_ROWS;
+      const RIGHT_GRID_START_X = 1140;      // first column center x
+      const RIGHT_GRID_START_Y = 180;       // first row center y
+      const RIGHT_GRID_SPACING_X = 120;
+      const RIGHT_GRID_SPACING_Y = 75;
+      const RIGHT_FIG_HALF_W = 28;
+      const RIGHT_FIG_HALF_H = 36;
+      const RIGHT_TARGET_X = 1440;          // right bucket rim center x
+      const RIGHT_TARGET_Y = 780;           // same y as left — both buckets at same height
+      const RIGHT_DOLLAR_TOP_OFFSET = 18;
+      const RIGHT_DOLLAR_LEFT_OFFSET = 15;
+
+      // ============================================================
+      // Generate 30 RIGHT-side small figures + their dollar glyphs
+      // ============================================================
+      const rightFigCenters = [];
+      for (let i = 0; i < NUM_RIGHT_CLIENTS; i++) {
+        const col = i % RIGHT_COLS;
+        const row = Math.floor(i / RIGHT_COLS);
+        const cx = RIGHT_GRID_START_X + col * RIGHT_GRID_SPACING_X;
+        const cy = RIGHT_GRID_START_Y + row * RIGHT_GRID_SPACING_Y;
+        rightFigCenters.push({ cx, cy });
+
+        const fig = document.createElement('div');
+        fig.className = 'figure-small';
+        fig.id = `figure-r-${i}`;
+        fig.style.left = (cx - RIGHT_FIG_HALF_W) + 'px';
+        fig.style.top = (cy - RIGHT_FIG_HALF_H) + 'px';
+        fig.innerHTML = `
+          <svg viewBox="0 0 140 180" width="56" height="72">
+            <circle cx="70" cy="34" r="28" fill="#ffffff"/>
+            <path d="M 25 180 L 25 115 Q 25 82.5 45 69 Q 55 62 70 62 Q 85 62 95 69 Q 115 82.5 115 115 L 115 180 Z" fill="#ffffff"/>
+          </svg>`;
+        root.appendChild(fig);
+
+        const sourceY = cy + RIGHT_FIG_HALF_H + 12;
+        const el = document.createElement('div');
+        el.className = 'dollar-small';
+        el.id = `dollar-r-${i}`;
+        el.textContent = '$';
+        el.style.left = (cx - RIGHT_DOLLAR_LEFT_OFFSET) + 'px';
+        el.style.top = (sourceY - RIGHT_DOLLAR_TOP_OFFSET) + 'px';
+        root.appendChild(el);
+      }
+
+      // ============================================================
+      // Generate LEFT-side dollars at POST-SLIDE positions.
+      // ============================================================
+      for (let ci = 0; ci < NUM_LEFT_CLIENTS; ci++) {
+        for (let di = 0; di < NUM_LEFT_DROPS_PER_CLIENT; di++) {
+          const el = document.createElement('div');
+          el.className = 'dollar';
+          el.id = `dollar-${ci}-${di}`;
+          el.textContent = '$';
+          el.style.left = (LEFT_NEW_CENTERS_X[ci] - LEFT_DOLLAR_LEFT_OFFSET) + 'px';
+          el.style.top = (LEFT_SOURCE_Y - LEFT_DOLLAR_TOP_OFFSET) + 'px';
+          root.appendChild(el);
+        }
+      }
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ============================================================
+      // Initial states
+      // ============================================================
+      gsap.set('.figure', { scale: 0, opacity: 0 });
+      gsap.set('.client-label', { y: 12, opacity: 0 });
+      gsap.set('.figure-small', { scale: 0, opacity: 0 });
+      // Both buckets START at the same size (scale 1.0)
+      gsap.set('#receiver-left',  { scale: 1.0, opacity: 0 });
+      gsap.set('#receiver-right', { scale: 1.0, opacity: 0 });
+      gsap.set('#divider', { scaleY: 0 });
+      gsap.set('.dollar', { x: 0, y: 0, opacity: 0 });
+      gsap.set('.dollar-small', { x: 0, y: 0, opacity: 0 });
+
+      // ============================================================
+      // Phase 1 (0.15s → 1.70s): 5 clients pop in left → right
+      // ============================================================
+      const figureCadence = 0.30;
+      for (let i = 0; i < NUM_LEFT_CLIENTS; i++) {
+        const t = 0.15 + i * figureCadence;
+        tl.to(`#figure-${i}`,
+          { scale: 1, opacity: 1, duration: 0.35, ease: 'back.out(2.0)' },
+          t
+        );
+        tl.to(`#label-${i}`,
+          { y: 0, opacity: 1, duration: 0.30, ease: 'power3.out' },
+          t + 0.12
+        );
+      }
+
+      // ============================================================
+      // Phase 2 (1.70s → 2.30s): 5 clients slide LEFT + scale to 0.7;
+      //   left bucket fades in below them. NO HOLD before this.
+      // ============================================================
+      const SLIDE_TIME = 1.70;
+      const SLIDE_DURATION = 0.60;
+      for (let i = 0; i < NUM_LEFT_CLIENTS; i++) {
+        const tx = LEFT_NEW_CENTERS_X[i] - LEFT_ORIG_CENTERS_X[i];
+        tl.to(`#figure-${i}`,
+          { x: tx, scale: LEFT_SLIDE_SCALE, duration: SLIDE_DURATION, ease: 'power3.inOut' },
+          SLIDE_TIME
+        );
+        tl.to(`#label-${i}`,
+          { x: tx, scale: LEFT_SLIDE_SCALE, duration: SLIDE_DURATION, ease: 'power3.inOut' },
+          SLIDE_TIME
+        );
+      }
+      tl.to('#receiver-left',
+        { opacity: 1, duration: 0.50, ease: 'power2.out' },
+        SLIDE_TIME + 0.10
+      );
+
+      // ============================================================
+      // Phase 3 (2.10s → 2.50s): Vertical divider slides down center
+      // ============================================================
+      tl.to('#divider',
+        { scaleY: 1, duration: 0.40, ease: 'power3.out' },
+        2.10
+      );
+
+      // ============================================================
+      // Phase 4 (2.50s → ~3.70s): 30 RIGHT-side clients fade + pop in
+      // ============================================================
+      const RIGHT_POP_START = 2.50;
+      const RIGHT_POP_STAGGER = 0.030;
+      for (let i = 0; i < NUM_RIGHT_CLIENTS; i++) {
+        tl.to(`#figure-r-${i}`,
+          { scale: 1, opacity: 1, duration: 0.30, ease: 'back.out(2.0)' },
+          RIGHT_POP_START + i * RIGHT_POP_STAGGER
+        );
+      }
+      // Last small figure done at 2.50 + 29*0.030 + 0.30 = 3.67
+
+      // ============================================================
+      // Phase 5 (3.50s → 3.90s): Right bucket fades in (held at scale 1.0)
+      // ============================================================
+      tl.to('#receiver-right',
+        { opacity: 1, duration: 0.40, ease: 'power2.out' },
+        3.50
+      );
+
+      // ============================================================
+      // Phase 6 (3.90s → ~8.5s): Money pours from BOTH sides into BOTH
+      //   buckets. Buckets START at the same size (scale 1.0). Left
+      //   bucket grows MORE (1.00 → 1.40) than right (1.00 → 1.15) —
+      //   right ends visibly smaller as Gray asked. Slower cadence +
+      //   longer fall = more time watching the buckets fill.
+      // ============================================================
+      const FALL_DURATION = 1.00;
+
+      // ---- LEFT money pour ----
+      const LEFT_MONEY_START = 3.90;
+      const LEFT_DROP_CADENCE = 0.55;
+      const LEFT_CLIENT_STAGGER = 0.06;
+
+      const leftDrops = [];
+      for (let di = 0; di < NUM_LEFT_DROPS_PER_CLIENT; di++) {
+        for (let ci = 0; ci < NUM_LEFT_CLIENTS; ci++) {
+          leftDrops.push({
+            ci, di,
+            t: LEFT_MONEY_START + di * LEFT_DROP_CADENCE + ci * LEFT_CLIENT_STAGGER
+          });
+        }
+      }
+      leftDrops.sort((a, b) => a.t - b.t);
+
+      leftDrops.forEach((drop, idx) => {
+        const sel = `#dollar-${drop.ci}-${drop.di}`;
+        const sourceX = LEFT_NEW_CENTERS_X[drop.ci];
+        const dx = LEFT_TARGET_X - sourceX;
+        const dy = LEFT_TARGET_Y - LEFT_SOURCE_Y;
+
+        tl.to(sel, { opacity: 1, duration: 0.32, ease: 'power1.out' }, drop.t);
+        tl.to(sel, { x: dx, duration: FALL_DURATION, ease: 'sine.inOut' }, drop.t);
+        tl.to(sel, { y: dy, duration: FALL_DURATION, ease: 'power2.in' }, drop.t);
+        tl.to(sel, { opacity: 0, duration: 0.28, ease: 'power2.in' }, drop.t + 0.65);
+
+        const landTime = drop.t + FALL_DURATION;
+        const newScale = 1.0 + (idx + 1) * 0.020;   // 1.00 → 1.40 across 20 drops (40% growth)
+        tl.to('#receiver-left',
+          { scale: newScale, duration: 0.22, ease: 'back.out(2.4)' },
+          landTime
+        );
+      });
+
+      // ---- RIGHT money pour ----
+      const RIGHT_MONEY_START = 4.10;
+      const RIGHT_DROP_CADENCE = 0.10;
+
+      const rightDrops = [];
+      for (let i = 0; i < NUM_RIGHT_CLIENTS; i++) {
+        rightDrops.push({ ci: i, t: RIGHT_MONEY_START + i * RIGHT_DROP_CADENCE });
+      }
+
+      rightDrops.forEach((drop, idx) => {
+        const sel = `#dollar-r-${drop.ci}`;
+        const c = rightFigCenters[drop.ci];
+        const sourceX = c.cx;
+        const sourceY = c.cy + RIGHT_FIG_HALF_H + 12;
+        const dx = RIGHT_TARGET_X - sourceX;
+        const dy = RIGHT_TARGET_Y - sourceY;
+
+        tl.to(sel, { opacity: 1, duration: 0.26, ease: 'power1.out' }, drop.t);
+        tl.to(sel, { x: dx, duration: FALL_DURATION, ease: 'sine.inOut' }, drop.t);
+        tl.to(sel, { y: dy, duration: FALL_DURATION, ease: 'power2.in' }, drop.t);
+        tl.to(sel, { opacity: 0, duration: 0.18, ease: 'power2.in' }, drop.t + 0.82);
+
+        const landTime = drop.t + FALL_DURATION;
+        const newScale = 1.0 + (idx + 1) * 0.005;   // 1.00 → 1.15 across 30 drops (15% growth)
+        tl.to('#receiver-right',
+          { scale: newScale, duration: 0.18, ease: 'back.out(2.4)' },
+          landTime
+        );
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

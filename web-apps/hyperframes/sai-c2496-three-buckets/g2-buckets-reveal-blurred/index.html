@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Inverted-isosceles-triangle layout — two buckets on the top base, apex at bottom. */
+      .bucket {
+        position: absolute;
+        width: 420px;
+        height: 380px;
+        will-change: transform, opacity;
+        filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.4));
+      }
+      .bucket-1 { top: 614px;  left:  60px; }  /* top-left corner — CUSTOMERS  */
+      .bucket-2 { top: 614px;  left: 600px; }  /* top-right corner — TEAM      */
+      .bucket-3 { top: 1082px; left: 330px; }  /* apex (bottom) — SHAREHOLDERS */
+
+      .bucket-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .bucket-svg .handle,
+      .bucket-svg .rim,
+      .bucket-svg .body,
+      .bucket-svg .bottom-edge {
+        fill: none;
+        stroke: #FFFFFF;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      /* Reverted to translucent outline-only buckets (original pattern). */
+      .bucket-svg .handle      { stroke-width: 11; }
+      .bucket-svg .rim         { stroke-width: 6;  }
+      .bucket-svg .body        { stroke-width: 6;  }
+      .bucket-svg .bottom-edge { stroke-width: 5;  }
+
+      /* Number badge — orange disc sitting on the upper portion of the bucket body. */
+      .badge {
+        position: absolute;
+        top: 138px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 104px;
+        height: 104px;
+        border-radius: 50%;
+        background: #F28129;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 4px 14px rgba(0, 0, 0, 0.3),
+          inset 0 2px 4px rgba(255, 255, 255, 0.25);
+        z-index: 2;
+        will-change: transform;
+      }
+      .badge-num {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 70px;
+        color: #FFFFFF;
+        line-height: 1.0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Label inside the bucket body — ORANGE + LIGHT BLUR + BRIGHTENED.
+         Stacked orange shadows thicken each letter BEFORE blur applies,
+         so the blurred output reads as solid Trendify orange instead of washed out. */
+      .label {
+        position: absolute;
+        top: 268px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 46px;
+        color: #F28129;
+        letter-spacing: 0.02em;
+        text-shadow:
+          0 0 2px #F28129,
+          0 0 3px #F28129,
+          0 0 4px #F28129,
+          0 0 6px #F28129;
+        line-height: 1.0;
+        padding: 0 20px;
+        z-index: 2;
+        /* 7px blur — unreadable but you can see "those are words". */
+        filter: blur(7px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4.5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4.5" data-track-index="1">
+
+        <div class="bucket bucket-1" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Handle endpoints meet the rim's leftmost + rightmost tips, so it reads as attached hardware. -->
+            <path class="handle" d="M 20 115 Q 210 -55 400 115"/>
+            <ellipse class="rim" cx="210" cy="115" rx="190" ry="14"/>
+            <path class="body" d="M 20 115 L 50 355 Q 210 378 370 355 L 400 115"/>
+            <ellipse class="bottom-edge" cx="210" cy="355" rx="160" ry="9"/>
+          </svg>
+          <div class="badge"><span class="badge-num">1</span></div>
+          <div class="label">CUSTOMERS</div>
+        </div>
+
+        <div class="bucket bucket-2" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Handle endpoints meet the rim's leftmost + rightmost tips, so it reads as attached hardware. -->
+            <path class="handle" d="M 20 115 Q 210 -55 400 115"/>
+            <ellipse class="rim" cx="210" cy="115" rx="190" ry="14"/>
+            <path class="body" d="M 20 115 L 50 355 Q 210 378 370 355 L 400 115"/>
+            <ellipse class="bottom-edge" cx="210" cy="355" rx="160" ry="9"/>
+          </svg>
+          <div class="badge"><span class="badge-num">2</span></div>
+          <div class="label">TEAM</div>
+        </div>
+
+        <div class="bucket bucket-3" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Handle endpoints meet the rim's leftmost + rightmost tips, so it reads as attached hardware. -->
+            <path class="handle" d="M 20 115 Q 210 -55 400 115"/>
+            <ellipse class="rim" cx="210" cy="115" rx="190" ry="14"/>
+            <path class="body" d="M 20 115 L 50 355 Q 210 378 370 355 L 400 115"/>
+            <ellipse class="bottom-edge" cx="210" cy="355" rx="160" ry="9"/>
+          </svg>
+          <div class="badge"><span class="badge-num">3</span></div>
+          <div class="label">SHAREHOLDERS</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Hidden until their staggered entrances fire.
+        gsap.set(".bucket", { opacity: 0, y: 100, scale: 0.86 });
+
+        // Same entrance animation as the prior g2 — back.out pop, 0.55s stagger,
+        // order matches Sai's naming: Customers (1), Team (2), Shareholders (3).
+        tl.to(".bucket", {
+          opacity: 1,
+          y: 0,
+          scale: 1.0,
+          duration: 0.50,
+          ease: "back.out(1.55)",
+          stagger: 0.55,
+        }, 0.15);
+
+        // Badge pulse on each landing.
+        tl.fromTo(".bucket-1 .badge",
+          { scale: 1 }, { scale: 1.12, duration: 0.18, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0.62);
+        tl.fromTo(".bucket-2 .badge",
+          { scale: 1 }, { scale: 1.12, duration: 0.18, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.17);
+        tl.fromTo(".bucket-3 .badge",
+          { scale: 1 }, { scale: 1.12, duration: 0.18, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.72);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

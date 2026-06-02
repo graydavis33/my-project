@@ -1,0 +1,852 @@
+[
+  {
+    "word": "My",
+    "start": 0.0,
+    "end": 0.06
+  },
+  {
+    "word": "only",
+    "start": 0.06,
+    "end": 0.24
+  },
+  {
+    "word": "goal",
+    "start": 0.24,
+    "end": 0.48
+  },
+  {
+    "word": "in",
+    "start": 0.48,
+    "end": 0.62
+  },
+  {
+    "word": "middle",
+    "start": 0.62,
+    "end": 0.76
+  },
+  {
+    "word": "school",
+    "start": 0.76,
+    "end": 0.98
+  },
+  {
+    "word": "was",
+    "start": 0.98,
+    "end": 1.18
+  },
+  {
+    "word": "to",
+    "start": 1.18,
+    "end": 1.3
+  },
+  {
+    "word": "make",
+    "start": 1.3,
+    "end": 1.46
+  },
+  {
+    "word": "my",
+    "start": 1.46,
+    "end": 1.6
+  },
+  {
+    "word": "7th",
+    "start": 1.6,
+    "end": 1.88
+  },
+  {
+    "word": "grade",
+    "start": 1.88,
+    "end": 2.04
+  },
+  {
+    "word": "basketball",
+    "start": 2.04,
+    "end": 2.24
+  },
+  {
+    "word": "team.",
+    "start": 2.24,
+    "end": 2.72
+  },
+  {
+    "word": "For",
+    "start": 2.8,
+    "end": 2.9
+  },
+  {
+    "word": "two",
+    "start": 2.9,
+    "end": 3.08
+  },
+  {
+    "word": "years",
+    "start": 3.08,
+    "end": 3.34
+  },
+  {
+    "word": "straight,",
+    "start": 3.34,
+    "end": 3.62
+  },
+  {
+    "word": "I",
+    "start": 3.72,
+    "end": 3.8
+  },
+  {
+    "word": "showed",
+    "start": 3.8,
+    "end": 3.96
+  },
+  {
+    "word": "up",
+    "start": 3.96,
+    "end": 4.1
+  },
+  {
+    "word": "to",
+    "start": 4.1,
+    "end": 4.16
+  },
+  {
+    "word": "every",
+    "start": 4.16,
+    "end": 4.46
+  },
+  {
+    "word": "intramural",
+    "start": 4.46,
+    "end": 4.9
+  },
+  {
+    "word": "run,",
+    "start": 4.9,
+    "end": 5.18
+  },
+  {
+    "word": "every",
+    "start": 5.28,
+    "end": 5.52
+  },
+  {
+    "word": "weight",
+    "start": 5.52,
+    "end": 5.78
+  },
+  {
+    "word": "training",
+    "start": 5.78,
+    "end": 5.98
+  },
+  {
+    "word": "class,",
+    "start": 5.98,
+    "end": 6.34
+  },
+  {
+    "word": "and",
+    "start": 6.52,
+    "end": 6.62
+  },
+  {
+    "word": "would",
+    "start": 6.62,
+    "end": 6.68
+  },
+  {
+    "word": "spend",
+    "start": 6.68,
+    "end": 6.82
+  },
+  {
+    "word": "hours",
+    "start": 6.82,
+    "end": 7.14
+  },
+  {
+    "word": "after",
+    "start": 7.14,
+    "end": 7.48
+  },
+  {
+    "word": "school",
+    "start": 7.48,
+    "end": 7.72
+  },
+  {
+    "word": "going",
+    "start": 7.72,
+    "end": 7.96
+  },
+  {
+    "word": "to",
+    "start": 7.96,
+    "end": 8.1
+  },
+  {
+    "word": "the",
+    "start": 8.1,
+    "end": 8.14
+  },
+  {
+    "word": "rec",
+    "start": 8.14,
+    "end": 8.32
+  },
+  {
+    "word": "center",
+    "start": 8.32,
+    "end": 8.5
+  },
+  {
+    "word": "to",
+    "start": 8.5,
+    "end": 8.7
+  },
+  {
+    "word": "practice.",
+    "start": 8.7,
+    "end": 9.02
+  },
+  {
+    "word": "When",
+    "start": 9.22,
+    "end": 9.4
+  },
+  {
+    "word": "I",
+    "start": 9.4,
+    "end": 9.46
+  },
+  {
+    "word": "tried",
+    "start": 9.46,
+    "end": 9.64
+  },
+  {
+    "word": "out",
+    "start": 9.64,
+    "end": 9.78
+  },
+  {
+    "word": "for",
+    "start": 9.78,
+    "end": 9.9
+  },
+  {
+    "word": "the",
+    "start": 9.9,
+    "end": 9.98
+  },
+  {
+    "word": "team,",
+    "start": 9.98,
+    "end": 10.22
+  },
+  {
+    "word": "I",
+    "start": 10.32,
+    "end": 10.42
+  },
+  {
+    "word": "got",
+    "start": 10.42,
+    "end": 10.6
+  },
+  {
+    "word": "cut",
+    "start": 10.6,
+    "end": 10.82
+  },
+  {
+    "word": "and",
+    "start": 10.82,
+    "end": 11.02
+  },
+  {
+    "word": "I",
+    "start": 11.02,
+    "end": 11.14
+  },
+  {
+    "word": "was",
+    "start": 11.14,
+    "end": 11.2
+  },
+  {
+    "word": "ready",
+    "start": 11.2,
+    "end": 11.4
+  },
+  {
+    "word": "to",
+    "start": 11.4,
+    "end": 11.54
+  },
+  {
+    "word": "give",
+    "start": 11.54,
+    "end": 11.66
+  },
+  {
+    "word": "up.",
+    "start": 11.66,
+    "end": 11.78
+  },
+  {
+    "word": "The",
+    "start": 11.82,
+    "end": 11.88
+  },
+  {
+    "word": "same",
+    "start": 11.88,
+    "end": 12.06
+  },
+  {
+    "word": "coach",
+    "start": 12.06,
+    "end": 12.32
+  },
+  {
+    "word": "who",
+    "start": 12.32,
+    "end": 12.44
+  },
+  {
+    "word": "cut",
+    "start": 12.44,
+    "end": 12.58
+  },
+  {
+    "word": "me",
+    "start": 12.58,
+    "end": 12.68
+  },
+  {
+    "word": "told",
+    "start": 12.68,
+    "end": 12.86
+  },
+  {
+    "word": "me",
+    "start": 12.86,
+    "end": 13.02
+  },
+  {
+    "word": "to",
+    "start": 13.02,
+    "end": 13.16
+  },
+  {
+    "word": "not",
+    "start": 13.16,
+    "end": 13.32
+  },
+  {
+    "word": "give",
+    "start": 13.32,
+    "end": 13.5
+  },
+  {
+    "word": "up",
+    "start": 13.5,
+    "end": 13.74
+  },
+  {
+    "word": "and",
+    "start": 13.74,
+    "end": 13.88
+  },
+  {
+    "word": "keep",
+    "start": 13.88,
+    "end": 14.06
+  },
+  {
+    "word": "practicing",
+    "start": 14.06,
+    "end": 14.48
+  },
+  {
+    "word": "for",
+    "start": 14.48,
+    "end": 14.8
+  },
+  {
+    "word": "next",
+    "start": 14.8,
+    "end": 14.96
+  },
+  {
+    "word": "year.",
+    "start": 14.96,
+    "end": 15.16
+  },
+  {
+    "word": "He",
+    "start": 15.26,
+    "end": 15.34
+  },
+  {
+    "word": "pushed",
+    "start": 15.34,
+    "end": 15.52
+  },
+  {
+    "word": "me",
+    "start": 15.52,
+    "end": 15.64
+  },
+  {
+    "word": "to",
+    "start": 15.64,
+    "end": 15.76
+  },
+  {
+    "word": "join",
+    "start": 15.76,
+    "end": 15.96
+  },
+  {
+    "word": "weight",
+    "start": 15.96,
+    "end": 16.14
+  },
+  {
+    "word": "training,",
+    "start": 16.14,
+    "end": 16.46
+  },
+  {
+    "word": "he",
+    "start": 16.66,
+    "end": 16.72
+  },
+  {
+    "word": "would",
+    "start": 16.72,
+    "end": 16.84
+  },
+  {
+    "word": "call",
+    "start": 16.84,
+    "end": 17.04
+  },
+  {
+    "word": "me",
+    "start": 17.04,
+    "end": 17.14
+  },
+  {
+    "word": "out",
+    "start": 17.14,
+    "end": 17.3
+  },
+  {
+    "word": "every",
+    "start": 17.3,
+    "end": 17.52
+  },
+  {
+    "word": "time",
+    "start": 17.52,
+    "end": 17.68
+  },
+  {
+    "word": "I",
+    "start": 17.68,
+    "end": 17.86
+  },
+  {
+    "word": "missed",
+    "start": 17.86,
+    "end": 18.02
+  },
+  {
+    "word": "an",
+    "start": 18.02,
+    "end": 18.18
+  },
+  {
+    "word": "intramural,",
+    "start": 18.18,
+    "end": 18.64
+  },
+  {
+    "word": "and",
+    "start": 18.74,
+    "end": 18.84
+  },
+  {
+    "word": "he",
+    "start": 18.84,
+    "end": 18.88
+  },
+  {
+    "word": "saw",
+    "start": 18.88,
+    "end": 19.06
+  },
+  {
+    "word": "something",
+    "start": 19.06,
+    "end": 19.3
+  },
+  {
+    "word": "in",
+    "start": 19.3,
+    "end": 19.46
+  },
+  {
+    "word": "me",
+    "start": 19.46,
+    "end": 19.56
+  },
+  {
+    "word": "that",
+    "start": 19.56,
+    "end": 19.72
+  },
+  {
+    "word": "I",
+    "start": 19.72,
+    "end": 19.86
+  },
+  {
+    "word": "didn't",
+    "start": 19.86,
+    "end": 20.0
+  },
+  {
+    "word": "even",
+    "start": 20.0,
+    "end": 20.14
+  },
+  {
+    "word": "see",
+    "start": 20.14,
+    "end": 20.38
+  },
+  {
+    "word": "in",
+    "start": 20.38,
+    "end": 20.46
+  },
+  {
+    "word": "myself.",
+    "start": 20.46,
+    "end": 20.7
+  },
+  {
+    "word": "And",
+    "start": 20.94,
+    "end": 21.0
+  },
+  {
+    "word": "in",
+    "start": 21.0,
+    "end": 21.04
+  },
+  {
+    "word": "8th",
+    "start": 21.04,
+    "end": 21.26
+  },
+  {
+    "word": "grade,",
+    "start": 21.26,
+    "end": 21.48
+  },
+  {
+    "word": "I",
+    "start": 21.6,
+    "end": 21.74
+  },
+  {
+    "word": "made",
+    "start": 21.74,
+    "end": 21.96
+  },
+  {
+    "word": "the",
+    "start": 21.96,
+    "end": 22.1
+  },
+  {
+    "word": "team.",
+    "start": 22.1,
+    "end": 22.24
+  },
+  {
+    "word": "Coach",
+    "start": 22.32,
+    "end": 22.44
+  },
+  {
+    "word": "Waddell",
+    "start": 22.44,
+    "end": 22.8
+  },
+  {
+    "word": "believed",
+    "start": 22.8,
+    "end": 23.06
+  },
+  {
+    "word": "in",
+    "start": 23.06,
+    "end": 23.28
+  },
+  {
+    "word": "me",
+    "start": 23.28,
+    "end": 23.4
+  },
+  {
+    "word": "when",
+    "start": 23.4,
+    "end": 23.56
+  },
+  {
+    "word": "I",
+    "start": 23.56,
+    "end": 23.74
+  },
+  {
+    "word": "didn't",
+    "start": 23.74,
+    "end": 23.92
+  },
+  {
+    "word": "even",
+    "start": 23.92,
+    "end": 24.04
+  },
+  {
+    "word": "believe",
+    "start": 24.04,
+    "end": 24.3
+  },
+  {
+    "word": "in",
+    "start": 24.3,
+    "end": 24.46
+  },
+  {
+    "word": "me.",
+    "start": 24.46,
+    "end": 24.58
+  },
+  {
+    "word": "I",
+    "start": 24.66,
+    "end": 24.76
+  },
+  {
+    "word": "had",
+    "start": 24.76,
+    "end": 24.82
+  },
+  {
+    "word": "everything",
+    "start": 24.82,
+    "end": 25.16
+  },
+  {
+    "word": "in",
+    "start": 25.16,
+    "end": 25.36
+  },
+  {
+    "word": "order",
+    "start": 25.36,
+    "end": 25.54
+  },
+  {
+    "word": "to",
+    "start": 25.54,
+    "end": 25.72
+  },
+  {
+    "word": "succeed,",
+    "start": 25.72,
+    "end": 26.08
+  },
+  {
+    "word": "but",
+    "start": 26.22,
+    "end": 26.36
+  },
+  {
+    "word": "I",
+    "start": 26.36,
+    "end": 26.46
+  },
+  {
+    "word": "just",
+    "start": 26.46,
+    "end": 26.58
+  },
+  {
+    "word": "lacked",
+    "start": 26.58,
+    "end": 26.94
+  },
+  {
+    "word": "the",
+    "start": 26.94,
+    "end": 27.14
+  },
+  {
+    "word": "self",
+    "start": 27.14,
+    "end": 27.36
+  },
+  {
+    "word": "-belief.",
+    "start": 27.36,
+    "end": 27.68
+  },
+  {
+    "word": "Sometimes",
+    "start": 27.68,
+    "end": 28.08
+  },
+  {
+    "word": "you",
+    "start": 28.08,
+    "end": 28.36
+  },
+  {
+    "word": "just",
+    "start": 28.36,
+    "end": 28.5
+  },
+  {
+    "word": "need",
+    "start": 28.5,
+    "end": 28.66
+  },
+  {
+    "word": "someone",
+    "start": 28.66,
+    "end": 28.88
+  },
+  {
+    "word": "to",
+    "start": 28.88,
+    "end": 29.0
+  },
+  {
+    "word": "believe",
+    "start": 29.0,
+    "end": 29.2
+  },
+  {
+    "word": "in",
+    "start": 29.2,
+    "end": 29.32
+  },
+  {
+    "word": "you",
+    "start": 29.32,
+    "end": 29.46
+  },
+  {
+    "word": "more",
+    "start": 29.46,
+    "end": 29.68
+  },
+  {
+    "word": "than",
+    "start": 29.68,
+    "end": 29.82
+  },
+  {
+    "word": "you",
+    "start": 29.82,
+    "end": 29.94
+  },
+  {
+    "word": "believe",
+    "start": 29.94,
+    "end": 30.18
+  },
+  {
+    "word": "in",
+    "start": 30.18,
+    "end": 30.34
+  },
+  {
+    "word": "yourself.",
+    "start": 30.34,
+    "end": 30.54
+  },
+  {
+    "word": "So",
+    "start": 30.76,
+    "end": 30.9
+  },
+  {
+    "word": "find",
+    "start": 30.9,
+    "end": 31.08
+  },
+  {
+    "word": "yourself",
+    "start": 31.08,
+    "end": 31.3
+  },
+  {
+    "word": "a",
+    "start": 31.3,
+    "end": 31.64
+  },
+  {
+    "word": "Coach",
+    "start": 31.64,
+    "end": 31.8
+  },
+  {
+    "word": "Waddell",
+    "start": 31.8,
+    "end": 32.12
+  },
+  {
+    "word": "and",
+    "start": 32.12,
+    "end": 32.34
+  },
+  {
+    "word": "be",
+    "start": 32.34,
+    "end": 32.48
+  },
+  {
+    "word": "the",
+    "start": 32.48,
+    "end": 32.6
+  },
+  {
+    "word": "Coach",
+    "start": 32.6,
+    "end": 32.78
+  },
+  {
+    "word": "Waddell",
+    "start": 32.78,
+    "end": 33.14
+  },
+  {
+    "word": "for",
+    "start": 33.14,
+    "end": 33.32
+  },
+  {
+    "word": "others.",
+    "start": 33.32,
+    "end": 33.5
+  }
+]

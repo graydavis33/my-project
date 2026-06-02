@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1440, height=1440" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1440px;
+        height: 1440px;
+        overflow: hidden;
+        background: #00B140;  /* chroma key green */
+        font-family: 'Arial Black', 'Impact', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="15"
+      data-width="1440"
+      data-height="1440"
+    >
+      <!-- Phase 0 (0 → 10s): existing number-graphic plays from the source MP4 -->
+      <video id="src" class="clip"
+             data-start="0" data-duration="10" data-track-index="0"
+             src="assets/source.mp4" muted playsinline
+             style="position: absolute; top: 0; left: 0; width: 1440px; height: 1440px;"></video>
+
+      <!-- Phase 1-2 (10 → 12.7s): three white circles morph to a smiley face, then scale up -->
+      <div id="smiley-group" class="clip"
+           data-start="10" data-duration="2.7" data-track-index="1"
+           style="position: absolute; top: 0; left: 0; width: 1440px; height: 1440px; transform-origin: 720px 720px;">
+        <!-- Circles positioned at the source MP4's last-frame positions to avoid a visible jump.
+             They translate + scale into smiley eyes / mouth via GSAP. -->
+        <div id="c1" style="position: absolute; left: 570px; top: 180px; width: 220px; height: 220px; background: #ffffff; border-radius: 50%;"></div>
+        <div id="c2" style="position: absolute; left: 940px; top: 820px; width: 240px; height: 240px; background: #ffffff; border-radius: 50%;"></div>
+        <div id="c3" style="position: absolute; left: 230px; top: 800px; width: 240px; height: 240px; background: #ffffff; border-radius: 50%;"></div>
+        <svg id="mouth"
+             style="position: absolute; left: 540px; top: 780px; width: 360px; height: 180px; opacity: 0;"
+             viewBox="0 0 360 180">
+          <path d="M30 30 Q180 200 330 30" stroke="#ffffff" stroke-width="40" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+
+      <!-- Phase 3-4 (12.7 → 15s): big dollar sign + 3 up-arrows that lift to suggest "increasing" -->
+      <div id="money-group" class="clip"
+           data-start="12.7" data-duration="2.3" data-track-index="2"
+           style="position: absolute; top: 0; left: 0; width: 1440px; height: 1440px;">
+        <div id="dollar"
+             style="position: absolute; left: 540px; top: 580px; width: 360px; height: 400px; color: #ffffff; font-size: 380px; font-weight: 900; text-align: center; line-height: 400px;">$</div>
+        <svg id="arr1"
+             style="position: absolute; left: 540px; top: 360px; width: 80px; height: 160px; opacity: 0;"
+             viewBox="0 0 80 160">
+          <path d="M40 0 L78 60 L56 60 L56 150 L24 150 L24 60 L2 60 Z" fill="#ffffff"/>
+        </svg>
+        <svg id="arr2"
+             style="position: absolute; left: 680px; top: 360px; width: 80px; height: 160px; opacity: 0;"
+             viewBox="0 0 80 160">
+          <path d="M40 0 L78 60 L56 60 L56 150 L24 150 L24 60 L2 60 Z" fill="#ffffff"/>
+        </svg>
+        <svg id="arr3"
+             style="position: absolute; left: 820px; top: 360px; width: 80px; height: 160px; opacity: 0;"
+             viewBox="0 0 80 160">
+          <path d="M40 0 L78 60 L56 60 L56 150 L24 150 L24 60 L2 60 Z" fill="#ffffff"/>
+        </svg>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ── Phase 1 (10.0 → 11.0): three circles converge to a smiley face
+      // c1 (top circle) — squashes downward and fades, making room for the mouth curve
+      tl.to("#c1", {
+        x: 0, y: 600, scaleX: 1.6, scaleY: 0.18, opacity: 0,
+        duration: 0.9, ease: "power2.inOut",
+      }, 10.0);
+
+      // c2 (bottom-right) — moves up to become the right eye (80px diameter)
+      // CSS center (1060, 940) → right eye center (800, 640): delta = (-260, -300), scale = 80/240 = 0.333
+      tl.to("#c2", {
+        x: -260, y: -300, scale: 0.333,
+        duration: 0.9, ease: "power3.inOut",
+      }, 10.0);
+
+      // c3 (bottom-left) — moves up to become the left eye
+      // CSS center (350, 920) → left eye center (640, 640): delta = (+290, -280), scale 0.333
+      tl.to("#c3", {
+        x: 290, y: -280, scale: 0.333,
+        duration: 0.9, ease: "power3.inOut",
+      }, 10.0);
+
+      // Mouth curve fades in as c1 finishes squashing
+      tl.to("#mouth", {
+        opacity: 1,
+        duration: 0.55, ease: "power2.out",
+      }, 10.55);
+
+      // ── Phase 2 (11.0 → 11.8): smiley group scales up to "big smiley" — around face center (720, 720)
+      tl.to("#smiley-group", {
+        scale: 1.5,
+        duration: 0.8, ease: "back.out(1.4)",
+      }, 11.0);
+
+      // ── Phase 3 (12.7 → 13.4): money symbol pops in
+      tl.from("#dollar", {
+        scale: 0.3,
+        opacity: 0,
+        duration: 0.7, ease: "back.out(1.5)",
+      }, 12.7);
+
+      // ── Phase 4 (13.2 → 15.0): three up-arrows appear staggered, then keep rising (increasing effect)
+      ["#arr1", "#arr2", "#arr3"].forEach((id, i) => {
+        tl.fromTo(id,
+          { y: 70, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+          13.2 + i * 0.18
+        );
+      });
+
+      // Arrows continue rising — staggered tops imply "going up / increasing"
+      tl.to("#arr1", { y: -60,  duration: 0.7, ease: "power2.out" }, 14.0);
+      tl.to("#arr2", { y: -100, duration: 0.7, ease: "power2.out" }, 14.15);
+      tl.to("#arr3", { y: -140, duration: 0.7, ease: "power2.out" }, 14.3);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

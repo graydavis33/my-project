@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        /* Chroma green for Premiere Ultra Key */
+        background: #00B140;
+      }
+
+      /* iPhone body: 480x854 = 9:16. White outer frame, dark inner space.
+         border-radius ~13% of width = 62px (matches modern iPhone). */
+      .part-card {
+        position: absolute;
+        width: 480px;
+        height: 854px;
+        border: 6px solid #ffffff;
+        border-radius: 62px;
+        background: #0d0d0d;
+        overflow: hidden;
+        transform-origin: center center;
+      }
+
+      /* Inset screen — inner display area, colored per phone via --screen-bg.
+         Outer 480x854, inset 12px → screen 456x830. Inner radius 50px. */
+      .screen {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        width: 456px;
+        height: 830px;
+        border-radius: 50px;
+        background: var(--screen-bg);
+        overflow: hidden;
+      }
+
+      /* Dynamic Island pill at top center of screen.
+         130 wide × 36 tall, 18px from top, centered: left = (456-130)/2 = 163px. */
+      .island {
+        position: absolute;
+        top: 18px;
+        left: 163px;
+        width: 130px;
+        height: 36px;
+        background: #000;
+        border-radius: 18px;
+        z-index: 3;
+      }
+
+      /* Title overlay — sits like a TikTok caption at top of screen, below island. */
+      .title {
+        position: absolute;
+        top: 84px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 56px;
+        color: #ffffff;
+        letter-spacing: 3px;
+        text-shadow: 0 4px 12px rgba(0,0,0,0.35);
+        z-index: 2;
+      }
+
+      /* Character SVG — talking head + shoulders, anchored to bottom of screen.
+         Width 280, height 540. Centered: left = (456-280)/2 = 88px. */
+      .char {
+        position: absolute;
+        bottom: 0;
+        left: 88px;
+        width: 280px;
+        height: 540px;
+        display: block;
+        z-index: 1;
+      }
+
+      /* Mouth is an SVG ellipse — its cx/cy keep it anchored on the head.
+         GSAP animates rx/ry attributes to cycle through talking shapes. */
+
+      /* CTA notification bubble — child of phone 3's .screen so it's clipped
+         by the screen's overflow:hidden, making it visually emerge FROM the
+         phone screen instead of floating outside. Slides up from the bottom
+         of the screen.  Apple system font via -apple-system stack. */
+      .stamp {
+        position: absolute;
+        top: 364px;          /* centered vertically: (830 - ~103) / 2 */
+        left: 28px;          /* centered inside 456px screen: (456-400)/2 */
+        width: 400px;
+        background: #ffffff;
+        border-radius: 26px;
+        padding: 20px 28px;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.28),
+          0 2px 6px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+        opacity: 0; /* hidden until t=7.7s */
+      }
+
+      .stamp-line1 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1d1d1f; /* Apple's near-black */
+        letter-spacing: -0.3px;
+        line-height: 1.25;
+        margin-bottom: 8px;
+      }
+
+      .stamp-link {
+        font-size: 20px;
+        font-weight: 500;
+        color: #1d1d1f;
+        letter-spacing: -0.2px;
+        line-height: 1.25;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- 3 phones laid out horizontally on a 1920x1080 canvas.
+           Card 480x854. Spacing: 120px side margins + 120px gaps.
+           120 + 480 + 120 + 480 + 120 + 480 + 120 = 1920 ✓
+           Vertical center: (1080 - 854) / 2 = 113. -->
+
+      <!-- Phone 1: indigo screen -->
+      <div id="card1" class="part-card" data-layout-allow-overflow style="left: 120px; top: 113px; --screen-bg: #4F46E5;">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="title">PART ONE</div>
+          <svg class="char" viewBox="0 0 200 600" preserveAspectRatio="xMidYMax meet">
+            <!-- Tapered torso -->
+            <path d="M 24 600 L 58 322 Q 100 292 142 322 L 176 600 Z" fill="#ffffff"/>
+            <!-- Head -->
+            <circle cx="100" cy="180" r="92" fill="#ffffff"/>
+            <!-- Eyes -->
+            <circle cx="76" cy="172" r="9" fill="#1a1a1a"/>
+            <circle cx="124" cy="172" r="9" fill="#1a1a1a"/>
+            <!-- Mouth (animated) -->
+            <ellipse class="mouth" cx="100" cy="215" rx="10" ry="10" fill="#1a1a1a"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Phone 2: pink screen -->
+      <div id="card2" class="part-card" data-layout-allow-overflow style="left: 720px; top: 113px; --screen-bg: #EC4899;">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="title">PART TWO</div>
+          <svg class="char" viewBox="0 0 200 600" preserveAspectRatio="xMidYMax meet">
+            <path d="M 24 600 L 58 322 Q 100 292 142 322 L 176 600 Z" fill="#ffffff"/>
+            <circle cx="100" cy="180" r="92" fill="#ffffff"/>
+            <circle cx="76" cy="172" r="9" fill="#1a1a1a"/>
+            <circle cx="124" cy="172" r="9" fill="#1a1a1a"/>
+            <ellipse class="mouth" cx="100" cy="215" rx="10" ry="10" fill="#1a1a1a"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Phone 3: deep teal screen (avoids clashing with orange video background) -->
+      <div id="card3" class="part-card" data-layout-allow-overflow style="left: 1320px; top: 113px; --screen-bg: #0E7490;">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="title">PART THREE</div>
+          <svg class="char" viewBox="0 0 200 600" preserveAspectRatio="xMidYMax meet">
+            <path d="M 24 600 L 58 322 Q 100 292 142 322 L 176 600 Z" fill="#ffffff"/>
+            <circle cx="100" cy="180" r="92" fill="#ffffff"/>
+            <circle cx="76" cy="172" r="9" fill="#1a1a1a"/>
+            <circle cx="124" cy="172" r="9" fill="#1a1a1a"/>
+            <ellipse class="mouth" cx="100" cy="215" rx="10" ry="10" fill="#1a1a1a"/>
+          </svg>
+
+          <!-- CTA notification — child of phone 3's screen, clipped by
+               screen overflow so it visually emerges from inside the phone. -->
+          <div id="stamp" class="stamp" data-layout-ignore>
+            <div class="stamp-line1">Click this link to watch part 3</div>
+            <div class="stamp-link">youtu.be/watch-part-3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ------------------------------------------------------------
+      // 1. Pop-up entrance — staggered scale+rise+fade for each phone.
+      // Each phone's character starts moving the instant its pop-in finishes,
+      // so all three boot up at distinct times.
+      // ------------------------------------------------------------
+      const POP_DUR = 0.65;
+      const POP1 = 0.20, POP2 = 0.38, POP3 = 0.56;
+
+      tl.from("#card1", { scale: 0, y: 80, opacity: 0, duration: POP_DUR, ease: "back.out(1.8)" }, POP1);
+      tl.from("#card2", { scale: 0, y: 80, opacity: 0, duration: POP_DUR, ease: "back.out(1.8)" }, POP2);
+      tl.from("#card3", { scale: 0, y: 80, opacity: 0, duration: POP_DUR, ease: "back.out(1.8)" }, POP3);
+
+      // ------------------------------------------------------------
+      // 2. Talking-head idle animation — runs after entrance, 1.5s → 6.0s.
+      // Per character:
+      //   - .char Y bob (subtle rise/fall)
+      //   - .char rotation sway (±1.5° tilt)
+      //   - .mouth ellipse rx/ry sequenced through talking shapes
+      //     (O / Ah / Mm / Oo / Ee / Eh) — mouth always stays inside head.
+      // Each phone uses a different shape sequence + step duration so they
+      // feel independently alive instead of synced.
+      // ------------------------------------------------------------
+      const MOUTH_SHAPES = [
+        { rx: 10, ry: 10 }, // O   (round)
+        { rx: 14, ry: 8  }, // Ah  (wide)
+        { rx: 8,  ry: 4  }, // Mm  (closed)
+        { rx: 7,  ry: 12 }, // Oo  (tall)
+        { rx: 14, ry: 3  }, // Ee  (slit)
+        { rx: 12, ry: 9  }, // Eh  (mid)
+        { rx: 6,  ry: 6  }, // dot
+      ];
+
+      function addTalking(cardSel, talkStart, mouthDur, shapeOffset, endTime) {
+        endTime = endTime || 6.0;
+        const start = talkStart;
+        const window = endTime - start;
+
+        // Head/body Y bob
+        const bobDur = 0.4;
+        const bobReps = Math.floor(window / bobDur) - 1;
+        tl.fromTo(
+          `${cardSel} .char`,
+          { y: 0 },
+          { y: -8, duration: bobDur, ease: "sine.inOut", yoyo: true, repeat: bobReps },
+          start
+        );
+
+        // Rotation sway
+        const swayDur = 0.6;
+        const swayReps = Math.floor(window / swayDur) - 1;
+        tl.fromTo(
+          `${cardSel} .char`,
+          { rotation: -1.5 },
+          { rotation: 1.5, duration: swayDur, ease: "sine.inOut", yoyo: true, repeat: swayReps },
+          start
+        );
+
+        // Mouth shape sequence — sequential tweens through MOUTH_SHAPES
+        let t = start;
+        let i = shapeOffset;
+        while (t + mouthDur <= endTime) {
+          const shape = MOUTH_SHAPES[i % MOUTH_SHAPES.length];
+          tl.to(
+            `${cardSel} .mouth`,
+            { attr: shape, duration: mouthDur, ease: "sine.inOut" },
+            t
+          );
+          t += mouthDur;
+          i++;
+        }
+      }
+
+      // Each phone's character starts the instant its pop-in finishes.
+      // Cards 1+2 talk until 6.0s (when they exit). Card 3 keeps talking
+      // through the whole comp because it stays on screen as the hero.
+      addTalking("#card1", POP1 + POP_DUR, 0.20, 0, 6.0); // starts ~0.85s
+      addTalking("#card2", POP2 + POP_DUR, 0.24, 2, 6.0); // starts ~1.03s
+      addTalking("#card3", POP3 + POP_DUR, 0.18, 4, 9.8); // starts ~1.21s, lives to end
+
+      // ------------------------------------------------------------
+      // 3. Transition at t=6.0s:
+      //    - Card 1 + Card 2 fade out and slide off the left edge
+      //    - Card 3 moves to the canvas center (1920/2 = 960) and scales 1.15x
+      // Card 3's center is currently at left=1320 + 240 = 1560 → translate -600.
+      // Card 3's vertical center already matches canvas center (540).
+      // ------------------------------------------------------------
+      tl.to("#card1", { x: -800, opacity: 0, duration: 0.65, ease: "power2.in" }, 6.0);
+      tl.to("#card2", { x: -1400, opacity: 0, duration: 0.7, ease: "power2.in" }, 6.05);
+      tl.to("#card3", { x: -600, scale: 1.15, duration: 0.7, ease: "power3.inOut" }, 6.0);
+
+      // ------------------------------------------------------------
+      // 4. Notification rises from inside the phone screen at t=7.7s —
+      // 1.0s after Card 3 settles. Stamp lives inside .screen so the
+      // screen's overflow:hidden clips its starting position below the
+      // bottom edge.  Slides up to land centered on the screen, then
+      // flashes red briefly to draw the eye.
+      // ------------------------------------------------------------
+      tl.fromTo("#stamp",
+        { y: 470, opacity: 0 },     // starts below the 830px-tall screen
+        { y: 0, opacity: 1, duration: 0.75, ease: "power3.out" },
+        7.7
+      );
+
+      // Two quick red flashes once the bubble settles, paired with a fast
+      // rotational shake.  Flash and shake share the same 0.4s window so the
+      // wiggle reads as energy from the alert.
+      tl.to("#stamp",
+        { backgroundColor: "#ff3b30", duration: 0.10, ease: "power1.inOut", yoyo: true, repeat: 3 },
+        8.5
+      );
+      tl.fromTo("#stamp",
+        { rotation: -5 },
+        { rotation: 5, duration: 0.05, ease: "sine.inOut", yoyo: true, repeat: 7, immediateRender: false },
+        8.5
+      );
+      // Snap rotation back to flat when the shake window ends.
+      tl.set("#stamp", { rotation: 0 }, 8.9);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene { position: relative; width: 100%; height: 100%; }
+
+      /* The whole assembly. transform-origin bottom-center so the impact
+         squash plants the base and the bounce reads as weight landing. */
+      #stage {
+        position: absolute;
+        left: 50%;
+        top: 700px;
+        width: 460px;
+        height: 760px;
+        transform: translateX(-50%);
+        transform-origin: 50% 100%;
+        will-change: transform;
+      }
+
+      /* Soft contact shadow under the product (dark, survives chroma key). */
+      #shadow {
+        position: absolute;
+        left: 50%;
+        bottom: 6px;
+        width: 360px;
+        height: 70px;
+        transform: translateX(-50%);
+        background: radial-gradient(ellipse at center,
+          rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.22) 45%, rgba(0,0,0,0) 72%);
+        border-radius: 50%;
+        will-change: transform, opacity;
+      }
+
+      /* Product box, bottom-anchored in the stage. */
+      #box {
+        position: absolute;
+        left: 30px;
+        bottom: 40px;
+        width: 400px;
+        height: 430px;
+        will-change: transform, opacity;
+        filter: drop-shadow(0 10px 18px rgba(0,0,0,0.28));
+      }
+
+      /* Gold medal — drops in from above and rests on the product. */
+      #medal {
+        position: absolute;
+        left: 110px;
+        top: 250px;
+        width: 240px;
+        height: 360px;
+        will-change: transform, opacity;
+        filter: drop-shadow(0 8px 16px rgba(0,0,0,0.35));
+      }
+
+      /* Specular gleam swept across the medallion (clipped to the disc). */
+      .medallion-clip {
+        position: absolute;
+        left: 25px;
+        top: 150px;
+        width: 190px;
+        height: 190px;
+        border-radius: 50%;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      #shine {
+        position: absolute;
+        top: -40px;
+        left: -150px;
+        width: 90px;
+        height: 280px;
+        transform: rotate(22deg);
+        background: linear-gradient(90deg,
+          rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0) 100%);
+        will-change: transform;
+      }
+
+      /* Warm glow that pulses behind the medallion. */
+      #glow {
+        position: absolute;
+        left: 10px;
+        top: 135px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(circle at center,
+          rgba(255,209,102,0.55) 0%, rgba(255,209,102,0) 70%);
+        opacity: 0;
+        will-change: opacity, transform;
+      }
+
+      .one {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 120px;
+        line-height: 1;
+        fill: #5E3A00;
+      }
+
+      /* Impact sparks + victory twinkles. */
+      .spark, .twinkle {
+        position: absolute;
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <div id="stage">
+          <div id="shadow"></div>
+
+          <!-- PRODUCT BOX -->
+          <svg id="box" viewBox="0 0 400 430" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="frontGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#FFFFFF"/>
+                <stop offset="1" stop-color="#E4E7EC"/>
+              </linearGradient>
+              <linearGradient id="topGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#FFFFFF"/>
+                <stop offset="1" stop-color="#F2F4F7"/>
+              </linearGradient>
+              <linearGradient id="sideGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#CDD2DA"/>
+                <stop offset="1" stop-color="#B4BAC4"/>
+              </linearGradient>
+            </defs>
+            <!-- right side face -->
+            <polygon points="330,170 380,130 380,370 330,410" fill="url(#sideGrad)" stroke="#9AA1AD" stroke-width="3" stroke-linejoin="round"/>
+            <!-- top face -->
+            <polygon points="70,170 120,130 380,130 330,170" fill="url(#topGrad)" stroke="#C2C7D0" stroke-width="3" stroke-linejoin="round"/>
+            <!-- front face -->
+            <polygon points="70,170 330,170 330,410 70,410" fill="url(#frontGrad)" stroke="#C2C7D0" stroke-width="3" stroke-linejoin="round"/>
+            <!-- brand band on the front -->
+            <rect x="70" y="356" width="260" height="54" fill="#F28129"/>
+            <rect x="70" y="356" width="260" height="8" fill="#FF9B4D"/>
+          </svg>
+
+          <!-- GOLD MEDAL #1 -->
+          <svg id="medal" viewBox="0 0 240 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="discGrad" cx="0.4" cy="0.32" r="0.85">
+                <stop offset="0" stop-color="#FFF1B8"/>
+                <stop offset="0.45" stop-color="#FFD24D"/>
+                <stop offset="0.78" stop-color="#F0A91E"/>
+                <stop offset="1" stop-color="#C77F00"/>
+              </radialGradient>
+              <linearGradient id="ribbonL" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#FF9B4D"/>
+                <stop offset="1" stop-color="#E0681A"/>
+              </linearGradient>
+              <linearGradient id="ribbonR" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#FF9B4D"/>
+                <stop offset="1" stop-color="#E0681A"/>
+              </linearGradient>
+            </defs>
+            <!-- ribbon straps (behind disc) -->
+            <polygon points="86,40 134,40 158,200 110,200" fill="url(#ribbonR)" stroke="#C9560F" stroke-width="2"/>
+            <polygon points="86,40 134,40 130,200 82,200" fill="url(#ribbonL)" stroke="#C9560F" stroke-width="2"/>
+            <!-- medallion outer ridged ring -->
+            <circle cx="120" cy="245" r="98" fill="#E0A21B"/>
+            <circle cx="120" cy="245" r="98" fill="none" stroke="#B8860B" stroke-width="3" stroke-dasharray="9 6"/>
+            <!-- medallion face -->
+            <circle cx="120" cy="245" r="84" fill="url(#discGrad)" stroke="#FFE9A6" stroke-width="3"/>
+            <circle cx="120" cy="245" r="70" fill="none" stroke="#C77F00" stroke-width="2" opacity="0.55"/>
+            <!-- number one -->
+            <text class="one" x="120" y="245" text-anchor="middle" dominant-baseline="central">1</text>
+          </svg>
+
+          <div class="medallion-clip" data-layout-allow-overflow>
+            <div id="shine"></div>
+          </div>
+          <div id="glow"></div>
+
+          <!-- impact sparks (positions deterministic, relative to stage) -->
+          <svg class="spark" data-spark="0" width="34" height="34" viewBox="0 0 34 34" style="left:150px;top:470px;"><path d="M17 0 L21 13 L34 17 L21 21 L17 34 L13 21 L0 17 L13 13 Z" fill="#FFD86B"/></svg>
+          <svg class="spark" data-spark="1" width="26" height="26" viewBox="0 0 34 34" style="left:300px;top:480px;"><path d="M17 0 L21 13 L34 17 L21 21 L17 34 L13 21 L0 17 L13 13 Z" fill="#FFE9A6"/></svg>
+          <svg class="spark" data-spark="2" width="30" height="30" viewBox="0 0 34 34" style="left:210px;top:430px;"><path d="M17 0 L21 13 L34 17 L21 21 L17 34 L13 21 L0 17 L13 13 Z" fill="#FFD86B"/></svg>
+          <svg class="spark" data-spark="3" width="22" height="22" viewBox="0 0 34 34" style="left:120px;top:540px;"><path d="M17 0 L21 13 L34 17 L21 21 L17 34 L13 21 L0 17 L13 13 Z" fill="#FFE9A6"/></svg>
+          <svg class="spark" data-spark="4" width="28" height="28" viewBox="0 0 34 34" style="left:330px;top:540px;"><path d="M17 0 L21 13 L34 17 L21 21 L17 34 L13 21 L0 17 L13 13 Z" fill="#FFD86B"/></svg>
+
+          <!-- victory twinkles around the medal -->
+          <svg class="twinkle" data-tw="0" width="30" height="30" viewBox="0 0 34 34" style="left:60px;top:210px;"><path d="M17 0 L21 13 L34 17 L21 21 L17 34 L13 21 L0 17 L13 13 Z" fill="#FFFFFF"/></svg>
+          <svg class="twinkle" data-tw="1" width="24" height="24" viewBox="0 0 34 34" style="left:360px;top:240px;"><path d="M17 0 L21 13 L34 17 L21 21 L17 34 L13 21 L0 17 L13 13 Z" fill="#FFFFFF"/></svg>
+          <svg class="twinkle" data-tw="2" width="20" height="20" viewBox="0 0 34 34" style="left:380px;top:430px;"><path d="M17 0 L21 13 L34 17 L21 21 L17 34 L13 21 L0 17 L13 13 Z" fill="#FFFFFF"/></svg>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // ── Resting/static state setup (elements positioned where CSS places them) ──
+        gsap.set("#medal", { transformOrigin: "120px 245px" });
+        gsap.set(".one", { transformOrigin: "50% 50%" });
+
+        // ── 1. Product box pops up ───────────────────────────────────────
+        tl.from("#box",    { y: 280, opacity: 0, scale: 0.82, duration: 0.70, ease: "back.out(1.5)" }, 0.20);
+        tl.from("#shadow", { scaleX: 0.4, opacity: 0, duration: 0.70, ease: "power2.out" }, 0.20);
+
+        // ── 2. Gold medal drops from above and lands on the box ──────────
+        tl.from("#medal", { y: -900, rotation: -10, duration: 0.78, ease: "power2.in" }, 1.07);
+
+        // ── 3. IMPACT @ ~1.85s — whole assembly squash-and-bounce (one bounce) ──
+        const HIT = 1.85;
+        tl.to("#stage", { scaleY: 0.80, scaleX: 1.15, duration: 0.09, ease: "power2.out", overwrite: "auto" }, HIT);
+        tl.to("#stage", { scaleY: 1.09, scaleX: 0.94, duration: 0.17, ease: "power1.inOut", overwrite: "auto" }, HIT + 0.09);
+        tl.to("#stage", { scaleY: 0.97, scaleX: 1.03, duration: 0.13, ease: "power1.inOut", overwrite: "auto" }, HIT + 0.26);
+        tl.to("#stage", { scaleY: 1.00, scaleX: 1.00, duration: 0.20, ease: "power2.out", overwrite: "auto" }, HIT + 0.39);
+
+        // contact shadow widens on impact then settles with the bounce
+        tl.to("#shadow", { scaleX: 1.30, opacity: 1, duration: 0.09, ease: "power2.out", overwrite: "auto" }, HIT);
+        tl.to("#shadow", { scaleX: 0.92, duration: 0.17, ease: "power1.inOut", overwrite: "auto" }, HIT + 0.09);
+        tl.to("#shadow", { scaleX: 1.00, duration: 0.30, ease: "power2.out", overwrite: "auto" }, HIT + 0.26);
+
+        // ── 4. Impact sparks burst outward ──────────────────────────────
+        const sparkVecs = [[-70,-40],[80,-30],[0,-90],[-95,30],[95,35]];
+        document.querySelectorAll(".spark").forEach((el, i) => {
+          const [dx, dy] = sparkVecs[i];
+          tl.fromTo(el,
+            { opacity: 0, scale: 0.2, x: 0, y: 0 },
+            { opacity: 1, scale: 1, x: dx, y: dy, duration: 0.22, ease: "power2.out" },
+            HIT + 0.02);
+          tl.to(el, { opacity: 0, scale: 0.4, duration: 0.30, ease: "power1.in" }, HIT + 0.24);
+        });
+
+        // ── 5. Gold gleam sweep + "1" pulse + glow ──────────────────────
+        const SHINE = HIT + 0.45;
+        tl.fromTo("#shine", { x: 0 }, { x: 300, duration: 0.55, ease: "power1.inOut" }, SHINE);
+        tl.to(".one", { scale: 1.12, duration: 0.14, ease: "power2.out", overwrite: "auto" }, SHINE + 0.02);
+        tl.to(".one", { scale: 1.00, duration: 0.18, ease: "power2.inOut", overwrite: "auto" }, SHINE + 0.16);
+
+        // glow pulse — finite cycles through the hold
+        tl.to("#glow", { opacity: 1, scale: 1.06, duration: 0.45, ease: "sine.inOut", yoyo: true, repeat: 3 }, SHINE);
+
+        // ── 6. Victory twinkles around the medal (finite) ───────────────
+        document.querySelectorAll(".twinkle").forEach((el, i) => {
+          tl.fromTo(el,
+            { opacity: 0, scale: 0.3, rotation: 0 },
+            { opacity: 1, scale: 1, rotation: 45, duration: 0.30, ease: "back.out(2)", yoyo: true, repeat: 3 },
+            SHINE + 0.10 + i * 0.22);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

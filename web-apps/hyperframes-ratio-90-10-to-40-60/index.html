@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      /* ---------- Number boxes (closer together; touching containers) ---------- */
+      .num-box {
+        position: absolute;
+        top: 400px;
+        width: 380px;
+        height: 280px;
+      }
+      #box-left  { left: 520px; }
+      #box-right { left: 1020px; }
+
+      .num {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 280px;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        transform-origin: 50% 50%;
+        /* Vertical orange gradient: light top → core Trendify orange → deep bottom */
+        background: linear-gradient(180deg, #FFCB7A 0%, #F28129 52%, #D86A0F 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.12),
+          0 12px 32px rgba(0, 0, 0, 0.10);
+      }
+
+      /* ---------- Slash divider ---------- */
+      .divide-box {
+        position: absolute;
+        top: 400px;
+        left: 900px;
+        width: 120px;
+        height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 280px;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        transform-origin: 50% 50%;
+        background: linear-gradient(180deg, #FFCB7A 0%, #F28129 52%, #D86A0F 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.12),
+          0 12px 32px rgba(0, 0, 0, 0.10);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- LEFT number slot: 90 (initial) → 40 (swap target) -->
+      <div id="box-left" class="num-box">
+        <span class="num" id="num-90">90</span>
+        <span class="num" id="num-40">40</span>
+      </div>
+
+      <!-- Slash divider -->
+      <div class="divide-box" id="divide">/</div>
+
+      <!-- RIGHT number slot: 10 (initial) → 60 (swap target) -->
+      <div id="box-right" class="num-box">
+        <span class="num" id="num-10">10</span>
+        <span class="num" id="num-60">60</span>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // -------- Initial states --------
+      gsap.set('#num-90, #num-10', { scale: 0.4, opacity: 0, y: 0 });
+      gsap.set('#num-40, #num-60', { scale: 0.85, opacity: 0, y: 60 });
+      gsap.set('#divide',          { scale: 0.4, opacity: 0 });
+
+      // -------- Phase 1: Pop ease-in fade-in entrance (0.10 - 0.95s) --------
+      // Stagger: 90 first, then ÷, then 10
+      tl.to('#num-90',
+        { scale: 1, opacity: 1, duration: 0.50, ease: 'back.out(2.2)' },
+        0.10
+      );
+      tl.to('#divide',
+        { scale: 1, opacity: 1, duration: 0.40, ease: 'back.out(2.0)' },
+        0.30
+      );
+      tl.to('#num-10',
+        { scale: 1, opacity: 1, duration: 0.50, ease: 'back.out(2.2)' },
+        0.50
+      );
+
+      // -------- Phase 2: Hold "90 ÷ 10" (1.00 - 2.40s) --------
+
+      // -------- Phase 3: Slot-machine switch — 60 takes over 10 (2.40 - 2.95s) --------
+      // OLD 10 exits up + fades
+      tl.to('#num-10',
+        { y: -50, opacity: 0, scale: 0.85, duration: 0.22, ease: 'power3.in' },
+        2.40
+      );
+      // NEW 60 rises up + pops in
+      tl.to('#num-60',
+        { y: 0, opacity: 1, scale: 1.08, duration: 0.30, ease: 'back.out(2.5)' },
+        2.50
+      );
+      // 60 settles from overshoot
+      tl.to('#num-60',
+        { scale: 1, duration: 0.15, ease: 'power2.out', overwrite: 'auto' },
+        2.80
+      );
+
+      // -------- Phase 4: Slot-machine switch — 40 takes over 90 (2.85 - 3.40s) --------
+      // OLD 90 exits up + fades
+      tl.to('#num-90',
+        { y: -50, opacity: 0, scale: 0.85, duration: 0.22, ease: 'power3.in' },
+        2.85
+      );
+      // NEW 40 rises up + pops in
+      tl.to('#num-40',
+        { y: 0, opacity: 1, scale: 1.08, duration: 0.30, ease: 'back.out(2.5)' },
+        2.95
+      );
+      // 40 settles from overshoot
+      tl.to('#num-40',
+        { scale: 1, duration: 0.15, ease: 'power2.out', overwrite: 'auto' },
+        3.25
+      );
+
+      // -------- Phase 5: Hold "40 ÷ 60" through 6.0s --------
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

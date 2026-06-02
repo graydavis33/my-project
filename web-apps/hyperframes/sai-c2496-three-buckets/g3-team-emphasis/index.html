@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        padding: 80px;
+      }
+
+      .top-label {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 78px;
+        letter-spacing: 0.10em;
+        color: #FFFFFF;
+        text-transform: uppercase;
+        text-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+        will-change: transform, opacity;
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 35px;
+      }
+
+      .bucket {
+        width: 760px;
+        height: 170px;
+        border-radius: 42px;
+        border: 4px solid #FFFFFF;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 48px;
+        gap: 44px;
+        filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.35));
+        will-change: transform, opacity;
+      }
+
+      /* TEAM card — orange-glass treatment for emphasis */
+      .bucket.team {
+        width: 880px;
+        height: 220px;
+        border-radius: 50px;
+        border: 5px solid #F28129;
+        background:
+          linear-gradient(180deg, rgba(242, 129, 41, 0.95) 0%, rgba(217, 109, 28, 0.95) 100%);
+        box-shadow:
+          0 8px 30px rgba(242, 129, 41, 0.55),
+          inset 0 4px 0 rgba(255, 255, 255, 0.18),
+          inset 0 -4px 0 rgba(0, 0, 0, 0.15);
+        gap: 52px;
+        padding: 0 60px;
+      }
+      .bucket.team .label { font-size: 96px; }
+      .bucket.team .badge { width: 140px; height: 140px; }
+      .bucket.team .badge-num { font-size: 100px; }
+
+      .badge {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: #F28129;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow:
+          0 4px 14px rgba(0, 0, 0, 0.3),
+          inset 0 2px 4px rgba(255, 255, 255, 0.25);
+      }
+      .bucket.team .badge { background: #FFFFFF; }
+      .bucket.team .badge-num { color: #F28129; }
+
+      .badge-num {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 80px;
+        color: #FFFFFF;
+        line-height: 1.0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      }
+
+      .label {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 72px;
+        color: #FFFFFF;
+        letter-spacing: 0.02em;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        line-height: 1.0;
+      }
+
+      .bottom-label {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 900;
+        font-size: 96px;
+        letter-spacing: 0.04em;
+        color: #F28129;
+        text-transform: uppercase;
+        text-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+        will-change: transform, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <div class="top-label" id="top">PICK ONE?</div>
+
+        <div class="stack">
+          <div class="bucket" data-layout-allow-overflow>
+            <div class="badge"><span class="badge-num">1</span></div>
+            <div class="label">CUSTOMERS</div>
+          </div>
+          <div class="bucket team" data-layout-allow-overflow id="team-card">
+            <div class="badge"><span class="badge-num">2</span></div>
+            <div class="label">TEAM</div>
+          </div>
+          <div class="bucket" data-layout-allow-overflow>
+            <div class="badge"><span class="badge-num">3</span></div>
+            <div class="label">SHAREHOLDERS</div>
+          </div>
+        </div>
+
+        <div class="bottom-label" id="bottom">FOCUS HERE.</div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // All elements start hidden, animate in over the comp
+        gsap.set("#top",        { opacity: 0, y: -40 });
+        gsap.set(".bucket",     { opacity: 0, y: 60, scale: 0.88 });
+        gsap.set("#team-card",  { opacity: 0, y: 60, scale: 0.88 });   // overrides above for #team-card
+        gsap.set("#bottom",     { opacity: 0, y: 40 });
+
+        // Top callout
+        tl.to("#top", { opacity: 1, y: 0, duration: 0.40, ease: "power3.out" }, 0.10);
+
+        // 3 cards enter with stagger — but TEAM gets a punchier ease
+        tl.to(".bucket:not(.team)", {
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.45, ease: "power3.out",
+          stagger: 0.18,
+        }, 0.30);
+
+        // TEAM card lands last + bigger bounce, claiming the spotlight
+        tl.to("#team-card", {
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.55, ease: "back.out(1.8)",
+        }, 0.85);
+
+        // Bottom callout — the conclusion
+        tl.to("#bottom", { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" }, 1.35);
+
+        // 3-cycle finite pulse on the TEAM card to keep eyes drawn there through the hold
+        tl.to("#team-card", {
+          scale: 1.03,
+          duration: 0.55,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: 5,
+        }, 1.90);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

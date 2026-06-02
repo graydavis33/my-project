@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Age Scroll — 93 to 35</title>
+<style>
+  /* Pure white background — photos are transparent-bg so they composite
+     cleanly on white. Matches what Gray asked for (no Sketchbook-gray paper). */
+  html, body {
+    margin: 0; padding: 0;
+    background: #ffffff;
+    overflow: hidden;
+    font-family: 'Bowlby One', 'Inter', sans-serif;
+  }
+
+  #age-scroll {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    background: #ffffff;
+    overflow: hidden;
+    /* Directional motion blur (vertical-only) via SVG feConvolveMatrix. */
+    filter: url(#vmotion);
+  }
+
+  .scroll-strip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    will-change: transform;
+  }
+
+  /* Photos use transparent-bg versions (paper stripped out) so they composite
+     onto the same solid #dcdcdc paper background as the synthesized rows.
+     No more visible seam at the photo edges — there IS no photo edge in the
+     color sense, only the silhouette of the content. */
+  .photo {
+    position: absolute;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    object-fit: cover;
+    display: block;
+  }
+  /* Photos are pre-cropped (35-centered.png, 93-centered.png) so axis is at
+     horizontal center of the cropped image. With object-fit:cover and default
+     object-position 50% 50%, the axis lands exactly at viewport x=960.
+     Cropping was the only way — source aspect (1.79) was too close to
+     container aspect (1.78) to allow object-position to shift the axis to
+     center via slack alone. */
+
+  .rows {
+    position: absolute;
+    left: 0;
+    top: 1080px;
+    width: 1920px;
+  }
+
+  /* Axis line — visible during motion blur with a simulated horizontal smear.
+     Because the global filter is VERTICAL motion blur only, a pure vertical
+     line can't smear (it's invariant under vertical averaging). To match the
+     photos' static crisp line at rest AND show motion blur during fast scroll,
+     we render the axis as a horizontal gradient that JS animates between two
+     states:
+       - rest:  width 7px, hard edges, solid black (matches photo)
+       - peak:  width ~32px, soft transparent edges, simulated smear
+     Animation tied to the same timeline as the SVG vertical-blur kernel. */
+  .axis {
+    position: absolute;
+    left: 50%;
+    top: -60px;
+    width: 7px;
+    bottom: -60px;
+    transform: translateX(-50%);
+    background: #161616;
+    pointer-events: none;
+  }
+
+  .rank-row {
+    position: absolute;
+    left: 0;
+    width: 1920px;
+    height: 380px;  /* ROW_PITCH */
+  }
+
+  /* Number column — viewport x=571, the exact column where the cropped
+     photos place their red numbers (35.png:574.9, 93.png:566.7 avg). */
+  .rank-num {
+    position: absolute;
+    left: 571px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bowlby One', 'Inter', sans-serif;
+    font-weight: 400;
+    color: #161616;
+    line-height: 0.95;
+  }
+
+  /* Small tick crossing the axis — matches photo proportions
+     (photos show short ticks ~30-40px wide, ~5-6px tall, NOT bars). */
+  .rank-tick {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 32px;
+    height: 6px;
+    background: #161616;
+    transform: translate(-50%, -50%);
+    border-radius: 1px;
+  }
+
+  /* Character column center at viewport x=1320 (matches cropped photos
+     within <1px). Width 270 → left:1185 puts center at 1320.
+     Rows cycle through 7 diverse figures (PNG + SVG, all monochrome). */
+  .rank-fig {
+    position: absolute;
+    left: 1185px;
+    top: 50%;
+    width: 270px;
+    height: 362px;  /* preserves 700:940 source aspect */
+    transform: translateY(-50%);
+  }
+  .rank-fig img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<div id="age-scroll" data-composition-id="age-scroll" data-start="0" data-duration="5" data-width="1920" data-height="1080" data-track-index="0">
+
+  <!-- Linear directional motion blur. Kernel is a 1xN vertical box of 1/N
+       values, dynamically resized by JS per frame. -->
+  <svg style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+    <filter id="vmotion" x="-5%" y="-50%" width="110%" height="200%">
+      <feConvolveMatrix id="mb-conv" in="SourceGraphic"
+                        order="1,1" kernelMatrix="1" preserveAlpha="true" />
+    </filter>
+  </svg>
+
+  <div class="scroll-strip" id="strip" data-layout-allow-overflow>
+    <img class="photo" id="photo-end"   src="source-photos/35-centered.png" alt="age 35 frame" / style="--hf-studio-offset-x: -6px; --hf-studio-offset-y: 4px; translate: var(--hf-studio-offset-x, 0px) var(--hf-studio-offset-y, 0px)" data-hf-studio-path-offset="true" data-hf-studio-original-translate="" data-hf-studio-original-inline-translate="">
+    <div class="rows" id="rows">
+      <div class="axis" id="axis"></div>
+    </div>
+    <img class="photo" id="photo-start" src="source-photos/93-centered.png" alt="age 93 frame" / style="--hf-studio-offset-x: 12px; --hf-studio-offset-y: 1px; translate: var(--hf-studio-offset-x, 0px) var(--hf-studio-offset-y, 0px)" data-hf-studio-path-offset="true" data-hf-studio-original-translate="" data-hf-studio-original-inline-translate="">
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+  window.__timelines = window.__timelines || {};
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  const rand = mulberry32(2026519);
+
+  const ROW_PITCH = 380;
+  // Photos contain their own peek ages (35.png shows 34/35/36, 93.png shows
+  // peek above/below 93). Synthesized rows cover the in-between range 37→91.
+  // Continuous count: 93 (photo) → 92 peek (photo) → 91 → ... → 37 → 36 peek (photo) → 35 (photo).
+  const FIRST_NUM = 37;
+  const LAST_NUM  = 91;
+  const NUM_ROWS  = LAST_NUM - FIRST_NUM + 1;
+  const rowsHost  = document.getElementById("rows");
+  const ROWS_HEIGHT = NUM_ROWS * ROW_PITCH;
+  rowsHost.style.height = ROWS_HEIGHT + "px";
+
+  // Diverse B&W character pool. Mix of PNGs (real cartoon w/ orange stripped)
+  // and inline SVG line-art. Per-row pick + per-row size jitter so the column
+  // reads as varied people smearing through, not one repeating figure.
+  const FIGURE_FILES = [
+    "source-photos/figures/figure-01.png",  // curly-hair guy (tie removed)
+    "source-photos/figures/figure-02.png",  // same, flipped
+    "source-photos/figures/figure-03.svg",  // long-hair woman, hand on hip
+    "source-photos/figures/figure-04.svg",  // bald man, arms crossed
+    "source-photos/figures/figure-05.svg",  // ponytail woman, waving
+    "source-photos/figures/figure-06.svg",  // glasses/beard man, thumbs up
+    "source-photos/figures/figure-07.svg",  // child, hand raised
+  ];
+
+  // Build a row for each rank: number on left, tick at axis, character on right.
+  // Numbers and characters are sized larger and varied per row.
+  for (let i = 0; i < NUM_ROWS; i++) {
+    const num = FIRST_NUM + i;
+    const row = document.createElement("div");
+    row.className = "rank-row";
+    row.style.top = (i * ROW_PITCH) + "px";
+
+    const numEl = document.createElement("div");
+    numEl.className = "rank-num";
+    numEl.textContent = String(num);
+    // Halfway between the original (110-150) and the bumped (200-240) sizes
+    const sizeJitter = 155 + Math.floor(rand() * 40);  // 155-195px
+    numEl.style.fontSize = sizeJitter + "px";
+    const rotJitter = (rand() * 4) - 2;
+    numEl.style.transform = `translate(-50%, -50%) rotate(${rotJitter.toFixed(2)}deg)`;
+    row.appendChild(numEl);
+
+    const tick = document.createElement("div");
+    tick.className = "rank-tick";
+    row.appendChild(tick);
+
+    // Cycle character file deterministically + offset by mulberry so different
+    // ages get different characters in a stable pattern. Size jitter 0.85-1.10
+    // gives "different sizes / shapes" feel under motion blur.
+    const fig = document.createElement("div");
+    fig.className = "rank-fig";
+    const figIdx = Math.floor(rand() * FIGURE_FILES.length);
+    const figFile = FIGURE_FILES[figIdx];
+    const figScale = 0.85 + rand() * 0.25;  // 0.85 - 1.10
+    fig.style.transform = `translateY(-50%) scale(${figScale.toFixed(3)})`;
+    fig.innerHTML = `<img src="${figFile}" alt="" />`;
+    row.appendChild(fig);
+
+    rowsHost.appendChild(row);
+  }
+
+  // Axis line is now a CSS div (.axis) — straight, matches photo line weight.
+  // No SVG path needed.
+
+  const STRIP_HEIGHT = 1080 + ROWS_HEIGHT + 1080;
+  document.getElementById("strip").style.height = STRIP_HEIGHT + "px";
+  const startPhotoY = 1080 + ROWS_HEIGHT;
+  document.getElementById("photo-start").style.top = startPhotoY + "px";
+
+  // --- Timeline + motion blur ----------------------------------------------
+  gsap.set("#strip", { y: -startPhotoY });
+
+  const convEl = document.getElementById("mb-conv");
+  function setMotionBlur(lengthPx) {
+    const n = Math.max(1, Math.round(lengthPx));
+    if (n <= 1) {
+      convEl.setAttribute("order", "1,1");
+      convEl.setAttribute("kernelMatrix", "1");
+      return;
+    }
+    const v = (1 / n).toFixed(6);
+    convEl.setAttribute("order", `1,${n}`);
+    convEl.setAttribute("kernelMatrix", new Array(n).fill(v).join(" "));
+  }
+  const blurState = { length: 1 };
+  function applyBlur() { setMotionBlur(blurState.length); }
+  applyBlur();
+
+  const tl = gsap.timeline({ paused: true });
+
+  // 5s layout (slow accel + cruise + smooth decel)
+  const HOLD_START   = 0.50;
+  const ACCEL_DUR    = 0.65;
+  const CRUISE_DUR   = 2.30;
+  const DECEL_DUR    = 0.80;
+  const ACCEL_START  = HOLD_START;
+  const CRUISE_START = ACCEL_START + ACCEL_DUR;
+  const DECEL_START  = CRUISE_START + CRUISE_DUR;
+  const SETTLE_AT    = DECEL_START + DECEL_DUR;
+
+  const TOTAL_DIST  = startPhotoY;
+  const ACCEL_FRAC  = 0.09;
+  const CRUISE_FRAC = 0.79;
+  const yAfterAccel  = -startPhotoY + TOTAL_DIST * ACCEL_FRAC;
+  const yAfterCruise = -startPhotoY + TOTAL_DIST * (ACCEL_FRAC + CRUISE_FRAC);
+
+  tl.to("#strip", { y: yAfterAccel,  duration: ACCEL_DUR,  ease: "power3.in"  }, ACCEL_START);
+  tl.to("#strip", { y: yAfterCruise, duration: CRUISE_DUR, ease: "none"       }, CRUISE_START);
+  tl.to("#strip", { y: 0,            duration: DECEL_DUR,  ease: "power3.out" }, DECEL_START);
+
+  const PEAK_BLUR = 140;
+  tl.to(blurState, {
+    length: PEAK_BLUR,
+    duration: ACCEL_DUR,
+    ease: "power2.in",
+    onUpdate: applyBlur,
+  }, ACCEL_START);
+  tl.to(blurState, {
+    length: 1,
+    duration: DECEL_DUR,
+    ease: "power3.out",
+    onUpdate: applyBlur,
+  }, DECEL_START);
+
+  // Axis line motion-blur simulation.
+  // Vertical-only feConvolveMatrix can't visually smear a pure vertical line
+  // (averaging black-with-black at every column yields the same black line).
+  // Solution: apply a CSS Gaussian blur to the axis itself, animated in sync
+  // with the SVG kernel. At rest blur=0 (sharp, matches photo); at peak the
+  // axis softens horizontally into a smeared band — reads as motion blur.
+  gsap.set("#axis", { filter: "blur(0px)" });
+  tl.to("#axis", {
+    filter: "blur(6px)",
+    duration: ACCEL_DUR,
+    ease: "power2.in",
+  }, ACCEL_START);
+  tl.to("#axis", {
+    filter: "blur(0px)",
+    duration: DECEL_DUR,
+    ease: "power3.out",
+  }, DECEL_START);
+
+  tl.to("#strip", { y: 10, duration: 0.08, ease: "power1.out", overwrite: "auto" }, SETTLE_AT);
+  tl.to("#strip", { y: 0,  duration: 0.16, ease: "power2.out" }, SETTLE_AT + 0.08);
+
+  window.__timelines["age-scroll"] = tl;
+</script>
+
+</body>
+</html>

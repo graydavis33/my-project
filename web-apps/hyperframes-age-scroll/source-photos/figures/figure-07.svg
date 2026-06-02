@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 940" width="700" height="940" fill="none">
+  <defs>
+    <style>
+      .skin { fill: white; stroke: #161616; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+      .hair { fill: #161616; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+      .line { fill: none; stroke: #161616; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+      .thin { fill: none; stroke: #161616; stroke-width: 7; stroke-linecap: round; }
+      .eye  { fill: #161616; }
+      .shirt { fill: white; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- short hair -->
+  <path class="hair" d="M 275 240 Q 265 130 380 115 Q 480 110 555 165 Q 575 220 570 280 Q 510 225 450 235 Q 380 245 325 260 Q 285 265 275 240 Z" />
+  <!-- bigger head (child proportions) -->
+  <ellipse class="skin" cx="415" cy="310" rx="155" ry="170" />
+  <!-- ears -->
+  <path class="line" d="M 273 320 Q 250 320 250 355 Q 250 395 280 395" />
+  <path class="line" d="M 557 320 Q 580 320 580 355 Q 580 395 550 395" />
+  <!-- eyebrows -->
+  <path class="thin" d="M 340 250 Q 370 240 400 250" />
+  <path class="thin" d="M 430 250 Q 460 240 490 250" />
+  <!-- big round eyes (child) -->
+  <ellipse class="eye" cx="365" cy="315" rx="13" ry="16" />
+  <ellipse class="eye" cx="465" cy="315" rx="13" ry="16" />
+  <!-- nose -->
+  <path class="thin" d="M 415 345 Q 415 375 428 388" />
+  <!-- toothy smile -->
+  <path class="line" d="M 350 395 Q 415 445 480 395" />
+  <path class="thin" d="M 380 410 L 450 410" />
+  <!-- neck (short) -->
+  <path class="line" d="M 385 480 L 385 515" />
+  <path class="line" d="M 445 480 L 445 515" />
+  <!-- smaller body -->
+  <path class="shirt" d="M 255 770 Q 280 585 380 515 L 450 515 Q 555 585 575 770 L 575 940 L 255 940 Z" />
+  <path class="line" d="M 385 515 L 415 575 L 445 515" />
+  <!-- raised hand -->
+  <path class="shirt" d="M 470 580 Q 510 410 540 235 Q 555 210 575 225 Q 575 410 530 600 Z" />
+  <circle class="skin" cx="557" cy="200" r="38" />
+  <path class="thin" d="M 545 168 L 540 138" />
+  <path class="thin" d="M 562 165 L 562 132" />
+  <path class="thin" d="M 580 170 L 585 142" />
+
+</svg>

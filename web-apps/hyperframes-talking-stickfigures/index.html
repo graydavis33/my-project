@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: 'JetBrains Mono', 'Courier New', monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6"
+      data-width="1080"
+      data-height="1080"
+    >
+      <!-- ============================================================
+        FIGURE A (LEFT) — half-body white stick figure
+        ============================================================ -->
+      <div class="figure-wrap" id="fig-a"
+           style="position: absolute; left: 120px; top: 520px; width: 280px; height: 420px; transform-origin: 50% 100%;">
+        <svg viewBox="0 0 280 360" width="280" height="360" style="position: absolute; left: 0; bottom: 0;">
+          <circle cx="140" cy="68" r="56" fill="#FFFFFF"/>
+          <path d="M 50 360 L 50 230 Q 50 165 90 138 Q 110 124 140 124 Q 170 124 190 138 Q 230 165 230 230 L 230 360 Z" fill="#FFFFFF"/>
+        </svg>
+      </div>
+
+      <!-- ============================================================
+        FIGURE B (RIGHT) — half-body white stick figure
+        ============================================================ -->
+      <div class="figure-wrap" id="fig-b"
+           style="position: absolute; left: 680px; top: 520px; width: 280px; height: 420px; transform-origin: 50% 100%;">
+        <svg viewBox="0 0 280 360" width="280" height="360" style="position: absolute; left: 0; bottom: 0;">
+          <circle cx="140" cy="68" r="56" fill="#FFFFFF"/>
+          <path d="M 50 360 L 50 230 Q 50 165 90 138 Q 110 124 140 124 Q 170 124 190 138 Q 230 165 230 230 L 230 360 Z" fill="#FFFFFF"/>
+        </svg>
+      </div>
+
+      <!-- ============================================================
+        SPEECH BUBBLES — gibberish symbols only
+        ============================================================ -->
+      <div class="bubble bubble-a" id="bubble-a"
+           style="position: absolute; left: 80px; top: 260px; min-width: 360px; transform-origin: 50% 100%; opacity: 0;">
+        <span class="gibberish" id="gibberish-a">@#! &amp;%*</span>
+        <div class="tail"></div>
+      </div>
+
+      <div class="bubble bubble-b" id="bubble-b"
+           style="position: absolute; left: 640px; top: 260px; min-width: 360px; transform-origin: 50% 100%; opacity: 0;">
+        <span class="gibberish" id="gibberish-b">$%&amp; !@#</span>
+        <div class="tail"></div>
+      </div>
+    </div>
+
+    <style>
+      .bubble {
+        background: #FFFFFF;
+        border-radius: 32px;
+        padding: 32px 40px;
+        font-family: 'JetBrains Mono', 'Courier New', monospace;
+        font-size: 72px;
+        font-weight: 700;
+        color: #000000;
+        white-space: nowrap;
+        text-align: center;
+        line-height: 1;
+        letter-spacing: 0.04em;
+      }
+      .bubble .tail {
+        position: absolute;
+        bottom: -28px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 24px solid transparent;
+        border-right: 24px solid transparent;
+        border-top: 32px solid #FFFFFF;
+      }
+    </style>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ============================================================
+      // Gibberish phrases — one per speaking turn
+      // ============================================================
+      const PHRASES = {
+        a1: '@#! &%*',
+        b1: '$%& !@#',
+        a2: '?!? &*+',
+        b2: '##$ @&^'
+      };
+
+      // Set initial scale state for bubbles (so back.out pop reads correctly)
+      gsap.set('#bubble-a', { scale: 0, opacity: 0 });
+      gsap.set('#bubble-b', { scale: 0, opacity: 0 });
+
+      // ============================================================
+      // Figure entrance — both pop in together
+      // ============================================================
+      tl.from('#fig-a', { scale: 0.85, opacity: 0, duration: 0.4, ease: 'back.out(1.6)' }, 0.0);
+      tl.from('#fig-b', { scale: 0.85, opacity: 0, duration: 0.4, ease: 'back.out(1.6)' }, 0.05);
+
+      // ============================================================
+      // Helper: speak turn — wiggle figure + pop bubble in/out
+      // ============================================================
+      function speak(figSel, bubbleSel, gibberishSel, phrase, startAt, duration) {
+        // Set the gibberish text inside the bubble at startAt
+        tl.set(gibberishSel, { textContent: phrase }, startAt);
+
+        // Bubble pop in
+        tl.to(bubbleSel, {
+          scale: 1, opacity: 1,
+          duration: 0.18, ease: 'back.out(2.0)'
+        }, startAt);
+
+        // Figure wiggle — alternating rotation + small Y bounce
+        const cycles = Math.max(2, Math.floor((duration - 0.3) / 0.15));
+        const frames = [];
+        for (let i = 0; i < cycles; i++) {
+          frames.push({ rotation: i % 2 === 0 ? 3 : -3, y: i % 2 === 0 ? -3 : 0, duration: 0.15 });
+        }
+        frames.push({ rotation: 0, y: 0, duration: 0.1 });
+        tl.to(figSel, { keyframes: frames, ease: 'sine.inOut' }, startAt + 0.05);
+
+        // Bubble pop out at end of turn
+        tl.to(bubbleSel, {
+          scale: 0, opacity: 0,
+          duration: 0.14, ease: 'back.in(1.6)'
+        }, startAt + duration - 0.14);
+      }
+
+      // ============================================================
+      // Conversation: A → B → A → B
+      // 0.5s → 1.5s | 1.65 → 2.65 | 2.8 → 3.8 | 3.95 → 4.95 | hold to 6.0
+      // ============================================================
+      const TURN = 1.0;   // seconds per speaking turn
+      const GAP  = 0.15;  // gap between turns
+
+      let t = 0.5;
+      speak('#fig-a', '#bubble-a', '#gibberish-a', PHRASES.a1, t, TURN); t += TURN + GAP;
+      speak('#fig-b', '#bubble-b', '#gibberish-b', PHRASES.b1, t, TURN); t += TURN + GAP;
+      speak('#fig-a', '#bubble-a', '#gibberish-a', PHRASES.a2, t, TURN); t += TURN + GAP;
+      speak('#fig-b', '#bubble-b', '#gibberish-b', PHRASES.b2, t, TURN);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
