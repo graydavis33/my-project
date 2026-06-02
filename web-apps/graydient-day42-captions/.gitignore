@@ -1,0 +1,6 @@
+# HyperFrames runtime cache + large video assets
+.waveform-cache/
+assets/*.mp4
+assets/*.m4a
+assets/*.mov
+renders/

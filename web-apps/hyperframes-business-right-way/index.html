@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: "Montserrat", "Inter", system-ui, sans-serif;
+        color: #ffffff;
+      }
+      #root { position: relative; width: 1920px; height: 1080px; }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+      }
+
+      /* ── corner marks ─────────────────────────────────── */
+      .corner-mark {
+        position: absolute;
+        width: 60px;
+        height: 6px;
+        background: #ffffff;
+        opacity: 0;
+      }
+      .corner-mark.tl   { top: 60px; left: 60px; }
+      .corner-mark.tl-v { top: 60px; left: 60px; width: 6px; height: 60px; }
+      .corner-mark.tr   { top: 60px; right: 60px; }
+      .corner-mark.tr-v { top: 60px; right: 60px; width: 6px; height: 60px; }
+      .corner-mark.bl   { bottom: 60px; left: 60px; }
+      .corner-mark.bl-v { bottom: 60px; left: 60px; width: 6px; height: 60px; }
+      .corner-mark.br   { bottom: 60px; right: 60px; }
+      .corner-mark.br-v { bottom: 60px; right: 60px; width: 6px; height: 60px; }
+
+      /* ── focal-point dot (the morph anchor) ─────────── */
+      .focal-dot {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 28px; height: 28px;
+        margin: -14px 0 0 -14px;
+        background: #ffffff;
+        border-radius: 50%;
+        opacity: 0;
+      }
+
+      /* ── SCENE 1 — Building / Foundation ─────────────── */
+      #scene1 svg .stroke {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      #scene1 svg .body-rect {
+        stroke-dasharray: 1600;
+        stroke-dashoffset: 1600;
+      }
+      #scene1 svg .roof {
+        stroke-dasharray: 360;
+        stroke-dashoffset: 360;
+      }
+      #scene1 svg .ground {
+        stroke-dasharray: 560;
+        stroke-dashoffset: 560;
+      }
+      #scene1 svg .antenna-line {
+        stroke-dasharray: 80;
+        stroke-dashoffset: 80;
+      }
+      #scene1 svg .antenna-ball {
+        fill: #ffffff;
+        opacity: 0;
+      }
+      #scene1 svg .window {
+        fill: #ffffff;
+        opacity: 0;
+      }
+      #scene1 svg .check-circle {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 5;
+        stroke-dasharray: 260;
+        stroke-dashoffset: 260;
+      }
+      #scene1 svg .check-mark {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 70;
+        stroke-dashoffset: 70;
+      }
+
+      /* ── SCENE 2 — Smiley + rays ─────────────────────── */
+      #scene2 .face-svg .face-ring {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 9;
+        stroke-dasharray: 1450;
+        stroke-dashoffset: 1450;
+      }
+      #scene2 .face-svg .eye {
+        fill: #ffffff;
+        opacity: 0;
+      }
+      #scene2 .face-svg .smile {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 13;
+        stroke-linecap: round;
+        stroke-dasharray: 320;
+        stroke-dashoffset: 320;
+      }
+      #scene2 .face-svg .ray {
+        stroke: #ffffff;
+        stroke-width: 7;
+        stroke-linecap: round;
+        stroke-dasharray: 90;
+        stroke-dashoffset: 90;
+      }
+
+      /* ── SCENE 3 — $ + ascending bars ────────────────── */
+      #scene3 .dollar {
+        position: absolute;
+        top: 220px;
+        left: 50%;
+        font-size: 280px;
+        font-weight: 900;
+        line-height: 1;
+        opacity: 0;
+      }
+      #scene3 .baseline {
+        position: absolute;
+        bottom: 196px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 6px;
+        background: #ffffff;
+        border-radius: 3px;
+      }
+      #scene3 .bar {
+        position: absolute;
+        bottom: 200px;
+        background: #ffffff;
+        border-radius: 10px 10px 0 0;
+        transform-origin: bottom center;
+        transform: scaleY(0);
+      }
+      #scene3 .arrow-svg .arrow-stroke {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 320;
+        stroke-dashoffset: 320;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- corner marks -->
+      <div class="corner-mark tl"></div><div class="corner-mark tl-v"></div>
+      <div class="corner-mark tr"></div><div class="corner-mark tr-v"></div>
+      <div class="corner-mark bl"></div><div class="corner-mark bl-v"></div>
+      <div class="corner-mark br"></div><div class="corner-mark br-v"></div>
+
+      <!-- focal dot (morph anchor between scenes) -->
+      <div class="focal-dot"></div>
+
+      <!-- SCENE 1: Building / Foundation -->
+      <div class="scene" id="scene1">
+        <svg width="700" height="780" viewBox="0 0 700 780" data-layout-allow-overflow>
+          <!-- ground line -->
+          <line class="stroke ground" x1="70" y1="710" x2="630" y2="710"/>
+          <!-- main body -->
+          <rect class="stroke body-rect" x="200" y="210" width="300" height="500" rx="6"/>
+          <!-- roof -->
+          <path class="stroke roof" d="M 200 210 L 350 110 L 500 210"/>
+          <!-- antenna -->
+          <line class="stroke antenna-line" x1="350" y1="110" x2="350" y2="48"/>
+          <circle class="antenna-ball" cx="350" cy="38" r="11"/>
+          <!-- 12 windows: 4 rows × 3 cols -->
+          <rect class="window" x="240" y="260" width="50" height="55"/>
+          <rect class="window" x="325" y="260" width="50" height="55"/>
+          <rect class="window" x="410" y="260" width="50" height="55"/>
+          <rect class="window" x="240" y="345" width="50" height="55"/>
+          <rect class="window" x="325" y="345" width="50" height="55"/>
+          <rect class="window" x="410" y="345" width="50" height="55"/>
+          <rect class="window" x="240" y="430" width="50" height="55"/>
+          <rect class="window" x="325" y="430" width="50" height="55"/>
+          <rect class="window" x="410" y="430" width="50" height="55"/>
+          <rect class="window" x="240" y="515" width="50" height="55"/>
+          <rect class="window" x="325" y="515" width="50" height="55"/>
+          <rect class="window" x="410" y="515" width="50" height="55"/>
+          <!-- door -->
+          <rect class="window door" x="312" y="608" width="76" height="102"/>
+          <!-- check badge top right -->
+          <circle class="check-circle" cx="600" cy="170" r="42"/>
+          <path class="check-mark" d="M 578 170 L 595 188 L 622 156"/>
+        </svg>
+      </div>
+
+      <!-- SCENE 2: Smiley + sun-rays -->
+      <div class="scene" id="scene2">
+        <svg class="face-svg" width="720" height="720" viewBox="0 0 720 720" data-layout-allow-overflow>
+          <!-- 8 sun rays (drawn around the face) -->
+          <line class="ray" x1="360" y1="110" x2="360" y2="40"/>
+          <line class="ray" x1="360" y1="610" x2="360" y2="680"/>
+          <line class="ray" x1="110" y1="360" x2="40"  y2="360"/>
+          <line class="ray" x1="610" y1="360" x2="680" y2="360"/>
+          <line class="ray" x1="180" y1="180" x2="130" y2="130"/>
+          <line class="ray" x1="540" y1="180" x2="590" y2="130"/>
+          <line class="ray" x1="180" y1="540" x2="130" y2="590"/>
+          <line class="ray" x1="540" y1="540" x2="590" y2="590"/>
+          <!-- face circle -->
+          <circle class="face-ring" cx="360" cy="360" r="225"/>
+          <!-- eyes -->
+          <circle class="eye" cx="280" cy="305" r="22"/>
+          <circle class="eye" cx="440" cy="305" r="22"/>
+          <!-- smile -->
+          <path class="smile" d="M 250 395 Q 360 500 470 395"/>
+        </svg>
+      </div>
+
+      <!-- SCENE 3: $ + ascending bars + up-arrow -->
+      <div class="scene" id="scene3">
+        <div class="dollar">$</div>
+        <div class="baseline"></div>
+        <div class="bar bar1" style="left: 690px;  width: 80px; height: 160px;"></div>
+        <div class="bar bar2" style="left: 800px;  width: 80px; height: 220px;"></div>
+        <div class="bar bar3" style="left: 910px;  width: 80px; height: 290px;"></div>
+        <div class="bar bar4" style="left: 1020px; width: 80px; height: 360px;"></div>
+        <div class="bar bar5" style="left: 1130px; width: 80px; height: 440px;"></div>
+        <svg class="arrow-svg" width="160" height="200" viewBox="0 0 160 200"
+             style="position:absolute; left: 1260px; bottom: 590px;" data-layout-allow-overflow>
+          <path class="arrow-stroke" d="M 80 195 L 80 25 M 30 70 L 80 20 L 130 70"/>
+        </svg>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      /* ── corner marks pop ────────────────────────────── */
+      tl.from(".corner-mark", {
+        scale: 0, opacity: 0, duration: 0.4, ease: "back.out(1.8)",
+        stagger: 0.04, transformOrigin: "center center"
+      }, 0.1);
+
+      /* ────────────────────────────────────────────────────
+         SCENE 1: Building / Foundation
+         (0.3s emerge from focal dot → 2.7s collapse back)
+      ──────────────────────────────────────────────────── */
+      const S1_IN = 0.3;
+      const S1_OUT = 2.7;
+
+      // hide scenes 2 and 3 entirely until their entrance time
+      tl.set("#scene2", { visibility: "hidden" }, 0);
+      tl.set("#scene3", { visibility: "hidden" }, 0);
+
+      // focal dot blooms first
+      tl.fromTo(".focal-dot",
+        { scale: 0, opacity: 0 },
+        { scale: 1.4, opacity: 1, duration: 0.3, ease: "back.out(2)", immediateRender: false, overwrite: "auto" },
+        S1_IN
+      );
+      // dot pops out as scene 1 takes over
+      tl.to(".focal-dot",
+        { scale: 4, opacity: 0, duration: 0.3, ease: "power2.out", overwrite: "auto" },
+        S1_IN + 0.25
+      );
+
+      // scene 1 emerges from the focal point
+      tl.fromTo("#scene1",
+        { opacity: 0, scale: 0.05 },
+        { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.4)", immediateRender: false },
+        S1_IN + 0.2
+      );
+
+      // ground line draws
+      tl.to("#scene1 .ground", { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" }, S1_IN + 0.5);
+      // body draws
+      tl.to("#scene1 .body-rect", { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut" }, S1_IN + 0.7);
+      // roof draws
+      tl.to("#scene1 .roof", { strokeDashoffset: 0, duration: 0.45, ease: "power2.out" }, S1_IN + 1.15);
+      // antenna draws
+      tl.to("#scene1 .antenna-line", { strokeDashoffset: 0, duration: 0.4, ease: "power2.out" }, S1_IN + 1.55);
+      tl.to("#scene1 .antenna-ball", { opacity: 1, duration: 0.2, ease: "power2.out" }, S1_IN + 1.9);
+
+      // windows pop in stagger
+      tl.fromTo("#scene1 .window",
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.28, ease: "back.out(2)", stagger: 0.04, transformOrigin: "center center" },
+        S1_IN + 1.0
+      );
+
+      // check badge top-right
+      tl.to("#scene1 .check-circle", { strokeDashoffset: 0, duration: 0.5, ease: "power2.out" }, S1_IN + 1.7);
+      tl.to("#scene1 .check-mark",   { strokeDashoffset: 0, duration: 0.35, ease: "power2.out" }, S1_IN + 2.1);
+
+      // SCENE 1 EXIT — collapse to focal point
+      tl.to("#scene1", {
+        scale: 0.04,
+        opacity: 0,
+        duration: 0.55,
+        ease: "power3.in",
+        overwrite: "auto"
+      }, S1_OUT);
+      tl.set("#scene1", { visibility: "hidden" }, S1_OUT + 0.6);
+
+      /* ────────────────────────────────────────────────────
+         TRANSITION 1 → 2: focal-dot pulse between scenes
+      ──────────────────────────────────────────────────── */
+      tl.fromTo(".focal-dot",
+        { scale: 0.2, opacity: 0 },
+        { scale: 1.6, opacity: 1, duration: 0.25, ease: "back.out(2)", immediateRender: false, overwrite: "auto" },
+        S1_OUT + 0.4
+      );
+      tl.to(".focal-dot",
+        { scale: 4, opacity: 0, duration: 0.25, ease: "power2.out", overwrite: "auto" },
+        S1_OUT + 0.65
+      );
+
+      /* ────────────────────────────────────────────────────
+         SCENE 2: Smiley + sun rays
+         (3.4s emerge → 5.7s collapse back)
+      ──────────────────────────────────────────────────── */
+      const S2_IN = 3.4;
+      const S2_OUT = 5.7;
+
+      tl.set("#scene2", { visibility: "visible" }, S2_IN - 0.05);
+
+      tl.fromTo("#scene2",
+        { opacity: 0, scale: 0.04 },
+        { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.5)", immediateRender: false },
+        S2_IN
+      );
+
+      // face circle draws
+      tl.to("#scene2 .face-ring", { strokeDashoffset: 0, duration: 0.75, ease: "power2.inOut" }, S2_IN + 0.2);
+
+      // eyes pop
+      tl.to("#scene2 .eye", { opacity: 1, duration: 0.05 }, S2_IN + 0.85);
+      tl.fromTo("#scene2 .eye",
+        { scale: 0 },
+        { scale: 1, duration: 0.35, ease: "back.out(2)", stagger: 0.08, transformOrigin: "center center" },
+        S2_IN + 0.85
+      );
+
+      // smile draws
+      tl.to("#scene2 .smile", { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" }, S2_IN + 1.1);
+
+      // rays draw outward stagger
+      tl.to("#scene2 .ray", { strokeDashoffset: 0, duration: 0.4, ease: "power2.out", stagger: 0.04 }, S2_IN + 1.5);
+
+      // small face wiggle
+      tl.to("#scene2 .face-svg", {
+        rotation: 2,
+        duration: 0.55,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: 1,
+        transformOrigin: "360px 360px"
+      }, S2_IN + 1.9);
+
+      // SCENE 2 EXIT — collapse to focal point
+      tl.to("#scene2", {
+        scale: 0.04,
+        opacity: 0,
+        duration: 0.55,
+        ease: "power3.in",
+        overwrite: "auto"
+      }, S2_OUT);
+      tl.set("#scene2", { visibility: "hidden" }, S2_OUT + 0.6);
+
+      /* ────────────────────────────────────────────────────
+         TRANSITION 2 → 3: focal-dot pulse
+      ──────────────────────────────────────────────────── */
+      tl.fromTo(".focal-dot",
+        { scale: 0.2, opacity: 0 },
+        { scale: 1.6, opacity: 1, duration: 0.25, ease: "back.out(2)", immediateRender: false, overwrite: "auto" },
+        S2_OUT + 0.4
+      );
+      tl.to(".focal-dot",
+        { scale: 4, opacity: 0, duration: 0.25, ease: "power2.out", overwrite: "auto" },
+        S2_OUT + 0.65
+      );
+
+      /* ────────────────────────────────────────────────────
+         SCENE 3: $ + ascending bars + up-arrow
+      ──────────────────────────────────────────────────── */
+      const S3_IN = 6.4;
+
+      tl.set("#scene3", { visibility: "visible" }, S3_IN - 0.05);
+
+      tl.fromTo("#scene3",
+        { opacity: 0, scale: 0.04 },
+        { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(1.5)", immediateRender: false },
+        S3_IN
+      );
+
+      // $ sign pops in (xPercent keeps it centered)
+      tl.fromTo("#scene3 .dollar",
+        { xPercent: -50, scale: 0.2, opacity: 0 },
+        { xPercent: -50, scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.7)", immediateRender: false },
+        S3_IN + 0.15
+      );
+
+      // baseline draws outward from center
+      tl.to("#scene3 .baseline", { width: 720, duration: 0.55, ease: "power2.inOut" }, S3_IN + 0.45);
+
+      // bars rise stagger
+      tl.to("#scene3 .bar", {
+        scaleY: 1,
+        duration: 0.65,
+        ease: "back.out(1.4)",
+        stagger: 0.09
+      }, S3_IN + 0.65);
+
+      // up-arrow draws
+      tl.to("#scene3 .arrow-stroke", {
+        strokeDashoffset: 0,
+        duration: 0.6,
+        ease: "power2.out"
+      }, S3_IN + 1.5);
+
+      // $ pulse for emphasis
+      tl.to("#scene3 .dollar", {
+        xPercent: -50,
+        scale: 1.06,
+        duration: 0.3,
+        ease: "power2.inOut",
+        yoyo: true,
+        repeat: 1,
+        overwrite: "auto"
+      }, S3_IN + 2.1);
+
+      // also fix transition focal-dot pulses (overwrite to clear earlier .focal-dot tweens)
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

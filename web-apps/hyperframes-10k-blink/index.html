@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0047bb;
+      }
+      #root {
+        width: 1080px;
+        height: 1080px;
+        position: relative;
+        background: #0047bb;
+        overflow: hidden;
+      }
+      .scene-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .dollar {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 210px;
+        line-height: 1;
+        color: #ffffff;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        transform-origin: center center;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="2.8"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="dollar" id="dollar">$10,000</div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Initial state
+      tl.set("#dollar", { scale: 0, opacity: 0, color: "#FFFFFF" }, 0);
+
+      // Pop-in white
+      tl.to(
+        "#dollar",
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.45,
+          ease: "back.out(1.6)",
+        },
+        0.15
+      );
+
+      // Hold white from 0.6s to 0.85s
+
+      // Blink 1: white -> green flash -> back to white
+      tl.set("#dollar", { color: "#00B140" }, 0.85);
+      tl.set("#dollar", { color: "#FFFFFF" }, 0.93);
+
+      // Blink 2: white -> green flash -> back to white
+      tl.set("#dollar", { color: "#00B140" }, 1.02);
+      tl.set("#dollar", { color: "#FFFFFF" }, 1.1);
+
+      // Lock to green (permanent) with subtle scale punch
+      tl.set("#dollar", { color: "#00B140" }, 1.22);
+      tl.to(
+        "#dollar",
+        { scale: 1.08, duration: 0.13, ease: "power2.out" },
+        1.22
+      );
+      tl.to(
+        "#dollar",
+        { scale: 1.0, duration: 0.32, ease: "power2.inOut" },
+        1.35
+      );
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

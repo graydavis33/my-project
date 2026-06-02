@@ -1,0 +1,737 @@
+[
+  {
+    "word": "I",
+    "start": 0.0,
+    "end": 0.0
+  },
+  {
+    "word": "hired",
+    "start": 0.0,
+    "end": 0.3
+  },
+  {
+    "word": "someone",
+    "start": 0.3,
+    "end": 0.48
+  },
+  {
+    "word": "for",
+    "start": 0.48,
+    "end": 0.72
+  },
+  {
+    "word": "the",
+    "start": 0.72,
+    "end": 0.8
+  },
+  {
+    "word": "first",
+    "start": 0.8,
+    "end": 0.98
+  },
+  {
+    "word": "time",
+    "start": 0.98,
+    "end": 1.2
+  },
+  {
+    "word": "at",
+    "start": 1.2,
+    "end": 1.34
+  },
+  {
+    "word": "the",
+    "start": 1.34,
+    "end": 1.36
+  },
+  {
+    "word": "age",
+    "start": 1.36,
+    "end": 1.54
+  },
+  {
+    "word": "of",
+    "start": 1.54,
+    "end": 1.68
+  },
+  {
+    "word": "18",
+    "start": 1.68,
+    "end": 1.9
+  },
+  {
+    "word": "and",
+    "start": 1.9,
+    "end": 2.1
+  },
+  {
+    "word": "it",
+    "start": 2.1,
+    "end": 2.2
+  },
+  {
+    "word": "went",
+    "start": 2.2,
+    "end": 2.38
+  },
+  {
+    "word": "horrible.",
+    "start": 2.38,
+    "end": 2.78
+  },
+  {
+    "word": "That's",
+    "start": 2.98,
+    "end": 3.06
+  },
+  {
+    "word": "because",
+    "start": 3.06,
+    "end": 3.18
+  },
+  {
+    "word": "I",
+    "start": 3.18,
+    "end": 3.34
+  },
+  {
+    "word": "didn't",
+    "start": 3.34,
+    "end": 3.5
+  },
+  {
+    "word": "understand",
+    "start": 3.5,
+    "end": 3.8
+  },
+  {
+    "word": "how",
+    "start": 3.8,
+    "end": 4.02
+  },
+  {
+    "word": "to",
+    "start": 4.02,
+    "end": 4.08
+  },
+  {
+    "word": "build",
+    "start": 4.08,
+    "end": 4.2
+  },
+  {
+    "word": "proper",
+    "start": 4.2,
+    "end": 4.52
+  },
+  {
+    "word": "systems",
+    "start": 4.52,
+    "end": 4.98
+  },
+  {
+    "word": "while",
+    "start": 4.98,
+    "end": 5.24
+  },
+  {
+    "word": "scaling.",
+    "start": 5.24,
+    "end": 5.58
+  },
+  {
+    "word": "Step",
+    "start": 5.76,
+    "end": 5.96
+  },
+  {
+    "word": "one,",
+    "start": 5.96,
+    "end": 6.22
+  },
+  {
+    "word": "do",
+    "start": 6.28,
+    "end": 6.4
+  },
+  {
+    "word": "an",
+    "start": 6.4,
+    "end": 6.56
+  },
+  {
+    "word": "audit",
+    "start": 6.56,
+    "end": 6.9
+  },
+  {
+    "word": "of",
+    "start": 6.9,
+    "end": 7.1
+  },
+  {
+    "word": "everything",
+    "start": 7.1,
+    "end": 7.42
+  },
+  {
+    "word": "that",
+    "start": 7.42,
+    "end": 7.64
+  },
+  {
+    "word": "you",
+    "start": 7.64,
+    "end": 7.84
+  },
+  {
+    "word": "do",
+    "start": 7.84,
+    "end": 8.0
+  },
+  {
+    "word": "as",
+    "start": 8.0,
+    "end": 8.22
+  },
+  {
+    "word": "a",
+    "start": 8.22,
+    "end": 8.34
+  },
+  {
+    "word": "founder",
+    "start": 8.34,
+    "end": 8.56
+  },
+  {
+    "word": "on",
+    "start": 8.56,
+    "end": 8.8
+  },
+  {
+    "word": "a",
+    "start": 8.8,
+    "end": 8.88
+  },
+  {
+    "word": "daily",
+    "start": 8.88,
+    "end": 9.04
+  },
+  {
+    "word": "basis.",
+    "start": 9.04,
+    "end": 9.38
+  },
+  {
+    "word": "Step",
+    "start": 9.64,
+    "end": 9.88
+  },
+  {
+    "word": "two,",
+    "start": 9.88,
+    "end": 10.12
+  },
+  {
+    "word": "document",
+    "start": 10.22,
+    "end": 10.54
+  },
+  {
+    "word": "everything",
+    "start": 10.54,
+    "end": 10.96
+  },
+  {
+    "word": "that",
+    "start": 10.96,
+    "end": 11.18
+  },
+  {
+    "word": "you",
+    "start": 11.18,
+    "end": 11.28
+  },
+  {
+    "word": "do",
+    "start": 11.28,
+    "end": 11.42
+  },
+  {
+    "word": "step",
+    "start": 11.42,
+    "end": 11.64
+  },
+  {
+    "word": "by",
+    "start": 11.64,
+    "end": 11.84
+  },
+  {
+    "word": "step",
+    "start": 11.84,
+    "end": 12.06
+  },
+  {
+    "word": "so",
+    "start": 12.06,
+    "end": 12.28
+  },
+  {
+    "word": "even",
+    "start": 12.28,
+    "end": 12.48
+  },
+  {
+    "word": "a",
+    "start": 12.48,
+    "end": 12.64
+  },
+  {
+    "word": "fifth",
+    "start": 12.64,
+    "end": 12.84
+  },
+  {
+    "word": "grader",
+    "start": 12.84,
+    "end": 13.16
+  },
+  {
+    "word": "can",
+    "start": 13.16,
+    "end": 13.28
+  },
+  {
+    "word": "understand",
+    "start": 13.28,
+    "end": 13.58
+  },
+  {
+    "word": "how",
+    "start": 13.58,
+    "end": 13.9
+  },
+  {
+    "word": "to",
+    "start": 13.9,
+    "end": 14.0
+  },
+  {
+    "word": "do",
+    "start": 14.0,
+    "end": 14.14
+  },
+  {
+    "word": "it.",
+    "start": 14.14,
+    "end": 14.26
+  },
+  {
+    "word": "Step",
+    "start": 14.34,
+    "end": 14.5
+  },
+  {
+    "word": "three,",
+    "start": 14.5,
+    "end": 14.8
+  },
+  {
+    "word": "hire",
+    "start": 14.92,
+    "end": 15.16
+  },
+  {
+    "word": "someone",
+    "start": 15.16,
+    "end": 15.48
+  },
+  {
+    "word": "and",
+    "start": 15.48,
+    "end": 15.78
+  },
+  {
+    "word": "walk",
+    "start": 15.78,
+    "end": 15.96
+  },
+  {
+    "word": "them",
+    "start": 15.96,
+    "end": 16.18
+  },
+  {
+    "word": "through",
+    "start": 16.18,
+    "end": 16.38
+  },
+  {
+    "word": "the",
+    "start": 16.38,
+    "end": 16.54
+  },
+  {
+    "word": "documentation.",
+    "start": 16.54,
+    "end": 16.94
+  },
+  {
+    "word": "Step",
+    "start": 17.34,
+    "end": 17.56
+  },
+  {
+    "word": "four,",
+    "start": 17.56,
+    "end": 17.86
+  },
+  {
+    "word": "have",
+    "start": 17.98,
+    "end": 18.12
+  },
+  {
+    "word": "them",
+    "start": 18.12,
+    "end": 18.26
+  },
+  {
+    "word": "shadow",
+    "start": 18.26,
+    "end": 18.58
+  },
+  {
+    "word": "you",
+    "start": 18.58,
+    "end": 18.84
+  },
+  {
+    "word": "while",
+    "start": 18.84,
+    "end": 19.02
+  },
+  {
+    "word": "you",
+    "start": 19.02,
+    "end": 19.14
+  },
+  {
+    "word": "do",
+    "start": 19.14,
+    "end": 19.28
+  },
+  {
+    "word": "the",
+    "start": 19.28,
+    "end": 19.36
+  },
+  {
+    "word": "specific",
+    "start": 19.36,
+    "end": 19.62
+  },
+  {
+    "word": "tasks",
+    "start": 19.62,
+    "end": 20.02
+  },
+  {
+    "word": "so",
+    "start": 20.02,
+    "end": 20.32
+  },
+  {
+    "word": "they",
+    "start": 20.32,
+    "end": 20.42
+  },
+  {
+    "word": "understand",
+    "start": 20.42,
+    "end": 20.76
+  },
+  {
+    "word": "how",
+    "start": 20.76,
+    "end": 21.04
+  },
+  {
+    "word": "you",
+    "start": 21.04,
+    "end": 21.16
+  },
+  {
+    "word": "do",
+    "start": 21.16,
+    "end": 21.3
+  },
+  {
+    "word": "it.",
+    "start": 21.3,
+    "end": 21.46
+  },
+  {
+    "word": "Step",
+    "start": 21.52,
+    "end": 21.7
+  },
+  {
+    "word": "five,",
+    "start": 21.7,
+    "end": 22.06
+  },
+  {
+    "word": "they",
+    "start": 22.18,
+    "end": 22.28
+  },
+  {
+    "word": "do",
+    "start": 22.28,
+    "end": 22.44
+  },
+  {
+    "word": "the",
+    "start": 22.44,
+    "end": 22.56
+  },
+  {
+    "word": "task",
+    "start": 22.56,
+    "end": 22.8
+  },
+  {
+    "word": "with",
+    "start": 22.8,
+    "end": 23.08
+  },
+  {
+    "word": "your",
+    "start": 23.08,
+    "end": 23.24
+  },
+  {
+    "word": "oversight",
+    "start": 23.24,
+    "end": 23.66
+  },
+  {
+    "word": "so",
+    "start": 23.66,
+    "end": 23.94
+  },
+  {
+    "word": "they",
+    "start": 23.94,
+    "end": 24.04
+  },
+  {
+    "word": "can",
+    "start": 24.04,
+    "end": 24.14
+  },
+  {
+    "word": "ask",
+    "start": 24.14,
+    "end": 24.38
+  },
+  {
+    "word": "any",
+    "start": 24.38,
+    "end": 24.58
+  },
+  {
+    "word": "questions.",
+    "start": 24.58,
+    "end": 24.94
+  },
+  {
+    "word": "Step",
+    "start": 25.14,
+    "end": 25.36
+  },
+  {
+    "word": "six,",
+    "start": 25.36,
+    "end": 25.7
+  },
+  {
+    "word": "they",
+    "start": 25.84,
+    "end": 25.92
+  },
+  {
+    "word": "do",
+    "start": 25.92,
+    "end": 26.08
+  },
+  {
+    "word": "the",
+    "start": 26.08,
+    "end": 26.18
+  },
+  {
+    "word": "task",
+    "start": 26.18,
+    "end": 26.44
+  },
+  {
+    "word": "without",
+    "start": 26.44,
+    "end": 26.78
+  },
+  {
+    "word": "you.",
+    "start": 26.78,
+    "end": 27.04
+  },
+  {
+    "word": "If",
+    "start": 27.1,
+    "end": 27.2
+  },
+  {
+    "word": "you",
+    "start": 27.2,
+    "end": 27.32
+  },
+  {
+    "word": "nailed",
+    "start": 27.32,
+    "end": 27.6
+  },
+  {
+    "word": "steps",
+    "start": 27.6,
+    "end": 27.78
+  },
+  {
+    "word": "one",
+    "start": 27.78,
+    "end": 28.08
+  },
+  {
+    "word": "and",
+    "start": 28.08,
+    "end": 28.26
+  },
+  {
+    "word": "two,",
+    "start": 28.26,
+    "end": 28.42
+  },
+  {
+    "word": "then",
+    "start": 28.46,
+    "end": 28.62
+  },
+  {
+    "word": "they",
+    "start": 28.62,
+    "end": 28.76
+  },
+  {
+    "word": "will",
+    "start": 28.76,
+    "end": 28.86
+  },
+  {
+    "word": "nail",
+    "start": 28.86,
+    "end": 29.14
+  },
+  {
+    "word": "step",
+    "start": 29.14,
+    "end": 29.4
+  },
+  {
+    "word": "six.",
+    "start": 29.4,
+    "end": 29.76
+  },
+  {
+    "word": "Then",
+    "start": 30.0,
+    "end": 30.2
+  },
+  {
+    "word": "you",
+    "start": 30.2,
+    "end": 30.34
+  },
+  {
+    "word": "just",
+    "start": 30.34,
+    "end": 30.52
+  },
+  {
+    "word": "repeat",
+    "start": 30.52,
+    "end": 30.76
+  },
+  {
+    "word": "this",
+    "start": 30.76,
+    "end": 30.94
+  },
+  {
+    "word": "framework",
+    "start": 30.94,
+    "end": 31.28
+  },
+  {
+    "word": "for",
+    "start": 31.28,
+    "end": 31.54
+  },
+  {
+    "word": "every",
+    "start": 31.54,
+    "end": 31.76
+  },
+  {
+    "word": "new",
+    "start": 31.76,
+    "end": 31.92
+  },
+  {
+    "word": "hire",
+    "start": 31.92,
+    "end": 32.18
+  },
+  {
+    "word": "in",
+    "start": 32.18,
+    "end": 32.42
+  },
+  {
+    "word": "every",
+    "start": 32.42,
+    "end": 32.68
+  },
+  {
+    "word": "area",
+    "start": 32.68,
+    "end": 32.96
+  },
+  {
+    "word": "of",
+    "start": 32.96,
+    "end": 33.16
+  },
+  {
+    "word": "the",
+    "start": 33.16,
+    "end": 33.2
+  },
+  {
+    "word": "business.",
+    "start": 33.2,
+    "end": 33.46
+  }
+]

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Team Happy</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #00FF00;
+  }
+  #root {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #00FF00;
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+    box-sizing: border-box;
+    padding: 0 90px;
+  }
+
+  /* Badge + header */
+  .badge-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+  .badge {
+    width: 150px;
+    height: 150px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+      linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+    border: 3px solid #fff;
+    box-shadow:
+      inset 0 2px 0 rgba(255,240,215,0.55),
+      inset 0 -4px 14px rgba(140,55,8,0.45),
+      0 0 32px rgba(242,129,41,0.55),
+      0 8px 24px rgba(0,0,0,0.28);
+  }
+  .badge-num {
+    font-size: 90px;
+    font-weight: 900;
+    color: #FFFFFF;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .header {
+    font-size: 84px;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* Figures */
+  .figures {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 34px;
+    width: 100%;
+  }
+  .figure-svg {
+    width: 140px;
+    height: 180px;
+    display: block;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.28));
+  }
+
+  /* Sparkles */
+  .sparkle {
+    position: absolute;
+    width: 54px;
+    height: 54px;
+  }
+  .spk-1 { left: 8%;  top: -6%; }
+  .spk-2 { right: 6%; top: 2%; }
+  .spk-3 { left: 24%; top: 64%; }
+  .spk-4 { right: 22%; top: -2%; }
+
+  /* Labels */
+  .labels {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 26px;
+  }
+  .pill {
+    font-size: 44px;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 18px 40px;
+    border: 3px solid #FFFFFF;
+    border-radius: 999px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+    <div class="stage">
+
+      <div class="badge-row">
+        <div class="badge"><span class="badge-num">2</span></div>
+        <div class="header">TEAM</div>
+      </div>
+
+      <div class="figures">
+        <!-- arms up -->
+        <svg class="figure-svg fig" viewBox="0 0 140 180" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="34" r="26" fill="#FFFFFF"/>
+          <path d="M70 64 C40 64 30 96 30 130 L30 180 L110 180 L110 130 C110 96 100 64 70 64 Z" fill="#FFFFFF"/>
+          <rect x="22" y="30" width="16" height="60" rx="8" fill="#FFFFFF" transform="rotate(38 30 60)"/>
+          <rect x="102" y="30" width="16" height="60" rx="8" fill="#FFFFFF" transform="rotate(-38 110 60)"/>
+        </svg>
+        <!-- arms down -->
+        <svg class="figure-svg fig" viewBox="0 0 140 180" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="34" r="26" fill="#FFFFFF"/>
+          <path d="M70 64 C40 64 30 96 30 130 L30 180 L110 180 L110 130 C110 96 100 64 70 64 Z" fill="#FFFFFF"/>
+        </svg>
+        <!-- arms up -->
+        <svg class="figure-svg fig" viewBox="0 0 140 180" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="34" r="26" fill="#FFFFFF"/>
+          <path d="M70 64 C40 64 30 96 30 130 L30 180 L110 180 L110 130 C110 96 100 64 70 64 Z" fill="#FFFFFF"/>
+          <rect x="22" y="30" width="16" height="60" rx="8" fill="#FFFFFF" transform="rotate(38 30 60)"/>
+          <rect x="102" y="30" width="16" height="60" rx="8" fill="#FFFFFF" transform="rotate(-38 110 60)"/>
+        </svg>
+        <!-- arms down -->
+        <svg class="figure-svg fig" viewBox="0 0 140 180" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="34" r="26" fill="#FFFFFF"/>
+          <path d="M70 64 C40 64 30 96 30 130 L30 180 L110 180 L110 130 C110 96 100 64 70 64 Z" fill="#FFFFFF"/>
+        </svg>
+
+        <svg class="sparkle spk-1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z" fill="#F28129"/>
+        </svg>
+        <svg class="sparkle spk-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z" fill="#F28129"/>
+        </svg>
+        <svg class="sparkle spk-3" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z" fill="#F28129"/>
+        </svg>
+        <svg class="sparkle spk-4" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z" fill="#F28129"/>
+        </svg>
+      </div>
+
+      <div class="labels">
+        <div class="pill" id="pill-1">HAPPY &middot; RETAINING</div>
+        <div class="pill" id="pill-2">EXCITED TO SHOW UP</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+
+    // Badge pops
+    tl.from(".badge", { scale: 0, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 0.2);
+    tl.from(".badge-num", { scale: 0, opacity: 0, duration: 0.4, ease: "back.out(1.6)" }, 0.32);
+
+    // Header slides in
+    tl.from(".header", { y: 50, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.4);
+
+    // Stick figures pop in stagger with tiny up-bob
+    tl.from(".fig", {
+      y: 60,
+      scale: 0.4,
+      opacity: 0,
+      duration: 0.55,
+      ease: "back.out(1.8)",
+      stagger: 0.15
+    }, 0.9);
+
+    // Sparkles pop in stagger
+    tl.from(".sparkle", {
+      scale: 0,
+      opacity: 0,
+      duration: 0.45,
+      ease: "back.out(2.4)",
+      stagger: 0.1,
+      transformOrigin: "50% 50%"
+    }, 1.6);
+
+    // Labels fade up
+    tl.from("#pill-1", { y: 36, opacity: 0, duration: 0.5, ease: "power2.out" }, 2.0);
+    tl.from("#pill-2", { y: 36, opacity: 0, duration: 0.5, ease: "power2.out" }, 2.4);
+
+    // Gentle finite bob/pulse on the figure group after entrance
+    const groupBobCycle = 1.0;
+    const groupBobStart = 2.7;
+    const groupBobReps = Math.max(0, Math.ceil((5 - groupBobStart) / groupBobCycle) - 1);
+    tl.to(".figures", {
+      y: -14,
+      duration: groupBobCycle / 2,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: groupBobReps
+    }, groupBobStart);
+
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>

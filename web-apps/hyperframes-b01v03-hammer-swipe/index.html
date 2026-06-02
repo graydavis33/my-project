@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1920px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      #fig-1 {
+        position: absolute;
+        top: 880px;
+        left: 80px;
+        width: 480px;
+        height: 800px;
+        transform-origin: 50% 100%;
+        z-index: 3;
+      }
+      #fig-1 svg { width: 100%; height: 100%; display: block; }
+
+      #table-1 {
+        position: absolute;
+        top: 1340px;
+        left: 470px;
+        width: 480px;
+        height: 360px;
+        transform-origin: 50% 50%;
+        z-index: 2;
+      }
+      #table-1 svg { width: 100%; height: 100%; display: block; }
+
+      #fig-2 {
+        position: absolute;
+        top: 880px;
+        left: 300px;          /* dead-center horizontal: 300 + 240 = 540 */
+        width: 480px;
+        height: 800px;
+        transform-origin: 50% 100%;
+        z-index: 3;
+      }
+      #fig-2 svg { width: 100%; height: 100%; display: block; }
+
+      /* Hide hammer on figure 2 */
+      #fig-2 .hammer { display: none; }
+
+      /* Ground shadow under figures for depth */
+      .ground-shadow {
+        position: absolute;
+        width: 360px;
+        height: 36px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center,
+          rgba(0,0,0,0.32) 0%,
+          rgba(0,0,0,0.18) 40%,
+          rgba(0,0,0,0) 75%);
+        z-index: 1;
+        pointer-events: none;
+      }
+      #shadow-1 { top: 1675px; left: 140px; }
+      #shadow-2 { top: 1675px; left: 360px; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Figure 1 ground shadow -->
+      <div id="shadow-1" class="ground-shadow"></div>
+
+      <!-- ============== Figure 1 with hammer + table ============== -->
+      <div id="fig-1">
+        <svg viewBox="0 0 280 580" data-layout-ignore>
+          <defs>
+            <linearGradient id="body-grad-1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset="0.55" stop-color="#f0f0f0"/>
+              <stop offset="1" stop-color="#cfcfcf"/>
+            </linearGradient>
+            <linearGradient id="handle-grad-1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#b88a4f"/>
+              <stop offset="1" stop-color="#5c4022"/>
+            </linearGradient>
+            <linearGradient id="head-grad-1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#9b9b9b"/>
+              <stop offset="0.4" stop-color="#6a6a6a"/>
+              <stop offset="1" stop-color="#3c3c3c"/>
+            </linearGradient>
+          </defs>
+
+          <!-- ============== Whole-body root group ============== -->
+          <g id="body-1">
+            <!-- LEGS (back layer) -->
+            <g id="L-leg-1">
+              <rect x="100" y="338" width="38" height="120" rx="19" fill="url(#body-grad-1)"/>
+              <g id="L-shin-1">
+                <rect x="103" y="450" width="32" height="100" rx="16" fill="url(#body-grad-1)"/>
+                <ellipse cx="115" cy="557" rx="32" ry="11" fill="url(#body-grad-1)"/>
+              </g>
+            </g>
+            <g id="R-leg-1">
+              <rect x="142" y="338" width="38" height="120" rx="19" fill="url(#body-grad-1)"/>
+              <g id="R-shin-1">
+                <rect x="145" y="450" width="32" height="100" rx="16" fill="url(#body-grad-1)"/>
+                <ellipse cx="165" cy="557" rx="32" ry="11" fill="url(#body-grad-1)"/>
+              </g>
+            </g>
+
+            <!-- HIPS (filled connector) -->
+            <path d="M 88 305 L 192 305 L 188 352 L 92 352 Z" fill="url(#body-grad-1)"/>
+
+            <!-- TORSO (front layer) — tapered shirt silhouette -->
+            <path d="
+              M 72 135
+              Q 72 110 100 110
+              L 180 110
+              Q 208 110 208 135
+              L 200 275
+              Q 198 300 178 305
+              L 102 305
+              Q 82 300 80 275
+              Z
+            " fill="url(#body-grad-1)"/>
+
+            <!-- HEAD GROUP — neck pivot (140, 110) -->
+            <g id="head-1">
+              <!-- Neck -->
+              <rect x="128" y="98" width="24" height="20" fill="url(#body-grad-1)"/>
+              <!-- Head -->
+              <ellipse cx="140" cy="58" rx="42" ry="50" fill="url(#body-grad-1)"/>
+            </g>
+
+            <!-- LEFT ARM — shoulder pivot (90, 132) -->
+            <g id="L-arm-1">
+              <rect x="62" y="120" width="32" height="100" rx="16" fill="url(#body-grad-1)"/>
+              <g id="L-forearm-1">
+                <rect x="66" y="215" width="28" height="105" rx="14" fill="url(#body-grad-1)"/>
+                <ellipse cx="80" cy="325" rx="20" ry="20" fill="url(#body-grad-1)"/>
+              </g>
+            </g>
+
+            <!-- RIGHT ARM (hammer-wielding) — shoulder pivot (190, 132) -->
+            <g id="R-arm-1">
+              <rect x="186" y="120" width="32" height="100" rx="16" fill="url(#body-grad-1)"/>
+              <g id="R-forearm-1">
+                <rect x="186" y="215" width="28" height="105" rx="14" fill="url(#body-grad-1)"/>
+                <ellipse cx="200" cy="325" rx="20" ry="20" fill="url(#body-grad-1)"/>
+                <!-- HAMMER (sits in right hand, animatable wrist whip) -->
+                <g id="hammer-1" class="hammer">
+                  <!-- Handle (warm wood gradient) -->
+                  <rect x="193" y="195" width="14" height="135" rx="3" fill="url(#handle-grad-1)"/>
+                  <!-- Head (gradient steel) -->
+                  <rect x="168" y="160" width="64" height="40" rx="5" fill="url(#head-grad-1)"/>
+                  <!-- Highlight on head -->
+                  <rect x="172" y="164" width="56" height="7" rx="2" fill="#cccccc" opacity="0.6"/>
+                  <!-- Claw notch on left side -->
+                  <path d="M 168 175 L 162 180 L 168 188 Z" fill="url(#head-grad-1)"/>
+                </g>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- ============== Workbench / table ============== -->
+      <div id="table-1">
+        <svg viewBox="0 0 480 360">
+          <defs>
+            <linearGradient id="top-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset="1" stop-color="#d8d8d8"/>
+            </linearGradient>
+            <linearGradient id="leg-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#e8e8e8"/>
+              <stop offset="1" stop-color="#a8a8a8"/>
+            </linearGradient>
+          </defs>
+          <!-- Tabletop (slightly chamfered) -->
+          <rect x="10" y="20" width="460" height="42" rx="5" fill="url(#top-grad)"/>
+          <!-- Top edge highlight -->
+          <rect x="14" y="22" width="452" height="5" rx="2" fill="#ffffff" opacity="0.8"/>
+          <!-- Workpiece being shaped — small block on tabletop -->
+          <rect x="200" y="-2" width="80" height="22" rx="3" fill="#c8c8c8"/>
+          <rect x="200" y="-2" width="80" height="6" rx="2" fill="#ffffff" opacity="0.6"/>
+          <!-- Left leg -->
+          <rect x="48" y="62" width="22" height="270" rx="3" fill="url(#leg-grad)"/>
+          <!-- Right leg -->
+          <rect x="410" y="62" width="22" height="270" rx="3" fill="url(#leg-grad)"/>
+          <!-- Stretcher (horizontal beam between legs) -->
+          <rect x="70" y="240" width="340" height="14" rx="2" fill="url(#leg-grad)"/>
+        </svg>
+      </div>
+
+      <!-- Figure 2 ground shadow -->
+      <div id="shadow-2" class="ground-shadow" style="opacity: 0;"></div>
+
+      <!-- ============== Figure 2 (incoming, idle pose) ============== -->
+      <div id="fig-2">
+        <svg viewBox="0 0 280 580" data-layout-ignore>
+          <defs>
+            <linearGradient id="body-grad-2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset="0.55" stop-color="#f0f0f0"/>
+              <stop offset="1" stop-color="#cfcfcf"/>
+            </linearGradient>
+          </defs>
+
+          <g id="body-2">
+            <g id="L-leg-2">
+              <rect x="100" y="338" width="38" height="120" rx="19" fill="url(#body-grad-2)"/>
+              <g id="L-shin-2">
+                <rect x="103" y="450" width="32" height="100" rx="16" fill="url(#body-grad-2)"/>
+                <ellipse cx="115" cy="557" rx="32" ry="11" fill="url(#body-grad-2)"/>
+              </g>
+            </g>
+            <g id="R-leg-2">
+              <rect x="142" y="338" width="38" height="120" rx="19" fill="url(#body-grad-2)"/>
+              <g id="R-shin-2">
+                <rect x="145" y="450" width="32" height="100" rx="16" fill="url(#body-grad-2)"/>
+                <ellipse cx="165" cy="557" rx="32" ry="11" fill="url(#body-grad-2)"/>
+              </g>
+            </g>
+            <path d="M 88 305 L 192 305 L 188 352 L 92 352 Z" fill="url(#body-grad-2)"/>
+            <path d="
+              M 72 135 Q 72 110 100 110 L 180 110 Q 208 110 208 135
+              L 200 275 Q 198 300 178 305 L 102 305 Q 82 300 80 275 Z
+            " fill="url(#body-grad-2)"/>
+
+            <g id="head-2">
+              <rect x="128" y="98" width="24" height="20" fill="url(#body-grad-2)"/>
+              <ellipse cx="140" cy="58" rx="42" ry="50" fill="url(#body-grad-2)"/>
+            </g>
+
+            <g id="L-arm-2">
+              <rect x="62" y="120" width="32" height="100" rx="16" fill="url(#body-grad-2)"/>
+              <g id="L-forearm-2">
+                <rect x="66" y="215" width="28" height="105" rx="14" fill="url(#body-grad-2)"/>
+                <ellipse cx="80" cy="325" rx="20" ry="20" fill="url(#body-grad-2)"/>
+              </g>
+            </g>
+
+            <g id="R-arm-2">
+              <rect x="186" y="120" width="32" height="100" rx="16" fill="url(#body-grad-2)"/>
+              <g id="R-forearm-2">
+                <rect x="186" y="215" width="28" height="105" rx="14" fill="url(#body-grad-2)"/>
+                <ellipse cx="200" cy="325" rx="20" ry="20" fill="url(#body-grad-2)"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ===================== JOINT PIVOTS + REST POSE =====================
+      // Figure 1 — all joints registered in SVG user coordinates
+      // Rest pose: right arm pre-cocked "ready-to-strike" (arm raised back, elbow bent)
+      // so hammer sits OUT and UP, away from the torso silhouette.
+      gsap.set('#L-arm-1',     { svgOrigin: '90 132', rotation: 0 });
+      gsap.set('#L-forearm-1', { svgOrigin: '80 220', rotation: 0 });
+      gsap.set('#R-arm-1',     { svgOrigin: '190 132', rotation: -55 });   // raised back
+      gsap.set('#R-forearm-1', { svgOrigin: '200 220', rotation: 38 });    // elbow bent
+      gsap.set('#hammer-1',    { svgOrigin: '200 325', rotation: 0 });     // wrist whip pivot
+      gsap.set('#L-shin-1',    { svgOrigin: '119 458', rotation: 0 });
+      gsap.set('#R-shin-1',    { svgOrigin: '161 458', rotation: 0 });
+      gsap.set('#head-1',      { svgOrigin: '140 108', rotation: -5 });    // looks up slightly
+
+      // Figure 2 mirror
+      gsap.set('#L-arm-2',     { svgOrigin: '90 132' });
+      gsap.set('#L-forearm-2', { svgOrigin: '80 220' });
+      gsap.set('#R-arm-2',     { svgOrigin: '190 132' });
+      gsap.set('#R-forearm-2', { svgOrigin: '200 220' });
+      gsap.set('#L-shin-2',    { svgOrigin: '119 458' });
+      gsap.set('#R-shin-2',    { svgOrigin: '161 458' });
+      gsap.set('#head-2',      { svgOrigin: '140 108' });
+
+      // Whole-figure pivot at feet (50% bottom) for body bob/lean
+      gsap.set('#fig-1', { transformOrigin: '50% 100%' });
+      gsap.set('#fig-2', { transformOrigin: '50% 100%', x: -1500, opacity: 1 });
+
+      // ===================== HAMMER CYCLE FUNCTION =====================
+      // One naturalistic strike: anticipation → strike → impact jolt → recovery
+      function hammerCycle(t0) {
+        // ----- ANTICIPATION (0.00 - 0.24) -----
+        // Figure loads: knees bend, body lowers + leans back, head tracks hammer up
+        tl.to('#fig-1', {
+          y: 8, rotation: -2.2, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+        tl.to('#R-arm-1', {
+          rotation: -130, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+        tl.to('#R-forearm-1', {
+          rotation: 42, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+        tl.to('#L-arm-1', {
+          rotation: 22, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+        tl.to('#L-forearm-1', {
+          rotation: -12, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+        tl.to('#head-1', {
+          rotation: -11, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+        tl.to('#L-shin-1', {
+          rotation: 5, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+        tl.to('#R-shin-1', {
+          rotation: 5, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+        // Hammer pre-whip — slight back tilt while loading
+        tl.to('#hammer-1', {
+          rotation: -20, duration: 0.24, ease: 'sine.inOut', overwrite: 'auto'
+        }, t0);
+
+        // ----- STRIKE (0.24 - 0.36) -----
+        // Body uncoils: rises + leans forward, arm whips down, elbow extends
+        tl.to('#fig-1', {
+          y: 4, rotation: 6, duration: 0.12, ease: 'power3.in', overwrite: 'auto'
+        }, t0 + 0.24);
+        tl.to('#R-arm-1', {
+          rotation: 65, duration: 0.12, ease: 'power3.in', overwrite: 'auto'
+        }, t0 + 0.24);
+        tl.to('#R-forearm-1', {
+          rotation: -65, duration: 0.12, ease: 'power3.in', overwrite: 'auto'
+        }, t0 + 0.24);
+        tl.to('#L-arm-1', {
+          rotation: -28, duration: 0.12, ease: 'power2.in', overwrite: 'auto'
+        }, t0 + 0.24);
+        tl.to('#L-forearm-1', {
+          rotation: 18, duration: 0.12, ease: 'power2.in', overwrite: 'auto'
+        }, t0 + 0.24);
+        tl.to('#head-1', {
+          rotation: 14, duration: 0.12, ease: 'power2.in', overwrite: 'auto'
+        }, t0 + 0.24);
+        tl.to('#L-shin-1', {
+          rotation: 0, duration: 0.12, ease: 'power3.out', overwrite: 'auto'
+        }, t0 + 0.24);
+        tl.to('#R-shin-1', {
+          rotation: 0, duration: 0.12, ease: 'power3.out', overwrite: 'auto'
+        }, t0 + 0.24);
+        // Hammer WHIP — wrist snaps so hammer head flips down past the hand
+        tl.to('#hammer-1', {
+          rotation: 130, duration: 0.12, ease: 'power3.in', overwrite: 'auto'
+        }, t0 + 0.24);
+
+        // ----- IMPACT (0.36 - 0.40) -----
+        // Body jolt down on hit, table shakes
+        tl.to('#fig-1', {
+          y: -10, duration: 0.04, ease: 'power3.out', overwrite: 'auto'
+        }, t0 + 0.36);
+        tl.to('#table-1', {
+          y: 14, duration: 0.04, ease: 'power3.out', overwrite: 'auto'
+        }, t0 + 0.36);
+        tl.to('#shadow-1', {
+          scaleX: 1.18, duration: 0.04, ease: 'power3.out', overwrite: 'auto'
+        }, t0 + 0.36);
+
+        // ----- RECOVERY (0.40 - 0.62) — settles to READY-TO-STRIKE rest pose -----
+        tl.to('#fig-1', {
+          y: 0, rotation: 0, duration: 0.22, ease: 'power2.out', overwrite: 'auto'
+        }, t0 + 0.40);
+        tl.to('#table-1', {
+          y: 0, duration: 0.20, ease: 'elastic.out(1.2, 0.5)', overwrite: 'auto'
+        }, t0 + 0.40);
+        tl.to('#shadow-1', {
+          scaleX: 1, duration: 0.22, ease: 'power2.out', overwrite: 'auto'
+        }, t0 + 0.40);
+        tl.to('#R-arm-1', {
+          rotation: -55, duration: 0.26, ease: 'power2.out', overwrite: 'auto'
+        }, t0 + 0.40);
+        tl.to('#R-forearm-1', {
+          rotation: 38, duration: 0.26, ease: 'power2.out', overwrite: 'auto'
+        }, t0 + 0.40);
+        tl.to('#L-arm-1', {
+          rotation: 0, duration: 0.26, ease: 'power2.out', overwrite: 'auto'
+        }, t0 + 0.40);
+        tl.to('#L-forearm-1', {
+          rotation: 0, duration: 0.26, ease: 'power2.out', overwrite: 'auto'
+        }, t0 + 0.40);
+        tl.to('#head-1', {
+          rotation: -5, duration: 0.26, ease: 'power2.out', overwrite: 'auto'
+        }, t0 + 0.40);
+        // Hammer returns to rest orientation
+        tl.to('#hammer-1', {
+          rotation: 0, duration: 0.26, ease: 'power2.out', overwrite: 'auto'
+        }, t0 + 0.40);
+      }
+
+      // 3 hammer cycles, slightly varied timing for naturalism
+      hammerCycle(0.15);
+      hammerCycle(0.80);
+      hammerCycle(1.50);
+
+      // ===================== SWIPE TRANSITION =====================
+      // Figure 1 + table exit RIGHT with motion blur + slight rotational kick
+      tl.to('#fig-1', {
+        x: 1500,
+        filter: 'blur(28px)',
+        skewX: -8,
+        rotation: 2,
+        duration: 0.55,
+        ease: 'power3.in',
+        overwrite: 'auto'
+      }, 2.25);
+      tl.to('#table-1', {
+        x: 1500,
+        filter: 'blur(28px)',
+        skewX: -8,
+        duration: 0.55,
+        ease: 'power3.in',
+        overwrite: 'auto'
+      }, 2.27);
+      tl.to('#shadow-1', {
+        x: 1500,
+        opacity: 0,
+        duration: 0.45,
+        ease: 'power3.in',
+        overwrite: 'auto'
+      }, 2.25);
+
+      // Figure 2 enters from LEFT with motion blur, decelerates to center
+      tl.fromTo('#fig-2',
+        { x: -1500, filter: 'blur(28px)', skewX: -8, rotation: -2, opacity: 1 },
+        {
+          x: 0, filter: 'blur(0px)', skewX: 0, rotation: 0,
+          duration: 0.65, ease: 'power3.out', overwrite: 'auto'
+        },
+        2.45
+      );
+      tl.fromTo('#shadow-2',
+        { x: -1500, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.60, ease: 'power3.out', overwrite: 'auto' },
+        2.55
+      );
+
+      // ===================== IDLE BREATHING ON FIG-2 (3.15 - 5.0s) =====================
+      // Subtle chest rise/fall + occasional micro head movement = "alive" not animatronic
+      tl.to('#fig-2', {
+        y: -5, duration: 0.95, ease: 'sine.inOut', yoyo: true, repeat: 1
+      }, 3.15);
+      tl.to('#head-2', {
+        rotation: 3, duration: 1.2, ease: 'sine.inOut', yoyo: true, repeat: 1
+      }, 3.30);
+      tl.to('#shadow-2', {
+        scaleX: 0.97, duration: 0.95, ease: 'sine.inOut', yoyo: true, repeat: 1, overwrite: 'auto'
+      }, 3.15);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

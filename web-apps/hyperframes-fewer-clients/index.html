@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: "Inter", sans-serif;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00B140;
+        overflow: hidden;
+      }
+      .scene-content { position: absolute; inset: 0; }
+
+      /* Centered horizontal row: stickperson | number | arrow */
+      .row {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 0;
+      }
+      .stickperson { margin-right: 24px; }
+
+      .stickperson {
+        width: 220px;
+        height: 330px;
+        opacity: 0;
+      }
+      .stickperson svg { width: 100%; height: 100%; display: block; }
+
+      .count-wrap {
+        width: 480px;
+        text-align: center;
+        opacity: 0;
+        transform-origin: 50% 50%;
+      }
+      .count-num {
+        font-family: "Inter", sans-serif;
+        font-weight: 800;
+        font-size: 280px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #FFFFFF;
+        font-variant-numeric: tabular-nums;
+        display: inline-block;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="7"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="row">
+
+          <!-- Stickperson (rises from bottom, fades in) -->
+          <div class="stickperson" id="stickperson">
+            <svg viewBox="0 0 220 330">
+              <circle cx="110" cy="60" r="44" fill="white"/>
+              <path d="M 110 115 L 60 154 L 77 275 L 143 275 L 160 154 Z" fill="white"/>
+            </svg>
+          </div>
+
+          <!-- Counter -->
+          <div class="count-wrap" id="count-wrap">
+            <span class="count-num" id="count-num">150</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ===== Initial states (set inside timeline at t=0) =====
+      tl.set("#stickperson", { y: 480, opacity: 0 }, 0);
+      tl.set("#count-wrap",  { scale: 0.7, opacity: 0 }, 0);
+
+      // ===== PHASE 1: Synchronized entrance (0.20 - 1.40s) =====
+      // Stickperson rises from below + fades in. Number pure fades in alongside.
+      tl.to("#stickperson", {
+        y: 0, opacity: 1, duration: 1.20, ease: "power3.out"
+      }, 0.20);
+
+      tl.to("#count-wrap", {
+        scale: 1, opacity: 1, duration: 0.90, ease: "power2.out"
+      }, 0.20);
+
+      // ===== PHASE 2: Slot-machine countdown 150 → 8 (1.80 - 4.00s, 2.20s churn) =====
+      const counter = { val: 150 };
+      const numEl = document.getElementById("count-num");
+      tl.to(counter, {
+        val: 8,
+        duration: 2.20,
+        ease: "power3.out",
+        immediateRender: false,
+        onUpdate: () => {
+          numEl.textContent = Math.floor(counter.val);
+        },
+        onComplete: () => {
+          numEl.textContent = "8";
+        }
+      }, 1.80);
+
+      // ===== PHASE 3: Hold (4.00 - 7.00s) — final state holds on screen =====
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Accent color","default":"#F28129"},{"id":"crashRed","type":"color","label":"Stamp color","default":"#E63946"}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .card-wrap {
+        position: absolute;
+        left: 80px;
+        top: 480px;
+        width: 920px;
+        height: 960px;
+        filter: drop-shadow(0 14px 36px rgba(0, 0, 0, 0.28));
+        will-change: transform, opacity;
+      }
+      .card-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .subtitle {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: 0.32em;
+        color: #2a2a2a;
+        opacity: 0;
+        text-transform: uppercase;
+        will-change: opacity, transform;
+      }
+
+      .year-block {
+        position: absolute;
+        left: 60px;
+        width: 800px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+      .year-2024 { top: 220px; }
+      .year-2025 { top: 380px; }
+
+      .year-label {
+        font-size: 38px;
+        font-weight: 900;
+        color: #F28129;
+        letter-spacing: 0.02em;
+        width: 120px;
+        text-align: right;
+      }
+
+      .grid-row {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 8px;
+      }
+      .month-tile {
+        height: 92px;
+        border: 3px solid #F28129;
+        border-radius: 10px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        color: #F28129;
+        text-transform: uppercase;
+        will-change: background, color, transform;
+      }
+
+      .stamp {
+        position: absolute;
+        left: 50%;
+        top: 600px;
+        width: 760px;
+        height: 280px;
+        margin-left: -380px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 8px solid #E63946;
+        background: rgba(230, 57, 70, 0.06);
+        border-radius: 18px;
+        color: #E63946;
+        font-size: 168px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        opacity: 0;
+        transform: rotate(-6deg) scale(2.6);
+        transform-origin: 50% 50%;
+        will-change: transform, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <div class="card-wrap" id="card-wrap" data-layout-allow-overflow>
+          <svg class="card-bg" viewBox="0 0 920 960" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="corner-tint-3" cx="100%" cy="100%" r="78%">
+                <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#FFFFFF" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect x="0" y="0" width="920" height="960" rx="44" ry="44" fill="#F2EFE9"/>
+            <rect x="0" y="0" width="920" height="960" rx="44" ry="44" fill="url(#corner-tint-3)"/>
+          </svg>
+
+          <div class="subtitle" id="subtitle">For 2 Years Straight</div>
+
+          <div class="year-block year-2024">
+            <div class="year-label">2024</div>
+            <div class="grid-row" id="row-2024"></div>
+          </div>
+          <div class="year-block year-2025">
+            <div class="year-label">2025</div>
+            <div class="grid-row" id="row-2025"></div>
+          </div>
+
+          <div class="stamp" id="stamp">NO ADS</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+        const months = ["J","F","M","A","M","J","J","A","S","O","N","D"];
+
+        const row2024 = document.getElementById("row-2024");
+        const row2025 = document.getElementById("row-2025");
+        const tiles = [];
+        for (let i = 0; i < 12; i++) {
+          const el = document.createElement("div");
+          el.className = "month-tile";
+          el.textContent = months[i];
+          row2024.appendChild(el);
+          tiles.push(el);
+        }
+        for (let i = 0; i < 12; i++) {
+          const el = document.createElement("div");
+          el.className = "month-tile";
+          el.textContent = months[i];
+          row2025.appendChild(el);
+          tiles.push(el);
+        }
+
+        const cardWrap = document.getElementById("card-wrap");
+        const subtitle = document.getElementById("subtitle");
+        const stamp    = document.getElementById("stamp");
+
+        gsap.set(cardWrap, { opacity: 0, scale: 0.92, transformOrigin: "50% 50%" });
+        gsap.set(tiles, { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" });
+        gsap.set(subtitle, { opacity: 0, y: -16 });
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Card pop-in
+        tl.to(cardWrap, { opacity: 1, scale: 1, duration: 0.50, ease: "back.out(1.4)" }, 0.10);
+
+        // Subtitle
+        tl.to(subtitle, { opacity: 0.55, y: 0, duration: 0.45, ease: "power2.out" }, 0.45);
+
+        // Tiles outline pop in, staggered (24 tiles × 65ms = 1.56s)
+        const tileStart = 0.65;
+        tl.to(tiles, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.22,
+          stagger: 0.065,
+          ease: "back.out(1.8)"
+        }, tileStart);
+
+        // Tiles fill orange right after their outline pops (same stagger, shifted)
+        const fillStart = tileStart + 0.05;
+        tiles.forEach(function (t, i) {
+          tl.to(t, {
+            backgroundColor: "#F28129",
+            color: "#FFFFFF",
+            duration: 0.22,
+            ease: "power2.out"
+          }, fillStart + i * 0.065);
+        });
+
+        // Stamp slam at end + card shake
+        const stampStart = tileStart + 24 * 0.065 + 0.15; // after last tile
+        tl.to(stamp, {
+          opacity: 1,
+          rotation: -6,
+          scale: 1,
+          duration: 0.30,
+          ease: "back.out(2.2)"
+        }, stampStart);
+        tl.fromTo(cardWrap,
+          { x: -8 },
+          { x: 8, duration: 0.05, ease: "none", yoyo: true, repeat: 5,
+            onComplete: () => { gsap.set(cardWrap, { x: 0 }); } },
+          stampStart);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

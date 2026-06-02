@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+      .scene-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .counter-row {
+        display: flex;
+        align-items: center;
+        gap: 36px;
+      }
+      .digit-viewport {
+        position: relative;
+        width: 220px;
+        height: 380px;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .digit {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 280px;
+        line-height: 1;
+        color: #ffffff;
+        font-variant-numeric: tabular-nums;
+        transform-origin: center center;
+      }
+      .years-text {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 220px;
+        line-height: 1;
+        color: #ffffff;
+        white-space: nowrap;
+        transform-origin: left center;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="3"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="counter-row">
+          <div class="digit-viewport" data-layout-allow-overflow>
+            <div class="digit" id="digit-1">1</div>
+            <div class="digit" id="digit-2">2</div>
+            <div class="digit" id="digit-3">3</div>
+            <div class="digit" id="digit-4">4</div>
+            <div class="digit" id="digit-5">5</div>
+          </div>
+          <div class="years-text" id="years">years</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Initial hidden states applied at t=0 inside the timeline
+      tl.set(
+        "#digit-1, #digit-2, #digit-3, #digit-4, #digit-5",
+        { y: -400, opacity: 0 },
+        0
+      );
+      tl.set("#years", { x: -280, scale: 0.4, opacity: 0 }, 0);
+
+      const tickIn = { y: 0, opacity: 1, duration: 0.2, ease: "back.out(2.2)" };
+      const tickOut = { y: 400, opacity: 0, duration: 0.18, ease: "power2.in" };
+
+      // Slot-machine ticks: 1 → 2 → 3 → 4 → 5
+      tl.to("#digit-1", tickIn, 0.15);
+
+      tl.to("#digit-1", tickOut, 0.4);
+      tl.to("#digit-2", tickIn, 0.4);
+
+      tl.to("#digit-2", tickOut, 0.65);
+      tl.to("#digit-3", tickIn, 0.65);
+
+      tl.to("#digit-3", tickOut, 0.9);
+      tl.to("#digit-4", tickIn, 0.9);
+
+      tl.to("#digit-4", tickOut, 1.15);
+      tl.to("#digit-5", tickIn, 1.15);
+
+      // "years" eases out from the 5 and lands to its right
+      tl.to(
+        "#years",
+        { x: 0, scale: 1, opacity: 1, duration: 0.65, ease: "power3.out" },
+        1.55
+      );
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

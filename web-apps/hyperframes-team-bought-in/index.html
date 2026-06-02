@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <title>Team Bought In</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      #team-bought-in {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        background: #00FF00;
+        overflow: hidden;
+      }
+
+      /* ===== Beams (drawn behind everything) ===== */
+      .beams-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: visible;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .beam {
+        fill: none;
+        stroke: #F28129;
+        stroke-width: 7;
+        stroke-linecap: round;
+        stroke-dasharray: 900;
+        stroke-dashoffset: 900;
+        filter: drop-shadow(0 0 18px rgba(242, 129, 41, 0.85));
+        will-change: stroke-dashoffset;
+      }
+
+      /* ===== Vision star ===== */
+      .star-wrap {
+        position: absolute;
+        top: 230px;
+        left: 50%;
+        width: 320px;
+        height: 320px;
+        margin-left: -160px;
+        z-index: 2;
+        will-change: transform, opacity;
+      }
+
+      .star-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      #star-path {
+        fill: #F28129;
+        stroke: #FFFFFF;
+        stroke-width: 7;
+        stroke-linejoin: round;
+        filter:
+          drop-shadow(0 0 30px rgba(242, 129, 41, 0.75))
+          drop-shadow(0 0 60px rgba(242, 129, 41, 0.40));
+      }
+
+      .star-flash {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 700px;
+        height: 700px;
+        margin: -350px 0 0 -350px;
+        border-radius: 50%;
+        background: radial-gradient(circle,
+          rgba(255, 255, 255, 0.70) 0%,
+          rgba(242, 129, 41, 0.45) 28%,
+          rgba(242, 129, 41, 0.00) 70%);
+        opacity: 0;
+        pointer-events: none;
+        will-change: transform, opacity;
+      }
+
+      .star-aura {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 480px;
+        height: 480px;
+        margin: -240px 0 0 -240px;
+        border-radius: 50%;
+        background: radial-gradient(circle,
+          rgba(242, 129, 41, 0.30) 0%,
+          rgba(242, 129, 41, 0.10) 35%,
+          rgba(242, 129, 41, 0.00) 70%);
+        opacity: 0;
+        pointer-events: none;
+        will-change: opacity, transform;
+      }
+
+      /* ===== Figures row ===== */
+      .figures-row {
+        position: absolute;
+        top: 1100px;
+        left: 145px;
+        width: 790px;
+        height: 200px;
+        display: flex;
+        gap: 35px;
+        z-index: 3;
+      }
+
+      .figure {
+        width: 130px;
+        height: 180px;
+        position: relative;
+        transform-origin: center 165px;
+        will-change: transform, filter;
+      }
+
+      .figure-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      .figure .head,
+      .figure .body {
+        fill: #FFFFFF;
+        stroke: none;
+      }
+
+      .figure.lit {
+        filter:
+          drop-shadow(0 0 26px rgba(242, 129, 41, 0.90))
+          drop-shadow(0 0 12px rgba(242, 129, 41, 0.55));
+      }
+
+      .figure.lit .head,
+      .figure.lit .body {
+        fill: #F28129;
+      }
+
+      /* ===== Title ===== */
+      .title-wrap {
+        position: absolute;
+        top: 1380px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: 4;
+        will-change: transform, opacity;
+      }
+
+      .title {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 180px;
+        letter-spacing: 0.03em;
+        color: #FFFFFF;
+        line-height: 1;
+        text-shadow: 0 6px 18px rgba(0, 0, 0, 0.30);
+        will-change: transform, opacity;
+      }
+
+      .title-underline {
+        display: block;
+        margin: 42px auto 0;
+        width: 0;
+        height: 16px;
+        background: linear-gradient(90deg,
+          rgba(242, 129, 41, 0) 0%,
+          rgba(242, 129, 41, 1) 50%,
+          rgba(242, 129, 41, 0) 100%);
+        border-radius: 8px;
+        filter: blur(2px);
+        will-change: width, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="team-bought-in" data-composition-id="team-bought-in" data-start="0" data-duration="8" data-width="1080" data-height="1920">
+
+      <!-- BEAMS (behind star + figures) -->
+      <svg class="beams-svg" viewBox="0 0 1080 1920" data-layout-ignore>
+        <path class="beam" id="beam1" d="M 540 460 L 210 1180" />
+        <path class="beam" id="beam2" d="M 540 460 L 375 1180" />
+        <path class="beam" id="beam3" d="M 540 460 L 540 1180" />
+        <path class="beam" id="beam4" d="M 540 460 L 705 1180" />
+        <path class="beam" id="beam5" d="M 540 460 L 870 1180" />
+      </svg>
+
+      <!-- VISION STAR -->
+      <div class="star-wrap" id="star-wrap" data-layout-ignore>
+        <div class="star-aura" id="star-aura"></div>
+        <div class="star-flash" id="star-flash"></div>
+        <svg class="star-svg" viewBox="-160 -160 320 320">
+          <path id="star-path"
+            d="M 0 -120 L 28.2 -38.8 L 114.1 -37.1 L 45.7 14.9 L 70.5 97.1 L 0 48 L -70.5 97.1 L -45.7 14.9 L -114.1 -37.1 L -28.2 -38.8 Z" />
+        </svg>
+      </div>
+
+      <!-- FIGURES (each starts at scattered rotation) -->
+      <div class="figures-row" data-layout-allow-overflow>
+        <div class="figure f1">
+          <svg class="figure-svg" viewBox="0 0 130 180">
+            <circle class="head" cx="65" cy="34" r="26" />
+            <path class="body" d="M 25 95 Q 65 70 105 95 L 96 178 L 34 178 Z" />
+          </svg>
+        </div>
+        <div class="figure f2">
+          <svg class="figure-svg" viewBox="0 0 130 180">
+            <circle class="head" cx="65" cy="34" r="26" />
+            <path class="body" d="M 25 95 Q 65 70 105 95 L 96 178 L 34 178 Z" />
+          </svg>
+        </div>
+        <div class="figure f3">
+          <svg class="figure-svg" viewBox="0 0 130 180">
+            <circle class="head" cx="65" cy="34" r="26" />
+            <path class="body" d="M 25 95 Q 65 70 105 95 L 96 178 L 34 178 Z" />
+          </svg>
+        </div>
+        <div class="figure f4">
+          <svg class="figure-svg" viewBox="0 0 130 180">
+            <circle class="head" cx="65" cy="34" r="26" />
+            <path class="body" d="M 25 95 Q 65 70 105 95 L 96 178 L 34 178 Z" />
+          </svg>
+        </div>
+        <div class="figure f5">
+          <svg class="figure-svg" viewBox="0 0 130 180">
+            <circle class="head" cx="65" cy="34" r="26" />
+            <path class="body" d="M 25 95 Q 65 70 105 95 L 96 178 L 34 178 Z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- TITLE -->
+      <div class="title-wrap">
+        <div class="title">BOUGHT IN</div>
+        <span class="title-underline" id="title-underline"></span>
+      </div>
+
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Set scattered initial rotations (immediate, before timeline plays)
+        gsap.set(".figure.f1", { rotation: -22 });
+        gsap.set(".figure.f2", { rotation: -8 });
+        gsap.set(".figure.f3", { rotation: 5 });
+        gsap.set(".figure.f4", { rotation: 14 });
+        gsap.set(".figure.f5", { rotation: -10 });
+
+        // 1. Figures rise up scattered
+        tl.from(".figure", {
+          y: 80,
+          opacity: 0,
+          scale: 0.55,
+          duration: 0.50,
+          ease: "back.out(1.7)",
+          stagger: 0.10
+        }, 0.30);
+
+        // 2. Vision star scales + rotates into existence
+        tl.from(".star-wrap", {
+          scale: 0,
+          rotation: -90,
+          opacity: 0,
+          duration: 0.70,
+          ease: "back.out(1.8)",
+          transformOrigin: "center center"
+        }, 1.40);
+
+        // 3. Star flash burst (white-orange radial expansion)
+        tl.fromTo("#star-flash",
+          { scale: 0.30, opacity: 0.85 },
+          { scale: 1.55, opacity: 0, duration: 0.55, ease: "power2.out" },
+          1.95);
+
+        // 4. Star aura fades in and stays
+        tl.fromTo("#star-aura",
+          { opacity: 0, scale: 0.6 },
+          { opacity: 1, scale: 1, duration: 0.55, ease: "power2.out" },
+          1.95);
+
+        // 5. All figures lock to 0° in unison (vision alignment)
+        tl.to([".figure.f1", ".figure.f2", ".figure.f3", ".figure.f4", ".figure.f5"], {
+          rotation: 0,
+          duration: 0.55,
+          ease: "back.out(1.5)"
+        }, 2.40);
+
+        // 6. Beams draw from star down to each figure (staggered)
+        tl.to(".beam", {
+          strokeDashoffset: 0,
+          duration: 0.40,
+          ease: "power2.out",
+          stagger: 0.10
+        }, 3.10);
+
+        // 7. Figures light up orange (matched to beam arrival)
+        const figureEls = document.querySelectorAll(".figure");
+        figureEls.forEach((fig, i) => {
+          tl.call(() => fig.classList.add("lit"), null, 3.40 + i * 0.10);
+        });
+
+        // 8. Star pulse + flash
+        tl.to(".star-wrap", {
+          scale: 1.18,
+          duration: 0.22,
+          ease: "power2.out",
+          yoyo: true,
+          repeat: 1
+        }, 4.35);
+
+        tl.fromTo("#star-flash",
+          { scale: 0.4, opacity: 0.7 },
+          { scale: 1.6, opacity: 0, duration: 0.55, ease: "power2.out" },
+          4.35);
+
+        // 9. Figures pulse in solidarity
+        tl.to(".figure", {
+          scale: 1.07,
+          duration: 0.22,
+          ease: "power2.out",
+          yoyo: true,
+          repeat: 1,
+          stagger: 0.05
+        }, 4.45);
+
+        // 10. Title slides up from below
+        tl.from(".title", {
+          y: 90,
+          opacity: 0,
+          duration: 0.60,
+          ease: "power3.out"
+        }, 4.75);
+
+        // 11. Orange underline glow sweeps under title
+        tl.fromTo("#title-underline",
+          { width: 0, opacity: 0 },
+          { width: 620, opacity: 1, duration: 0.55, ease: "power3.out" },
+          5.15);
+
+        // 12. Ambient: slow star wobble through end of comp
+        tl.to(".star-wrap", {
+          rotation: "+=8",
+          duration: 2.50,
+          ease: "sine.inOut"
+        }, 5.50);
+
+        window.__timelines["team-bought-in"] = tl;
+      </script>
+    </div>
+  </body>
+</html>

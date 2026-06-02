@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: "Inter", sans-serif;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00B140;
+        overflow: hidden;
+      }
+      .scene-content { position: absolute; inset: 0; }
+
+      .row {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 110px;
+      }
+
+      .count-wrap {
+        width: 380px;
+        text-align: center;
+        opacity: 0;
+      }
+      .count-num {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 320px;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        color: #FFFFFF;
+        font-variant-numeric: tabular-nums;
+        display: inline-block;
+        -webkit-text-stroke: 2px #F28129;
+        text-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        paint-order: stroke fill;
+      }
+
+      .years-text {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 220px;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        color: #FFFFFF;
+        white-space: nowrap;
+        opacity: 0;
+        -webkit-text-stroke: 2px #F28129;
+        text-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        paint-order: stroke fill;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="row">
+          <div class="count-wrap" id="count-wrap">
+            <span class="count-num" id="count-num">0</span>
+          </div>
+          <div class="years-text" id="years">years old</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ===== Initial states (set inside timeline at t=0) =====
+      tl.set("#count-wrap", { opacity: 0 }, 0);
+      tl.set("#years",      { opacity: 0 }, 0);
+
+      // ===== PHASE 1: Number fades in IN PLACE while it counts (0.20 - 2.40s) =====
+      // Fade-in completes in first 1.0s; count keeps ticking after at full opacity.
+      tl.to("#count-wrap", {
+        opacity: 1, duration: 1.00, ease: "power2.out"
+      }, 0.20);
+
+      const counter = { val: 0 };
+      const numEl = document.getElementById("count-num");
+      tl.to(counter, {
+        val: 16,
+        duration: 2.20,
+        ease: "power3.out",
+        immediateRender: false,
+        onUpdate: () => {
+          numEl.textContent = Math.floor(counter.val);
+        },
+        onComplete: () => {
+          numEl.textContent = "16";
+        }
+      }, 0.20);
+
+      // ===== PHASE 2: "years old" fades in early, overlapping the count (1.10 - 2.00s) =====
+      tl.to("#years", {
+        opacity: 1, duration: 0.90, ease: "power2.out"
+      }, 1.10);
+
+      // ===== PHASE 3: Hold (2.40 - 5.00s) =====
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

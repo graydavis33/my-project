@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1920px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      /* ---------- Option row (50% smaller — maximum chroma buffer for Premiere scaling) ---------- */
+      .option-row {
+        position: absolute;
+        left: 380px;
+        width: 320px;
+        height: 66px;
+        border-radius: 36px;
+        border: 3px solid #ffffff;
+        display: flex;
+        align-items: center;
+        padding-left: 12px;
+        padding-right: 14px;
+        gap: 13px;
+        box-shadow:
+          0 0 9px rgba(255, 255, 255, 0.55),
+          0 0 19px rgba(255, 255, 255, 0.28);
+        will-change: transform, opacity;
+      }
+      #row-1 { top: 848px; }
+      #row-2 { top: 927px; }
+      #row-3 { top: 1006px; }
+
+      /* Filled orange — applied to all three boxes */
+      .option-filled {
+        background: linear-gradient(180deg, #FFA046 0%, #F28129 50%, #D86A0F 100%);
+        box-shadow:
+          0 0 11px rgba(255, 145, 50, 0.85),
+          0 0 24px rgba(242, 129, 41, 0.50),
+          inset 0 2px 5px rgba(255, 255, 255, 0.18);
+      }
+
+      /* ---------- Number badge (circular) ---------- */
+      .badge {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 29px;
+        line-height: 1;
+        flex-shrink: 0;
+        box-shadow:
+          0 0 0 2px rgba(255, 255, 255, 0.18),
+          0 2px 6px rgba(0, 0, 0, 0.22);
+      }
+      .badge-white {
+        background: #ffffff;
+        color: #F28129;
+      }
+
+      /* ---------- Label ---------- */
+      .label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 26px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0;
+        white-space: nowrap;
+        text-shadow:
+          0 2px 5px rgba(0, 0, 0, 0.22),
+          0 5px 12px rgba(0, 0, 0, 0.18);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div class="option-row option-filled" id="row-1">
+        <div class="badge badge-white">1</div>
+        <div class="label">CUSTOMERS</div>
+      </div>
+
+      <div class="option-row option-filled" id="row-2">
+        <div class="badge badge-white">2</div>
+        <div class="label">TEAM</div>
+      </div>
+
+      <div class="option-row option-filled" id="row-3">
+        <div class="badge badge-white">3</div>
+        <div class="label">SHAREHOLDERS</div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // -------- Initial states: all rows off-screen left, invisible --------
+      gsap.set('#row-1, #row-2, #row-3', { x: -1300, opacity: 0 });
+
+      // -------- Slide in with bounce, staggered 1 -> 2 -> 3 --------
+      // back.out(1.9) gives the overshoot/settle "bounce" on arrival
+      tl.to('#row-1',
+        { x: 0, opacity: 1, duration: 0.70, ease: 'back.out(1.9)' },
+        0.15
+      );
+      tl.to('#row-2',
+        { x: 0, opacity: 1, duration: 0.70, ease: 'back.out(1.9)' },
+        0.35
+      );
+      tl.to('#row-3',
+        { x: 0, opacity: 1, duration: 0.70, ease: 'back.out(1.9)' },
+        0.55
+      );
+
+      // -------- Hold through 5.0s --------
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: "Montserrat", "Inter", system-ui, sans-serif;
+        color: #ffffff;
+      }
+      #root { position: relative; width: 1920px; height: 1080px; }
+
+      #camera {
+        position: absolute;
+        top: 0; left: 0;
+        width: 4800px;
+        height: 1080px;
+        transform-origin: 0 0;
+        will-change: transform;
+      }
+
+      .corner-mark {
+        position: absolute;
+        width: 60px;
+        height: 6px;
+        background: #ffffff;
+        opacity: 0;
+        z-index: 10;
+      }
+      .corner-mark.tl   { top: 60px; left: 60px; }
+      .corner-mark.tl-v { top: 60px; left: 60px; width: 6px; height: 60px; }
+      .corner-mark.tr   { top: 60px; right: 60px; }
+      .corner-mark.tr-v { top: 60px; right: 60px; width: 6px; height: 60px; }
+      .corner-mark.bl   { bottom: 60px; left: 60px; }
+      .corner-mark.bl-v { bottom: 60px; left: 60px; width: 6px; height: 60px; }
+      .corner-mark.br   { bottom: 60px; right: 60px; }
+      .corner-mark.br-v { bottom: 60px; right: 60px; width: 6px; height: 60px; }
+
+      #world .ink {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      #world .ink.thin { stroke-width: 5; }
+      #world .ink.thick { stroke-width: 7; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="12"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="corner-mark tl"></div><div class="corner-mark tl-v"></div>
+      <div class="corner-mark tr"></div><div class="corner-mark tr-v"></div>
+      <div class="corner-mark bl"></div><div class="corner-mark bl-v"></div>
+      <div class="corner-mark br"></div><div class="corner-mark br-v"></div>
+
+      <div id="camera" data-layout-allow-overflow>
+        <svg id="world" width="4800" height="1080" viewBox="0 0 4800 1080" data-layout-allow-overflow>
+
+          <!-- ════════════════════════════════════════════════
+               SCENE 1 — Laptop with X (the neglected project)
+               world center (700, 540)
+               ════════════════════════════════════════════════ -->
+          <!-- 1a screen rect (top-left → top-right → bottom-right → bottom-left → close) -->
+          <path id="lap-screen" class="ink"
+                d="M 520 380 L 880 380 L 880 620 L 520 620 L 520 380"/>
+          <!-- 1b X diagonal 1 -->
+          <line id="lap-x1" class="ink" x1="560" y1="420" x2="840" y2="580"/>
+          <!-- 1c X diagonal 2 -->
+          <line id="lap-x2" class="ink" x1="840" y1="420" x2="560" y2="580"/>
+          <!-- 1d base/keyboard rect -->
+          <path id="lap-base" class="ink"
+                d="M 480 640 L 920 640 L 920 700 L 480 700 L 480 640"/>
+
+          <!-- ════════════════════════════════════════════════
+               BRIDGE 1 — laptop top-right (920, 380) → figure head top (2200, 240)
+               ════════════════════════════════════════════════ -->
+          <path id="bridge1" class="ink"
+                d="M 920 380
+                   C 1150 320, 1400 280, 1650 270
+                   C 1850 265, 2050 250, 2200 240"/>
+
+          <!-- ════════════════════════════════════════════════
+               SCENE 2 — Stickfigure pointing right
+               world center (2200, 540)
+               ════════════════════════════════════════════════ -->
+          <!-- 2a head circle -->
+          <circle id="fig-head" class="ink" cx="2200" cy="300" r="60"/>
+          <!-- 2b body line -->
+          <line id="fig-body" class="ink" x1="2200" y1="360" x2="2200" y2="580"/>
+          <!-- 2c left arm (down at side) -->
+          <line id="fig-arm-l" class="ink" x1="2200" y1="395" x2="2120" y2="510"/>
+          <!-- 2d left leg -->
+          <line id="fig-leg-l" class="ink" x1="2200" y1="580" x2="2120" y2="760"/>
+          <!-- 2e right leg -->
+          <line id="fig-leg-r" class="ink" x1="2200" y1="580" x2="2280" y2="760"/>
+          <!-- 2f right arm POINTING RIGHT (this exits the figure and becomes the bridge to outcome) -->
+          <line id="fig-arm-r" class="ink" x1="2200" y1="380" x2="2400" y2="380"/>
+
+          <!-- ════════════════════════════════════════════════
+               BRIDGE 2 — arm tip (2400, 380) → mountain left base (3550, 740)
+               ════════════════════════════════════════════════ -->
+          <path id="bridge2" class="ink"
+                d="M 2400 380
+                   C 2700 320, 3000 380, 3200 520
+                   C 3300 600, 3400 680, 3550 740"/>
+
+          <!-- ════════════════════════════════════════════════
+               SCENE 3 — Mountain + flag + sparkles (crazy future outcome)
+               world center (3950, 540)
+               ════════════════════════════════════════════════ -->
+          <!-- 3a mountain peak — left base → peak → right base -->
+          <path id="mtn-peak" class="ink thick"
+                d="M 3550 740 L 3950 340 L 4350 740"/>
+          <!-- 3b inner shading line (snow ridge) on left face -->
+          <path id="mtn-ridge1" class="ink thin"
+                d="M 3760 540 L 3850 460 L 3920 510"/>
+          <!-- 3c inner shading line (snow ridge) on right face -->
+          <path id="mtn-ridge2" class="ink thin"
+                d="M 4140 540 L 4040 460 L 3980 510"/>
+          <!-- 3d ground line under mountain -->
+          <line id="mtn-ground" class="ink" x1="3450" y1="740" x2="4450" y2="740"/>
+          <!-- 3e flag pole going up from peak -->
+          <line id="flag-pole" class="ink" x1="3950" y1="340" x2="3950" y2="220"/>
+          <!-- 3f flag rectangle (triangular pennant) -->
+          <path id="flag-cloth" class="ink"
+                d="M 3950 220 L 4060 250 L 3950 280"/>
+
+          <!-- 3g sparkle rays around mountain peak — 8 radial short lines -->
+          <g id="sparkles">
+            <line class="ink spark thin" x1="3950" y1="160" x2="3950" y2="120"/>
+            <line class="ink spark thin" x1="4180" y1="220" x2="4220" y2="190"/>
+            <line class="ink spark thin" x1="4280" y1="380" x2="4330" y2="380"/>
+            <line class="ink spark thin" x1="4250" y1="540" x2="4300" y2="560"/>
+            <line class="ink spark thin" x1="3720" y1="220" x2="3680" y2="190"/>
+            <line class="ink spark thin" x1="3620" y1="380" x2="3570" y2="380"/>
+            <line class="ink spark thin" x1="3650" y1="540" x2="3600" y2="560"/>
+            <line class="ink spark thin" x1="3850" y1="160" x2="3820" y2="120"/>
+            <line class="ink spark thin" x1="4050" y1="160" x2="4080" y2="120"/>
+            <line class="ink spark thin" x1="3950" y1="100" x2="3950" y2="60"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const SCALE = 1.7;
+      function camAt(t, Px, Py, dur, ease = "power1.inOut") {
+        return tl.to("#camera", {
+          x: 960 - SCALE * Px,
+          y: 540 - SCALE * Py,
+          duration: dur, ease
+        }, t);
+      }
+
+      // dasharray setup
+      const strokes = [
+        { sel: "#lap-screen",   len: 1240 },
+        { sel: "#lap-x1",       len:  330 },
+        { sel: "#lap-x2",       len:  330 },
+        { sel: "#lap-base",     len: 1020 },
+        { sel: "#bridge1",      len: 1500 },
+        { sel: "#fig-head",     len:  380 },
+        { sel: "#fig-body",     len:  220 },
+        { sel: "#fig-arm-l",    len:  140 },
+        { sel: "#fig-leg-l",    len:  198 },
+        { sel: "#fig-leg-r",    len:  198 },
+        { sel: "#fig-arm-r",    len:  200 },
+        { sel: "#bridge2",      len: 1500 },
+        { sel: "#mtn-peak",     len:  920 },
+        { sel: "#mtn-ridge1",   len:  170 },
+        { sel: "#mtn-ridge2",   len:  170 },
+        { sel: "#mtn-ground",   len: 1000 },
+        { sel: "#flag-pole",    len:  120 },
+        { sel: "#flag-cloth",   len:  240 },
+      ];
+      strokes.forEach(s => {
+        gsap.set(s.sel, { strokeDasharray: s.len, strokeDashoffset: s.len });
+      });
+      gsap.set(".spark", { strokeDasharray: 50, strokeDashoffset: 50 });
+      gsap.set("#camera", { transformOrigin: "0 0", scale: SCALE, x: 960 - SCALE*700, y: 540 - SCALE*500 });
+
+      // corner marks
+      tl.from(".corner-mark", {
+        scale: 0, opacity: 0, duration: 0.4, ease: "back.out(1.8)",
+        stagger: 0.04, transformOrigin: "center center"
+      }, 0);
+
+      /* ════════════════════════════════════════════════
+         SCENE 1 — Laptop with X
+         ════════════════════════════════════════════════ */
+      // 1a screen rect (clockwise, 0.7s @ t=0.3)
+      tl.to("#lap-screen", { strokeDashoffset: 0, duration: 0.7, ease: "none" }, 0.3);
+      camAt(0.3, 700, 380, 0.18);  // top
+      camAt(0.48, 880, 500, 0.18); // right
+      camAt(0.66, 700, 620, 0.18); // bottom
+      camAt(0.84, 520, 500, 0.16); // left
+
+      // 1b X1 diagonal (0.35s @ t=1.05)
+      tl.to("#lap-x1", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 1.05);
+      camAt(1.05, 700, 500, 0.35);
+
+      // 1c X2 diagonal (0.35s @ t=1.45)
+      tl.to("#lap-x2", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 1.45);
+      camAt(1.45, 700, 500, 0.35);
+
+      // 1d base rect (0.6s @ t=1.85)
+      tl.to("#lap-base", { strokeDashoffset: 0, duration: 0.6, ease: "none" }, 1.85);
+      camAt(1.85, 700, 670, 0.6);
+
+      /* ════════════════════════════════════════════════
+         BRIDGE 1 — pen travels to figure
+         (920, 380) → (2200, 240), 1.1s @ t=2.55
+         ════════════════════════════════════════════════ */
+      tl.to("#bridge1", { strokeDashoffset: 0, duration: 1.1, ease: "none" }, 2.55);
+      camAt(2.55, 1300, 320, 0.40);
+      camAt(2.95, 1700, 270, 0.40);
+      camAt(3.35, 2200, 240, 0.30);
+
+      /* ════════════════════════════════════════════════
+         SCENE 2 — Figure
+         ════════════════════════════════════════════════ */
+      // 2a head circle (0.55s @ t=3.7) — pen around head
+      tl.to("#fig-head", { strokeDashoffset: 0, duration: 0.55, ease: "none" }, 3.7);
+      camAt(3.70, 2260, 300, 0.14);
+      camAt(3.84, 2200, 360, 0.14);
+      camAt(3.98, 2140, 300, 0.14);
+      camAt(4.12, 2200, 240, 0.13);
+
+      // 2b body line (0.4s @ t=4.3)
+      tl.to("#fig-body", { strokeDashoffset: 0, duration: 0.4, ease: "none" }, 4.3);
+      camAt(4.3, 2200, 470, 0.4);
+
+      // 2c left arm down (0.3s @ t=4.7)
+      tl.to("#fig-arm-l", { strokeDashoffset: 0, duration: 0.3, ease: "none" }, 4.7);
+      camAt(4.7, 2160, 450, 0.3);
+
+      // 2d left leg (0.32s @ t=5.05)
+      tl.to("#fig-leg-l", { strokeDashoffset: 0, duration: 0.32, ease: "none" }, 5.05);
+      camAt(5.05, 2160, 670, 0.32);
+
+      // 2e right leg (0.32s @ t=5.4)
+      tl.to("#fig-leg-r", { strokeDashoffset: 0, duration: 0.32, ease: "none" }, 5.4);
+      camAt(5.4, 2240, 670, 0.32);
+
+      // 2f right arm pointing right (0.4s @ t=5.75) — this becomes the bridge to outcome
+      tl.to("#fig-arm-r", { strokeDashoffset: 0, duration: 0.4, ease: "none" }, 5.75);
+      camAt(5.75, 2300, 380, 0.4);
+
+      /* ════════════════════════════════════════════════
+         BRIDGE 2 — pen travels from arm tip to mountain base
+         (2400, 380) → (3550, 740), 1.1s @ t=6.20
+         ════════════════════════════════════════════════ */
+      tl.to("#bridge2", { strokeDashoffset: 0, duration: 1.1, ease: "none" }, 6.20);
+      camAt(6.20, 2700, 380, 0.35);
+      camAt(6.55, 3100, 520, 0.35);
+      camAt(6.90, 3400, 680, 0.40);
+
+      /* ════════════════════════════════════════════════
+         SCENE 3 — Mountain peak with flag + sparkles
+         ════════════════════════════════════════════════ */
+      // 3a mountain peak: left base → peak → right base (1.0s @ t=7.35)
+      tl.to("#mtn-peak", { strokeDashoffset: 0, duration: 1.0, ease: "none" }, 7.35);
+      camAt(7.35, 3750, 540, 0.50);
+      camAt(7.85, 3950, 340, 0.25);
+      camAt(8.10, 4150, 540, 0.25);
+
+      // 3b ground under mountain (0.4s @ t=8.4)
+      tl.to("#mtn-ground", { strokeDashoffset: 0, duration: 0.4, ease: "none" }, 8.4);
+      camAt(8.4, 3950, 740, 0.4);
+
+      // 3c left ridge shading (0.3s @ t=8.85)
+      tl.to("#mtn-ridge1", { strokeDashoffset: 0, duration: 0.3, ease: "none" }, 8.85);
+      camAt(8.85, 3840, 500, 0.3);
+
+      // 3d right ridge shading (0.3s @ t=9.2)
+      tl.to("#mtn-ridge2", { strokeDashoffset: 0, duration: 0.3, ease: "none" }, 9.2);
+      camAt(9.2, 4060, 500, 0.3);
+
+      // 3e flag pole (0.3s @ t=9.55) — extends up from peak
+      tl.to("#flag-pole", { strokeDashoffset: 0, duration: 0.3, ease: "none" }, 9.55);
+      camAt(9.55, 3950, 280, 0.3);
+
+      // 3f flag cloth (triangular pennant) (0.35s @ t=9.9)
+      tl.to("#flag-cloth", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 9.9);
+      camAt(9.9, 4000, 250, 0.35);
+
+      // 3g sparkles pop in stagger (0.5s starting @ t=10.3)
+      tl.to(".spark", {
+        strokeDashoffset: 0, duration: 0.3, ease: "power2.out", stagger: 0.04
+      }, 10.3);
+      camAt(10.3, 3950, 400, 0.5);
+
+      // gentle flag wave + camera ease back to overview at very end
+      tl.to("#flag-cloth", {
+        attr: { d: "M 3950 220 L 4070 245 L 3950 280" },
+        duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1
+      }, 10.9);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

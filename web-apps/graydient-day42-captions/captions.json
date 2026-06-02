@@ -1,0 +1,425 @@
+{
+  "video_duration": 62.35,
+  "hook": {
+    "end_time": 4.76,
+    "words": [
+      {
+        "display": "This",
+        "start": 0.0,
+        "end": 0.1,
+        "is_keyword": false
+      },
+      {
+        "display": "is",
+        "start": 0.1,
+        "end": 0.2,
+        "is_keyword": false
+      },
+      {
+        "display": "day",
+        "start": 0.2,
+        "end": 0.36,
+        "is_keyword": true
+      },
+      {
+        "display": "42",
+        "start": 0.36,
+        "end": 0.74,
+        "is_keyword": true
+      },
+      {
+        "display": "as",
+        "start": 0.74,
+        "end": 1.08,
+        "is_keyword": false
+      },
+      {
+        "display": "a",
+        "start": 1.08,
+        "end": 1.22,
+        "is_keyword": false
+      },
+      {
+        "display": "creative",
+        "start": 1.22,
+        "end": 1.5,
+        "is_keyword": true
+      },
+      {
+        "display": "director",
+        "start": 1.5,
+        "end": 1.92,
+        "is_keyword": true
+      },
+      {
+        "display": "for",
+        "start": 1.92,
+        "end": 2.3,
+        "is_keyword": false
+      },
+      {
+        "display": "a",
+        "start": 2.3,
+        "end": 2.4,
+        "is_keyword": false
+      },
+      {
+        "display": "21-",
+        "start": 2.4,
+        "end": 2.72,
+        "is_keyword": true
+      },
+      {
+        "display": "year-",
+        "start": 2.72,
+        "end": 3.1,
+        "is_keyword": true
+      },
+      {
+        "display": "old",
+        "start": 3.1,
+        "end": 3.3,
+        "is_keyword": true
+      },
+      {
+        "display": "CEO",
+        "start": 3.3,
+        "end": 3.58,
+        "is_keyword": true
+      },
+      {
+        "display": "in",
+        "start": 3.58,
+        "end": 4.2,
+        "is_keyword": false
+      },
+      {
+        "display": "New",
+        "start": 4.2,
+        "end": 4.34,
+        "is_keyword": true
+      },
+      {
+        "display": "York",
+        "start": 4.34,
+        "end": 4.52,
+        "is_keyword": true
+      },
+      {
+        "display": "City.",
+        "start": 4.52,
+        "end": 4.76,
+        "is_keyword": true
+      }
+    ]
+  },
+  "body_chunks": [
+    {
+      "text": "And honestly, I'm still figuring it out.",
+      "start": 5.1,
+      "end": 6.62,
+      "is_aroll": true
+    },
+    {
+      "text": "We've pumped out shorts,",
+      "start": 6.7,
+      "end": 7.52,
+      "is_aroll": false
+    },
+    {
+      "text": "paid ads,",
+      "start": 7.84,
+      "end": 8.46,
+      "is_aroll": false
+    },
+    {
+      "text": "onboarding videos, long form.",
+      "start": 8.9,
+      "end": 10.38,
+      "is_aroll": false
+    },
+    {
+      "text": "For a while,",
+      "start": 10.44,
+      "end": 10.84,
+      "is_aroll": true
+    },
+    {
+      "text": "I was trying",
+      "start": 10.94,
+      "end": 11.34,
+      "is_aroll": true
+    },
+    {
+      "text": "to do it all myself.",
+      "start": 11.34,
+      "end": 11.94,
+      "is_aroll": true
+    },
+    {
+      "text": "Different style every day,",
+      "start": 12.24,
+      "end": 13.22,
+      "is_aroll": false
+    },
+    {
+      "text": "one video a day.",
+      "start": 13.4,
+      "end": 14.38,
+      "is_aroll": false
+    },
+    {
+      "text": "It was unsustainable.",
+      "start": 14.5,
+      "end": 15.94,
+      "is_aroll": false
+    },
+    {
+      "text": "So we adjusted.",
+      "start": 15.96,
+      "end": 16.56,
+      "is_aroll": true
+    },
+    {
+      "text": "Now my boss handles",
+      "start": 16.76,
+      "end": 17.42,
+      "is_aroll": true
+    },
+    {
+      "text": "all the talking head content,",
+      "start": 17.42,
+      "end": 18.5,
+      "is_aroll": true
+    },
+    {
+      "text": "which is easier to produce",
+      "start": 18.62,
+      "end": 19.76,
+      "is_aroll": true
+    },
+    {
+      "text": "and a higher volume.",
+      "start": 19.76,
+      "end": 20.6,
+      "is_aroll": true
+    },
+    {
+      "text": "We outsource paid ads",
+      "start": 20.76,
+      "end": 21.82,
+      "is_aroll": false
+    },
+    {
+      "text": "to a team of editors while",
+      "start": 21.82,
+      "end": 23.1,
+      "is_aroll": false
+    },
+    {
+      "text": "I focus on the systems,",
+      "start": 23.1,
+      "end": 24.28,
+      "is_aroll": false
+    },
+    {
+      "text": "communications, and long form.",
+      "start": 24.42,
+      "end": 26.04,
+      "is_aroll": false
+    },
+    {
+      "text": "It's the first time it's",
+      "start": 26.4,
+      "end": 26.98,
+      "is_aroll": true
+    },
+    {
+      "text": "actually felt like a rhythm.",
+      "start": 26.98,
+      "end": 27.98,
+      "is_aroll": true
+    },
+    {
+      "text": "I'm still building a full",
+      "start": 27.98,
+      "end": 29.0,
+      "is_aroll": true
+    },
+    {
+      "text": "content operating system,",
+      "start": 29.0,
+      "end": 30.32,
+      "is_aroll": true
+    },
+    {
+      "text": "pre-production all the way to analytics.",
+      "start": 30.46,
+      "end": 32.02,
+      "is_aroll": true
+    },
+    {
+      "text": "But sometimes it feels like",
+      "start": 32.3,
+      "end": 33.7,
+      "is_aroll": true
+    },
+    {
+      "text": "I'm building the plane",
+      "start": 33.7,
+      "end": 34.54,
+      "is_aroll": true
+    },
+    {
+      "text": "as I'm flying it.",
+      "start": 34.54,
+      "end": 35.62,
+      "is_aroll": true
+    },
+    {
+      "text": "And I'm doing",
+      "start": 35.72,
+      "end": 36.06,
+      "is_aroll": false
+    },
+    {
+      "text": "this all in a city",
+      "start": 36.06,
+      "end": 37.06,
+      "is_aroll": false
+    },
+    {
+      "text": "that does not care",
+      "start": 37.06,
+      "end": 38.16,
+      "is_aroll": false
+    },
+    {
+      "text": "if you make it or not.",
+      "start": 38.16,
+      "end": 38.94,
+      "is_aroll": false
+    },
+    {
+      "text": "Walking through rats to get",
+      "start": 39.04,
+      "end": 40.32,
+      "is_aroll": false
+    },
+    {
+      "text": "to my apartment, missing my train,",
+      "start": 40.32,
+      "end": 42.1,
+      "is_aroll": false
+    },
+    {
+      "text": "or not being able",
+      "start": 42.3,
+      "end": 42.94,
+      "is_aroll": true
+    },
+    {
+      "text": "to sleep because of sirens.",
+      "start": 42.94,
+      "end": 44.14,
+      "is_aroll": true
+    },
+    {
+      "text": "That's just New York.",
+      "start": 44.3,
+      "end": 45.14,
+      "is_aroll": true
+    },
+    {
+      "text": "And I appreciate every second of it.",
+      "start": 45.26,
+      "end": 47.1,
+      "is_aroll": false
+    },
+    {
+      "text": "My boss and I are pleased",
+      "start": 47.16,
+      "end": 48.24,
+      "is_aroll": false
+    },
+    {
+      "text": "with the progress, but not satisfied.",
+      "start": 48.24,
+      "end": 49.86,
+      "is_aroll": false
+    },
+    {
+      "text": "I don't know if I'm",
+      "start": 50.2,
+      "end": 50.88,
+      "is_aroll": true
+    },
+    {
+      "text": "moving fast enough,",
+      "start": 50.88,
+      "end": 51.74,
+      "is_aroll": true
+    },
+    {
+      "text": "but I'm 42 days",
+      "start": 51.92,
+      "end": 52.9,
+      "is_aroll": true
+    },
+    {
+      "text": "in and I'm still here.",
+      "start": 52.9,
+      "end": 53.98,
+      "is_aroll": true
+    },
+    {
+      "text": "This is me documenting all of it.",
+      "start": 54.06,
+      "end": 55.84,
+      "is_aroll": false
+    },
+    {
+      "text": "The job.",
+      "start": 55.86,
+      "end": 56.58,
+      "is_aroll": false
+    },
+    {
+      "text": "The city.",
+      "start": 56.95,
+      "end": 57.85,
+      "is_aroll": false
+    },
+    {
+      "text": "And the learning curve.",
+      "start": 58.0,
+      "end": 58.56,
+      "is_aroll": true
+    },
+    {
+      "text": "For me, and for whoever's watching this,",
+      "start": 58.64,
+      "end": 60.56,
+      "is_aroll": true
+    },
+    {
+      "text": "wondering if they should take",
+      "start": 60.66,
+      "end": 61.54,
+      "is_aroll": true
+    },
+    {
+      "text": "the leap too.",
+      "start": 61.54,
+      "end": 61.98,
+      "is_aroll": true
+    }
+  ],
+  "_help": {
+    "edit_workflow": "Edit body_chunks[i].text/start/end/is_aroll, save, watch.py will regenerate index.html. HyperFrames preview hot-reloads in ~1s.",
+    "is_aroll_true": "caption positions above the head (top: 320px)",
+    "is_aroll_false": "caption sits vertically centered (top: 880px)",
+    "rebuild_command": "python rebuild.py",
+    "auto_watch_command": "python watch.py"
+  }
+}

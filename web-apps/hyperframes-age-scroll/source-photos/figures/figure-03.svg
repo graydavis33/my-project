@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 940" width="700" height="940" fill="none">
+  <defs>
+    <style>
+      .skin { fill: white; stroke: #161616; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+      .hair { fill: #161616; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+      .line { fill: none; stroke: #161616; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+      .thin { fill: none; stroke: #161616; stroke-width: 7; stroke-linecap: round; }
+      .eye  { fill: #161616; }
+      .shirt { fill: white; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- long hair flowing down behind head -->
+  <path class="hair" d="M 245 130 Q 165 240 175 460 Q 180 580 215 640 L 260 640 L 260 380 Q 260 220 320 165 Q 350 145 380 138" />
+  <path class="hair" d="M 450 138 Q 480 145 510 165 Q 570 220 570 380 L 570 640 L 615 640 Q 650 580 655 460 Q 665 240 585 130 Q 510 90 415 88 Q 320 90 245 130 Z" />
+  <!-- face -->
+  <ellipse class="skin" cx="415" cy="280" rx="138" ry="160" />
+  <!-- bangs swept right -->
+  <path class="hair" d="M 285 195 Q 320 130 415 125 Q 510 130 545 175 Q 540 220 480 215 Q 410 200 340 220 Q 295 230 285 195 Z" />
+  <!-- ear (right side, peeking out) -->
+  <path class="line" d="M 548 290 Q 568 290 568 320 Q 568 350 548 350" />
+  <!-- eyebrows -->
+  <path class="thin" d="M 350 235 Q 370 225 390 232" />
+  <path class="thin" d="M 440 232 Q 460 225 480 235" />
+  <!-- eyes -->
+  <ellipse class="eye" cx="370" cy="280" rx="11" ry="14" />
+  <ellipse class="eye" cx="460" cy="280" rx="11" ry="14" />
+  <!-- nose -->
+  <path class="thin" d="M 415 305 Q 415 335 425 348" />
+  <!-- smile -->
+  <path class="line" d="M 365 365 Q 415 410 465 365" />
+  <!-- neck -->
+  <path class="line" d="M 380 430 L 380 480" />
+  <path class="line" d="M 450 430 L 450 480" />
+  <!-- shoulders + blouse -->
+  <path class="shirt" d="M 195 720 Q 215 540 380 480 L 450 480 Q 615 540 635 720 L 635 940 L 195 940 Z" />
+  <!-- V-neck -->
+  <path class="line" d="M 380 480 L 415 555 L 450 480" />
+  <!-- hand on hip (arm bent) -->
+  <path class="shirt" d="M 195 720 Q 135 770 145 840 Q 152 880 195 880 Q 230 880 235 850" />
+
+</svg>

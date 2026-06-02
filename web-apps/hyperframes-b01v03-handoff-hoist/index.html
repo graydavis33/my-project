@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1920px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      /* Giver (slightly smaller) on the left */
+      #giver {
+        position: absolute;
+        top: 1000px;
+        left: 70px;
+        width: 380px;
+        height: 700px;
+        transform-origin: 50% 100%;
+        z-index: 3;
+      }
+      #giver svg { width: 100%; height: 100%; display: block; }
+
+      /* Receiver (taller) on the right */
+      #receiver {
+        position: absolute;
+        top: 850px;
+        left: 560px;
+        width: 420px;
+        height: 850px;
+        transform-origin: 50% 100%;
+        z-index: 3;
+      }
+      #receiver svg { width: 100%; height: 100%; display: block; }
+
+      /* Product: Trendify orange device, animates between giver and receiver */
+      #product-wrap {
+        position: absolute;
+        top: 1150px;
+        left: 210px;          /* between giver's hands at chest level initially */
+        width: 100px;
+        height: 70px;
+        z-index: 5;
+        transform-origin: 50% 50%;
+      }
+      #product {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, #FFB068 0%, #F28129 50%, #C25B0A 100%);
+        border-radius: 10px;
+        box-shadow:
+          0 0 0 3px rgba(255, 255, 255, 0.95),
+          0 8px 22px rgba(0, 0, 0, 0.25),
+          inset 0 2px 4px rgba(255, 255, 255, 0.45);
+      }
+      /* Product screen suggestion (a thin band on the device for "screen") */
+      #product::after {
+        content: '';
+        position: absolute;
+        top: 14px; left: 14px; right: 14px; bottom: 16px;
+        border-radius: 4px;
+        background: linear-gradient(180deg,
+          rgba(255,255,255,0.18) 0%,
+          rgba(255,255,255,0.06) 100%);
+      }
+
+      /* Triumphant glow halo behind product at the Simba peak */
+      #glow {
+        position: absolute;
+        top: 800px;
+        left: 580px;
+        width: 480px;
+        height: 480px;
+        z-index: 2;
+        background: radial-gradient(circle,
+          rgba(255, 200, 110, 0.70) 0%,
+          rgba(255, 145, 50, 0.34) 30%,
+          rgba(255, 145, 50, 0) 65%);
+        pointer-events: none;
+        transform-origin: 50% 50%;
+        filter: blur(8px);
+      }
+
+      .ground-shadow {
+        position: absolute;
+        width: 320px;
+        height: 32px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at center,
+          rgba(0,0,0,0.30) 0%,
+          rgba(0,0,0,0.16) 40%,
+          rgba(0,0,0,0) 75%);
+        z-index: 1;
+        pointer-events: none;
+      }
+      #shadow-g { top: 1685px; left: 110px; }
+      #shadow-r { top: 1685px; left: 610px; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Ground shadows -->
+      <div id="shadow-g" class="ground-shadow"></div>
+      <div id="shadow-r" class="ground-shadow"></div>
+
+      <!-- Glow halo (behind product at hoist) -->
+      <div id="glow"></div>
+
+      <!-- ============== GIVER (left, smaller) ============== -->
+      <div id="giver">
+        <svg viewBox="0 0 280 580" data-layout-ignore>
+          <defs>
+            <linearGradient id="grad-g" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset="0.55" stop-color="#f0f0f0"/>
+              <stop offset="1" stop-color="#cfcfcf"/>
+            </linearGradient>
+          </defs>
+
+          <g id="body-g">
+            <!-- Legs -->
+            <g id="Lleg-g">
+              <rect x="100" y="338" width="38" height="120" rx="19" fill="url(#grad-g)"/>
+              <g id="Lshin-g">
+                <rect x="103" y="450" width="32" height="100" rx="16" fill="url(#grad-g)"/>
+                <ellipse cx="115" cy="557" rx="32" ry="11" fill="url(#grad-g)"/>
+              </g>
+            </g>
+            <g id="Rleg-g">
+              <rect x="142" y="338" width="38" height="120" rx="19" fill="url(#grad-g)"/>
+              <g id="Rshin-g">
+                <rect x="145" y="450" width="32" height="100" rx="16" fill="url(#grad-g)"/>
+                <ellipse cx="165" cy="557" rx="32" ry="11" fill="url(#grad-g)"/>
+              </g>
+            </g>
+
+            <!-- Hips -->
+            <path d="M 88 305 L 192 305 L 188 352 L 92 352 Z" fill="url(#grad-g)"/>
+
+            <!-- Torso -->
+            <path d="
+              M 72 135 Q 72 110 100 110 L 180 110 Q 208 110 208 135
+              L 200 275 Q 198 300 178 305 L 102 305 Q 82 300 80 275 Z
+            " fill="url(#grad-g)"/>
+
+            <!-- Head + neck -->
+            <g id="head-g">
+              <rect x="128" y="98" width="24" height="20" fill="url(#grad-g)"/>
+              <ellipse cx="140" cy="58" rx="42" ry="50" fill="url(#grad-g)"/>
+            </g>
+
+            <!-- Left arm -->
+            <g id="Larm-g">
+              <rect x="62" y="120" width="32" height="100" rx="16" fill="url(#grad-g)"/>
+              <g id="Lforearm-g">
+                <rect x="66" y="215" width="28" height="105" rx="14" fill="url(#grad-g)"/>
+                <ellipse cx="80" cy="325" rx="20" ry="20" fill="url(#grad-g)"/>
+              </g>
+            </g>
+
+            <!-- Right arm -->
+            <g id="Rarm-g">
+              <rect x="186" y="120" width="32" height="100" rx="16" fill="url(#grad-g)"/>
+              <g id="Rforearm-g">
+                <rect x="186" y="215" width="28" height="105" rx="14" fill="url(#grad-g)"/>
+                <ellipse cx="200" cy="325" rx="20" ry="20" fill="url(#grad-g)"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- ============== RECEIVER (right, taller) ============== -->
+      <div id="receiver">
+        <svg viewBox="0 0 280 580" data-layout-ignore>
+          <defs>
+            <linearGradient id="grad-r" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset="0.55" stop-color="#f0f0f0"/>
+              <stop offset="1" stop-color="#cfcfcf"/>
+            </linearGradient>
+          </defs>
+
+          <g id="body-r">
+            <g id="Lleg-r">
+              <rect x="100" y="338" width="38" height="120" rx="19" fill="url(#grad-r)"/>
+              <g id="Lshin-r">
+                <rect x="103" y="450" width="32" height="100" rx="16" fill="url(#grad-r)"/>
+                <ellipse cx="115" cy="557" rx="32" ry="11" fill="url(#grad-r)"/>
+              </g>
+            </g>
+            <g id="Rleg-r">
+              <rect x="142" y="338" width="38" height="120" rx="19" fill="url(#grad-r)"/>
+              <g id="Rshin-r">
+                <rect x="145" y="450" width="32" height="100" rx="16" fill="url(#grad-r)"/>
+                <ellipse cx="165" cy="557" rx="32" ry="11" fill="url(#grad-r)"/>
+              </g>
+            </g>
+
+            <path d="M 88 305 L 192 305 L 188 352 L 92 352 Z" fill="url(#grad-r)"/>
+            <path d="
+              M 72 135 Q 72 110 100 110 L 180 110 Q 208 110 208 135
+              L 200 275 Q 198 300 178 305 L 102 305 Q 82 300 80 275 Z
+            " fill="url(#grad-r)"/>
+
+            <g id="head-r">
+              <rect x="128" y="98" width="24" height="20" fill="url(#grad-r)"/>
+              <ellipse cx="140" cy="58" rx="42" ry="50" fill="url(#grad-r)"/>
+            </g>
+
+            <g id="Larm-r">
+              <rect x="62" y="120" width="32" height="100" rx="16" fill="url(#grad-r)"/>
+              <g id="Lforearm-r">
+                <rect x="66" y="215" width="28" height="105" rx="14" fill="url(#grad-r)"/>
+                <ellipse cx="80" cy="325" rx="20" ry="20" fill="url(#grad-r)"/>
+              </g>
+            </g>
+
+            <g id="Rarm-r">
+              <rect x="186" y="120" width="32" height="100" rx="16" fill="url(#grad-r)"/>
+              <g id="Rforearm-r">
+                <rect x="186" y="215" width="28" height="105" rx="14" fill="url(#grad-r)"/>
+                <ellipse cx="200" cy="325" rx="20" ry="20" fill="url(#grad-r)"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- PRODUCT (animates between figures) -->
+      <div id="product-wrap">
+        <div id="product"></div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ===================== JOINT PIVOTS =====================
+      // GIVER joints
+      gsap.set('#Larm-g',     { svgOrigin: '90 132' });
+      gsap.set('#Lforearm-g', { svgOrigin: '80 220' });
+      gsap.set('#Rarm-g',     { svgOrigin: '190 132' });
+      gsap.set('#Rforearm-g', { svgOrigin: '200 220' });
+      gsap.set('#Lshin-g',    { svgOrigin: '119 458' });
+      gsap.set('#Rshin-g',    { svgOrigin: '161 458' });
+      gsap.set('#head-g',     { svgOrigin: '140 108' });
+
+      // RECEIVER joints
+      gsap.set('#Larm-r',     { svgOrigin: '90 132' });
+      gsap.set('#Lforearm-r', { svgOrigin: '80 220' });
+      gsap.set('#Rarm-r',     { svgOrigin: '190 132' });
+      gsap.set('#Rforearm-r', { svgOrigin: '200 220' });
+      gsap.set('#Lshin-r',    { svgOrigin: '119 458' });
+      gsap.set('#Rshin-r',    { svgOrigin: '161 458' });
+      gsap.set('#head-r',     { svgOrigin: '140 108' });
+
+      gsap.set('#product-wrap', { x: 0, y: 0, scale: 1, opacity: 1, rotation: 0 });
+      gsap.set('#glow', { opacity: 0, scale: 0.5 });
+
+      // ===================== PHASE 1: GIVER LOADS + PRESENTS (0.20 - 1.40s) =====================
+      // Biomechanically natural: brief load (knee flex) → push up → arms extend with product
+
+      // Loading dip (0.20 - 0.40)
+      tl.to('#giver',     { y: 8, duration: 0.20, ease: 'sine.inOut' }, 0.20);
+      tl.to('#Lshin-g',   { rotation: 5, duration: 0.20, ease: 'sine.inOut' }, 0.20);
+      tl.to('#Rshin-g',   { rotation: 5, duration: 0.20, ease: 'sine.inOut' }, 0.20);
+      tl.to('#head-g',    { rotation: -4, duration: 0.20, ease: 'sine.inOut' }, 0.20);
+
+      // Push up + extend arms (0.40 - 1.30)
+      tl.to('#giver',     { y: -12, duration: 0.90, ease: 'power2.out' }, 0.40);
+      tl.to('#Lshin-g',   { rotation: 0, duration: 0.45, ease: 'power2.out' }, 0.40);
+      tl.to('#Rshin-g',   { rotation: 0, duration: 0.45, ease: 'power2.out' }, 0.40);
+      // Arms swing up — shoulder rotates, elbow extends
+      tl.to('#Larm-g',     { rotation: 135, duration: 0.90, ease: 'power2.out' }, 0.40);
+      tl.to('#Lforearm-g', { rotation: -25, duration: 0.90, ease: 'power2.out' }, 0.40);
+      tl.to('#Rarm-g',     { rotation: -135, duration: 0.90, ease: 'power2.out' }, 0.40);
+      tl.to('#Rforearm-g', { rotation: 25, duration: 0.90, ease: 'power2.out' }, 0.40);
+      tl.to('#head-g',     { rotation: 5, duration: 0.90, ease: 'power2.out' }, 0.40);
+
+      // Product rises with giver's hands — to overhead position
+      tl.to('#product-wrap',
+        { x: 25, y: -140, duration: 0.90, ease: 'power2.out' },
+        0.40
+      );
+
+      // ===================== PHASE 2: PRODUCT ARCS TO RECEIVER (1.40 - 2.50s) =====================
+      // Natural toss-and-catch arc with gentle rotation for momentum
+      tl.to('#product-wrap',
+        {
+          keyframes: [
+            { x: 200, y: -250, rotation: -8, duration: 0.55, ease: 'power2.out' },  // peak
+            { x: 380, y: -200, rotation: 4,  duration: 0.55, ease: 'power2.in' }    // descent into receiver's hands
+          ]
+        },
+        1.40
+      );
+
+      // ===================== PHASE 3: RECEIVER LOADS + HOISTS (1.60 - 3.20s) =====================
+      // Receiver prepares — slight knee flex (loading)
+      tl.to('#receiver',   { y: 8, duration: 0.30, ease: 'sine.inOut' }, 1.60);
+      tl.to('#Lshin-r',    { rotation: 5, duration: 0.30, ease: 'sine.inOut' }, 1.60);
+      tl.to('#Rshin-r',    { rotation: 5, duration: 0.30, ease: 'sine.inOut' }, 1.60);
+
+      // Arms come up TO MEET the product mid-arc (1.70 - 2.50s)
+      tl.to('#Larm-r',     { rotation: 100, duration: 0.80, ease: 'power2.inOut' }, 1.70);
+      tl.to('#Lforearm-r', { rotation: -45, duration: 0.80, ease: 'power2.inOut' }, 1.70);
+      tl.to('#Rarm-r',     { rotation: -100, duration: 0.80, ease: 'power2.inOut' }, 1.70);
+      tl.to('#Rforearm-r', { rotation: 45, duration: 0.80, ease: 'power2.inOut' }, 1.70);
+      tl.to('#head-r',     { rotation: -8, duration: 0.80, ease: 'power2.inOut' }, 1.70);
+
+      // Brief settle on catch (2.50 - 2.70)
+      tl.to('#receiver', { y: 12, duration: 0.20, ease: 'power2.out' }, 2.50);
+
+      // ===================== PHASE 4: TRIUMPHANT SIMBA HOIST (2.70 - 3.60s) =====================
+      // Receiver extends UP — body rises, arms reach STRAIGHT overhead, head tilts back
+      tl.to('#receiver', { y: -22, duration: 0.90, ease: 'back.out(1.6)' }, 2.70);
+      tl.to('#Lshin-r',  { rotation: 0, duration: 0.40, ease: 'power2.out' }, 2.70);
+      tl.to('#Rshin-r',  { rotation: 0, duration: 0.40, ease: 'power2.out' }, 2.70);
+      // Arms straighten to fully vertical
+      tl.to('#Larm-r',     { rotation: 165, duration: 0.85, ease: 'back.out(1.4)' }, 2.70);
+      tl.to('#Lforearm-r', { rotation: 0,   duration: 0.85, ease: 'back.out(1.4)' }, 2.70);
+      tl.to('#Rarm-r',     { rotation: -165, duration: 0.85, ease: 'back.out(1.4)' }, 2.70);
+      tl.to('#Rforearm-r', { rotation: 0,    duration: 0.85, ease: 'back.out(1.4)' }, 2.70);
+      tl.to('#head-r',     { rotation: 8,    duration: 0.85, ease: 'back.out(1.4)' }, 2.70);
+
+      // Product rises to peak hoist position with arms
+      tl.to('#product-wrap',
+        { x: 405, y: -340, rotation: 0, duration: 0.80, ease: 'back.out(1.5)' },
+        2.75
+      );
+
+      // Glow halo ignites at peak hoist
+      tl.to('#glow', { opacity: 1, scale: 1, duration: 0.55, ease: 'power2.out' }, 2.90);
+      tl.to('#product-wrap', { scale: 1.15, duration: 0.30, ease: 'back.out(2.4)' }, 3.10);
+      tl.to('#product-wrap', { scale: 1.06, duration: 0.30, ease: 'power2.inOut', overwrite: 'auto' }, 3.40);
+
+      // ===================== PHASE 5: BREATHING TRIUMPH HOLD (3.70 - 5.0s) =====================
+      // Both figures gently breathe; receiver subtly bobs; glow pulses
+      tl.to('#receiver', {
+        y: -28, duration: 0.65, ease: 'sine.inOut', yoyo: true, repeat: 1, overwrite: 'auto'
+      }, 3.70);
+      tl.to('#product-wrap', {
+        y: '-=8', duration: 0.65, ease: 'sine.inOut', yoyo: true, repeat: 1, overwrite: 'auto'
+      }, 3.70);
+      tl.to('#head-r', {
+        rotation: 12, duration: 0.65, ease: 'sine.inOut', yoyo: true, repeat: 1, overwrite: 'auto'
+      }, 3.70);
+      tl.to('#glow', {
+        opacity: 0.78, scale: 1.05, duration: 0.65, ease: 'sine.inOut', yoyo: true, repeat: 1, overwrite: 'auto'
+      }, 3.70);
+      // Giver subtle breathing
+      tl.to('#giver', {
+        y: '-=5', duration: 0.75, ease: 'sine.inOut', yoyo: true, repeat: 1, overwrite: 'auto'
+      }, 3.80);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, height=1920" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@600;700&display=swap" rel="stylesheet" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    @font-face {
+      font-family: 'Anton';
+      font-style: normal;
+      font-weight: 400;
+      src: url('https://fonts.gstatic.com/s/anton/v25/1Ptgg87LROyAm0K08i4gS7lu.woff2') format('woff2');
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      margin: 0; width: 1080px; height: 1920px;
+      overflow: hidden; background: #000;
+    }
+    #day42-captions {
+      position: relative;
+      width: 1080px; height: 1920px;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .video-wrap {
+      position: absolute; inset: 0;
+      width: 1080px; height: 1920px;
+      overflow: hidden;
+    }
+    .video-wrap video {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hook-block {
+      position: absolute;
+      top: 370px;
+      left: 90px; right: 90px;
+      width: 900px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: baseline;
+      gap: 0 14px;
+      row-gap: 14px;
+      z-index: 10;
+      text-align: center;
+      color: #ffffff;
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.55));
+    }
+    .hw { display: inline-block; line-height: 1.05; }
+    .hw.rw {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600; font-size: 64px;
+      color: #ffffff;
+    }
+    .hw.kw {
+      font-family: 'Anton', 'Montserrat', sans-serif;
+      font-weight: 400; font-size: 78px;
+      color: #FFD60A;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .body-block-aroll, .body-block-broll {
+      position: absolute;
+      left: 90px; right: 90px;
+      width: 900px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .body-block-aroll { top: 320px; height: 240px; }
+    .body-block-broll { top: 880px; height: 280px; }
+    .bc {
+      position: absolute;
+      width: 100%;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600; font-size: 62px;
+      line-height: 1.18;
+      color: #ffffff;
+      text-align: center;
+      filter: drop-shadow(0 3px 7px rgba(0,0,0,0.6));
+    }
+  </style>
+</head>
+<body>
+  <div id="day42-captions" data-composition-id="day42-captions" data-start="0" data-duration="62.35" data-track-index="0" data-width="1080" data-height="1920">
+    <div class="video-wrap">
+      <video id="day42-video"
+             data-start="0" data-duration="62.35" data-track-index="1"
+             src="assets/day42_final.mp4"
+             muted playsinline></video>
+    </div>
+    <audio id="day42-audio"
+           data-start="0" data-duration="62.35" data-track-index="2"
+           src="assets/day42_final.m4a"
+           data-volume="1" preload="auto"></audio>
+
+    <div class="hook-block"><span class="hw rw" id="hw0">This</span><span class="hw rw" id="hw1">is</span><span class="hw kw" id="hw2">day</span><span class="hw kw" id="hw3">42</span><span class="hw rw" id="hw4">as</span><span class="hw rw" id="hw5">a</span><span class="hw kw" id="hw6">creative</span><span class="hw kw" id="hw7">director</span><span class="hw rw" id="hw8">for</span><span class="hw rw" id="hw9">a</span><span class="hw kw" id="hw10">21-</span><span class="hw kw" id="hw11">year-</span><span class="hw kw" id="hw12">old</span><span class="hw kw" id="hw13">CEO</span><span class="hw rw" id="hw14">in</span><span class="hw kw" id="hw15">New</span><span class="hw kw" id="hw16">York</span><span class="hw kw" id="hw17">City.</span></div>
+    <div class="body-block-aroll"><div class="bc bc-aroll" id="bc0">And honestly, I'm still figuring it out.</div><div class="bc bc-aroll" id="bc4">For a while,</div><div class="bc bc-aroll" id="bc5">I was trying</div><div class="bc bc-aroll" id="bc6">to do it all myself.</div><div class="bc bc-aroll" id="bc10">So we adjusted.</div><div class="bc bc-aroll" id="bc11">Now my boss handles</div><div class="bc bc-aroll" id="bc12">all the talking head content,</div><div class="bc bc-aroll" id="bc13">which is easier to produce</div><div class="bc bc-aroll" id="bc14">and a higher volume.</div><div class="bc bc-aroll" id="bc19">It's the first time it's</div><div class="bc bc-aroll" id="bc20">actually felt like a rhythm.</div><div class="bc bc-aroll" id="bc21">I'm still building a full</div><div class="bc bc-aroll" id="bc22">content operating system,</div><div class="bc bc-aroll" id="bc23">pre-production all the way to analytics.</div><div class="bc bc-aroll" id="bc24">But sometimes it feels like</div><div class="bc bc-aroll" id="bc25">I'm building the plane</div><div class="bc bc-aroll" id="bc26">as I'm flying it.</div><div class="bc bc-aroll" id="bc33">or not being able</div><div class="bc bc-aroll" id="bc34">to sleep because of sirens.</div><div class="bc bc-aroll" id="bc35">That's just New York.</div><div class="bc bc-aroll" id="bc39">I don't know if I'm</div><div class="bc bc-aroll" id="bc40">moving fast enough,</div><div class="bc bc-aroll" id="bc41">but I'm 42 days</div><div class="bc bc-aroll" id="bc42">in and I'm still here.</div><div class="bc bc-aroll" id="bc46">And the learning curve.</div><div class="bc bc-aroll" id="bc47">For me, and for whoever's watching this,</div><div class="bc bc-aroll" id="bc48">wondering if they should take</div><div class="bc bc-aroll" id="bc49">the leap too.</div></div>
+    <div class="body-block-broll"><div class="bc bc-broll" id="bc1">We've pumped out shorts,</div><div class="bc bc-broll" id="bc2">paid ads,</div><div class="bc bc-broll" id="bc3">onboarding videos, long form.</div><div class="bc bc-broll" id="bc7">Different style every day,</div><div class="bc bc-broll" id="bc8">one video a day.</div><div class="bc bc-broll" id="bc9">It was unsustainable.</div><div class="bc bc-broll" id="bc15">We outsource paid ads</div><div class="bc bc-broll" id="bc16">to a team of editors while</div><div class="bc bc-broll" id="bc17">I focus on the systems,</div><div class="bc bc-broll" id="bc18">communications, and long form.</div><div class="bc bc-broll" id="bc27">And I'm doing</div><div class="bc bc-broll" id="bc28">this all in a city</div><div class="bc bc-broll" id="bc29">that does not care</div><div class="bc bc-broll" id="bc30">if you make it or not.</div><div class="bc bc-broll" id="bc31">Walking through rats to get</div><div class="bc bc-broll" id="bc32">to my apartment, missing my train,</div><div class="bc bc-broll" id="bc36">And I appreciate every second of it.</div><div class="bc bc-broll" id="bc37">My boss and I are pleased</div><div class="bc bc-broll" id="bc38">with the progress, but not satisfied.</div><div class="bc bc-broll" id="bc43">This is me documenting all of it.</div><div class="bc bc-broll" id="bc44">The job.</div><div class="bc bc-broll" id="bc45">The city.</div></div>
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+  tl.set("#hw0", {opacity:0, y:14}, 0);
+  tl.to("#hw0", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 0.000);
+  tl.set("#hw1", {opacity:0, y:14}, 0);
+  tl.to("#hw1", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 0.100);
+  tl.set("#hw2", {opacity:0, y:14}, 0);
+  tl.to("#hw2", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 0.200);
+  tl.set("#hw3", {opacity:0, y:14}, 0);
+  tl.to("#hw3", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 0.360);
+  tl.set("#hw4", {opacity:0, y:14}, 0);
+  tl.to("#hw4", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 0.740);
+  tl.set("#hw5", {opacity:0, y:14}, 0);
+  tl.to("#hw5", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 1.080);
+  tl.set("#hw6", {opacity:0, y:14}, 0);
+  tl.to("#hw6", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 1.220);
+  tl.set("#hw7", {opacity:0, y:14}, 0);
+  tl.to("#hw7", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 1.500);
+  tl.set("#hw8", {opacity:0, y:14}, 0);
+  tl.to("#hw8", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 1.920);
+  tl.set("#hw9", {opacity:0, y:14}, 0);
+  tl.to("#hw9", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 2.300);
+  tl.set("#hw10", {opacity:0, y:14}, 0);
+  tl.to("#hw10", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 2.400);
+  tl.set("#hw11", {opacity:0, y:14}, 0);
+  tl.to("#hw11", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 2.720);
+  tl.set("#hw12", {opacity:0, y:14}, 0);
+  tl.to("#hw12", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 3.100);
+  tl.set("#hw13", {opacity:0, y:14}, 0);
+  tl.to("#hw13", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 3.300);
+  tl.set("#hw14", {opacity:0, y:14}, 0);
+  tl.to("#hw14", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 3.580);
+  tl.set("#hw15", {opacity:0, y:14}, 0);
+  tl.to("#hw15", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 4.200);
+  tl.set("#hw16", {opacity:0, y:14}, 0);
+  tl.to("#hw16", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 4.340);
+  tl.set("#hw17", {opacity:0, y:14}, 0);
+  tl.to("#hw17", {opacity:1, y:0, duration:0.20, ease:"power2.out"}, 4.520);
+  tl.to(".hook-block", {opacity:0, y:-12, duration:0.30, ease:"power2.in"}, 4.760);
+  tl.set(".hook-block", {visibility:"hidden"}, 5.060);
+  tl.set("#bc0", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc0", {visibility:"visible"}, 5.100);
+  tl.to("#bc0", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 5.100);
+  tl.to("#bc0", {opacity:0, duration:0.15, ease:"power2.in"}, 6.600);
+  tl.set("#bc1", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc1", {visibility:"visible"}, 6.700);
+  tl.to("#bc1", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 6.700);
+  tl.to("#bc1", {opacity:0, duration:0.15, ease:"power2.in"}, 7.570);
+  tl.set("#bc2", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc2", {visibility:"visible"}, 7.840);
+  tl.to("#bc2", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 7.840);
+  tl.to("#bc2", {opacity:0, duration:0.15, ease:"power2.in"}, 8.510);
+  tl.set("#bc3", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc3", {visibility:"visible"}, 8.900);
+  tl.to("#bc3", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 8.900);
+  tl.to("#bc3", {opacity:0, duration:0.15, ease:"power2.in"}, 10.340);
+  tl.set("#bc4", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc4", {visibility:"visible"}, 10.440);
+  tl.to("#bc4", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 10.440);
+  tl.to("#bc4", {opacity:0, duration:0.15, ease:"power2.in"}, 10.840);
+  tl.set("#bc5", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc5", {visibility:"visible"}, 10.940);
+  tl.to("#bc5", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 10.940);
+  tl.to("#bc5", {opacity:0, duration:0.15, ease:"power2.in"}, 11.240);
+  tl.set("#bc6", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc6", {visibility:"visible"}, 11.340);
+  tl.to("#bc6", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 11.340);
+  tl.to("#bc6", {opacity:0, duration:0.15, ease:"power2.in"}, 11.990);
+  tl.set("#bc7", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc7", {visibility:"visible"}, 12.240);
+  tl.to("#bc7", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 12.240);
+  tl.to("#bc7", {opacity:0, duration:0.15, ease:"power2.in"}, 13.270);
+  tl.set("#bc8", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc8", {visibility:"visible"}, 13.400);
+  tl.to("#bc8", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 13.400);
+  tl.to("#bc8", {opacity:0, duration:0.15, ease:"power2.in"}, 14.400);
+  tl.set("#bc9", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc9", {visibility:"visible"}, 14.500);
+  tl.to("#bc9", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 14.500);
+  tl.to("#bc9", {opacity:0, duration:0.15, ease:"power2.in"}, 15.860);
+  tl.set("#bc10", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc10", {visibility:"visible"}, 15.960);
+  tl.to("#bc10", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 15.960);
+  tl.to("#bc10", {opacity:0, duration:0.15, ease:"power2.in"}, 16.610);
+  tl.set("#bc11", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc11", {visibility:"visible"}, 16.760);
+  tl.to("#bc11", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 16.760);
+  tl.to("#bc11", {opacity:0, duration:0.15, ease:"power2.in"}, 17.320);
+  tl.set("#bc12", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc12", {visibility:"visible"}, 17.420);
+  tl.to("#bc12", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 17.420);
+  tl.to("#bc12", {opacity:0, duration:0.15, ease:"power2.in"}, 18.520);
+  tl.set("#bc13", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc13", {visibility:"visible"}, 18.620);
+  tl.to("#bc13", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 18.620);
+  tl.to("#bc13", {opacity:0, duration:0.15, ease:"power2.in"}, 19.660);
+  tl.set("#bc14", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc14", {visibility:"visible"}, 19.760);
+  tl.to("#bc14", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 19.760);
+  tl.to("#bc14", {opacity:0, duration:0.15, ease:"power2.in"}, 20.650);
+  tl.set("#bc15", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc15", {visibility:"visible"}, 20.760);
+  tl.to("#bc15", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 20.760);
+  tl.to("#bc15", {opacity:0, duration:0.15, ease:"power2.in"}, 21.720);
+  tl.set("#bc16", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc16", {visibility:"visible"}, 21.820);
+  tl.to("#bc16", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 21.820);
+  tl.to("#bc16", {opacity:0, duration:0.15, ease:"power2.in"}, 23.000);
+  tl.set("#bc17", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc17", {visibility:"visible"}, 23.100);
+  tl.to("#bc17", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 23.100);
+  tl.to("#bc17", {opacity:0, duration:0.15, ease:"power2.in"}, 24.320);
+  tl.set("#bc18", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc18", {visibility:"visible"}, 24.420);
+  tl.to("#bc18", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 24.420);
+  tl.to("#bc18", {opacity:0, duration:0.15, ease:"power2.in"}, 26.090);
+  tl.set("#bc19", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc19", {visibility:"visible"}, 26.400);
+  tl.to("#bc19", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 26.400);
+  tl.to("#bc19", {opacity:0, duration:0.15, ease:"power2.in"}, 26.880);
+  tl.set("#bc20", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc20", {visibility:"visible"}, 26.980);
+  tl.to("#bc20", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 26.980);
+  tl.to("#bc20", {opacity:0, duration:0.15, ease:"power2.in"}, 27.880);
+  tl.set("#bc21", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc21", {visibility:"visible"}, 27.980);
+  tl.to("#bc21", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 27.980);
+  tl.to("#bc21", {opacity:0, duration:0.15, ease:"power2.in"}, 28.900);
+  tl.set("#bc22", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc22", {visibility:"visible"}, 29.000);
+  tl.to("#bc22", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 29.000);
+  tl.to("#bc22", {opacity:0, duration:0.15, ease:"power2.in"}, 30.360);
+  tl.set("#bc23", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc23", {visibility:"visible"}, 30.460);
+  tl.to("#bc23", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 30.460);
+  tl.to("#bc23", {opacity:0, duration:0.15, ease:"power2.in"}, 32.070);
+  tl.set("#bc24", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc24", {visibility:"visible"}, 32.300);
+  tl.to("#bc24", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 32.300);
+  tl.to("#bc24", {opacity:0, duration:0.15, ease:"power2.in"}, 33.600);
+  tl.set("#bc25", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc25", {visibility:"visible"}, 33.700);
+  tl.to("#bc25", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 33.700);
+  tl.to("#bc25", {opacity:0, duration:0.15, ease:"power2.in"}, 34.440);
+  tl.set("#bc26", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc26", {visibility:"visible"}, 34.540);
+  tl.to("#bc26", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 34.540);
+  tl.to("#bc26", {opacity:0, duration:0.15, ease:"power2.in"}, 35.620);
+  tl.set("#bc27", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc27", {visibility:"visible"}, 35.720);
+  tl.to("#bc27", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 35.720);
+  tl.to("#bc27", {opacity:0, duration:0.15, ease:"power2.in"}, 35.960);
+  tl.set("#bc28", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc28", {visibility:"visible"}, 36.060);
+  tl.to("#bc28", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 36.060);
+  tl.to("#bc28", {opacity:0, duration:0.15, ease:"power2.in"}, 36.960);
+  tl.set("#bc29", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc29", {visibility:"visible"}, 37.060);
+  tl.to("#bc29", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 37.060);
+  tl.to("#bc29", {opacity:0, duration:0.15, ease:"power2.in"}, 38.060);
+  tl.set("#bc30", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc30", {visibility:"visible"}, 38.160);
+  tl.to("#bc30", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 38.160);
+  tl.to("#bc30", {opacity:0, duration:0.15, ease:"power2.in"}, 38.940);
+  tl.set("#bc31", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc31", {visibility:"visible"}, 39.040);
+  tl.to("#bc31", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 39.040);
+  tl.to("#bc31", {opacity:0, duration:0.15, ease:"power2.in"}, 40.220);
+  tl.set("#bc32", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc32", {visibility:"visible"}, 40.320);
+  tl.to("#bc32", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 40.320);
+  tl.to("#bc32", {opacity:0, duration:0.15, ease:"power2.in"}, 42.150);
+  tl.set("#bc33", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc33", {visibility:"visible"}, 42.300);
+  tl.to("#bc33", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 42.300);
+  tl.to("#bc33", {opacity:0, duration:0.15, ease:"power2.in"}, 42.840);
+  tl.set("#bc34", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc34", {visibility:"visible"}, 42.940);
+  tl.to("#bc34", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 42.940);
+  tl.to("#bc34", {opacity:0, duration:0.15, ease:"power2.in"}, 44.190);
+  tl.set("#bc35", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc35", {visibility:"visible"}, 44.300);
+  tl.to("#bc35", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 44.300);
+  tl.to("#bc35", {opacity:0, duration:0.15, ease:"power2.in"}, 45.160);
+  tl.set("#bc36", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc36", {visibility:"visible"}, 45.260);
+  tl.to("#bc36", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 45.260);
+  tl.to("#bc36", {opacity:0, duration:0.15, ease:"power2.in"}, 47.060);
+  tl.set("#bc37", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc37", {visibility:"visible"}, 47.160);
+  tl.to("#bc37", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 47.160);
+  tl.to("#bc37", {opacity:0, duration:0.15, ease:"power2.in"}, 48.140);
+  tl.set("#bc38", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc38", {visibility:"visible"}, 48.240);
+  tl.to("#bc38", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 48.240);
+  tl.to("#bc38", {opacity:0, duration:0.15, ease:"power2.in"}, 49.910);
+  tl.set("#bc39", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc39", {visibility:"visible"}, 50.200);
+  tl.to("#bc39", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 50.200);
+  tl.to("#bc39", {opacity:0, duration:0.15, ease:"power2.in"}, 50.780);
+  tl.set("#bc40", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc40", {visibility:"visible"}, 50.880);
+  tl.to("#bc40", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 50.880);
+  tl.to("#bc40", {opacity:0, duration:0.15, ease:"power2.in"}, 51.790);
+  tl.set("#bc41", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc41", {visibility:"visible"}, 51.920);
+  tl.to("#bc41", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 51.920);
+  tl.to("#bc41", {opacity:0, duration:0.15, ease:"power2.in"}, 52.800);
+  tl.set("#bc42", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc42", {visibility:"visible"}, 52.900);
+  tl.to("#bc42", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 52.900);
+  tl.to("#bc42", {opacity:0, duration:0.15, ease:"power2.in"}, 53.960);
+  tl.set("#bc43", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc43", {visibility:"visible"}, 54.060);
+  tl.to("#bc43", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 54.060);
+  tl.to("#bc43", {opacity:0, duration:0.15, ease:"power2.in"}, 55.760);
+  tl.set("#bc44", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc44", {visibility:"visible"}, 55.860);
+  tl.to("#bc44", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 55.860);
+  tl.to("#bc44", {opacity:0, duration:0.15, ease:"power2.in"}, 56.630);
+  tl.set("#bc45", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc45", {visibility:"visible"}, 56.950);
+  tl.to("#bc45", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 56.950);
+  tl.to("#bc45", {opacity:0, duration:0.15, ease:"power2.in"}, 57.900);
+  tl.set("#bc46", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc46", {visibility:"visible"}, 58.000);
+  tl.to("#bc46", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 58.000);
+  tl.to("#bc46", {opacity:0, duration:0.15, ease:"power2.in"}, 58.540);
+  tl.set("#bc47", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc47", {visibility:"visible"}, 58.640);
+  tl.to("#bc47", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 58.640);
+  tl.to("#bc47", {opacity:0, duration:0.15, ease:"power2.in"}, 60.560);
+  tl.set("#bc48", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc48", {visibility:"visible"}, 60.660);
+  tl.to("#bc48", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 60.660);
+  tl.to("#bc48", {opacity:0, duration:0.15, ease:"power2.in"}, 61.440);
+  tl.set("#bc49", {opacity:0, y:18, visibility:"hidden"}, 0);
+  tl.set("#bc49", {visibility:"visible"}, 61.540);
+  tl.to("#bc49", {opacity:1, y:0, duration:0.18, ease:"power3.out"}, 61.540);
+  tl.to("#bc49", {opacity:0, duration:0.15, ease:"power2.in"}, 62.030);
+    window.__timelines["day42-captions"] = tl;
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 940" width="700" height="940" fill="none">
+  <defs>
+    <style>
+      .skin { fill: white; stroke: #161616; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+      .hair { fill: #161616; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+      .line { fill: none; stroke: #161616; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+      .thin { fill: none; stroke: #161616; stroke-width: 7; stroke-linecap: round; }
+      .eye  { fill: #161616; }
+      .shirt { fill: white; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- ponytail swept right behind head -->
+  <path class="hair" d="M 555 195 Q 645 210 670 340 Q 685 460 645 555 Q 620 580 595 555 Q 615 460 595 360 Q 575 285 555 230 Z" />
+  <!-- head -->
+  <ellipse class="skin" cx="415" cy="280" rx="138" ry="160" />
+  <!-- hair top + side, gathered into ponytail -->
+  <path class="hair" d="M 285 230 Q 270 130 380 110 Q 460 100 545 145 Q 580 175 580 230 Q 555 200 510 200 Q 430 215 360 230 Q 305 245 285 230 Z" />
+  <!-- ear (left, peeking under hair) -->
+  <path class="line" d="M 287 295 Q 263 295 263 325 Q 263 360 290 360" />
+  <!-- eyebrows -->
+  <path class="thin" d="M 345 240 Q 370 230 395 240" />
+  <path class="thin" d="M 435 240 Q 460 230 485 240" />
+  <!-- eyes -->
+  <ellipse class="eye" cx="370" cy="290" rx="11" ry="14" />
+  <ellipse class="eye" cx="460" cy="290" rx="11" ry="14" />
+  <!-- nose -->
+  <path class="thin" d="M 415 315 Q 415 345 425 358" />
+  <!-- big open smile -->
+  <path class="line" d="M 360 370 Q 415 420 470 370" />
+  <path class="thin" d="M 380 380 L 450 380" />
+  <!-- neck -->
+  <path class="line" d="M 380 440 L 380 485" />
+  <path class="line" d="M 450 440 L 450 485" />
+  <!-- shirt + shoulders -->
+  <path class="shirt" d="M 225 740 Q 250 555 380 488 L 450 488 Q 525 510 555 580 L 580 700 L 580 940 L 225 940 Z" />
+  <!-- collar -->
+  <path class="line" d="M 380 488 L 415 550 L 450 488" />
+  <!-- raised waving arm -->
+  <path class="shirt" d="M 555 580 Q 595 410 625 245 Q 640 215 660 230 Q 660 410 605 600 Z" />
+  <!-- waving hand -->
+  <circle class="skin" cx="650" cy="215" r="42" />
+  <path class="thin" d="M 632 178 L 628 145" />
+  <path class="thin" d="M 652 173 L 652 140" />
+  <path class="thin" d="M 672 178 L 678 148" />
+  <path class="thin" d="M 688 195 L 695 175" />
+
+</svg>

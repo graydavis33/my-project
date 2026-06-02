@@ -1,0 +1,11 @@
+{
+  "name": "sai-b1v7-business-crash-graph",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.6.51 preview",
+    "check": "npx --yes hyperframes@0.6.51 lint && npx --yes hyperframes@0.6.51 validate && npx --yes hyperframes@0.6.51 inspect",
+    "render": "npx --yes hyperframes@0.6.51 render --fps 60",
+    "render30": "npx --yes hyperframes@0.6.51 render --fps 30"
+  }
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Pill color","default":"#F28129"},{"id":"green","type":"color","label":"Rebuilt stamp color","default":"#2ECC71"}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .card-wrap {
+        position: absolute;
+        left: 80px;
+        top: 540px;
+        width: 920px;
+        height: 840px;
+        filter: drop-shadow(0 14px 36px rgba(0, 0, 0, 0.28));
+        will-change: transform, opacity;
+      }
+      .card-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .pill {
+        position: absolute;
+        left: 80px;
+        width: 760px;
+        height: 180px;
+        border: 5px solid #F28129;
+        border-radius: 90px;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 88px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: #F28129;
+        text-transform: uppercase;
+        will-change: transform, opacity;
+      }
+      .pill-product { top: 150px; }
+      .pill-service { top: 510px; }
+
+      .stamp {
+        position: absolute;
+        left: 50%;
+        width: 540px;
+        height: 200px;
+        margin-left: -270px;
+        border: 7px solid #2ECC71;
+        background: rgba(46, 204, 113, 0.08);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2ECC71;
+        font-size: 96px;
+        font-weight: 900;
+        font-style: italic;
+        letter-spacing: 0.06em;
+        opacity: 0;
+        text-transform: uppercase;
+        will-change: transform, opacity;
+      }
+      .stamp-product { top: 140px; }
+      .stamp-service { top: 500px; }
+
+      .check-line {
+        position: absolute;
+        left: 80px;
+        width: 760px;
+        height: 5px;
+        background: #2ECC71;
+        transform-origin: left center;
+        will-change: transform;
+      }
+      .check-product { top: 238px; }
+      .check-service { top: 598px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <div class="card-wrap" id="card-wrap" data-layout-allow-overflow>
+          <svg class="card-bg" viewBox="0 0 920 840" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="corner-tint-4" cx="100%" cy="100%" r="78%">
+                <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#FFFFFF" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect x="0" y="0" width="920" height="840" rx="44" ry="44" fill="#F2EFE9"/>
+            <rect x="0" y="0" width="920" height="840" rx="44" ry="44" fill="url(#corner-tint-4)"/>
+          </svg>
+
+          <div class="pill pill-product" id="pill-1">Product</div>
+          <div class="check-line check-product" id="check-1"></div>
+          <div class="stamp stamp-product" id="stamp-1">Rebuilt</div>
+
+          <div class="pill pill-service" id="pill-2">Service</div>
+          <div class="check-line check-service" id="check-2"></div>
+          <div class="stamp stamp-service" id="stamp-2">Rebuilt</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const cardWrap = document.getElementById("card-wrap");
+        const pill1    = document.getElementById("pill-1");
+        const pill2    = document.getElementById("pill-2");
+        const stamp1   = document.getElementById("stamp-1");
+        const stamp2   = document.getElementById("stamp-2");
+        const check1   = document.getElementById("check-1");
+        const check2   = document.getElementById("check-2");
+
+        gsap.set(cardWrap, { opacity: 0, scale: 0.94, transformOrigin: "50% 50%" });
+        gsap.set(pill1, { opacity: 0, x: -160 });
+        gsap.set(pill2, { opacity: 0, x:  160 });
+        gsap.set([stamp1, stamp2], { opacity: 0, scale: 2.8, rotation: 8, transformOrigin: "50% 50%" });
+        gsap.set([check1, check2], { scaleX: 0 });
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Card pop-in
+        tl.to(cardWrap, { opacity: 1, scale: 1, duration: 0.50, ease: "back.out(1.4)" }, 0.10);
+
+        // Pill 1 in from left
+        const p1Start = 0.60;
+        tl.to(pill1, { opacity: 1, x: 0, duration: 0.50, ease: "back.out(1.6)" }, p1Start);
+
+        // Pill 2 in from right (slightly delayed)
+        const p2Start = 1.00;
+        tl.to(pill2, { opacity: 1, x: 0, duration: 0.50, ease: "back.out(1.6)" }, p2Start);
+
+        // Stamp 1 slams + check line draws + card shake
+        const s1Start = 1.70;
+        tl.to(stamp1, { opacity: 1, scale: 1, rotation: 8, duration: 0.28, ease: "back.out(2.4)" }, s1Start);
+        tl.to(check1, { scaleX: 1, duration: 0.30, ease: "power3.out" }, s1Start + 0.03);
+        tl.fromTo(pill1,
+          { x: -10 },
+          { x: 10, duration: 0.05, ease: "none", yoyo: true, repeat: 4,
+            onComplete: () => { gsap.set(pill1, { x: 0 }); } },
+          s1Start);
+
+        // Stamp 2 slams + check line draws + pill shake
+        const s2Start = 2.70;
+        tl.to(stamp2, { opacity: 1, scale: 1, rotation: 8, duration: 0.28, ease: "back.out(2.4)" }, s2Start);
+        tl.to(check2, { scaleX: 1, duration: 0.30, ease: "power3.out" }, s2Start + 0.03);
+        tl.fromTo(pill2,
+          { x: -10 },
+          { x: 10, duration: 0.05, ease: "none", yoyo: true, repeat: 4,
+            onComplete: () => { gsap.set(pill2, { x: 0 }); } },
+          s2Start);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+      }
+      .text-slide {
+        position: absolute;
+        left: 10px;
+        top: 220px;
+        width: 1900px;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 80px;
+        color: #ffffff;
+        letter-spacing: 1px;
+      }
+      .line {
+        overflow: hidden;
+        height: 1.22em;
+        text-align: center;
+        line-height: 1.22;
+        white-space: nowrap;
+      }
+      .w {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="text-slide">
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">&ldquo;Trust</span> <span class="w">me</span> <span class="w">guys,</span> <span class="w">if</span> <span class="w">I</span> <span class="w">put</span> <span class="w">my</span>
+        </div>
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">mind</span> <span class="w">to</span> <span class="w">something,</span> <span class="w">it</span> <span class="w">will</span> <span class="w">work</span>
+        </div>
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">out</span> <span class="w">and</span> <span class="w">I</span> <span class="w">will</span> <span class="w">set</span> <span class="w">you</span> <span class="w">guys</span>
+        </div>
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">up</span> <span class="w">for</span> <span class="w">the</span> <span class="w">rest</span> <span class="w">of</span> <span class="w">your</span> <span class="w">life.&rdquo;</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 27 words × 0.14s stagger = 3.64s for last word's start; +0.34s slide → 3.98s.
+      // Composition 6s → ~2s final hold.
+      tl.from(".w", {
+        yPercent: 100,
+        opacity: 0,
+        duration: 0.34,
+        ease: "power3.out",
+        stagger: 0.14,
+      }, 0.15);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

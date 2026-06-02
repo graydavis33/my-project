@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>This Saves You — Time, Energy, Money</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #00ff00;
+      }
+
+      #root {
+        position: relative;
+        overflow: hidden;
+        background: #00ff00;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      .stage {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 120px 90px;
+        box-sizing: border-box;
+        gap: 70px;
+      }
+
+      .header {
+        font-weight: 800;
+        font-size: 64px;
+        line-height: 1.05;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        text-align: center;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        margin: 0;
+      }
+
+      .list {
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        width: 100%;
+        align-items: center;
+      }
+
+      .item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 48px;
+        width: 100%;
+        max-width: 760px;
+      }
+
+      .icon-wrap {
+        position: relative;
+        flex: 0 0 auto;
+        width: 200px;
+        height: 200px;
+      }
+
+      .icon-circle {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(
+            ellipse 100% 60% at 50% 0%,
+            rgba(255, 220, 180, 0.55) 0%,
+            rgba(255, 200, 150, 0.2) 35%,
+            rgba(255, 180, 120, 0) 65%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(255, 168, 88, 1) 0%,
+            rgba(242, 129, 41, 1) 35%,
+            rgba(214, 100, 22, 1) 100%
+          );
+        border: 3px solid #fff;
+        box-shadow: inset 0 2px 0 rgba(255, 240, 215, 0.55),
+          inset 0 -4px 14px rgba(140, 55, 8, 0.45),
+          0 0 32px rgba(242, 129, 41, 0.55),
+          0 8px 24px rgba(0, 0, 0, 0.28);
+      }
+
+      .icon-circle svg {
+        width: 118px;
+        height: 118px;
+        display: block;
+      }
+
+      .label {
+        font-weight: 900;
+        font-size: 92px;
+        line-height: 1;
+        color: #f28129;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div class="stage">
+        <h1 class="header" id="header">This Saves You</h1>
+
+        <div class="list">
+          <!-- TIME -->
+          <div class="item" id="item-1">
+            <div class="icon-wrap">
+              <div class="icon-circle" id="circle-1">
+                <svg viewBox="0 0 100 100" fill="none">
+                  <circle
+                    cx="50"
+                    cy="54"
+                    r="34"
+                    stroke="#fff"
+                    stroke-width="6"
+                  />
+                  <path
+                    d="M50 54 V32"
+                    stroke="#fff"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M50 54 L66 60"
+                    stroke="#fff"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M40 14 H60"
+                    stroke="#fff"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M50 14 V20"
+                    stroke="#fff"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="label" id="label-1">Time</div>
+          </div>
+
+          <!-- ENERGY -->
+          <div class="item" id="item-2">
+            <div class="icon-wrap">
+              <div class="icon-circle" id="circle-2">
+                <svg viewBox="0 0 100 100" fill="none">
+                  <path
+                    d="M56 14 L30 56 H48 L42 86 L72 42 H53 Z"
+                    fill="#fff"
+                    stroke="#fff"
+                    stroke-width="4"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="label" id="label-2">Energy</div>
+          </div>
+
+          <!-- MONEY -->
+          <div class="item" id="item-3">
+            <div class="icon-wrap">
+              <div class="icon-circle" id="circle-3">
+                <svg viewBox="0 0 100 100" fill="none">
+                  <path
+                    d="M50 16 V84"
+                    stroke="#fff"
+                    stroke-width="7"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M66 30 C66 22 58 26 50 26 C42 26 34 28 34 38 C34 48 44 50 50 50 C56 50 66 52 66 62 C66 72 58 74 50 74 C42 74 34 78 34 70"
+                    stroke="#fff"
+                    stroke-width="7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    fill="none"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="label" id="label-3">Money</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Header in first
+      tl.from(
+        "#header",
+        { y: -60, opacity: 0, duration: 0.55, ease: "power3.out" },
+        0.15
+      );
+
+      // Per-item entrance: circle pops (back.out), label slides from right (varied eases)
+      const itemStarts = [0.6, 1.1, 1.6];
+      const labelEases = ["power3.out", "expo.out", "power4.out"];
+
+      itemStarts.forEach((t, i) => {
+        const n = i + 1;
+        // icon circle scales in
+        tl.from(
+          "#circle-" + n,
+          { scale: 0, opacity: 0, duration: 0.6, ease: "back.out(1.8)" },
+          t
+        );
+        // label slides in from the side
+        tl.from(
+          "#label-" + n,
+          { x: 90, opacity: 0, duration: 0.55, ease: labelEases[i] },
+          t + 0.12
+        );
+      });
+
+      // After all three are in: subtle simultaneous settle (finite yoyo)
+      tl.to(
+        ["#item-1", "#item-2", "#item-3"],
+        {
+          scale: 1.03,
+          duration: 0.28,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: 1,
+          transformOrigin: "center center",
+        },
+        2.55
+      );
+
+      // hold final state to end (data-duration = 5)
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
