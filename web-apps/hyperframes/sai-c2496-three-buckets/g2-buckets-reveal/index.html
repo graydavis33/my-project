@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Inverted-isosceles-triangle layout — two buckets on the top base, apex at bottom. */
+      .bucket {
+        position: absolute;
+        width: 280px;
+        height: 360px;
+        will-change: transform, opacity;
+      }
+      .bucket-1 { top: 641px;  left: 160px; }  /* top-left corner — CUSTOMERS  */
+      .bucket-2 { top: 641px;  left: 640px; }  /* top-right corner — TEAM      */
+      .bucket-3 { top: 1057px; left: 400px; }  /* apex (bottom) — SHAREHOLDERS */
+
+      .bucket-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        /* Drop shadow only on the white bucket outline — not on the orange badge. */
+        filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+      }
+      .bucket-svg .handle,
+      .bucket-svg .rim,
+      .bucket-svg .rim-inner,
+      .bucket-svg .bottom-edge {
+        fill: none;
+        stroke: #FFFFFF;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      /* Body gets a translucent vertical gradient fill — cylindrical shading
+         while staying mostly transparent for chroma key. */
+      .bucket-svg .body {
+        fill: url(#bodyGrad);
+        stroke: #FFFFFF;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      /* Bright highlight on the left-inside of the body — reads as light reflection. */
+      .bucket-svg .body-highlight {
+        fill: none;
+        stroke: #FFFFFF;
+        stroke-opacity: 0.65;
+        stroke-width: 3;
+        stroke-linecap: round;
+      }
+      .bucket-svg .handle      { stroke-width: 7; }
+      .bucket-svg .rim         { stroke-width: 5; }
+      .bucket-svg .rim-inner   { stroke-width: 3; }
+      .bucket-svg .bottom-edge { stroke-width: 4; }
+      .bucket-svg .grip {
+        fill: #FFFFFF;
+        stroke: #FFFFFF;
+        stroke-width: 1.5;
+      }
+
+      /* Number badge — orange disc sitting on the upper portion of the bucket body. */
+      /* Large badge centered in the bucket body — the number is now the hero element. */
+      .badge {
+        position: absolute;
+        top: 150px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 135px;
+        height: 135px;
+        border-radius: 50%;
+        background: #F28129;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        will-change: transform;
+      }
+      .badge-num {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 85px;
+        color: #FFFFFF;
+        line-height: 1.0;
+      }
+
+      /* Label is a solid-white tag with orange text inside.
+         Tag sized to the text. Blur applies only to the text, not the white background. */
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4.5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4.5" data-track-index="1">
+
+        <!-- Shared gradient defs used by every bucket SVG for cylindrical 3D shading -->
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+          <defs>
+            <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.30"/>
+              <stop offset="55%"  stop-color="#FFFFFF" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.20"/>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <div class="bucket bucket-1" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 280 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Handle wire arc + chunky center grip -->
+            <path class="handle" d="M 10 100 Q 140 -45 270 100"/>
+            <rect class="grip" x="112" y="18" width="56" height="18" rx="9" ry="9"/>
+            <!-- Double-line rim shows depth -->
+            <ellipse class="rim" cx="140" cy="100" rx="130" ry="12"/>
+            <ellipse class="rim-inner" cx="140" cy="112" rx="122" ry="8"/>
+            <!-- Body with subtle taper, more cylindrical (matches reference) -->
+            <path class="body" d="M 10 100 L 45 350 Q 140 370 235 350 L 270 100"/>
+            <ellipse class="bottom-edge" cx="140" cy="350" rx="95" ry="7"/>
+          </svg>
+          <div class="badge"><span class="badge-num">1</span></div>
+        </div>
+
+        <div class="bucket bucket-2" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 280 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Handle wire arc + chunky center grip -->
+            <path class="handle" d="M 10 100 Q 140 -45 270 100"/>
+            <rect class="grip" x="112" y="18" width="56" height="18" rx="9" ry="9"/>
+            <!-- Double-line rim shows depth -->
+            <ellipse class="rim" cx="140" cy="100" rx="130" ry="12"/>
+            <ellipse class="rim-inner" cx="140" cy="112" rx="122" ry="8"/>
+            <!-- Body with subtle taper, more cylindrical (matches reference) -->
+            <path class="body" d="M 10 100 L 45 350 Q 140 370 235 350 L 270 100"/>
+            <ellipse class="bottom-edge" cx="140" cy="350" rx="95" ry="7"/>
+          </svg>
+          <div class="badge"><span class="badge-num">2</span></div>
+        </div>
+
+        <div class="bucket bucket-3" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 280 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- Handle wire arc + chunky center grip -->
+            <path class="handle" d="M 10 100 Q 140 -45 270 100"/>
+            <rect class="grip" x="112" y="18" width="56" height="18" rx="9" ry="9"/>
+            <!-- Double-line rim shows depth -->
+            <ellipse class="rim" cx="140" cy="100" rx="130" ry="12"/>
+            <ellipse class="rim-inner" cx="140" cy="112" rx="122" ry="8"/>
+            <!-- Body with subtle taper, more cylindrical (matches reference) -->
+            <path class="body" d="M 10 100 L 45 350 Q 140 370 235 350 L 270 100"/>
+            <ellipse class="bottom-edge" cx="140" cy="350" rx="95" ry="7"/>
+          </svg>
+          <div class="badge"><span class="badge-num">3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Hidden until their staggered entrances fire.
+        gsap.set(".bucket", { opacity: 0, y: 100, scale: 0.86 });
+
+        // Same entrance animation as the prior g2 — back.out pop, 0.55s stagger,
+        // order matches Sai's naming: Customers (1), Team (2), Shareholders (3).
+        tl.to(".bucket", {
+          opacity: 1,
+          y: 0,
+          scale: 1.0,
+          duration: 0.50,
+          ease: "back.out(1.55)",
+          stagger: 0.55,
+        }, 0.15);
+
+        // Badge pulse on each landing.
+        tl.fromTo(".bucket-1 .badge",
+          { scale: 1 }, { scale: 1.12, duration: 0.18, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0.62);
+        tl.fromTo(".bucket-2 .badge",
+          { scale: 1 }, { scale: 1.12, duration: 0.18, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.17);
+        tl.fromTo(".bucket-3 .badge",
+          { scale: 1 }, { scale: 1.12, duration: 0.18, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.72);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

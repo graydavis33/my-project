@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Hook — ? morphs to 2</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #00FF00; width: 1080px; height: 1920px; overflow: hidden; }
+  #root {
+    position: relative; width: 1080px; height: 1920px; background: #00FF00;
+    font-family: "Montserrat", sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .morph { position: relative; width: 640px; height: 420px; }
+  .glyph {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 340px; line-height: 1; color: #F28129;
+    text-shadow: 0 8px 22px rgba(0,0,0,0.35), 0 0 4px rgba(0,0,0,0.25);
+    backface-visibility: hidden;
+    will-change: transform, opacity, filter;
+  }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-duration="2.6" data-width="1080" data-height="1920">
+    <div class="morph">
+      <div class="glyph" id="qmark">?</div>
+      <div class="glyph" id="num2">2</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+
+    gsap.set("#num2", { opacity: 0, rotationX: 90, scale: 0.7, transformPerspective: 900, transformOrigin: "50% 50%" });
+
+    // 1) "?" eases in from the bottom
+    tl.from("#qmark", { y: 150, opacity: 0, scale: 0.8, duration: 0.55, ease: "power3.out" }, 0.20);
+
+    // 2) Cool 3D flip morph: "?" flips away with motion blur, "2" flips in + pops
+    const M = 0.95;
+    tl.to("#qmark",
+      { rotationX: -90, scale: 0.7, opacity: 0, filter: "blur(10px)",
+        duration: 0.26, ease: "power2.in", transformPerspective: 900, transformOrigin: "50% 50%", overwrite: "auto" },
+      M);
+    tl.fromTo("#num2",
+      { opacity: 0, rotationX: 90, scale: 0.7, filter: "blur(10px)", transformPerspective: 900, transformOrigin: "50% 50%" },
+      { opacity: 1, rotationX: 0, scale: 1, filter: "blur(0px)",
+        duration: 0.42, ease: "back.out(2)", transformPerspective: 900, transformOrigin: "50% 50%", immediateRender: false },
+      M + 0.20);
+
+    // 3) settle pulse on the "2"
+    tl.to("#num2", { scale: 1.06, duration: 0.16, ease: "power2.out", transformOrigin: "50% 50%", overwrite: "auto" }, M + 0.66);
+    tl.to("#num2", { scale: 1.0, duration: 0.28, ease: "power2.inOut", transformOrigin: "50% 50%", overwrite: "auto" }, M + 0.82);
+
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>

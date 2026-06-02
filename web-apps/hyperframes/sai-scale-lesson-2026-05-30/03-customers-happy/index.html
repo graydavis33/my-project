@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sai — 1 Customers Happy</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #00FF00;
+  }
+  #root {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #00FF00;
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 56px;
+    box-sizing: border-box;
+    padding: 0 90px;
+  }
+
+  /* ---- Header cluster (badge + CUSTOMERS) ---- */
+  .header-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .badge {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #fff;
+    background:
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+      linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+    box-shadow:
+      inset 0 2px 0 rgba(255,240,215,0.55),
+      inset 0 -4px 14px rgba(140,55,8,0.45),
+      0 0 32px rgba(242,129,41,0.55),
+      0 8px 24px rgba(0,0,0,0.28);
+  }
+  .badge span {
+    font-size: 90px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .header {
+    font-size: 84px;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .sub-label {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-top: -16px;
+  }
+  .sub-label .txt {
+    font-size: 46px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  /* white circle smile accent */
+  .smile {
+    width: 58px;
+    height: 58px;
+  }
+
+  /* ---- Recurring revenue: month chips ---- */
+  .every-month {
+    font-size: 44px;
+    font-weight: 800;
+    color: #F28129;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+  }
+
+  .chip {
+    width: 150px;
+    height: 110px;
+    border-radius: 28px;
+    border: 3px solid #fff;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    box-sizing: border-box;
+    position: relative;
+  }
+  .chip .month {
+    font-size: 34px;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .chip .dollar {
+    font-size: 46px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* lit (orange-glass) fill layer sits behind chip content */
+  .chip .fill {
+    position: absolute;
+    inset: 0;
+    border-radius: 25px;
+    background:
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+      linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+    box-shadow:
+      inset 0 2px 0 rgba(255,240,215,0.55),
+      inset 0 -4px 14px rgba(140,55,8,0.45),
+      0 0 28px rgba(242,129,41,0.5);
+    z-index: -1;
+  }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+    <div class="stage">
+
+      <div class="header-row">
+        <div class="badge"><span>1</span></div>
+        <div class="header">CUSTOMERS</div>
+        <div class="sub-label">
+          <svg class="smile" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="27" stroke="#fff" stroke-width="4"/>
+            <circle cx="21" cy="24" r="3.5" fill="#fff"/>
+            <circle cx="39" cy="24" r="3.5" fill="#fff"/>
+            <path d="M18 36 Q30 48 42 36" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none"/>
+          </svg>
+          <div class="txt">Truly Happy</div>
+        </div>
+      </div>
+
+      <div class="every-month">Every Month</div>
+
+      <div class="chip-row">
+        <div class="chip" id="chip-0">
+          <div class="fill" id="fill-0"></div>
+          <div class="month">Jan</div>
+          <div class="dollar" id="d-0">$</div>
+        </div>
+        <div class="chip" id="chip-1">
+          <div class="fill" id="fill-1"></div>
+          <div class="month">Feb</div>
+          <div class="dollar" id="d-1">$</div>
+        </div>
+        <div class="chip" id="chip-2">
+          <div class="fill" id="fill-2"></div>
+          <div class="month">Mar</div>
+          <div class="dollar" id="d-2">$</div>
+        </div>
+        <div class="chip" id="chip-3">
+          <div class="fill" id="fill-3"></div>
+          <div class="month">Apr</div>
+          <div class="dollar" id="d-3">$</div>
+        </div>
+        <div class="chip" id="chip-4">
+          <div class="fill" id="fill-4"></div>
+          <div class="month">May</div>
+          <div class="dollar" id="d-4">$</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+
+    // Hide later-beat elements at t=0
+    for (let i = 0; i < 5; i++) {
+      tl.set("#fill-" + i, { scaleY: 0, transformOrigin: "50% 100%" }, 0);
+      tl.set("#d-" + i, { opacity: 0 }, 0);
+    }
+
+    // Badge pop
+    tl.from(".badge", { scale: 0, opacity: 0, duration: 0.55, ease: "back.out(2)" }, 0.15);
+
+    // CUSTOMERS slide in
+    tl.from(".header", { y: 60, opacity: 0, duration: 0.55, ease: "power3.out" }, 0.4);
+
+    // Sub-label fade
+    tl.from(".sub-label", { y: 24, opacity: 0, duration: 0.45, ease: "sine.out" }, 0.7);
+
+    // EVERY MONTH label fade
+    tl.from(".every-month", { y: 20, opacity: 0, duration: 0.45, ease: "power2.out" }, 1.0);
+
+    // Chip outlines enter as a row
+    tl.from(".chip", { y: 40, opacity: 0, duration: 0.4, ease: "power2.out", stagger: 0.08 }, 0.85);
+
+    // Sequential fill + $ stamp per chip
+    const chipStart = 1.2;
+    const chipStep = 0.45;
+    for (let i = 0; i < 5; i++) {
+      const t = chipStart + i * chipStep;
+      tl.to("#fill-" + i, { scaleY: 1, duration: 0.32, ease: "back.out(1.6)" }, t);
+      tl.fromTo("#d-" + i,
+        { opacity: 0, scale: 1.8 },
+        { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" },
+        t + 0.1);
+    }
+
+    // Gentle finite pulse on the whole row after fills complete
+    const lastFill = chipStart + 4 * chipStep + 0.42; // ~3.42
+    const holdStart = lastFill;
+    const cycle = 0.7;
+    const pulseWindow = 5 - holdStart; // ~1.58s
+    const pulses = Math.max(1, Math.ceil(pulseWindow / cycle) - 1);
+    tl.to(".chip-row", {
+      scale: 1.04,
+      duration: cycle / 2,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: pulses * 2 - 1,
+      transformOrigin: "50% 50%"
+    }, holdStart);
+
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      #source-video {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        object-fit: cover;
+        z-index: 0;
+      }
+
+      .captions {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      .cap {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 920px;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 64px;
+        line-height: 1.18;
+        color: #ffffff;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        letter-spacing: 0.005em;
+      }
+      /* BOT — anchor to BOTTOM so single + 2-line chunks share the same baseline.
+         Bottom of text at y=1450 (below chest, above IG bottom UI safe zone). */
+      .cap-bot {
+        bottom: 470px;
+      }
+      /* TOP — y=300, gives clear space above hat brim AND from top UI safe zone (220px).
+         Single line ends y=375. 2-line ends y=450 — only use 2-line TOP if hat
+         is below y=470 in that shot. */
+      .cap-top {
+        top: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30.78" data-width="1080" data-height="1920">
+      <video
+        id="source-video"
+        data-start="0"
+        data-duration="30.78"
+        data-track-index="0"
+        src="source.mp4"
+        muted
+        playsinline
+      ></video>
+      <audio
+        id="source-audio"
+        data-start="0"
+        data-duration="30.78"
+        data-track-index="2"
+        src="source.mp4"
+        data-volume="1"
+      ></audio>
+
+      <div id="captions" class="captions clip" data-start="0" data-duration="30.78" data-track-index="1">
+        <!-- v3 changes:
+             - c1 double-lined ("my business / changed when") so it fits in safe area
+             - c3 REMOVED (was "90/10 to" — Gray cut for redundancy)
+             - c12 dropped leading "and" → "if you actually wanna"
+             - c24 REMOVED ("i've made more strides" overlapped growth chart)
+             - c25 moved BOT→TOP and double-lined ("in my career / than ever before")
+             - Standalone "I" + contractions (I've, I'm) capitalized
+             - cap-bot anchored to bottom (single + 2-line share baseline at y=1450)
+             - cap-top lowered to y=300 (space from head + space from IG UI) -->
+        <div class="cap cap-bot" id="c1">my business<br>changed when</div>
+        <div class="cap cap-bot" id="c2">I went from</div>
+        <div class="cap cap-top" id="c5">every founder gets 24</div>
+        <div class="cap cap-top" id="c6">hours in a day</div>
+        <div class="cap cap-top" id="c7">you sleep for eight hours</div>
+        <div class="cap cap-top" id="c8">you maybe do other stuff</div>
+        <div class="cap cap-top" id="c9">for another couple hours</div>
+        <div class="cap cap-top" id="c10">that leaves you with 14</div>
+        <div class="cap cap-top" id="c11">hours of undivided work</div>
+        <div class="cap cap-top" id="c12">if you actually wanna</div>
+        <div class="cap cap-top" id="c13">optimize these 14 hours</div>
+        <div class="cap cap-top" id="c14">you need a proper split</div>
+        <div class="cap cap-top" id="c15">for planning your work</div>
+        <div class="cap cap-top" id="c16">and executing on your work</div>
+        <div class="cap cap-bot" id="c17">I used to spend 90%</div>
+        <div class="cap cap-bot" id="c18">of my time executing</div>
+        <div class="cap cap-bot" id="c19">on work and</div>
+        <div class="cap cap-bot" id="c20">10% planning</div>
+        <div class="cap cap-bot" id="c21">and once I changed it</div>
+        <div class="cap cap-bot" id="c22">to 60% planning</div>
+        <div class="cap cap-bot" id="c23">and 40% execution</div>
+        <div class="cap cap-top" id="c24">I've made more strides</div>
+        <div class="cap cap-top" id="c25">in my career<br>than ever before</div>
+        <div class="cap cap-top" id="c26">now I think and anticipate</div>
+        <div class="cap cap-top" id="c27">what needs my attention</div>
+        <div class="cap cap-top" id="c28">throughout the week</div>
+        <div class="cap cap-top" id="c29">I map it out and I</div>
+        <div class="cap cap-top" id="c30">time block it in my</div>
+        <div class="cap cap-top" id="c31">calendar</div>
+        <div class="cap cap-top" id="c32">when you work you work</div>
+        <div class="cap cap-bot" id="c33">when you plan you plan</div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // [id, start, end] — c3 + c24 removed
+        // c1 extended to absorb c2's old timing for the 2-line readability gain
+        const chunks = [
+          ["#c1",   0.000,  0.860],   // "my business / changed when" — matches Whisper words exactly
+          ["#c2",   0.860,  1.220],   // "I went from" — matches Whisper, ends when "90" starts
+          // 1.220-2.760: NO captions (90/10 to 60/40 — graphic shows the words)
+          ["#c5",   3.000,  3.860],
+          ["#c6",   3.860,  4.620],
+          ["#c7",   4.700,  5.640],
+          ["#c8",   5.740,  6.620],
+          ["#c9",   6.620,  7.500],
+          ["#c10",  7.760,  8.620],
+          ["#c11",  8.620,  9.780],
+          ["#c12",  9.880, 10.860],
+          ["#c13", 10.860, 11.700],
+          ["#c14", 11.820, 12.740],
+          ["#c15", 12.740, 13.700],
+          ["#c16", 13.700, 14.820],
+          ["#c17", 14.880, 15.780],
+          ["#c18", 15.780, 16.620],
+          ["#c19", 16.620, 17.300],
+          ["#c20", 17.300, 18.140],
+          ["#c21", 18.340, 19.000],
+          ["#c22", 19.000, 20.000],
+          ["#c23", 20.000, 21.180],
+          ["#c24", 21.460, 22.540],   // restored at TOP (was incorrectly removed in v3)
+          ["#c25", 22.540, 23.780],   // moved TOP, double-lined
+          ["#c26", 23.980, 25.220],
+          ["#c27", 25.220, 26.140],
+          ["#c28", 26.140, 26.920],
+          ["#c29", 26.980, 27.740],
+          ["#c30", 27.740, 28.460],
+          ["#c31", 28.460, 28.740],
+          ["#c32", 28.740, 29.600],
+          ["#c33", 29.680, 30.540],
+        ];
+
+        chunks.forEach(function (c) {
+          const id = c[0], s = c[1], e = c[2];
+          tl.to(id, { opacity: 1, duration: 0.08, ease: "power1.out" }, s);
+          tl.to(id, { opacity: 0, duration: 0.08, ease: "power1.in" }, Math.max(s + 0.08, e - 0.06));
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

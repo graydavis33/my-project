@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <!--
+      ════════════════════════════════════════════════════════════════════
+      HOW TO SWAP CLIPS
+
+      1. Pick any clip from "C:/Users/Gray Davis/My Drive/Broll Graydient/"
+      2. Convert to MP4 with this command (iPhone MOVs need re-encode):
+
+           ffmpeg -i "C:/Users/Gray Davis/My Drive/Broll Graydient/IMG_XXXX.MOV" ^
+                  -c:v libx264 -preset fast -crf 20 -an ^
+                  "assets/clip1.mp4"
+
+         (Replace clip1.mp4 with clip2.mp4 for the second slot.)
+
+      3. To pick a SPECIFIC moment of a longer clip, add `data-media-start`
+         to the <video> tag below. Example: data-media-start="42.5" jumps
+         to 42.5 seconds into the source.
+
+      4. To change overlay text, edit the .card-1 and .card-2 divs below.
+
+      5. To change timing, see the comments in the GSAP block at bottom.
+      ════════════════════════════════════════════════════════════════════
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000000;
+      }
+
+      /* Video clip wrappers — full-bleed, stacked. */
+      .clip-wrap {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      .clip-wrap video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      #wrap-1 { z-index: 1; }
+      #wrap-2 { z-index: 3; opacity: 0; }
+
+      /* Dark gradient at bottom for text readability over any B-roll. */
+      .bottom-gradient {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 700px;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.78) 0%,
+          rgba(0, 0, 0, 0.55) 35%,
+          rgba(0, 0, 0, 0.18) 75%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      /* Text cards — Montserrat SemiBold lower-third. */
+      .text-card {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        bottom: 240px;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 68px;
+        line-height: 1.18;
+        letter-spacing: -0.01em;
+        color: #ffffff;
+        text-align: center;
+        text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+        z-index: 10;
+        opacity: 0;
+      }
+      .card-1 { z-index: 10; }
+      .card-2 { z-index: 11; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Clip 1: scene 1 backdrop (0 – 5.4s) -->
+      <div id="wrap-1" class="clip-wrap">
+        <video
+          id="v1"
+          data-start="0"
+          data-duration="5.4"
+          data-track-index="0"
+          data-media-start="0"
+          src="assets/clip1.mp4"
+          muted
+          playsinline
+        ></video>
+      </div>
+
+      <!-- Clip 2: scene 2 backdrop (4.6 – 10s, with 0.8s crossfade overlap) -->
+      <div id="wrap-2" class="clip-wrap">
+        <video
+          id="v2"
+          data-start="4.6"
+          data-duration="5.4"
+          data-track-index="1"
+          data-media-start="0"
+          src="assets/clip2.mp4"
+          muted
+          playsinline
+        ></video>
+      </div>
+
+      <!-- Bottom gradient for text contrast -->
+      <div class="bottom-gradient"></div>
+
+      <!-- Text card 1 -->
+      <div class="text-card card-1">
+        1 year ago I was scared<br />I&rsquo;d never get a job.
+      </div>
+
+      <!-- Text card 2 -->
+      <div class="text-card card-2">
+        Now I live in NYC doing<br />my dream one.
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ─── Timing map ────────────────────────────────────────────────────
+      //   0.0 – 5.4s   Clip 1 plays
+      //   0.6 – 1.2s   Card 1 fades + rises in
+      //   1.2 – 4.6s   Card 1 holds
+      //   4.6 – 5.4s   Crossfade: clip 2 fades over clip 1 (buries card 1)
+      //   4.6 – 10.0s  Clip 2 plays
+      //   5.8 – 6.4s   Card 2 fades + rises in
+      //   6.4 – 9.5s   Card 2 holds
+      //   9.5 – 10.0s  Card 2 gentle fade-out (final scene)
+      // ─────────────────────────────────────────────────────────────────
+
+      // Card 1 entrance
+      tl.fromTo(
+        ".card-1",
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+        0.6
+      );
+
+      // Crossfade clip 2 over clip 1
+      tl.to("#wrap-2", { opacity: 1, duration: 0.8, ease: "power2.inOut" }, 4.6);
+
+      // Card 2 entrance
+      tl.fromTo(
+        ".card-2",
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" },
+        5.8
+      );
+
+      // Final-scene exit (allowed: this is the last scene)
+      tl.to(".card-2", { opacity: 0, duration: 0.5, ease: "power2.in" }, 9.5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

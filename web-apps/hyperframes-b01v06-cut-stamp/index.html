@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1920px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      /* ---------- CUT stamp: red rubber-stamp rectangle, white text, rotated ---------- */
+      #stamp {
+        position: absolute;
+        top: 800px;
+        left: 190px;
+        width: 700px;
+        height: 320px;
+        border: 10px solid #FF3B30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-style: italic;
+        font-size: 240px;
+        line-height: 1;
+        color: #FFFFFF;
+        letter-spacing: -0.02em;
+        transform-origin: 50% 50%;
+        background: rgba(255, 59, 48, 0.08);
+        box-shadow:
+          0 0 0 6px rgba(255, 59, 48, 0.12),
+          0 10px 36px rgba(0, 0, 0, 0.18);
+      }
+
+      /* ---------- Diagonal red strike line crossing the stamp ---------- */
+      #strike-wrap {
+        position: absolute;
+        top: 960px;
+        left: 60px;
+        width: 960px;
+        height: 0;
+        transform-origin: 50% 50%;
+        transform: rotate(-22deg);
+        z-index: 2;
+      }
+      .strike-bar {
+        position: absolute;
+        top: -14px;
+        left: 0;
+        width: 100%;
+        height: 28px;
+        background: #FF3B30;
+        border-radius: 14px;
+        transform-origin: 0% 50%;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="3"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="stamp">CUT</div>
+
+      <div id="strike-wrap">
+        <div class="strike-bar"></div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Initial states
+      gsap.set('#stamp',       { scale: 3, opacity: 0, rotation: -9 });
+      gsap.set('.strike-bar',  { scaleX: 0 });
+
+      // Phase 1: Stamp slams down (0.10 - 0.40s)
+      tl.to('#stamp',
+        { scale: 1, opacity: 1, duration: 0.30, ease: 'back.out(2.6)' },
+        0.10
+      );
+
+      // Phase 2: Stamp shake — single keyframed rotation tween (0.42 - 0.70s)
+      tl.to('#stamp',
+        { keyframes: [
+            { rotation: -4,  duration: 0.07 },
+            { rotation: -13, duration: 0.07 },
+            { rotation: -6,  duration: 0.07 },
+            { rotation: -9,  duration: 0.07 }
+          ] },
+        0.42
+      );
+
+      // Phase 3: Diagonal strike line scales across (0.55 - 0.80s)
+      tl.to('.strike-bar',
+        { scaleX: 1, duration: 0.25, ease: 'power3.out' },
+        0.55
+      );
+
+      // Phase 4: Hold through 3.0s
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=3240, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 3240px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0A0A0A;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="4"
+      data-width="3240"
+      data-height="1080"
+    >
+      <div
+        id="tt"
+        class="clip"
+        data-composition-id="tiktok-counter"
+        data-composition-src="compositions/tiktok-counter.html"
+        data-start="0"
+        data-duration="4"
+        data-track-index="0"
+        style="position: absolute; left: 0; top: 0; width: 1080px; height: 1080px;"
+      ></div>
+
+      <div
+        id="ig"
+        class="clip"
+        data-composition-id="instagram-counter"
+        data-composition-src="compositions/instagram-counter.html"
+        data-start="0"
+        data-duration="4"
+        data-track-index="1"
+        style="position: absolute; left: 1080px; top: 0; width: 1080px; height: 1080px;"
+      ></div>
+
+      <div
+        id="yt"
+        class="clip"
+        data-composition-id="youtube-counter"
+        data-composition-src="compositions/youtube-counter.html"
+        data-start="0"
+        data-duration="4"
+        data-track-index="2"
+        style="position: absolute; left: 2160px; top: 0; width: 1080px; height: 1080px;"
+      ></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

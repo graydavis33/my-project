@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      #stage { position: absolute; inset: 0; will-change: transform, opacity; }
+      #press { display: block; }
+
+      .limb {
+        fill: none;
+        stroke: #FFFFFF;
+        stroke-width: 16;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .head { fill: #FFFFFF; }
+      .bar-rod { stroke: #FFFFFF; stroke-width: 14; stroke-linecap: round; }
+      .plate { fill: #FFFFFF; }
+      .plate-ring { fill: none; stroke: #C7CCD6; stroke-width: 5; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <div id="stage">
+          <svg id="press" viewBox="0 0 1080 1920" width="1080" height="1920" xmlns="http://www.w3.org/2000/svg">
+            <!-- ground shadow -->
+            <ellipse cx="540" cy="1434" rx="155" ry="24" fill="#000000" opacity="0.28"/>
+
+            <!-- legs -->
+            <polyline class="limb" points="540,1120 470,1272 452,1412"/>
+            <polyline class="limb" points="540,1120 610,1272 628,1412"/>
+            <!-- torso -->
+            <line class="limb" x1="540" y1="840" x2="540" y2="1120"/>
+            <!-- shoulders -->
+            <line class="limb" x1="500" y1="840" x2="580" y2="840"/>
+            <!-- neck -->
+            <line class="limb" x1="540" y1="802" x2="540" y2="840"/>
+            <!-- head -->
+            <circle class="head" cx="540" cy="744" r="58"/>
+
+            <!-- arms (points recomputed each frame) -->
+            <polyline id="leftArm" class="limb"/>
+            <polyline id="rightArm" class="limb"/>
+
+            <!-- barbell (translated each frame) -->
+            <g id="bar">
+              <line class="bar-rod" x1="356" y1="790" x2="724" y2="790"/>
+              <circle class="plate" cx="378" cy="790" r="54"/>
+              <circle class="plate-ring" cx="378" cy="790" r="34"/>
+              <circle class="plate" cx="702" cy="790" r="54"/>
+              <circle class="plate-ring" cx="702" cy="790" r="34"/>
+            </g>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        // ── Press rig ────────────────────────────────────────────────────
+        // Hands grip the bar directly above each shoulder, so each arm is a
+        // 2-bone chain (shoulder → elbow → hand) whose endpoints share an x.
+        // As the bar rises the arm straightens; as it lowers the elbow flares.
+        const Lx = 500, Rx = 580, shY = 840, segL = 132, barBase = 790;
+        const leftArm  = document.getElementById("leftArm");
+        const rightArm = document.getElementById("rightArm");
+        const bar      = document.getElementById("bar");
+
+        function setPose(barY) {
+          const d = shY - barY;
+          const half = d / 2;
+          const e = Math.sqrt(Math.max(0, segL * segL - half * half)); // elbow flare
+          const eY = (shY + barY) / 2;
+          leftArm.setAttribute("points",  Lx + "," + shY + " " + (Lx - e) + "," + eY + " " + Lx + "," + barY);
+          rightArm.setAttribute("points", Rx + "," + shY + " " + (Rx + e) + "," + eY + " " + Rx + "," + barY);
+          bar.setAttribute("transform", "translate(0," + (barY - barBase) + ")");
+        }
+
+        const BOTTOM = 790;  // bar racked at shoulder/chin level
+        const TOP    = 590;  // bar locked out overhead
+        setPose(BOTTOM);
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // figure settles in
+        tl.from("#stage", { opacity: 0, scale: 0.9, duration: 0.40, ease: "back.out(1.5)", transformOrigin: "50% 62%" }, 0.10);
+
+        // press reps: up powerfully, lower under control, repeat (7 strokes → ends locked out)
+        const rep = { by: BOTTOM };
+        tl.to(rep, {
+          by: TOP,
+          duration: 0.60,
+          ease: "power2.out",
+          yoyo: true,
+          repeat: 6,
+          onUpdate: () => setPose(rep.by),
+        }, 0.55);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

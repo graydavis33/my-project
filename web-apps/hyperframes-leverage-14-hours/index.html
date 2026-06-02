@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      /* ---------- Fulcrum (static, apex at canvas (960, 764) touches bar bottom) ---------- */
+      #fulcrum {
+        position: absolute;
+        left: 850px;
+        top: 764px;
+        width: 220px;
+        height: 160px;
+        transform-origin: 50% 0%;
+        z-index: 1;
+      }
+      #fulcrum svg { width: 100%; height: 100%; display: block; }
+
+      /* ---------- Rig (rotates around fulcrum apex (960, 764)) ---------- */
+      #rig {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        transform-origin: 960px 764px;
+        z-index: 2;
+      }
+
+      .bar {
+        position: absolute;
+        top: 750px;
+        left: 410px;
+        width: 1100px;
+        height: 14px;
+        background: #ffffff;
+        border-radius: 7px;
+        transform-origin: 50% 50%;
+      }
+
+      /* ---------- Plates sit ABOVE the bar (plate bottom touches bar top y=750) ---------- */
+      .plate {
+        position: absolute;
+        top: 430px;          /* plate center y = 590, bottom = 750 (touches bar top) */
+        width: 320px;
+        height: 320px;
+        transform-origin: 50% 50%;
+      }
+      /* Weight plate starts at CENTER of bar; translates -540 to land at left end */
+      #plate-weight { left: 800px; }      /* center x = 960 */
+      #plate-right  { left: 1340px; }     /* right end x = 1500 */
+
+      .plate-ring {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+      }
+      .plate-ring svg { width: 100%; height: 100%; display: block; }
+
+      .plate-glow {
+        position: absolute;
+        left: -90px;
+        top: -90px;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.18) 30%, rgba(255,255,255,0) 60%);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* ---------- Weight plate contents: "14 HRS" (already on plate from the start) ---------- */
+      #num-14 {
+        position: absolute;
+        left: 0;
+        top: 70px;
+        width: 320px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 144px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: -0.01em;
+        font-variant-numeric: tabular-nums;
+        z-index: 3;
+        transform-origin: 50% 50%;
+      }
+      #unit-hrs {
+        position: absolute;
+        left: 0;
+        top: 210px;
+        width: 320px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 52px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.12em;
+        z-index: 3;
+      }
+
+      /* ---------- Right plate contents: time-blocking calendar grid ---------- */
+      #planning-grid {
+        position: absolute;
+        left: 50px;
+        top: 50px;
+        width: 220px;
+        height: 220px;
+        z-index: 3;
+        transform-origin: 50% 50%;
+      }
+      #planning-grid svg { width: 100%; height: 100%; display: block; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="8"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Static fulcrum -->
+      <div id="fulcrum">
+        <svg viewBox="0 0 220 160" fill="#ffffff">
+          <polygon points="110,4 216,156 4,156" />
+        </svg>
+      </div>
+
+      <!-- Rotating lever rig -->
+      <div id="rig">
+        <div class="bar" id="bar"></div>
+
+        <!-- WEIGHT plate: starts at center with "14 HRS" already on it, rolls left -->
+        <div class="plate" id="plate-weight">
+          <div class="plate-glow" id="weight-glow"></div>
+          <div class="plate-ring">
+            <svg viewBox="0 0 320 320" fill="none" stroke="#ffffff" stroke-width="10">
+              <circle cx="160" cy="160" r="150" />
+            </svg>
+          </div>
+          <div id="num-14">14</div>
+          <div id="unit-hrs">HRS</div>
+        </div>
+
+        <!-- PLANNING plate: appears on right side after weight has rolled left -->
+        <div class="plate" id="plate-right">
+          <div class="plate-ring">
+            <svg viewBox="0 0 320 320" fill="none" stroke="#ffffff" stroke-width="10">
+              <circle cx="160" cy="160" r="150" />
+            </svg>
+          </div>
+          <!-- Clipboard checklist: 3 tasks (2 checked, 1 unchecked) — "planning" iconography -->
+          <div id="planning-grid">
+            <svg viewBox="0 0 220 220" fill="none">
+              <!-- Clip at top -->
+              <rect x="86" y="14" width="48" height="26" rx="5"
+                    stroke="#ffffff" stroke-width="5" />
+              <!-- Clipboard body -->
+              <rect x="30" y="32" width="160" height="174" rx="10"
+                    stroke="#ffffff" stroke-width="5" />
+
+              <!-- Row 1: checked -->
+              <rect x="46" y="62" width="34" height="34" rx="4"
+                    stroke="#ffffff" stroke-width="4" />
+              <path d="M 53 79 L 62 89 L 76 71"
+                    stroke="#ffffff" stroke-width="5"
+                    stroke-linecap="round" stroke-linejoin="round" fill="none" />
+              <rect x="96" y="76" width="72" height="6" rx="3" fill="#ffffff" />
+
+              <!-- Row 2: checked -->
+              <rect x="46" y="112" width="34" height="34" rx="4"
+                    stroke="#ffffff" stroke-width="4" />
+              <path d="M 53 129 L 62 139 L 76 121"
+                    stroke="#ffffff" stroke-width="5"
+                    stroke-linecap="round" stroke-linejoin="round" fill="none" />
+              <rect x="96" y="126" width="72" height="6" rx="3" fill="#ffffff" />
+
+              <!-- Row 3: unchecked -->
+              <rect x="46" y="162" width="34" height="34" rx="4"
+                    stroke="#ffffff" stroke-width="4" />
+              <rect x="96" y="176" width="60" height="6" rx="3" fill="#ffffff" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // -------- Initial states --------
+      gsap.set('#fulcrum',      { scaleY: 0, opacity: 0, transformOrigin: '50% 100%' });
+      gsap.set('#bar',          { scaleX: 0, opacity: 0 });
+      gsap.set('#plate-weight', { scale: 0, opacity: 0, x: 0, rotation: 0 });
+      gsap.set('#plate-right',  { scale: 0, opacity: 0 });
+      gsap.set('#planning-grid', { scale: 0, opacity: 0 });
+      gsap.set('#weight-glow',  { opacity: 0, scale: 0.6 });
+      gsap.set('#rig',          { rotation: 0 });
+
+      // -------- Phase 1: Fulcrum + bar build (0.0 - 1.0s) --------
+      tl.to('#fulcrum',
+        { scaleY: 1, opacity: 1, duration: 0.42, ease: 'back.out(1.6)' },
+        0.15
+      );
+      tl.to('#bar',
+        { scaleX: 1, opacity: 1, duration: 0.55, ease: 'power3.out' },
+        0.40
+      );
+
+      // -------- Phase 2: Weight plate pops in at CENTER of bar (1.00 - 1.55s) --------
+      tl.to('#plate-weight',
+        { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(2.0)' },
+        1.00
+      );
+
+      // -------- Phase 3: Weight rolls LEFT along the bar (1.85 - 2.85s) --------
+      // Translation and rotation share the same ease so they read as ONE rolling motion.
+      // 540px travel at r=160 ≈ 0.54 revolutions physically; rounded to a full -360°
+      // so the "14 HRS" text lands upright at the left end.
+      tl.to('#plate-weight',
+        { x: -540, rotation: -360, duration: 1.00, ease: 'power1.in' },
+        1.85
+      );
+
+      // -------- Phase 4: Bar tilts LEFT-DOWN as weight arrives (2.55 - 3.45s) --------
+      // Overlaps with end of roll for connected gravity feel
+      tl.to('#rig',
+        { rotation: -10, duration: 0.90, ease: 'power2.in' },
+        2.55
+      );
+
+      // -------- Phase 5: Hold left-down state (3.45 - 4.00s) --------
+      // (No tween — just the hold)
+
+      // -------- Phase 6: Planning content enters right plate (4.00 - 4.85s) --------
+      tl.to('#plate-right',
+        { scale: 1, opacity: 1, duration: 0.55, ease: 'back.out(2.0)' },
+        4.00
+      );
+      tl.to('#planning-grid',
+        { scale: 1, opacity: 1, duration: 0.50, ease: 'back.out(1.8)' },
+        4.30
+      );
+
+      // -------- Phase 7: Bar tilts to RIGHT-DOWN — LEVERAGE moment (4.95 - 6.35s) --------
+      // -10° → +12° = 22° swing; power2.inOut feels weighted
+      tl.to('#rig',
+        { rotation: 12, duration: 1.40, ease: 'power2.inOut' },
+        4.95
+      );
+
+      // -------- Phase 8: Glow halo on lifted weight plate (6.20 - 7.20s) --------
+      tl.to('#weight-glow',
+        { opacity: 1, scale: 1, duration: 0.50, ease: 'power2.out' },
+        6.20
+      );
+      tl.to('#weight-glow',
+        { opacity: 0.35, scale: 0.95, duration: 0.50, ease: 'power2.inOut' },
+        6.70
+      );
+
+      // -------- Phase 9: "14" emphasis pulse (6.55s) --------
+      tl.to('#num-14',
+        { scale: 1.08, duration: 0.20, ease: 'power2.out', yoyo: true, repeat: 1 },
+        6.55
+      );
+
+      // -------- Phase 10: Hold tilted state through 8.0s --------
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

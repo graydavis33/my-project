@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 940" width="700" height="940" fill="none">
+  <defs>
+    <style>
+      .skin { fill: white; stroke: #161616; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+      .hair { fill: #161616; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+      .line { fill: none; stroke: #161616; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+      .thin { fill: none; stroke: #161616; stroke-width: 7; stroke-linecap: round; }
+      .eye  { fill: #161616; }
+      .shirt { fill: white; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- bald round head -->
+  <ellipse class="skin" cx="415" cy="290" rx="148" ry="160" />
+  <!-- subtle scalp shading line (skullcap suggestion) -->
+  <path class="thin" d="M 290 230 Q 415 195 540 235" />
+  <!-- ears both sides -->
+  <path class="line" d="M 275 290 Q 250 290 250 325 Q 250 365 280 365" />
+  <path class="line" d="M 555 290 Q 580 290 580 325 Q 580 365 550 365" />
+  <!-- eyebrows (raised, knowing) -->
+  <path class="line" d="M 340 230 Q 375 215 405 228" />
+  <path class="line" d="M 425 228 Q 455 215 490 230" />
+  <!-- eyes -->
+  <ellipse class="eye" cx="370" cy="290" rx="11" ry="14" />
+  <ellipse class="eye" cx="460" cy="290" rx="11" ry="14" />
+  <!-- nose -->
+  <path class="line" d="M 415 320 Q 415 355 428 368" />
+  <!-- smug smirk (one corner raised) -->
+  <path class="line" d="M 360 395 Q 410 415 470 385" />
+  <!-- neck -->
+  <path class="line" d="M 380 445 L 380 490" />
+  <path class="line" d="M 450 445 L 450 490" />
+  <!-- shirt collar + shoulders -->
+  <path class="shirt" d="M 195 740 Q 220 545 380 488 L 450 488 Q 610 545 635 740 L 635 940 L 195 940 Z" />
+  <!-- V-collar -->
+  <path class="line" d="M 380 488 L 415 555 L 450 488" />
+  <!-- crossed arms -->
+  <path class="shirt" d="M 200 740 Q 280 720 380 770 Q 480 720 580 740 L 600 800 Q 480 780 380 825 Q 280 780 200 800 Z" />
+  <path class="thin" d="M 295 760 Q 380 790 470 760" />
+
+</svg>

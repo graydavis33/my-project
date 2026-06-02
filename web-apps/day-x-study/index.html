@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day-X Series Study Library — Graydient Media</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --bg-elev: #181c24;
+    --bg-elev-2: #1f2532;
+    --border: #2a3142;
+    --border-hi: #3a4254;
+    --text: #e8eaed;
+    --text-dim: #9aa0a6;
+    --text-faint: #6b7280;
+    --accent: #f28129;
+    --accent-glow: rgba(242, 129, 41, 0.15);
+    --tag-true: #00d97e;
+    --tag-serialized: #4d9fff;
+    --tag-daily: #ffb547;
+    --tag-ditl: #b58cff;
+    --tag-short: #ff5cb4;
+    --good: #2ECC71;
+    --warn: #ffb547;
+    --bad: #ff5555;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    padding: 40px 32px 80px;
+    max-width: 1480px;
+    margin: 0 auto;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  h1 .accent { color: var(--accent); }
+  .meta {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-family: "JetBrains Mono", "Consolas", monospace;
+  }
+  .meta a { color: var(--text-dim); text-decoration: underline; text-decoration-color: var(--border-hi); }
+  .meta a:hover { color: var(--accent); }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: -0.01em;
+  }
+  h2 .num {
+    color: var(--accent);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+    margin-right: 8px;
+  }
+
+  h3 { font-size: 17px; font-weight: 700; margin: 24px 0 10px; letter-spacing: -0.005em; }
+  h4 { font-size: 14px; font-weight: 600; margin: 16px 0 6px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  p { margin-bottom: 12px; color: var(--text); }
+  p.dim { color: var(--text-dim); font-size: 14px; }
+
+  .intro {
+    background: linear-gradient(180deg, var(--bg-elev) 0%, var(--bg-elev-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 36px;
+  }
+  .intro p:last-child { margin-bottom: 0; }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: "JetBrains Mono", monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .tag-true { background: rgba(0, 217, 126, 0.15); color: var(--tag-true); border: 1px solid rgba(0, 217, 126, 0.35); }
+  .tag-serialized { background: rgba(77, 159, 255, 0.15); color: var(--tag-serialized); border: 1px solid rgba(77, 159, 255, 0.35); }
+  .tag-daily { background: rgba(255, 181, 71, 0.15); color: var(--tag-daily); border: 1px solid rgba(255, 181, 71, 0.35); }
+  .tag-ditl { background: rgba(181, 140, 255, 0.15); color: var(--tag-ditl); border: 1px solid rgba(181, 140, 255, 0.35); }
+  .tag-short {
+    background: rgba(255, 92, 180, 0.15);
+    color: var(--tag-short);
+    border: 1px solid rgba(255, 92, 180, 0.35);
+  }
+  .tag-long {
+    background: rgba(154, 160, 166, 0.12);
+    color: var(--text-dim);
+    border: 1px solid var(--border-hi);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0 28px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .matrix-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 36px;
+  }
+  table.matrix {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.matrix th, table.matrix td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.matrix th {
+    background: var(--bg-elev-2);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky;
+    top: 0;
+  }
+  table.matrix tbody tr:hover { background: var(--bg-elev); }
+  table.matrix td:first-child { font-weight: 600; }
+  table.matrix tr.is-short { background: rgba(255, 92, 180, 0.03); }
+  table.matrix tr.is-short:hover { background: rgba(255, 92, 180, 0.07); }
+
+  .dots {
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border-hi);
+  }
+  .dot.on { background: var(--accent); }
+  .dot.on-good { background: var(--good); }
+  .dot.on-bad { background: var(--bad); }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.18s, transform 0.18s;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .card.is-short { border-color: rgba(255, 92, 180, 0.35); }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .card-thumb {
+    aspect-ratio: 16 / 9;
+    background: var(--bg-elev-2);
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .card-thumb-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-faint);
+    font-size: 13px;
+    font-family: "JetBrains Mono", monospace;
+    flex-direction: column;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--bg-elev-2) 0%, var(--bg-elev) 100%);
+  }
+  .card-thumb-placeholder .ph-icon {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    opacity: 0.7;
+  }
+  .play-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    padding: 4px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 600;
+  }
+  .card-num {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.7);
+    color: var(--accent);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+  }
+  .short-pill {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: "JetBrains Mono", monospace;
+    letter-spacing: 0.04em;
+    background: rgba(255, 92, 180, 0.85);
+    color: white;
+    text-transform: uppercase;
+  }
+  .card-body {
+    padding: 18px 20px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .card-title a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .card-title a:hover { color: var(--accent); }
+  .card-industry {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .card-meta-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 14px;
+    margin: 12px 0 14px;
+    padding: 12px 14px;
+    background: var(--bg-elev-2);
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .card-meta-row .k { color: var(--text-dim); font-family: "JetBrains Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .card-meta-row .v { color: var(--text); }
+
+  .card-section { margin-top: 14px; }
+  .card-section h5 {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .card-section p {
+    font-size: 13.5px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .steal-box {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: rgba(242, 129, 41, 0.08);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+  }
+  .steal-box h5 {
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .steal-box ul {
+    list-style: none;
+    padding-left: 0;
+    font-size: 13px;
+  }
+  .steal-box li {
+    padding: 3px 0;
+    color: var(--text);
+  }
+  .steal-box li::before {
+    content: "→ ";
+    color: var(--accent);
+    margin-right: 4px;
+  }
+
+  .synth-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 18px;
+    margin: 24px 0;
+  }
+  .synth-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+  }
+  .synth-card h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: var(--accent);
+  }
+  .synth-card p, .synth-card li { font-size: 13.5px; }
+  .synth-card ul, .synth-card ol { padding-left: 20px; }
+  .synth-card li { padding: 3px 0; }
+
+  .action-list {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin: 20px 0 40px;
+  }
+  .action-list h3 { margin-top: 0; }
+  .action-list ol { padding-left: 22px; }
+  .action-list li { padding: 6px 0; font-size: 14px; }
+
+  .sources {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .sources h4 { color: var(--text-dim); margin-bottom: 10px; }
+  .sources ul { list-style: none; padding-left: 0; columns: 2; column-gap: 24px; }
+  .sources li { padding: 3px 0; }
+  .sources a { color: var(--text-dim); text-decoration: underline; text-decoration-color: var(--border-hi); }
+  .sources a:hover { color: var(--accent); }
+
+  nav.toc {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    font-size: 13px;
+    font-family: "JetBrains Mono", monospace;
+  }
+  nav.toc a {
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  nav.toc a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 24px 16px 60px; }
+    h1 { font-size: 22px; }
+    .cards { grid-template-columns: 1fr; }
+    .sources ul { columns: 1; }
+  }
+
+  @media print {
+    body { background: white; color: black; padding: 20px; max-width: 100%; }
+    .card, .synth-card, .action-list, .intro, .matrix-wrap {
+      background: white;
+      border: 1px solid #ccc;
+      page-break-inside: avoid;
+    }
+    .card-thumb { background-color: #f0f0f0; }
+    nav.toc, .card-thumb { display: none; }
+    a { color: black; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Day-X Series <span class="accent">Study Library</span></h1>
+  <div class="meta">
+    For: <strong>Graydient Media</strong> — Format B "Day X of being a creative director for a 21-year-old CEO in NYC"
+    &nbsp;·&nbsp; Compiled: 2026-05-25 (v2 — short-form weighted)
+    &nbsp;·&nbsp; <a href="../../../My%20Drive/Obsidian/Graydient%20Media/Content/Graydient%20Media/content-formats/day-x-series-reference-library.md">Source MD</a>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#intro">How to use</a>
+  <a href="#matrix">Comparison Matrix</a>
+  <a href="#cards">10 Series Deep-Dive</a>
+  <a href="#synthesis">Cross-Series Synthesis</a>
+  <a href="#actions">Action Items</a>
+</nav>
+
+<section id="intro" class="intro">
+  <p><strong>What this is.</strong> 10 references to study before locking the Day-X format for Graydient Media. <strong>5 are short-form</strong> (closest to your 45s budget — sub-90s vertical) and <strong>5 are long-form</strong> (held for principle-stealing on persistent counters, recurring closes, music-led cutting, breathing shots, emotional arc).</p>
+  <p><strong>Ordered by relevance to your format</strong> — card #01 is the closest fit (runtime + niche + scripted-cinematic register), each subsequent card adds one stolen principle.</p>
+  <p><strong>Format tags.</strong> Pink badge = SHORT-FORM (under 90s, vertical). Plus the category tag for structural classification:</p>
+  <div class="legend">
+    <div class="legend-item"><span class="tag tag-short">SHORT</span> Under 90s, vertical</div>
+    <div class="legend-item"><span class="tag tag-true">TRUE Day-X</span> Title includes literal "Day [N]"</div>
+    <div class="legend-item"><span class="tag tag-serialized">Serialized Challenge</span> "30 days of X" framing</div>
+    <div class="legend-item"><span class="tag tag-daily">Daily, No Counter</span> Daily cadence, no day-number in title</div>
+    <div class="legend-item"><span class="tag tag-ditl">Day in the Life</span> Recurring DITL, not serialized</div>
+  </div>
+</section>
+
+<h2 id="matrix"><span class="num">01</span>Comparison Matrix</h2>
+<p class="dim">Rows tinted pink = short-form (closest runtime match). B-roll density and edit-pace dots: <span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span> means 3/5.</p>
+<div class="matrix-wrap">
+<table class="matrix">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Series</th>
+      <th>Form</th>
+      <th>Category</th>
+      <th>Runtime</th>
+      <th>Opener</th>
+      <th>B-roll</th>
+      <th>Edit pace</th>
+      <th>Music role</th>
+      <th>On-screen text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="is-short">
+      <td>1</td><td>Erika Kullberg</td>
+      <td><span class="tag tag-short">SHORT</span></td>
+      <td><span class="tag tag-daily">DAILY</span></td>
+      <td><strong>30–60s</strong></td><td>Scene-staged mistake</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span></div></td>
+      <td>Light underscore</td>
+      <td>Heavy supers</td>
+    </tr>
+    <tr class="is-short">
+      <td>2</td><td>Daniel Schiffer</td>
+      <td><span class="tag tag-short">SHORT</span></td>
+      <td><span class="tag tag-daily">DAILY</span></td>
+      <td><strong>15–60s</strong></td><td>Cold-open hero shot</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div></td>
+      <td>Beat-matched cuts</td>
+      <td>Tasteful sans-serif</td>
+    </tr>
+    <tr>
+      <td>3</td><td>Matt D'Avella</td>
+      <td><span class="tag tag-long">LONG</span></td>
+      <td><span class="tag tag-serialized">SERIALIZED</span></td>
+      <td>8–14 min</td><td>Direct thesis statement</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div></td>
+      <td>Ambient</td>
+      <td>Tasteful sans-serif</td>
+    </tr>
+    <tr class="is-short">
+      <td>4</td><td>Salary Transparent Street</td>
+      <td><span class="tag tag-short">SHORT</span></td>
+      <td><span class="tag tag-daily">DAILY</span></td>
+      <td><strong>20–60s</strong></td><td>Stranger-stop hook</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div></td>
+      <td>None / ambient</td>
+      <td>Hard-coded salary super</td>
+    </tr>
+    <tr>
+      <td>5</td><td>Ryan Trahan</td>
+      <td><span class="tag tag-long">LONG</span></td>
+      <td><span class="tag tag-true">TRUE</span></td>
+      <td>18–30 min</td><td>Cold-open visual + spoken Day-count</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span></div></td>
+      <td>Drives everything</td>
+      <td>Persistent counters + pop-ups</td>
+    </tr>
+    <tr class="is-short">
+      <td>6</td><td>Justin Welsh</td>
+      <td><span class="tag tag-short">SHORT</span></td>
+      <td><span class="tag tag-daily">DAILY</span></td>
+      <td><strong>30–90s</strong></td><td>Direct one-line thesis</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div></td>
+      <td>None / underscore</td>
+      <td>Heavy captions + key-term highlights</td>
+    </tr>
+    <tr>
+      <td>7</td><td>Sam Sulek</td>
+      <td><span class="tag tag-long">LONG</span></td>
+      <td><span class="tag tag-true">TRUE</span></td>
+      <td>20–40 min</td><td>Car-talk, no hook</td>
+      <td><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></td>
+      <td><div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></td>
+      <td>None</td>
+      <td>NONE — zero</td>
+    </tr>
+    <tr>
+      <td>8</td><td>Casey Neistat</td>
+      <td><span class="tag tag-long">LONG</span></td>
+      <td><span class="tag tag-true">TRUE</span></td>
+      <td>8–15 min</td><td>Music drop + NYC visual</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div></td>
+      <td>Leads cuts</td>
+      <td>Minimal, hand-drawn</td>
+    </tr>
+    <tr class="is-short">
+      <td>9</td><td>Codie Sanchez</td>
+      <td><span class="tag tag-short">SHORT</span></td>
+      <td><span class="tag tag-daily">DAILY</span></td>
+      <td><strong>30–75s</strong></td><td>Contrarian one-liner hook</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="dot"></span></div></td>
+      <td>Punchy underscore</td>
+      <td>Heavy supers + B-roll insert text</td>
+    </tr>
+    <tr class="is-short">
+      <td>10</td><td>BistroHuddy (Drew Talbert)</td>
+      <td><span class="tag tag-short">SHORT</span></td>
+      <td><span class="tag tag-ditl">DITL</span></td>
+      <td><strong>30–90s</strong></td><td>Cold-open in character</td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></td>
+      <td><div class="dots"><span class="dot on"></span><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></td>
+      <td>None</td>
+      <td>None</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="cards"><span class="num">02</span>10 Series Deep-Dive</h2>
+
+<div class="cards">
+
+  <!-- 1. Erika Kullberg (kept, moved to #1 — closest runtime match) -->
+  <article class="card is-short">
+    <a href="https://www.youtube.com/@Erika2/shorts" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb card-thumb-placeholder">
+        <div class="card-num">01</div>
+        <span class="short-pill">SHORT</span>
+        <div class="ph-icon">$</div>
+        <div>Daily Money Shorts</div>
+        <div class="play-badge">▶ Channel · @Erika2/shorts</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.youtube.com/@Erika2/shorts" target="_blank">Erika Kullberg</a></div>
+        <span class="tag tag-daily">DAILY</span>
+      </div>
+      <div class="card-industry">Personal finance · 21M+ followers cross-platform · ★ closest runtime match</div>
+      <div class="card-meta-row">
+        <span class="k">Peak Short</span><span class="v">Negotiate medical bills → 4.1M views</span>
+        <span class="k">Runtime</span><span class="v"><strong>30–60 sec — exact match to your 45s</strong></span>
+        <span class="k">Format</span><span class="v">4-beat scripted scene</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Scripted scene-staging — she plays both characters (the regular person AND Erika). Cold-opens on the relatable money mistake, then "Erika appears" to teach.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Locked-off vertical 9:16. Studio backdrop. Multiple wardrobe changes for scene shifts. Bright key lighting. Tight insert shots (contracts, phone screens, dollar amounts). Heavy text supers, every term highlighted. Sub-second cuts.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>Frustration → relief (Erika teaches) → empowerment. Ends with recurring catchphrase: "Who taught you this? Erica did."</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>Sub-second cuts to maintain attention in &lt;60s budget</li>
+          <li>Heavy captions/text supers — every key term highlighted</li>
+          <li>★ Recurring close-tag as catchphrase — you have "Day X+7 in a week"; consider a second visual stinger</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2. Daniel Schiffer (NEW — videographer/filmmaker short-form) -->
+  <article class="card is-short">
+    <a href="https://www.youtube.com/@danielschiffer" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb card-thumb-placeholder">
+        <div class="card-num">02</div>
+        <span class="short-pill">SHORT</span>
+        <div class="ph-icon">🎬</div>
+        <div>Filmmaking Shorts</div>
+        <div class="play-badge">▶ Channel · @danielschiffer</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.youtube.com/@danielschiffer" target="_blank">Daniel Schiffer</a></div>
+        <span class="tag tag-daily">DAILY</span>
+      </div>
+      <div class="card-industry">Filmmaker · Videography craft · 2.3M+ subs · ★ closest niche match</div>
+      <div class="card-meta-row">
+        <span class="k">Format</span><span class="v">15-30 second filmmaking clips</span>
+        <span class="k">Runtime</span><span class="v"><strong>15–60 sec — directly relevant</strong></span>
+        <span class="k">Style</span><span class="v">Cinematic product / film B-roll demos</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Cold-opens on a hero shot — usually a beautifully lit object (pizza, watch, perfume bottle, glass of water) at the moment of maximum visual interest. Caption-only intro: a single text super naming the technique.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Cinematic on a budget — that's his entire brand. Practical lighting (window + bounce, single key + flag). Mostly handheld with subtle stabilization. Heavy use of macro lens and shallow DOF. Bright clean grade (no heavy LUT — natural color treatment).</p>
+      </div>
+      <div class="card-section">
+        <h5>Effects, timing, music</h5>
+        <p>Music almost always drives the cut — beat-matched edits, often a single track per video without multiple drops. Sub-1.5-second cuts. Sound design layered (foley on every move, whoosh on transitions). One signature move per video — a whip pan, a focus pull, a speed ramp — that the viewer immediately wants to try.</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Cinematic-on-budget aesthetic — proves you don't need rental-house gear to look pro</li>
+          <li>"One signature move per video" — bake one transition / shot / move into each Day-X that other videographers will want to copy</li>
+          <li>Bright clean grade over heavy LUT — reads more polished and modern, less "creator preset"</li>
+          <li>Sound design on every move — way more impactful than music alone</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 3. Matt D'Avella (kept — visual register) -->
+  <article class="card">
+    <a href="https://www.youtube.com/watch?v=_hbRvKhL4LA" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb" style="background-image: url('thumbnails/_hbRvKhL4LA.jpg');">
+        <div class="card-num">03</div>
+        <div class="play-badge">▶ I timed everything for 30 days</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.youtube.com/channel/UCJ24N4O0bP7LGLBDvye7oCA" target="_blank">Matt D'Avella</a></div>
+        <span class="tag tag-serialized">SERIALIZED</span>
+      </div>
+      <div class="card-industry">Minimalism · Lifestyle design · ~3.7M subs · ★ visual register match for "creative director" credibility</div>
+      <div class="card-meta-row">
+        <span class="k">Series</span><span class="v">30 Day Experiments playlist</span>
+        <span class="k">Runtime</span><span class="v">8–14 min (long-form, held for visual principle)</span>
+        <span class="k">Format</span><span class="v">4-beat doc essay</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Direct talking-head with thesis statement: "I just spent 30 days doing X. Here's what happened." Crystal-clear payoff in 5s.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Cinematic minimalism. Slightly desaturated grade. Symmetrical framing. Negative space. Every B-roll shot set up like a photograph. Tasteful sans-serif text supers. NO unnecessary motion graphics.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>Curiosity → struggle → insight → reframe. The "reframe" beat at the end is what makes it rewatchable.</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Closest visual register for "creative director" credibility</li>
+          <li>Composed B-roll over run-and-gun — every shot intentional</li>
+          <li>Slightly desaturated grade reads more "intentional" than YouTube-pop saturation</li>
+          <li>Reframe-beat at close (your Day 1 → Day X reflection)</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 4. Salary Transparent Street (NEW — NYC vertical scripted recurring) -->
+  <article class="card is-short">
+    <a href="https://www.salarytransparentstreet.com/" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb card-thumb-placeholder">
+        <div class="card-num">04</div>
+        <span class="short-pill">SHORT</span>
+        <div class="ph-icon">STS</div>
+        <div>Street-Interview Vertical</div>
+        <div class="play-badge">▶ salarytransparentstreet.com</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.salarytransparentstreet.com/" target="_blank">Salary Transparent Street</a></div>
+        <span class="tag tag-daily">DAILY</span>
+      </div>
+      <div class="card-industry">Career / pay transparency · Hannah Williams · 2.8M+ followers · ★ NYC vertical scripted-recurring</div>
+      <div class="card-meta-row">
+        <span class="k">Origin</span><span class="v">Solo NYC street-interview format, $1M+/yr revenue</span>
+        <span class="k">Runtime</span><span class="v"><strong>20–60 sec, vertical</strong></span>
+        <span class="k">Format</span><span class="v">Same opener every episode — stop a stranger, ask 3 questions</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Same hook every episode: "Excuse me, can I ask you what you do for work and how much you make?" + handheld vertical approach. The opener IS the show — viewers know exactly what they're getting in 2 seconds.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Handheld phone or small camera, vertical 9:16, single take. NYC street setting visible (architecture, foot traffic). No B-roll. The stranger and their answer ARE the visual. Hard-coded salary super appears with reveal beat.</p>
+      </div>
+      <div class="card-section">
+        <h5>Effects, timing, music</h5>
+        <p>NO music. Just ambient street sound. Sub-1-second cuts where the conversation has dead air. Number reveal appears with a single graphic super — no fancy animation.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>Curiosity (who is this stranger?) → setup (what do they do?) → reveal (how much?) → reaction (is it more or less than I'd guess?). Same arc every episode — viewers WANT the predictability.</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Same exact opener every episode — viewers reward predictability, not novelty</li>
+          <li>Vertical handheld with location in frame — your NYC location is your asset, show it</li>
+          <li>Hard-coded reveal super — the dollar number on screen DOES the emotional payoff</li>
+          <li>No music sometimes beats music — ambient sound + a tight reveal can hit harder than a track</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 5. Ryan Trahan (kept — TRUE Day-X mechanics) -->
+  <article class="card">
+    <a href="https://www.youtube.com/watch?v=tgoRqkvFnrw" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb" style="background-image: url('thumbnails/tgoRqkvFnrw.jpg');">
+        <div class="card-num">05</div>
+        <div class="play-badge">▶ Day 19 of Penny Series</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.youtube.com/@ryan" target="_blank">Ryan Trahan</a></div>
+        <span class="tag tag-true">TRUE</span>
+      </div>
+      <div class="card-industry">Challenge / Journey storytelling · ~18M subs · ★ Day-X format mechanics</div>
+      <div class="card-meta-row">
+        <span class="k">Series</span><span class="v">Penny Series — 30 videos, ~253M views in June 2022</span>
+        <span class="k">Runtime</span><span class="v">18–30 min (long-form, held for format mechanics)</span>
+        <span class="k">Format</span><span class="v">Single-thread story arc per episode</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Cold-open on tense visual (Ryan stranded, deal-making) → talks to camera with Day-count + dollar amount + day's mission. ~12-18s.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Cinematic multi-cam (DSLR + drone + GoPro). Warm cinematic LUT. Cuts every 1–3s. Constant on-screen money counter, day number, animated dollar amounts. Cash-register SFX on transactions.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>Hope → tension → triumph or defeat → cliffhanger. Complete mini-arc + setup for next day.</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Persistent on-screen DAY + dollar counter ("$6,500/mo locked")</li>
+          <li>Cliffhanger / open-loop close into next day</li>
+          <li>Cold-open on tense visual before any spoken word</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 6. Justin Welsh (NEW — solopreneur daily shorts) -->
+  <article class="card is-short">
+    <a href="https://www.youtube.com/shorts/vtiPgndxv7E" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb" style="background-image: url('thumbnails/vtiPgndxv7E.jpg');">
+        <div class="card-num">06</div>
+        <span class="short-pill">SHORT</span>
+        <div class="play-badge">▶ "This is the New Career Path"</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.linkedin.com/in/justinwelsh" target="_blank">Justin Welsh</a></div>
+        <span class="tag tag-daily">DAILY</span>
+      </div>
+      <div class="card-industry">Solopreneur · $10M+ one-person business · ★ role-evolution match for Gray as creative director</div>
+      <div class="card-meta-row">
+        <span class="k">Engine</span><span class="v">Batch-writes weekly content at 4 AM, posts daily</span>
+        <span class="k">Runtime</span><span class="v"><strong>30–90 sec talking-head Shorts</strong></span>
+        <span class="k">Format</span><span class="v">One thesis per Short, packaged as advice</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Direct one-line thesis statement to camera, no setup, no greeting. "Most people misunderstand what solopreneur means." The thesis itself is the hook.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Locked-off talking head, vertical, clean office or living room background. Minimal B-roll (occasional cut to laptop / pen / notebook for emphasis). Bright key + soft fill — flat, friendly lighting.</p>
+      </div>
+      <div class="card-section">
+        <h5>Effects, timing, music</h5>
+        <p>Heavy auto-captions with each key word/phrase highlighted in colored boxes. Cuts every 2-3 seconds (often jump-cuts on his face to compress). Light ambient music underscore — never drives. The talking is the show.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>Provocation (the thesis) → evidence (one short example) → reframe (here's how to think about it instead). Argument format compressed to 60 seconds.</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Batch-writing model — Justin writes a week of content in one focused session, not daily</li>
+          <li>Auto-captions with key terms highlighted in colored boxes (more eye-pulling than plain captions)</li>
+          <li>Solopreneur framing — Gray IS becoming a solopreneur+creative-director hybrid, this voice transfers</li>
+          <li>One thesis per video — don't try to teach 3 things, teach 1 thing well</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 7. Sam Sulek (kept — TRUE Day-X scale proof) -->
+  <article class="card">
+    <a href="https://www.youtube.com/watch?v=o_lrEqfHTuU" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb" style="background-image: url('thumbnails/o_lrEqfHTuU.jpg');">
+        <div class="card-num">07</div>
+        <div class="play-badge">▶ Spring Bulk Day 1 - Legs</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.youtube.com/@sam_sulek" target="_blank">Sam Sulek</a></div>
+        <span class="tag tag-true">TRUE</span>
+      </div>
+      <div class="card-industry">Fitness · Bodybuilding · 3M+ subs (grew 8K → 2.26M in one year) · ★ Day-X format SCALE proof</div>
+      <div class="card-meta-row">
+        <span class="k">Series</span><span class="v">Spring Bulk Day 1 → Day 200+ (still going)</span>
+        <span class="k">Runtime</span><span class="v">20–40 min (long-form, held for scale-proof)</span>
+        <span class="k">Format</span><span class="v">Car talk → workout → post-workout car talk</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Sits in car. Talks mid-thought. No music, no hook, no edit. The OPPOSITE of a hook-led opener — and it works.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Phone-camera. Locked-off in car. Handheld at gym. ZERO color grade. NO inserts, NO music, NO captions, NO graphics. Radical raw-ness is the brand thesis.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>None constructed. Hangout vibes. Viewer = "gym bro you're hanging with."</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Proof the literal "Day [N]" format scales to 200+ episodes without viewer fatigue</li>
+          <li>The deeper lesson: trust your audience to stay even without packaging tricks IF the content is genuinely valuable</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 8. Casey Neistat (kept — NYC daily vlog principle) -->
+  <article class="card">
+    <a href="https://www.youtube.com/watch?v=qRv7G7WpOoU" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb" style="background-image: url('thumbnails/qRv7G7WpOoU.jpg');">
+        <div class="card-num">08</div>
+        <div class="play-badge">▶ Snowboarding with the NYPD</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.youtube.com/user/caseyneistat" target="_blank">Casey Neistat</a></div>
+        <span class="tag tag-true">TRUE</span>
+      </div>
+      <div class="card-industry">Lifestyle · NYC creator · ~12M subs · ★ NYC daily vlog OG, principle reference</div>
+      <div class="card-meta-row">
+        <span class="k">Series</span><span class="v">Daily vlog (2015–2018) — 800 consecutive days</span>
+        <span class="k">Peak video</span><span class="v">Snowboarding with the NYPD → 6.5M views in 24h</span>
+        <span class="k">Runtime</span><span class="v">8–15 min (long-form, held for music-led editing principle)</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Cold-open on striking NYC visual + music drop. Spoken intro hits at 5–10s in. No "Hey guys."</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Defined the cinematic-vlog genre. Wide-angle (fisheye) lens. Stabilized walking shots. Heavy time-lapse. Drone aerials. B-roll always motivated by story, never filler. Minimal text — hand-drawn arrows occasionally.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>Day-of-life narrative. Opens with energy, mid-day tension/work, closes on a quiet music beat — NOT a cliffhanger.</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Cold-open visual + music drop before any words</li>
+          <li>Wide-angle NYC establishing shots (your location IS your asset)</li>
+          <li>Music-led cutting — let the song dictate where cuts land</li>
+          <li>Speed-ramps on movement B-roll</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 9. Codie Sanchez (NEW — business short-form) -->
+  <article class="card is-short">
+    <a href="https://www.youtube.com/@CodieSanchezCT/videos" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb card-thumb-placeholder">
+        <div class="card-num">09</div>
+        <span class="short-pill">SHORT</span>
+        <div class="ph-icon">CS</div>
+        <div>Business Shorts</div>
+        <div class="play-badge">▶ Channel · @CodieSanchezCT</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.youtube.com/@CodieSanchezCT/videos" target="_blank">Codie Sanchez</a></div>
+        <span class="tag tag-daily">DAILY</span>
+      </div>
+      <div class="card-industry">Business / Contrarian Thinking · 2.1M+ subs · ★ Sai-adjacent founder universe</div>
+      <div class="card-meta-row">
+        <span class="k">Engine</span><span class="v">Daily-cadence Shorts + Reels on business ownership</span>
+        <span class="k">Runtime</span><span class="v"><strong>30–75 sec talking-head + B-roll</strong></span>
+        <span class="k">Format</span><span class="v">Contrarian-thesis hook → quick evidence → CTA</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Contrarian one-liner: "Stop trying to start a business. Buy one." Hook is the unconventional take itself — viewer keeps watching to find out why she's saying that.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Talking-head in styled professional setting (office, hotel suite, podcast booth). Tight insert B-roll of dollar amounts, contracts, news headlines. Color grade is bright + clean — looks like a finance-publication interview.</p>
+      </div>
+      <div class="card-section">
+        <h5>Effects, timing, music</h5>
+        <p>Punchy underscore music underneath, never overpowering. Captions throughout — every key business term highlighted in a contrasting color. Sub-2 second cuts. Frequent cuts to news-headline inserts to provide "source authority" feel.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>Provocation (contrarian thesis) → quick rationale → tactical takeaway. The "this is something most people don't tell you" frame is the emotional pull.</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Contrarian hook format — could the Day-X "biggest L" beat lean into contrarian craft takes? ("Most videographers won't show this...")</li>
+          <li>News-headline insert B-roll for source authority</li>
+          <li>Bright clean grade reads more "professional credibility" than warm cinematic</li>
+          <li>Closest Sai-adjacent founder voice template for short-form business content</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+  <!-- 10. BistroHuddy / Drew Talbert (NEW — serialized vertical comedy) -->
+  <article class="card is-short">
+    <a href="https://www.tiktok.com/@drew_talbert" target="_blank" rel="noopener" style="text-decoration:none;">
+      <div class="card-thumb card-thumb-placeholder">
+        <div class="card-num">10</div>
+        <span class="short-pill">SHORT</span>
+        <div class="ph-icon">BH</div>
+        <div>Serialized Vertical Comedy</div>
+        <div class="play-badge">▶ TikTok · @drew_talbert</div>
+      </div>
+    </a>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-title"><a href="https://www.tiktok.com/@drew_talbert" target="_blank">BistroHuddy / Drew Talbert</a></div>
+        <span class="tag tag-ditl">DITL</span>
+      </div>
+      <div class="card-industry">Comedy · Restaurant universe · 4.5M TikTok followers, 253M+ likes · ★ serialized vertical format scale proof</div>
+      <div class="card-meta-row">
+        <span class="k">Premise</span><span class="v">Fictional restaurant, single creator plays all roles</span>
+        <span class="k">Runtime</span><span class="v"><strong>30–90 sec, vertical</strong></span>
+        <span class="k">Format</span><span class="v">Serialized character continuity — viewers know all the regulars</span>
+      </div>
+      <div class="card-section">
+        <h5>Opener</h5>
+        <p>Cold-open in character — immediately in the scene as a server / customer / manager. Zero exposition. Existing viewers know the characters; new viewers get pulled in by the immediacy.</p>
+      </div>
+      <div class="card-section">
+        <h5>Visuals & B-roll</h5>
+        <p>Single-take vertical phone footage, costume changes between cuts to play different characters. No B-roll inserts, no graphics, no music — performance carries everything.</p>
+      </div>
+      <div class="card-section">
+        <h5>Effects, timing, music</h5>
+        <p>NONE. Zero graphics, zero text, zero music. The pure craft of character + timing + relatable workplace truth IS the show.</p>
+      </div>
+      <div class="card-section">
+        <h5>Emotional arc</h5>
+        <p>Setup (familiar restaurant moment) → escalation (something goes wrong) → punchline / awkward holds. Workplace comedy formula in 60 seconds.</p>
+      </div>
+      <div class="steal-box">
+        <h5>Steal for your format</h5>
+        <ul>
+          <li>★ Serialized character continuity — viewers come back because they want to see what "the regulars" do next. Your "regulars" = the CEO, the team, the recurring tools/locations.</li>
+          <li>Zero graphics CAN work — if the content + performance are strong enough, packaging is overhead</li>
+          <li>Cold-open in-scene with zero exposition — viewers reward immediacy over setup</li>
+          <li>Proof a single creator with phone + costumes can scale to 4.5M followers without any cinematic polish</li>
+        </ul>
+      </div>
+    </div>
+  </article>
+
+</div>
+
+<h2 id="synthesis"><span class="num">03</span>Cross-Series Synthesis</h2>
+
+<div class="synth-grid">
+
+  <div class="synth-card">
+    <h3>What ALL 10 share</h3>
+    <ol>
+      <li><strong>Cold-open before any spoken word.</strong> Even the lo-fi creators open mid-thought, never "Hey guys."</li>
+      <li><strong>Recurring close formula or repeat-engagement mechanic.</strong> Cliffhanger, catchphrase, character continuity, quiet reflection — all locked.</li>
+      <li><strong>Consistent visual identity.</strong> Color grade + framing rules don't change week-to-week. Viewers recognize the show in 2 seconds.</li>
+      <li><strong>One persistent on-screen or structural element.</strong> Day counter, money counter, captions, recurring character, scripted-scene format. Something that anchors the show.</li>
+    </ol>
+  </div>
+
+  <div class="synth-card">
+    <h3>What the 5 short-form picks teach</h3>
+    <ol>
+      <li><strong>Erika</strong> — sub-second cuts + heavy captioning + recurring catchphrase. Exact runtime match.</li>
+      <li><strong>Daniel Schiffer</strong> — cinematic-on-budget aesthetic + one signature move per video. Craft niche.</li>
+      <li><strong>Salary Transparent Street</strong> — same opener every episode + NYC location in frame + no music sometimes wins.</li>
+      <li><strong>Justin Welsh</strong> — batch-writing model + one thesis per video + colored-box keyword highlights.</li>
+      <li><strong>Codie Sanchez</strong> — contrarian hook + news-headline insert B-roll + bright clean grade.</li>
+      <li><strong>BistroHuddy</strong> — serialized character continuity + cold-open in-scene + proof zero graphics can scale.</li>
+    </ol>
+  </div>
+
+  <div class="synth-card">
+    <h3>What the 5 long-form picks teach</h3>
+    <ol>
+      <li><strong>Ryan Trahan</strong> — persistent day + dollar counter + cliffhanger close. Day-X format leader.</li>
+      <li><strong>Casey Neistat</strong> — cold-open + music drop + wide-angle NYC establishing shots.</li>
+      <li><strong>Matt D'Avella</strong> — composed B-roll + slightly desaturated grade + reframe-beat at close.</li>
+      <li><strong>Sam Sulek</strong> — proof literal "Day [N]" scales to 200+ episodes.</li>
+    </ol>
+    <p style="margin-top:10px;"><strong>Visual register target:</strong> Matt D'Avella + Daniel Schiffer hybrid — composed minimalism with cinematic-on-budget execution.</p>
+  </div>
+
+  <div class="synth-card">
+    <h3>What's MISSING from your Day 40 draft</h3>
+    <ol>
+      <li><strong>Persistent corner day counter</strong> throughout the video, not just opener. Ryan keeps "DAY 19" visible the whole video.</li>
+      <li><strong>Music-led cutting.</strong> Pick the track first, cut to its beats. Daniel Schiffer + Casey Neistat both lead this way.</li>
+      <li><strong>One signature move per video.</strong> A whip pan, a focus pull, a transition that other videographers want to copy. Daniel Schiffer's brand is built on this.</li>
+      <li><strong>A breathing shot.</strong> Pick one moment per week (the hero opener shot) and let it hold for 3–4 seconds, not the usual sub-2.</li>
+      <li><strong>Colored-box keyword highlights on captions.</strong> Plain captions vs colored-box-highlighted key terms = significant difference in eye-pull (Justin Welsh's edge).</li>
+    </ol>
+  </div>
+
+</div>
+
+<h2 id="actions"><span class="num">04</span>What to Test in Your First 3 Day-X Uploads</h2>
+
+<div class="action-list">
+  <h3>3 A/B variables, tested across Days 40, 41, 42 on Instagram Trial Reels</h3>
+  <ol>
+    <li><strong>Persistent corner DAY counter</strong> ("DAY 40" lower-left small, full duration) <em>vs</em> no counter</li>
+    <li><strong>Music-first edit</strong> (pick song, cut to beats) <em>vs</em> script-first edit (V/O drives cut)</li>
+    <li><strong>Cold-open hero shot held 3-4s</strong> <em>vs</em> current 5s opener with V/O over it from frame 1</li>
+  </ol>
+  <p style="margin-top:14px; padding: 12px 14px; background: var(--bg-elev-2); border-radius: 6px; font-size: 13.5px;"><strong>Lock the winner</strong> (highest 3-second hold-rate on Trial Reels) as your v2 baseline by Day 43. From there, every change is incremental, not foundational.</p>
+</div>
+
+<div class="sources">
+  <h4>Sources (verified 2026-05-25)</h4>
+  <ul>
+    <li><a href="https://www.youtube.com/@Erika2/shorts" target="_blank">Erika Kullberg — Shorts</a></li>
+    <li><a href="https://startupspells.com/p/exposing-erika-kullbergs-21-million-followers-growth-strategy" target="_blank">Erika Kullberg — Growth Strategy breakdown</a></li>
+    <li><a href="https://www.youtube.com/@danielschiffer" target="_blank">Daniel Schiffer — Channel</a></li>
+    <li><a href="https://www.storyblocks.com/resources/blog/daniel-schiffer-challenge" target="_blank">Daniel Schiffer — Storyblocks profile</a></li>
+    <li><a href="https://www.youtube.com/playlist?list=PLXKuahfdkl6zkBULJhEMNy_RnErOYXwJk" target="_blank">Matt D'Avella — 30 Day Experiments</a></li>
+    <li><a href="https://www.youtube.com/watch?v=_hbRvKhL4LA" target="_blank">Matt D'Avella — I timed everything</a></li>
+    <li><a href="https://www.salarytransparentstreet.com/" target="_blank">Salary Transparent Street</a></li>
+    <li><a href="https://www.cnbc.com/2024/01/12/hannah-williams-salary-transparent-street-tiktok-brought-in-1-million-dollars.html" target="_blank">Hannah Williams — CNBC profile</a></li>
+    <li><a href="https://vidiq.com/blog/post/ryan-trahan-penny-billion-youtube-views/" target="_blank">Ryan Trahan Penny Series — vidiq</a></li>
+    <li><a href="https://www.youtube.com/watch?v=tgoRqkvFnrw" target="_blank">Ryan Trahan — Penny Day 19</a></li>
+    <li><a href="https://www.justinwelsh.me/" target="_blank">Justin Welsh — Site</a></li>
+    <li><a href="https://www.youtube.com/shorts/vtiPgndxv7E" target="_blank">Justin Welsh — Career Path Short</a></li>
+    <li><a href="https://vidiq.com/blog/post/sam-sulek-breaks-youtube-rules-goes-viral/" target="_blank">Sam Sulek — vidiq breakdown</a></li>
+    <li><a href="https://www.youtube.com/watch?v=o_lrEqfHTuU" target="_blank">Sam Sulek — Spring Bulk Day 1</a></li>
+    <li><a href="https://en.wikipedia.org/wiki/Casey_Neistat" target="_blank">Casey Neistat — Wikipedia</a></li>
+    <li><a href="https://www.youtube.com/watch?v=qRv7G7WpOoU" target="_blank">Casey Neistat — Snowboarding NYPD</a></li>
+    <li><a href="https://www.youtube.com/@CodieSanchezCT/videos" target="_blank">Codie Sanchez — Channel</a></li>
+    <li><a href="https://www.nbcnews.com/tech/internet/bistro-huddy-one-tiktoks-favorite-restaurants-completely-made-rcna165801" target="_blank">BistroHuddy — NBC News profile</a></li>
+    <li><a href="https://www.tiktok.com/@drew_talbert" target="_blank">BistroHuddy / Drew Talbert — TikTok</a></li>
+  </ul>
+</div>
+
+</body>
+</html>

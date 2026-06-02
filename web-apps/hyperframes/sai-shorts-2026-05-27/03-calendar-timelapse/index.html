@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="en" data-composition-variables='[{"id":"year","type":"string","label":"Year label","default":"2026"},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"red","type":"color","label":"Header red","default":"#C8252C"},{"id":"paper","type":"color","label":"Paper color","default":"#FFFFFF"},{"id":"ink","type":"color","label":"Primary text (ink)","default":"#0A0A0A"},{"id":"inkSoft","type":"color","label":"Secondary text","default":"#6E6E6E"},{"id":"cardEnterTime","type":"number","label":"Calendar enters at (s)","default":0.0},{"id":"firstFlipTime","type":"number","label":"First tear (Jan→Feb) at (s)","default":0.35},{"id":"fastInterval","type":"number","label":"Interval between early tears (s)","default":0.22},{"id":"slowInterval","type":"number","label":"Interval between later tears (s)","default":0.34},{"id":"decemberHoldStart","type":"number","label":"December lands at (s)","default":2.80},{"id":"highlightTime","type":"number","label":"Orange accent on December at (s)","default":3.20},{"id":"tearDuration","type":"number","label":"Per-page tear duration (s)","default":0.70}]'>
+=======
+<html lang="en" data-composition-variables='[{"id":"year","type":"string","label":"Year label","default":"2026"},{"id":"endMonth","type":"string","label":"Highlight month (3-letter)","default":"APR"},{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Border stroke (px)","default":3},{"id":"cornerRadius","type":"number","label":"Tile corner radius (px)","default":24},{"id":"firstStepTime","type":"number","label":"First month activates at (s)","default":0.55},{"id":"stepInterval","type":"number","label":"Time between month activations (s)","default":0.45},{"id":"highlightHoldStart","type":"number","label":"April lands (orange-glass) at (s)","default":2.05}]'>
+>>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -20,6 +24,7 @@
         width: 100%;
         height: 100%;
         display: flex;
+<<<<<<< HEAD
         align-items: center;
         justify-content: center;
       }
@@ -209,11 +214,190 @@
         border-radius: 999px;
         box-shadow: 0 0 16px rgba(242, 129, 41, 0.6);
         opacity: 0;
+=======
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 220px 100px 0 100px;
+      }
+
+      /* === Year title — orange-glass slab on top === */
+      .year-title {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 900;
+        font-size: 130px;
+        letter-spacing: 0.02em;
+        color: var(--white);
+        text-align: center;
+        line-height: 1;
+        padding: 0 0 60px 0;
+        text-shadow:
+          0 0 24px rgba(242, 129, 41, 0.85),
+          0 0 60px rgba(242, 129, 41, 0.45),
+          0 4px 0 rgba(0, 0, 0, 0.25);
+        will-change: transform, opacity;
+      }
+
+      /* === Stepper: vertical column with month tiles ===
+         Pending tiles: outlined white at low opacity.
+         Completed tiles: outlined white at MID opacity + check overlay.
+         Highlight tile (final month): full orange-glass treatment. */
+      .stepper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+        width: 720px;
+      }
+
+      /* Vertical connector line down the middle, behind tiles.
+         Track is INVISIBLE — only the moving fill below shows the line's path. */
+      .connector {
+        position: absolute;
+        left: 50%;
+        top: 8px;
+        bottom: 8px;
+        width: 16px;
+        transform: translateX(-50%);
+        background: transparent;
+        border-radius: 999px;
+        z-index: 0;
+        overflow: hidden;
+      }
+      .connector-fill {
+        position: absolute;
+        left: 0; right: 0; top: 0;
+        height: 0%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 1) 0%,
+          rgba(255, 220, 180, 1) 70%,
+          rgba(255, 200, 130, 1) 100%
+        );
+        box-shadow:
+          0 0 32px rgba(255, 255, 255, 0.6),
+          0 0 64px rgba(242, 129, 41, 0.35);
+        border-radius: 999px;
+        transform-origin: top center;
+        will-change: height;
+      }
+
+      .step {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 152px;
+        z-index: 1;
+      }
+
+      /* Tile shared base */
+      .tile {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+        padding: 0 44px 0 56px;
+        border-style: solid;
+        border-color: rgba(255, 255, 255, 0.55);
+        background: rgba(255, 255, 255, 0.06);
+        will-change: transform, opacity;
+      }
+      .tile-month {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 64px;
+        letter-spacing: 0.04em;
+        color: var(--white);
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      }
+      .tile-icon {
+        width: 56px;
+        height: 56px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      /* Check mark drawn via two strokes */
+      .check {
+        width: 56px;
+        height: 56px;
+        opacity: 0;
+        will-change: opacity, transform;
+      }
+      .check svg {
+        width: 100%;
+        height: 100%;
+      }
+      .check path {
+        stroke: var(--white);
+        stroke-width: 7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+        stroke-dasharray: 80;
+        stroke-dashoffset: 80;
+      }
+
+      /* === Highlight tile (the final month — April) gets full orange-glass ===
+         Same gradient + bloom as the bank-vault composition. */
+      .tile.is-highlight {
+        background:
+          radial-gradient(
+            ellipse 100% 60% at 50% 0%,
+            rgba(255, 220, 180, 0.55) 0%,
+            rgba(255, 200, 150, 0.20) 35%,
+            rgba(255, 180, 120, 0.0) 65%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(255, 168, 88, 1) 0%,
+            rgba(242, 129, 41, 1) 35%,
+            rgba(214, 100, 22, 1) 100%
+          );
+        border-color: var(--white);
+      }
+      .tile.is-highlight .tile-month {
+        font-size: 76px;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.40);
+      }
+
+      /* Two-label stack on the highlight tile — APRIL cross-fades to TAX SEASON.
+         Grid trick: both labels share grid-cell 1/1 so the container sizes to
+         the wider label (TAX SEASON), and the cross-fade can run without layout shift. */
+      .label-stack {
+        position: relative;
+        display: grid;
+        align-items: center;
+      }
+      .stack-label {
+        grid-area: 1 / 1;
+        white-space: nowrap;
+        will-change: opacity, transform;
+      }
+
+      /* Star burst around the final month — sparkle on land */
+      .sparkle {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        background: var(--white);
+        border-radius: 50%;
+        box-shadow: 0 0 16px rgba(255, 255, 255, 0.85), 0 0 32px rgba(242, 129, 41, 0.7);
+        opacity: 0;
+        pointer-events: none;
+>>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         will-change: transform, opacity;
       }
     </style>
   </head>
   <body>
+<<<<<<< HEAD
     <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
       <div id="scene" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
         <div id="calendar" class="calendar">
@@ -225,6 +409,20 @@
             </div>
           </div>
         </div>
+=======
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <div id="year-title" class="year-title" data-layout-allow-overflow>2026</div>
+
+        <div id="stepper" class="stepper" data-layout-allow-overflow>
+          <div class="connector">
+            <div id="connector-fill" class="connector-fill"></div>
+          </div>
+          <!-- Step tiles injected by JS so order/highlight is data-driven -->
+        </div>
+
+>>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
       </div>
     </div>
 
@@ -232,6 +430,7 @@
       (function () {
         const vars = window.__hyperframes.getVariables();
 
+<<<<<<< HEAD
         // Theme tokens
         document.documentElement.style.setProperty("--paper", vars.paper);
         document.documentElement.style.setProperty("--ink", vars.ink);
@@ -369,6 +568,196 @@
           { scale: 1.0 },
           { scale: 1.06, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1 },
           vars.highlightTime
+=======
+        document.documentElement.style.setProperty("--white", vars.white);
+        document.documentElement.style.setProperty("--orange", vars.orange);
+
+        // Year title content
+        document.getElementById("year-title").textContent = vars.year;
+
+        // Months sequence — Jan through April (4 steps, lands on April)
+        const months = [
+          { short: "JAN", full: "JANUARY" },
+          { short: "FEB", full: "FEBRUARY" },
+          { short: "MAR", full: "MARCH" },
+          { short: "APR", full: "APRIL" },
+          { short: "MAY", full: "MAY" },
+          { short: "JUN", full: "JUNE" },
+          { short: "JUL", full: "JULY" },
+          { short: "AUG", full: "AUGUST" },
+          { short: "SEP", full: "SEPTEMBER" },
+          { short: "OCT", full: "OCTOBER" },
+          { short: "NOV", full: "NOVEMBER" },
+          { short: "DEC", full: "DECEMBER" },
+        ];
+        const endShort = (vars.endMonth || "APR").toUpperCase();
+        const endIdx = Math.max(0, months.findIndex(m => m.short === endShort));
+        const sequence = months.slice(0, endIdx + 1); // start from Jan, land on endMonth
+
+        // Build step tiles
+        const stepper = document.getElementById("stepper");
+        sequence.forEach(function (m, i) {
+          const isHighlight = i === sequence.length - 1;
+          const step = document.createElement("div");
+          step.className = "step";
+          step.id = "step-" + i;
+
+          const tile = document.createElement("div");
+          tile.className = "tile" + (isHighlight ? " is-highlight" : "");
+          tile.id = "tile-" + i;
+          tile.style.borderWidth = vars.strokeWidth + "px";
+          tile.style.borderRadius = vars.cornerRadius + "px";
+          tile.setAttribute("data-layout-allow-overflow", "");
+
+          let label;
+          if (isHighlight) {
+            // Stacked labels: "APRIL" (visible at land) -> "TAX SEASON" (cross-fades in after bounce)
+            label = document.createElement("div");
+            label.className = "tile-month label-stack";
+            const labelA = document.createElement("span");
+            labelA.className = "stack-label";
+            labelA.id = "label-month-" + i;
+            labelA.textContent = m.full;
+            label.appendChild(labelA);
+            const labelB = document.createElement("span");
+            labelB.className = "stack-label";
+            labelB.id = "label-swap-" + i;
+            labelB.textContent = "TAX SEASON";
+            labelB.style.opacity = "0";
+            label.appendChild(labelB);
+          } else {
+            label = document.createElement("div");
+            label.className = "tile-month";
+            label.textContent = m.full;
+          }
+          tile.appendChild(label);
+
+          // Non-highlight tiles get a check icon when they activate.
+          // Highlight tile (April → TAX SEASON) gets NO icon — text only.
+          if (!isHighlight) {
+            const iconWrap = document.createElement("div");
+            iconWrap.className = "tile-icon";
+            const check = document.createElement("div");
+            check.className = "check";
+            check.id = "check-" + i;
+            check.innerHTML = '<svg viewBox="0 0 64 64"><path d="M14 34 L28 48 L52 18" /></svg>';
+            iconWrap.appendChild(check);
+            tile.appendChild(iconWrap);
+          }
+
+          step.appendChild(tile);
+          stepper.appendChild(step);
+        });
+
+        // Glass box-shadow for the highlight tile
+        const highlightTile = stepper.querySelector(".tile.is-highlight");
+        if (highlightTile) {
+          highlightTile.style.boxShadow = [
+            "inset 0 2px 0 rgba(255, 240, 215, 0.55)",
+            "inset 0 -4px 14px rgba(140, 55, 8, 0.45)",
+            "0 0 36px rgba(242, 129, 41, 0.6)",
+            "0 8px 24px rgba(0, 0, 0, 0.28)",
+          ].join(", ");
+        }
+
+        // (Sparkles removed — no stars or circles per Gray's review.)
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Year title — bounce in
+        tl.from("#year-title",
+          { y: -80, opacity: 0, scale: 0.7, duration: 0.55, ease: "back.out(1.7)" },
+          0
+        );
+
+        // All step tiles enter — staggered fade-up
+        const tileSelectors = sequence.map(function (_, i) { return "#tile-" + i; });
+        tl.from(tileSelectors,
+          { y: 40, opacity: 0, duration: 0.40, ease: "power3.out", stagger: 0.08 },
+          0.30
+        );
+
+        // Connector fills as steps activate
+        const totalSteps = sequence.length;
+        const completedSteps = totalSteps - 1; // all except the highlight count as "completed" tracks
+        let lastStepLandTime = vars.firstStepTime;
+
+        for (let i = 0; i < completedSteps; i++) {
+          const stepTime = vars.firstStepTime + i * vars.stepInterval;
+          lastStepLandTime = stepTime;
+
+          // Step pulse — quick scale up + back
+          tl.fromTo("#tile-" + i,
+            { scale: 1.0 },
+            { scale: 1.05, duration: 0.14, ease: "power2.out", yoyo: true, repeat: 1 },
+            stepTime
+          );
+
+          // Check mark draws in
+          tl.to("#check-" + i + " path",
+            { strokeDashoffset: 0, duration: 0.30, ease: "power2.out" },
+            stepTime
+          );
+          tl.to("#check-" + i,
+            { opacity: 1, duration: 0.18, ease: "power2.out" },
+            stepTime
+          );
+
+          // Connector fills from previous step to this step
+          const fillPct = ((i + 1) / totalSteps) * 100;
+          tl.to("#connector-fill",
+            { height: fillPct + "%", duration: vars.stepInterval * 0.85, ease: "power1.inOut" },
+            stepTime
+          );
+        }
+
+        // Highlight tile (April) — orange-glass land + glow
+        const landTime = vars.highlightHoldStart;
+
+        // Final connector fill — runs all the way down
+        tl.to("#connector-fill",
+          { height: "100%", duration: 0.40, ease: "power1.inOut" },
+          landTime - 0.20
+        );
+
+        // April tile entrance pop — overshoot scale, no exit
+        tl.fromTo("#tile-" + (totalSteps - 1),
+          { scale: 1.0 },
+          { scale: 1.10, duration: 0.18, ease: "back.out(2.4)" },
+          landTime
+        );
+        tl.to("#tile-" + (totalSteps - 1),
+          { scale: 1.0, duration: 0.32, ease: "elastic.out(1, 0.5)" },
+          landTime + 0.18
+        );
+
+        // Label swap: APRIL fades out + scales down, TAX SEASON fades in + scales up.
+        // Happens AFTER the initial bounce settles so the visual focus is clear.
+        const swapTime = landTime + 0.55;
+        const highlightIdx = totalSteps - 1;
+        tl.to("#label-month-" + highlightIdx,
+          { opacity: 0, scale: 0.85, duration: 0.22, ease: "power2.in" },
+          swapTime
+        );
+        tl.fromTo("#label-swap-" + highlightIdx,
+          { opacity: 0, scale: 1.15 },
+          { opacity: 1, scale: 1.0, duration: 0.32, ease: "back.out(1.6)" },
+          swapTime + 0.10
+        );
+
+        // Subtle continuous glow pulse on April (3 cycles, finite — no repeat:-1)
+        tl.to("#tile-" + (totalSteps - 1),
+          { boxShadow: [
+              "inset 0 2px 0 rgba(255, 240, 215, 0.55)",
+              "inset 0 -4px 14px rgba(140, 55, 8, 0.45)",
+              "0 0 60px rgba(242, 129, 41, 0.9)",
+              "0 8px 24px rgba(0, 0, 0, 0.28)",
+            ].join(", "),
+            duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 3 },
+          landTime + 0.40
+>>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         );
 
         window.__timelines["main"] = tl;

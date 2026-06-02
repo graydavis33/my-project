@@ -1,0 +1,632 @@
+{
+  "hormozi": {
+    "name": "Alex Hormozi",
+    "videos": [
+      {
+        "id": "EonibwnAEME",
+        "title": "How to Catch Up In Life (Using Logic)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=EonibwnAEME",
+        "thumb": "thumbnails/hormozi_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "OQf2Ba-Lp_4",
+        "title": "Building a $2,500,000 Business for a Stranger in 36 Minutes",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=OQf2Ba-Lp_4",
+        "thumb": "thumbnails/hormozi_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "3fsJFUvA6Ts",
+        "title": "What Makes The Perfect Business (5 Things)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=3fsJFUvA6Ts",
+        "thumb": "thumbnails/hormozi_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "0EqJD2o-Mnk",
+        "title": "Helping 6 Business Owners Scale in 33 Minutes",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=0EqJD2o-Mnk",
+        "thumb": "thumbnails/hormozi_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "fr78adfAnuA",
+        "title": "How to Use AI in Your Business in 2026",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=fr78adfAnuA",
+        "thumb": "thumbnails/hormozi_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "gadzhi": {
+    "name": "Iman Gadzhi",
+    "videos": [
+      {
+        "id": "5BgmmGHYk1U",
+        "title": "Stop wasting your life - 7 Steps to UNLOCK 97.9% of your Potential",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=5BgmmGHYk1U",
+        "thumb": "thumbnails/gadzhi_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "pLxRBCBY1HQ",
+        "title": "10 Years of Business Knowledge In 19 Minutes",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=pLxRBCBY1HQ",
+        "thumb": "thumbnails/gadzhi_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "NqPHDrQwiro",
+        "title": "Give me 16 minutes and I’ll brainwash you into thinking like a Millionaire",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=NqPHDrQwiro",
+        "thumb": "thumbnails/gadzhi_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "O6DrQJ5OOlU",
+        "title": "How Using “Dark Motivation” Made Me Rich",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=O6DrQJ5OOlU",
+        "thumb": "thumbnails/gadzhi_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "1QBBldKX4k8",
+        "title": "What to do when you feel like doing NOTHING",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=1QBBldKX4k8",
+        "thumb": "thumbnails/gadzhi_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "morgan": {
+    "name": "Charlie Morgan",
+    "videos": [
+      {
+        "id": "HAQhw5HtSqI",
+        "title": "How to run a hyper-profitable business partnership (like me)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=HAQhw5HtSqI",
+        "thumb": "thumbnails/morgan_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "J4q_DF7pSWI",
+        "title": "the dark side of $1M/mo (managing 'extreme' burnout)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=J4q_DF7pSWI",
+        "thumb": "thumbnails/morgan_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "KnT4taIvVkk",
+        "title": "Why business & finance personal brands \"fall off\" & become irrelevant",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=KnT4taIvVkk",
+        "thumb": "thumbnails/morgan_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "DTMj8eWYO2k",
+        "title": "\"Bulk and Cut\" is the best business strategy to get to $1M/mo",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=DTMj8eWYO2k",
+        "thumb": "thumbnails/morgan_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "KeL4GDir1aI",
+        "title": "16 ways to make $1,000,000 with a free skool funnel (just like me!)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=KeL4GDir1aI",
+        "thumb": "thumbnails/morgan_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "welch": {
+    "name": "Jordan Welch",
+    "videos": [
+      {
+        "id": "7-Sg2RKNMZE",
+        "title": "How I'd Start a 1-Person Business With Claude AI in 30 Days",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=7-Sg2RKNMZE",
+        "thumb": "thumbnails/welch_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "klmEkOZB9Uw",
+        "title": "Day In The Life Of A Multi-Millionaire In Buenos Aires",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=klmEkOZB9Uw",
+        "thumb": "thumbnails/welch_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "4pN16Ju0Lbw",
+        "title": "Millionaire Explains: How To Get Rich With $0",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=4pN16Ju0Lbw",
+        "thumb": "thumbnails/welch_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "ieeCpOjMNeI",
+        "title": "things i've learned \"getting rich\" in my 20s...",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=ieeCpOjMNeI",
+        "thumb": "thumbnails/welch_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "5SSzRxFOM9c",
+        "title": "i sold everything",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=5SSzRxFOM9c",
+        "thumb": "thumbnails/welch_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "malinowski": {
+    "name": "Brett Malinowski",
+    "videos": [
+      {
+        "id": "8V05zvCaqZE",
+        "title": "Watch me build a $10,000+ App with AI in 1 Hour",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=8V05zvCaqZE",
+        "thumb": "thumbnails/malinowski_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "Y8kHj8LJ2sU",
+        "title": "The $20M Business Hidden Inside Video Games",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=Y8kHj8LJ2sU",
+        "thumb": "thumbnails/malinowski_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "McO_xcf4IYw",
+        "title": "How to Build & Sell Ai Services (Full Course)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=McO_xcf4IYw",
+        "thumb": "thumbnails/malinowski_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "AArGhYdcJXk",
+        "title": "The Most Profitable AI Business Isn’t Software",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=AArGhYdcJXk",
+        "thumb": "thumbnails/malinowski_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "VPQnhIfvuzg",
+        "title": "7 AI Businesses You Can Start with Claude Agents",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=VPQnhIfvuzg",
+        "thumb": "thumbnails/malinowski_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "mylett": {
+    "name": "Ed Mylett",
+    "videos": [
+      {
+        "id": "dphaa3ql2r0",
+        "title": "Andy Frisella Breaks Down the Mindset That Creates Elite Performers!",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=dphaa3ql2r0",
+        "thumb": "thumbnails/mylett_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "HNHA16qFyFI",
+        "title": "Why You Haven't Met Your Full Potential (Yet) | Ed Mylett",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=HNHA16qFyFI",
+        "thumb": "thumbnails/mylett_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "HcTCNOKGt-E",
+        "title": "Candace Cameron Bure Gets Real About Faith, Fame, and Starting Over!",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=HcTCNOKGt-E",
+        "thumb": "thumbnails/mylett_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "v2gwPDKCtLU",
+        "title": "How To Do 10 Years Of Work In 2 | Ed Mylett",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=v2gwPDKCtLU",
+        "thumb": "thumbnails/mylett_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "goAZD7X9dmk",
+        "title": "What You Were Never Told About the O. J. Simpson Case Feat. Chris Todd",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=goAZD7X9dmk",
+        "thumb": "thumbnails/mylett_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "sharran": {
+    "name": "Sharran Srivatsaa",
+    "videos": [
+      {
+        "id": "ISQkh8bu6EU",
+        "title": "The Millionaire Mindset I'm Teaching My Kids",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=ISQkh8bu6EU",
+        "thumb": "thumbnails/sharran_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "Vx_sSMAJjNg",
+        "title": "In 16 Minutes, I’ll Make People Actually Listen to You",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=Vx_sSMAJjNg",
+        "thumb": "thumbnails/sharran_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "OcH0864CLPs",
+        "title": "How To Stop Fearing Financial Failure",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=OcH0864CLPs",
+        "thumb": "thumbnails/sharran_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "UMiAzkNEM4U",
+        "title": "In 18 Minutes, You'll Understand Generational Wealth",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=UMiAzkNEM4U",
+        "thumb": "thumbnails/sharran_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "OWorFLIbRoo",
+        "title": "If You Only Watch One Money Video, Make It This",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=OWorFLIbRoo",
+        "thumb": "thumbnails/sharran_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "kagan": {
+    "name": "Noah Kagan",
+    "videos": [
+      {
+        "id": "iQ7oJRgj1-4",
+        "title": "POV: You’re Running a $96M / year Business",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=iQ7oJRgj1-4",
+        "thumb": "thumbnails/kagan_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "mzXJDP9Hoic",
+        "title": "I make $100M/year … I’m going to die with $0",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=mzXJDP9Hoic",
+        "thumb": "thumbnails/kagan_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "9Rcbt6Ydk0U",
+        "title": "I made $3.3M last year... here’s how",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=9Rcbt6Ydk0U",
+        "thumb": "thumbnails/kagan_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "U3EaDKXvSY8",
+        "title": "How I Turned $49k In Debt To $500 Million",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=U3EaDKXvSY8",
+        "thumb": "thumbnails/kagan_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "FRbeL6rEWjY",
+        "title": "I Met 25 Billionaires… Here's 6 Lessons They Taught Me",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=FRbeL6rEWjY",
+        "thumb": "thumbnails/kagan_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "koe": {
+    "name": "Dan Koe",
+    "videos": [
+      {
+        "id": "7HM-rptYdTs",
+        "title": "How To Grow An Audience If You Have 0 Followers (It's Only 2 Habits)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=7HM-rptYdTs",
+        "thumb": "thumbnails/koe_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "YM0_8mOaKic",
+        "title": "How To Completely Reinvent Yourself In 6-12 Months",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=YM0_8mOaKic",
+        "thumb": "thumbnails/koe_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "3rNqNvwNcrM",
+        "title": "I'm begging you to start writing essays (even if you hate writing)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=3rNqNvwNcrM",
+        "thumb": "thumbnails/koe_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "vRsO_SmCYbQ",
+        "title": "If you've lost your creative genius, watch this",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=vRsO_SmCYbQ",
+        "thumb": "thumbnails/koe_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "VXgusdDbsQE",
+        "title": "How To Build A $1M One-Person Business Faster With AI",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=VXgusdDbsQE",
+        "thumb": "thumbnails/koe_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "doac": {
+    "name": "Diary of a CEO",
+    "videos": [
+      {
+        "id": "zc8Nh4TMB1s",
+        "title": "The Sugar Doctor's WARNING: The \"Healthy\" Foods Quietly Destroying Your Body! - Dr David Unwin",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=zc8Nh4TMB1s",
+        "thumb": "thumbnails/doac_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "V-z0k5xu1hM",
+        "title": "UFO Roundtable: Former CIA Scientist Proves Aliens Exist!",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=V-z0k5xu1hM",
+        "thumb": "thumbnails/doac_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "kwEtOyaFhCA",
+        "title": "Pulitzer Prize Historian: You Won't Notice Until It’s Too Late - Anne Applebaum",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=kwEtOyaFhCA",
+        "thumb": "thumbnails/doac_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "BTJGr78-zyw",
+        "title": "Professor Jiang: World War 3 Is About To Begin, Let Me Explain!",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=BTJGr78-zyw",
+        "thumb": "thumbnails/doac_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "NdU6UdUKaYc",
+        "title": "Scott Galloway: AI Wasn’t Built For You. The Rich Don’t Need You Anymore!",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=NdU6UdUKaYc",
+        "thumb": "thumbnails/doac_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "abdaal": {
+    "name": "Ali Abdaal",
+    "videos": [
+      {
+        "id": "dW6pvUx4_jc",
+        "title": "What's the Point? ",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=dW6pvUx4_jc",
+        "thumb": "thumbnails/abdaal_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "6tmBB5GcOLU",
+        "title": "you only need a phone",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=6tmBB5GcOLU",
+        "thumb": "thumbnails/abdaal_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "CFBEih785-I",
+        "title": "The Simplest Way to Make $10k/month - Case Study",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=CFBEih785-I",
+        "thumb": "thumbnails/abdaal_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "9rRvmcDpWwA",
+        "title": "The Cost of Getting Rich",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=9rRvmcDpWwA",
+        "thumb": "thumbnails/abdaal_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "bfENsVP77VQ",
+        "title": "The Only Investing Video You’ll Ever Need (Start With $0)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=bfENsVP77VQ",
+        "thumb": "thumbnails/abdaal_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "sahil": {
+    "name": "Sahil Bloom",
+    "videos": [
+      {
+        "id": "lAg2-wWR5wU",
+        "title": "Busy But Behind? (10 Min Fix)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=lAg2-wWR5wU",
+        "thumb": "thumbnails/sahil_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "aA3OUCVSo8Y",
+        "title": "Feeling Stuck? (Try This 3-Min Test)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=aA3OUCVSo8Y",
+        "thumb": "thumbnails/sahil_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "jrN-f2wEcOw",
+        "title": "Still Broke? Try This Tonight",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=jrN-f2wEcOw",
+        "thumb": "thumbnails/sahil_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "B2IPxfoHwp8",
+        "title": "Phone Addict? (Start this tonight)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=B2IPxfoHwp8",
+        "thumb": "thumbnails/sahil_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "qsmjQGw0uiU",
+        "title": "13 Innocent Mistakes Quietly Destroying Your 20s",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=qsmjQGw0uiU",
+        "thumb": "thumbnails/sahil_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "codie": {
+    "name": "Codie Sanchez",
+    "videos": [
+      {
+        "id": "oRpjoHJcX4s",
+        "title": "How To Replace Your Job in 30 Days from Your Couch",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=oRpjoHJcX4s",
+        "thumb": "thumbnails/codie_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "LDPE3wa9f2k",
+        "title": "How To Grow Your Business SO Fast It Feels Illegal",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=LDPE3wa9f2k",
+        "thumb": "thumbnails/codie_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "NyVBWIW6vbk",
+        "title": "Dollar Cost Averaging is dead... This is how to invest in 2026",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=NyVBWIW6vbk",
+        "thumb": "thumbnails/codie_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "yBefMa8LydA",
+        "title": "How to Manage Time Like a Top 1% CEO",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=yBefMa8LydA",
+        "thumb": "thumbnails/codie_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "pD7TO-Pwlzk",
+        "title": "How This Garbage Man Built A Billion Dollar Empire",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=pD7TO-Pwlzk",
+        "thumb": "thumbnails/codie_5.jpg",
+        "rank": 5
+      }
+    ]
+  },
+  "leila": {
+    "name": "Leila Hormozi",
+    "videos": [
+      {
+        "id": "DVtuTp3ykcA",
+        "title": "AI Is Making Your Thinking Worse (And How to Fix It)",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=DVtuTp3ykcA",
+        "thumb": "thumbnails/leila_1.jpg",
+        "rank": 1
+      },
+      {
+        "id": "LCc-wecNPKg",
+        "title": "Is It Time For A Change?",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=LCc-wecNPKg",
+        "thumb": "thumbnails/leila_2.jpg",
+        "rank": 2
+      },
+      {
+        "id": "j64UB9hU6BM",
+        "title": "Do This and People Will Instantly Respect You",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=j64UB9hU6BM",
+        "thumb": "thumbnails/leila_3.jpg",
+        "rank": 3
+      },
+      {
+        "id": "NqtWADqiMCo",
+        "title": "How to Outsmart a Toxic Workplace",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=NqtWADqiMCo",
+        "thumb": "thumbnails/leila_4.jpg",
+        "rank": 4
+      },
+      {
+        "id": "e1awpbZxVnw",
+        "title": "The Psychology of Making More Money",
+        "views": 0,
+        "url": "https://www.youtube.com/watch?v=e1awpbZxVnw",
+        "thumb": "thumbnails/leila_5.jpg",
+        "rank": 5
+      }
+    ]
+  }
+}

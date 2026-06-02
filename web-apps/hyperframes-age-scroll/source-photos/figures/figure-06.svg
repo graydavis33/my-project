@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 940" width="700" height="940" fill="none">
+  <defs>
+    <style>
+      .skin { fill: white; stroke: #161616; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+      .hair { fill: #161616; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+      .line { fill: none; stroke: #161616; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+      .thin { fill: none; stroke: #161616; stroke-width: 7; stroke-linecap: round; }
+      .eye  { fill: #161616; }
+      .shirt { fill: white; stroke: #161616; stroke-width: 14; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- short hair (textured top) -->
+  <path class="hair" d="M 280 225 Q 265 105 385 100 Q 470 95 540 150 Q 575 200 555 250 Q 510 205 460 215 Q 380 225 325 245 Q 285 245 280 225 Z" />
+  <!-- hair strands -->
+  <path class="thin" d="M 320 140 Q 340 100 380 105" />
+  <path class="thin" d="M 420 105 Q 460 100 490 125" />
+  <!-- head -->
+  <ellipse class="skin" cx="415" cy="290" rx="138" ry="160" />
+  <!-- ears -->
+  <path class="line" d="M 280 295 Q 256 295 256 325 Q 256 360 285 360" />
+  <path class="line" d="M 550 295 Q 575 295 575 325 Q 575 360 547 360" />
+  <!-- glasses frames -->
+  <circle class="line" cx="370" cy="295" r="40" />
+  <circle class="line" cx="460" cy="295" r="40" />
+  <line class="line" x1="410" y1="295" x2="420" y2="295" />
+  <line class="thin" x1="334" y1="285" x2="280" y2="280" />
+  <line class="thin" x1="497" y1="285" x2="550" y2="280" />
+  <!-- eyes inside glasses -->
+  <circle class="eye" cx="370" cy="295" r="8" />
+  <circle class="eye" cx="460" cy="295" r="8" />
+  <!-- nose -->
+  <path class="thin" d="M 415 340 Q 415 365 428 378" />
+  <!-- beard (full, framing chin) -->
+  <path class="hair" d="M 300 360 Q 310 460 415 470 Q 520 460 530 360 Q 510 420 460 425 Q 415 435 370 425 Q 320 420 300 360 Z" />
+  <!-- mouth in beard -->
+  <path class="line" d="M 385 395 Q 415 408 445 395" />
+  <!-- neck -->
+  <path class="line" d="M 380 465 L 380 510" />
+  <path class="line" d="M 450 465 L 450 510" />
+  <!-- shirt -->
+  <path class="shirt" d="M 200 745 Q 225 555 380 510 L 450 510 Q 605 555 630 745 L 630 940 L 200 940 Z" />
+  <path class="line" d="M 380 510 L 415 575 L 450 510" />
+  <!-- thumbs-up arm raised on left -->
+  <path class="shirt" d="M 225 575 Q 175 410 195 260 Q 205 230 225 235 Q 245 410 270 580 Z" />
+  <!-- thumb -->
+  <ellipse class="skin" cx="210" cy="220" rx="28" ry="42" />
+  <!-- fist below thumb -->
+  <ellipse class="skin" cx="235" cy="270" rx="38" ry="32" />
+
+</svg>

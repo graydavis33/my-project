@@ -1,0 +1,48 @@
+[
+  {
+    "filename": "article-01-the-verge.png",
+    "source_url": "https://www.theverge.com/2021/3/11/22325054/beeple-christies-nft-sale-cost-everydays-69-million",
+    "outlet": "the-verge",
+    "headline": "Beeple sold an NFT for $69 million",
+    "captured_at": "2026-05-19T00:49:43+00:00"
+  },
+  {
+    "filename": "article-02-nytimes.png",
+    "source_url": "https://web.archive.org/web/2021031200000/https://www.nytimes.com/2021/03/11/arts/design/nft-auction-christies-beeple.html",
+    "outlet": "nytimes",
+    "headline": "JPG File Sells for $69 Million, as \u2018NFT Mania\u2019 Gathers Pace",
+    "captured_at": "2026-05-19T00:55:19+00:00"
+  },
+  {
+    "filename": "article-03-forbes.png",
+    "source_url": null,
+    "outlet": "forbes",
+    "headline": "An NFT Portrait Just Sold For $11.8 Million At Sotheby's",
+    "captured_at": "2026-05-19T00:58:19+00:00",
+    "synthesized": true
+  },
+  {
+    "filename": "article-04-businessinsider.png",
+    "source_url": null,
+    "outlet": "businessinsider",
+    "headline": "An 18-year-old artist has made over $17 million selling NFTs in less than a year",
+    "captured_at": "2026-05-19T00:58:19+00:00",
+    "synthesized": true
+  },
+  {
+    "filename": "article-05-bloomberg.png",
+    "source_url": null,
+    "outlet": "bloomberg",
+    "headline": "Bored Ape Yacht Club Has Created A Class Of Crypto Millionaires",
+    "captured_at": "2026-05-19T00:58:19+00:00",
+    "synthesized": true
+  },
+  {
+    "filename": "article-06-cnbc.png",
+    "source_url": null,
+    "outlet": "cnbc",
+    "headline": "Most expensive NFT ever sold auctions for $69.3 million",
+    "captured_at": "2026-05-19T00:58:19+00:00",
+    "synthesized": true
+  }
+]

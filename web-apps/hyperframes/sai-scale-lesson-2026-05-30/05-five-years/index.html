@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Sai — It Took Me Five Years</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #00FF00;
+  }
+  #root {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #00FF00;
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  /* Counter row: digit viewport + YEARS word, centered horizontally */
+  .counter-row {
+    position: absolute;
+    top: 560px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+  }
+
+  .digit-viewport {
+    position: relative;
+    width: 240px;
+    height: 380px;
+    overflow: hidden;
+    flex: none;
+  }
+
+  .digit {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 300px;
+    line-height: 1;
+    color: #FFFFFF;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    font-variant-numeric: tabular-nums;
+    will-change: transform, opacity;
+  }
+
+  /* The final landed "5" is the orange accent */
+  #digit-5 {
+    color: #F28129;
+  }
+
+  .years {
+    font-weight: 900;
+    font-size: 150px;
+    line-height: 1;
+    color: #FFFFFF;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    flex: none;
+    will-change: transform, opacity;
+  }
+
+  .subtitle {
+    position: absolute;
+    top: 1020px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-weight: 800;
+    font-size: 52px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #FFFFFF;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    will-change: transform, opacity;
+  }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-duration="3.5" data-width="1080" data-height="1920">
+    <div class="counter-row">
+      <div class="digit-viewport" data-layout-allow-overflow>
+        <div class="digit" id="digit-1">1</div>
+        <div class="digit" id="digit-2">2</div>
+        <div class="digit" id="digit-3">3</div>
+        <div class="digit" id="digit-4">4</div>
+        <div class="digit" id="digit-5">5</div>
+      </div>
+      <div class="years">YEARS</div>
+    </div>
+
+    <div class="subtitle">To Figure This Out</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const tickIn  = { y: 0,   opacity: 1, duration: 0.2,  ease: "back.out(2.2)" };
+      const tickOut = { y: 400, opacity: 0, duration: 0.18, ease: "power2.in" };
+
+      // Start every digit above the viewport, invisible
+      tl.set(["#digit-1", "#digit-2", "#digit-3", "#digit-4", "#digit-5"], { y: -400, opacity: 0 }, 0);
+
+      // Slot-machine tick: 1 -> 2 -> 3 -> 4 -> 5
+      tl.to("#digit-1", tickIn, 0.15);
+      tl.to("#digit-1", tickOut, 0.4);  tl.to("#digit-2", tickIn, 0.4);
+      tl.to("#digit-2", tickOut, 0.65); tl.to("#digit-3", tickIn, 0.65);
+      tl.to("#digit-3", tickOut, 0.9);  tl.to("#digit-4", tickIn, 0.9);
+      tl.to("#digit-4", tickOut, 1.15); tl.to("#digit-5", tickIn, 1.15);
+
+      // "YEARS" eases in to the right of the digit, from left + small + faded
+      tl.from(".years", {
+        x: -200,
+        scale: 0.4,
+        opacity: 0,
+        duration: 0.55,
+        ease: "power3.out"
+      }, 1.5);
+
+      // Subtitle fades up below the counter row
+      tl.from(".subtitle", {
+        y: 40,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out"
+      }, 1.9);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </div>
+</body>
+</html>
