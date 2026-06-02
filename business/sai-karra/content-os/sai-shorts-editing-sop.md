@@ -106,7 +106,7 @@ Gray composites HyperFrames-rendered graphics over the A-roll trim in Premiere u
 - Trendify orange `#F28129`, orange-glass cards
 - Montserrat ExtraBold 72-92px headers, SemiBold 36-44px body labels
 - `back.out(1.6)` entrances, finite repeats only
-- All graphics produced via `npx hyperframes render --fps 24`
+- **Graphics render at `npx hyperframes render --fps 60`** (NOT 24). 60fps so the graphic can be speed-adjusted in Premiere without quality loss. The A-roll trim, captions, and final delivered video stay at 24fps (23.976) — only the HyperFrames graphic layers are 60fps.
 
 Graphics in a typical Sai short:
 - Hook visual (B-roll, screen recording, OR title card)
