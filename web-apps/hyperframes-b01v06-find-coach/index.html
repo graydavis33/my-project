@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1920px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      .eyebrow-line {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 64px;
+        line-height: 1;
+        letter-spacing: 0.16em;
+        color: #ffffff;
+        gap: 24px;
+        text-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.14),
+          0 12px 32px rgba(0, 0, 0, 0.11);
+      }
+      #eyebrow-1 { top: 800px; }
+      #eyebrow-2 { top: 1240px; }
+
+      .big-line {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 320px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 900;
+        font-size: 220px;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+      #big-1 { top: 910px; }
+      #big-2 { top: 1350px; }
+
+      .orange-text {
+        background: linear-gradient(180deg, #FFCB7A 0%, #F28129 52%, #D86A0F 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.14),
+          0 12px 32px rgba(0, 0, 0, 0.11);
+      }
+      .white-text {
+        color: #ffffff;
+        text-shadow:
+          0 4px 12px rgba(0, 0, 0, 0.16),
+          0 12px 32px rgba(0, 0, 0, 0.13);
+      }
+
+      .w { display: inline-block; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- First couplet: FIND YOUR COACH -->
+      <div class="eyebrow-line" id="eyebrow-1" data-layout-ignore>
+        <span class="w">FIND</span><span class="w">YOUR</span>
+      </div>
+      <div class="big-line" id="big-1" data-layout-ignore>
+        <span class="w orange-text">COACH</span>
+      </div>
+
+      <!-- Second couplet: BE THE COACH -->
+      <div class="eyebrow-line" id="eyebrow-2" data-layout-ignore>
+        <span class="w">BE</span><span class="w">THE</span>
+      </div>
+      <div class="big-line" id="big-2" data-layout-ignore>
+        <span class="w white-text">COACH</span>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Couplet 1: FIND YOUR + COACH (orange)
+      tl.from('#eyebrow-1 .w',
+        { yPercent: 100, opacity: 0, duration: 0.40, ease: 'power3.out', stagger: 0.08 },
+        0.15
+      );
+      tl.from('#big-1 .w',
+        { yPercent: 100, opacity: 0, duration: 0.50, ease: 'back.out(1.7)' },
+        0.45
+      );
+
+      // Couplet 2: BE THE + COACH (white)
+      tl.from('#eyebrow-2 .w',
+        { yPercent: 100, opacity: 0, duration: 0.40, ease: 'power3.out', stagger: 0.08 },
+        1.20
+      );
+      tl.from('#big-2 .w',
+        { yPercent: 100, opacity: 0, duration: 0.50, ease: 'back.out(1.7)' },
+        1.50
+      );
+
+      // Hold through 5.0s
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

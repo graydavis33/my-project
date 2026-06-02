@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: "Inter", sans-serif;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00B140;
+        overflow: hidden;
+      }
+
+      .zone-label {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 52px;
+        letter-spacing: 3px;
+        color: #FFFFFF;
+        white-space: nowrap;
+        text-align: center;
+      }
+
+      /* ===== LEFT: THE PROJECT (dim) ===== */
+      .project-zone {
+        position: absolute;
+        left: 120px;
+        top: 360px;
+        width: 560px;
+        height: 560px;
+        opacity: 0;
+      }
+      .project-icon {
+        position: absolute;
+        left: 80px;
+        top: 60px;
+        width: 400px;
+        height: 320px;
+      }
+      .project-icon svg { width: 100%; height: 100%; display: block; }
+      .project-label {
+        position: absolute;
+        left: 0;
+        top: 420px;
+        width: 560px;
+      }
+      .dust-mark {
+        position: absolute;
+        font-family: "Inter", sans-serif;
+        font-weight: 800;
+        font-size: 64px;
+        color: #FFFFFF;
+        opacity: 0;
+      }
+
+      /* ===== RIGHT: FUTURE OUTCOME (glowing) ===== */
+      .future-zone {
+        position: absolute;
+        left: 1240px;
+        top: 320px;
+        width: 560px;
+        height: 620px;
+        opacity: 0;
+      }
+      .crown {
+        position: absolute;
+        left: 60px;
+        top: 60px;
+        width: 200px;
+        height: 140px;
+        opacity: 0;
+      }
+      .crown svg { width: 100%; height: 100%; display: block; }
+      .trophy {
+        position: absolute;
+        left: 300px;
+        top: 20px;
+        width: 220px;
+        height: 280px;
+        opacity: 0;
+      }
+      .trophy svg { width: 100%; height: 100%; display: block; }
+      .money {
+        position: absolute;
+        left: 75px;
+        top: 200px;
+        width: 360px;
+        text-align: center;
+        font-family: "Inter", sans-serif;
+        font-weight: 900;
+        font-size: 180px;
+        letter-spacing: -0.02em;
+        color: #FFFFFF;
+        line-height: 1;
+        opacity: 0;
+      }
+      .future-label {
+        position: absolute;
+        left: 0;
+        top: 480px;
+        width: 560px;
+      }
+
+      /* Sparkles around future cluster */
+      .sparkle {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        opacity: 0;
+      }
+      .sparkle svg { width: 100%; height: 100%; display: block; }
+
+      /* ===== CENTER: curved arrow from project to future ===== */
+      .arrow-arc {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        pointer-events: none;
+      }
+      .arrow-arc svg { width: 100%; height: 100%; display: block; overflow: visible; }
+      .arrow-path {
+        stroke: #FFFFFF;
+        stroke-width: 7;
+        fill: none;
+        stroke-linecap: round;
+        stroke-dasharray: 580;
+        stroke-dashoffset: 580;
+      }
+      .arrow-head {
+        stroke: #FFFFFF;
+        stroke-width: 7;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: 0;
+      }
+      .arrow-text {
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 64px;
+        letter-spacing: 4px;
+        fill: #FFFFFF;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="9"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- LEFT: THE PROJECT (dim) -->
+      <div class="project-zone" id="project-zone">
+        <div class="project-icon" id="project-icon">
+          <svg viewBox="0 0 400 320">
+            <!-- Laptop screen -->
+            <rect x="60" y="40" width="280" height="180" rx="14" ry="14"
+              fill="none" stroke="#FFFFFF" stroke-width="6"/>
+            <!-- Screen inner content (lines suggesting code/work) -->
+            <line x1="90" y1="80" x2="280" y2="80" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+            <line x1="90" y1="110" x2="240" y2="110" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+            <line x1="90" y1="140" x2="260" y2="140" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+            <line x1="90" y1="170" x2="210" y2="170" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+            <!-- Laptop base -->
+            <path d="M 30 240 L 370 240 L 390 280 L 10 280 Z"
+              fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+            <!-- Hinge notch -->
+            <line x1="170" y1="240" x2="230" y2="240" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="project-label zone-label">THE PROJECT</div>
+
+        <div class="dust-mark" id="dust-1" style="left: 100px; top: -20px;">?</div>
+        <div class="dust-mark" id="dust-2" style="left: 460px; top: 40px;">?</div>
+      </div>
+
+      <!-- CENTER: curved arrow from project zone to future zone -->
+      <div class="arrow-arc">
+        <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid meet">
+          <!-- Horizontal arrow from the right edge of the project to the left edge of the future zone -->
+          <path id="focus-arc" class="arrow-path"
+            d="M 600 600 L 1180 600"/>
+          <!-- Arrow head — V pointing RIGHT into the future cluster -->
+          <path class="arrow-head" id="arrow-head"
+            d="M 1150 575 L 1180 600 L 1150 625"/>
+          <!-- FOCUS label centered above the line, with vertical breathing room -->
+          <text class="arrow-text" id="arrow-text" x="890" y="540" text-anchor="middle">FOCUS</text>
+        </svg>
+      </div>
+
+      <!-- RIGHT: FUTURE OUTCOME (glowing) -->
+      <div class="future-zone" id="future-zone">
+        <!-- Crown -->
+        <div class="crown" id="crown">
+          <svg viewBox="0 0 200 140">
+            <path d="M 20 130 L 35 50 L 70 95 L 100 30 L 130 95 L 165 50 L 180 130 Z"
+              fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+            <line x1="20" y1="130" x2="180" y2="130" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="35" cy="50" r="10" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+            <circle cx="100" cy="30" r="12" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+            <circle cx="165" cy="50" r="10" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+          </svg>
+        </div>
+
+        <!-- Trophy -->
+        <div class="trophy" id="trophy">
+          <svg viewBox="0 0 220 280">
+            <!-- Cup -->
+            <path d="M 50 30 L 170 30 L 170 120 Q 170 175 110 175 Q 50 175 50 120 Z"
+              fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linejoin="round"/>
+            <!-- Left handle -->
+            <path d="M 50 55 Q 15 55 15 95 Q 15 130 50 130"
+              fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+            <!-- Right handle -->
+            <path d="M 170 55 Q 205 55 205 95 Q 205 130 170 130"
+              fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+            <!-- Stem -->
+            <rect x="95" y="175" width="30" height="50"
+              fill="none" stroke="#FFFFFF" stroke-width="6"/>
+            <!-- Base -->
+            <rect x="55" y="225" width="110" height="30" rx="4" ry="4"
+              fill="none" stroke="#FFFFFF" stroke-width="6"/>
+            <!-- Star on cup -->
+            <path d="M 110 70 L 117 90 L 138 90 L 121 103 L 128 124 L 110 112 L 92 124 L 99 103 L 82 90 L 103 90 Z"
+              fill="#FFFFFF" stroke="none"/>
+          </svg>
+        </div>
+
+        <!-- Money -->
+        <div class="money" id="money">$5M</div>
+
+        <!-- Label -->
+        <div class="future-label zone-label">FUTURE OUTCOME</div>
+
+        <!-- Sparkles -->
+        <div class="sparkle" id="spark-1" style="left: -20px; top: 100px;">
+          <svg viewBox="0 0 40 40"><path d="M 20 2 L 24 16 L 38 20 L 24 24 L 20 38 L 16 24 L 2 20 L 16 16 Z" fill="#FFFFFF"/></svg>
+        </div>
+        <div class="sparkle" id="spark-2" style="left: 540px; top: 50px;">
+          <svg viewBox="0 0 40 40"><path d="M 20 2 L 24 16 L 38 20 L 24 24 L 20 38 L 16 24 L 2 20 L 16 16 Z" fill="#FFFFFF"/></svg>
+        </div>
+        <div class="sparkle" id="spark-3" style="left: 0; top: 320px;">
+          <svg viewBox="0 0 40 40"><path d="M 20 2 L 24 16 L 38 20 L 24 24 L 20 38 L 16 24 L 2 20 L 16 16 Z" fill="#FFFFFF"/></svg>
+        </div>
+        <div class="sparkle" id="spark-4" style="left: 510px; top: 380px;">
+          <svg viewBox="0 0 40 40"><path d="M 20 2 L 24 16 L 38 20 L 24 24 L 20 38 L 16 24 L 2 20 L 16 16 Z" fill="#FFFFFF"/></svg>
+        </div>
+        <div class="sparkle" id="spark-5" style="left: 260px; top: 380px;">
+          <svg viewBox="0 0 40 40"><path d="M 20 2 L 24 16 L 38 20 L 24 24 L 20 38 L 16 24 L 2 20 L 16 16 Z" fill="#FFFFFF"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ===== PHASE 1: PROJECT zone fades in at full opacity =====
+      tl.to("#project-zone", {
+        opacity: 1, duration: 0.90, ease: "power2.out"
+      }, 0.30);
+
+      // ===== PHASE 2: Arrow draws from project → future =====
+      tl.to("#focus-arc", {
+        strokeDashoffset: 0, duration: 1.20, ease: "power2.inOut"
+      }, 1.20);
+      tl.to("#arrow-head", {
+        opacity: 1, duration: 0.20, ease: "power2.out"
+      }, 2.30);
+      tl.to("#arrow-text", {
+        opacity: 1, duration: 0.40, ease: "power2.out"
+      }, 1.80);
+
+      // ===== PHASE 3: FUTURE OUTCOME zone =====
+      tl.to("#future-zone", {
+        opacity: 1, duration: 0.30, ease: "power2.out"
+      }, 2.40);
+
+      tl.fromTo("#crown",
+        { scale: 0.4, opacity: 0, transformOrigin: "50% 100%" },
+        { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(1.8)", immediateRender: false },
+        2.55);
+
+      tl.fromTo("#trophy",
+        { scale: 0.4, opacity: 0, transformOrigin: "50% 100%" },
+        { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(1.8)", immediateRender: false },
+        2.85);
+
+      tl.fromTo("#money",
+        { scale: 0.3, opacity: 0, transformOrigin: "50% 50%" },
+        { scale: 1, opacity: 1, duration: 0.50, ease: "back.out(2.0)", immediateRender: false },
+        3.20);
+
+      // ===== PHASE 4: Sparkles stagger pop =====
+      tl.fromTo("#spark-1, #spark-2, #spark-3, #spark-4, #spark-5",
+        { scale: 0, opacity: 0, transformOrigin: "50% 50%" },
+        {
+          scale: 1, opacity: 1, duration: 0.35,
+          ease: "back.out(2.4)", stagger: 0.12, immediateRender: false
+        },
+        3.40);
+
+      tl.to("#spark-1, #spark-2, #spark-3, #spark-4, #spark-5",
+        { scale: 1.25, duration: 0.50, ease: "sine.inOut", yoyo: true, repeat: 7,
+          stagger: { each: 0.10, from: "random" } },
+        4.60);
+
+      tl.to("#money",
+        { scale: 1.06, duration: 0.55, ease: "sine.inOut", yoyo: true, repeat: 6 },
+        4.10);
+
+      // ===== PHASE 5: Dust marks blink on project zone =====
+      tl.fromTo("#dust-1",
+        { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" },
+        { opacity: 0.55, scale: 1, duration: 0.40, ease: "back.out(2.0)",
+          yoyo: true, repeat: 3, immediateRender: false },
+        3.80);
+      tl.fromTo("#dust-2",
+        { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" },
+        { opacity: 0.55, scale: 1, duration: 0.40, ease: "back.out(2.0)",
+          yoyo: true, repeat: 3, immediateRender: false },
+        4.15);
+
+      // ===== PHASE 6: Hold (4.6 - 9.0s) — sparkles + money pulse keep cycling =====
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

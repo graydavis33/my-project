@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+      .scene-content {
+        position: absolute;
+        inset: 0;
+      }
+      .stack {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 60px;
+      }
+      .globe-wrap {
+        position: relative;
+        width: 480px;
+        height: 480px;
+      }
+      .globe {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+      }
+      .globe svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .pulse {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 480px;
+        height: 480px;
+        margin-left: -240px;
+        margin-top: -240px;
+        border: 5px solid #ffffff;
+        border-radius: 50%;
+        z-index: 1;
+        transform-origin: center center;
+        opacity: 0;
+      }
+      .headline {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 100px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="3.5"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="stack">
+          <div class="globe-wrap">
+            <div class="pulse" id="pulse-1"></div>
+            <div class="pulse" id="pulse-2"></div>
+            <div class="pulse" id="pulse-3"></div>
+            <div class="pulse" id="pulse-4"></div>
+            <div class="globe" id="globe">
+              <svg viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round">
+                <circle cx="100" cy="100" r="86" />
+                <ellipse cx="100" cy="100" rx="86" ry="32" />
+                <ellipse cx="100" cy="100" rx="40" ry="86" />
+                <line x1="14" y1="100" x2="186" y2="100" />
+              </svg>
+            </div>
+          </div>
+          <div class="headline" id="headline">TOLD THE WORLD</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Initial states
+      tl.set("#globe", { scale: 0, opacity: 0 }, 0);
+      tl.set("#headline", { y: 40, opacity: 0 }, 0);
+      tl.set(".pulse", { scale: 0.5, opacity: 0 }, 0);
+
+      // Globe pops in
+      tl.to(
+        "#globe",
+        { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(2.0)" },
+        0.15
+      );
+
+      // Pulse rings emanate outward, staggered
+      const pulseRing = (target, t) => {
+        tl.fromTo(
+          target,
+          { scale: 0.5, opacity: 1 },
+          { scale: 2.4, opacity: 0, duration: 1.4, ease: "power2.out" },
+          t
+        );
+      };
+      pulseRing("#pulse-1", 0.65);
+      pulseRing("#pulse-2", 1.05);
+      pulseRing("#pulse-3", 1.45);
+      pulseRing("#pulse-4", 1.85);
+
+      // Headline reveals
+      tl.to(
+        "#headline",
+        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+        1.0
+      );
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+      }
+      .text-slide {
+        position: absolute;
+        left: 10px;
+        top: 280px;
+        width: 1900px;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 80px;
+        color: #ffffff;
+        letter-spacing: 1px;
+      }
+      .line {
+        overflow: hidden;
+        height: 1.22em;
+        text-align: center;
+        line-height: 1.22;
+        white-space: nowrap;
+      }
+      .w {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="text-slide">
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">When</span> <span class="w">someone</span> <span class="w">gives</span> <span class="w">you</span>
+        </div>
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">their</span> <span class="w">attention</span> <span class="w">or</span> <span class="w">money,</span>
+        </div>
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">don&rsquo;t</span> <span class="w">get</span> <span class="w">greedy</span> <span class="w">and</span>
+        </div>
+        <div class="line" data-layout-allow-overflow data-layout-ignore>
+          <span class="w">break</span> <span class="w">their</span> <span class="w">trust.</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 15 words × 0.14s stagger = 2.10s last word start; +0.34s slide → 2.44s end.
+      // Composition 5s → ~2.4s final hold.
+      tl.from(".w", {
+        yPercent: 100,
+        opacity: 0,
+        duration: 0.34,
+        ease: "power3.out",
+        stagger: 0.14,
+      }, 0.15);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

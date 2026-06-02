@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+      .scene-content {
+        position: absolute;
+        inset: 0;
+      }
+
+      .equation-row {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        gap: 36px;
+      }
+      .icon-group {
+        width: 260px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+        transform-origin: center center;
+      }
+      .icon-art {
+        width: 260px;
+        height: 260px;
+        position: relative;
+      }
+      .icon-art svg.icon-svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .icon-art svg.strike-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      .icon-label {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 42px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.04em;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .plus {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        font-size: 130px;
+        line-height: 1;
+        color: #ffffff;
+        width: 70px;
+        text-align: center;
+        transform-origin: center center;
+        margin-bottom: 70px; /* visually align with icon centers (icons have label below) */
+      }
+
+      .truth-group {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 48px;
+      }
+      .truth-art {
+        width: 380px;
+        height: 380px;
+        transform-origin: center center;
+      }
+      .truth-art svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .truth-label {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 96px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="7.5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="equation-row" id="equation-row">
+          <!-- NO COMPETITION: two opposing arrows colliding -->
+          <div class="icon-group" id="icon-comp">
+            <div class="icon-art">
+              <svg class="icon-svg" viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="100" cy="100" r="86" />
+                <!-- left arrow pointing right -->
+                <line x1="36" y1="100" x2="88" y2="100" />
+                <polyline points="74,86 90,100 74,114" />
+                <!-- right arrow pointing left -->
+                <line x1="164" y1="100" x2="112" y2="100" />
+                <polyline points="126,86 110,100 126,114" />
+              </svg>
+              <svg class="strike-svg" id="strike-comp" viewBox="0 0 200 200" fill="none" stroke="#ff3b30" stroke-width="12" stroke-linecap="round">
+                <line class="strike-a" x1="38" y1="38" x2="162" y2="162" />
+                <line class="strike-b" x1="162" y1="38" x2="38" y2="162" />
+              </svg>
+            </div>
+            <div class="icon-label">COMPETITION</div>
+          </div>
+
+          <div class="plus" id="plus-1">+</div>
+
+          <!-- NO AI: robot head -->
+          <div class="icon-group" id="icon-ai">
+            <div class="icon-art">
+              <svg class="icon-svg" viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+                <!-- antenna ball -->
+                <circle cx="100" cy="20" r="7" fill="#ffffff" stroke="none" />
+                <line x1="100" y1="28" x2="100" y2="52" />
+                <!-- head outline -->
+                <rect x="42" y="56" width="116" height="116" rx="18" />
+                <!-- eyes -->
+                <circle cx="76" cy="104" r="10" fill="#ffffff" stroke="none" />
+                <circle cx="124" cy="104" r="10" fill="#ffffff" stroke="none" />
+                <!-- mouth grill -->
+                <line x1="70" y1="142" x2="130" y2="142" />
+              </svg>
+              <svg class="strike-svg" id="strike-ai" viewBox="0 0 200 200" fill="none" stroke="#ff3b30" stroke-width="12" stroke-linecap="round">
+                <line class="strike-a" x1="38" y1="38" x2="162" y2="162" />
+                <line class="strike-b" x1="162" y1="38" x2="38" y2="162" />
+              </svg>
+            </div>
+            <div class="icon-label">AI</div>
+          </div>
+
+          <div class="plus" id="plus-2">+</div>
+
+          <!-- NO EXTERNAL FORCES: 4 arrows pointing inward + center dot -->
+          <div class="icon-group" id="icon-ext">
+            <div class="icon-art">
+              <svg class="icon-svg" viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+                <!-- center dot -->
+                <circle cx="100" cy="100" r="12" fill="#ffffff" stroke="none" />
+                <!-- top arrow pointing down -->
+                <line x1="100" y1="20" x2="100" y2="72" />
+                <polyline points="86,58 100,72 114,58" />
+                <!-- bottom arrow pointing up -->
+                <line x1="100" y1="180" x2="100" y2="128" />
+                <polyline points="86,142 100,128 114,142" />
+                <!-- left arrow pointing right -->
+                <line x1="20" y1="100" x2="72" y2="100" />
+                <polyline points="58,86 72,100 58,114" />
+                <!-- right arrow pointing left -->
+                <line x1="180" y1="100" x2="128" y2="100" />
+                <polyline points="142,86 128,100 142,114" />
+              </svg>
+              <svg class="strike-svg" id="strike-ext" viewBox="0 0 200 200" fill="none" stroke="#ff3b30" stroke-width="12" stroke-linecap="round">
+                <line class="strike-a" x1="38" y1="38" x2="162" y2="162" />
+                <line class="strike-b" x1="162" y1="38" x2="38" y2="162" />
+              </svg>
+            </div>
+            <div class="icon-label">EXTERNAL FORCES</div>
+          </div>
+        </div>
+
+        <div class="truth-group" id="truth-group">
+          <div class="truth-art" id="truth-art">
+            <svg viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+              <!-- shield outline -->
+              <path d="M 100 14 L 28 44 L 28 110 Q 28 162 100 188 Q 172 162 172 110 L 172 44 Z" />
+              <!-- checkmark inside -->
+              <polyline points="58,102 90,132 146,72" />
+            </svg>
+          </div>
+          <div class="truth-label" id="truth-label">BUILD IN TRUTH</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Initial states at t=0 — equation row hidden, truth group hidden
+      tl.set(
+        "#icon-comp, #plus-1, #icon-ai, #plus-2, #icon-ext",
+        { scale: 0, opacity: 0 },
+        0
+      );
+      tl.set(".strike-a", { scaleX: 0, transformOrigin: "left center" }, 0);
+      tl.set(".strike-b", { scaleX: 0, transformOrigin: "right center" }, 0);
+      tl.set("#truth-art", { scale: 0, opacity: 0 }, 0);
+      tl.set("#truth-label", { y: 50, opacity: 0 }, 0);
+
+      const iconPop = { scale: 1, opacity: 1, duration: 0.42, ease: "back.out(2.0)" };
+      const plusPop = { scale: 1, opacity: 1, duration: 0.30, ease: "back.out(2.4)" };
+      const strikeDraw = { scaleX: 1, duration: 0.28, ease: "power3.out" };
+
+      // Phase 1: equation builds left-to-right; red X (two crossing strokes) draws after each icon pops in
+      tl.to("#icon-comp", iconPop, 0.15);
+      tl.to("#strike-comp .strike-a", strikeDraw, 0.40);
+      tl.to("#strike-comp .strike-b", strikeDraw, 0.50);
+      tl.to("#plus-1", plusPop, 0.72);
+
+      tl.to("#icon-ai", iconPop, 1.05);
+      tl.to("#strike-ai .strike-a", strikeDraw, 1.30);
+      tl.to("#strike-ai .strike-b", strikeDraw, 1.40);
+      tl.to("#plus-2", plusPop, 1.62);
+
+      tl.to("#icon-ext", iconPop, 1.95);
+      tl.to("#strike-ext .strike-a", strikeDraw, 2.20);
+      tl.to("#strike-ext .strike-b", strikeDraw, 2.30);
+
+      // Phase 2: hold equation (~1.7s)
+
+      // Phase 3: merge — converge to canvas center, scale down, fade
+      // row layout (left-to-right): icon-comp | plus-1 | icon-ai | plus-2 | icon-ext
+      // widths: 260, 70, 260, 70, 260 with 36px gaps → total = 260+36+70+36+260+36+70+36+260 = 1064
+      // centers from row-center: icon-comp -402, plus-1 -237, icon-ai 0, plus-2 +237, icon-ext +402
+      const mergeStart = 4.10;
+      const mergeEase = { duration: 0.40, ease: "power3.in", scale: 0.2, opacity: 0 };
+      tl.to("#icon-comp", { x:  402, ...mergeEase }, mergeStart);
+      tl.to("#plus-1",    { x:  237, ...mergeEase }, mergeStart);
+      tl.to("#icon-ai",   { x:    0, ...mergeEase }, mergeStart);
+      tl.to("#plus-2",    { x: -237, ...mergeEase }, mergeStart);
+      tl.to("#icon-ext",  { x: -402, ...mergeEase }, mergeStart);
+
+      // Phase 4: TRUTH shield bursts from center
+      tl.to(
+        "#truth-art",
+        { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(2.0)" },
+        4.55
+      );
+      tl.to(
+        "#truth-label",
+        { y: 0, opacity: 1, duration: 0.50, ease: "power3.out" },
+        4.85
+      );
+
+      // Phase 5: hold TRUTH to end (~7.5s)
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

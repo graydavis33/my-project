@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Cool Guy Making Money</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #00FF00;
+  }
+  #root {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #00FF00;
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  /* COOL GUY header */
+  #header {
+    position: absolute;
+    top: 470px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 92px;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+
+  /* MAKING MONEY subtitle */
+  #subtitle {
+    position: absolute;
+    top: 1320px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 60px;
+    font-weight: 800;
+    color: #F28129;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  }
+
+  /* Figure wrapper centered */
+  #figure-wrap {
+    position: absolute;
+    left: 50%;
+    top: 700px;
+    width: 240px;
+    height: 340px;
+    margin-left: -120px;
+  }
+  #figure-svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 240px;
+    height: 340px;
+    display: block;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.30));
+  }
+  /* Sunglasses overlay (orange) positioned over the eyes */
+  #shades {
+    position: absolute;
+    left: 36px;
+    top: 36px;
+    width: 168px;
+    height: 70px;
+    display: block;
+  }
+
+  /* Money glyphs */
+  .money {
+    position: absolute;
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    will-change: transform, opacity;
+  }
+  .money.white { color: #FFFFFF; }
+  .money.orange { color: #F28129; }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+    <div class="stage">
+
+      <div id="header">COOL GUY</div>
+
+      <div id="figure-wrap">
+        <svg id="figure-svg" viewBox="0 0 140 200" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="70" cy="34" r="26" fill="#FFFFFF"/>
+          <path d="M70 64 C40 64 30 96 30 130 L30 200 L110 200 L110 130 C110 96 100 64 70 64 Z" fill="#FFFFFF"/>
+        </svg>
+        <!-- Sunglasses: two connected lenses + bridge, orange -->
+        <svg id="shades" viewBox="0 0 168 70" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="14" width="62" height="44" rx="14" fill="#F28129" stroke="#FFFFFF" stroke-width="4"/>
+          <rect x="100" y="14" width="62" height="44" rx="14" fill="#F28129" stroke="#FFFFFF" stroke-width="4"/>
+          <rect x="68" y="26" width="32" height="10" rx="5" fill="#F28129" stroke="#FFFFFF" stroke-width="3"/>
+        </svg>
+      </div>
+
+      <!-- Money glyphs: deterministic positions (seeded mulberry32, baked static) -->
+      <div class="money-layer" data-layout-allow-overflow>
+      <div class="money orange" id="m0" style="left:392px;top:976px;font-size:79px" data-rot="-8.82" data-fall="-185" data-bob="18.6" data-delay="1.20">$</div>
+      <div class="money white" id="m1" style="left:747px;top:626px;font-size:68px" data-rot="1.85" data-fall="-185" data-bob="21.8" data-delay="1.17">$</div>
+      <div class="money white" id="m2" style="left:794px;top:1173px;font-size:79px" data-rot="11.30" data-fall="-178" data-bob="12.0" data-delay="1.58">$</div>
+      <div class="money white" id="m3" style="left:211px;top:638px;font-size:55px" data-rot="-6.43" data-fall="-226" data-bob="16.0" data-delay="1.35">$</div>
+      <div class="money orange" id="m4" style="left:329px;top:621px;font-size:85px" data-rot="3.08" data-fall="-174" data-bob="17.8" data-delay="1.46">$</div>
+      <div class="money white" id="m5" style="left:758px;top:994px;font-size:56px" data-rot="-11.40" data-fall="-203" data-bob="11.0" data-delay="1.47">$</div>
+      <div class="money white" id="m6" style="left:265px;top:908px;font-size:53px" data-rot="10.99" data-fall="-223" data-bob="20.6" data-delay="1.55">$</div>
+      <div class="money white" id="m7" style="left:674px;top:1130px;font-size:83px" data-rot="11.99" data-fall="-157" data-bob="16.3" data-delay="1.39">$</div>
+      <div class="money orange" id="m8" style="left:870px;top:734px;font-size:54px" data-rot="8.89" data-fall="-210" data-bob="14.0" data-delay="1.27">$</div>
+      <div class="money white" id="m9" style="left:124px;top:1067px;font-size:90px" data-rot="9.92" data-fall="-159" data-bob="12.2" data-delay="1.73">$</div>
+      <div class="money white" id="m10" style="left:720px;top:1128px;font-size:88px" data-rot="-8.03" data-fall="-216" data-bob="17.1" data-delay="1.37">$</div>
+      <div class="money white" id="m11" style="left:286px;top:862px;font-size:81px" data-rot="-8.84" data-fall="-258" data-bob="13.2" data-delay="1.18">$</div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    const DURATION = 4;
+
+    // Figure pops in with confident settle
+    tl.from("#figure-wrap", {
+      y: 80,
+      scale: 0,
+      opacity: 0,
+      duration: 0.55,
+      ease: "back.out(1.8)",
+      transformOrigin: "50% 100%"
+    }, 0.2);
+    // tiny confident lean settle
+    tl.to("#figure-svg", {
+      rotation: -4,
+      duration: 0.4,
+      ease: "power2.out",
+      transformOrigin: "50% 100%"
+    }, 0.7);
+    tl.to("#figure-svg", {
+      rotation: 0,
+      duration: 0.5,
+      ease: "sine.inOut",
+      transformOrigin: "50% 100%"
+    }, 1.1);
+
+    // Sunglasses drop onto the face — "puts on shades"
+    tl.from("#shades", {
+      y: -120,
+      opacity: 0,
+      duration: 0.7,
+      ease: "back.out(2)"
+    }, 0.7);
+
+    // COOL GUY punches in
+    tl.from("#header", {
+      scale: 0.4,
+      opacity: 0,
+      duration: 0.45,
+      ease: "back.out(2.2)",
+      transformOrigin: "50% 50%"
+    }, 0.9);
+
+    // Money glyphs: fade in + fall/drift past with deterministic stagger + bob
+    for (let i = 0; i < 12; i++) {
+      const el = document.getElementById("m" + i);
+      const delay = parseFloat(el.dataset.delay);
+      const fallFrom = parseFloat(el.dataset.fall);
+      const rot = parseFloat(el.dataset.rot);
+      const bob = parseFloat(el.dataset.bob);
+      tl.from("#m" + i, {
+        y: fallFrom,
+        opacity: 0,
+        rotation: rot,
+        duration: 0.55,
+        ease: "power2.out"
+      }, delay);
+      const bobStart = delay + 0.55;
+      const bobCycle = 1.1;
+      const reps = Math.max(0, Math.ceil((DURATION - bobStart) / bobCycle) - 1);
+      tl.to("#m" + i, {
+        y: "-=" + bob,
+        duration: bobCycle / 2,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: reps
+      }, bobStart);
+    }
+
+    // MAKING MONEY fades up — guarded element ref so a missing-target
+    // resolution during the validate extraction pass can't warn.
+    const subtitleEl = document.getElementById("subtitle");
+    if (subtitleEl) {
+      tl.from(subtitleEl, {
+        y: 44,
+        opacity: 0,
+        duration: 0.55,
+        ease: "power3.out"
+      }, 1.4);
+    }
+
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>

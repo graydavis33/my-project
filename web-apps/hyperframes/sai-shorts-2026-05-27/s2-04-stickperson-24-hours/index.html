@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"White","default":"#FFFFFF"},{"id":"counterDownTarget","type":"number","label":"Countdown 1 target","default":16},{"id":"counter2DownTarget","type":"number","label":"Countdown 2 target","default":14}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Swap-group is positioning-only. group-inner holds the layout + the static
+         shrink-down via CSS scale, so GSAP transforms (x, scaleX, etc.) compose on top
+         without clobbering it. */
+      .swap-group {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        will-change: transform, filter, opacity;
+      }
+      .group-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        transform: scale(0.65);
+        transform-origin: center center;
+      }
+
+      /* All swap groups start blurred — their entrance tweens de-blur them. */
+      #awake-group, #asleep-group, #talk-group { filter: blur(22px); }
+
+      .figure-area {
+        position: relative;
+        width: 480px;
+        height: 585px;
+      }
+
+      .figure {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.4));
+      }
+      .figure .body { fill: var(--white); }
+      .figure .feature {
+        fill: none;
+        stroke: var(--orange);
+        stroke-width: 8;
+        stroke-linecap: round;
+      }
+      .figure .feature-fill { fill: var(--orange); }
+      .figure .mouth { fill: var(--orange); }
+
+      .zees {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .zee {
+        position: absolute;
+        top: 100px;
+        left: 290px;
+        color: var(--orange);
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 80px;
+        line-height: 1;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      .bubble {
+        position: absolute;
+        top: -120px;
+        left: 245px;
+        width: 250px;
+        height: 140px;
+        filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.35));
+        opacity: 0;
+        transform-origin: 60px 100%;
+        will-change: transform, opacity;
+      }
+      .bubble-body { fill: var(--white); }
+      .bubble-dot { fill: var(--orange); }
+
+      .counter-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .counter {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 300px;
+        line-height: 0.95;
+        color: var(--white);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.01em;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+        min-width: 460px;
+        text-align: center;
+      }
+
+      .label {
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 700;
+        font-size: 80px;
+        letter-spacing: 0.08em;
+        color: var(--white);
+        text-transform: uppercase;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <!-- AWAKE -->
+        <div id="awake-group" class="swap-group" data-layout-allow-overflow>
+          <div class="group-inner">
+            <div class="figure-area">
+              <svg id="figure-awake" class="figure" viewBox="0 0 360 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle class="body" cx="180" cy="95" r="78"></circle>
+                <path class="body" d="M 122 190 Q 112 210 96 440 L 264 440 Q 248 210 238 190 Q 220 178 180 178 Q 140 178 122 190 Z"></path>
+              </svg>
+            </div>
+            <div class="counter-wrap">
+              <div id="counter-awake" class="counter">0</div>
+              <div class="label">Hours</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ASLEEP -->
+        <div id="asleep-group" class="swap-group" data-layout-allow-overflow>
+          <div class="group-inner">
+            <div class="figure-area">
+              <svg id="figure-asleep" class="figure" viewBox="0 0 360 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle class="body" cx="180" cy="95" r="78"></circle>
+                <path class="body" d="M 122 190 Q 112 210 96 440 L 264 440 Q 248 210 238 190 Q 220 178 180 178 Q 140 178 122 190 Z"></path>
+                <path class="feature" d="M 132 86 q 18 14 36 0"></path>
+                <path class="feature" d="M 192 86 q 18 14 36 0"></path>
+                <circle id="mouth-asleep" class="mouth" cx="180" cy="138" r="14"></circle>
+              </svg>
+              <div class="zees">
+                <div class="zee zee-1">Z</div>
+                <div class="zee zee-2">Z</div>
+                <div class="zee zee-3">Z</div>
+                <div class="zee zee-4">Z</div>
+              </div>
+            </div>
+            <div class="counter-wrap">
+              <div id="counter-asleep" class="counter">24</div>
+              <div class="label">Hours</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TALKING -->
+        <div id="talk-group" class="swap-group" data-layout-allow-overflow>
+          <div class="group-inner">
+            <div class="figure-area">
+              <svg id="figure-talk" class="figure" viewBox="0 0 360 440" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle class="body" cx="180" cy="95" r="78"></circle>
+                <path class="body" d="M 122 190 Q 112 210 96 440 L 264 440 Q 248 210 238 190 Q 220 178 180 178 Q 140 178 122 190 Z"></path>
+                <circle class="feature-fill" cx="152" cy="84" r="7"></circle>
+                <circle class="feature-fill" cx="208" cy="84" r="7"></circle>
+                <ellipse id="mouth-talk" class="mouth" cx="180" cy="138" rx="14" ry="14"></ellipse>
+              </svg>
+              <svg class="bubble" viewBox="0 0 250 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect class="bubble-body" x="0" y="0" width="250" height="105" rx="36" ry="36"></rect>
+                <path class="bubble-body" d="M 58 100 L 38 138 L 92 100 Z"></path>
+                <circle class="bubble-dot dot-1" cx="85"  cy="52" r="11"></circle>
+                <circle class="bubble-dot dot-2" cx="125" cy="52" r="11"></circle>
+                <circle class="bubble-dot dot-3" cx="165" cy="52" r="11"></circle>
+              </svg>
+            </div>
+            <div class="counter-wrap">
+              <div id="counter-talk" class="counter">16</div>
+              <div class="label">Hours</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+        document.documentElement.style.setProperty("--orange", vars.orange);
+        document.documentElement.style.setProperty("--white", vars.white);
+
+        // ───────────── SPEED / TIMING ─────────────────────────────────
+        // 5/11.5 collapses the nominal 11.5s structure into exactly 5s.
+        const SPEED = 5 / 11.5;
+        const s = (n) => n * SPEED;
+
+        const T = {
+          enterStart:       s(0.20),
+          enterDur:         s(1.00),
+          countUpStart:     s(1.35),
+          countUpDur:       s(2.15),
+          swap1:            s(4.50),
+          swap1Dur:         s(0.75),
+          countDown1Start:  s(5.45),
+          countDown1Dur:    s(1.10),
+          sleepStart:       s(4.50 + 0.85),
+          mouthBreath:      s(0.80),
+          zStagger:         s(0.50),
+          zDur:             s(0.55),
+          swap2:            s(7.55),
+          swap2Dur:         s(0.75),
+          countDown2Start:  s(8.55),
+          countDown2Dur:    s(0.80),
+          talkStart:        s(7.55 + 0.85),
+          bubbleStart:      s(7.55 + 0.95),
+          bubbleEnterDur:   s(0.35),
+          shapeDur:         s(0.18),
+          shapeDurShort:    s(0.16),
+          dotPulseDur:      s(0.30),
+          dotStagger:       s(0.20),
+          compDur:          s(11.5),
+        };
+
+        // Center each group; subsequent x/y tweens are deltas off center.
+        // Asleep + talk start at opacity 0 so they're hidden until their entrance fades.
+        gsap.set("#awake-group",  { xPercent: -50, yPercent: -50 });
+        gsap.set("#asleep-group", { xPercent: -50, yPercent: -50, opacity: 0 });
+        gsap.set("#talk-group",   { xPercent: -50, yPercent: -50, opacity: 0 });
+
+        const awakeGroupEl  = document.getElementById("awake-group");
+        const asleepGroupEl = document.getElementById("asleep-group");
+        const talkGroupEl   = document.getElementById("talk-group");
+        const awakeBlur  = { b: 22 };
+        const asleepBlur = { b: 22 };
+        const talkBlur   = { b: 22 };
+        const setAwakeBlur  = () => { awakeGroupEl.style.filter  = "blur(" + awakeBlur.b  + "px)"; };
+        const setAsleepBlur = () => { asleepGroupEl.style.filter = "blur(" + asleepBlur.b + "px)"; };
+        const setTalkBlur   = () => { talkGroupEl.style.filter   = "blur(" + talkBlur.b   + "px)"; };
+
+        const counterAwakeEl  = document.getElementById("counter-awake");
+        const counterAsleepEl = document.getElementById("counter-asleep");
+        const counterTalkEl   = document.getElementById("counter-talk");
+        const counterUp    = { val: 0 };
+        const counterDown1 = { val: 24 };
+        const counterDown2 = { val: 16 };
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // ───── PHASE 1 — awake enters from below, de-blurs ─────────
+        tl.from("#awake-group", {
+          y: 320, opacity: 0,
+          duration: T.enterDur, ease: "power3.out",
+        }, T.enterStart);
+        tl.to(awakeBlur, {
+          b: 0, duration: T.enterDur, ease: "power3.out", onUpdate: setAwakeBlur,
+        }, T.enterStart);
+
+        // ───── PHASE 2 — counter ticks 0 → 24 ───────────────────────
+        tl.to(counterUp, {
+          val: 24, duration: T.countUpDur, ease: "power2.out",
+          onUpdate: () => { counterAwakeEl.textContent = Math.floor(counterUp.val); },
+        }, T.countUpStart);
+
+        // ───── PHASE 3 — swap 1 (awake exits right, asleep enters left) ─
+        // Opacity is tight: exit hits opacity 0 BEFORE silhouette would clip the canvas right;
+        // entrance stays at 0 until the figure is fully inside the canvas, then fades up.
+        tl.to("#awake-group", {
+          x: 900, scaleX: 1.30,
+          duration: T.swap1Dur, ease: "power2.inOut",
+        }, T.swap1);
+        tl.to("#awake-group", {
+          opacity: 0,
+          duration: T.swap1Dur * 0.22, ease: "power2.out",
+        }, T.swap1 + T.swap1Dur * 0.25);
+        tl.to(awakeBlur, {
+          b: 24, duration: T.swap1Dur, ease: "power2.inOut", onUpdate: setAwakeBlur,
+        }, T.swap1);
+
+        tl.from("#asleep-group", {
+          x: -900, scaleX: 1.30,
+          duration: T.swap1Dur, ease: "power2.inOut",
+        }, T.swap1);
+        tl.to("#asleep-group", {
+          opacity: 1,
+          duration: T.swap1Dur * 0.22, ease: "power2.in",
+        }, T.swap1 + T.swap1Dur * 0.58);
+        tl.to(asleepBlur, {
+          b: 0, duration: T.swap1Dur, ease: "power2.inOut", onUpdate: setAsleepBlur,
+        }, T.swap1);
+
+        // ───── PHASE 4 — counter ticks 24 → 16 ──────────────────────
+        tl.to(counterDown1, {
+          val: vars.counterDownTarget,
+          duration: T.countDown1Dur, ease: "power2.out",
+          onUpdate: () => { counterAsleepEl.textContent = Math.floor(counterDown1.val); },
+        }, T.countDown1Start);
+
+        // ───── PHASE 5 — sleep (mouth breath + Z stream) ────────────
+        tl.to("#mouth-asleep", {
+          attr: { r: 28 },
+          duration: T.mouthBreath, ease: "sine.inOut",
+          yoyo: true, repeat: 1,
+        }, T.sleepStart);
+
+        tl.fromTo(".zee",
+          { opacity: 0, x: -10, y: 20, scale: 0.5 },
+          {
+            opacity: 1, x: 50, y: -50, scale: 1.0,
+            duration: T.zDur, stagger: T.zStagger, ease: "power2.out", overwrite: "auto",
+          },
+          T.sleepStart
+        );
+        tl.to(".zee",
+          {
+            opacity: 0, x: 120, y: -150, scale: 1.45,
+            duration: T.zDur, stagger: T.zStagger, ease: "power2.in", overwrite: "auto",
+          },
+          T.sleepStart + T.zDur
+        );
+
+        // ───── PHASE 6 — swap 2 (asleep exits right, talking enters left) ─
+        tl.to("#asleep-group", {
+          x: 900, scaleX: 1.30,
+          duration: T.swap2Dur, ease: "power2.inOut",
+        }, T.swap2);
+        tl.to("#asleep-group", {
+          opacity: 0,
+          duration: T.swap2Dur * 0.22, ease: "power2.out",
+        }, T.swap2 + T.swap2Dur * 0.25);
+        tl.to(asleepBlur, {
+          b: 24, duration: T.swap2Dur, ease: "power2.inOut", onUpdate: setAsleepBlur,
+        }, T.swap2);
+
+        tl.from("#talk-group", {
+          x: -900, scaleX: 1.30,
+          duration: T.swap2Dur, ease: "power2.inOut",
+        }, T.swap2);
+        tl.to("#talk-group", {
+          opacity: 1,
+          duration: T.swap2Dur * 0.22, ease: "power2.in",
+        }, T.swap2 + T.swap2Dur * 0.58);
+        tl.to(talkBlur, {
+          b: 0, duration: T.swap2Dur, ease: "power2.inOut", onUpdate: setTalkBlur,
+        }, T.swap2);
+
+        // ───── PHASE 7 — counter ticks 16 → 14 ──────────────────────
+        tl.to(counterDown2, {
+          val: vars.counter2DownTarget,
+          duration: T.countDown2Dur, ease: "power2.out",
+          onUpdate: () => { counterTalkEl.textContent = Math.floor(counterDown2.val); },
+        }, T.countDown2Start);
+
+        // ───── PHASE 8a — speech bubble pops in ─────────────────────
+        tl.fromTo(".bubble",
+          { opacity: 0, scale: 0 },
+          {
+            opacity: 1, scale: 1.0,
+            duration: T.bubbleEnterDur, ease: "back.out(1.7)",
+          },
+          T.bubbleStart
+        );
+
+        // ───── PHASE 8b — typing dots pulse (staggered) ─────────────
+        const dotPulseStart = T.bubbleStart + T.bubbleEnterDur;
+        const dotPulseSpan  = Math.max(0.5, T.compDur - dotPulseStart);
+        const dotCycle      = T.dotPulseDur * 2;
+        const dotRepeats    = Math.max(0, Math.ceil(dotPulseSpan / dotCycle) * 2 - 1);
+        tl.to(".bubble-dot", {
+          opacity: 0.25,
+          duration: T.dotPulseDur, ease: "sine.inOut",
+          yoyo: true, repeat: dotRepeats, stagger: T.dotStagger,
+        }, dotPulseStart);
+
+        // ───── PHASE 8c — talking mouth morphs through speech shapes ─
+        const talkCycleDur = (T.shapeDur + T.shapeDurShort + T.shapeDurShort + T.shapeDur);
+        const talkRepeats  = Math.max(0, Math.ceil((T.compDur - T.talkStart) / talkCycleDur) - 1);
+        const talkCycle = gsap.timeline({ repeat: talkRepeats });
+        talkCycle
+          .to("#mouth-talk", { attr: { rx: 20, ry: 24 }, duration: T.shapeDur,      ease: "power2.inOut" })
+          .to("#mouth-talk", { attr: { rx: 22, ry: 8  }, duration: T.shapeDurShort, ease: "power2.inOut" })
+          .to("#mouth-talk", { attr: { rx: 12, ry: 16 }, duration: T.shapeDurShort, ease: "power2.inOut" })
+          .to("#mouth-talk", { attr: { rx: 16, ry: 10 }, duration: T.shapeDur,      ease: "power2.inOut" });
+        tl.add(talkCycle, T.talkStart);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

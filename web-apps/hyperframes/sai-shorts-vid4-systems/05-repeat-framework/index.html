@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 240px 80px 0 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .step-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 44px;
+        background:
+          radial-gradient(
+            ellipse 100% 60% at 50% 0%,
+            rgba(255, 220, 180, 0.55) 0%,
+            rgba(255, 200, 150, 0.20) 35%,
+            rgba(255, 180, 120, 0.0) 65%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(255, 168, 88, 1) 0%,
+            rgba(242, 129, 41, 1) 35%,
+            rgba(214, 100, 22, 1) 100%
+          );
+        border: 2px solid #ffffff;
+        border-radius: 999px;
+        box-shadow:
+          inset 0 2px 0 rgba(255, 240, 215, 0.55),
+          inset 0 -3px 10px rgba(140, 55, 8, 0.45),
+          0 0 24px rgba(242, 129, 41, 0.55),
+          0 6px 18px rgba(0, 0, 0, 0.28);
+        margin-bottom: 36px;
+      }
+      .step-pill-text {
+        font-weight: 800;
+        font-size: 36px;
+        letter-spacing: 0.10em;
+        color: #ffffff;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      }
+
+      .title {
+        font-weight: 800;
+        font-size: 84px;
+        line-height: 1.05;
+        letter-spacing: 0.03em;
+        color: #ffffff;
+        text-align: center;
+        text-transform: uppercase;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+        margin-bottom: 50px;
+      }
+
+      /* Loop ring container — center of scene */
+      .loop-container {
+        position: relative;
+        width: 660px;
+        height: 660px;
+      }
+      .loop-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Counter — sits at center of loop */
+      .counter {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 200px;
+        line-height: 1;
+        color: #ffffff;
+        text-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 38px rgba(242, 129, 41, 0.7);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* 4 small stickfigure silhouettes around the loop (12/3/6/9 o'clock) */
+      .micro-fig {
+        position: absolute;
+        width: 90px;
+        height: 120px;
+        z-index: 3;
+      }
+      .micro-fig svg { width: 100%; height: 100%; }
+
+      /* Positions relative to loop-container (660×660 — center 330,330) */
+      /* 12 o'clock: center-top */
+      .fig-12 { left: 285px; top: -30px; }
+      /* 3 o'clock: right-center */
+      .fig-3 { left: 595px; top: 270px; }
+      /* 6 o'clock: center-bottom */
+      .fig-6 { left: 285px; top: 570px; }
+      /* 9 o'clock: left-center */
+      .fig-9 { left: -25px; top: 270px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <div id="step-pill" class="step-pill">
+          <div class="step-pill-text">REPEAT</div>
+        </div>
+        <div id="title" class="title">FOR EVERY<br>NEW HIRE</div>
+
+        <div id="loop-container" class="loop-container" data-layout-allow-overflow>
+          <!-- Circular arrow loop -->
+          <svg class="loop-svg" id="loop-svg" viewBox="0 0 660 660" fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" data-layout-allow-overflow>
+            <!-- Open circular arrow: arc 80% of full circle, with arrowhead -->
+            <path id="loop-path" d="M 330 70 A 260 260 0 1 1 134 426" />
+            <!-- Arrowhead at end of arc (around 200, 480 area, pointing tangent to circle) -->
+            <polyline points="100 380 134 426 178 392" />
+          </svg>
+
+          <!-- Counter centered in loop -->
+          <div id="counter" class="counter">×1</div>
+
+          <!-- Micro stickfigures around loop -->
+          <div id="fig-12" class="micro-fig fig-12" data-layout-allow-overflow>
+            <svg viewBox="0 0 90 120" fill="#ffffff">
+              <circle cx="45" cy="20" r="15" />
+              <path d="M 28 36 Q 45 46 62 36 L 70 110 Q 45 118 20 110 Z" />
+            </svg>
+          </div>
+          <div id="fig-3" class="micro-fig fig-3" data-layout-allow-overflow>
+            <svg viewBox="0 0 90 120" fill="#ffffff">
+              <circle cx="45" cy="20" r="15" />
+              <path d="M 28 36 Q 45 46 62 36 L 70 110 Q 45 118 20 110 Z" />
+            </svg>
+          </div>
+          <div id="fig-6" class="micro-fig fig-6" data-layout-allow-overflow>
+            <svg viewBox="0 0 90 120" fill="#ffffff">
+              <circle cx="45" cy="20" r="15" />
+              <path d="M 28 36 Q 45 46 62 36 L 70 110 Q 45 118 20 110 Z" />
+            </svg>
+          </div>
+          <div id="fig-9" class="micro-fig fig-9" data-layout-allow-overflow>
+            <svg viewBox="0 0 90 120" fill="#ffffff">
+              <circle cx="45" cy="20" r="15" />
+              <path d="M 28 36 Q 45 46 62 36 L 70 110 Q 45 118 20 110 Z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // 1. Pill + title
+        tl.from("#step-pill", { y: 80, opacity: 0, duration: 0.55, ease: "back.out(1.7)" }, 0.20);
+        tl.from("#title", { y: 50, opacity: 0, duration: 0.55, ease: "power3.out" }, 0.45);
+
+        // 2. Loop arrow draws in via strokeDashoffset on path + arrowhead
+        const loopPath = document.getElementById("loop-path");
+        const pathLen = loopPath.getTotalLength();
+        loopPath.style.strokeDasharray = pathLen;
+        loopPath.style.strokeDashoffset = pathLen;
+
+        tl.to(
+          loopPath,
+          { strokeDashoffset: 0, duration: 1.10, ease: "power2.out" },
+          0.85
+        );
+        // Arrowhead polyline draws in too (animate stroke dash)
+        const arrowhead = document.querySelector("#loop-svg polyline");
+        const arrowLen = 120;
+        arrowhead.style.strokeDasharray = arrowLen;
+        arrowhead.style.strokeDashoffset = arrowLen;
+        tl.to(
+          arrowhead,
+          { strokeDashoffset: 0, duration: 0.35, ease: "power2.out" },
+          1.75
+        );
+
+        // 3. Counter pops in
+        tl.from(
+          "#counter",
+          { scale: 0.4, opacity: 0, duration: 0.55, ease: "back.out(2)" },
+          2.05
+        );
+
+        // 4. Counter slot-machine: ×1 → ×2 → ×3 → ×4 → ×5+
+        const counterEl = document.getElementById("counter");
+        const targets = ["×1", "×2", "×3", "×4", "×5+"];
+        const microFigs = ["#fig-12", "#fig-3", "#fig-6", "#fig-9"];
+
+        for (let i = 1; i < targets.length; i++) {
+          const t = 2.65 + (i - 1) * 0.40;
+          // Update text + scale pulse to give "tick" feel
+          tl.add(function () {
+            counterEl.textContent = targets[i];
+          }, t);
+          tl.fromTo(
+            counterEl,
+            { scale: 0.85 },
+            { scale: 1.0, duration: 0.30, ease: "back.out(2.5)", overwrite: "auto", immediateRender: false },
+            t
+          );
+
+          // Pop the corresponding micro figure on the loop
+          if (i - 1 < microFigs.length) {
+            tl.from(
+              microFigs[i - 1],
+              { scale: 0.0, opacity: 0, duration: 0.40, ease: "back.out(2.3)" },
+              t - 0.05
+            );
+          }
+        }
+
+        // 5. Loop ring slow rotation (3 finite cycles over remaining time)
+        tl.to(
+          "#loop-svg",
+          { rotation: 360, transformOrigin: "50% 50%", duration: 4.0, ease: "none" },
+          1.0
+        );
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

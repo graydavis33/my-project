@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1080px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+      .scene-content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .calendar-frame {
+        width: 880px;
+        height: 900px;
+        border: 5px solid #ffffff;
+        border-radius: 32px;
+        padding: 40px 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: transparent;
+        transform-origin: center center;
+      }
+      .frame-header {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 92px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        padding: 8px 0 28px 0;
+      }
+      .frame-divider {
+        width: 100%;
+        height: 4px;
+        background: #ffffff;
+        border-radius: 2px;
+        margin-bottom: 36px;
+        transform-origin: center center;
+      }
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 115px);
+        grid-template-rows: repeat(5, 115px);
+        gap: 16px;
+      }
+      .day-cell {
+        width: 115px;
+        height: 115px;
+        background: #ffffff;
+        border-radius: 20px;
+        transform-origin: center center;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="3.8"
+      data-width="1080"
+      data-height="1080"
+    >
+      <div class="scene-content">
+        <div class="calendar-frame" id="frame">
+          <div class="frame-header" id="header">ONE MONTH</div>
+          <div class="frame-divider" id="divider"></div>
+          <div class="calendar-grid" id="grid">
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+            <div class="day-cell"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Initial states applied at t=0
+      tl.set("#frame", { scale: 0.85, opacity: 0 }, 0);
+      tl.set("#header", { y: 30, opacity: 0 }, 0);
+      tl.set("#divider", { scaleX: 0, opacity: 0 }, 0);
+      tl.set(".day-cell", { scale: 0, opacity: 0 }, 0);
+
+      // 1. Calendar frame establishes
+      tl.to(
+        "#frame",
+        { scale: 1, opacity: 1, duration: 0.55, ease: "back.out(1.6)" },
+        0.15
+      );
+
+      // 2. Header reveals
+      tl.to(
+        "#header",
+        { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" },
+        0.55
+      );
+
+      // 3. Divider expands from center
+      tl.to(
+        "#divider",
+        { scaleX: 1, opacity: 1, duration: 0.45, ease: "power3.out" },
+        0.85
+      );
+
+      // 4. Day cells pop in, staggered
+      // Last cell entrance: starts at 1.15 + 29*0.04 = 2.31, ends 2.31 + 0.4 = 2.71
+      tl.to(
+        ".day-cell",
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.4,
+          ease: "back.out(2.0)",
+          stagger: { each: 0.04, from: "start" },
+        },
+        1.15
+      );
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

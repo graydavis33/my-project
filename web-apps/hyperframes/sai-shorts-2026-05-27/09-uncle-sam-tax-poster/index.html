@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"enterTime","type":"number","label":"Poster fades in at (s)","default":0.2},{"id":"firstPointTime","type":"number","label":"First emphasis pulse at (s)","default":0.95},{"id":"pulseInterval","type":"number","label":"Time between pulses (s)","default":1.4}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green for Premiere overlay */
+      }
+
+      .scene {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* === Uncle Sam — single bg-removed cutout, animated as whole figure ===
+         Source is the 4x Real-ESRGAN upscaled, u2net-cutout PNG (1304x1712).
+         Display at 940x1234 keeps the aspect ratio + comfortable framing in
+         the 1080x1920 vertical canvas. */
+      .uncle-sam {
+        position: relative;
+        width: 940px;
+        height: 1234px;
+        will-change: transform, opacity;
+        filter: drop-shadow(0 16px 40px rgba(0, 0, 0, 0.50));
+        transform-origin: 50% 60%; /* pivot near torso so wobble leans figure naturally */
+      }
+      .uncle-sam img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <div id="uncle-sam" class="uncle-sam" data-layout-allow-overflow>
+          <img src="assets/uncle-sam-4x.png" alt="Uncle Sam cutout" />
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const vars = window.__hyperframes.getVariables();
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // === 1. Entrance: fade in + slight pop + drop ===
+        tl.from("#uncle-sam",
+          { opacity: 0, scale: 0.80, y: 30, duration: 0.55, ease: "back.out(1.5)", overwrite: "auto" },
+          vars.enterTime
+        );
+
+        const dur = 5;
+        const startMotion = vars.enterTime + 0.55;
+        const animRange = dur - startMotion;
+
+        // === 2. Continuous wobble — gentle rotation back and forth ===
+        const wobbleCycle = 1.1;
+        const wobbleReps = Math.max(1, Math.ceil(animRange / wobbleCycle) * 2);
+        tl.to("#uncle-sam",
+          { rotation: 2.2, duration: wobbleCycle / 2, ease: "sine.inOut", yoyo: true, repeat: wobbleReps, overwrite: "auto" },
+          startMotion
+        );
+
+        // === 3. Continuous breathing — subtle scale pulse ===
+        const breatheCycle = 1.6;
+        const breatheReps = Math.max(1, Math.ceil(animRange / breatheCycle) * 2);
+        tl.to("#uncle-sam",
+          { scale: 1.025, duration: breatheCycle / 2, ease: "sine.inOut", yoyo: true, repeat: breatheReps },
+          startMotion + 0.2
+        );
+
+        // (Emphasis x-shake removed — smooth rotation + breathing only.)
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

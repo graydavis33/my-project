@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Sai — The Hard Way (Climb)</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #00FF00;
+  }
+  #root {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #00FF00;
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .stage {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* The jagged uphill path */
+  .climb-svg {
+    position: absolute;
+    inset: 0;
+    width: 1080px;
+    height: 1920px;
+  }
+  .path-line {
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-width: 14;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+  }
+
+  /* Climbing figure: head circle + tapered torso */
+  .figure {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 120px;
+    height: 150px;
+    will-change: transform;
+    /* origin at the feet so wobble pivots from the ground */
+    transform-origin: 60px 150px;
+  }
+  .figure svg {
+    width: 120px;
+    height: 150px;
+    overflow: visible;
+  }
+  .fig-stroke {
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-width: 12;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+  }
+  .fig-fill {
+    fill: #FFFFFF;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+  }
+
+  /* Peak flag */
+  .flag {
+    position: absolute;
+    left: 884px;
+    top: 392px;
+    width: 150px;
+    height: 200px;
+    will-change: transform;
+    transform-origin: 18px 200px;
+  }
+  .flag-pole {
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-width: 11;
+    stroke-linecap: round;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+  }
+  .flag-cloth {
+    fill: #F28129;
+    filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.35));
+  }
+
+  /* Bird that knocks the climber off */
+  .bird {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 130px;
+    height: 70px;
+    will-change: transform;
+    transform-origin: 65px 35px;
+  }
+  .bird svg { width: 130px; height: 70px; overflow: visible; }
+  .bird-stroke {
+    fill: none;
+    stroke: #FFFFFF;
+    stroke-width: 13;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+  }
+
+  /* Supporting label — unobtrusive, lower third */
+  .label {
+    position: absolute;
+    left: 0;
+    bottom: 230px;
+    width: 100%;
+    text-align: center;
+    font-weight: 800;
+    font-size: 52px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+    <div class="stage">
+
+      <!-- Jagged uphill path -->
+      <svg class="climb-svg" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+        <path class="path-line" id="climbPath"
+          d="M 130 1390
+             L 250 1250
+             L 205 1325
+             L 390 1130
+             L 330 1205
+             L 525 985
+             L 460 1060
+             L 690 825
+             L 620 900
+             L 830 660
+             L 902 565" />
+      </svg>
+
+      <!-- Climbing figure -->
+      <div class="figure" id="figure">
+        <svg viewBox="0 0 120 150">
+          <!-- head -->
+          <circle class="fig-fill" cx="60" cy="26" r="24" />
+          <!-- tapered torso -->
+          <path class="fig-fill" d="M 60 54
+            L 86 132
+            Q 60 144 34 132
+            Z" />
+        </svg>
+      </div>
+
+      <!-- Peak flag -->
+      <div class="flag" id="flag">
+        <svg viewBox="0 0 150 200">
+          <line class="flag-pole" x1="18" y1="200" x2="18" y2="14" />
+          <path class="flag-cloth" d="M 18 18 L 132 46 L 18 80 Z" />
+        </svg>
+      </div>
+
+      <!-- Bird -->
+      <div class="bird" id="bird">
+        <svg viewBox="0 0 130 70">
+          <path class="bird-stroke" d="M 8 50 Q 40 6 65 38 Q 90 6 122 50" />
+        </svg>
+      </div>
+
+    </div>
+
+    <div class="label" data-layout-allow-overflow>The Hard Way</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // --- Label fades in early and holds (supporting accent) ---
+      tl.from(".label", {
+        y: 30,
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out"
+      }, 0.15);
+
+      // --- Jagged path draws in via stroke-dashoffset ---
+      const path = document.getElementById("climbPath");
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = len;
+      path.style.strokeDashoffset = len;
+      tl.to(path, {
+        strokeDashoffset: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, 0.2);
+
+      // --- Figure waypoints (top-left of the 120x150 box so feet sit on the path line) ---
+      // Feet target ≈ box left+60, top+150. We offset so the figure stands ON each path vertex.
+      // Path vertices (ascending peaks only, the climb progression):
+      //   (130,1390) (390,1130) (525,985) (690,825) (830,660) (902,565)
+      // Figure left = vx - 60, top = vy - 150.
+      const wp = [
+        { x: 70,  y: 1240 }, // start, lower-left
+        { x: 330, y: 980  }, // peak 1
+        { x: 465, y: 835  }, // peak 2  (stumble happens just after here)
+        { x: 630, y: 675  }, // peak 3
+        { x: 770, y: 510  }, // peak 4
+        { x: 842, y: 415  }  // summit (next to flag)
+      ];
+
+      // Start position (offset first ~0.15s): figure enters from below the start point
+      gsap.set("#figure", { x: wp[0].x, y: wp[0].y + 120, opacity: 0, rotation: 0 });
+
+      // Entrance: rise up to the first waypoint
+      tl.to("#figure", {
+        x: wp[0].x, y: wp[0].y, opacity: 1,
+        duration: 0.4, ease: "power3.out"
+      }, 0.95);
+
+      // Climb to peak 1
+      tl.to("#figure", {
+        x: wp[1].x, y: wp[1].y,
+        duration: 0.45, ease: "power1.inOut"
+      }, 1.35);
+
+      // Climb to peak 2 (approach the rough patch)
+      tl.to("#figure", {
+        x: wp[2].x, y: wp[2].y,
+        duration: 0.35, ease: "power1.in"
+      }, 1.80);
+
+      // --- STUMBLE at ~1.6s region: slip BACK + DOWN a little ---
+      tl.to("#figure", {
+        x: wp[2].x - 70, y: wp[2].y + 55,
+        duration: 0.18, ease: "power3.in"
+      }, 2.15);
+      // wobble tilt during the slip and settle back upright
+      tl.to("#figure", {
+        keyframes: {
+          rotation: [-11, 9, -5, 0],
+          ease: "power1.out"
+        },
+        duration: 0.42,
+        ease: "none"
+      }, 2.15);
+
+      // Recover: push back up past where it slipped
+      tl.to("#figure", {
+        x: wp[3].x, y: wp[3].y,
+        duration: 0.40, ease: "power2.out"
+      }, 2.45);
+
+      // Final push to the summit
+      tl.to("#figure", {
+        x: wp[4].x, y: wp[4].y,
+        duration: 0.30, ease: "power1.inOut"
+      }, 2.85);
+      tl.to("#figure", {
+        x: wp[5].x, y: wp[5].y,
+        duration: 0.25, ease: "power2.out"
+      }, 3.15);
+
+      // --- Triumph: figure scales up at the summit ---
+      tl.to("#figure", {
+        scale: 1.4, duration: 0.35, ease: "back.out(1.8)"
+      }, 3.45);
+
+      // --- Flag pops at the peak ---
+      gsap.set("#flag", { scale: 0, opacity: 0 });
+      tl.to("#flag", {
+        scale: 1, opacity: 1,
+        duration: 0.35, ease: "back.out(2)"
+      }, 3.55);
+
+      // --- Bird swoops in from the top-right toward the climber ---
+      gsap.set("#bird", { x: 1200, y: 240, opacity: 0, rotation: 10 });
+      tl.to("#bird", { opacity: 1, duration: 0.10 }, 3.85);
+      tl.to("#bird", {
+        x: 800, y: 360, rotation: 16,
+        duration: 0.32, ease: "power2.in"
+      }, 3.85);
+
+      // --- IMPACT (~4.15): switch pivot to center so he tumbles ---
+      tl.set("#figure", { transformOrigin: "60px 75px" }, 4.15);
+
+      // bird carries on past, off to the lower-left
+      tl.to("#bird", {
+        x: -250, y: 560, rotation: -12,
+        duration: 0.55, ease: "power1.out"
+      }, 4.18);
+
+      // figure knocked off + tumbles down the mountain
+      tl.to("#figure", {
+        x: 250, y: 1820, rotation: 620, scale: 1.0,
+        duration: 0.62, ease: "power2.in"
+      }, 4.18);
+
+      // motion blur ramps up as he falls
+      const fb = { b: 0 };
+      const figEl = document.getElementById("figure");
+      tl.to(fb, {
+        b: 1, duration: 0.62, ease: "power2.in",
+        onUpdate: () => {
+          figEl.style.filter = "blur(" + (fb.b * 26) + "px) drop-shadow(0 2px 6px rgba(0,0,0,0.3))";
+        }
+      }, 4.18);
+
+      // fade out near the bottom
+      tl.to("#figure", { opacity: 0, duration: 0.20, ease: "power1.in" }, 4.66);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+
+      .scene { position: relative; width: 100%; height: 100%; }
+
+      .bucket {
+        position: absolute;
+        width: 280px;
+        height: 360px;
+        will-change: transform, opacity;
+      }
+      .bucket-1 { top: 641px;  left: 160px; }
+      .bucket-2 { top: 641px;  left: 640px; }
+      .bucket-3 { top: 1057px; left: 400px; }
+
+      .bucket-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+      }
+      .bucket-svg .handle,
+      .bucket-svg .rim,
+      .bucket-svg .rim-inner,
+      .bucket-svg .bottom-edge {
+        fill: none;
+        stroke: #FFFFFF;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .bucket-svg .body {
+        fill: url(#bodyGrad);
+        stroke: #FFFFFF;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .bucket-svg .body-highlight {
+        fill: none;
+        stroke: #FFFFFF;
+        stroke-opacity: 0.65;
+        stroke-width: 3;
+        stroke-linecap: round;
+      }
+      .bucket-svg .handle      { stroke-width: 7; }
+      .bucket-svg .rim         { stroke-width: 5; }
+      .bucket-svg .rim-inner   { stroke-width: 3; }
+      .bucket-svg .bottom-edge { stroke-width: 4; }
+      .bucket-svg .grip {
+        fill: #FFFFFF;
+        stroke: #FFFFFF;
+        stroke-width: 1.5;
+      }
+
+      .badge {
+        position: absolute;
+        top: 150px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 135px;
+        height: 135px;
+        border-radius: 67.5px;
+        background: #FFFFFF;
+        z-index: 2;
+        will-change: transform, width;
+      }
+      /* Number and word share the exact same look — Montserrat 800, 85px, white —
+         so the badge "2" reads as morphing straight into the title word. */
+      .badge-num,
+      .badge-word {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800;
+        font-size: 85px;
+        color: #F28129;
+        line-height: 1.0;
+        white-space: nowrap;
+      }
+      .badge-word { opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <!-- Shared gradient defs for cylindrical 3D shading on bucket bodies -->
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+          <defs>
+            <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.30"/>
+              <stop offset="55%"  stop-color="#FFFFFF" stop-opacity="0.08"/>
+              <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0.20"/>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <!-- Customers — already revealed in G4, shows the word from the start. -->
+        <div class="bucket bucket-1" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 280 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path class="handle" d="M 10 100 Q 140 -45 270 100"/>
+            <rect class="grip" x="112" y="18" width="56" height="18" rx="9" ry="9"/>
+            <ellipse class="rim" cx="140" cy="100" rx="130" ry="12"/>
+            <ellipse class="rim-inner" cx="140" cy="112" rx="122" ry="8"/>
+            <path class="body" d="M 10 100 L 45 350 Q 140 370 235 350 L 270 100"/>
+            <ellipse class="bottom-edge" cx="140" cy="350" rx="95" ry="7"/>
+          </svg>
+          <div class="badge">
+            <span class="badge-num">1</span>
+            <span class="badge-word">CUSTOMERS</span>
+          </div>
+        </div>
+
+        <!-- Team (focused). -->
+        <div class="bucket bucket-2" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 280 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path class="handle" d="M 10 100 Q 140 -45 270 100"/>
+            <rect class="grip" x="112" y="18" width="56" height="18" rx="9" ry="9"/>
+            <ellipse class="rim" cx="140" cy="100" rx="130" ry="12"/>
+            <ellipse class="rim-inner" cx="140" cy="112" rx="122" ry="8"/>
+            <path class="body" d="M 10 100 L 45 350 Q 140 370 235 350 L 270 100"/>
+            <ellipse class="bottom-edge" cx="140" cy="350" rx="95" ry="7"/>
+          </svg>
+          <div class="badge">
+            <span class="badge-num">2</span>
+            <span class="badge-word">TEAM</span>
+          </div>
+        </div>
+
+        <!-- Shareholders — still blurred, fades away. -->
+        <div class="bucket bucket-3" data-layout-allow-overflow>
+          <svg class="bucket-svg" viewBox="0 0 280 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path class="handle" d="M 10 100 Q 140 -45 270 100"/>
+            <rect class="grip" x="112" y="18" width="56" height="18" rx="9" ry="9"/>
+            <ellipse class="rim" cx="140" cy="100" rx="130" ry="12"/>
+            <ellipse class="rim-inner" cx="140" cy="112" rx="122" ry="8"/>
+            <path class="body" d="M 10 100 L 45 350 Q 140 370 235 350 L 270 100"/>
+            <ellipse class="bottom-edge" cx="140" cy="350" rx="95" ry="7"/>
+          </svg>
+          <div class="badge"><span class="badge-num">3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // ─── TEAM FOCUS ──────────────────────────────────────────────
+        // Customers is already clear (continuity from G4).
+        // Bucket-2 flies to center. Others fade + drift outward.
+
+        // CONTINUITY — Customers was already revealed in G4, so bucket-1 starts in its
+        // word/pill state (number hidden, CUSTOMERS shown) instead of the number "1".
+        const cW = document.querySelector(".bucket-1 .badge-word").offsetWidth;
+        gsap.set(".bucket-1 .badge",      { width: cW + 100 });
+        gsap.set(".bucket-1 .badge-num",  { opacity: 0 });
+        gsap.set(".bucket-1 .badge-word", { opacity: 1 });
+
+        // PHASE 1 — bucket-2 to center; bucket-1 drifts upper-left; bucket-3 drifts down
+        tl.to(".bucket-2", { x: -240, y: 139, duration: 0.70, ease: "power2.inOut" }, 0.15);
+        tl.to(".bucket-1", { x: -220, y: -120, opacity: 0, duration: 0.60, ease: "power2.out" }, 0.15);
+        tl.to(".bucket-3", { x: 0,    y: 220,  opacity: 0, duration: 0.60, ease: "power2.out" }, 0.15);
+
+        // PHASE 2 — number morphs into the title word. Badge expands circle → pill,
+        // number cross-fades out as the word fades in (same font, so it reads as a morph).
+        const land = 0.95;
+        const wordW = document.querySelector(".bucket-2 .badge-word").offsetWidth;
+        tl.to(".bucket-2 .badge",      { width: wordW + 100, duration: 0.42, ease: "power2.inOut" }, land);
+        tl.to(".bucket-2 .badge-num",  { opacity: 0, duration: 0.22, ease: "power1.out" }, land);
+        tl.to(".bucket-2 .badge-word", { opacity: 1, duration: 0.30, ease: "power1.in" }, land + 0.14);
+
+        // PHASE 5 — gentle pulse through hold
+        tl.to(".bucket-2", {
+          scale: 1.03,
+          duration: 0.80, ease: "sine.inOut",
+          yoyo: true, repeat: 3,
+          overwrite: "auto",
+        }, 1.85);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

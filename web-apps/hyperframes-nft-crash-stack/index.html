@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>NFT Article Pile-Up</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #00B140; overflow: hidden; font-family: 'Inter', sans-serif; }
+
+  #nft-article-stack {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    background: #00B140;
+    overflow: hidden;
+  }
+
+  .article {
+    position: absolute;
+    width: 800px;
+    height: 500px;
+    left: 560px;
+    top: 290px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow:
+      0 28px 64px rgba(0, 0, 0, 0.42),
+      0 8px 18px rgba(0, 0, 0, 0.28),
+      0 0 0 4px rgba(255, 255, 255, 0.95);
+    will-change: transform, opacity;
+    opacity: 0;
+  }
+
+  .article img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<div id="nft-article-stack" data-composition-id="nft-article-stack" data-start="0" data-duration="7" data-width="1920" data-height="1080" data-track-index="0">
+
+  <!-- Articles ordered bottom-to-top in the pile (last one rendered is on top) -->
+  <div class="article" id="a1" style="z-index: 1;"><img src="article-screenshots/article-01-the-verge.png" alt="" /></div>
+  <div class="article" id="a2" style="z-index: 2;"><img src="article-screenshots/article-02-cnbc.png" alt="" /></div>
+  <div class="article" id="a3" style="z-index: 3;"><img src="article-screenshots/article-03-techcrunch.png" alt="" /></div>
+  <div class="article" id="a4" style="z-index: 4;"><img src="article-screenshots/article-04-forbes.png" alt="" /></div>
+  <div class="article" id="a5" style="z-index: 5;"><img src="article-screenshots/article-05-fortune.png" alt="" /></div>
+  <div class="article" id="a6" style="z-index: 6;"><img src="article-screenshots/article-06-guardian.png" alt="" /></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+  window.__timelines = window.__timelines || {};
+
+  // Each article's rest position (where it sits in the final pile) and its
+  // throw-in start offset from rest. Cards enter from fully offscreen so they
+  // physically land on the pile rather than fade in nearby.
+  const articles = [
+    { id: "#a1", restX: -90, restY: -40, restRot: -7, fromX: -1500, fromY: -650, fromRot: -38 },
+    { id: "#a2", restX:  70, restY: -55, restRot:  6, fromX:  1500, fromY: -700, fromRot:  42 },
+    { id: "#a3", restX: -50, restY:  30, restRot: -4, fromX: -1600, fromY:  600, fromRot: -52 },
+    { id: "#a4", restX:  90, restY:  20, restRot:  8, fromX:  1550, fromY:  650, fromRot:  48 },
+    { id: "#a5", restX: -30, restY: -10, restRot: -3, fromX: -1450, fromY: -900, fromRot: -26 },
+    { id: "#a6", restX:  40, restY:  50, restRot:  5, fromX:  1600, fromY: -850, fromRot:  35 },
+  ];
+
+  const tl = gsap.timeline({ paused: true });
+
+  const SLAM_DUR  = 0.46;
+  const SLAM_GAP  = 0.58;
+  const FIRST_AT  = 0.30;
+
+  articles.forEach((a, i) => {
+    const startT = FIRST_AT + i * SLAM_GAP;
+
+    // Throw-in: from fully offscreen at a wilder angle and scaled up, slamming
+    // down into the pile with back.out for the final settle.
+    // immediateRender:false keeps the card invisible (opacity:0 from CSS) until
+    // its slam moment — avoids the GSAP fromTo immediate-render trap.
+    tl.fromTo(a.id,
+      {
+        x: a.fromX,
+        y: a.fromY,
+        rotation: a.fromRot,
+        scale: 1.35,
+        opacity: 0,
+      },
+      {
+        x: a.restX,
+        y: a.restY,
+        rotation: a.restRot,
+        scale: 1.0,
+        opacity: 1,
+        duration: SLAM_DUR,
+        ease: "back.out(1.7)",
+        immediateRender: false,
+      },
+      startT
+    );
+
+    // Landing jiggle: every previously-landed article gets a small kick when
+    // the new one slams on top. Adds physical weight to the pile.
+    if (i > 0) {
+      for (let j = 0; j < i; j++) {
+        const prev = articles[j];
+        const jiggleAt = startT + SLAM_DUR * 0.55;
+        const kickDir = prev.restRot > 0 ? 1 : -1;
+        tl.to(prev.id, {
+          x: prev.restX + 4 * kickDir,
+          y: prev.restY + 3,
+          rotation: prev.restRot + 0.8 * kickDir,
+          duration: 0.08,
+          ease: "power2.out",
+        }, jiggleAt);
+        tl.to(prev.id, {
+          x: prev.restX,
+          y: prev.restY,
+          rotation: prev.restRot,
+          duration: 0.18,
+          ease: "power2.inOut",
+        }, jiggleAt + 0.08);
+      }
+    }
+  });
+
+  // Final settle: subtle zoom-in on the whole pile for visual weight.
+  const SETTLE_AT = FIRST_AT + articles.length * SLAM_GAP + 0.10;
+  tl.to("#nft-article-stack .article", {
+    scale: 1.04,
+    duration: 1.0,
+    ease: "power2.inOut",
+    stagger: 0,
+  }, SETTLE_AT);
+
+  window.__timelines["nft-article-stack"] = tl;
+</script>
+
+</body>
+</html>

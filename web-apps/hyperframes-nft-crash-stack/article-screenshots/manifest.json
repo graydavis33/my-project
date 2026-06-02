@@ -1,0 +1,44 @@
+[
+  {
+    "filename": "article-01-the-verge.png",
+    "source_url": "https://www.theverge.com/23312790/loot-dom-hofmann-nft-project-developer-community",
+    "outlet": "the-verge",
+    "headline": "How a viral NFT project survived the crypto crash",
+    "captured_at": "2026-05-19T00:21:01+00:00"
+  },
+  {
+    "filename": "article-02-cnbc.png",
+    "source_url": "https://www.cnbc.com/2021/06/15/nft-price-crash-what-next-for-digital-collectibles.html",
+    "outlet": "cnbc",
+    "headline": "NFT sales are dropping but believers still see a future for digital collectibles",
+    "captured_at": "2026-05-19T00:21:11+00:00"
+  },
+  {
+    "filename": "article-03-techcrunch.png",
+    "source_url": "https://techcrunch.com/podcast/formerly-rich-nft-buyers-party-through-the-pain/",
+    "outlet": "techcrunch",
+    "headline": "Formerly rich NFT buyers party through the pain",
+    "captured_at": "2026-05-19T00:21:19+00:00"
+  },
+  {
+    "filename": "article-04-forbes.png",
+    "source_url": "https://www.forbes.com/sites/stevendesmyter/2024/06/13/the-aura-of-cryptocurrencies-and-the-death-of-nfts/",
+    "outlet": "forbes",
+    "headline": "The Aura Of Cryptocurrencies (and The Death Of NFTs)",
+    "captured_at": "2026-05-19T00:21:28+00:00"
+  },
+  {
+    "filename": "article-05-fortune.png",
+    "source_url": "https://fortune.com/2022/02/03/nft-collector-crypto-art-museum-market-crash/",
+    "outlet": "fortune",
+    "headline": "This NFT collector who says he has art worth millions thinks the market is about to crash\u2014but notes he\u2019s not in it for the money",
+    "captured_at": "2026-05-19T00:21:37+00:00"
+  },
+  {
+    "filename": "article-06-guardian.png",
+    "source_url": "https://www.theguardian.com/technology/2022/jul/02/nft-sales-hit-12-month-low-after-cryptocurrency-crash",
+    "outlet": "guardian",
+    "headline": "NFT sales hit 12-month low after cryptocurrency crash",
+    "captured_at": "2026-05-19T00:21:44+00:00"
+  }
+]

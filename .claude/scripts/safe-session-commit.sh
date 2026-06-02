@@ -24,6 +24,25 @@ if [ -z "$(git status --porcelain)" ]; then
     exit 0
 fi
 
+# Refuse to auto-commit on any branch other than main. Added 2026-06-02
+# after discovering that a paused rebase had parked Windows sessions on
+# snapshot-2026-05-29-windows for 23 days; every Stop pushed to that
+# branch instead of main, silently splitting the work lineage.
+BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [ "$BRANCH" != "main" ]; then
+    LOG="$REPO/.claude/auto-commit-skipped.log"
+    {
+        echo "---"
+        echo "$(date -Iseconds) — auto-commit BLOCKED: not on main"
+        echo "current branch: ${BRANCH:-<detached HEAD>}"
+        echo "files affected:"
+        git status --porcelain
+    } >> "$LOG"
+    echo "[safe-session-commit] BLOCKED: HEAD is '${BRANCH:-<detached>}', not 'main'." >&2
+    echo "[safe-session-commit] Changes left unstaged. See .claude/auto-commit-skipped.log" >&2
+    exit 0
+fi
+
 git add .
 
 # How much would this commit delete?

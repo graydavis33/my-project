@@ -1,0 +1,11 @@
+{
+  "name": "sai-vid2-captions",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.6.51 preview",
+    "check": "npx --yes hyperframes@0.6.51 lint && npx --yes hyperframes@0.6.51 validate && npx --yes hyperframes@0.6.51 inspect",
+    "render": "npx --yes hyperframes@0.6.51 render --fps 24",
+    "publish": "npx --yes hyperframes@0.6.51 publish"
+  }
+}

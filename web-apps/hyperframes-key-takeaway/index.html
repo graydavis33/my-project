@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+      }
+
+      /* ===== Three numbered cards, white outline on chroma green ===== */
+      .card {
+        position: absolute;
+        top: 360px;
+        width: 280px;
+        height: 360px;
+        border: 8px solid #ffffff;
+        border-radius: 24px;
+        background: rgba(255,255,255,0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 200px;
+        color: #ffffff;
+        letter-spacing: 0;
+        line-height: 1;
+      }
+      #card-1 { left: 340px; }   /* center x = 480 */
+      #card-2 { left: 820px; }   /* center x = 960 (canvas center) */
+      #card-3 { left: 1300px; }  /* center x = 1440 */
+
+      /* ===== Final unified circle (revealed when cards merge) ===== */
+      #big-circle {
+        position: absolute;
+        top: 240px;
+        left: 660px;
+        width: 600px;
+        height: 600px;
+        border: 8px solid #ffffff;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.04);
+        transform-origin: 50% 50%;
+      }
+
+      /* ===== KEY TAKEAWAY label inside the circle ===== */
+      #key-takeaway {
+        position: absolute;
+        top: 441px;
+        left: 660px;
+        width: 600px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;          /* SemiBold */
+        font-size: 90px;
+        color: #ffffff;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        line-height: 1.1;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Three cards: 1, 2, 3 — slide up one by one -->
+      <div class="card" id="card-1">1</div>
+      <div class="card" id="card-2">2</div>
+      <div class="card" id="card-3">3</div>
+
+      <!-- Final unified circle (hidden until merge) -->
+      <div id="big-circle"></div>
+
+      <!-- KEY TAKEAWAY label (hidden until circle is revealed) -->
+      <div id="key-takeaway">KEY<br>TAKEAWAY</div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ============================================================
+      // Initial states
+      // ============================================================
+      // Cards start BELOW the canvas, ready to slide up.
+      gsap.set('.card', { y: 800, opacity: 0 });
+
+      // For the swirl phase, each card pivots around the CANVAS CENTER
+      // (960, 540). transform-origin is given relative to the element,
+      // so we offset each card's origin so rotations swing it around the
+      // shared canvas center while scaling collapses it toward that point.
+      gsap.set('#card-1', { transformOrigin: '620px 180px' });   // 960-340=620, 540-360=180
+      gsap.set('#card-2', { transformOrigin: '140px 180px' });   // 960-820=140, 540-360=180
+      gsap.set('#card-3', { transformOrigin: '-340px 180px' });  // 960-1300=-340, 540-360=180
+
+      gsap.set('#big-circle', { scale: 0, opacity: 0 });
+      gsap.set('#key-takeaway', { opacity: 0, scale: 0.7 });
+
+      // ============================================================
+      // Phase 1 (0.20s → 1.45s): Cards slide up one by one
+      // ============================================================
+      tl.to('#card-1', { y: 0, opacity: 1, duration: 0.50, ease: 'back.out(1.4)' }, 0.20);
+      tl.to('#card-2', { y: 0, opacity: 1, duration: 0.50, ease: 'back.out(1.4)' }, 0.55);
+      tl.to('#card-3', { y: 0, opacity: 1, duration: 0.50, ease: 'back.out(1.4)' }, 0.90);
+      // Last card finishes settling at ~1.40
+
+      // ============================================================
+      // Phase 2 (1.45s → 2.50s): Hold — three cards visible side by side
+      // ============================================================
+
+      // ============================================================
+      // Phase 3 (2.50s → 3.50s): Cards swirl around the canvas center
+      //   and shrink toward it. Each card rotates ~360° around (960,540)
+      //   while scaling to zero — the rotational pivot at canvas center
+      //   means they spiral inward as they spin.
+      // ============================================================
+      const SWIRL_TIME = 2.50;
+      const SWIRL_DURATION = 1.00;
+      const SWIRL_EASE = 'power2.in';
+
+      tl.to('#card-1',
+        { rotation:  360, scale: 0, opacity: 0, duration: SWIRL_DURATION, ease: SWIRL_EASE },
+        SWIRL_TIME
+      );
+      tl.to('#card-2',
+        { rotation: -360, scale: 0, opacity: 0, duration: SWIRL_DURATION, ease: SWIRL_EASE },
+        SWIRL_TIME + 0.05
+      );
+      tl.to('#card-3',
+        { rotation:  360, scale: 0, opacity: 0, duration: SWIRL_DURATION, ease: SWIRL_EASE },
+        SWIRL_TIME + 0.10
+      );
+
+      // ============================================================
+      // Phase 4 (3.20s → 3.80s): Big circle scales up from canvas center
+      //   (overlaps the tail of the swirl so the cards "become" the circle)
+      // ============================================================
+      tl.to('#big-circle',
+        { scale: 1, opacity: 1, duration: 0.60, ease: 'back.out(1.6)' },
+        3.20
+      );
+
+      // ============================================================
+      // Phase 5 (3.65s → 4.05s): KEY TAKEAWAY label reveals inside circle
+      // ============================================================
+      tl.to('#key-takeaway',
+        { opacity: 1, scale: 1, duration: 0.40, ease: 'power3.out' },
+        3.65
+      );
+
+      // ============================================================
+      // Phase 6 (4.05s → 6.00s): Final hold
+      // ============================================================
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

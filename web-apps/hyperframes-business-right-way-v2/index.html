@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00B140;
+        font-family: "Montserrat", "Inter", system-ui, sans-serif;
+        color: #ffffff;
+      }
+      #root { position: relative; width: 1920px; height: 1080px; }
+
+      /* camera = world wrapper. transform-origin 0 0; scale + translate set by GSAP */
+      #camera {
+        position: absolute;
+        top: 0; left: 0;
+        width: 5760px;
+        height: 1080px;
+        transform-origin: 0 0;
+        will-change: transform;
+      }
+
+      /* corner marks (fixed in viewport) */
+      .corner-mark {
+        position: absolute;
+        width: 60px;
+        height: 6px;
+        background: #ffffff;
+        opacity: 0;
+        z-index: 10;
+      }
+      .corner-mark.tl   { top: 60px; left: 60px; }
+      .corner-mark.tl-v { top: 60px; left: 60px; width: 6px; height: 60px; }
+      .corner-mark.tr   { top: 60px; right: 60px; }
+      .corner-mark.tr-v { top: 60px; right: 60px; width: 6px; height: 60px; }
+      .corner-mark.bl   { bottom: 60px; left: 60px; }
+      .corner-mark.bl-v { bottom: 60px; left: 60px; width: 6px; height: 60px; }
+      .corner-mark.br   { bottom: 60px; right: 60px; }
+      .corner-mark.br-v { bottom: 60px; right: 60px; width: 6px; height: 60px; }
+
+      /* every stroke shares this look */
+      #world .ink {
+        fill: none;
+        stroke: #ffffff;
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      #world .ink.thin { stroke-width: 5; }
+
+      #world .fillwhite { fill: #ffffff; opacity: 0; }
+
+      /* bars rise from baseline */
+      #world .bar { transform: scaleY(0); transform-box: fill-box; transform-origin: center bottom; }
+
+      /* $ symbol starts hidden */
+      #world .dollar { opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="13"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- corner marks -->
+      <div class="corner-mark tl"></div><div class="corner-mark tl-v"></div>
+      <div class="corner-mark tr"></div><div class="corner-mark tr-v"></div>
+      <div class="corner-mark bl"></div><div class="corner-mark bl-v"></div>
+      <div class="corner-mark br"></div><div class="corner-mark br-v"></div>
+
+      <div id="camera" data-layout-allow-overflow>
+        <svg id="world" width="5760" height="1080" viewBox="0 0 5760 1080" data-layout-allow-overflow>
+
+          <!-- ════════════════════════════════════════════════
+               SCENE 1 — Skyscraper (centered around x=960)
+               ════════════════════════════════════════════════ -->
+          <!-- s1a antenna shaft (drawn from bottom up) -->
+          <line id="s1-antenna" class="ink" x1="960" y1="200" x2="960" y2="100"/>
+          <!-- s1b antenna ball -->
+          <circle id="s1-ball" class="fillwhite" cx="960" cy="88" r="11"/>
+          <!-- s1c roof left side -->
+          <line id="s1-roof-l" class="ink" x1="810" y1="370" x2="960" y2="270"/>
+          <!-- s1d roof right side -->
+          <line id="s1-roof-r" class="ink" x1="960" y1="270" x2="1110" y2="370"/>
+          <!-- s1e body rect (drawn clockwise from top-right) -->
+          <path id="s1-body" class="ink" d="M 1110 370 L 1110 870 L 810 870 L 810 370 L 1110 370"/>
+          <!-- s1f ground line -->
+          <line id="s1-ground" class="ink" x1="740" y1="870" x2="1180" y2="870"/>
+          <!-- s1g windows (12) -->
+          <g id="s1-windows">
+            <rect class="fillwhite win" x="850" y="420" width="50" height="55"/>
+            <rect class="fillwhite win" x="935" y="420" width="50" height="55"/>
+            <rect class="fillwhite win" x="1020" y="420" width="50" height="55"/>
+            <rect class="fillwhite win" x="850" y="505" width="50" height="55"/>
+            <rect class="fillwhite win" x="935" y="505" width="50" height="55"/>
+            <rect class="fillwhite win" x="1020" y="505" width="50" height="55"/>
+            <rect class="fillwhite win" x="850" y="590" width="50" height="55"/>
+            <rect class="fillwhite win" x="935" y="590" width="50" height="55"/>
+            <rect class="fillwhite win" x="1020" y="590" width="50" height="55"/>
+            <rect class="fillwhite win" x="850" y="675" width="50" height="55"/>
+            <rect class="fillwhite win" x="1020" y="675" width="50" height="55"/>
+            <rect class="fillwhite win door" x="922" y="768" width="76" height="102"/>
+          </g>
+          <!-- s1h check circle -->
+          <circle id="s1-check-circle" class="ink thin" cx="1230" cy="380" r="42"/>
+          <!-- s1i check mark -->
+          <path id="s1-check-mark" class="ink" d="M 1208 380 L 1225 398 L 1252 366"/>
+
+          <!-- ════════════════════════════════════════════════
+               BRIDGE 1 — visible connecting line from check-mark
+               endpoint (1252, 366) to stickfigure head top (2880, 240)
+               ════════════════════════════════════════════════ -->
+          <path id="bridge1" class="ink"
+                d="M 1252 366
+                   C 1500 350, 1700 460, 1900 460
+                   C 2100 460, 2300 380, 2500 320
+                   C 2700 270, 2820 250, 2880 240"/>
+
+          <!-- ════════════════════════════════════════════════
+               SCENE 2 — Stickfigure arms raised (centered x=2880)
+               ════════════════════════════════════════════════ -->
+          <!-- s2a head circle — bridge lands at top of this -->
+          <circle id="s2-head" class="ink" cx="2880" cy="300" r="60"/>
+          <!-- s2b body line -->
+          <line id="s2-body" class="ink" x1="2880" y1="360" x2="2880" y2="620"/>
+          <!-- s2c left arm raised -->
+          <line id="s2-arm-l" class="ink" x1="2880" y1="390" x2="2760" y2="270"/>
+          <!-- s2d right arm raised -->
+          <line id="s2-arm-r" class="ink" x1="2880" y1="390" x2="3000" y2="270"/>
+          <!-- s2e left leg -->
+          <line id="s2-leg-l" class="ink" x1="2880" y1="620" x2="2790" y2="780"/>
+          <!-- s2f right leg -->
+          <line id="s2-leg-r" class="ink" x1="2880" y1="620" x2="2970" y2="780"/>
+          <!-- s2g joy sparkles -->
+          <g id="s2-sparks">
+            <line class="ink spark" x1="2700" y1="200" x2="2670" y2="170"/>
+            <line class="ink spark" x1="3060" y1="200" x2="3090" y2="170"/>
+            <line class="ink spark" x1="2670" y1="330" x2="2630" y2="340"/>
+            <line class="ink spark" x1="3090" y1="330" x2="3130" y2="340"/>
+            <line class="ink spark" x1="2720" y1="450" x2="2690" y2="470"/>
+            <line class="ink spark" x1="3040" y1="450" x2="3070" y2="470"/>
+            <line class="ink spark" x1="2780" y1="170" x2="2780" y2="135"/>
+            <line class="ink spark" x1="2980" y1="170" x2="2980" y2="135"/>
+          </g>
+
+          <!-- ════════════════════════════════════════════════
+               BRIDGE 2 — from right hand tip (3000, 270) over to
+               scene 3 entry point (5180, 320) (arrow tip area)
+               ════════════════════════════════════════════════ -->
+          <path id="bridge2" class="ink"
+                d="M 3000 270
+                   C 3300 180, 3700 160, 4100 220
+                   C 4400 270, 4700 320, 5000 320
+                   C 5100 320, 5150 320, 5180 320"/>
+
+          <!-- ════════════════════════════════════════════════
+               SCENE 3 — Bars + arrow + $ (centered around x=4800)
+               ════════════════════════════════════════════════ -->
+          <!-- s3a arrow chevron (left tine + right tine) -->
+          <path id="s3-chev" class="ink" d="M 5130 370 L 5180 320 L 5230 370"/>
+          <!-- s3b arrow shaft going down from chevron tip -->
+          <line id="s3-shaft" class="ink" x1="5180" y1="320" x2="5180" y2="480"/>
+          <!-- s3c baseline -->
+          <line id="s3-baseline" class="ink" x1="5240" y1="820" x2="4360" y2="820"/>
+          <!-- s3d bars rising from baseline -->
+          <g id="s3-bars">
+            <rect class="fillwhite bar" x="4400" y="660" width="80" height="160"/>
+            <rect class="fillwhite bar" x="4550" y="600" width="80" height="220"/>
+            <rect class="fillwhite bar" x="4700" y="530" width="80" height="290"/>
+            <rect class="fillwhite bar" x="4850" y="460" width="80" height="360"/>
+            <rect class="fillwhite bar" x="5000" y="380" width="80" height="440"/>
+          </g>
+          <!-- s3e $ glyph at chart top center -->
+          <text id="s3-dollar" class="dollar" x="4800" y="360"
+                font-size="220" font-weight="900" fill="#ffffff"
+                text-anchor="middle" font-family="Montserrat, Inter, sans-serif">$</text>
+        </svg>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ── camera helpers ────────────────────────────────────────────
+      // GSAP transform order: translate * scale (point-wise: scale first, then translate)
+      // To place world (Px, Py) at screen center (960, 540) with scale S:
+      //   tx = 960 - S*Px,  ty = 540 - S*Py
+      const SCALE = 1.7;
+      function camTo(Px, Py, dur, ease = "power1.inOut") {
+        return tl.to("#camera", {
+          x: 960 - SCALE * Px,
+          y: 540 - SCALE * Py,
+          duration: dur, ease
+        }, "<");
+      }
+      function camAt(t, Px, Py, dur, ease = "power1.inOut") {
+        return tl.to("#camera", {
+          x: 960 - SCALE * Px,
+          y: 540 - SCALE * Py,
+          duration: dur, ease
+        }, t);
+      }
+
+      // ── set initial dasharrays so strokes start hidden ────────────
+      const strokes = [
+        { sel: "#s1-antenna",     len:  100 },
+        { sel: "#s1-roof-l",      len:  185 },
+        { sel: "#s1-roof-r",      len:  185 },
+        { sel: "#s1-body",        len: 1620 },
+        { sel: "#s1-ground",      len:  440 },
+        { sel: "#s1-check-circle",len:  270 },
+        { sel: "#s1-check-mark",  len:   75 },
+        { sel: "#bridge1",        len: 2200 },
+        { sel: "#s2-head",        len:  380 },
+        { sel: "#s2-body",        len:  260 },
+        { sel: "#s2-arm-l",       len:  170 },
+        { sel: "#s2-arm-r",       len:  170 },
+        { sel: "#s2-leg-l",       len:  184 },
+        { sel: "#s2-leg-r",       len:  184 },
+        { sel: "#bridge2",        len: 2800 },
+        { sel: "#s3-chev",        len:  145 },
+        { sel: "#s3-shaft",       len:  160 },
+        { sel: "#s3-baseline",    len:  880 },
+      ];
+      strokes.forEach(s => {
+        gsap.set(s.sel, { strokeDasharray: s.len, strokeDashoffset: s.len });
+      });
+      gsap.set(".spark", { strokeDasharray: 50, strokeDashoffset: 50 });
+      gsap.set("#camera", { transformOrigin: "0 0", x: 0, y: 0, scale: SCALE });
+
+      // corner marks pop
+      tl.from(".corner-mark", {
+        scale: 0, opacity: 0, duration: 0.4, ease: "back.out(1.8)",
+        stagger: 0.04, transformOrigin: "center center"
+      }, 0);
+
+      // initial camera focus: above antenna (960, 150)
+      tl.set("#camera", { x: 960 - SCALE * 960, y: 540 - SCALE * 150 }, 0);
+
+      /* ════════════════════════════════════════════════
+         SCENE 1 — Skyscraper
+         ════════════════════════════════════════════════ */
+      // 1a. antenna shaft draws (960,200)→(960,100), 0.45s @ t=0.3
+      tl.to("#s1-antenna", { strokeDashoffset: 0, duration: 0.45, ease: "none" }, 0.3);
+      camAt(0.3, 960, 130, 0.45);
+
+      // 1b. antenna ball pops at (960,88) @ t=0.75
+      tl.to("#s1-ball", { opacity: 1, duration: 0.2, ease: "back.out(2)" }, 0.75);
+      camAt(0.75, 960, 100, 0.2);
+
+      // 1c. roof left (810,370)→(960,270), 0.35s @ t=0.95
+      tl.to("#s1-roof-l", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 0.95);
+      camAt(0.95, 885, 320, 0.35);
+
+      // 1d. roof right (960,270)→(1110,370), 0.35s @ t=1.30
+      tl.to("#s1-roof-r", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 1.30);
+      camAt(1.30, 1035, 320, 0.35);
+
+      // 1e. body rect clockwise from (1110,370) — 1.2s, camera follows around
+      tl.to("#s1-body", { strokeDashoffset: 0, duration: 1.2, ease: "none" }, 1.65);
+      // right side down: t=1.65 → 1.95, pen reaches (1110, 870)
+      camAt(1.65, 1110, 620, 0.30);
+      // bottom: t=1.95 → 2.25, pen reaches (810, 870)
+      camAt(1.95, 960, 870, 0.30);
+      // left side up: t=2.25 → 2.55, pen reaches (810, 370)
+      camAt(2.25, 810, 620, 0.30);
+      // top close: t=2.55 → 2.85, pen reaches (1110, 370)
+      camAt(2.55, 960, 370, 0.30);
+
+      // 1f. ground line (740,870)→(1180,870), 0.4s @ t=2.95
+      tl.to("#s1-ground", { strokeDashoffset: 0, duration: 0.4, ease: "none" }, 2.95);
+      camAt(2.95, 960, 800, 0.4);
+
+      // 1g. windows pop (12 windows, stagger 0.04s) @ t=3.4
+      tl.to("#s1-windows .win", {
+        opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)",
+        stagger: 0.04, transformOrigin: "center center"
+      }, 3.4);
+      gsap.set("#s1-windows .win", { transformOrigin: "center center", scale: 0, opacity: 0 });
+      camAt(3.4, 960, 545, 0.5);
+
+      // 1h. check circle (clockwise from top), 0.5s @ t=4.0
+      tl.to("#s1-check-circle", { strokeDashoffset: 0, duration: 0.5, ease: "none" }, 4.0);
+      camAt(4.0, 1230, 380, 0.5);
+
+      // 1i. check mark, 0.35s @ t=4.5
+      tl.to("#s1-check-mark", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 4.5);
+      camAt(4.5, 1230, 380, 0.35);
+
+      /* ════════════════════════════════════════════════
+         BRIDGE 1 — pen travels to stickfigure
+         (1252, 366) → (2880, 240), 1.3s @ t=4.85
+         ════════════════════════════════════════════════ */
+      tl.to("#bridge1", { strokeDashoffset: 0, duration: 1.3, ease: "none" }, 4.85);
+      camAt(4.85, 1700, 420, 0.45);
+      camAt(5.30, 2300, 360, 0.45);
+      camAt(5.75, 2880, 270, 0.40);
+
+      /* ════════════════════════════════════════════════
+         SCENE 2 — Stickfigure
+         ════════════════════════════════════════════════ */
+      // 2a. head circle, 0.5s @ t=6.2 — pen circles head
+      tl.to("#s2-head", { strokeDashoffset: 0, duration: 0.55, ease: "none" }, 6.2);
+      camAt(6.20, 2940, 300, 0.14);  // pen at right of head
+      camAt(6.34, 2880, 360, 0.14);  // bottom
+      camAt(6.48, 2820, 300, 0.14);  // left
+      camAt(6.62, 2880, 240, 0.13);  // top close
+
+      // 2b. body line, 0.4s @ t=6.8
+      tl.to("#s2-body", { strokeDashoffset: 0, duration: 0.4, ease: "none" }, 6.8);
+      camAt(6.8, 2880, 490, 0.4);
+
+      // 2c. left arm raised, 0.35s @ t=7.2
+      tl.to("#s2-arm-l", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 7.2);
+      camAt(7.2, 2820, 330, 0.35);
+
+      // 2d. right arm raised, 0.35s @ t=7.55
+      tl.to("#s2-arm-r", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 7.55);
+      camAt(7.55, 2940, 330, 0.35);
+
+      // 2e. left leg, 0.35s @ t=7.95
+      tl.to("#s2-leg-l", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 7.95);
+      camAt(7.95, 2835, 700, 0.35);
+
+      // 2f. right leg, 0.35s @ t=8.30
+      tl.to("#s2-leg-r", { strokeDashoffset: 0, duration: 0.35, ease: "none" }, 8.30);
+      camAt(8.30, 2925, 700, 0.35);
+
+      // 2g. sparkles pop (stagger), 0.4s @ t=8.7
+      tl.to(".spark", {
+        strokeDashoffset: 0, duration: 0.3, ease: "power2.out", stagger: 0.04
+      }, 8.7);
+      camAt(8.7, 2880, 400, 0.4);
+
+      /* ════════════════════════════════════════════════
+         BRIDGE 2 — pen travels to chart
+         (3000, 270) → (5180, 320), 1.3s @ t=9.15
+         ════════════════════════════════════════════════ */
+      tl.to("#bridge2", { strokeDashoffset: 0, duration: 1.3, ease: "none" }, 9.15);
+      camAt(9.15, 3000, 270, 0.10);
+      camAt(9.25, 3700, 200, 0.40);
+      camAt(9.65, 4400, 270, 0.40);
+      camAt(10.05, 5000, 320, 0.30);
+      camAt(10.35, 5180, 320, 0.10);
+
+      /* ════════════════════════════════════════════════
+         SCENE 3 — Chart
+         ════════════════════════════════════════════════ */
+      // 3a. arrow chevron — pen draws M(5130,370)→L(5180,320)→L(5230,370), 0.3s @ t=10.45
+      tl.to("#s3-chev", { strokeDashoffset: 0, duration: 0.3, ease: "none" }, 10.45);
+      camAt(10.45, 5180, 345, 0.3);
+
+      // 3b. arrow shaft (5180,320)→(5180,480), 0.3s @ t=10.75
+      tl.to("#s3-shaft", { strokeDashoffset: 0, duration: 0.3, ease: "none" }, 10.75);
+      camAt(10.75, 5180, 400, 0.3);
+
+      // 3c. bars rise (stagger from right to left), 0.6s @ t=11.05
+      tl.to("#s3-bars .bar", {
+        scaleY: 1, duration: 0.55, ease: "back.out(1.5)", stagger: 0.07
+      }, 11.05);
+      camAt(11.05, 4800, 620, 0.6);
+
+      // 3d. baseline draws (5240,820)→(4360,820), 0.45s @ t=11.45
+      tl.to("#s3-baseline", { strokeDashoffset: 0, duration: 0.45, ease: "none" }, 11.45);
+      camAt(11.45, 4800, 820, 0.45);
+
+      // 3e. $ pops at top center, 0.4s @ t=11.65
+      tl.to("#s3-dollar", { opacity: 1, duration: 0.4, ease: "power2.out" }, 11.65);
+      camAt(11.65, 4800, 410, 0.4);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

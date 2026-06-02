@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #00b140;
+      }
+      #root {
+        width: 1920px;
+        height: 1080px;
+        position: relative;
+        background: #00b140;
+        overflow: hidden;
+      }
+
+      .stat-card {
+        position: absolute;
+        top: 220px;
+        width: 760px;
+        height: 640px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 36px;
+        transform-origin: 50% 50%;
+      }
+      #card-followers { left: 100px; }
+      #card-views     { left: 1060px; }
+
+      .stat-icon {
+        width: 200px;
+        height: 200px;
+        transform-origin: 50% 50%;
+      }
+      .stat-icon svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .stat-number {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800;
+        font-size: 128px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.005em;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        transform-origin: 50% 50%;
+      }
+
+      .stat-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 56px;
+        line-height: 1;
+        color: #ffffff;
+        letter-spacing: 0.06em;
+        text-align: center;
+        white-space: nowrap;
+        transform-origin: 50% 50%;
+      }
+
+      /* Vertical divider down canvas center */
+      #divider {
+        position: absolute;
+        left: 957px;
+        top: 180px;
+        width: 5px;
+        height: 720px;
+        background: #ffffff;
+        transform-origin: 50% 0%;
+        z-index: 4;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6.5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- LEFT: Followers card -->
+      <div class="stat-card" id="card-followers">
+        <div class="stat-icon" id="icon-followers">
+          <!-- Half-body stick-figure silhouette -->
+          <svg viewBox="0 0 140 180">
+            <circle cx="70" cy="34" r="28" fill="#ffffff"/>
+            <path d="M 25 180 L 25 115 Q 25 82.5 45 69 Q 55 62 70 62 Q 85 62 95 69 Q 115 82.5 115 115 L 115 180 Z" fill="#ffffff"/>
+          </svg>
+        </div>
+        <div class="stat-number" id="num-followers">0</div>
+        <div class="stat-label" id="label-followers">FOLLOWERS</div>
+      </div>
+
+      <!-- Vertical divider -->
+      <div id="divider"></div>
+
+      <!-- RIGHT: Views / month card -->
+      <div class="stat-card" id="card-views">
+        <div class="stat-icon" id="icon-views">
+          <!-- White-outlined circle with solid play triangle inside -->
+          <svg viewBox="0 0 200 200" fill="none" stroke="#ffffff" stroke-width="10" stroke-linejoin="round">
+            <circle cx="100" cy="100" r="86"/>
+            <polygon points="82,62 142,100 82,138" fill="#ffffff" stroke="none"/>
+          </svg>
+        </div>
+        <div class="stat-number" id="num-views">0</div>
+        <div class="stat-label" id="label-views">VIEWS / MONTH</div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const FOLLOWER_TARGET = 2400000;
+      const VIEW_TARGET = 240000000;
+      const followerEl = document.getElementById('num-followers');
+      const viewEl     = document.getElementById('num-views');
+      const followerCounter = { val: 0 };
+      const viewCounter     = { val: 0 };
+
+      // Initial states
+      gsap.set('#icon-followers, #icon-views', { scale: 0, opacity: 0 });
+      gsap.set('#num-followers, #num-views',  { y: 30, opacity: 0 });
+      gsap.set('#label-followers, #label-views', { y: 24, opacity: 0 });
+      gsap.set('#divider', { scaleY: 0 });
+
+      // Phase 1: divider drops, icons pop in, labels rise
+      tl.to('#divider',
+        { scaleY: 1, duration: 0.50, ease: 'power3.out' },
+        0.15
+      );
+      tl.to('#icon-followers',
+        { scale: 1, opacity: 1, duration: 0.50, ease: 'back.out(2.0)' },
+        0.30
+      );
+      tl.to('#icon-views',
+        { scale: 1, opacity: 1, duration: 0.50, ease: 'back.out(2.0)' },
+        0.50
+      );
+      tl.to('#label-followers',
+        { y: 0, opacity: 1, duration: 0.40, ease: 'power3.out' },
+        0.70
+      );
+      tl.to('#label-views',
+        { y: 0, opacity: 1, duration: 0.40, ease: 'power3.out' },
+        0.85
+      );
+
+      // Phase 2: counters fade in then slot-machine up to targets
+      tl.to('#num-followers',
+        { y: 0, opacity: 1, duration: 0.40, ease: 'power3.out' },
+        1.00
+      );
+      tl.to('#num-views',
+        { y: 0, opacity: 1, duration: 0.40, ease: 'power3.out' },
+        1.15
+      );
+
+      const COUNT_START = 1.10;
+      const COUNT_DURATION = 2.40;
+      tl.to(followerCounter,
+        {
+          val: FOLLOWER_TARGET,
+          duration: COUNT_DURATION,
+          ease: 'power3.out',
+          onUpdate: () => {
+            followerEl.textContent = Math.floor(followerCounter.val).toLocaleString('en-US');
+          }
+        },
+        COUNT_START
+      );
+      tl.to(viewCounter,
+        {
+          val: VIEW_TARGET,
+          duration: COUNT_DURATION,
+          ease: 'power3.out',
+          onUpdate: () => {
+            viewEl.textContent = Math.floor(viewCounter.val).toLocaleString('en-US');
+          }
+        },
+        COUNT_START + 0.05
+      );
+
+      // Phase 3: pulse pop on completion
+      const PULSE_START = COUNT_START + COUNT_DURATION + 0.05;
+      tl.to('#num-followers',
+        { scale: 1.08, duration: 0.18, ease: 'power2.out', yoyo: true, repeat: 1 },
+        PULSE_START
+      );
+      tl.to('#num-views',
+        { scale: 1.08, duration: 0.18, ease: 'power2.out', yoyo: true, repeat: 1 },
+        PULSE_START + 0.05
+      );
+
+      // Phase 4: hold to 6.5s
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

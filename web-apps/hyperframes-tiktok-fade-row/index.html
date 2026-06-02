@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        /* Chroma green for Premiere Ultra Key */
+        background: #00B140;
+      }
+      .clip-wrapper {
+        position: absolute;
+        overflow: hidden;
+        transform-origin: top left;
+        border-radius: 16px;
+        border: 3px solid #ffffff;
+      }
+      .clip-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      /* Z-stack: clip 1 always on top so clips 2-6 are hidden behind it
+         until they slide past its right edge. Among clips 2-6, leftmost
+         (clip 2) is highest so it covers later-emerging clips during
+         their transit. */
+      #w1 { z-index: 10; }
+      #w2 { z-index: 9; }
+      #w3 { z-index: 8; }
+      #w4 { z-index: 7; }
+      #w5 { z-index: 6; }
+      #w6 { z-index: 5; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="5.5"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Final-state CSS layout: 6 clips in a horizontal row, 300x504 each, 24px gaps, vertically centered.
+           Clips 2-6 start hidden BEHIND clip 1 at the same screen x; they slide horizontally rightward
+           and emerge from clip 1's right edge to land at their CSS positions. Pure horizontal motion. -->
+      <div id="w1" class="clip-wrapper" style="left: 0px;    top: 288px; width: 300px; height: 504px;">
+        <video id="v1" class="clip" data-start="0" data-duration="5.5" data-track-index="0"
+               src="assets/clip1.mp4" muted playsinline></video>
+      </div>
+      <div id="w2" class="clip-wrapper" style="left: 324px;  top: 288px; width: 300px; height: 504px;">
+        <video id="v2" class="clip" data-start="0" data-duration="5.5" data-track-index="1"
+               src="assets/clip2.mp4" muted playsinline></video>
+      </div>
+      <div id="w3" class="clip-wrapper" style="left: 648px;  top: 288px; width: 300px; height: 504px;">
+        <video id="v3" class="clip" data-start="0" data-duration="5.5" data-track-index="2"
+               src="assets/clip3.mp4" muted playsinline></video>
+      </div>
+      <div id="w4" class="clip-wrapper" style="left: 972px;  top: 288px; width: 300px; height: 504px;">
+        <video id="v4" class="clip" data-start="0" data-duration="5.5" data-track-index="3"
+               src="assets/clip4.mp4" muted playsinline></video>
+      </div>
+      <div id="w5" class="clip-wrapper" style="left: 1296px; top: 288px; width: 300px; height: 504px;">
+        <video id="v5" class="clip" data-start="0" data-duration="5.5" data-track-index="4"
+               src="assets/clip5.mp4" muted playsinline></video>
+      </div>
+      <div id="w6" class="clip-wrapper" style="left: 1620px; top: 288px; width: 300px; height: 504px;">
+        <video id="v6" class="clip" data-start="0" data-duration="5.5" data-track-index="5"
+               src="assets/clip6.mp4" muted playsinline></video>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ── Initial state ────────────────────────────────────────────────
+      // Clip 1 starts large at canvas center.
+      //   Hero size: 540 x 907 (preserves vertical TikTok aspect 1050:1764)
+      //   Hero position: (690, 86) — centered on 1920x1080
+      //   Relative to CSS (0, 288, 300x504): scale = 1.8, offset = (690, -202)
+      tl.set("#w1", { x: 690, y: -202, scale: 1.8, opacity: 0 }, 0);
+
+      // Clips 2-6 start at visual x = 0 (same screen position as clip 1) AND opacity 0.
+      // They stay invisible during clip 1's hero/shrink phase. At t=1.6 (when clip 1
+      // has landed at x=0 covering them), they pop to opacity 1 — invisible to the
+      // viewer because clip 1 (z=10) is on top. Then they slide rightward and emerge.
+      tl.set("#w2", { x:  -324, opacity: 0 }, 0);
+      tl.set("#w3", { x:  -648, opacity: 0 }, 0);
+      tl.set("#w4", { x:  -972, opacity: 0 }, 0);
+      tl.set("#w5", { x: -1296, opacity: 0 }, 0);
+      tl.set("#w6", { x: -1620, opacity: 0 }, 0);
+      tl.set(["#w2","#w3","#w4","#w5","#w6"], { opacity: 1 }, 1.6);
+
+      // ── Phase 1 (0.0-0.4s): clip 1 fades in at center ────────────────
+      tl.to("#w1", { opacity: 1, duration: 0.4, ease: "power2.out" }, 0);
+
+      // ── Phase 2 (0.4-0.8s): hold — clip 1 alone, fully visible ───────
+
+      // ── Phase 3 (0.8-1.6s): clip 1 shrinks/slides to its final slot ──
+      tl.to("#w1", {
+        x: 0, y: 0, scale: 1,
+        duration: 0.8,
+        ease: "power3.inOut",
+      }, 0.8);
+
+      // ── Phase 4 (1.6-2.6s): clips 2-6 slide horizontally OUT from clip 1 ─
+      // Pure horizontal translation. Each clip travels to x=0 (its CSS slot).
+      // Stagger 0.1s lets them emerge in sequence; same 0.6s duration means
+      // clips with longer travel move faster (clip 6 is the rightmost).
+      // Z-order (clip2 highest, clip6 lowest among 2-6) ensures earlier-landing
+      // clips stay visible while later ones slide past behind them.
+      const emerge = ["#w2", "#w3", "#w4", "#w5", "#w6"];
+      emerge.forEach((id, i) => {
+        tl.to(id, {
+          x: 0,
+          duration: 0.6,
+          ease: "power2.out",
+        }, 1.6 + i * 0.1);
+      });
+
+      // ── Phase 5 (2.6-5.5s): hold final state — all 6 playing simultaneously ─
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
