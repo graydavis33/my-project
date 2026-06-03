@@ -1,179 +1,72 @@
 # SOP System — Mac ↔ Windows Cross-Machine Checklist
 
-**Created:** 2026-06-02 (Mac session)
-**Purpose:** One place that tracks every Python script powering the Content-OS SOP system and exactly what each one needs to run on **both** the Mac and the Windows PC. Work down this list one row at a time.
+**Created:** 2026-06-02 (Mac session) · **Updated:** 2026-06-02 (after tool cleanup)
+**Purpose:** Track every Python script powering the Content-OS SOP system and what each needs to run on both machines. Work down it one row at a time.
 
-> Companion: the `device-compatibility` memory (GitHub is the sync bridge) and `business/sai-karra/content-os/` (the SOPs themselves). This doc is about the **scripts** that the SOPs call.
+> Companion: the `device-compatibility` memory (GitHub is the sync bridge) and `business/sai-karra/content-os/` (the SOPs). This doc is about the **scripts** the SOPs call.
 
 ---
 
-## The core truth (read this first)
+## The core truth
 
-Git already syncs all the **code** to both machines. What git does **NOT** sync (on purpose, for security):
+Git syncs all the **code** to both machines. What git does **NOT** sync (on purpose, for security):
 
-1. **Secrets** — `.env` files and `token.json` are gitignored. The code arrives on the new machine; the keys do not.
-2. **Local tools** — Whisper, ffmpeg, Pillow, fonts. These are installed per-machine, not committed.
+1. **Secrets** — `.env` / `token.json` are gitignored. Code arrives on the new machine; keys do not.
+2. **Local tools** — Whisper, ffmpeg, Pillow, fonts. Installed per-machine.
 3. **Python environments** (`venv/`) — each machine builds its own.
 
-So "this script only works on one machine" almost always means **one of those three is missing on the other machine**, OR the script has a **hardcoded path** (`D:/Sai/...`) that only exists on one machine.
+So "only works on one machine" = one of those three is missing there, OR a **hardcoded path** (`D:/Sai/...`) that only exists on one machine.
 
 ### How secrets travel (they don't — you set them by hand)
 
-Per your security rule: **you create every `.env` file yourself, in your own Terminal. Never paste a key into this chat.** Claude gives you the template and the commands; you fill in the real values. The same key values go in the matching `.env` on each machine.
+**You create every `.env` yourself, in your Terminal. Never paste a key into chat.** The same key values go in the matching `.env` on each machine.
 
-### The clean pattern for every tool
+### Whisper decision (2026-06-02)
 
-Each tool gets its **own `venv`** (isolated Python) + its **own `.env`** + its requirements installed. `sai-captions` already does this correctly — copy that pattern for the rest.
-
-```bash
-cd python-scripts/<tool>
-python3 -m venv venv          # build the isolated environment (once per machine)
-source venv/bin/activate       # Mac/Linux   (Windows: venv\Scripts\activate)
-pip install -r requirements.txt
-# then create .env by hand (see each tool's row below)
-```
+**Whisper is a Windows-only install.** ~95% of editing (and all batches) happen on the Windows PC, where Whisper runs fast on the RTX 5070 GPU. We are **not** installing it on the Mac.
 
 ---
 
 ## Status legend
 
-| Mark | Meaning |
-|---|---|
-| ✅ | Ready on this Mac |
-| ⚠️ | Partly ready — needs one thing |
-| ❌ | Not set up on this Mac yet |
-| 🪟 | Windows status assumed working (verify on Windows when you're there) |
-| ↪️ | Handled in another session |
+✅ ready here · ⚠️ needs one thing · ❌ not set up · 🪟 Windows (where the work happens) · ↪️ other session · ⏸️ paused · 🗄️ archived
 
 ---
 
 ## The scripts that power the SOP system
 
-### 1. `screen-recording-analyzer` — the SOP generator itself
-Turns a screen recording → frames + transcript bundle that Claude reads to write an SOP. **The on-ramp for the whole SOP system.**
-
-| Needs | Mac | Note |
-|---|---|---|
-| ffmpeg | ✅ | installed (v8.1) |
-| Whisper | ❌ | `pip install openai-whisper` — but Python 3.14 may fight it; use a venv with Python 3.12 if so |
-| API key | — | **None.** SOP writing is done by Claude, not an API call |
-| Hardcoded paths | ✅ | None — fully portable |
-
-**One action for Mac:** install Whisper (in a venv). → then it runs on both machines.
-
----
-
-### 2. `sai-captions` — auto-captions for shorts
-Whisper transcribes → Pillow burns Montserrat captions → ffmpeg renders. Powers the shorts-editing SOP.
-
-| Needs | Mac | Note |
-|---|---|---|
-| Own venv | ✅ | `venv/` already exists here |
-| Whisper + Pillow | ✅ (in venv) | system Python lacks Pillow, but the tool's venv has it |
-| Montserrat font | ✅ | `fonts/Montserrat.ttf` in repo |
-| API key | — | None |
-| Hardcoded paths | ✅ | None |
-
-**Status:** Likely already cross-machine ✅. **One action:** run a quick test render on Mac to confirm, then build the same venv on Windows.
+| # | Tool | What it does | Needs to run | Status |
+|---|---|---|---|---|
+| 1 | **transcriber** (was content-pipeline) | audio/video → text; `--meeting-notes` → Obsidian notes | Whisper (🪟 Windows). `--meeting-notes` needs `ANTHROPIC_API_KEY` in `.env`. Plain transcript needs **no keys**. | 🪟 lives on Windows. Mac = not needed. |
+| 2 | **sai-captions** | Whisper + Pillow burn captions on shorts | own `venv` (already on Mac ✅), Whisper, Montserrat font (in repo ✅) | ✅ likely cross-machine. Test a render to confirm. |
+| 3 | **sai-linkedin** | LinkedIn post in Sai's voice + frame finder | `ANTHROPIC_API_KEY` + fix hardcoded `D:/Sai` path | ⏸️ **PAUSED** (Gray's call 2026-06-02) |
+| 4 | **multicam-mirror** | dual-cam long-form sync + render | numpy; fix hardcoded `D:/Sai` input/output → make them arguments | ❌ path fix pending |
+| 5 | **content-researcher** | trending topics + Reddit → Notion | `ANTHROPIC_API_KEY`, `YOUTUBE_API_KEY`, `NOTION_TOKEN`, `NOTION_PAGE_ID` | 🎯 **repositioned as a Graydient-brand tool** (Gray's own content), not Sai-SOP |
+| 6 | **footage-organizer** | footage filing (underpins all SOPs) | (cross-machine SQLite already done in v2) | ↪️ being upgraded in another session |
+| — | screen-recording-analyzer | recording → SOP | — | ⏭️ ignored (Gray doesn't use it enough) |
+| — | hook-optimizer | hook scoring | — | 🗄️ archived → `_archive/` (playbook handles hooks) |
+| — | founders-series | Founder Series helper | — | 🗄️ archived → `_archive/` |
 
 ---
 
-### 3. `content-pipeline` — video → transcript → clips → draft folder
-Whisper transcript → Claude picks clips + writes title/caption/X-thread. Powers shorts + long-form drafting.
+## "Hardcoded path" — what it means (plain English)
 
-| Needs | Mac | Note |
-|---|---|---|
-| ffmpeg | ✅ | |
-| Whisper | ❌ | same install as #1 |
-| `ANTHROPIC_API_KEY` | ❌ | in `.env` (anthropic SDK reads it automatically) |
-| `OPENAI_API_KEY` | ❌ | in `.env` |
-| `OBSIDIAN_VOICE_MEMOS` | ✅ default | Mac path is the built-in default; **Windows must set this in `.env`** |
-| Hardcoded paths | ✅ | Mac-friendly default, overridable per machine — good design |
-
-**One action for Mac:** create `.env` (2 keys) + install Whisper. **For Windows:** also set `OBSIDIAN_VOICE_MEMOS` to the `C:/Users/...` path.
+A hardcoded path is a folder location typed directly into the code and frozen there — e.g. `ROOT = Path("D:/Sai")`. `D:/` only exists on **Windows**; on the Mac the same drive is `/Volumes/Footage/Sai`. So the script crashes on the other machine. **Fix:** pass the folder in when you run the script (like a mail-merge field) instead of baking it in.
 
 ---
 
-### 4. `sai-linkedin` — LinkedIn post in Sai's voice + frame finder
-Powers the LinkedIn SOP. `main.py` drafts the post; `find_visuals.py` pulls matching footage frames.
+## What's actually left to do
 
-| Needs | Mac | Note |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | ❌ | in `.env` |
-| Hardcoded paths | ❌ | **`ROOT = Path("D:/Sai")`** in `find_visuals.py` + a `/Volumes/Footage/Sai` example — Windows-only drive letter breaks on Mac |
+After the 2026-06-02 cleanup, the cross-machine to-do list is small:
 
-**One action:** create `.env` **and** fix the hardcoded `D:/Sai` so it auto-detects the footage drive on each machine (Mac `/Volumes/...` vs Windows `D:/`).
-
----
-
-### 5. `multicam-mirror` — dual-cam long-form sync + render
-Powers the weekly YouTube long-form SOP. Syncs A-roll/B-roll, picks takes, renders.
-
-| Needs | Mac | Note |
-|---|---|---|
-| ffmpeg + numpy | ⚠️ | numpy via venv |
-| API key | — | None |
-| Hardcoded paths | ❌ | **`ROOT` and `OUT_DIR` are hardcoded `D:/Sai/...`** — these should be command-line arguments, not baked in |
-
-**One action:** change the hardcoded `D:/Sai` input/output paths into arguments you pass when you run it, so the same script works from any footage location on either machine.
-
----
-
-### 6. `hook-optimizer` — score/generate hooks
-Supports the shorts SOP. Pure Claude API, no files.
-
-| Needs | Mac | Note |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | ❌ | in `.env` |
-| Hardcoded paths | ✅ | None |
-
-**One action:** create `.env` (1 key). Then identical on both machines.
-
----
-
-### 7. `content-researcher` — trend + Reddit research → Notion
-Powers the research SOP. YouTube + Reddit + Claude → Notion report.
-
-| Needs | Mac | Note |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | ❌ | in `.env` |
-| `YOUTUBE_API_KEY` | ❌ | in `.env` |
-| `NOTION_TOKEN` + `NOTION_PAGE_ID` | ❌ | in `.env` |
-| Hardcoded paths | ✅ | None |
-
-**One action:** create `.env` (4 keys). Then identical on both machines.
-
----
-
-### 8. `founders-series` — Founder Series helper
-Powers the Founder Series SOP.
-
-| Needs | Mac | Note |
-|---|---|---|
-| `ANTHROPIC_API_KEY` | ❌ | in `.env` |
-| Hardcoded paths | ✅ | None |
-
-**One action:** create `.env` (1 key).
-
----
-
-### 9. `footage-organizer` — footage filing (underpins all SOPs)
-↪️ **Being upgraded to a new version in a separate session.** Has hardcoded paths in `config.py` (lines 22–23) but the v2 work already made the SQLite index cross-machine. Leave it to that session; revisit here once it lands.
-
----
-
-## Recommended order to work down this list
-
-Grouped so each step unlocks the most at once:
-
-1. **Install Whisper once (in a venv).** Unlocks #1 (SOP generator), #3 (content-pipeline), and confirms #2 (sai-captions). Biggest single win, **no secrets needed.**
-2. **Create the `.env` files** for the API-key tools (#3, #4, #6, #7, #8). You do this in Terminal; Claude supplies each template. One sitting, knock them all out.
-3. **Fix the hardcoded `D:/Sai` paths** in #4 (`sai-linkedin`) and #5 (`multicam-mirror`) so they auto-detect the drive. Code change Claude can do.
-4. **Mirror the same setup on Windows** — build each venv + copy the same `.env` values. Verify each tool runs.
+1. **sai-captions** — run one test render on the Mac to confirm it works, then build the same `venv` on Windows. *(no secrets)*
+2. **multicam-mirror** — change its hardcoded `D:/Sai` input/output paths into command-line arguments so it runs from any drive. *(code change, Claude can do)*
+3. **transcriber** — when you next want `--meeting-notes`, set `ANTHROPIC_API_KEY` (+ `OPENAI_API_KEY`) in `transcriber/.env` on Windows. *(you do this in Terminal)*
+4. **content-researcher** — keep for your own brand; set its 4 keys when you want to use it on Mac.
+5. **sai-linkedin** — ⏸️ paused. Revisit later (needs `.env` + the `D:/Sai` path fix).
 
 ---
 
 ## Open questions for Gray
-- Is there a single shared API key you want all tools to read from one place, or keep a separate `.env` per tool (current design)?
-- On Windows, where does the footage drive mount — always `D:/Sai`, or does the letter change? (Decides how the auto-detect path fix should work.)
-- Which SOP do you run most often day-to-day? That's the one to make bulletproof first.
+- On Windows, where does the footage drive mount — always `D:/Sai`, or does the letter change? (Decides how the multicam path fix should auto-detect.)
+- Which SOP do you run most day-to-day? That's the one to make bulletproof first.
