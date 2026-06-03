@@ -33,6 +33,37 @@ Living doc tracking how the **Scriptwriter system** (story-arc-playbook + script
 
 _(Phase 3+ — scriptwriter handoff + output review — to fill in after transcription completes.)_
 
+---
+
+### ⏸ Paused 2026-06-02 — resume state
+
+Gray called pause after Drive ingest + retro Phase 2 notes. Tool tooling needs polish before pushing further through this batch.
+
+**State at pause:**
+- ✅ 13 .m4a files downloaded to `C:/Users/Gray Davis/My Drive/Voice memos/Batch 2/` (sizes verified against Drive)
+- ❌ 0 transcripts produced — `python main.py --transcribe-only` loop was stopped mid-batch (no transcripts written, no API calls made — local Whisper only)
+- ✅ Retro doc has Phase 1 (Drive ingest) + Phase 2 (transcription setup) notes + 7 v2 candidates
+- Scriptwriter subagent NOT invoked yet
+
+**To resume:**
+1. (Optional, recommended first) Fix top-friction v2 items so resume isn't gated on the same gaps:
+   - Add `sys.stdout.reconfigure(encoding="utf-8")` to `python-scripts/content-pipeline/main.py`
+   - Add `--transcribe-only --all` batch support to `main.py` (currently only `--meeting-notes` batches)
+   - Decide on karramedia Drive access pattern (second gdrive MCP vs Python helper) — only matters for *future* batches, not this resume since the .m4a files are already on disk locally
+2. Run the transcription loop again:
+   ```
+   cd "C:/Users/Gray Davis/my-project/python-scripts/content-pipeline"
+   export PYTHONIOENCODING=utf-8
+   for f in "C:/Users/Gray Davis/My Drive/Voice memos/Batch 2/"*.m4a; do
+     python main.py "$f" --transcribe-only
+   done
+   ```
+3. Move resulting transcripts from `python-scripts/content-pipeline/output/` to `My Drive/Voice memos/Batch 2/`
+4. Merge the 2 finance pairs at the transcript level: `How I manage my money pt 1 + pt 2` → one; `Redoing Finance part 1 + part 2` → one. Net: 11 transcripts.
+5. Invoke scriptwriter subagent with the 11 transcripts as input, honoring the `(great hook)` / `(hook at the end)` parentheticals on `Landed a Fortune 500 client` and `Accept your passion`.
+6. Save batch output to `business/social-media/sai/scripts/2026-06-02-batch-2.md` (or refile date if it slides to the next day).
+7. Append Phase 3+ notes to this retro.
+
 ### Categories to watch
 - **Voice slips** — did Sai sound like an AI? Specific lines Gray rewrote?
 - **Playbook gaps** — info the subagent needed that wasn't in playbook.md / frameworks.md / a reference?
