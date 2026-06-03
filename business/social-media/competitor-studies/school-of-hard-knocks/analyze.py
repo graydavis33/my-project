@@ -26,7 +26,7 @@ TRANSCRIPTS = ROOT / "transcripts"
 FRAMES = ROOT / "frames"
 CUTS = ROOT / "cuts"
 
-load_dotenv("/Users/graydavis28/Desktop/my-project/python-scripts/content-pipeline/.env")
+load_dotenv("/Users/graydavis28/Desktop/my-project/python-scripts/transcriber/.env")
 
 anthropic_client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 

@@ -20,15 +20,6 @@ def _tool_path(folder: str) -> str:
 
 
 TOOLS: dict[str, dict] = {
-    "hook-optimizer": {
-        "description": "Generate YouTube titles, hooks, and thumbnail concepts for a video idea",
-        "path": _tool_path("hook-optimizer"),
-        "cmd": ["main.py"],
-        "args_hint": "your video concept in quotes",
-        "example": 'hook-optimizer "how I edit a wedding film in one hour"',
-        "required_args": True,
-        "interactive": False,
-    },
     "content-researcher": {
         "description": "Research a video concept — finds outlier YouTube videos + full Claude analysis",
         "path": _tool_path("content-researcher"),
@@ -38,12 +29,12 @@ TOOLS: dict[str, dict] = {
         "required_args": True,
         "interactive": False,
     },
-    "content-pipeline": {
-        "description": "Transcribe a video file and find the best short-form clips using Claude",
-        "path": _tool_path("content-pipeline"),
+    "transcriber": {
+        "description": "Transcribe audio/video to text with local Whisper (add --meeting-notes for voice-memo notes to Obsidian)",
+        "path": _tool_path("transcriber"),
         "cmd": ["main.py"],
-        "args_hint": "absolute path to your video file",
-        "example": "content-pipeline /path/to/video.mp4",
+        "args_hint": "absolute path to your audio/video file",
+        "example": "transcriber /path/to/video.mp4",
         "required_args": True,
         "interactive": False,
     },

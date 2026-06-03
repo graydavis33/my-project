@@ -4,7 +4,7 @@
 **Active:** Tuesday 2026-05-26 (ground-running date)
 **Canonical doc:** `C:/Users/Gray Davis/My Drive/Obsidian/Graydient Media/sai-karra/Content Operating System.md`
 
-This folder is the workspace-side mirror — for SOPs that need to live next to code (e.g., referenced by python-scripts/sai-linkedin, content-pipeline, etc.). The Obsidian doc is the canonical strategy + narrative source. The SOPs here are the operational checklists.
+This folder is the workspace-side mirror — for SOPs that need to live next to code (e.g., referenced by python-scripts/sai-linkedin, transcriber, etc.). The Obsidian doc is the canonical strategy + narrative source. The SOPs here are the operational checklists.
 
 ---
 

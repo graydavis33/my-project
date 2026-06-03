@@ -20,19 +20,23 @@
     },
     "content-researcher": {
       "status": "live",
-      "notes": "LIVE on Windows + Mac. Agent loop + Reddit layer built. Workflow doc out of date."
+      "notes": "LIVE on Windows + Mac. Repositioned 2026-06-02 as a GRAYDIENT-BRAND tool (find topics for Gray's own content); only used for Sai when specifically needed."
     },
-    "content-pipeline": {
-      "status": "partial",
-      "notes": "Built on Windows. Needs Mac setup + real video end-to-end test."
+    "transcriber": {
+      "status": "live",
+      "notes": "Renamed from content-pipeline 2026-06-02 and stripped to transcription-only (clip-picking removed). Local Whisper lives on Windows; --meeting-notes needs ANTHROPIC_API_KEY."
     },
     "client-onboarding": {
       "status": "retired",
       "notes": "Discontinued — no longer needed."
     },
     "hook-optimizer": {
-      "status": "live",
-      "notes": "Live on Windows (.env set 2026-04-13). Needs .env on Mac."
+      "status": "archived",
+      "notes": "Archived 2026-06-02 to python-scripts/_archive/. Never used; short-form story-arc playbook handles hooks now."
+    },
+    "founders-series": {
+      "status": "archived",
+      "notes": "Archived 2026-06-02 to python-scripts/_archive/. No longer used (Founder Series content SOP stays; helper script retired)."
     },
     "creator-intel": {
       "status": "partial",

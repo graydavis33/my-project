@@ -130,7 +130,7 @@ def main():
 
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
-        sys.exit("ANTHROPIC_API_KEY missing — copy from content-pipeline/.env")
+        sys.exit("ANTHROPIC_API_KEY missing — copy from transcriber/.env")
 
     client = Anthropic(api_key=api_key)
 

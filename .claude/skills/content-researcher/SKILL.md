@@ -1,6 +1,6 @@
 ---
 name: content-researcher
-description: Research a video concept end-to-end — finds trending YouTube outliers, Reddit pain points, and Claude-synthesized topic recommendations. Triggers when Gray says "research [topic]", "find videos about [X]", "what's trending in [niche]", or asks for a daily/weekly trend brief. Wraps python-scripts/content-researcher/.
+description: Research a video concept end-to-end — finds trending YouTube outliers, Reddit pain points, and Claude-synthesized topic recommendations. PRIMARY USE = Gray's own Graydient Media brand (deciding what topic to make a video about). For Sai's content, topics come from Sai's voice memos, so only reach for this on Sai work when Gray specifically asks. Triggers when Gray says "research [topic]", "find videos about [X]", "what's trending in [niche]", or asks for a daily/weekly trend brief. Wraps python-scripts/content-researcher/.
 ---
 
 # Content Researcher
