@@ -1,5 +1,10 @@
 # Sandcastles Watchlists — Build Plan
 
+> **LIVE as of 2026-06-03.** Single Graydient watchlist populated in "My Workspace" (Pro = one workspace; Sai handled via global tools / channel-UUID filter, see below). Watchlist sits at **~59 channels** — the "50 cap" from public pricing did NOT hard-block via the MCP (verify no overage flag in webapp). Composition: Gray's 3 own accounts (IG+TikTok+YT Shorts) + curated low-lift set (editing tips / AI-stack / talking-head gear / small-emerging) + 4 adjacent lenses (colinandsamir, itsryanto, aliabdaal, themayanknegi). **Pending cleanup:** prune cinematic/lifestyle pre-existing picks (blake.ridder, henbu_, qfroost, kevinbparry, prismlensfx, qmike, omgadrian, jordanagajanian) in the webapp — for signal quality, not space. **Gate that won:** production-fit (replicable in a few hours) > follower size > niche. Personal-brand-launch creator added by Gray directly.
+
+---
+
+
 **Plan:** Pro (≈50-channel cap total) → **25 per watchlist**, 2 lists (Gray + Sai).
 **Design rules applied:** niche-fit = hard gate · size-tier = soft sort · skew nano/mid (replicable) · span formats · ~5 lateral picks each · prioritize *active short-form posters* · include own channel · skip saturated gurus · short-form accounts only (IG / TikTok / YT Shorts — NOT long-form YouTube).
 
