@@ -96,7 +96,7 @@ VPS deployment files live in `deploy/`. Re-deploy from scratch: `bash deploy/vps
 
 ## MCP Servers
 
-Six MCP servers configured in `~/.claude.json` (VS Code extension uses `--strict-mcp-config` and reads this file, not `settings.json`):
+Eight MCP servers configured in `~/.claude.json` (VS Code extension uses `--strict-mcp-config` and reads this file, not `settings.json`):
 
 | Server | Purpose |
 |---|---|
@@ -106,6 +106,8 @@ Six MCP servers configured in `~/.claude.json` (VS Code extension uses `--strict
 | obsidian | Read/write to `Obsidian/Graydient Media` vault |
 | slack | Slack workspace access (bot token + team ID) |
 | sequential-thinking | Structured multi-step reasoning |
+| higgsfield | Higgsfield AI image/video gen (hosted HTTP MCP, OAuth) |
+| sandcastles | Sandcastles short-form research — outliers/hooks/formats/topics across IG/TikTok/YT Shorts (hosted HTTP MCP at `https://mcp.sandcastles.ai/`, OAuth). Slash commands in `.claude/commands/sandcastles/`; SOP at `workflows/sandcastles.md` |
 
 ---
 
