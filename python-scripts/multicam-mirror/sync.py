@@ -37,7 +37,11 @@ def compute_offset(a_wav: Path, b_wav: Path, window_s: float = 30.0) -> float:
 
     corr = correlate(b, a, mode="full", method="fft")
     lag_samples = int(np.argmax(corr)) - (len(a) - 1)
-    offset_s = -lag_samples / sr_a
+    # correlate(b, a) peaks at lag D where b[n] = a[n-D], i.e. D = (tB - tA)*sr.
+    # The contract (see module docstring) is offset = tB - tA = lag/sr, so that
+    # an A-cam timestamp maps to B via A + offset. Do NOT negate here — negating
+    # flips the sign and lands every mirrored B segment at A - offset (off by 2x).
+    offset_s = lag_samples / sr_a
     return offset_s
 
 

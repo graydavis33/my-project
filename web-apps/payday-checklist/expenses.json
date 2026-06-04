@@ -1,5 +1,20 @@
 {
-  "generated_at": "2026-06-02T14:52:57Z",
+  "generated_at": "2026-06-04T13:58:33Z",
   "month": "2026-06",
-  "expenses": []
+  "expenses": [
+    {
+      "email_id": "19e8e6556f81e75c",
+      "date": "2026-06-03",
+      "vendor": "Garrett ODell",
+      "amount": 79.0,
+      "category": "Dining Out"
+    },
+    {
+      "email_id": "19e8af42af968604",
+      "date": "2026-06-02",
+      "vendor": "Sandcastles",
+      "amount": 49.0,
+      "category": "Software & Tools"
+    }
+  ]
 }
