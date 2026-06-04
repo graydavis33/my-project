@@ -74,6 +74,9 @@ def main() -> int:
 
     b_duration = render.get_duration(args.b_cam)
 
+    a_fps = render.get_fps(args.a_cam)
+    print(f"      Locking B-cam segments to A-cam framerate: {a_fps}")
+
     print(f"[3/4] Extracting {len(ranges)} B-cam segment(s) ...")
     segments: list[Path] = []
     for i, r in enumerate(ranges):
@@ -88,7 +91,7 @@ def main() -> int:
                 print(f"      SKIP: segment {i} fully outside B-cam")
                 continue
         seg_path = out_dir / "segments" / f"seg_{i:03d}.mp4"
-        render.extract_segment(args.b_cam, b_start, b_end, seg_path)
+        render.extract_segment(args.b_cam, b_start, b_end, seg_path, fps=a_fps)
         segments.append(seg_path)
         print(f"      seg {i:03d}: A[{r['start']:.2f}-{r['end']:.2f}] -> B[{b_start:.2f}-{b_end:.2f}]")
 
