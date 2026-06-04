@@ -23,17 +23,25 @@ def extract_audio_mono(video: Path, out_wav: Path, sr: int = 48000) -> None:
     ])
 
 
-def extract_segment(video: Path, start: float, end: float, out_mp4: Path) -> None:
+def extract_segment(video: Path, start: float, end: float, out_mp4: Path,
+                    fps: str | None = None) -> None:
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
     duration = end - start
-    run([
+    cmd = [
         "ffmpeg", "-y",
         "-ss", f"{start:.3f}", "-i", str(video), "-t", f"{duration:.3f}",
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
         "-c:a", "aac", "-b:a", "192k",
         "-pix_fmt", "yuv420p",
-        str(out_mp4),
-    ])
+    ]
+    # Lock output framerate to the A-cam's so each B segment has the same frame
+    # count as its A counterpart. Without this, a B-cam at a different fps rounds
+    # each segment to a different frame count and cumulative drift desyncs the
+    # two reels by the end (e.g. 25fps B vs 23.976fps A drifts ~0.2s over 32 cuts).
+    if fps:
+        cmd += ["-r", fps]
+    cmd.append(str(out_mp4))
+    run(cmd)
 
 
 def concat_segments(segments: list[Path], out_mp4: Path) -> None:
@@ -50,6 +58,17 @@ def concat_segments(segments: list[Path], out_mp4: Path) -> None:
         str(out_mp4),
     ])
     list_file.unlink(missing_ok=True)
+
+
+def get_fps(video: Path) -> str:
+    """Return the video stream's r_frame_rate as a string like '24000/1001'."""
+    result = subprocess.run(
+        ["ffprobe", "-v", "error", "-select_streams", "v:0",
+         "-show_entries", "stream=r_frame_rate",
+         "-of", "default=noprint_wrappers=1:nokey=1", str(video)],
+        capture_output=True, text=True, check=True,
+    )
+    return result.stdout.strip()
 
 
 def get_duration(video: Path) -> float:
