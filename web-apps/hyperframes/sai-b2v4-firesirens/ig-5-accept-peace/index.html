@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene {
+        position: relative; width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center;
+        padding: 260px 80px 0 80px;
+      }
+      /* orange-glass recipe */
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 60% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 24px rgba(242,129,41,0.55),
+          0 6px 18px rgba(0,0,0,0.28);
+      }
+      .pill {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 16px 46px; border-radius: 999px; margin-bottom: 34px;
+      }
+      .pill-text {
+        font-weight: 800; font-size: 38px; letter-spacing: 0.10em;
+        color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      }
+      .title {
+        font-weight: 800; font-size: 96px; line-height: 1.04; letter-spacing: 0.02em;
+        color: #fff; text-align: center; text-transform: uppercase;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.35); margin-bottom: 34px;
+      }
+      .subtitle {
+        margin-bottom: 50px; font-weight: 600; font-size: 44px; color: #fff;
+        text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.45); letter-spacing: 0.01em;
+      }
+      /* vertical formula stack */
+      .stage {
+        position: relative; width: 920px;
+        display: flex; flex-direction: column; align-items: center;
+      }
+      .row {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 28px 56px; border-radius: 44px; max-width: 920px;
+      }
+      .row-text {
+        font-weight: 800; font-size: 56px; letter-spacing: 0.01em;
+        color: #fff; text-transform: uppercase; text-align: center;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      }
+      .row-payoff { padding: 36px 90px; border-radius: 56px; }
+      .row-payoff .row-text { font-size: 96px; letter-spacing: 0.03em; }
+      .connector {
+        display: flex; align-items: center; justify-content: center;
+        height: 96px;
+      }
+      .connector svg { overflow: visible; }
+      .eq {
+        font-weight: 800; font-size: 80px; color: #fff; line-height: 1;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <div id="pill" class="pill glass"><div class="pill-text">THE LESSON</div></div>
+        <div id="title" class="title">ACCEPTANCE = PEACE</div>
+        <div id="subtitle" class="subtitle">when you've done all you can</div>
+
+        <div class="stage" data-layout-allow-overflow>
+          <!-- Row 1 -->
+          <div id="row1" class="row glass"><div class="row-text">DID EVERYTHING YOU CAN</div></div>
+
+          <!-- down arrow -->
+          <div class="connector">
+            <svg id="arrow1" width="60" height="96" viewBox="0 0 60 96">
+              <path id="arrow1-line" d="M 30 6 L 30 70" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+              <path id="arrow1-head" d="M 12 56 L 30 78 L 48 56" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <!-- Row 2 -->
+          <div id="row2" class="row glass"><div class="row-text">ACCEPT IT</div></div>
+
+          <!-- equals sign -->
+          <div class="connector">
+            <div id="eq" class="eq">=</div>
+          </div>
+
+          <!-- Row 3 — payoff -->
+          <div id="row3" class="row glass row-payoff"><div class="row-text">PEACE</div></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 5;
+
+        // header entrances
+        tl.from("#pill", { y: 70, opacity: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.15);
+        tl.from("#title", { y: 50, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.4);
+        tl.from("#subtitle", { y: 40, opacity: 0, duration: 0.45, ease: "power2.out" }, 0.7);
+
+        // Row 1 pops in
+        tl.from("#row1", { y: 60, scale: 0.8, opacity: 0, duration: 0.5, ease: "back.out(1.7)", transformOrigin: "50% 50%" }, 1.05);
+
+        // arrow 1 draws (line then head)
+        const a1line = document.getElementById("arrow1-line");
+        const a1head = document.getElementById("arrow1-head");
+        const l1 = a1line.getTotalLength();
+        const h1 = a1head.getTotalLength();
+        gsap.set(a1line, { strokeDasharray: l1, strokeDashoffset: l1 });
+        gsap.set(a1head, { strokeDasharray: h1, strokeDashoffset: h1 });
+        tl.to(a1line, { strokeDashoffset: 0, duration: 0.32, ease: "power2.out" }, 1.5);
+        tl.to(a1head, { strokeDashoffset: 0, duration: 0.22, ease: "power2.out" }, 1.78);
+
+        // Row 2 pops in
+        tl.from("#row2", { y: 60, scale: 0.8, opacity: 0, duration: 0.5, ease: "back.out(1.6)", transformOrigin: "50% 50%" }, 2.0);
+
+        // equals sign pops
+        tl.from("#eq", { scale: 0, opacity: 0, duration: 0.4, ease: "back.out(2)", transformOrigin: "50% 50%" }, 2.45);
+
+        // Row 3 PEACE lands big
+        tl.from("#row3", { y: 70, scale: 0.6, opacity: 0, duration: 0.7, ease: "back.out(1.8)", transformOrigin: "50% 50%" }, 2.85);
+
+        // gentle finite glow pulse on PEACE
+        const glowCycle = 0.9;
+        const glowStart = 3.6;
+        const glowReps = Math.ceil((DUR - glowStart) / glowCycle) - 1;
+        tl.fromTo("#row3",
+          { filter: "drop-shadow(0 0 12px rgba(242,129,41,0.5))" },
+          { filter: "drop-shadow(0 0 34px rgba(242,129,41,0.95))", duration: glowCycle / 2,
+            ease: "sine.inOut", yoyo: true, repeat: glowReps * 2 + 1 },
+          glowStart);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
