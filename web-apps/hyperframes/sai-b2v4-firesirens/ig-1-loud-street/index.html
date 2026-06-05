@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene {
+        position: relative; width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center;
+        padding: 300px 80px 0 80px;
+      }
+      /* orange-glass recipe */
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 60% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 24px rgba(242,129,41,0.55),
+          0 6px 18px rgba(0,0,0,0.28);
+      }
+      .pill {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 16px 46px; border-radius: 999px; margin-bottom: 34px;
+      }
+      .pill-text {
+        font-weight: 800; font-size: 38px; letter-spacing: 0.10em;
+        color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      }
+      .title {
+        font-weight: 800; font-size: 96px; line-height: 1.04; letter-spacing: 0.02em;
+        color: #fff; text-align: center; text-transform: uppercase;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.35); margin-bottom: 40px;
+      }
+      .stage {
+        position: relative; width: 760px; height: 760px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .stage svg { position: absolute; width: 760px; height: 760px; overflow: visible; }
+      .pin-glow { filter: drop-shadow(0 0 26px rgba(242,129,41,0.85)); }
+      .subtitle {
+        margin-top: 18px; font-weight: 600; font-size: 44px; color: #fff;
+        text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.45); letter-spacing: 0.01em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <div id="pill" class="pill glass"><div class="pill-text">WHERE I LIVE</div></div>
+        <div id="title" class="title">8TH AVE, NYC</div>
+
+        <div class="stage" data-layout-allow-overflow>
+          <!-- loudness equalizer bars -->
+          <svg id="bars" viewBox="0 0 760 760">
+            <defs>
+              <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FFA858"/>
+                <stop offset="35%" stop-color="#F28129"/>
+                <stop offset="100%" stop-color="#D66416"/>
+              </linearGradient>
+            </defs>
+            <!-- baseline at y=620; bars grow upward -->
+            <rect class="bar" x="150" y="470" width="62" height="150" rx="20" fill="url(#barGrad)" stroke="#fff" stroke-width="6"/>
+            <rect class="bar" x="234" y="380" width="62" height="240" rx="20" fill="url(#barGrad)" stroke="#fff" stroke-width="6"/>
+            <rect class="bar" x="318" y="300" width="62" height="320" rx="20" fill="url(#barGrad)" stroke="#fff" stroke-width="6"/>
+            <rect class="bar" x="402" y="340" width="62" height="280" rx="20" fill="url(#barGrad)" stroke="#fff" stroke-width="6"/>
+            <rect class="bar" x="486" y="420" width="62" height="200" rx="20" fill="url(#barGrad)" stroke="#fff" stroke-width="6"/>
+            <rect class="bar" x="570" y="500" width="62" height="120" rx="20" fill="url(#barGrad)" stroke="#fff" stroke-width="6"/>
+          </svg>
+          <!-- location map pin (above the bars) -->
+          <svg id="pin" class="pin-glow" viewBox="0 0 760 760">
+            <!-- teardrop -->
+            <path d="M 380 90
+                     C 300 90 240 152 240 232
+                     C 240 320 380 430 380 430
+                     C 380 430 520 320 520 232
+                     C 520 152 460 90 380 90 Z"
+                  fill="url(#barGrad)" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+            <!-- inner white dot -->
+            <circle cx="380" cy="226" r="50" fill="#fff"/>
+          </svg>
+        </div>
+        <div id="subtitle" class="subtitle">one of the loudest streets in America</div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 5;
+
+        // entrances
+        tl.from("#pill", { y: 70, opacity: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.15);
+        tl.from("#title", { y: 50, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.4);
+
+        // pin drops in with a bounce
+        tl.from("#pin", { y: -120, opacity: 0, duration: 0.7, ease: "back.out(2.2)", transformOrigin: "50% 60%" }, 0.7);
+
+        // bars rise from baseline (stagger) — scaleY from 0, anchored at bottom (y=620)
+        const bars = gsap.utils.toArray(".bar");
+        tl.from(bars, {
+          scaleY: 0, opacity: 0, duration: 0.5, ease: "expo.out",
+          transformOrigin: "50% 620px", stagger: 0.08
+        }, 1.2);
+
+        tl.from("#subtitle", { y: 40, opacity: 0, duration: 0.45, ease: "power2.out" }, 1.7);
+
+        // bars pulse up/down continuously like a sound meter (finite repeats)
+        const cycle = 0.7;
+        const pulseStart = 1.9;
+        const reps = Math.ceil((DUR - pulseStart) / cycle) - 1;
+        const scales = [1.35, 0.7, 1.5, 0.8, 1.3, 0.65];
+        bars.forEach(function (b, i) {
+          tl.to(b, {
+            scaleY: scales[i], duration: cycle / 2, ease: "sine.inOut",
+            transformOrigin: "50% 620px", yoyo: true, repeat: reps * 2 + 1
+          }, pulseStart + i * 0.05);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
