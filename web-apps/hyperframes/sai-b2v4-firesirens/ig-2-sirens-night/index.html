@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene {
+        position: relative; width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center;
+        padding: 300px 80px 0 80px;
+      }
+      /* orange-glass recipe */
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 60% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 24px rgba(242,129,41,0.55),
+          0 6px 18px rgba(0,0,0,0.28);
+      }
+      .pill {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 16px 46px; border-radius: 999px; margin-bottom: 34px;
+      }
+      .pill-text {
+        font-weight: 800; font-size: 38px; letter-spacing: 0.10em;
+        color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      }
+      .title {
+        font-weight: 800; font-size: 96px; line-height: 1.04; letter-spacing: 0.02em;
+        color: #fff; text-align: center; text-transform: uppercase;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.35); margin-bottom: 40px;
+      }
+      .stage {
+        position: relative; width: 760px; height: 760px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .stage svg { position: absolute; width: 760px; height: 760px; overflow: visible; }
+      .beacon-glow { filter: drop-shadow(0 0 26px rgba(242,129,41,0.85)); }
+      .subtitle {
+        margin-top: 18px; font-weight: 600; font-size: 44px; color: #fff;
+        text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.45); letter-spacing: 0.01em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <div id="pill" class="pill glass"><div class="pill-text">EVERY NIGHT</div></div>
+        <div id="title" class="title">I HEAR SIRENS</div>
+
+        <div class="stage" data-layout-allow-overflow>
+          <!-- pulsing sound-wave rings -->
+          <svg id="waves" viewBox="0 0 760 760">
+            <circle class="wave" cx="380" cy="380" r="150" fill="none" stroke="#fff" stroke-width="6" />
+            <circle class="wave" cx="380" cy="380" r="150" fill="none" stroke="#fff" stroke-width="6" />
+            <circle class="wave" cx="380" cy="380" r="150" fill="none" stroke="#F28129" stroke-width="7" />
+          </svg>
+          <!-- siren beacon -->
+          <svg id="beacon" class="beacon-glow" viewBox="0 0 760 760">
+            <!-- base -->
+            <rect x="300" y="430" width="160" height="70" rx="16" fill="none" stroke="#fff" stroke-width="8"/>
+            <!-- dome -->
+            <path d="M 312 432 A 68 68 0 0 1 448 432 Z" fill="#F28129" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+            <!-- top knob -->
+            <rect id="knob" x="368" y="338" width="24" height="34" rx="8" fill="#fff"/>
+          </svg>
+        </div>
+        <div id="subtitle" class="subtitle">the loudest noise in the world</div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 5;
+
+        // entrances
+        tl.from("#pill", { y: 70, opacity: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.15);
+        tl.from("#title", { y: 50, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.4);
+        tl.from("#beacon", { y: 70, scale: 0.7, opacity: 0, duration: 0.6, ease: "back.out(1.6)", transformOrigin: "50% 60%" }, 0.7);
+        tl.from("#subtitle", { y: 40, opacity: 0, duration: 0.45, ease: "power2.out" }, 1.15);
+
+        // beacon light flash (finite)
+        const flashCycle = 0.6;
+        const flashReps = Math.ceil((DUR - 1.0) / flashCycle) - 1;
+        tl.fromTo("#beacon",
+          { filter: "drop-shadow(0 0 10px rgba(242,129,41,0.5))" },
+          { filter: "drop-shadow(0 0 34px rgba(242,129,41,1))", duration: flashCycle / 2,
+            ease: "sine.inOut", yoyo: true, repeat: flashReps * 2 + 1 },
+          1.0);
+
+        // sound-wave rings pulse outward (finite, staggered)
+        const waves = gsap.utils.toArray(".wave");
+        const cycle = 1.2;
+        const reps = Math.ceil((DUR - 1.1) / cycle) - 1;
+        waves.forEach(function (w, i) {
+          tl.fromTo(w,
+            { scale: 0.5, opacity: 0.0, transformOrigin: "380px 380px" },
+            { scale: 2.3, opacity: 0.0, duration: cycle, ease: "power1.out",
+              repeat: reps,
+              keyframes: { opacity: [0, 0.85, 0] } },
+            1.1 + i * 0.4);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
