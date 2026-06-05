@@ -1,0 +1,10 @@
+{
+  "name": "sai-b2v4-title-1-annoying-sound",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes preview",
+    "check": "npx --yes hyperframes lint && npx --yes hyperframes validate && npx --yes hyperframes inspect",
+    "render": "npx --yes hyperframes render --fps 60"
+  }
+}

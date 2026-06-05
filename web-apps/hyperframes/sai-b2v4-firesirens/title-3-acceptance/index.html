@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene {
+        position: relative; width: 100%; height: 100%;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 10px; padding: 80px;
+      }
+      .line {
+        display: block; white-space: nowrap;
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800; color: #FFFFFF;
+        text-transform: uppercase; letter-spacing: -0.01em;
+        line-height: 1.02; text-align: center;
+        text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+        will-change: transform, opacity;
+      }
+      #l1 { font-size: 64px; font-weight: 700; letter-spacing: 0.08em; }
+      #l2 {
+        font-size: 142px; font-weight: 900; color: #F28129;
+        letter-spacing: -0.02em; line-height: 0.98;
+        text-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+        margin: 4px 0 10px;
+      }
+      #l3 { font-size: 72px; }
+      #l4 { font-size: 84px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.6" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3.6" data-track-index="1">
+        <div class="line" id="l1">WHY</div>
+        <div class="line" id="l2">ACCEPTANCE</div>
+        <div class="line" id="l3">IS THE SKILL THAT</div>
+        <div class="line" id="l4">CHANGED EVERYTHING</div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        tl.from("#l1", { y: 40, opacity: 0, duration: 0.38, ease: "power2.out" }, 0.15);
+        tl.from("#l2", { y: 120, opacity: 0, scale: 0.68, duration: 0.70, ease: "back.out(1.7)" }, 0.32);
+        tl.from("#l3", { y: 55, opacity: 0, duration: 0.42, ease: "power3.out" }, 0.74);
+        tl.from("#l4", { y: 60, opacity: 0, duration: 0.44, ease: "expo.out" }, 0.94);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
