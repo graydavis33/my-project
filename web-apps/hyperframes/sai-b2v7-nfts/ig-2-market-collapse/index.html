@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0; width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .card-wrap {
+        position: absolute; left: 80px; top: 480px;
+        width: 920px; height: 960px;
+        filter: drop-shadow(0 14px 36px rgba(0, 0, 0, 0.30));
+        will-change: transform, opacity;
+      }
+      .card-bg, .chart-svg {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        display: block; overflow: visible;
+      }
+      .header {
+        position: absolute; left: 0; top: 56px; width: 100%; text-align: center;
+        font-size: 40px; font-weight: 800; letter-spacing: 0.28em;
+        color: #2a2a2a; opacity: 0.55; text-transform: uppercase;
+      }
+      .axis      { fill: none; stroke: #F28129; stroke-width: 5; stroke-linecap: round; }
+      .grid-line { fill: none; stroke: #F28129; stroke-width: 1.75; stroke-linecap: round; opacity: 0.5; }
+      .climb { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .crash { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .stamp-label {
+        position: absolute; left: 0; bottom: 36px; width: 100%; text-align: center;
+        font-size: 56px; font-weight: 900; letter-spacing: 0.16em;
+        color: #E63946; text-transform: uppercase; opacity: 0;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.18);
+        will-change: opacity, transform;
+      }
+      .x-stamp {
+        position: absolute; left: 50%; bottom: 150px;
+        width: 180px; height: 180px; margin-left: -90px;
+        will-change: transform, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4.6" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4.6" data-track-index="1">
+        <div class="card-wrap" id="card-wrap" data-layout-allow-overflow>
+          <!-- White card background (relative coords 0-920 x 0-960) -->
+          <svg class="card-bg" viewBox="0 0 920 960" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="corner-tint" cx="100%" cy="100%" r="78%">
+                <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#FFFFFF" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect x="0" y="0" width="920" height="960" rx="44" ry="44" fill="#F2EFE9"/>
+            <rect x="0" y="0" width="920" height="960" rx="44" ry="44" fill="url(#corner-tint)"/>
+          </svg>
+
+          <div class="header">The NFT Market</div>
+
+          <!-- Chart layer (relative to card-wrap: 920×960 viewBox) -->
+          <svg class="chart-svg" viewBox="0 0 920 960" xmlns="http://www.w3.org/2000/svg">
+            <g id="grid">
+              <line class="grid-line" id="grid-h-1" x1="80" y1="640" x2="840" y2="640"/>
+              <line class="grid-line" id="grid-h-2" x1="80" y1="540" x2="840" y2="540"/>
+              <line class="grid-line" id="grid-h-3" x1="80" y1="440" x2="840" y2="440"/>
+              <line class="grid-line" id="grid-v-1" x1="240" y1="200" x2="240" y2="740"/>
+              <line class="grid-line" id="grid-v-2" x1="400" y1="200" x2="400" y2="740"/>
+              <line class="grid-line" id="grid-v-3" x1="560" y1="200" x2="560" y2="740"/>
+              <line class="grid-line" id="grid-v-4" x1="720" y1="200" x2="720" y2="740"/>
+            </g>
+
+            <line id="axis-y" class="axis" x1="80"  y1="200" x2="80"  y2="740"/>
+            <line id="axis-x" class="axis" x1="80"  y1="740" x2="840" y2="740"/>
+
+            <!-- Climb path: exponential up to peak at (520, 260) -->
+            <path id="climb" class="climb" d="" stroke="#F28129" stroke-width="14"/>
+            <!-- Crash path: peak to crash floor then flatline -->
+            <path id="crash" class="crash" d="" stroke="#E63946" stroke-width="14"/>
+            <!-- Peak dot (sits at top of climb, falls with crash) -->
+            <circle id="peak-dot" r="20" cx="520" cy="260" fill="#F28129" opacity="0"
+              filter="drop-shadow(0 0 18px rgba(242,129,41,0.9))"/>
+          </svg>
+
+          <!-- Red X stamp + COLLAPSED label below chart -->
+          <svg class="x-stamp" id="x-stamp" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="110" cy="110" r="100" fill="none" stroke="#E63946" stroke-width="10"/>
+            <line id="x-stroke-1" x1="50"  y1="50"  x2="170" y2="170" stroke="#E63946" stroke-width="14" stroke-linecap="round"/>
+            <line id="x-stroke-2" x1="170" y1="50"  x2="50"  y2="170" stroke="#E63946" stroke-width="14" stroke-linecap="round"/>
+          </svg>
+
+          <div class="stamp-label" id="stamp-label">Collapsed</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const CLIMB_DUR = 1.2, CRASH_DUR = 0.55;
+        const cardWrap  = document.getElementById("card-wrap");
+        const climbEl   = document.getElementById("climb");
+        const crashEl   = document.getElementById("crash");
+        const peakDot   = document.getElementById("peak-dot");
+        const xStamp    = document.getElementById("x-stamp");
+        const xS1       = document.getElementById("x-stroke-1");
+        const xS2       = document.getElementById("x-stroke-2");
+        const stampLbl  = document.getElementById("stamp-label");
+        const gridEls   = document.querySelectorAll(".grid-line");
+
+        // === Build climb curve (chart-svg viewBox 920×960). Peak (520, 260), baseline (80, 720). ===
+        const CX0 = 80, CX1 = 520, CY_BOT = 720, CY_TOP = 260, k = 2.6, STEPS = 60;
+        const climbPts = [];
+        for (let i = 0; i <= STEPS; i++) {
+          const t = i / STEPS;
+          const norm = (Math.exp(k * t) - 1) / (Math.exp(k) - 1);
+          climbPts.push([CX0 + t * (CX1 - CX0), CY_BOT - norm * (CY_BOT - CY_TOP)]);
+        }
+        let climbD = `M ${climbPts[0][0].toFixed(2)} ${climbPts[0][1].toFixed(2)}`;
+        for (let i = 1; i < climbPts.length; i++) climbD += ` L ${climbPts[i][0].toFixed(2)} ${climbPts[i][1].toFixed(2)}`;
+        climbEl.setAttribute("d", climbD);
+
+        // === Crash: peak (520, 260) → cliff (640, 720) → flatline (840, 720) ===
+        crashEl.setAttribute("d", "M 520 260 L 640 720 L 840 720");
+
+        const climbLen = climbEl.getTotalLength();
+        climbEl.style.strokeDasharray = climbLen;
+        climbEl.style.strokeDashoffset = climbLen;
+        const crashLen = crashEl.getTotalLength();
+        crashEl.style.strokeDasharray = crashLen;
+        crashEl.style.strokeDashoffset = crashLen;
+
+        gsap.set(cardWrap, { opacity: 0, scale: 0.92, transformOrigin: "50% 50%" });
+        gsap.set(gridEls, { opacity: 0 });
+        gsap.set(xStamp, { opacity: 0, scale: 2.4, rotation: -8, transformOrigin: "50% 50%" });
+        gsap.set([xS1, xS2], { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(stampLbl, { opacity: 0, y: 18 });
+
+        // Find when climb crosses gridlines so they fade in with the curve
+        const SAMPLES = 200;
+        const crossings = {};
+        let lastX = climbPts[0][0], lastY = climbPts[0][1];
+        for (let s = 1; s <= SAMPLES; s++) {
+          const len = (s / SAMPLES) * climbLen;
+          const pt  = climbEl.getPointAtLength(len);
+          gridEls.forEach(function (g) {
+            if (crossings[g.id] !== undefined) return;
+            const x1 = parseFloat(g.getAttribute("x1"));
+            const y1 = parseFloat(g.getAttribute("y1"));
+            if (y1 === parseFloat(g.getAttribute("y2"))) {
+              if (lastY > y1 && pt.y <= y1) crossings[g.id] = len / climbLen;
+            } else {
+              if (lastX < x1 && pt.x >= x1) crossings[g.id] = len / climbLen;
+            }
+          });
+          lastX = pt.x; lastY = pt.y;
+        }
+        function inversePower2InOut(p) {
+          if (p < 0.5) return Math.sqrt(p / 2);
+          return 1 - Math.sqrt((1 - p) / 2);
+        }
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // 1) Card pops in
+        const cardStart = 0.10;
+        tl.to(cardWrap, { opacity: 1, scale: 1, duration: 0.50, ease: "back.out(1.4)" }, cardStart);
+
+        // 2) Climb draws (orange)
+        const climbStart = 0.55;
+        const climbProxy = { p: 0 };
+        tl.to(climbProxy, { p: 1, duration: CLIMB_DUR, ease: "power2.inOut",
+          onUpdate: () => { climbEl.style.strokeDashoffset = climbLen * (1 - climbProxy.p); } }, climbStart);
+
+        // Gridlines fade in as climb crosses them
+        gridEls.forEach(function (g) {
+          const frac = crossings[g.id];
+          if (frac === undefined) return;
+          const easedTime = inversePower2InOut(frac) * CLIMB_DUR;
+          tl.to(g, { opacity: 0.5, duration: 0.30, ease: "power2.inOut" }, climbStart + easedTime);
+        });
+
+        // 3) Peak dot pops in & pulses
+        const peakTime = climbStart + CLIMB_DUR;
+        tl.to(peakDot, { opacity: 1, duration: 0.18 }, peakTime - 0.02);
+        tl.fromTo(peakDot, { attr: { r: 20 } },
+          { attr: { r: 30 }, duration: 0.20, ease: "power2.out", yoyo: true, repeat: 1 }, peakTime);
+
+        // 4) Crash plummets red
+        const crashStart = peakTime + 0.30;
+        const crashProxy = { p: 0 };
+        tl.to(crashProxy, { p: 1, duration: CRASH_DUR, ease: "power3.in",
+          onUpdate: () => {
+            const p = crashProxy.p;
+            crashEl.style.strokeDashoffset = crashLen * (1 - p);
+            if (p > 0) {
+              const pt = crashEl.getPointAtLength(p * crashLen);
+              peakDot.setAttribute("cx", pt.x);
+              peakDot.setAttribute("cy", pt.y);
+              peakDot.setAttribute("fill", "#E63946");
+            }
+          } }, crashStart);
+
+        // 5) X stamp slams + COLLAPSED label + card shake
+        const stampStart = crashStart + CRASH_DUR + 0.05;
+        tl.to(xStamp, { opacity: 1, scale: 1, rotation: -8, duration: 0.22, ease: "back.out(2.4)" }, stampStart);
+        tl.to(xS1, { scaleX: 1, duration: 0.18, ease: "power3.out" }, stampStart + 0.04);
+        tl.to(xS2, { scaleX: 1, duration: 0.18, ease: "power3.out" }, stampStart + 0.14);
+        tl.to(stampLbl, { opacity: 1, y: 0, duration: 0.30, ease: "back.out(1.8)" }, stampStart + 0.18);
+        tl.fromTo(cardWrap, { x: -6 },
+          { x: 6, duration: 0.05, ease: "none", yoyo: true, repeat: 5,
+            onComplete: () => { gsap.set(cardWrap, { x: 0 }); } }, stampStart);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
