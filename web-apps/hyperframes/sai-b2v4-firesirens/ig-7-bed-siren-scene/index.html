@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      #scene { position: absolute; inset: 0; }
+      svg { position: absolute; inset: 0; overflow: visible; }
+      .ink { fill: #16161a; }
+      .lash { fill: none; stroke: #16161a; stroke-width: 12; stroke-linecap: round; }
+      .zz { fill: #fff; font-weight: 800; font-family: "Montserrat", sans-serif; }
+      .bell-body { fill: #F28129; stroke: #fff; stroke-width: 13; stroke-linejoin: round; }
+      .ring { fill: none; stroke: #fff; stroke-width: 13; stroke-linecap: round; }
+      /* 3D drop shadows */
+      #figure { filter: drop-shadow(0 16px 16px rgba(0,0,0,0.40)); }
+      #bell   { filter: drop-shadow(0 0 22px rgba(242,129,41,0.5)) drop-shadow(0 12px 13px rgba(0,0,0,0.5)); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5.5" data-width="1080" data-height="1920">
+      <div id="scene" class="clip" data-start="0" data-duration="5.5" data-track-index="1">
+        <svg viewBox="0 0 1080 1920" data-layout-allow-overflow>
+
+          <!-- SIREN BELL (behind the figure, upper-right) -->
+          <g id="bell">
+            <ellipse id="bell-glow" cx="772" cy="566" rx="150" ry="130" fill="#FF3B1A" opacity="0"/>
+            <g id="bell-shake">
+              <!-- ring marks: ( and ) fixed at the bell's top corners -->
+              <path class="ring" id="ring-l" d="M 688 470 q -28 42 0 84" opacity="0"/>
+              <path class="ring" id="ring-r" d="M 856 470 q 28 42 0 84" opacity="0"/>
+              <!-- knob -->
+              <rect x="760" y="432" width="24" height="30" rx="11" fill="#fff"/>
+              <!-- bell dome flaring to a rim -->
+              <path class="bell-body" d="M 698 580 Q 698 478 772 470 Q 846 478 846 580 L 872 622 L 672 622 Z"/>
+              <!-- clapper -->
+              <circle cx="772" cy="644" r="16" fill="#fff"/>
+            </g>
+          </g>
+
+          <!-- FIGURE — head + shoulders bust (avatar crop), solid white -->
+          <g id="figure">
+            <path id="bust" fill="#fff" d="M 352 1300 Q 352 1000 448 938 Q 494 910 540 908 Q 586 910 632 938 Q 728 1000 728 1300 Z"/>
+            <circle id="head" cx="540" cy="752" r="146" fill="#fff"/>
+
+            <g id="eyes-closed">
+              <path class="lash" d="M 472 740 q 26 20 52 0"/>
+              <path class="lash" d="M 556 740 q 26 20 52 0"/>
+            </g>
+            <g id="eyes-open" opacity="0">
+              <circle class="ink" cx="498" cy="740" r="13"/>
+              <circle class="ink" cx="582" cy="740" r="13"/>
+            </g>
+            <ellipse id="mouth-open" class="ink" cx="556" cy="818" rx="16" ry="22"/>
+            <path id="mouth-closed" class="lash" d="M 510 816 h 60" opacity="0"/>
+          </g>
+
+          <!-- Z's off the head -->
+          <g id="zzz-head" data-layout-allow-overflow>
+            <text class="zz" id="zh1" x="636" y="652" font-size="52">z</text>
+            <text class="zz" id="zh2" x="668" y="584" font-size="72">z</text>
+            <text class="zz" id="zh3" x="706" y="500" font-size="96">Z</text>
+          </g>
+          <!-- Z's blown from the mouth -->
+          <g id="zzz-mouth" data-layout-allow-overflow>
+            <text class="zz" id="zm1" x="612" y="824" font-size="40">z</text>
+            <text class="zz" id="zm2" x="652" y="796" font-size="56">z</text>
+          </g>
+
+        </svg>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const RING = 2.0; // moment the bell starts vibrating
+
+        tl.set("#bell", { x: 540, opacity: 0 }, 0);
+
+        tl.from("#figure", { scale: 0.93, opacity: 0, duration: 0.35, ease: "back.out(1.5)", transformOrigin: "50% 60%" }, 0.1);
+
+        // sleeping Z's stream out continuously (head + mouth) until he wakes
+        function emitZ(id, rise, drift, startAt) {
+          tl.fromTo(id,
+            { opacity: 0, x: 0, y: 14 },
+            { keyframes: { "0%": { opacity: 0, y: 14, x: 0 }, "22%": { opacity: 1 }, "100%": { opacity: 0, y: rise, x: drift } },
+              duration: 0.9, ease: "power1.out", repeat: 2 },
+            startAt);
+        }
+        emitZ("#zh1", -54, -10, 0.30); emitZ("#zh2", -60, -12, 0.52); emitZ("#zh3", -66, -16, 0.74);
+        emitZ("#zm1", -42, 20, 0.40); emitZ("#zm2", -48, 26, 0.62);
+        tl.to("#mouth-open", { scaleY: 0.72, transformOrigin: "50% 50%", duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0.5);
+
+        // SIREN BELL slides in early, settles behind his top-right
+        tl.to("#bell", { opacity: 1, duration: 0.18 }, 1.4);
+        tl.from("#bell", { x: 540, duration: 0.6, ease: "power3.out" }, 1.4);
+
+        // bell starts vibrating at RING; ring marks blink in place (they shake WITH the bell)
+        tl.to("#bell-shake", { x: 7, rotation: 2.4, duration: 0.045, ease: "none", yoyo: true, repeat: 46, transformOrigin: "50% 90%" }, RING);
+        tl.fromTo("#bell-glow", { opacity: 0 }, { opacity: 0.55, duration: 0.18, ease: "sine.inOut", yoyo: true, repeat: 12 }, RING);
+        tl.to(".ring", { opacity: 1, duration: 0.07 }, RING);
+        tl.to(".ring", { opacity: 0.3, duration: 0.11, ease: "none", yoyo: true, repeat: 11 }, RING + 0.08);
+
+        // WAKE — eyes open IMMEDIATELY when the bell starts vibrating
+        tl.to("#zzz-head", { opacity: 0, duration: 0.22, ease: "power2.in" }, RING - 0.1);
+        tl.to("#zzz-mouth", { opacity: 0, duration: 0.22, ease: "power2.in" }, RING - 0.1);
+        tl.to("#mouth-open", { opacity: 0, duration: 0.12 }, RING);
+        tl.to("#mouth-closed", { opacity: 1, duration: 0.12 }, RING + 0.06);
+        tl.to("#eyes-closed", { opacity: 0, duration: 0.1 }, RING);
+        tl.to("#eyes-open", { opacity: 1, duration: 0.1 }, RING + 0.03);
+        tl.to("#figure", { scale: 1.055, duration: 0.09, ease: "power2.out", yoyo: true, repeat: 1, transformOrigin: "50% 70%" }, RING);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
