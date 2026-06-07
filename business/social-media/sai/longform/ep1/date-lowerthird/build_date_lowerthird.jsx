@@ -153,11 +153,13 @@
     app.endUndoGroup();
 
     // ---------- export .mogrt next to this script ----------
+    // NOTE: the path arg is the DESTINATION FOLDER; AE names the file after the
+    // template ("Date Lower-Third.mogrt"). Passing a *.mogrt path nests it in a folder.
     var here = new File($.fileName).parent;
     var outPath = here.fsName + "/Date Lower-Third.mogrt";
     var exported = false;
     try {
-        exported = comp.exportAsMotionGraphicsTemplate(true, outPath);
+        exported = comp.exportAsMotionGraphicsTemplate(true, here.fsName);
     } catch (e) {
         exported = false;
     }

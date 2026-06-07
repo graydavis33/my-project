@@ -4,7 +4,13 @@ Cinematic date lower-third for the EP1 BTS doc. Two-line: **DAY** (bold) + **ful
 beneath, with a growing orange accent bar. You edit the text right in Premiere — no
 re-render.
 
-## One-time: build the .mogrt (in After Effects)
+## ✅ Already built
+
+`Date Lower-Third.mogrt` is already in this folder (built + verified). Skip straight to
+**"Use it in Premiere"** below. The AE build steps are only for regenerating after you
+tweak the look in the `.jsx`.
+
+## Rebuild the .mogrt (only if you change the design)
 
 1. Open **After Effects 2026**.
 2. `File > Scripts > Run Script File...` and pick `build_date_lowerthird.jsx`
