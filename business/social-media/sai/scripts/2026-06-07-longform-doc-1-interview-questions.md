@@ -1,123 +1,90 @@
-# Longform Doc — Episode 1 · Interview Question Script
+# Longform Doc — Episode 1 · Interview Questions (Josh / Street Talk)
 
-**Shoot:** Sai interview (office) — 2026-06-07
-**Maps to:** Episode 1 storyline arc — *"How I Built My 2nd Agency Before 22 / Raw Look Inside Trendify"* (`plans/2026-04-15-sai-debrief-content-strategy.md` → Episode 1 structure)
-**Grounded in:** `plans/2026-04-15-sai-debrief-research-deepdive.md` (Sai/Trendify dossier)
-**Format:** ~45 min. Horizontal, Sai + Gray both in frame so you can crop vertical. Capture key answers in 2–3 locations (desk / walk / office) for edit flexibility.
+**Subject:** Josh — founder, **Street Talk** (street-interview ad agency, NYC)
+**Grounded in:** the filmed transcript `D:/Sai/08_AI_EDITS/long-form/Founder Series 1/edit/takes_packed.md` (C2383 + C2385)
+**Arc:** Founders Series long-form spine — Cold open → Origin → What it is now → Tour → Wisdom drop
+**Format:** horizontal, both in frame for vertical crop · capture key answers in 2–3 spots
 
----
-
-## How to run it (read first)
-
-- **Each section below = one beat of the documentary arc.** Ask in order; the answers literally drop into that timeline slot.
-- **Make every answer self-contained.** Ask him to restate the question in the answer ("Trendify is…" not "It's…") so it cuts clean for voiceover-over-B-roll.
-- **Always re-prompt for a NUMBER or a SPECIFIC.** The whole arc lives on stakes + specifics ("we did $722K, 2x last year") not "we worked hard." If he generalizes: *"Say the number."*
-- **Cold-open line: film it FIRST (cold) and again LAST (warmed up).** 3–5 takes, one sentence each. This is the single most important capture of the day — the thumbnail + hook ride on it.
-- **Listen live for the killer soundbite.** The second you hear it: *"That. Say it again, tighter, no wind-up."*
-- **Don't hold a static talking head — it's fine, you'll cut B-roll over it,** but get reaction beats and pauses too.
+> Every question below is a **callback to something he already said on camera.** The goal today is to get him to tell those same stories *deeper, slower, and more cinematic* — not new trivia.
 
 ---
 
-## BEAT 1 — COLD OPEN (0:00–0:15) · the ONE line ⭐ MUST-GET
+## How to run it
 
-*Goal: a single punchy sentence over the title card. Lead with scale / stakes / contrarian. Film 3–5 one-sentence takes.*
-
-- In one sentence — what did you and your brother just build?
-- Finish this, one breath: *"At 21, my brother and I have already…"*
-- Say it like you're telling a stranger at a bar: how do two brothers under 25 end up running an agency with Fortune 500 and YC-backed clients?
-- What's the number that makes someone stop scrolling? (options to pull from him: $722K / 2x YoY · 20M+ leads · 5M+ followers · 8-figures in ad spend managed)
-- Re-prompt: *"Same thing, shorter — start with the punchline, drop the wind-up."*
+- **Make answers self-contained** — "Street Talk is…", "The first day in the park, I…" — so it cuts clean for voiceover.
+- **Re-prompt for the scene, not the summary.** When he gives the headline ("I slept on a couch"), push: *"Put me there — what time was it, what did the apartment smell like, what were you thinking?"*
+- **Cold-open line first (cold) and again last (warm).** 3–5 takes, one sentence.
+- **When he says a number, make him say it out loud and proud** (96 people · 16 months · every major city).
 
 ---
 
-## BEAT 2 — THE STORY ARC (0:15–3:30) · the spine, origin → now
+## BEAT 1 — COLD OPEN ⭐ (the one line, 3–5 takes)
 
-*Goal: the chronological journey as voiceover-able soundbites. Mixtapes/chess at 11 → TikTok 2021 → BuiltGen → the pivot to Trendify. Push for dates + feelings + numbers.*
-
-- Take me back to age 11 — what were you making before any of this? (he co-founded **Insight Chess Academy** with Srikar; **basketball mixtapes** on YouTube)
-- When did you realize you could actually build an audience — what happened on TikTok in 2021? *(re-prompt for the number: 1M followers in ~3 months of daily posting)*
-- What was your content actually about back then, and why did it pop? (his line: *"cool facts coupled with a unique storytelling approach"*)
-- You started **BuiltGen at 16** — what was it, and what made a 16-year-old start a marketing agency? *(20M+ leads, 50+ clients)*
-- What did BuiltGen teach you that you could NOT have learned any other way?
-- **The pivot (critical):** Why walk away from your first agency and build a *second* one? What was broken or missing that made Trendify necessary? *(this is the "End with pivot" beat the whole hook pays off)*
-- There's a line you've used — *"fear of being an average human."* Is that real? Where does it come from?
+- One sentence — who are you and what did you build?
+- Finish this in one breath: *"Sixteen months ago I was alone in a park with a microphone… and today—"*
+- Say it like a flex: zero to **96 people**, a stream in every major city — how?
+- Re-prompt: *"Shorter. Start on the punchline."*
 
 ---
 
-## BEAT 3 — WHAT TRENDIFY IS NOW (3:30–5:30) · show, don't tell
+## BEAT 2 — ORIGIN · how it actually started (the heart of the episode)
 
-*Goal: captions for the present-day office / client / team B-roll. Get crisp, namable specifics.*
+*He gave you the skeleton on camera. Today, get the scene.*
 
-- In plain English — what does Trendify actually do? (creative-first UGC ads built to scale)
-- Who are you doing this for? Name the names you're allowed to name. *(publicly safe: Y Combinator, Mindvalley, Justin Kan, Checkmate)*
-- Give me one real result you're proud of — with the number. *(e.g., Checkmate → #1 most-followed fintech on TikTok; 7,500+ creatives; 40+ creators)*
-- Walk me through what actually happens in this office on a normal day.
-- How big is the team — and who are they to you?
-- Why NYC? Why Midtown? *(the city is a character in this series — Liam Ottley style)*
-
----
-
-## BEAT 4 — WHY THIS SEASON MATTERS (5:30–7:30) · stakes + brother dynamic
-
-*Goal: emotional stakes that make people subscribe. This is where the doc earns its weight.*
-
-- What's actually at stake for you right now? What are you scared happens if this doesn't work?
-- Why put it on camera? Why let people watch the inside of it?
-- What's the hardest part of this that nobody sees?
-- **Brother dynamic:** What's it really like building this with Srikar? Where do you two clash? *(the #1 differentiator of the whole show — get a real, candid answer)*
-- What's something you're better at than your brother — and something he's better at than you?
-- A year from now, what does "this worked" look like?
+- Take me to the **very first day in Washington Square Park** — one mic, no employees. Walk up to that first stranger for me. What were you actually feeling?
+- You said you were **sleeping on Oliver's couch and uploading footage at an Apple store.** Paint a normal day back then — wake up to upload, what did it look like?
+- You **quit your summer internship before you knew what ROAS or media buying even was** — didn't even know what Slack was. What makes a person jump *that* blind?
+- You **dropped out in your senior year — your last year.** Was it one moment or a slow build? And who did you have to tell — what did that conversation sound like?
+- **Tabs Chocolate, employee #1 for Oliver Mercado.** What did that job teach you that four years of college never could?
+- You said **street-view ads "didn't exist" yet** — you were on sales calls convincing brands to buy something with no name. What was it like getting told no, over and over, on a thing nobody believed in?
+- You had **"nowhere to live, churning and burning clients nonstop that summer."** What was the lowest moment — the night you almost quit?
 
 ---
 
-## BEAT 5 — WHAT'S NEXT (7:30–9:30) · tease / serialize
+## BEAT 3 — WHAT STREET TALK IS NOW · show, don't tell
 
-*Goal: concrete cliffhanger fuel so people come back for Ep 2.*
-
-- What's the next big thing coming — a client, a hire, a launch? Be specific.
-- What are you betting on that most people in the UGC / agency space are sleeping on? *(contrarian take — also cuts to a short)*
-- If you nail the next 90 days, what changes for Trendify?
-
----
-
-## BEAT 6 — CTA / SIGN-OFF + WISDOM DROP (9:30–end)
-
-*Goal: a clean close + an evergreen soundbite that also works as standalone short-form.*
-
-- If a 15-year-old wanted to do what you've done — the ONE thing you'd tell them?
-- Look down the lens: tell people what they'll see if they stick around for this series.
-- Quick clean framing line for the intro: *"I'm Sai, co-founder of Trendify — welcome to episode one."* (a couple takes)
+- In plain English for someone who's never heard of you — what does **Street Talk** do?
+- You said *"brands are media companies, and your ads cannot look like ads."* Unpack that — why is a street interview the **most native** thing on social?
+- **16 months, 0 → 96 people, a stream in every major city.** What broke as you scaled that fast that you had to fix on the fly?
+- Your exec team is insane — a **COO who ran Hollywood.com for 15 years, a CRO from Tinuiti.** How does a 23-year-old get people with that much more experience to come work *for him*?
+- You said you were **"21 in a park making a ton of money, knew you weren't special but knew you had something hot."** How did you keep your head straight with that kind of money that young?
 
 ---
 
-## TEAM-MEMBER INTERVIEWS (after Sai wraps + B-roll, per 4/29 plan)
+## BEAT 4 — THE TOUR (brand signature — mic'd up, walking)
 
-*Short, 2–3 questions each. These become texture + a possible "what it's like inside" beat.*
-
-- Who are you and what do you do at Trendify? (self-contained answer)
-- What's it actually like working for two brothers under 25?
-- What's something about Sai that would surprise people?
-- What's a moment that made you think "this place is different"?
-- What are you building right now that you're fired up about?
+- You **moved into this office 4 months ago and already outgrew it** — you're taking your own floor downstairs. Walk me through it. Show me where the magic *and* the chaos happen.
+- Point to **one thing in this room** that tells the whole story of the last two years.
 
 ---
 
-## IF SRIKAR IS AROUND (bonus — duo gold)
+## BEAT 5 — WISDOM DROP + CLOSE
 
-- You're the older brother *and* the CEO — what's Sai better at than you?
-- Tell me about the day you two decided to start over and build Trendify.
-- What do people get wrong about going into business with your sibling?
-- *(If he'll do it: one 2-shot line with both brothers for the cold open / thumbnail.)*
+- Your number-one advice is *"surround yourself with people smarter than you."* When did you learn that the **hard way**?
+- You said *"the only thing that matters is your people — not the product, not the market."* Why are you so sure?
+- What are you **still trying to figure out** — what keeps you up as a leader right now?
+- For the kid watching who's scared to take the leap — AI, competition, all of it — what do you actually tell them? *(he gave a clean version on camera: "no risk, no reward" / "find a service, post it on Twitter, get paid, make content, then drop out" — get a tighter take)*
+- If you could sit with **18-year-old Josh — the kid who did half his SAT and walked out** — for one conversation, what do you say?
+- Down the lens: who are you, and why should they watch this?
 
 ---
 
-## Capture checklist (don't leave without)
+## TEAM-MEMBER INTERVIEWS (after Josh wraps + B-roll)
 
-- [ ] 3–5 cold-open one-liner takes (Beat 1) — filmed cold AND warm
-- [ ] Full origin → pivot story in self-contained soundbites (Beat 2)
-- [ ] At least 2 hard numbers said out loud ($722K / 2x, 20M leads, 5M followers, Checkmate #1)
-- [ ] One candid brother-dynamic answer (Beat 4)
-- [ ] One contrarian/"what's next" line for a short (Beat 5)
-- [ ] One evergreen advice soundbite (Beat 6)
-- [ ] 2–3 locations covered for the main answers
-- [ ] Both Sai + Gray framed for vertical crop
+- Who are you and what do you do at Street Talk?
+- What's it actually like working for a 23-year-old founder?
+- What's something about Josh that would surprise people?
+- What was the moment you realized this place was different?
+
+---
+
+## Capture checklist
+
+- [ ] 3–5 cold-open one-liners (cold + warm)
+- [ ] The park "first day" scene, told slow (Beat 2)
+- [ ] The couch / Apple-store grind, as a scene not a summary
+- [ ] Numbers said out loud: 96 people · 16 months · every major city
+- [ ] The exec-team recruiting answer (Beat 3)
+- [ ] One mic'd-up office tour pass (Beat 4)
+- [ ] The 18-year-old-Josh answer (Beat 5)
+- [ ] 2–3 locations for the main answers · both framed for vertical crop
