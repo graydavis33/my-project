@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene {
+        position: relative; width: 100%; height: 100%;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 10px; padding: 80px;
+      }
+      .line {
+        display: block; white-space: nowrap;
+        font-family: "Montserrat", system-ui, sans-serif;
+        font-weight: 800; color: #FFFFFF;
+        text-transform: uppercase; letter-spacing: -0.01em;
+        line-height: 1.04; text-align: center;
+        text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+        will-change: transform, opacity;
+      }
+      #l1 { font-size: 88px; }
+      #l2 { font-size: 88px; }
+      #l3 { font-size: 76px; margin-top: 14px; }
+      #l4 {
+        font-size: 92px; font-weight: 900; color: #F28129;
+        text-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.6" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3.6" data-track-index="1">
+        <div class="line" id="l1">THE MOST ANNOYING</div>
+        <div class="line" id="l2">SOUND IN NYC</div>
+        <div class="line" id="l3">TAUGHT ME MY</div>
+        <div class="line" id="l4">BIGGEST LIFE LESSON</div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        tl.from("#l1", { y: 70, opacity: 0, duration: 0.42, ease: "power3.out" }, 0.15);
+        tl.from("#l2", { y: 60, opacity: 0, duration: 0.42, ease: "power2.out" }, 0.34);
+        tl.from("#l3", { y: 50, opacity: 0, duration: 0.40, ease: "expo.out" }, 0.54);
+        tl.from("#l4", { y: 90, opacity: 0, scale: 0.72, duration: 0.62, ease: "back.out(1.8)" }, 0.74);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

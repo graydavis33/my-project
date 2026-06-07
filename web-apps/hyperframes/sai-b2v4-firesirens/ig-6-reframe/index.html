@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00;
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene {
+        position: relative; width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center;
+        padding: 300px 80px 0 80px;
+      }
+      /* orange-glass recipe */
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 60% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 24px rgba(242,129,41,0.55),
+          0 6px 18px rgba(0,0,0,0.28);
+      }
+      .pill {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 16px 46px; border-radius: 999px; margin-bottom: 34px;
+      }
+      .pill-text {
+        font-weight: 800; font-size: 38px; letter-spacing: 0.10em;
+        color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      }
+      .title {
+        font-weight: 800; font-size: 96px; line-height: 1.04; letter-spacing: 0.02em;
+        color: #fff; text-align: center; text-transform: uppercase;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.35); margin-bottom: 40px;
+      }
+      .stage {
+        position: relative; width: 760px; height: 760px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .stage svg { position: absolute; width: 760px; height: 760px; overflow: visible; }
+      .beacon-glow { filter: drop-shadow(0 0 26px rgba(242,129,41,0.85)); }
+      /* infographic vehicles (triangle stack, left) + person (right) */
+      #left  { left: -36px; top: 352px; width: 300px; height: 210px; }
+      #right { left: 525px; top: 352px; width: 170px; height: 240px;
+               filter: drop-shadow(0 6px 9px rgba(0,0,0,0.45)); }
+      /* per-vehicle drop shadow = depth between the stacked points */
+      .veh { filter: drop-shadow(0 9px 10px rgba(0,0,0,0.55)); }
+      .subtitle {
+        margin-top: 18px; font-weight: 600; font-size: 44px; color: #fff;
+        text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.45); letter-spacing: 0.01em;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <div class="stage" data-layout-allow-overflow>
+          <!-- LEFT: emergency-vehicle infographics, stacked as a triangle with depth -->
+          <svg id="left" class="ig-left" viewBox="0 0 300 210">
+            <!-- speed lines (trailing motion, behind the cluster) -->
+            <line class="speed" x1="8" y1="72"  x2="46" y2="72"  stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0"/>
+            <line class="speed" x1="2" y1="120" x2="42" y2="120" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0"/>
+            <line class="speed" x1="8" y1="166" x2="46" y2="166" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0"/>
+
+            <!-- FIRE TRUCK (top apex, back) -->
+            <g class="veh-wrap"><g class="veh" transform="translate(102,30) scale(0.78)">
+              <g stroke="#fff" stroke-width="5" stroke-linecap="round">
+                <line x1="24" y1="34" x2="118" y2="22"/>
+                <line x1="27" y1="46" x2="121" y2="34"/>
+                <line x1="44" y1="31" x2="48" y2="43"/>
+                <line x1="70" y1="27.5" x2="74" y2="39.5"/>
+                <line x1="96" y1="24" x2="100" y2="36"/>
+              </g>
+              <rect x="10" y="46" width="116" height="34" rx="8" fill="#F28129" stroke="#fff" stroke-width="6"/>
+              <path d="M126 80 V58 H146 a6 6 0 0 1 6 6 V80 Z" fill="#F28129" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+              <rect x="131" y="62" width="13" height="12" rx="2" fill="#fff"/>
+              <rect class="siren siren-a" x="129" y="49" width="11" height="9" rx="2" fill="#F28129"/>
+              <rect class="siren siren-b" x="140" y="49" width="11" height="9" rx="2" fill="#fff"/>
+              <g class="wheel"><circle cx="40" cy="84" r="13" fill="none" stroke="#fff" stroke-width="6"/><line x1="40" y1="75" x2="40" y2="93" stroke="#fff" stroke-width="3"/><line x1="31" y1="84" x2="49" y2="84" stroke="#fff" stroke-width="3"/></g>
+              <g class="wheel"><circle cx="104" cy="84" r="13" fill="none" stroke="#fff" stroke-width="6"/><line x1="104" y1="75" x2="104" y2="93" stroke="#fff" stroke-width="3"/><line x1="95" y1="84" x2="113" y2="84" stroke="#fff" stroke-width="3"/></g>
+            </g></g>
+
+            <!-- AMBULANCE (bottom-left, offset clear of the police car) -->
+            <g class="veh-wrap"><g class="veh" transform="translate(44,116) scale(0.82)">
+              <rect x="10" y="34" width="92" height="44" rx="8" fill="none" stroke="#fff" stroke-width="6"/>
+              <path d="M102 78 V46 H126 L146 62 V78 Z" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+              <path d="M126 50 L142 62 H126 Z" fill="#fff"/>
+              <rect x="40" y="48" width="30" height="10" rx="2" fill="#F28129"/>
+              <rect x="50" y="38" width="10" height="30" rx="2" fill="#F28129"/>
+              <rect class="siren siren-a" x="34" y="24" width="23" height="9" rx="3" fill="#F28129"/>
+              <rect class="siren siren-b" x="57" y="24" width="23" height="9" rx="3" fill="#fff"/>
+              <g class="wheel"><circle cx="44" cy="82" r="13" fill="none" stroke="#fff" stroke-width="6"/><line x1="44" y1="73" x2="44" y2="91" stroke="#fff" stroke-width="3"/><line x1="35" y1="82" x2="53" y2="82" stroke="#fff" stroke-width="3"/></g>
+              <g class="wheel"><circle cx="116" cy="82" r="13" fill="none" stroke="#fff" stroke-width="6"/><line x1="116" y1="73" x2="116" y2="91" stroke="#fff" stroke-width="3"/><line x1="107" y1="82" x2="125" y2="82" stroke="#fff" stroke-width="3"/></g>
+            </g></g>
+
+            <!-- POLICE CAR (bottom-right, front) -->
+            <g class="veh-wrap"><g class="veh" transform="translate(164,124) scale(0.86)">
+              <path d="M8 74 V60 Q8 54 16 54 H140 Q150 56 150 64 V74 Z" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+              <path d="M36 54 L54 36 H104 L122 54 Z" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+              <line x1="79" y1="36" x2="79" y2="54" stroke="#fff" stroke-width="4"/>
+              <path transform="translate(68,56) scale(0.7)" d="M12 2 L15 9 L22 9 L16.5 13.5 L18.5 21 L12 16.5 L5.5 21 L7.5 13.5 L2 9 L9 9 Z" fill="#F28129"/>
+              <rect class="siren siren-a" x="62" y="26" width="17" height="10" rx="3" fill="#F28129"/>
+              <rect class="siren siren-b" x="79" y="26" width="17" height="10" rx="3" fill="#fff"/>
+              <g class="wheel"><circle cx="44" cy="78" r="13" fill="none" stroke="#fff" stroke-width="6"/><line x1="44" y1="69" x2="44" y2="87" stroke="#fff" stroke-width="3"/><line x1="35" y1="78" x2="53" y2="78" stroke="#fff" stroke-width="3"/></g>
+              <g class="wheel"><circle cx="116" cy="78" r="13" fill="none" stroke="#fff" stroke-width="6"/><line x1="116" y1="69" x2="116" y2="87" stroke="#fff" stroke-width="3"/><line x1="107" y1="78" x2="125" y2="78" stroke="#fff" stroke-width="3"/></g>
+            </g></g>
+          </svg>
+
+          <!-- ARROW across -->
+          <svg id="arrowsvg" viewBox="0 0 760 760">
+            <path id="arrow" d="M 290 465 L 470 465" fill="none" stroke="#fff"
+              stroke-width="14" stroke-linecap="round"/>
+            <path id="arrowhead" d="M 442 440 L 478 465 L 442 490" fill="none" stroke="#fff"
+              stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+          <!-- RIGHT: a person (the life) — infographic, with the same heart above -->
+          <svg id="right" class="ig-right" viewBox="0 0 170 240">
+            <circle cx="85" cy="60" r="32" fill="none" stroke="#fff" stroke-width="8"/>
+            <path d="M34 234 V168 a51 51 0 0 1 102 0 V234" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+          <!-- HEART payoff (own svg so it can pulse independently) -->
+          <svg id="heartsvg" viewBox="0 0 760 760">
+            <path id="heart"
+              d="M 610 256
+                 C 596 230, 558 232, 558 264
+                 C 558 292, 588 312, 610 332
+                 C 632 312, 662 292, 662 264
+                 C 662 232, 624 230, 610 256 Z"
+              fill="#F28129" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 5;
+
+        // LEFT cluster slides in from the left
+        tl.from("#left", { x: -260, opacity: 0, duration: 0.6, ease: "power3.out" }, 0.7);
+
+        // ARROW draws across
+        const arrow = document.getElementById("arrow");
+        const arrowLen = arrow.getTotalLength();
+        arrow.style.strokeDasharray = arrowLen;
+        const head = document.getElementById("arrowhead");
+        tl.fromTo("#arrow",
+          { strokeDashoffset: arrowLen },
+          { strokeDashoffset: 0, duration: 0.45, ease: "power2.out" }, 1.25);
+        tl.from("#arrowhead", { opacity: 0, scale: 0.4, duration: 0.25, ease: "power2.out",
+          transformOrigin: "470px 465px" }, 1.6);
+
+        // RIGHT side + HEART pop in big (the payoff)
+        tl.from("#right", { scale: 0.6, opacity: 0, duration: 0.55, ease: "back.out(1.9)",
+          transformOrigin: "center" }, 1.85);
+        tl.from("#heart", { scale: 0.0, opacity: 0, duration: 0.55, ease: "back.out(1.9)",
+          transformOrigin: "610px 280px" }, 2.05);
+
+        // gentle finite heartbeat pulse on the heart
+        const beatCycle = 0.9;
+        const beatStart = 2.7;
+        const beatReps = Math.ceil((DUR - beatStart) / beatCycle) - 1;
+        tl.fromTo("#heart",
+          { scale: 1.0, transformOrigin: "610px 280px" },
+          { scale: 1.14, duration: beatCycle / 2, ease: "sine.inOut",
+            yoyo: true, repeat: beatReps * 2 + 1 },
+          beatStart);
+
+        // ── DRIVING MOTION (loops, finite repeats, after the cluster lands) ──
+        const driveStart = 1.45;
+        const span = DUR - driveStart;
+
+        // wheels spin
+        const wheelCycle = 0.7;
+        tl.to(".wheel", { rotation: 360, transformOrigin: "50% 50%", duration: wheelCycle,
+          ease: "none", repeat: Math.ceil(span / wheelCycle) }, driveStart);
+
+        // subtle driving bob
+        const bobHalf = 0.13;
+        tl.to(".veh-wrap", { y: -5, duration: bobHalf, ease: "sine.inOut",
+          yoyo: true, repeat: Math.ceil(span / bobHalf),
+          stagger: { each: 0.05, from: "edges" } }, driveStart);
+
+        // siren lights alternate (orange / white halves flashing)
+        const sirenHalf = 0.22;
+        const sirenReps = Math.ceil(span / sirenHalf);
+        tl.set(".siren-b", { opacity: 0.2 }, driveStart);
+        tl.to(".siren-a", { opacity: 0.2, duration: sirenHalf, ease: "sine.inOut",
+          yoyo: true, repeat: sirenReps }, driveStart);
+        tl.to(".siren-b", { opacity: 1.0, duration: sirenHalf, ease: "sine.inOut",
+          yoyo: true, repeat: sirenReps }, driveStart);
+
+        // speed lines streak backward
+        const speedCycle = 0.5;
+        tl.fromTo(".speed",
+          { opacity: 0.8, x: 16 },
+          { opacity: 0, x: -16, duration: speedCycle, ease: "power1.out",
+            repeat: Math.ceil(span / speedCycle), stagger: 0.14 }, driveStart);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

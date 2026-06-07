@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #00FF00; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 60% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 24px rgba(242,129,41,0.55),
+          0 8px 22px rgba(0,0,0,0.30);
+      }
+
+      .step {
+        position: absolute; border-radius: 30px;
+        display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        padding: 34px 18px 0 18px;
+        will-change: transform;
+      }
+      #step1 { left: 80px;  width: 280px; top: 1250px; height: 370px; transform-origin: 50% 100%; }
+      #step2 { left: 400px; width: 280px; top: 1120px; height: 500px; transform-origin: 50% 100%; }
+      #step3 { left: 720px; width: 280px; top: 1000px; height: 620px; transform-origin: 50% 100%; }
+
+      .badge {
+        width: 64px; height: 64px; border-radius: 999px;
+        background: #fff; color: #D66416;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 900; font-size: 38px; margin-bottom: 16px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      }
+      .school {
+        font-weight: 800; font-size: 28px; letter-spacing: 0.10em; color: #fff;
+        text-transform: uppercase; opacity: 0.92; text-align: center;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.35); margin-bottom: 14px;
+      }
+      .driver {
+        display: flex; flex-direction: column; align-items: center;
+        font-weight: 900; font-size: 50px; line-height: 1.04; color: #fff;
+        text-transform: uppercase; letter-spacing: -0.01em; text-align: center;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      }
+
+      svg.decor { position: absolute; inset: 0; overflow: visible; }
+      .fig-fill { fill: #fff; }
+      .fig-line {
+        fill: none; stroke: #fff; stroke-width: 26;
+        stroke-linecap: round; stroke-linejoin: round;
+      }
+      #figure { filter: drop-shadow(0 10px 14px rgba(0,0,0,0.32)); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4.4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4.4" data-track-index="1">
+
+        <div id="step1" class="step glass">
+          <div class="badge">1</div>
+          <div class="school">Elementary</div>
+          <div class="driver"><span>FIT</span><span>IN</span></div>
+        </div>
+        <div id="step2" class="step glass">
+          <div class="badge">2</div>
+          <div class="school">Middle</div>
+          <div class="driver"><span>BE</span><span>SMARTER</span></div>
+        </div>
+        <div id="step3" class="step glass">
+          <div class="badge">3</div>
+          <div class="school">High School</div>
+          <div class="driver"><span>THE</span><span>FUTURE</span></div>
+        </div>
+
+        <!-- locked stick figure: reached the top of step 3, arms raised -->
+        <svg class="decor" viewBox="0 0 1080 1920" data-layout-allow-overflow>
+          <g id="figure" data-layout-allow-overflow>
+            <circle class="fig-fill" cx="860" cy="838" r="37"/>
+            <path class="fig-line" d="M 860 882 L 860 944"/>
+            <path class="fig-line" d="M 860 896 L 812 848"/>
+            <path class="fig-line" d="M 860 896 L 908 848"/>
+            <path class="fig-line" d="M 860 944 L 834 998"/>
+            <path class="fig-line" d="M 860 944 L 886 998"/>
+          </g>
+        </svg>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        const stepContent = ["#step1 .badge","#step1 .school","#step1 .driver",
+                             "#step2 .badge","#step2 .school","#step2 .driver",
+                             "#step3 .badge","#step3 .school","#step3 .driver"];
+        // content hidden while the bar is still growing up from the baseline
+        tl.set(stepContent, { opacity: 0 }, 0);
+        tl.set("#figure", { opacity: 0 }, 0);
+
+        // bars level up from the x-axis baseline, one by one
+        const grow = (sel, at) =>
+          tl.from(sel, { scaleY: 0, duration: 0.55, ease: "power3.out", transformOrigin: "50% 100%" }, at);
+        const reveal = (els, at) =>
+          tl.to(els, { opacity: (i, t) => (t.classList.contains("school") ? 0.92 : 1),
+                       y: 0, duration: 0.30, ease: "power2.out", stagger: 0.06 }, at);
+
+        grow("#step1", 0.20);
+        reveal(["#step1 .badge","#step1 .school","#step1 .driver"], 0.62);
+
+        grow("#step2", 0.68);
+        reveal(["#step2 .badge","#step2 .school","#step2 .driver"], 1.10);
+
+        grow("#step3", 1.16);
+        reveal(["#step3 .badge","#step3 .school","#step3 .driver"], 1.58);
+
+        // figure climbs onto the top step, little reach-up bounce
+        tl.to("#figure", { opacity: 1, duration: 0.18 }, 1.78);
+        tl.from("#figure", { y: 70, duration: 0.5, ease: "back.out(1.6)", transformOrigin: "860px 998px" }, 1.78);
+        tl.to("#figure", { y: -12, duration: 0.30, ease: "power2.out", yoyo: true, repeat: 1,
+          transformOrigin: "860px 998px" }, 2.34);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
