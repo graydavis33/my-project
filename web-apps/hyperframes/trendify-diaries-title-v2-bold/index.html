@@ -28,7 +28,7 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="4.4" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6.0" data-width="1920" data-height="1080">
       <div class="stage">
         <span class="line l1">TRENDIFY</span>
         <span class="line l2">DIARIES</span>
@@ -47,7 +47,11 @@
         tl.from(".tagsq", { scaleX: 0, duration: 0.4, ease: "back.out(2)" }, 0.66);
         tl.from(".tagtext", { x: -26, opacity: 0, duration: 0.45, ease: "power2.out" }, 0.74);
 
-        tl.to(".stage", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 3.8);
+        // ambient: a slow parallax drift + the accent bar breathing
+        tl.to(".stage", { x: 7, y: -5, duration: 0.95, ease: "sine.inOut", repeat: 3, yoyo: true }, 1.6);
+        tl.to(".tagsq", { scaleY: 1.3, transformOrigin: "center", duration: 0.9, ease: "sine.inOut", repeat: 3, yoyo: true }, 1.7);
+
+        tl.to(".stage", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 5.4);
 
         window.__timelines["main"] = tl;
       </script>

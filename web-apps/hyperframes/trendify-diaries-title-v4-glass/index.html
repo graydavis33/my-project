@@ -40,7 +40,7 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="4.8" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6.2" data-width="1920" data-height="1080">
       <div class="stage">
         <div class="grid"></div>
         <div class="glow"></div>
@@ -70,7 +70,12 @@
         // episode label
         tl.from(".episode", { y: 12, opacity: 0, duration: 0.5, ease: "power2.out" }, 1.05);
 
-        tl.to(".stage", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 4.15);
+        // ambient: the glow breathes, panel + underline subtly pulse
+        tl.to(".glow", { opacity: 0.6, duration: 0.9, ease: "sine.inOut", repeat: 3, yoyo: true }, 1.8);
+        tl.to(".panel", { scale: 1.008, transformOrigin: "center", duration: 1.4, ease: "sine.inOut", repeat: 1, yoyo: true }, 1.9);
+        tl.to(".underline", { opacity: 0.55, duration: 0.8, ease: "sine.inOut", repeat: 3, yoyo: true }, 2.0);
+
+        tl.to(".stage", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 5.55);
 
         window.__timelines["main"] = tl;
       </script>

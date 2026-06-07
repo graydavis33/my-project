@@ -96,7 +96,7 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="4.8"
+      data-duration="6.2"
       data-width="1920"
       data-height="1080"
     >
@@ -129,8 +129,11 @@
           1.1
         );
 
-        // hold, then the only exit: gentle fade out (final scene)
-        tl.to(".stage", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 4.15);
+        // ambient: a slow breathing drift while it holds
+        tl.to(".content", { y: -7, scale: 1.012, duration: 0.85, ease: "sine.inOut", repeat: 3, yoyo: true }, 2.1);
+
+        // the only exit: gentle fade out (final scene)
+        tl.to(".stage", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 5.55);
 
         window.__timelines["main"] = tl;
       </script>
