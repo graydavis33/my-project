@@ -49,9 +49,21 @@ are built — no exceptions unless Gray overrides for a specific video.
 
 ## Animation
 
-- Snappy per-phrase pop-in: `scale 0.92 → 1` + fade, `duration 0.13`,
-  `ease back.out(1.6)`, synced to the spoken phrase (group `start` = first word's
-  start). Replace, don't overlap.
+- **NO flicker at the line change (hard rule — Gray 2026-06-06).** A caption must
+  never dim, fade out, slide, or blank in the gap *between* two cards. Those
+  inter-card transitions are what read as a "flicker." Keep each card at **full
+  opacity, gapless** — it holds until the **next card's start** (last card holds
+  to the end), then **hard-cuts** to the next. No fade-out, no crossfade, no
+  slide-up entrance, no micro-gap.
+- A subtle entrance (pop-in / fade-in) is only acceptable on the **very first**
+  card or a card that follows a genuine long pause (it appears over blank, so
+  there is nothing to dim against). Within continuous speech, replace instantly.
+- For the PIL alpha-layer path (`sai-captions` / `_b2_edit/pipeline.py` /
+  `recaption_final.py`): this is enforced by building gapless spans
+  (`e = next card start`) and writing each card PNG at full alpha — no
+  `alpha_scaled`, no `y_off`, no crossfade. Verify by sampling consecutive
+  frames over black: per-frame max luma must stay 255 across every transition
+  (a dip to ~200 or a 0 = the flicker is back).
 
 ## Workflow
 

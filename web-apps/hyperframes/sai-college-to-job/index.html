@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 60% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 24px rgba(242,129,41,0.55),
+          0 8px 22px rgba(0,0,0,0.30);
+      }
+
+      .card {
+        position: absolute; top: 750px; width: 320px; height: 420px;
+        border-radius: 38px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 32px;
+        will-change: transform, filter;
+      }
+      #card-left  { left: 130px; filter: url(#mblur-l); }
+      #card-right { left: 630px; filter: url(#mblur-r); }
+
+      .icon { width: 212px; height: 172px; filter: drop-shadow(0 9px 12px rgba(0,0,0,0.32)); }
+      .ink   { fill: #fff; }
+      .accent{ fill: #F28129; }
+      .ink-line { fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+
+      .label {
+        font-weight: 900; font-size: 46px; letter-spacing: -0.01em; color: #fff;
+        text-transform: uppercase; text-align: center;
+        text-shadow: 0 4px 12px rgba(0,0,0,0.42);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3" data-width="1080" data-height="1920">
+      <!-- directional (horizontal) motion-blur filters -->
+      <svg width="0" height="0" style="position:absolute">
+        <filter id="mblur-l" x="-60%" y="-20%" width="220%" height="140%">
+          <feGaussianBlur id="mb-l" stdDeviation="0 0" />
+        </filter>
+        <filter id="mblur-r" x="-60%" y="-20%" width="220%" height="140%">
+          <feGaussianBlur id="mb-r" stdDeviation="0 0" />
+        </filter>
+      </svg>
+
+      <div id="scene" class="scene clip" data-start="0" data-duration="3" data-track-index="1">
+
+        <!-- LEFT: COLLEGE — graduation cap -->
+        <div id="card-left" class="card glass" data-layout-allow-overflow>
+          <svg class="icon" viewBox="0 0 240 200">
+            <polygon class="ink" points="120,38 232,82 120,126 8,82" />
+            <path class="ink" d="M58,100 L58,140 Q120,176 182,140 L182,100 L120,128 Z" />
+            <circle class="ink" cx="120" cy="82" r="9" />
+            <path class="ink-line" d="M120,82 L206,98 L206,152" />
+            <circle class="ink" cx="206" cy="162" r="12" />
+          </svg>
+          <div class="label">College</div>
+        </div>
+
+        <!-- RIGHT: JOB — briefcase -->
+        <div id="card-right" class="card glass" data-layout-allow-overflow>
+          <svg class="icon" viewBox="0 0 240 200">
+            <path class="ink" d="M94,56 Q94,34 120,34 Q146,34 146,56 L146,72 L131,72 L131,58 Q131,48 120,48 Q109,48 109,58 L109,72 L94,72 Z" />
+            <rect class="ink" x="34" y="72" width="172" height="106" rx="18" />
+            <rect class="accent" x="34" y="116" width="172" height="9" />
+            <rect class="accent" x="103" y="103" width="34" height="30" rx="7" />
+          </svg>
+          <div class="label">Job</div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // LEFT (College) slides in first from off-frame left, overshoots & settles (boomerang)
+        tl.from("#card-left", { x: -880, duration: 0.45, ease: "back.out(1.1)" }, 0.15);
+        tl.from("#mb-l", { attr: { stdDeviation: "40 0" }, duration: 0.3, ease: "power2.out" }, 0.15);
+
+        // RIGHT (Job) slides in second from off-frame right (opposite direction)
+        tl.from("#card-right", { x: 880, duration: 0.45, ease: "back.out(1.1)" }, 0.5);
+        tl.from("#mb-r", { attr: { stdDeviation: "40 0" }, duration: 0.3, ease: "power2.out" }, 0.5);
+
+        // subtle shared idle float during the hold (finite yoyo, fully seekable)
+        tl.to(["#card-left", "#card-right"],
+          { y: -16, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.4);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

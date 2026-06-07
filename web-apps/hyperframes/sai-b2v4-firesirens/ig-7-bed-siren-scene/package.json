@@ -1,0 +1,1 @@
+{ "name": "sai-b2v4-ig-7-bed-siren-scene", "private": true, "type": "module", "scripts": { "dev": "npx --yes hyperframes preview", "render": "npx --yes hyperframes render --fps 30" } }
