@@ -41,8 +41,16 @@ style as Vid 4 fire-sirens (`sai-b2v4-firesirens/`). Lean package (Gray's call):
 5. **ig-2-market-collapse** — animated line graph: exponential climb (orange) → brutal
    crash (red) right before launch, red X stamp + "COLLAPSED". Adapted from
    `sai-shorts-2026-05-27/batch1-vid7/02-business-crash-graph`.
-6. **ig-3-lesson** — equation card: "PROVE YOURSELF = NOTHING" (red) vs
-   "DO IT FOR YOU = HAPPY" (orange). Mirrors Vid 4 "ACCEPTANCE = PEACE".
+6. **ig-3-lesson** — drawn split-contrast infographic (NO equation text): two
+   orange-glass panels, "FOR THEM" vs "FOR YOU", using the locked head+shoulders
+   avatar (upper body, round head — from `sai-b2v4-firesirens/ig-7`). LEFT = a
+   speaker talking (animated mouth + speech bubble) to 3 listener avatars; a red
+   ✗ pops in (fixed position) and the whole card does one natural red blink. RIGHT
+   = one avatar with static shine lines from the head; a green ✓ pops in ~1.6s
+   later and the whole card does one smooth ~1s green blink. Only continuous
+   motion = the speaker's mouth. Green ✓/blink ⇒ this card is ALPHA-only (a green
+   element can't be chroma-keyed). 5.0s. Exported:
+   `6 - The Lesson (For Them vs For You) (alpha).mov`.
 
 ## Render modes (per locked rule: alpha when soft drop shadows present)
 - **Titles (1–3):** green-screen MP4 — keyed in Premiere (text shadows key clean enough).

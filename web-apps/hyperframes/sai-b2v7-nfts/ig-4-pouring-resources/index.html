@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Pouring Into An NFT</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #00FF00; }
+  #root {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: #00FF00;
+    overflow: hidden;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  /* Title */
+  .title {
+    position: absolute;
+    top: 130px;
+    left: 0; width: 100%;
+    text-align: center;
+  }
+  .t-line {
+    font-size: 66px;
+    font-weight: 900;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+    text-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  }
+  .t-line .nft { color: #F28129; text-shadow: 0 12px 36px rgba(0,0,0,0.5); }
+
+  /* Resource icons */
+  .res {
+    position: absolute;
+    top: 950px;
+    width: 240px;
+    text-align: center;
+  }
+  .res svg { width: 132px; height: 132px; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35)); }
+  .res-label {
+    margin-top: 8px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.45);
+  }
+
+  /* Falling value particles */
+  .streams { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+  .dot {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #F28129;
+    box-shadow: 0 0 14px rgba(242,129,41,0.85), inset 0 2px 0 rgba(255,235,210,0.7);
+    opacity: 0;
+    will-change: transform;
+  }
+
+  /* NFT card */
+  .nft-glow {
+    position: absolute;
+    left: 240px; top: 1000px;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(242,129,41,0.7) 0%, rgba(242,129,41,0.25) 40%, rgba(242,129,41,0) 70%);
+    will-change: transform, opacity;
+  }
+  .nft-card {
+    position: absolute;
+    left: 320px; top: 1280px;
+    width: 440px; height: 440px;
+    border-radius: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    box-sizing: border-box;
+    background:
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+      linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 38%, rgba(214,100,22,1) 100%);
+    border: 3px solid #FFFFFF;
+    box-shadow:
+      inset 0 2px 0 rgba(255,240,215,0.55),
+      inset 0 -6px 18px rgba(140,55,8,0.45),
+      0 0 28px rgba(242,129,41,0.55),
+      0 10px 28px rgba(0,0,0,0.3);
+    will-change: transform;
+  }
+  .nft-card svg { width: 230px; height: 230px; filter: drop-shadow(0 6px 14px rgba(120,45,5,0.5)); }
+  .nft-tag {
+    font-size: 46px;
+    font-weight: 900;
+    color: #FFFFFF;
+    letter-spacing: 0.06em;
+    text-shadow: 0 4px 12px rgba(120,45,5,0.5);
+  }
+
+  /* Progress */
+  .progress { position: absolute; left: 280px; top: 1790px; width: 520px; text-align: center; }
+  .prog-label {
+    font-size: 34px;
+    font-weight: 900;
+    color: #F28129;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.45);
+    margin-bottom: 12px;
+  }
+  .prog-track {
+    position: relative;
+    width: 100%; height: 26px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.22);
+    border: 2px solid #FFFFFF;
+    overflow: hidden;
+  }
+  .prog-fill {
+    position: absolute; left: 0; top: 0; height: 100%; width: 100%;
+    transform-origin: left center;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(255,168,88,1), rgba(242,129,41,1));
+    box-shadow: 0 0 16px rgba(242,129,41,0.8);
+  }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+
+    <!-- MONEY -->
+    <div class="res" id="res-money" style="left: 90px;">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="92" rx="42" ry="12" fill="#F28129" stroke="#FFFFFF" stroke-width="3"/>
+        <ellipse cx="60" cy="74" rx="42" ry="12" fill="#F28129" stroke="#FFFFFF" stroke-width="3"/>
+        <ellipse cx="60" cy="56" rx="42" ry="12" fill="#F28129" stroke="#FFFFFF" stroke-width="3"/>
+        <ellipse cx="60" cy="36" rx="42" ry="14" fill="#F28129" stroke="#FFFFFF" stroke-width="3"/>
+        <text x="60" y="45" font-family="Montserrat, sans-serif" font-size="28" font-weight="900" fill="#FFFFFF" text-anchor="middle">$</text>
+      </svg>
+    </div>
+
+    <!-- ENERGY -->
+    <div class="res" id="res-energy" style="left: 420px;">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <path d="M68 8 L28 66 L54 66 L44 112 L94 48 L62 48 Z" fill="#F28129" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- TIME -->
+    <div class="res" id="res-time" style="left: 750px;">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="22" y="10" width="76" height="11" rx="5" fill="#FFFFFF"/>
+        <rect x="22" y="99" width="76" height="11" rx="5" fill="#FFFFFF"/>
+        <path d="M32 21 L88 21 L60 60 Z" fill="#F28129"/>
+        <path d="M60 60 L88 99 L32 99 Z" fill="#F28129"/>
+        <path d="M32 21 L88 21 L60 60 L88 99 L32 99 L60 60 Z" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div class="streams" id="streams"></div>
+
+    <div class="nft-glow" id="nft-glow"></div>
+    <div class="nft-card" id="nft-card">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <path d="M58 44 L142 44 L178 86 L100 178 L22 86 Z" fill="#FFFFFF" stroke="#F28129" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M58 44 L100 86 L142 44" fill="none" stroke="#F28129" stroke-width="4"/>
+        <path d="M22 86 L100 86 L178 86" fill="none" stroke="#F28129" stroke-width="4"/>
+        <path d="M100 86 L100 178" fill="none" stroke="#F28129" stroke-width="4"/>
+      </svg>
+      <div class="nft-tag">NFT</div>
+    </div>
+
+    <div class="progress">
+      <div class="prog-label">All In</div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+
+    function mulberry32(a) {
+      return function () {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        let t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    const rand = mulberry32(7770424);
+
+    const DUR = 6;
+    const tl = gsap.timeline({ paused: true });
+
+    // --- Build particle streams (icon -> NFT, absorbed) ---
+    const streams = document.getElementById("streams");
+    const NFT_X = 540, NFT_Y = 1300;           // absorption point (top-center of card)
+    const sources = [
+      { x: 210, y: 1080 },   // money icon bottom-center
+      { x: 540, y: 1080 },   // energy
+      { x: 870, y: 1080 },   // time
+    ];
+    const PER = 7;
+    const dots = [];
+    sources.forEach((src) => {
+      for (let i = 0; i < PER; i++) {
+        const d = document.createElement("div");
+        d.className = "dot";
+        d.style.left = (src.x - 10) + "px";
+        d.style.top = (src.y - 10) + "px";
+        streams.appendChild(d);
+        dots.push({ el: d, src, idx: i });
+      }
+    });
+
+    // --- Entrances ---
+    tl.from("#nft-card", { scale: 0, opacity: 0, duration: 0.6, ease: "back.out(1.5)" }, 0.2);
+    tl.from("#nft-glow", { scale: 0.4, opacity: 0, duration: 0.6, ease: "power2.out" }, 0.3);
+
+    tl.from(".res", { y: 50, scale: 0.5, opacity: 0, duration: 0.55, ease: "back.out(1.7)", stagger: 0.16 }, 0.45);
+
+    // --- Continuous pour: dots appear only once the icons are in, then fall + shrink into the NFT ---
+    const POUR = 1.25;  // pour begins after icons settle
+    const fall = 0.7;   // travel time per dot
+    dots.forEach(({ el, src, idx }) => {
+      const dx = NFT_X - src.x;
+      const dy = NFT_Y - src.y;
+      const jitter = (rand() - 0.5) * 40;
+      const start = POUR + idx * (fall / PER) + rand() * 0.06;
+      const reps = Math.ceil((DUR + 0.5 - start) / fall);
+      tl.set(el, { opacity: 1 }, start);
+      tl.to(el, { x: dx + jitter, y: dy, duration: fall, ease: "power1.in", repeat: reps }, start);
+      tl.to(el, { scale: 0, duration: fall, ease: "power2.in", repeat: reps, transformOrigin: "50% 50%" }, start);
+    });
+
+    // --- NFT glow pulse (finite) ---
+    const pulse = 0.9, pStart = 1.4;
+    const pReps = Math.ceil((DUR - pStart) / pulse) - 1;
+    tl.to("#nft-glow", { scale: 1.15, opacity: 0.9, duration: pulse / 2, ease: "sine.inOut", yoyo: true, repeat: pReps }, pStart);
+    // Gentle NFT card breathing
+    tl.to("#nft-card", { scale: 1.04, duration: pulse, ease: "sine.inOut", yoyo: true, repeat: Math.ceil((DUR - pStart) / pulse) - 1 }, pStart + 0.2);
+
+    // --- "ALL IN" progress fills as resources pour ---
+    tl.from(".progress", { y: 36, opacity: 0, duration: 0.5, ease: "power2.out" }, 1.2);
+    tl.fromTo("#prog-fill", { scaleX: 0 }, { scaleX: 1, duration: 3.6, ease: "power1.inOut" }, 1.5);
+
+    window.__timelines["main"] = tl;
+  </script>
+</body>
+</html>
