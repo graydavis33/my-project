@@ -10,11 +10,8 @@
         width: 1080px; height: 1920px; overflow: hidden;
         background: #00FF00; font-family: "Montserrat", system-ui, sans-serif;
       }
-      .scene {
-        position: relative; width: 100%; height: 100%;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 40px; padding: 60px 36px;
-      }
+      .scene { position: relative; width: 100%; height: 100%; }
+
       .glass {
         background:
           radial-gradient(ellipse 100% 60% at 50% 0%,
@@ -25,38 +22,122 @@
           inset 0 2px 0 rgba(255,240,215,0.55),
           inset 0 -3px 10px rgba(140,55,8,0.45),
           0 0 24px rgba(242,129,41,0.55),
-          0 6px 18px rgba(0,0,0,0.28);
+          0 8px 22px rgba(0,0,0,0.30);
       }
-      .pill {
-        display: inline-flex; align-items: center; justify-content: center;
-        padding: 16px 50px; border-radius: 999px; margin-bottom: 12px;
+
+      #pill {
+        position: absolute; left: 50%; top: 300px;
+        padding: 18px 56px; border-radius: 999px; will-change: transform;
       }
-      .pill-text {
-        font-weight: 800; font-size: 40px; letter-spacing: 0.14em;
+      #pill .t {
+        font-weight: 800; font-size: 44px; letter-spacing: 0.14em;
         color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.4);
       }
-      .eq {
-        font-weight: 900; font-size: 64px; line-height: 1.0; letter-spacing: -0.01em;
-        color: #fff; text-align: center; text-transform: uppercase; white-space: nowrap;
-        text-shadow: 0 4px 12px rgba(0,0,0,0.4); will-change: transform, opacity;
+
+      .panel {
+        position: absolute; top: 600px; width: 450px; height: 960px;
+        border-radius: 36px; display: flex; flex-direction: column; align-items: center;
+        padding-top: 36px; overflow: hidden; will-change: transform;
       }
-      .eq .eqsign { color: #F28129; margin: 0 8px; }
-      .nothing { color: #E63946; }
-      .happy   { color: #F28129; }
-      .but {
-        font-weight: 800; font-size: 34px; letter-spacing: 0.28em;
-        color: #fff; opacity: 0.85; text-transform: uppercase;
-        text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      #panelL { left: 70px; }
+      #panelR { left: 560px; }
+
+      .label {
+        font-weight: 900; font-size: 46px; letter-spacing: 0.04em;
+        color: #fff; text-transform: uppercase; text-align: center;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.4); z-index: 2;
       }
+
+      svg.fig { position: absolute; left: 0; top: 0; overflow: visible; }
+      .sil { fill: #fff; }
+      .ink { fill: #7A3708; }
+      .fg  { filter: drop-shadow(0 8px 12px rgba(0,0,0,0.32)); }
+
+      .bubble { fill: #fff; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.30)); }
+
+      .xmark { fill: none; stroke: #E63946; stroke-width: 26; stroke-linecap: round; }
+      .check { fill: none; stroke: #22C55E; stroke-width: 28; stroke-linecap: round; stroke-linejoin: round; }
+      .ray   { stroke: #fff; stroke-width: 13; stroke-linecap: round; }
+
+      /* full-card blink overlays */
+      .flash { position: absolute; inset: 0; border-radius: 36px; opacity: 0; pointer-events: none; z-index: 6; }
+      #flashL { background: rgba(230,57,70,0.55); box-shadow: inset 0 0 70px rgba(230,57,70,0.7); }
+      #flashR { background: rgba(34,197,94,0.50); box-shadow: inset 0 0 70px rgba(34,197,94,0.65); }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="4.4" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="4.4" data-track-index="1">
-        <div id="pill" class="pill glass"><div class="pill-text">THE LESSON</div></div>
-        <div id="eq1" class="eq">PROVE YOURSELF <span class="eqsign">=</span> <span class="nothing">NOTHING</span></div>
-        <div id="but" class="but">BUT</div>
-        <div id="eq2" class="eq">DO IT FOR YOU <span class="eqsign">=</span> <span class="happy">HAPPY</span></div>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+
+        <div id="pill" class="glass"><span class="t">THE LESSON</span></div>
+
+        <!-- LEFT: FOR THEM — speaker talking (animated mouth + speech bubble) -->
+        <div id="panelL" class="panel glass">
+          <div class="label">FOR&nbsp;THEM</div>
+          <svg class="fig" id="figL" width="450" height="900" viewBox="0 0 450 900">
+            <g class="fg">
+              <!-- speaker avatar (upper body) with a talking face -->
+              <g transform="translate(225 252) scale(0.6)">
+                <g id="avatarL">
+                  <path class="sil" d="M -188 548 Q -188 248 -92 186 Q -46 158 0 156 Q 46 158 92 186 Q 188 248 188 548 Z"/>
+                  <circle class="sil" cx="0" cy="0" r="146"/>
+                  <circle class="ink" cx="-52" cy="-22" r="15"/>
+                  <circle class="ink" cx="52" cy="-22" r="15"/>
+                  <ellipse id="mouthL" class="ink" cx="0" cy="58" rx="30" ry="22"/>
+                </g>
+              </g>
+              <!-- speech bubble coming out of him -->
+              <g id="bubbleL">
+                <path class="bubble" d="M300 150 h112 a24 24 0 0 1 24 24 v52 a24 24 0 0 1 -24 24 h-70 l-26 30 l2 -30 h-18 a24 24 0 0 1 -24 -24 v-52 a24 24 0 0 1 24 -24 Z"/>
+                <circle class="ink" cx="330" cy="200" r="9"/>
+                <circle class="ink" cx="362" cy="200" r="9"/>
+                <circle class="ink" cx="394" cy="200" r="9"/>
+              </g>
+              <!-- listeners -->
+              <g transform="translate(118 700) scale(0.26)"><g class="aud"><path class="sil" d="M -188 548 Q -188 248 -92 186 Q -46 158 0 156 Q 46 158 92 186 Q 188 248 188 548 Z"/><circle class="sil" cx="0" cy="0" r="146"/></g></g>
+              <g transform="translate(225 710) scale(0.28)"><g class="aud"><path class="sil" d="M -188 548 Q -188 248 -92 186 Q -46 158 0 156 Q 46 158 92 186 Q 188 248 188 548 Z"/><circle class="sil" cx="0" cy="0" r="146"/></g></g>
+              <g transform="translate(332 700) scale(0.26)"><g class="aud"><path class="sil" d="M -188 548 Q -188 248 -92 186 Q -46 158 0 156 Q 46 158 92 186 Q 188 248 188 548 Z"/><circle class="sil" cx="0" cy="0" r="146"/></g></g>
+            </g>
+          </svg>
+          <svg class="fig" width="450" height="900" viewBox="0 0 450 900" style="pointer-events:none">
+            <g transform="translate(225 852)"><g id="xmark">
+              <path class="xmark" d="M-36 -36 L36 36"/>
+              <path class="xmark" d="M36 -36 L-36 36"/>
+            </g></g>
+          </svg>
+          <div class="flash" id="flashL"></div>
+        </div>
+
+        <!-- RIGHT: FOR YOU — one figure, static shine lines from the head -->
+        <div id="panelR" class="panel glass">
+          <div class="label">FOR&nbsp;YOU</div>
+          <svg class="fig" id="figR" width="450" height="900" viewBox="0 0 450 900">
+            <g class="fg">
+              <g id="shine" transform="translate(225 300)">
+                <line class="ray" x1="0" y1="-112" x2="0" y2="-152"/>
+                <line class="ray" x1="44" y1="-104" x2="60" y2="-141"/>
+                <line class="ray" x1="-44" y1="-104" x2="-60" y2="-141"/>
+                <line class="ray" x1="84" y1="-74" x2="114" y2="-100"/>
+                <line class="ray" x1="-84" y1="-74" x2="-114" y2="-100"/>
+                <line class="ray" x1="110" y1="-20" x2="150" y2="-28"/>
+                <line class="ray" x1="-110" y1="-20" x2="-150" y2="-28"/>
+              </g>
+              <g transform="translate(225 300) scale(0.62)">
+                <g id="avatarR">
+                  <path class="sil" d="M -188 548 Q -188 248 -92 186 Q -46 158 0 156 Q 46 158 92 186 Q 188 248 188 548 Z"/>
+                  <circle class="sil" cx="0" cy="0" r="146"/>
+                </g>
+              </g>
+            </g>
+          </svg>
+          <svg class="fig" width="450" height="900" viewBox="0 0 450 900" style="pointer-events:none">
+            <g transform="translate(225 852)"><g id="check">
+              <path class="check" d="M-38 2 L-10 32 L42 -30"/>
+            </g></g>
+          </svg>
+          <div class="flash" id="flashR"></div>
+        </div>
+
       </div>
     </div>
 
@@ -64,21 +145,47 @@
       (function () {
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
-        const DUR = 4.4;
+        const DUR = 5;
+        const fill = (start, half) => Math.ceil((DUR - start) / half) + 1;
 
-        tl.from("#pill", { y: 70, opacity: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.15);
-        tl.from("#eq1", { y: 50, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.45);
-        tl.from("#but", { scale: 0.4, opacity: 0, duration: 0.4, ease: "back.out(2)" }, 0.85);
-        tl.from("#eq2", { y: 50, opacity: 0, scale: 0.9, duration: 0.55, ease: "back.out(1.6)" }, 1.1);
+        // title
+        tl.set("#pill", { xPercent: -50 }, 0);
+        tl.from("#pill", { y: 70, opacity: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.12);
 
-        // gentle finite glow pulse on the payoff word
-        const cyc = 0.9, start = 1.7;
-        const reps = Math.ceil((DUR - start) / cyc) - 1;
-        tl.fromTo(".happy",
-          { textShadow: "0 4px 12px rgba(0,0,0,0.4), 0 0 0px rgba(242,129,41,0)" },
-          { textShadow: "0 4px 12px rgba(0,0,0,0.4), 0 0 30px rgba(242,129,41,0.9)",
-            duration: cyc / 2, ease: "sine.inOut", yoyo: true, repeat: reps * 2 + 1 },
-          start);
+        // LEFT: FOR THEM
+        tl.from("#panelL", { y: 60, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.45);
+        tl.from("#panelL .label", { y: 24, opacity: 0, duration: 0.32, ease: "power2.out" }, 0.62);
+        tl.from("#avatarL", { scale: 0.7, opacity: 0, duration: 0.42,
+                  ease: "back.out(1.6)", transformOrigin: "0px 548px" }, 0.78);
+        tl.from(".aud", { scale: 0.4, opacity: 0, duration: 0.34,
+                  ease: "back.out(1.8)", transformOrigin: "0px 548px", stagger: 0.08 }, 1.0);
+        tl.from("#bubbleL", { scale: 0.3, opacity: 0, duration: 0.34,
+                  ease: "back.out(1.9)", transformOrigin: "300px 230px" }, 1.1);
+        // red X pops in at its fixed position
+        tl.from("#xmark", { scale: 0.4, opacity: 0, duration: 0.34,
+                  ease: "back.out(2.2)", transformOrigin: "50% 50%" }, 1.7);
+        // whole FOR THEM card blinks red (one natural blink) as the X lands
+        tl.fromTo("#flashL", { opacity: 0 }, { opacity: 1, duration: 0.16, ease: "power2.out" }, 1.66);
+        tl.to("#flashL", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 1.82);
+
+        // RIGHT: FOR YOU
+        tl.from("#panelR", { y: 60, opacity: 0, duration: 0.5, ease: "power3.out" }, 1.05);
+        tl.from("#panelR .label", { y: 24, opacity: 0, duration: 0.32, ease: "power2.out" }, 1.22);
+        tl.from("#avatarR", { scale: 0.7, opacity: 0, duration: 0.42,
+                  ease: "back.out(1.6)", transformOrigin: "0px 548px" }, 1.4);
+        // shine lines just appear (NOT animated) — simple fade-in, then static
+        tl.from("#shine line", { opacity: 0, duration: 0.4, ease: "power2.out" }, 1.7);
+        // green check pops in ~1.6s after the red X
+        tl.from("#check", { scale: 0.4, opacity: 0, duration: 0.40,
+                  ease: "back.out(2.2)", transformOrigin: "50% 50%" }, 3.3);
+        // whole FOR YOU card blinks green — one smooth blink, ~1s long
+        tl.fromTo("#flashR", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "sine.inOut" }, 3.28);
+        tl.to("#flashR", { opacity: 0, duration: 0.6, ease: "sine.inOut" }, 3.68);
+
+        // ── only continuous motion: the speaker's mouth talking ──
+        tl.fromTo("#mouthL", { scaleY: 0.22 },
+          { scaleY: 1, duration: 0.15, ease: "sine.inOut", yoyo: true,
+            repeat: fill(1.2, 0.15), transformOrigin: "50% 50%" }, 1.2);
 
         window.__timelines["main"] = tl;
       })();

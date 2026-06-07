@@ -25,30 +25,15 @@
           0 8px 22px rgba(0,0,0,0.30);
       }
 
-      .pill {
-        position: absolute; left: 50%; top: 560px; transform: translateX(-50%);
-        display: inline-flex; align-items: center; justify-content: center;
-        padding: 16px 52px; border-radius: 999px; white-space: nowrap;
-      }
-      .pill-text {
-        font-weight: 800; font-size: 38px; letter-spacing: 0.16em;
-        color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      }
-      .title {
-        position: absolute; left: 0; top: 660px; width: 100%; text-align: center;
-        font-weight: 900; font-size: 104px; letter-spacing: -0.02em; color: #fff;
-        text-transform: uppercase; text-shadow: 0 6px 18px rgba(0,0,0,0.45);
-        white-space: nowrap;
-      }
-
       .step {
         position: absolute; border-radius: 30px;
         display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
         padding: 34px 18px 0 18px;
+        will-change: transform;
       }
-      #step1 { left: 80px;  width: 280px; top: 1250px; height: 370px; }
-      #step2 { left: 400px; width: 280px; top: 1120px; height: 500px; }
-      #step3 { left: 720px; width: 280px; top: 1000px; height: 620px; }
+      #step1 { left: 80px;  width: 280px; top: 1250px; height: 370px; transform-origin: 50% 100%; }
+      #step2 { left: 400px; width: 280px; top: 1120px; height: 500px; transform-origin: 50% 100%; }
+      #step3 { left: 720px; width: 280px; top: 1000px; height: 620px; transform-origin: 50% 100%; }
 
       .badge {
         width: 64px; height: 64px; border-radius: 999px;
@@ -70,35 +55,17 @@
       }
 
       svg.decor { position: absolute; inset: 0; overflow: visible; }
-      .arrow { fill: none; stroke: #fff; stroke-width: 8; stroke-linecap: round;
-        stroke-linejoin: round; stroke-dasharray: 16 20; }
-      .figure { fill: #fff; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.35)); }
-      .figline { fill: none; stroke: #fff; stroke-width: 22; stroke-linecap: round;
-        filter: drop-shadow(0 8px 12px rgba(0,0,0,0.35)); }
+      .fig-fill { fill: #fff; }
+      .fig-line {
+        fill: none; stroke: #fff; stroke-width: 26;
+        stroke-linecap: round; stroke-linejoin: round;
+      }
+      #figure { filter: drop-shadow(0 10px 14px rgba(0,0,0,0.32)); }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
-
-        <div id="pill" class="pill glass"><div class="pill-text">THE PATTERN</div></div>
-        <div id="title" class="title">PROVE MYSELF</div>
-
-        <!-- rising dashed arrow across the step tops -->
-        <svg class="decor" viewBox="0 0 1080 1920" data-layout-allow-overflow>
-          <path id="arrow" class="arrow" d="M 150 1300 L 470 1170 L 800 1050"/>
-          <path id="arrow-head" class="arrow" style="stroke-dasharray:none" d="M 760 1036 L 808 1046 L 792 1092"/>
-
-          <!-- locked stick figure: climbed to the top of step 3, reaching up -->
-          <g id="figure" data-layout-allow-overflow>
-            <circle class="figure" cx="860" cy="858" r="30"/>
-            <path class="figline" d="M 860 892 L 860 958"/>
-            <path class="figline" d="M 860 916 L 824 884"/>
-            <path class="figline" d="M 860 916 L 896 884"/>
-            <path class="figline" d="M 860 958 L 836 1000"/>
-            <path class="figline" d="M 860 958 L 884 1000"/>
-          </g>
-        </svg>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4.4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4.4" data-track-index="1">
 
         <div id="step1" class="step glass">
           <div class="badge">1</div>
@@ -116,6 +83,18 @@
           <div class="driver"><span>THE</span><span>FUTURE</span></div>
         </div>
 
+        <!-- locked stick figure: reached the top of step 3, arms raised -->
+        <svg class="decor" viewBox="0 0 1080 1920" data-layout-allow-overflow>
+          <g id="figure" data-layout-allow-overflow>
+            <circle class="fig-fill" cx="860" cy="838" r="37"/>
+            <path class="fig-line" d="M 860 882 L 860 944"/>
+            <path class="fig-line" d="M 860 896 L 812 848"/>
+            <path class="fig-line" d="M 860 896 L 908 848"/>
+            <path class="fig-line" d="M 860 944 L 834 998"/>
+            <path class="fig-line" d="M 860 944 L 886 998"/>
+          </g>
+        </svg>
+
       </div>
     </div>
 
@@ -124,38 +103,34 @@
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        tl.from("#pill", { y: 60, opacity: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.12);
-        tl.from("#title", { y: 50, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.34);
+        const stepContent = ["#step1 .badge","#step1 .school","#step1 .driver",
+                             "#step2 .badge","#step2 .school","#step2 .driver",
+                             "#step3 .badge","#step3 .school","#step3 .driver"];
+        // content hidden while the bar is still growing up from the baseline
+        tl.set(stepContent, { opacity: 0 }, 0);
+        tl.set("#figure", { opacity: 0 }, 0);
 
-        // steps rise into place (bottom-aligned), staggered low → high
-        tl.from("#step1", { y: 80, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.70);
-        tl.from("#step2", { y: 90, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.92);
-        tl.from("#step3", { y: 100, opacity: 0, duration: 0.5, ease: "back.out(1.4)" }, 1.14);
+        // bars level up from the x-axis baseline, one by one
+        const grow = (sel, at) =>
+          tl.from(sel, { scaleY: 0, duration: 0.55, ease: "power3.out", transformOrigin: "50% 100%" }, at);
+        const reveal = (els, at) =>
+          tl.to(els, { opacity: (i, t) => (t.classList.contains("school") ? 0.92 : 1),
+                       y: 0, duration: 0.30, ease: "power2.out", stagger: 0.06 }, at);
 
-        // badges + labels pop per step
-        tl.from(["#step1 .badge", "#step1 .school", "#step1 .driver"],
-          { y: 24, opacity: 0, duration: 0.34, ease: "power2.out", stagger: 0.06 }, 0.90);
-        tl.from(["#step2 .badge", "#step2 .school", "#step2 .driver"],
-          { y: 24, opacity: 0, duration: 0.34, ease: "power2.out", stagger: 0.06 }, 1.12);
-        tl.from(["#step3 .badge", "#step3 .school", "#step3 .driver"],
-          { y: 24, opacity: 0, duration: 0.34, ease: "power2.out", stagger: 0.06 }, 1.34);
+        grow("#step1", 0.20);
+        reveal(["#step1 .badge","#step1 .school","#step1 .driver"], 0.62);
 
-        // dashed arrow draws up the staircase
-        const arrow = document.getElementById("arrow");
-        const len = arrow.getTotalLength();
-        gsap.set(arrow, { strokeDashoffset: 0 });
-        const proxy = { p: 0 };
-        gsap.set(arrow, { attr: { "stroke-dasharray": len }, strokeDashoffset: len });
-        tl.to(proxy, { p: 1, duration: 0.7, ease: "power2.inOut",
-          onUpdate: () => { arrow.style.strokeDashoffset = len * (1 - proxy.p); } }, 1.55);
-        tl.from("#arrow-head", { opacity: 0, scale: 0.5, transformOrigin: "800px 1050px",
-          duration: 0.3, ease: "back.out(2)" }, 2.15);
+        grow("#step2", 0.68);
+        reveal(["#step2 .badge","#step2 .school","#step2 .driver"], 1.10);
+
+        grow("#step3", 1.16);
+        reveal(["#step3 .badge","#step3 .school","#step3 .driver"], 1.58);
 
         // figure climbs onto the top step, little reach-up bounce
-        tl.from("#figure", { y: 60, opacity: 0, duration: 0.5, ease: "back.out(1.6)",
-          transformOrigin: "860px 1000px" }, 2.35);
-        tl.to("#figure", { y: -10, duration: 0.28, ease: "power2.out", yoyo: true, repeat: 1,
-          transformOrigin: "860px 1000px" }, 2.9);
+        tl.to("#figure", { opacity: 1, duration: 0.18 }, 1.78);
+        tl.from("#figure", { y: 70, duration: 0.5, ease: "back.out(1.6)", transformOrigin: "860px 998px" }, 1.78);
+        tl.to("#figure", { y: -12, duration: 0.30, ease: "power2.out", yoyo: true, repeat: 1,
+          transformOrigin: "860px 998px" }, 2.34);
 
         window.__timelines["main"] = tl;
       })();
