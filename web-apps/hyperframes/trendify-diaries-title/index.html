@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: transparent; /* alpha — composites over footage */
+      }
+
+      #root .stage {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* soft center scrim so white type reads over any footage */
+      #root .scrim {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 60% 55% at center,
+          rgba(0, 0, 0, 0.55) 0%,
+          rgba(0, 0, 0, 0.34) 38%,
+          rgba(0, 0, 0, 0) 72%
+        );
+        z-index: 0;
+      }
+
+      #root .content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        padding: 120px;
+        box-sizing: border-box;
+      }
+
+      /* wordmark sits inside an overflow mask for the wipe-up reveal */
+      #root .title-mask {
+        overflow: hidden;
+        height: 152px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #root .title {
+        display: block;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 116px;
+        line-height: 1;
+        letter-spacing: 0.11em;
+        color: #ffffff;
+        white-space: nowrap;
+        text-indent: 0.11em;
+      }
+
+      #root .divider {
+        width: 280px;
+        height: 2px;
+        background: #ffffff;
+        opacity: 0.85;
+        transform-origin: center;
+      }
+
+      #root .episode {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 46px;
+        line-height: 1;
+        letter-spacing: 0.42em;
+        color: #ffffff;
+        white-space: nowrap;
+        text-indent: 0.42em;
+      }
+      #root .episode .ch { display: inline-block; }
+      #root .episode .sp { display: inline-block; width: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="6.2"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="stage">
+        <div class="scrim"></div>
+        <div class="content">
+          <div class="title-mask" data-layout-allow-overflow><span class="title">TRENDIFY DIARIES</span></div>
+          <div class="divider"></div>
+          <div class="episode" aria-label="Episode One"><span class="ch">E</span><span class="ch">P</span><span class="ch">I</span><span class="ch">S</span><span class="ch">O</span><span class="ch">D</span><span class="ch">E</span><span class="sp"></span><span class="ch">O</span><span class="ch">N</span><span class="ch">E</span></div>
+        </div>
+      </div>
+
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // scrim breathes in
+        tl.from(".scrim", { opacity: 0, duration: 0.7, ease: "power2.out" }, 0.1);
+
+        // wordmark wipes up from behind the mask
+        tl.from(".title", { yPercent: 125, duration: 0.95, ease: "power4.out" }, 0.28);
+
+        // hairline rule draws out from center
+        tl.from(".divider", { scaleX: 0, opacity: 0, duration: 0.6, ease: "power3.inOut" }, 0.9);
+
+        // episode label reveals letter by letter
+        tl.from(
+          ".episode .ch",
+          { opacity: 0, yPercent: 70, duration: 0.5, ease: "power3.out", stagger: 0.045 },
+          1.1
+        );
+
+        // ambient: a slow breathing drift while it holds
+        tl.to(".content", { y: -7, scale: 1.012, duration: 0.85, ease: "sine.inOut", repeat: 3, yoyo: true }, 2.1);
+
+        // the only exit: gentle fade out (final scene)
+        tl.to(".stage", { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 5.55);
+
+        window.__timelines["main"] = tl;
+      </script>
+    </div>
+  </body>
+</html>
