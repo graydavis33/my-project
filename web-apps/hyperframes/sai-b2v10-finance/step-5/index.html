@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      .wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 55% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 38%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 24px rgba(242,129,41,0.55),
+          0 8px 22px rgba(0,0,0,0.30);
+      }
+
+      .card {
+        width: 860px; border-radius: 50px;
+        padding: 72px 70px 80px;
+        display: flex; flex-direction: column; align-items: center;
+        will-change: transform;
+      }
+      .steplabel {
+        font-weight: 900; font-size: 100px; line-height: 1.0; color: #fff;
+        text-transform: uppercase; letter-spacing: -0.01em; text-align: center;
+        text-shadow: 0 4px 14px rgba(0,0,0,0.45);
+      }
+      .divider {
+        width: 130px; height: 6px; background: #fff; border-radius: 999px;
+        opacity: 0.92; margin: 26px 0 30px; transform-origin: 50% 50%;
+      }
+      .takeaway {
+        font-weight: 800; font-size: 58px; line-height: 1.12; color: #fff;
+        text-transform: uppercase; letter-spacing: 0.005em; text-align: center;
+        max-width: 700px; text-shadow: 0 3px 10px rgba(0,0,0,0.42);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3" data-track-index="1">
+        <div class="wrap">
+          <div id="card" class="card glass">
+            <div id="steplabel" class="steplabel">Step Five</div>
+            <div id="divider" class="divider"></div>
+            <div id="takeaway" class="takeaway">Hire a CPA to verify</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        tl.from("#card",      { scale: 0.84, opacity: 0, duration: 0.60, ease: "back.out(1.5)" }, 0.12);
+        tl.from("#steplabel", { y: 40, opacity: 0, duration: 0.50, ease: "power3.out" }, 0.30);
+        tl.from("#divider",   { scaleX: 0, opacity: 0, duration: 0.40, ease: "power2.out" }, 0.52);
+        tl.from("#takeaway",  { y: 30, opacity: 0, duration: 0.48, ease: "power2.out" }, 0.64);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
