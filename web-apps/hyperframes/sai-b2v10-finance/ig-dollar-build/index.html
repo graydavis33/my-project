@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+
+      /* glowing foundation / ground the $ builds up from */
+      #base {
+        position: absolute; left: 50%; top: 1546px; transform: translateX(-50%);
+        width: 420px; height: 16px; border-radius: 999px;
+        background: linear-gradient(90deg, rgba(242,129,41,0) 0%, #FFA858 18%, #F28129 50%, #FFA858 82%, rgba(242,129,41,0) 100%);
+        box-shadow: 0 0 28px rgba(242,129,41,0.75), 0 0 60px rgba(242,129,41,0.4);
+        transform-origin: 50% 50%;
+      }
+
+      /* soft glow that blooms behind the finished dollar sign */
+      #glow {
+        position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+        width: 760px; height: 1260px; border-radius: 50%;
+        background: radial-gradient(ellipse 55% 50% at 50% 50%,
+          rgba(242,129,41,0.30) 0%, rgba(242,129,41,0.12) 45%, rgba(242,129,41,0) 72%);
+        pointer-events: none;
+      }
+
+      #dollar { position: absolute; inset: 0; transform-origin: 50% 50%; }
+
+      .brick {
+        position: absolute; width: 122px; height: 112px; border-radius: 16px;
+        will-change: transform;
+        background:
+          radial-gradient(ellipse 100% 60% at 50% 0%,
+            rgba(255,224,186,0.60) 0%, rgba(255,200,150,0.22) 38%, rgba(255,180,120,0) 68%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 40%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 9px rgba(140,55,8,0.42),
+          0 0 18px rgba(242,129,41,0.42),
+          0 7px 16px rgba(0,0,0,0.30);
+      }
+      .stud {
+        position: absolute; top: -15px; width: 42px; height: 23px; border-radius: 50% / 55%;
+        background: linear-gradient(180deg, rgba(255,196,140,1) 0%, rgba(242,129,41,1) 100%);
+        border: 1.5px solid #fff;
+        box-shadow: inset 0 2px 0 rgba(255,245,225,0.7), 0 2px 5px rgba(120,48,6,0.4);
+      }
+      .stud.l { left: 16px; }
+      .stud.r { right: 16px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4.6" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4.6" data-track-index="1">
+        <div id="glow"></div>
+        <div id="base"></div>
+        <div id="dollar"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        // --- $ silhouette on a 5-col x 9-row grid (rows 0=top .. 8=bottom) ---
+        // Blocky "S" (rows 1-7) unioned with a vertical stem at col 2 (rows 0-8).
+        const MAP = {
+          0: [2],
+          1: [0, 1, 2, 3, 4],
+          2: [0, 2],
+          3: [0, 2],
+          4: [0, 1, 2, 3, 4],
+          5: [2, 4],
+          6: [2, 4],
+          7: [0, 1, 2, 3, 4],
+          8: [2],
+        };
+
+        const LEFT = 203, TOP = 392, COL_PITCH = 138, ROW_PITCH = 128;
+
+        // Append bricks bottom-to-top so (a) the stagger builds upward and
+        // (b) higher bricks paint last, resting visually on the studs below.
+        const dollar = document.getElementById("dollar");
+        for (let row = 8; row >= 0; row--) {
+          for (const col of MAP[row]) {
+            const b = document.createElement("div");
+            b.className = "brick";
+            b.style.left = (LEFT + col * COL_PITCH) + "px";
+            b.style.top = (TOP + row * ROW_PITCH) + "px";
+            b.innerHTML = '<span class="stud l"></span><span class="stud r"></span>';
+            dollar.appendChild(b);
+          }
+        }
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // foundation glows in first
+        tl.from("#base", { scaleX: 0, opacity: 0, duration: 0.45, ease: "power2.out" }, 0.05);
+
+        // bricks drop + snap into place, bottom row to top row
+        tl.from(".brick", {
+          y: -60, opacity: 0, scale: 0.68,
+          duration: 0.42, ease: "back.out(2.1)",
+          stagger: 0.075,
+        }, 0.22);
+
+        // glow blooms behind the completed sign
+        tl.from("#glow", { opacity: 0, scale: 0.82, duration: 0.7, ease: "power2.out" }, 2.25);
+
+        // one settle "click" pulse once the build finishes
+        tl.to("#dollar", { scale: 1.025, duration: 0.19, yoyo: true, repeat: 1, ease: "power2.inOut" }, 2.95);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
