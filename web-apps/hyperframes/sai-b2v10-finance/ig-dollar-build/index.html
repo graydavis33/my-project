@@ -33,7 +33,7 @@
       #dollar { position: absolute; inset: 0; transform-origin: 50% 50%; }
 
       .brick {
-        position: absolute; width: 122px; height: 112px; border-radius: 16px;
+        position: absolute; width: 86px; height: 86px; border-radius: 12px;
         will-change: transform;
         background:
           radial-gradient(ellipse 100% 60% at 50% 0%,
@@ -47,13 +47,13 @@
           0 7px 16px rgba(0,0,0,0.30);
       }
       .stud {
-        position: absolute; top: -15px; width: 42px; height: 23px; border-radius: 50% / 55%;
+        position: absolute; top: -11px; width: 30px; height: 17px; border-radius: 50% / 55%;
         background: linear-gradient(180deg, rgba(255,196,140,1) 0%, rgba(242,129,41,1) 100%);
         border: 1.5px solid #fff;
         box-shadow: inset 0 2px 0 rgba(255,245,225,0.7), 0 2px 5px rgba(120,48,6,0.4);
       }
-      .stud.l { left: 16px; }
-      .stud.r { right: 16px; }
+      .stud.l { left: 11px; }
+      .stud.r { right: 11px; }
     </style>
   </head>
   <body>
@@ -67,26 +67,31 @@
 
     <script>
       (function () {
-        // --- $ silhouette on a 5-col x 9-row grid (rows 0=top .. 8=bottom) ---
-        // Blocky "S" (rows 1-7) unioned with a vertical stem at col 2 (rows 0-8).
+        // --- $ silhouette on a 7-col x 12-row grid (row 0=top .. 11=bottom) ---
+        // A THICK blocky "S" (rows 1-10) with the dollar bar as short nubs that
+        // poke out top (row 0) and bottom (row 11) only — a full center column
+        // read as a building/tower, so the bar is kept to the classic $ ticks.
         const MAP = {
-          0: [2],
-          1: [0, 1, 2, 3, 4],
-          2: [0, 2],
-          3: [0, 2],
-          4: [0, 1, 2, 3, 4],
-          5: [2, 4],
-          6: [2, 4],
-          7: [0, 1, 2, 3, 4],
-          8: [2],
+          0: [3],
+          1: [1, 2, 3, 4, 5],
+          2: [0, 1, 2, 3, 4, 5, 6],
+          3: [0, 1],
+          4: [0, 1],
+          5: [0, 1, 2, 3, 4, 5],
+          6: [1, 2, 3, 4, 5, 6],
+          7: [5, 6],
+          8: [5, 6],
+          9: [0, 1, 2, 3, 4, 5, 6],
+          10: [1, 2, 3, 4, 5],
+          11: [3],
         };
 
-        const LEFT = 203, TOP = 392, COL_PITCH = 138, ROW_PITCH = 128;
+        const LEFT = 197, TOP = 389, COL_PITCH = 100, ROW_PITCH = 96;
 
         // Append bricks bottom-to-top so (a) the stagger builds upward and
         // (b) higher bricks paint last, resting visually on the studs below.
         const dollar = document.getElementById("dollar");
-        for (let row = 8; row >= 0; row--) {
+        for (let row = 11; row >= 0; row--) {
           for (const col of MAP[row]) {
             const b = document.createElement("div");
             b.className = "brick";
@@ -105,16 +110,16 @@
 
         // bricks drop + snap into place, bottom row to top row
         tl.from(".brick", {
-          y: -60, opacity: 0, scale: 0.68,
-          duration: 0.42, ease: "back.out(2.1)",
-          stagger: 0.075,
+          y: -50, opacity: 0, scale: 0.66,
+          duration: 0.40, ease: "back.out(2.1)",
+          stagger: 0.045,
         }, 0.22);
 
         // glow blooms behind the completed sign
-        tl.from("#glow", { opacity: 0, scale: 0.82, duration: 0.7, ease: "power2.out" }, 2.25);
+        tl.from("#glow", { opacity: 0, scale: 0.82, duration: 0.7, ease: "power2.out" }, 2.45);
 
         // one settle "click" pulse once the build finishes
-        tl.to("#dollar", { scale: 1.025, duration: 0.19, yoyo: true, repeat: 1, ease: "power2.inOut" }, 2.95);
+        tl.to("#dollar", { scale: 1.025, duration: 0.19, yoyo: true, repeat: 1, ease: "power2.inOut" }, 3.0);
 
         window.__timelines["main"] = tl;
       })();
