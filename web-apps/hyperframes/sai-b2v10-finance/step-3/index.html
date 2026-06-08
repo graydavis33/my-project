@@ -27,41 +27,35 @@
       }
 
       .card {
-        width: 900px; border-radius: 50px;
-        padding: 70px 72px 78px;
+        width: 860px; border-radius: 50px;
+        padding: 72px 70px 80px;
         display: flex; flex-direction: column; align-items: center;
         will-change: transform;
       }
       .steplabel {
-        font-weight: 900; font-size: 96px; line-height: 1.0; color: #fff;
+        font-weight: 900; font-size: 100px; line-height: 1.0; color: #fff;
         text-transform: uppercase; letter-spacing: -0.01em; text-align: center;
         text-shadow: 0 4px 14px rgba(0,0,0,0.45);
       }
       .divider {
         width: 130px; height: 6px; background: #fff; border-radius: 999px;
-        opacity: 0.92; margin: 24px 0 28px; transform-origin: 50% 50%;
+        opacity: 0.92; margin: 26px 0 30px; transform-origin: 50% 50%;
       }
-      .subhead {
-        font-weight: 800; font-size: 44px; color: #fff;
-        text-transform: uppercase; letter-spacing: 0.01em; text-align: center;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.40); margin-bottom: 22px;
-      }
-      .body {
-        font-weight: 600; font-size: 37px; line-height: 1.34; color: #fff;
-        text-align: center; max-width: 740px;
-        text-shadow: 0 2px 8px rgba(0,0,0,0.40);
+      .takeaway {
+        font-weight: 800; font-size: 58px; line-height: 1.12; color: #fff;
+        text-transform: uppercase; letter-spacing: 0.005em; text-align: center;
+        max-width: 700px; text-shadow: 0 3px 10px rgba(0,0,0,0.42);
       }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="4.5" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="4.5" data-track-index="1">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3" data-track-index="1">
         <div class="wrap">
           <div id="card" class="card glass">
             <div id="steplabel" class="steplabel">Step Three</div>
             <div id="divider" class="divider"></div>
-            <div id="subhead" class="subhead">Learn the fundamentals</div>
-            <div id="body" class="body">Use AI to learn every term — P&L, cash vs. accrual, accounts receivable and payable. Don't skip the basics.</div>
+            <div id="takeaway" class="takeaway">Learn the fundamentals with AI</div>
           </div>
         </div>
       </div>
@@ -73,9 +67,8 @@
         const tl = gsap.timeline({ paused: true });
         tl.from("#card",      { scale: 0.84, opacity: 0, duration: 0.60, ease: "back.out(1.5)" }, 0.12);
         tl.from("#steplabel", { y: 40, opacity: 0, duration: 0.50, ease: "power3.out" }, 0.30);
-        tl.from("#divider",   { scaleX: 0, opacity: 0, duration: 0.40, ease: "power2.out" }, 0.50);
-        tl.from("#subhead",   { y: 28, opacity: 0, duration: 0.42, ease: "power2.out" }, 0.62);
-        tl.from("#body",      { y: 26, opacity: 0, duration: 0.50, ease: "power2.out" }, 0.78);
+        tl.from("#divider",   { scaleX: 0, opacity: 0, duration: 0.40, ease: "power2.out" }, 0.52);
+        tl.from("#takeaway",  { y: 30, opacity: 0, duration: 0.48, ease: "power2.out" }, 0.64);
         window.__timelines["main"] = tl;
       })();
     </script>
