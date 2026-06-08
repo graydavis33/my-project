@@ -1,7 +1,21 @@
 {
-  "generated_at": "2026-06-07T12:21:03Z",
+  "generated_at": "2026-06-08T14:51:21Z",
   "month": "2026-06",
   "expenses": [
+    {
+      "email_id": "19ea480be38923d1",
+      "date": "2026-06-07",
+      "vendor": "Wispr Flow",
+      "amount": 15.0,
+      "category": "Software & Tools"
+    },
+    {
+      "email_id": "19ea2ea762ff2057",
+      "date": "2026-06-07",
+      "vendor": "Epidemic Sound",
+      "amount": 17.99,
+      "category": "Software & Tools"
+    },
     {
       "email_id": "19e8e6556f81e75c",
       "date": "2026-06-03",
