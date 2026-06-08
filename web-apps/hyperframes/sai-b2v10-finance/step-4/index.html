@@ -15,9 +15,9 @@
 
       .glass {
         background:
-          radial-gradient(ellipse 100% 60% at 50% 0%,
+          radial-gradient(ellipse 100% 55% at 50% 0%,
             rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
-          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 35%, rgba(214,100,22,1) 100%);
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 38%, rgba(214,100,22,1) 100%);
         border: 2px solid #fff;
         box-shadow:
           inset 0 2px 0 rgba(255,240,215,0.55),
@@ -27,38 +27,41 @@
       }
 
       .card {
-        width: 720px; border-radius: 52px;
-        padding: 70px 60px 80px;
+        width: 900px; border-radius: 50px;
+        padding: 70px 72px 78px;
         display: flex; flex-direction: column; align-items: center;
         will-change: transform;
       }
-      .badge {
-        width: 112px; height: 112px; border-radius: 999px;
-        background: #fff; color: #D66416;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: 900; font-size: 62px; margin-bottom: 28px;
-        box-shadow: 0 6px 14px rgba(0,0,0,0.28);
-      }
-      .kicker {
-        font-weight: 800; font-size: 36px; letter-spacing: 0.16em; color: #fff;
-        text-transform: uppercase; opacity: 0.94; text-align: center;
-        text-shadow: 0 2px 6px rgba(0,0,0,0.35); margin-bottom: 22px;
-      }
-      .word {
-        font-weight: 900; font-size: 104px; line-height: 1.0; color: #fff;
-        text-transform: uppercase; letter-spacing: -0.015em; text-align: center;
+      .steplabel {
+        font-weight: 900; font-size: 96px; line-height: 1.0; color: #fff;
+        text-transform: uppercase; letter-spacing: -0.01em; text-align: center;
         text-shadow: 0 4px 14px rgba(0,0,0,0.45);
+      }
+      .divider {
+        width: 130px; height: 6px; background: #fff; border-radius: 999px;
+        opacity: 0.92; margin: 24px 0 28px; transform-origin: 50% 50%;
+      }
+      .subhead {
+        font-weight: 800; font-size: 44px; color: #fff;
+        text-transform: uppercase; letter-spacing: 0.01em; text-align: center;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.40); margin-bottom: 22px;
+      }
+      .body {
+        font-weight: 600; font-size: 37px; line-height: 1.34; color: #fff;
+        text-align: center; max-width: 740px;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.40);
       }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="3" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="3" data-track-index="1">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4.5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4.5" data-track-index="1">
         <div class="wrap">
           <div id="card" class="card glass">
-            <div id="badge" class="badge">4</div>
-            <div id="kicker" class="kicker">Step Four</div>
-            <div id="word" class="word">Rebuild</div>
+            <div id="steplabel" class="steplabel">Step Four</div>
+            <div id="divider" class="divider"></div>
+            <div id="subhead" class="subhead">Build it yourself</div>
+            <div id="body" class="body">Rebuild the system yourself, without a CPA, so you actually understand how every piece works.</div>
           </div>
         </div>
       </div>
@@ -68,10 +71,11 @@
       (function () {
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
-        tl.from("#card",   { scale: 0.82, opacity: 0, duration: 0.60, ease: "back.out(1.5)" }, 0.12);
-        tl.from("#badge",  { scale: 0, opacity: 0, duration: 0.50, ease: "back.out(1.8)" }, 0.32);
-        tl.from("#kicker", { y: 26, opacity: 0, duration: 0.40, ease: "power2.out" }, 0.52);
-        tl.from("#word",   { y: 44, opacity: 0, duration: 0.52, ease: "power3.out" }, 0.62);
+        tl.from("#card",      { scale: 0.84, opacity: 0, duration: 0.60, ease: "back.out(1.5)" }, 0.12);
+        tl.from("#steplabel", { y: 40, opacity: 0, duration: 0.50, ease: "power3.out" }, 0.30);
+        tl.from("#divider",   { scaleX: 0, opacity: 0, duration: 0.40, ease: "power2.out" }, 0.50);
+        tl.from("#subhead",   { y: 28, opacity: 0, duration: 0.42, ease: "power2.out" }, 0.62);
+        tl.from("#body",      { y: 26, opacity: 0, duration: 0.50, ease: "power2.out" }, 0.78);
         window.__timelines["main"] = tl;
       })();
     </script>
