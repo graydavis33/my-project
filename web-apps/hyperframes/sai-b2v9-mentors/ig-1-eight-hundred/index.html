@@ -17,20 +17,6 @@
         padding: 180px 90px; gap: 40px;
       }
 
-      .kicker {
-        font-weight: 800; font-size: 40px; color: #fff; text-transform: uppercase;
-        letter-spacing: 0.16em; text-align: center; text-shadow: 0 3px 10px rgba(0,0,0,0.45);
-      }
-      .mentors { display: flex; gap: 70px; align-items: flex-end; }
-      .mentors .av { width: 158px; height: 288px; fill: #fff;
-        filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4)); }
-
-      .connect {
-        font-weight: 800; font-size: 34px; color: #fff; text-transform: uppercase;
-        letter-spacing: 0.10em; text-align: center; opacity: 0.92;
-        text-shadow: 0 3px 10px rgba(0,0,0,0.4);
-      }
-
       .glass {
         background:
           radial-gradient(ellipse 100% 55% at 50% 0%,
@@ -69,12 +55,6 @@
     <div id="root" data-composition-id="main" data-start="0" data-duration="3.6" data-width="1080" data-height="1920">
       <div id="scene" class="scene clip" data-start="0" data-duration="3.6" data-track-index="1">
         <div class="wrap">
-          <div id="kicker" class="kicker">My Two Mentors</div>
-          <div id="mentors" class="mentors">
-            <svg class="av m-av" viewBox="345 598 390 712"><use href="#avatarShape" /></svg>
-            <svg class="av m-av" viewBox="345 598 390 712"><use href="#avatarShape" /></svg>
-          </div>
-          <div id="connect" class="connect">Run an agency of</div>
           <div id="badge" class="badge glass">
             <div class="num">800+</div>
             <div class="lbl">Employees</div>
@@ -111,11 +91,8 @@
 
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
-        tl.from("#kicker",        { y: 30, opacity: 0, duration: 0.45, ease: "power3.out" }, 0.10);
-        tl.from("#mentors .av",   { y: 36, scale: 0.8, opacity: 0, duration: 0.55, ease: "back.out(1.6)", stagger: 0.12, transformOrigin: "50% 100%" }, 0.26);
-        tl.from("#connect",       { y: 24, opacity: 0, duration: 0.42, ease: "power2.out" }, 0.62);
-        tl.from("#badge",         { scale: 0.84, opacity: 0, duration: 0.55, ease: "back.out(1.5)" }, 0.78);
-        tl.from("#crowd .av",     { y: 18, opacity: 0, duration: 0.40, ease: "power2.out", stagger: 0.022 }, 1.02);
+        tl.from("#badge",         { scale: 0.84, opacity: 0, duration: 0.55, ease: "back.out(1.5)" }, 0.15);
+        tl.from("#crowd .av",     { y: 18, opacity: 0, duration: 0.40, ease: "power2.out", stagger: 0.022 }, 0.5);
         window.__timelines["main"] = tl;
       })();
     </script>
