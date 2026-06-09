@@ -12,127 +12,145 @@
       }
       .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
 
-      /* the camera cranes up by translating this tall world downward */
-      .world { position: absolute; left: 0; top: 0; width: 1080px; height: 2700px;
-        transform: translateY(-780px); will-change: transform; }
-
-      .money { position: absolute; z-index: 1; }
-      .dollar { position: absolute; font-weight: 900; color: #F28129; line-height: 1;
-        text-shadow: 0 0 18px rgba(242,129,41,0.7), 0 4px 10px rgba(0,0,0,0.35);
-        will-change: transform, opacity; }
-
-      .ground { position: absolute; left: 120px; top: 2638px; width: 840px; height: 5px;
-        background: rgba(255,255,255,0.18); border-radius: 999px; z-index: 1; }
-
-      .building { position: absolute; inset: 0; z-index: 2; }
-      .floor {
-        position: absolute; border-radius: 10px; border: 2px solid #fff; will-change: transform, opacity;
-        background:
-          radial-gradient(ellipse 120% 60% at 50% 0%,
-            rgba(255,220,180,0.5) 0%, rgba(255,200,150,0.18) 40%, rgba(255,180,120,0) 70%),
-          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 45%, rgba(214,100,22,1) 100%);
-        box-shadow:
-          inset 0 2px 0 rgba(255,240,215,0.5),
-          inset 0 -3px 9px rgba(140,55,8,0.4),
-          0 0 18px rgba(242,129,41,0.45),
-          0 6px 16px rgba(0,0,0,0.28);
-        display: flex; align-items: center; justify-content: center; gap: 16px;
+      /* soft ambient glow behind the tower for depth */
+      .glow {
+        position: absolute; left: 540px; top: 950px; width: 560px; height: 560px;
+        margin-left: -280px; margin-top: -280px; border-radius: 50%; z-index: 0;
+        background: radial-gradient(circle, rgba(242,129,41,0.4) 0%, rgba(242,129,41,0.14) 42%, rgba(242,129,41,0) 70%);
+        will-change: opacity;
       }
-      .win { width: 24px; height: 26px; border-radius: 4px;
-        background: rgba(255,242,222,0.92); box-shadow: 0 0 6px rgba(255,230,200,0.6); }
 
-      .spire { position: absolute; left: 533px; width: 14px; border-radius: 8px;
-        background: linear-gradient(180deg, #fff 0%, #FFD9A8 100%);
-        box-shadow: 0 0 16px rgba(242,129,41,0.7); will-change: transform, opacity; transform-origin: 50% 100%; }
-      .beacon { position: absolute; left: 524px; width: 32px; height: 32px; border-radius: 50%;
-        background: radial-gradient(circle, #fff 0%, #F28129 70%);
-        box-shadow: 0 0 22px rgba(242,129,41,0.9); will-change: transform, opacity; }
+      /* the building grows upward by revealing this bottom-anchored wrapper */
+      .revealwrap {
+        position: absolute; left: 400px; bottom: 600px; width: 280px; height: 0;
+        overflow: hidden; z-index: 1; will-change: height;
+      }
+      .bld { position: absolute; left: 0; bottom: 0; width: 280px; height: 720px; }
+      .win.lit  { fill: #FFE7AE; }
+      .win.dark { fill: #9A5016; }
+
+      /* the money the tower rises out of (sits in front of the base) */
+      .money { position: absolute; left: 390px; top: 1250px; width: 300px; height: 175px; z-index: 2; }
+      .coin { fill: #EFA93A; stroke: #FFF3D6; stroke-width: 3; will-change: transform, opacity; }
+      .coinslot { fill: #C9852A; }
+      .mdollar { fill: #F28129; font-weight: 900; will-change: transform, opacity;
+        filter: drop-shadow(0 0 10px rgba(242,129,41,0.6)); }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="4.4" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="4.4" data-track-index="1">
-        <div id="world" class="world" data-layout-allow-overflow>
-          <div class="ground"></div>
-          <div id="money" class="money"></div>
-          <div id="building" class="building" data-layout-ignore></div>
-          <div id="spire" class="spire"></div>
-          <div id="beacon" class="beacon"></div>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.2" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3.2" data-track-index="1">
+
+        <div id="glow" class="glow"></div>
+
+        <div class="revealwrap" data-layout-allow-overflow>
+          <svg id="bld" class="bld" viewBox="0 0 280 720" data-layout-allow-overflow>
+            <defs>
+              <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#FFB877" />
+                <stop offset="0.45" stop-color="#F28129" />
+                <stop offset="1" stop-color="#BE5E16" />
+              </linearGradient>
+              <linearGradient id="topSheen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="rgba(255,240,215,0.5)" />
+                <stop offset="1" stop-color="rgba(255,240,215,0)" />
+              </linearGradient>
+            </defs>
+            <g id="bodyGroup"></g>
+            <g id="winGroup"></g>
+            <!-- crown antenna -->
+            <rect x="135" y="44" width="6" height="70" rx="3" fill="#F0D2A6" />
+            <circle id="beacon" cx="138" cy="40" r="8" fill="#FFE7AE" />
+          </svg>
         </div>
+
+        <svg id="money" class="money" viewBox="0 0 300 175" data-layout-allow-overflow>
+          <text class="mdollar" x="92"  y="58"  font-size="56" text-anchor="middle">$</text>
+          <text class="mdollar" x="208" y="50"  font-size="44" text-anchor="middle">$</text>
+          <g id="coins"></g>
+        </svg>
       </div>
     </div>
 
     <script>
       (function () {
-        const WORLD_H = 2700, CX = 540;
-        const FLOORS = 14, FLOOR_H = 140, STEP = 150;
-        const baseBottom = WORLD_H - 60; // 2640
-
-        function widthFor(i) { return i <= 5 ? 360 : i <= 10 ? 280 : 200; }
-
-        // --- build the dollar-sign cluster at street level ---
-        const money = document.getElementById("money");
-        const dollars = [
-          { x: 462, y: 2486, s: 72 }, { x: 540, y: 2452, s: 104 }, { x: 624, y: 2492, s: 70 },
-          { x: 500, y: 2556, s: 54 }, { x: 592, y: 2556, s: 54 },
+        // --- realistic setback tower: continuous body + window grid ---
+        const sections = [
+          { x: 36, y: 470, w: 208, h: 250, idx: 0 },
+          { x: 66, y: 250, w: 148, h: 220, idx: 1 },
+          { x: 94, y: 112, w: 92,  h: 138, idx: 2 },
         ];
-        dollars.forEach((d) => {
-          const el = document.createElement("div");
-          el.className = "dollar";
-          el.textContent = "$";
-          el.style.left = d.x + "px"; el.style.top = d.y + "px";
-          el.style.fontSize = d.s + "px";
-          el.style.marginLeft = (-d.s * 0.3) + "px";
-          money.appendChild(el);
+        const bodyGroup = document.getElementById("bodyGroup");
+        const winGroup = document.getElementById("winGroup");
+        const NS = "http://www.w3.org/2000/svg";
+
+        sections.forEach((s) => {
+          const r = document.createElementNS(NS, "rect");
+          r.setAttribute("x", s.x); r.setAttribute("y", s.y);
+          r.setAttribute("width", s.w); r.setAttribute("height", s.h);
+          r.setAttribute("rx", 1);
+          r.setAttribute("fill", "url(#bodyGrad)");
+          r.setAttribute("stroke", "rgba(110,50,8,0.55)");
+          r.setAttribute("stroke-width", "1.5");
+          bodyGroup.appendChild(r);
+          // thin top sheen on each setback ledge
+          const sheen = document.createElementNS(NS, "rect");
+          sheen.setAttribute("x", s.x); sheen.setAttribute("y", s.y);
+          sheen.setAttribute("width", s.w); sheen.setAttribute("height", 14);
+          sheen.setAttribute("fill", "url(#topSheen)");
+          bodyGroup.appendChild(sheen);
+
+          // window grid
+          const winW = 16, winH = 20, gapX = 11, gapY = 11, padX = 16, padY = 18;
+          const cols = Math.max(2, Math.floor((s.w - 2 * padX + gapX) / (winW + gapX)));
+          const rows = Math.max(2, Math.floor((s.h - 2 * padY + gapY) / (winH + gapY)));
+          const totalW = cols * winW + (cols - 1) * gapX;
+          const totalH = rows * winH + (rows - 1) * gapY;
+          const startX = s.x + (s.w - totalW) / 2;
+          const startY = s.y + (s.h - totalH) / 2;
+          for (let row = 0; row < rows; row++) {
+            for (let c = 0; c < cols; c++) {
+              const w = document.createElementNS(NS, "rect");
+              w.setAttribute("x", startX + c * (winW + gapX));
+              w.setAttribute("y", startY + row * (winH + gapY));
+              w.setAttribute("width", winW); w.setAttribute("height", winH);
+              w.setAttribute("rx", 2);
+              const lit = ((row * 3 + c * 7 + s.idx * 5) % 4) === 0;
+              w.setAttribute("class", "win " + (lit ? "lit" : "dark"));
+              winGroup.appendChild(w);
+            }
+          }
         });
 
-        // --- build the skyscraper floors, bottom to top ---
-        const building = document.getElementById("building");
-        const floorEls = [];
-        for (let i = 0; i < FLOORS; i++) {
-          const w = widthFor(i);
-          const bottom = baseBottom - i * STEP;
-          const top = bottom - FLOOR_H;
-          const f = document.createElement("div");
-          f.className = "floor";
-          f.style.left = (CX - w / 2) + "px";
-          f.style.top = top + "px";
-          f.style.width = w + "px";
-          f.style.height = FLOOR_H + "px";
-          const cols = Math.max(3, Math.floor(w / 78));
-          for (let c = 0; c < cols; c++) {
-            const win = document.createElement("div");
-            win.className = "win";
-            f.appendChild(win);
-          }
-          building.appendChild(f);
-          floorEls.push(f);
-        }
-
-        // spire + beacon sit on top of the highest floor
-        const topFloorTop = baseBottom - (FLOORS - 1) * STEP - FLOOR_H; // 550
-        const spire = document.getElementById("spire");
-        spire.style.top = (topFloorTop - 120) + "px";
-        spire.style.height = "126px";
-        const beacon = document.getElementById("beacon");
-        beacon.style.top = (topFloorTop - 150) + "px";
+        // --- coin stack ---
+        const coins = document.getElementById("coins");
+        const stack = [
+          { cx: 150, cy: 150 }, { cx: 150, cy: 130 }, { cx: 150, cy: 110 }, { cx: 150, cy: 92 },
+        ];
+        stack.forEach((s) => {
+          const e = document.createElementNS(NS, "ellipse");
+          e.setAttribute("class", "coin");
+          e.setAttribute("cx", s.cx); e.setAttribute("cy", s.cy);
+          e.setAttribute("rx", 78); e.setAttribute("ry", 20);
+          coins.appendChild(e);
+        });
 
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // 1) dollar signs ease + fade in, then a little settle-pop
-        tl.from(".dollar", { y: 26, scale: 0.6, opacity: 0, duration: 0.5, ease: "power2.out", stagger: 0.08 }, 0.12);
-        tl.to(".dollar", { scale: 1.14, duration: 0.13, ease: "power2.out", stagger: 0.05, yoyo: true, repeat: 1, transformOrigin: "50% 50%" }, 0.72);
+        // 1) money eases + fades + pops in, then a little settle-pop
+        tl.from("#coins .coin", { y: 18, scaleY: 0, opacity: 0, duration: 0.45, ease: "power2.out", stagger: 0.07, transformOrigin: "50% 100%" }, 0.12);
+        tl.from(".mdollar",     { y: 24, scale: 0.5, opacity: 0, duration: 0.5, ease: "back.out(1.7)", stagger: 0.1, transformOrigin: "50% 100%" }, 0.2);
+        tl.to(".mdollar",       { scale: 1.14, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1, stagger: 0.05, transformOrigin: "50% 100%" }, 0.7);
 
-        // 2) camera cranes from the base up to the spire
-        tl.fromTo("#world", { y: -780 }, { y: 0, duration: 2.9, ease: "power1.inOut" }, 1.05);
+        // 2) the building rises out of the money (bottom-anchored reveal, no camera move)
+        tl.fromTo(".revealwrap", { height: 0 }, { height: 720, duration: 1.25, ease: "power2.out" }, 0.95);
+        tl.from("#glow",        { opacity: 0, duration: 1.0, ease: "power2.out" }, 1.0);
+        // the floating $ dissolve as the tower rises (money becomes the building)
+        tl.to(".mdollar",       { opacity: 0, duration: 0.45, ease: "power1.in" }, 1.05);
 
-        // 3) floors build bottom -> top, each popping into place (synced under the camera)
-        tl.from(floorEls, { y: 26, scale: 0.6, opacity: 0, duration: 0.42, ease: "back.out(1.7)", stagger: 0.188, transformOrigin: "50% 100%" }, 1.05);
-
-        // 4) spire + beacon cap it off
-        tl.from("#spire", { scaleY: 0, opacity: 0, duration: 0.45, ease: "power3.out" }, 3.66);
-        tl.from("#beacon", { scale: 0, opacity: 0, duration: 0.4, ease: "back.out(2)", transformOrigin: "50% 50%" }, 3.92);
+        // 3) beacon blinks on at the crown
+        tl.from("#beacon",      { scale: 0, opacity: 0, duration: 0.4, ease: "back.out(2)", transformOrigin: "138px 40px" }, 2.15);
 
         window.__timelines["main"] = tl;
       })();
