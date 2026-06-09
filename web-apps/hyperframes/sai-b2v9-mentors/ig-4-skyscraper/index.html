@@ -12,145 +12,172 @@
       }
       .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
 
-      /* soft ambient glow behind the tower for depth */
       .glow {
-        position: absolute; left: 540px; top: 950px; width: 560px; height: 560px;
+        position: absolute; left: 540px; top: 1000px; width: 560px; height: 560px;
         margin-left: -280px; margin-top: -280px; border-radius: 50%; z-index: 0;
         background: radial-gradient(circle, rgba(242,129,41,0.4) 0%, rgba(242,129,41,0.14) 42%, rgba(242,129,41,0) 70%);
-        will-change: opacity;
+        opacity: 0; will-change: opacity;
       }
 
-      /* the building grows upward by revealing this bottom-anchored wrapper */
-      .revealwrap {
-        position: absolute; left: 400px; bottom: 600px; width: 280px; height: 0;
-        overflow: hidden; z-index: 1; will-change: height;
-      }
-      .bld { position: absolute; left: 0; bottom: 0; width: 280px; height: 720px; }
-      .win.lit  { fill: #FFE7AE; }
-      .win.dark { fill: #9A5016; }
+      /* big dollar signs — the money the tower rises from */
+      .mdollar { position: absolute; font-weight: 900; color: #F28129; line-height: 1; z-index: 2;
+        text-shadow: 0 0 22px rgba(242,129,41,0.6), 0 6px 14px rgba(0,0,0,0.32);
+        will-change: transform, opacity; }
 
-      /* the money the tower rises out of (sits in front of the base) */
-      .money { position: absolute; left: 390px; top: 1250px; width: 300px; height: 175px; z-index: 2; }
-      .coin { fill: #EFA93A; stroke: #FFF3D6; stroke-width: 3; will-change: transform, opacity; }
-      .coinslot { fill: #C9852A; }
-      .mdollar { fill: #F28129; font-weight: 900; will-change: transform, opacity;
-        filter: drop-shadow(0 0 10px rgba(242,129,41,0.6)); }
+      /* reveal wrapper — bottom-anchored, height grows for the rise */
+      .revealwrap { position: absolute; left: 360px; bottom: 590px; width: 360px; height: 0;
+        overflow: hidden; z-index: 1; }
+      .bld { position: absolute; left: 76px; bottom: 0; width: 208px; height: 690px; will-change: transform; }
+
+      .sec {
+        position: absolute; border: 1.5px solid rgba(110,50,8,0.55); will-change: transform, opacity;
+        background: linear-gradient(90deg, #FFB877 0%, #F28129 45%, #BE5E16 100%);
+        box-shadow: inset 0 2px 0 rgba(255,240,215,0.45), inset 0 -3px 9px rgba(140,55,8,0.35);
+        display: grid; align-content: center; justify-content: center;
+      }
+      .win { width: 16px; height: 20px; border-radius: 2px; }
+      .win.lit  { background: #FFE7AE; }
+      .win.dark { background: #9A5016; }
+
+      .antenna { position: absolute; left: 100px; width: 8px; bottom: 590px; height: 70px;
+        background: #F0D2A6; border-radius: 3px; z-index: 1; }
+      .beacon { position: absolute; left: 95px; width: 18px; height: 18px; border-radius: 50%; bottom: 656px;
+        background: radial-gradient(circle, #fff 0%, #FFE7AE 70%); box-shadow: 0 0 14px rgba(242,129,41,0.8); z-index: 1; }
+
+      /* demolition debris + dust (scene level, hidden until collapse) */
+      .chunk { position: absolute; z-index: 3; border: 1px solid rgba(110,50,8,0.5); border-radius: 2px;
+        background: linear-gradient(135deg, #F8A04E 0%, #E0741F 60%, #B2540F 100%); opacity: 0; will-change: transform, opacity; }
+      .puff { position: absolute; z-index: 2; border-radius: 50%; opacity: 0; will-change: transform, opacity;
+        background: radial-gradient(circle, rgba(196,190,182,0.55) 0%, rgba(196,190,182,0) 70%); }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="3.2" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="3.2" data-track-index="1">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
 
         <div id="glow" class="glow"></div>
 
+        <div class="mdollar" id="d1" style="left:493px; top:1120px; font-size:168px;">$</div>
+        <div class="mdollar" id="d2" style="left:392px; top:1210px; font-size:120px;">$</div>
+        <div class="mdollar" id="d3" style="left:612px; top:1210px; font-size:120px;">$</div>
+
         <div class="revealwrap" data-layout-allow-overflow>
-          <svg id="bld" class="bld" viewBox="0 0 280 720" data-layout-allow-overflow>
-            <defs>
-              <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#FFB877" />
-                <stop offset="0.45" stop-color="#F28129" />
-                <stop offset="1" stop-color="#BE5E16" />
-              </linearGradient>
-              <linearGradient id="topSheen" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="rgba(255,240,215,0.5)" />
-                <stop offset="1" stop-color="rgba(255,240,215,0)" />
-              </linearGradient>
-            </defs>
-            <g id="bodyGroup"></g>
-            <g id="winGroup"></g>
-            <!-- crown antenna -->
-            <rect x="135" y="44" width="6" height="70" rx="3" fill="#F0D2A6" />
-            <circle id="beacon" cx="138" cy="40" r="8" fill="#FFE7AE" />
-          </svg>
+          <div id="bld" class="bld" data-layout-allow-overflow>
+            <div class="sec" id="sec0"></div>
+            <div class="sec" id="sec1"></div>
+            <div class="sec" id="sec2"></div>
+            <div class="antenna"></div>
+            <div class="beacon"></div>
+          </div>
         </div>
 
-        <svg id="money" class="money" viewBox="0 0 300 175" data-layout-allow-overflow>
-          <text class="mdollar" x="92"  y="58"  font-size="56" text-anchor="middle">$</text>
-          <text class="mdollar" x="208" y="50"  font-size="44" text-anchor="middle">$</text>
-          <g id="coins"></g>
-        </svg>
+        <div id="debris"></div>
       </div>
     </div>
 
     <script>
       (function () {
-        // --- realistic setback tower: continuous body + window grid ---
+        function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+        const rnd = mulberry32(20260608);
+
+        // --- build the 3 facade sections (HTML so each can collapse independently) ---
         const sections = [
-          { x: 36, y: 470, w: 208, h: 250, idx: 0 },
-          { x: 66, y: 250, w: 148, h: 220, idx: 1 },
-          { x: 94, y: 112, w: 92,  h: 138, idx: 2 },
+          { el: "sec0", w: 208, h: 240, bottom: 0,   idx: 0 },
+          { el: "sec1", w: 150, h: 210, bottom: 240, idx: 1 },
+          { el: "sec2", w: 96,  h: 140, bottom: 450, idx: 2 },
         ];
-        const bodyGroup = document.getElementById("bodyGroup");
-        const winGroup = document.getElementById("winGroup");
-        const NS = "http://www.w3.org/2000/svg";
-
         sections.forEach((s) => {
-          const r = document.createElementNS(NS, "rect");
-          r.setAttribute("x", s.x); r.setAttribute("y", s.y);
-          r.setAttribute("width", s.w); r.setAttribute("height", s.h);
-          r.setAttribute("rx", 1);
-          r.setAttribute("fill", "url(#bodyGrad)");
-          r.setAttribute("stroke", "rgba(110,50,8,0.55)");
-          r.setAttribute("stroke-width", "1.5");
-          bodyGroup.appendChild(r);
-          // thin top sheen on each setback ledge
-          const sheen = document.createElementNS(NS, "rect");
-          sheen.setAttribute("x", s.x); sheen.setAttribute("y", s.y);
-          sheen.setAttribute("width", s.w); sheen.setAttribute("height", 14);
-          sheen.setAttribute("fill", "url(#topSheen)");
-          bodyGroup.appendChild(sheen);
-
-          // window grid
-          const winW = 16, winH = 20, gapX = 11, gapY = 11, padX = 16, padY = 18;
+          const el = document.getElementById(s.el);
+          el.style.width = s.w + "px";
+          el.style.height = s.h + "px";
+          el.style.bottom = s.bottom + "px";
+          el.style.left = ((208 - s.w) / 2) + "px";
+          const winW = 16, gapX = 11, gapY = 11, padX = 16, padY = 18;
           const cols = Math.max(2, Math.floor((s.w - 2 * padX + gapX) / (winW + gapX)));
-          const rows = Math.max(2, Math.floor((s.h - 2 * padY + gapY) / (winH + gapY)));
-          const totalW = cols * winW + (cols - 1) * gapX;
-          const totalH = rows * winH + (rows - 1) * gapY;
-          const startX = s.x + (s.w - totalW) / 2;
-          const startY = s.y + (s.h - totalH) / 2;
-          for (let row = 0; row < rows; row++) {
+          const rows = Math.max(2, Math.floor((s.h - 2 * padY + gapY) / (20 + gapY)));
+          el.style.gridTemplateColumns = "repeat(" + cols + ", " + winW + "px)";
+          el.style.gap = gapY + "px " + gapX + "px";
+          for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
-              const w = document.createElementNS(NS, "rect");
-              w.setAttribute("x", startX + c * (winW + gapX));
-              w.setAttribute("y", startY + row * (winH + gapY));
-              w.setAttribute("width", winW); w.setAttribute("height", winH);
-              w.setAttribute("rx", 2);
-              const lit = ((row * 3 + c * 7 + s.idx * 5) % 4) === 0;
-              w.setAttribute("class", "win " + (lit ? "lit" : "dark"));
-              winGroup.appendChild(w);
+              const w = document.createElement("div");
+              const lit = ((r * 3 + c * 7 + s.idx * 5) % 4) === 0;
+              w.className = "win " + (lit ? "lit" : "dark");
+              el.appendChild(w);
             }
           }
         });
 
-        // --- coin stack ---
-        const coins = document.getElementById("coins");
-        const stack = [
-          { cx: 150, cy: 150 }, { cx: 150, cy: 130 }, { cx: 150, cy: 110 }, { cx: 150, cy: 92 },
-        ];
-        stack.forEach((s) => {
-          const e = document.createElementNS(NS, "ellipse");
-          e.setAttribute("class", "coin");
-          e.setAttribute("cx", s.cx); e.setAttribute("cy", s.cy);
-          e.setAttribute("rx", 78); e.setAttribute("ry", 20);
-          coins.appendChild(e);
-        });
+        // --- pre-generate rubble chunks + dust puffs at the base ---
+        const debris = document.getElementById("debris");
+        const BASE_Y = 1330; // frame y of the tower footprint
+        const chunks = [];
+        for (let i = 0; i < 15; i++) {
+          const cw = 24 + Math.floor(rnd() * 34);
+          const ch = 16 + Math.floor(rnd() * 24);
+          const x = 540 + (rnd() - 0.5) * 230;
+          const y = BASE_Y - 6 + rnd() * 54;
+          const ang = (rnd() - 0.5) * 80;
+          const d = document.createElement("div");
+          d.className = "chunk";
+          d.style.width = cw + "px"; d.style.height = ch + "px";
+          d.style.left = (x - cw / 2) + "px"; d.style.top = (y - ch / 2) + "px";
+          debris.appendChild(d);
+          chunks.push({ el: d, ang });
+        }
+        const puffs = [];
+        for (let i = 0; i < 7; i++) {
+          const ps = 130 + Math.floor(rnd() * 150);
+          const x = 540 + (rnd() - 0.5) * 240;
+          const y = BASE_Y - 30 + rnd() * 40;
+          const p = document.createElement("div");
+          p.className = "puff";
+          p.style.width = ps + "px"; p.style.height = ps + "px";
+          p.style.left = (x - ps / 2) + "px"; p.style.top = (y - ps / 2) + "px";
+          debris.appendChild(p);
+          puffs.push(p);
+        }
 
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // 1) money eases + fades + pops in, then a little settle-pop
-        tl.from("#coins .coin", { y: 18, scaleY: 0, opacity: 0, duration: 0.45, ease: "power2.out", stagger: 0.07, transformOrigin: "50% 100%" }, 0.12);
-        tl.from(".mdollar",     { y: 24, scale: 0.5, opacity: 0, duration: 0.5, ease: "back.out(1.7)", stagger: 0.1, transformOrigin: "50% 100%" }, 0.2);
-        tl.to(".mdollar",       { scale: 1.14, duration: 0.12, ease: "power2.out", yoyo: true, repeat: 1, stagger: 0.05, transformOrigin: "50% 100%" }, 0.7);
+        // 1) big dollar signs ease + fade in, settle-pop, then HOLD
+        tl.from(".mdollar", { y: 30, scale: 0.5, opacity: 0, duration: 0.55, ease: "back.out(1.6)", stagger: 0.12, transformOrigin: "50% 50%" }, 0.2);
+        tl.to(".mdollar", { scale: 1.1, duration: 0.14, ease: "power2.out", yoyo: true, repeat: 1, stagger: 0.06, transformOrigin: "50% 50%" }, 1.0);
 
-        // 2) the building rises out of the money (bottom-anchored reveal, no camera move)
-        tl.fromTo(".revealwrap", { height: 0 }, { height: 720, duration: 1.25, ease: "power2.out" }, 0.95);
-        tl.from("#glow",        { opacity: 0, duration: 1.0, ease: "power2.out" }, 1.0);
-        // the floating $ dissolve as the tower rises (money becomes the building)
-        tl.to(".mdollar",       { opacity: 0, duration: 0.45, ease: "power1.in" }, 1.05);
+        // 2) the building rises out of the money (held until 1.7); money fades as it comes in
+        tl.fromTo(".revealwrap", { height: 0 }, { height: 690, duration: 1.2, ease: "power2.out" }, 1.7);
+        tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power2.out" }, 1.75);
+        tl.to(".mdollar", { opacity: 0, duration: 0.5, ease: "power1.in" }, 1.7);
 
-        // 3) beacon blinks on at the crown
-        tl.from("#beacon",      { scale: 0, opacity: 0, duration: 0.4, ease: "back.out(2)", transformOrigin: "138px 40px" }, 2.15);
+        // 3) built — HOLD so it's obviously stopped (2.9 -> 3.6)
+
+        // 4) DEMOLITION — shake, then crash down into rubble
+        tl.to("#bld", { keyframes: [
+          { x: -7, duration: 0.05 }, { x: 7, duration: 0.05 }, { x: -6, duration: 0.05 },
+          { x: 6, duration: 0.05 }, { x: -3, duration: 0.05 }, { x: 0, duration: 0.05 },
+        ], ease: "none" }, 3.55);
+
+        // sections pancake down, top first
+        tl.to("#sec2", { y: 360, scaleY: 0.18, rotation: -12, duration: 0.5, ease: "power2.in", transformOrigin: "50% 100%" }, 3.85);
+        tl.to("#sec1", { y: 190, scaleY: 0.2,  rotation: 9,   duration: 0.5, ease: "power2.in", transformOrigin: "50% 100%" }, 3.95);
+        tl.to("#sec0", { scaleY: 0.16, rotation: -4, duration: 0.46, ease: "power2.in", transformOrigin: "50% 100%" }, 4.05);
+        tl.to(".antenna, .beacon", { y: 420, opacity: 0, rotation: 40, duration: 0.45, ease: "power2.in" }, 3.85);
+        tl.to(".sec", { opacity: 0, duration: 0.35, ease: "power1.in" }, 4.35);
+        tl.to("#glow", { opacity: 0, duration: 0.6, ease: "power1.in" }, 3.95);
+
+        // rubble tumbles into a pile
+        chunks.forEach((c, i) => {
+          tl.fromTo(c.el,
+            { opacity: 0, scale: 0.4, y: -26, rotation: c.ang - 35 },
+            { opacity: 1, scale: 1, y: 0, rotation: c.ang, duration: 0.5, ease: "back.out(1.4)", transformOrigin: "50% 50%" },
+            3.95 + i * 0.028);
+        });
+
+        // dust cloud blooms then settles
+        puffs.forEach((p, i) => {
+          tl.fromTo(p, { opacity: 0, scale: 0.4 }, { opacity: 0.55, scale: 1.2, duration: 0.4, ease: "power2.out" }, 3.9 + i * 0.04);
+          tl.to(p, { opacity: 0, scale: 1.5, duration: 0.85, ease: "power1.in" }, 4.35 + i * 0.04);
+        });
 
         window.__timelines["main"] = tl;
       })();
