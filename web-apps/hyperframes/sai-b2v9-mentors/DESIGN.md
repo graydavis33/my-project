@@ -10,6 +10,9 @@ Lean package: **3 beat infographics** (drawn, no title cards unless Gray asks).
   never want to retire"* → **ig-2-money-vs-people**
 - *"it has nothing to do with the material… it makes you want to be a better person"*
   → **ig-3-north-star**
+- building wealth into an empire (extra graphic Gray requested) → **ig-4-skyscraper**
+  ($ signs ease/fade/pop in at street level → a skyscraper builds out of them floor-by-floor
+  while the camera cranes from the base up to the spire; world-translate camera, setback taper)
 
 ## Format
 - 1080×1920 vertical, 24fps
