@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      .wrap {
+        position: absolute; inset: 0;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        padding: 150px 80px; gap: 34px;
+      }
+
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 55% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 38%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow:
+          inset 0 2px 0 rgba(255,240,215,0.55),
+          inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 24px rgba(242,129,41,0.55),
+          0 8px 22px rgba(0,0,0,0.30);
+      }
+
+      .lane { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+      .lanehead { display: flex; align-items: center; gap: 24px; }
+      .coin {
+        width: 96px; height: 96px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; will-change: transform;
+      }
+      .coin .sym {
+        font-weight: 900; font-size: 60px; color: #fff; line-height: 1;
+        text-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      }
+      .coin .star { width: 58px; height: 58px; fill: #fff;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.35)); }
+      .headtext {
+        font-weight: 900; font-size: 52px; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.01em; text-shadow: 0 3px 12px rgba(0,0,0,0.45);
+      }
+
+      .graph { width: 780px; height: 230px; }
+      .axis { stroke: rgba(255,255,255,0.35); stroke-width: 3; }
+      .line { fill: none; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round;
+        filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35)); }
+      .line.bad { stroke: #E63946; }
+      .line.good { stroke: #F28129; }
+      .dot.bad { fill: #E63946; }
+      .dot.good { fill: #F28129; }
+
+      .outcome {
+        font-weight: 900; font-size: 50px; text-transform: uppercase; letter-spacing: 0.02em;
+        padding: 18px 46px; border-radius: 999px; border: 2px solid #fff; color: #fff;
+        will-change: transform; text-shadow: 0 3px 9px rgba(0,0,0,0.4);
+      }
+      .outcome.bad {
+        background: linear-gradient(180deg, #F05566 0%, #E63946 55%, #B71F2C 100%);
+        box-shadow: 0 0 22px rgba(230,57,70,0.5), 0 8px 20px rgba(0,0,0,0.3);
+      }
+
+      .vs {
+        width: 110px; height: 110px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; will-change: transform;
+        border: 3px solid #fff; background: rgba(20,20,20,0.55);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      }
+      .vs span { font-weight: 900; font-size: 48px; color: #fff; letter-spacing: -0.02em; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+        <div class="wrap">
+
+          <!-- LANE 1 — money only -> bored -->
+          <div class="lane">
+            <div class="lanehead">
+              <div id="coin1" class="coin glass"><div class="sym">$</div></div>
+              <div id="head1" class="headtext">Just Chase Money</div>
+            </div>
+            <svg class="graph" viewBox="0 0 780 230">
+              <line class="axis" x1="20" y1="205" x2="760" y2="205" />
+              <path id="line-bad" class="line bad" d="M 40 188 L 200 86 L 350 66 L 500 92 L 640 150 L 740 182" />
+              <circle id="dot-bad" class="dot bad" cx="740" cy="182" r="13" />
+            </svg>
+            <div id="out-bad" class="outcome bad">You Get Bored</div>
+          </div>
+
+          <div id="vs" class="vs"><span>VS</span></div>
+
+          <!-- LANE 2 — people / north star -> never retire -->
+          <div class="lane">
+            <div class="lanehead">
+              <div id="coin2" class="coin glass">
+                <svg class="star" viewBox="0 0 100 100"><path d="M50 5 L61 38 L96 38 L68 59 L79 92 L50 72 L21 92 L32 59 L4 38 L39 38 Z" /></svg>
+              </div>
+              <div id="head2" class="headtext">Do Good For People</div>
+            </div>
+            <svg class="graph" viewBox="0 0 780 230">
+              <line class="axis" x1="20" y1="205" x2="760" y2="205" />
+              <path id="line-good" class="line good" d="M 40 190 L 200 158 L 350 118 L 500 80 L 640 46 L 740 22" />
+              <circle id="dot-good" class="dot good" cx="740" cy="22" r="13" />
+            </svg>
+            <div id="out-good" class="outcome good glass">Never Retire</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        // prep stroke-draw for both graph lines (deterministic, computed at load)
+        function prep(id) {
+          const p = document.getElementById(id);
+          const len = p.getTotalLength();
+          p.style.strokeDasharray = len;
+          p.style.strokeDashoffset = len;
+          return len;
+        }
+        const lenBad = prep("line-bad");
+        const lenGood = prep("line-good");
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // lane 1
+        tl.from("#coin1",    { scale: 0.7, opacity: 0, duration: 0.5, ease: "back.out(1.7)" }, 0.12);
+        tl.from("#head1",    { x: -30, opacity: 0, duration: 0.45, ease: "power3.out" }, 0.26);
+        tl.to("#line-bad",   { strokeDashoffset: 0, duration: 0.8, ease: "power1.inOut" }, 0.5);
+        tl.from("#dot-bad",  { scale: 0, opacity: 0, duration: 0.32, ease: "back.out(2)", transformOrigin: "50% 50%" }, 1.25);
+        tl.from("#out-bad",  { y: 22, scale: 0.85, opacity: 0, duration: 0.46, ease: "back.out(1.5)" }, 1.4);
+
+        // vs
+        tl.from("#vs",       { scale: 0, opacity: 0, duration: 0.5, ease: "back.out(1.8)" }, 1.6);
+
+        // lane 2
+        tl.from("#coin2",    { scale: 0.7, opacity: 0, duration: 0.5, ease: "back.out(1.7)" }, 1.85);
+        tl.from("#head2",    { x: -30, opacity: 0, duration: 0.45, ease: "power3.out" }, 1.99);
+        tl.to("#line-good",  { strokeDashoffset: 0, duration: 0.8, ease: "power1.inOut" }, 2.2);
+        tl.from("#dot-good", { scale: 0, opacity: 0, duration: 0.32, ease: "back.out(2)", transformOrigin: "50% 50%" }, 2.95);
+        tl.from("#out-good", { y: 22, scale: 0.85, opacity: 0, duration: 0.46, ease: "back.out(1.5)" }, 3.1);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
