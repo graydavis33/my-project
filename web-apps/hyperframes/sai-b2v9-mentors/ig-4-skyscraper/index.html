@@ -45,9 +45,12 @@
         background: radial-gradient(circle, #fff 0%, #FFE7AE 70%); box-shadow: 0 0 14px rgba(242,129,41,0.8); z-index: 1; }
 
       /* demolition debris + dust (scene level, hidden until collapse) */
-      .chunk { position: absolute; z-index: 3; border: 1px solid rgba(110,50,8,0.5); border-radius: 2px;
-        background: linear-gradient(135deg, #F8A04E 0%, #E0741F 60%, #B2540F 100%); opacity: 0; will-change: transform, opacity; }
-      .puff { position: absolute; z-index: 2; border-radius: 50%; opacity: 0; will-change: transform, opacity;
+      /* faceted low-poly rubble mound (SVG) — rises to swallow the collapsing tower */
+      .mound { position: absolute; left: 370px; top: 1118px; width: 340px; height: 232px; z-index: 3;
+        transform: scaleY(0); transform-origin: 50% 100%; will-change: transform; }
+      .crumb { position: absolute; z-index: 4; opacity: 0; box-shadow: 0 1px 2px rgba(80,35,5,0.35);
+        will-change: transform, opacity; }
+      .puff { position: absolute; z-index: 5; border-radius: 50%; opacity: 0; will-change: transform, opacity;
         background: radial-gradient(circle, rgba(196,190,182,0.55) 0%, rgba(196,190,182,0) 70%); }
     </style>
   </head>
@@ -71,6 +74,24 @@
           </div>
         </div>
 
+        <svg id="mound" class="mound" viewBox="0 0 340 232" data-layout-allow-overflow>
+          <!-- wide flat debris skirt (behind) -->
+          <ellipse cx="170" cy="208" rx="170" ry="22" fill="#E8A968" opacity="0.85" />
+          <polygon points="12,214 64,202 122,210 180,204 248,212 322,202 330,224 6,224" fill="#DC9A5A" opacity="0.8" />
+          <!-- mound base silhouette (fills any facet gaps so the pile is dense) -->
+          <polygon points="150,18 185,68 210,95 250,150 300,206 40,206 78,150 105,100 128,55" fill="#C8631A" />
+          <!-- low-poly facets: light upper-left -> dark lower-right -->
+          <polygon points="150,18 128,55 105,100 146,120" fill="#F2B66A" />
+          <polygon points="150,18 146,120 196,118 185,68" fill="#EC9A4E" />
+          <polygon points="185,68 196,118 250,150 210,95" fill="#A85311" />
+          <polygon points="105,100 78,150 130,166 146,120" fill="#D77A28" />
+          <polygon points="78,150 40,206 136,206 130,166" fill="#C8631A" />
+          <polygon points="146,120 130,166 180,186 196,118" fill="#E0741F" />
+          <polygon points="130,166 136,206 210,206 180,186" fill="#B85E14" />
+          <polygon points="196,118 180,186 250,150" fill="#9A490F" />
+          <polygon points="250,150 180,186 210,206 300,206" fill="#7E3C0C" />
+          <g id="speckles"></g>
+        </svg>
         <div id="debris"></div>
       </div>
     </div>
@@ -110,19 +131,41 @@
         // --- pre-generate rubble chunks + dust puffs at the base ---
         const debris = document.getElementById("debris");
         const BASE_Y = 1330; // frame y of the tower footprint
-        const chunks = [];
-        for (let i = 0; i < 15; i++) {
-          const cw = 24 + Math.floor(rnd() * 34);
-          const ch = 16 + Math.floor(rnd() * 24);
-          const x = 540 + (rnd() - 0.5) * 230;
-          const y = BASE_Y - 6 + rnd() * 54;
-          const ang = (rnd() - 0.5) * 80;
+        const palette = ["#F8A04E", "#EC8636", "#E0741F", "#C8631A", "#B2540F", "#8A4A12", "#F2B66A"];
+
+        // speckle texture scattered over the mound surface (light + dark flecks)
+        const SVGNS = "http://www.w3.org/2000/svg";
+        const speckles = document.getElementById("speckles");
+        for (let i = 0; i < 34; i++) {
+          const sy = 45 + rnd() * 150;
+          const hw = Math.max(6, (sy - 18) / 188 * 122);
+          const sx = 150 + (rnd() * 2 - 1) * (hw - 6);
+          const c = document.createElementNS(SVGNS, "circle");
+          c.setAttribute("cx", sx.toFixed(1)); c.setAttribute("cy", sy.toFixed(1));
+          c.setAttribute("r", (1.4 + rnd() * 2.4).toFixed(1));
+          c.setAttribute("fill", rnd() < 0.5 ? "#FFE0B0" : "#5E2E08");
+          c.setAttribute("opacity", (0.45 + rnd() * 0.4).toFixed(2));
+          speckles.appendChild(c);
+        }
+
+        // scattered outlier chunks flung out around the base
+        const outliers = [];
+        for (let i = 0; i < 14; i++) {
+          const side = rnd() < 0.5 ? -1 : 1;
+          const dist = 118 + rnd() * 120;
+          const x = 540 + side * dist + (rnd() * 2 - 1) * 28;
+          const y = BASE_Y - 8 + rnd() * 40;
+          const cw = 7 + Math.floor(rnd() * 12);
+          const ch = 6 + Math.floor(rnd() * 9);
+          const ang = (rnd() * 2 - 1) * 180;
           const d = document.createElement("div");
-          d.className = "chunk";
+          d.className = "crumb";
           d.style.width = cw + "px"; d.style.height = ch + "px";
           d.style.left = (x - cw / 2) + "px"; d.style.top = (y - ch / 2) + "px";
+          d.style.background = palette[Math.floor(rnd() * palette.length)];
+          d.style.borderRadius = rnd() < 0.4 ? "50%" : "1px";
           debris.appendChild(d);
-          chunks.push({ el: d, ang });
+          outliers.push({ el: d, ang, cx: x });
         }
         const puffs = [];
         for (let i = 0; i < 7; i++) {
@@ -142,41 +185,41 @@
 
         // 1) big dollar signs ease + fade in, settle-pop, then HOLD
         tl.from(".mdollar", { y: 30, scale: 0.5, opacity: 0, duration: 0.55, ease: "back.out(1.6)", stagger: 0.12, transformOrigin: "50% 50%" }, 0.2);
-        tl.to(".mdollar", { scale: 1.1, duration: 0.14, ease: "power2.out", yoyo: true, repeat: 1, stagger: 0.06, transformOrigin: "50% 50%" }, 1.0);
+        tl.to(".mdollar", { scale: 1.1, duration: 0.14, ease: "power2.out", yoyo: true, repeat: 1, stagger: 0.06, transformOrigin: "50% 50%" }, 0.9);
 
-        // 2) the building rises out of the money (held until 1.7); money fades as it comes in
-        tl.fromTo(".revealwrap", { height: 0 }, { height: 690, duration: 1.2, ease: "power2.out" }, 1.7);
-        tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power2.out" }, 1.75);
-        tl.to(".mdollar", { opacity: 0, duration: 0.5, ease: "power1.in" }, 1.7);
+        // 2) the building rises out of the money (held to 1.5); money fades as it comes in
+        tl.fromTo(".revealwrap", { height: 0 }, { height: 690, duration: 1.1, ease: "power2.out" }, 1.5);
+        tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "power2.out" }, 1.55);
+        tl.to(".mdollar", { opacity: 0, duration: 0.5, ease: "power1.in" }, 1.5);
 
-        // 3) built — HOLD so it's obviously stopped (2.9 -> 3.6)
+        // 3) built — long HOLD (~2.6 -> 3.7) so it's obviously stopped
 
-        // 4) DEMOLITION — shake, then crash down into rubble
-        tl.to("#bld", { keyframes: [
-          { x: -7, duration: 0.05 }, { x: 7, duration: 0.05 }, { x: -6, duration: 0.05 },
-          { x: 6, duration: 0.05 }, { x: -3, duration: 0.05 }, { x: 0, duration: 0.05 },
-        ], ease: "none" }, 3.55);
+        // 4) COLLAPSE — no shake. Tower sinks + breaks straight down (no fade) into a dense pile.
+        tl.to("#bld", { y: 660, duration: 0.5, ease: "power2.in" }, 3.7);
+        tl.to("#sec2", { rotation: -22, duration: 0.42, ease: "power1.in", transformOrigin: "50% 100%" }, 3.72);
+        tl.to("#sec1", { rotation: 16,  duration: 0.42, ease: "power1.in", transformOrigin: "50% 100%" }, 3.76);
+        tl.to("#sec0", { rotation: -6, scaleY: 0.82, duration: 0.42, ease: "power1.in", transformOrigin: "50% 100%" }, 3.8);
+        tl.to(".antenna, .beacon", { rotation: 42, duration: 0.4, ease: "power1.in" }, 3.7);
+        tl.to("#glow", { opacity: 0, duration: 0.55, ease: "power1.in" }, 3.8);
 
-        // sections pancake down, top first
-        tl.to("#sec2", { y: 360, scaleY: 0.18, rotation: -12, duration: 0.5, ease: "power2.in", transformOrigin: "50% 100%" }, 3.85);
-        tl.to("#sec1", { y: 190, scaleY: 0.2,  rotation: 9,   duration: 0.5, ease: "power2.in", transformOrigin: "50% 100%" }, 3.95);
-        tl.to("#sec0", { scaleY: 0.16, rotation: -4, duration: 0.46, ease: "power2.in", transformOrigin: "50% 100%" }, 4.05);
-        tl.to(".antenna, .beacon", { y: 420, opacity: 0, rotation: 40, duration: 0.45, ease: "power2.in" }, 3.85);
-        tl.to(".sec", { opacity: 0, duration: 0.35, ease: "power1.in" }, 4.35);
-        tl.to("#glow", { opacity: 0, duration: 0.6, ease: "power1.in" }, 3.95);
+        // faceted rubble mound rises to swallow the collapsing tower (thick, no gaps)
+        tl.fromTo("#mound", { scaleY: 0 }, { scaleY: 1, duration: 0.52, ease: "back.out(1.05)" }, 3.82);
 
-        // rubble tumbles into a pile
-        chunks.forEach((c, i) => {
-          tl.fromTo(c.el,
-            { opacity: 0, scale: 0.4, y: -26, rotation: c.ang - 35 },
-            { opacity: 1, scale: 1, y: 0, rotation: c.ang, duration: 0.5, ease: "back.out(1.4)", transformOrigin: "50% 50%" },
-            3.95 + i * 0.028);
+        // outlier debris bursts outward from the collapse and settles around the base
+        outliers.forEach((o, i) => {
+          const dx = (540 - o.cx) * 0.55;
+          tl.fromTo(o.el,
+            { opacity: 0, scale: 0.3, x: dx, y: -28, rotation: o.ang - 60 },
+            { opacity: 1, scale: 1, x: 0, y: 0, rotation: o.ang, duration: 0.5, ease: "power2.out", transformOrigin: "50% 50%" },
+            3.9 + i * 0.02);
         });
 
-        // dust cloud blooms then settles
+        // dust cloud billows on impact then settles (single tween per puff — no overlap)
         puffs.forEach((p, i) => {
-          tl.fromTo(p, { opacity: 0, scale: 0.4 }, { opacity: 0.55, scale: 1.2, duration: 0.4, ease: "power2.out" }, 3.9 + i * 0.04);
-          tl.to(p, { opacity: 0, scale: 1.5, duration: 0.85, ease: "power1.in" }, 4.35 + i * 0.04);
+          tl.to(p, { keyframes: [
+            { opacity: 0.5, scale: 1.2, duration: 0.38, ease: "power2.out" },
+            { opacity: 0, scale: 1.55, duration: 0.7, ease: "power1.in" },
+          ] }, 3.85 + i * 0.04);
         });
 
         window.__timelines["main"] = tl;

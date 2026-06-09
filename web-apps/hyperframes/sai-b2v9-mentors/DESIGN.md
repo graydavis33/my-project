@@ -6,13 +6,17 @@ Lean package: **3 beat infographics** (drawn, no title cards unless Gray asks).
 
 ## Script beats → infographics
 - *"two mentors who run an agency that employs over 800 people"* → **ig-1-eight-hundred**
-- *"if your goal is only money you'll get bored… make people your North Star and you'll
-  never want to retire"* → **ig-2-money-vs-people**
+- *"lunch with two mentors… genuinely curious about me"* → **ig-2-money-vs-people**
+  (folder name is legacy; content is now: two mentor figures TALKING to one figure (you) —
+  animated mouths, head bobs, alternating speech bubbles; you listen w/ a nod + small smile)
 - *"it has nothing to do with the material… it makes you want to be a better person"*
   → **ig-3-north-star**
 - building wealth into an empire (extra graphic Gray requested) → **ig-4-skyscraper**
-  ($ signs ease/fade/pop in at street level → a skyscraper builds out of them floor-by-floor
-  while the camera cranes from the base up to the spire; world-translate camera, setback taper)
+  (3 BIG $ signs ease/fade/pop in + hold → realistic setback tower rises out of the money
+  as the $ fade → holds "obviously built" → collapses straight down (no shake, no fade): the
+  tower buckles/sinks while a solid jagged rubble mound rises to swallow it + dense seeded crumb
+  texture on top (thick pile, no gaps) + dust. No camera move. HTML facade sections.
+  **Rendered at 60fps** per Gray, transparent ProRes 4444.)
 
 ## Format
 - 1080×1920 vertical, 24fps
