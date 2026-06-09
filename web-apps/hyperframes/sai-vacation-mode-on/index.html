@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      /* ---------- WORDMARK ---------- */
+      #wordmark {
+        position: absolute; left: 0; right: 0; top: 660px; z-index: 2;
+        display: flex; flex-direction: column; align-items: center; gap: 4px;
+      }
+      #wordmark .w1 {
+        font-size: 132px; font-weight: 900; letter-spacing: -0.015em; color: #FFFFFF;
+        text-transform: uppercase; line-height: 0.96;
+        text-shadow: 0 6px 18px rgba(60,30,4,0.45);
+      }
+      #wordmark .w2 {
+        font-size: 132px; font-weight: 900; letter-spacing: 0.04em; color: #F28129;
+        text-transform: uppercase; line-height: 0.96;
+        text-shadow: 0 6px 18px rgba(60,30,4,0.45);
+      }
+
+      /* ---------- TOGGLE ---------- */
+      #toggleGlow {
+        position: absolute; left: 540px; top: 1150px; width: 820px; height: 560px;
+        margin-left: -410px; margin-top: -280px; border-radius: 50%; z-index: 1;
+        background: radial-gradient(ellipse, rgba(242,129,41,0.45) 0%, rgba(242,129,41,0.12) 45%, rgba(242,129,41,0) 70%);
+        opacity: 0; will-change: opacity;
+      }
+      #toggle {
+        position: absolute; left: 240px; top: 1020px; width: 600px; height: 260px; z-index: 3;
+        will-change: transform, opacity;
+      }
+      .track {
+        position: absolute; inset: 0; border-radius: 130px; box-sizing: border-box;
+      }
+      .track-off {
+        background: rgba(54,46,38,0.55);
+        border: 2px solid rgba(255,255,255,0.28);
+        box-shadow: inset 0 6px 16px rgba(0,0,0,0.40), inset 0 -3px 8px rgba(255,255,255,0.10),
+          0 8px 22px rgba(0,0,0,0.28);
+      }
+      .track-on {
+        background: linear-gradient(150deg, #FFA858 0%, #F28129 55%, #D66416 100%);
+        border: 2px solid #FFFFFF; opacity: 0;
+        box-shadow: inset 0 3px 12px rgba(255,255,255,0.45), inset 0 -10px 22px rgba(120,50,8,0.35),
+          0 0 26px rgba(242,129,41,0.6), 0 8px 22px rgba(0,0,0,0.30);
+        will-change: opacity;
+      }
+      .track-label {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        font-size: 56px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase;
+      }
+      #lblOff { right: 56px; color: rgba(255,255,255,0.45); }
+      #lblOn  { left: 64px; color: #FFFFFF; opacity: 0; text-shadow: 0 2px 8px rgba(90,40,6,0.5); }
+      .knob {
+        position: absolute; left: 18px; top: 18px; width: 224px; height: 224px; border-radius: 50%;
+        background: radial-gradient(circle at 38% 32%, #FFFFFF 0%, #FBF6EC 52%, #E9DECC 100%);
+        border: 2px solid rgba(255,255,255,0.9);
+        box-shadow: 0 10px 22px rgba(0,0,0,0.32), inset 0 3px 8px rgba(255,255,255,0.9),
+          inset 0 -8px 16px rgba(150,120,80,0.25);
+        will-change: transform; z-index: 4;
+        display: flex; align-items: center; justify-content: center;
+      }
+      #knobIcon { width: 110px; height: 110px; color: #9A9088; will-change: color, transform; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="3.4" data-track-index="1" data-layout-allow-overflow>
+
+        <!-- WORDMARK -->
+        <div id="wordmark">
+          <div class="w1">Vacation</div>
+          <div class="w2">Mode</div>
+        </div>
+
+        <!-- TOGGLE -->
+        <div id="toggleGlow"></div>
+        <div id="toggle">
+          <div class="track track-on" id="trackOn"></div>
+          <div class="track track-off" id="trackOff"></div>
+          <div class="track-label" id="lblOff">Off</div>
+          <div class="track-label" id="lblOn">On</div>
+          <div class="knob" id="knob">
+            <svg id="knobIcon" viewBox="0 0 100 100" fill="none">
+              <path d="M50 16 L50 48" stroke="currentColor" stroke-width="9" stroke-linecap="round" />
+              <path d="M31 28 A26 26 0 1 0 69 28" stroke="currentColor" stroke-width="9" stroke-linecap="round" fill="none" />
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        const FLIP = 1.6;
+
+        // ---- wordmark drops in ----
+        tl.from("#wordmark .w1", { y: 54, opacity: 0, duration: 0.6, ease: "power3.out" }, 0.2);
+        tl.from("#wordmark .w2", { y: 44, opacity: 0, duration: 0.55, ease: "back.out(1.5)" }, 0.35);
+
+        // ---- toggle (OFF state) builds ----
+        tl.from("#toggle", { scale: 0.82, opacity: 0, duration: 0.55, ease: "back.out(1.6)", transformOrigin: "50% 50%" }, 0.6);
+        tl.from("#knob", { x: -26, opacity: 0, duration: 0.40, ease: "back.out(1.7)" }, 0.82);
+        tl.from("#lblOff", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0.98);
+
+        // ---- anticipation: knob pulls back left ----
+        tl.to("#knob", { x: -16, duration: 0.14, ease: "power2.in", yoyo: true, repeat: 1 }, FLIP - 0.34);
+
+        // ---- THE FLIP ----
+        tl.to("#knob", { x: 340, duration: 0.52, ease: "back.out(1.5)" }, FLIP);
+        tl.to("#knobIcon", { color: "#F28129", duration: 0.3, ease: "power1.out" }, FLIP + 0.18);
+        tl.to("#trackOn", { opacity: 1, duration: 0.3, ease: "power2.out" }, FLIP + 0.06);
+        tl.to("#trackOff", { opacity: 0, duration: 0.28, ease: "power2.out" }, FLIP + 0.06);
+        tl.to("#toggleGlow", { opacity: 1, duration: 0.4, ease: "power2.out" }, FLIP + 0.05);
+        tl.to("#lblOff", { opacity: 0, duration: 0.2, ease: "power1.out" }, FLIP);
+        tl.fromTo("#lblOn", { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: 0.3, ease: "power2.out" }, FLIP + 0.22);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

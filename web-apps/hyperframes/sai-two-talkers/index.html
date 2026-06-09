@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      svg.stage { position: absolute; inset: 0; overflow: visible; }
+
+      .sil    { fill: #fff; }
+      .ink    { fill: #7A3708; }
+      /* "Money Vs People" treatment: white figures, orange glow + subtle depth shadow */
+      .fg     { filter: drop-shadow(0 0 16px rgba(242,129,41,0.85)) drop-shadow(0 6px 12px rgba(0,0,0,0.35)); }
+      .bubble { fill: #fff; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.28)); }
+      .dot    { fill: #7A3708; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5" data-track-index="1">
+        <svg class="stage" viewBox="0 0 1080 1920">
+
+          <!-- ===== TALKER B (back, slightly smaller) ===== -->
+          <g id="talkBwrap">
+            <g class="fg" transform="translate(520 1130) scale(0.72)">
+              <g id="talkB">
+                <path class="sil" d="M -188 548 Q -188 248 -92 186 Q -46 158 0 156 Q 46 158 92 186 Q 188 248 188 548 Z"/>
+                <circle class="sil" cx="0" cy="0" r="146"/>
+                <circle class="ink" cx="-52" cy="-22" r="15"/>
+                <circle class="ink" cx="52" cy="-22" r="15"/>
+                <ellipse id="mouthB" class="ink" cx="0" cy="60" rx="28" ry="20"/>
+              </g>
+            </g>
+            <g id="bubbleB" transform="translate(360 690) scale(1.25)">
+              <path class="bubble" d="M0 0 h150 a26 26 0 0 1 26 26 v66 a26 26 0 0 1 -26 26 h-44 l-30 36 l2 -36 h-78 a26 26 0 0 1 -26 -26 v-66 a26 26 0 0 1 26 -26 Z"/>
+              <circle class="dot" cx="44" cy="59" r="11"/>
+              <circle class="dot" cx="86" cy="59" r="11"/>
+              <circle class="dot" cx="128" cy="59" r="11"/>
+            </g>
+          </g>
+
+          <!-- ===== TALKER A (front, larger) ===== -->
+          <g id="talkAwrap">
+            <g class="fg" transform="translate(285 1075) scale(0.84)">
+              <g id="talkA">
+                <path class="sil" d="M -188 548 Q -188 248 -92 186 Q -46 158 0 156 Q 46 158 92 186 Q 188 248 188 548 Z"/>
+                <circle class="sil" cx="0" cy="0" r="146"/>
+                <circle class="ink" cx="-52" cy="-22" r="15"/>
+                <circle class="ink" cx="52" cy="-22" r="15"/>
+                <ellipse id="mouthA" class="ink" cx="0" cy="60" rx="32" ry="24"/>
+              </g>
+            </g>
+            <g id="bubbleA" transform="translate(150 800) scale(1.45)">
+              <path class="bubble" d="M0 0 h150 a26 26 0 0 1 26 26 v66 a26 26 0 0 1 -26 26 h-44 l-30 36 l2 -36 h-78 a26 26 0 0 1 -26 -26 v-66 a26 26 0 0 1 26 -26 Z"/>
+              <circle class="dot" cx="44" cy="59" r="11"/>
+              <circle class="dot" cx="86" cy="59" r="11"/>
+              <circle class="dot" cx="128" cy="59" r="11"/>
+            </g>
+          </g>
+
+          <!-- ===== LISTENER (solo, right, neutral) ===== -->
+          <g id="listenWrap">
+            <g class="fg" transform="translate(830 1085) scale(0.84)">
+              <g id="listen">
+                <path class="sil" d="M -188 548 Q -188 248 -92 186 Q -46 158 0 156 Q 46 158 92 186 Q 188 248 188 548 Z"/>
+                <circle class="sil" cx="0" cy="0" r="146"/>
+                <circle class="ink" cx="-52" cy="-22" r="15"/>
+                <circle class="ink" cx="52" cy="-22" r="15"/>
+                <ellipse class="ink" cx="0" cy="62" rx="22" ry="7"/>
+              </g>
+            </g>
+          </g>
+
+        </svg>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 5;
+        const fill = (start, half) => Math.ceil((DUR - start) / half) + 1;
+
+        // entrances
+        tl.from("#listenWrap", { scale: 0.7, opacity: 0, duration: 0.45,
+                  ease: "back.out(1.6)", transformOrigin: "830px 1480px" }, 0.15);
+        tl.from("#talkBwrap", { scale: 0.7, opacity: 0, duration: 0.45,
+                  ease: "back.out(1.6)", transformOrigin: "520px 1480px" }, 0.30);
+        tl.from("#talkAwrap", { scale: 0.7, opacity: 0, duration: 0.45,
+                  ease: "back.out(1.7)", transformOrigin: "285px 1480px" }, 0.42);
+        tl.from("#bubbleB", { scale: 0.3, opacity: 0, duration: 0.34,
+                  ease: "back.out(1.9)", transformOrigin: "50% 100%" }, 0.78);
+        tl.from("#bubbleA", { scale: 0.3, opacity: 0, duration: 0.34,
+                  ease: "back.out(1.9)", transformOrigin: "50% 100%" }, 0.92);
+
+        // continuous mouth talking (seekable loops, offset so they're not in sync)
+        tl.fromTo("#mouthA", { scaleY: 0.22 },
+          { scaleY: 1, duration: 0.16, ease: "sine.inOut", yoyo: true,
+            repeat: fill(1.0, 0.16), transformOrigin: "50% 50%" }, 1.0);
+        tl.fromTo("#mouthB", { scaleY: 0.25 },
+          { scaleY: 1, duration: 0.19, ease: "sine.inOut", yoyo: true,
+            repeat: fill(1.1, 0.19), transformOrigin: "50% 50%" }, 1.1);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
