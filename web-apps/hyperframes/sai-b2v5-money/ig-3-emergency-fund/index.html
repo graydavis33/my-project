@@ -94,13 +94,18 @@
         tl.from("#dashes", { opacity: 0, duration: 0.45, ease: "power1.out" }, 0.6);
         tl.from("#rnum", { scale: 0.5, opacity: 0, duration: 0.45, ease: "back.out(1.6)", transformOrigin: "50% 100%" }, 0.72);
 
-        // plane appears at the bottom of the runway, then taxis up + lifts off
+        // plane appears at the bottom of the runway, then taxis up the runway
         tl.fromTo("#plane", { y: 350, opacity: 0, scale: 0.96 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 0.95);
-        tl.to("#plane", { y: 0, scale: 1, duration: 1.3, ease: "power1.in" }, 1.25);
+        tl.to("#plane", { y: 0, scale: 1, duration: 1.05, ease: "power1.in" }, 1.25);
 
-        // runway number counts 0 -> 6 in lockstep with the plane moving up
-        tl.to(counter, { v: 6, duration: 1.3, ease: "power1.in",
+        // runway number counts 0 -> 6 in lockstep with the plane moving up the runway
+        tl.to(counter, { v: 6, duration: 1.05, ease: "power1.in",
           onUpdate: () => { rnumEl.textContent = Math.round(counter.v); } }, 1.25);
+
+        // then the plane keeps its trajectory, flies off the top of the runway,
+        // and fades out right under the EMERGENCY FUND text
+        tl.to("#plane", { y: -82, duration: 0.62, ease: "power1.in" }, 2.3);
+        tl.to("#plane", { opacity: 0, duration: 0.5, ease: "power1.in" }, 2.48);
 
         window.__timelines["main"] = tl;
       })();
