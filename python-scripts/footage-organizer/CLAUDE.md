@@ -61,7 +61,7 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 
 `RAW_INCOMING` was eliminated 2026-05-01: Gray drops loose footage directly into `01_ORGANIZED/<date>/` instead. Running the organizer categorizes those loose files in place into `01_ORGANIZED/<category>/<date>/`.
 
-**`create-week` now scaffolds across all four W##-bucketed locations** (FOOTAGE_LIBRARY × 17 categories + ACTIVE/DELIVERED/ARCHIVE × 3 formats = 26 folders per week). Run every Monday.
+**`ensure_week` scaffolds across all four W##-bucketed locations** (FOOTAGE_LIBRARY × 17 categories + ACTIVE/DELIVERED/ARCHIVE × 3 formats = 26 folders per week). As of v3 Phase 1 (2026-06-10), `index` and `pull` auto-call `ensure_week(today)` first, so the current week is created automatically — no manual Monday step. `create-week` remains for backfilling a specific past/future week. (`ensure_week` is the shared helper in `cli_index.py`; `create-week` and the lazy auto-call both route through it.)
 
 **Hard rules:**
 - Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
@@ -69,7 +69,7 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - `pull-cleanup` deletes pull folders after publish, restoring the no-duplication invariant
 
 **Weekly workflow:**
-- Every Monday: `python cli_index.py --client sai create-week` creates `<category>/W##_MMM-DD-DD/` under all 17 categories
+- Automatic: any `index` or `pull` run creates this week's `W##_MMM-DD-DD/` folders first (lazy `ensure_week`). No manual Monday step. `create-week --week <date>` backfills other weeks.
 - After editing + publishing a video: `python cli_index.py --client sai pull-cleanup` deletes the pull folder used for that edit
 - Week numbering: W01 = ISO week of Apr 15, 2026 (Sai project Day 1). W01 label uses Apr 15-19 (partial week starting at project day 1)
 

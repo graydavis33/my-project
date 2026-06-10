@@ -40,22 +40,25 @@ The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIEN
 
 Archive subfolders now use the **week label** (`W##_MMM-DD-DD`), not the exact shoot date. Week numbering: W01 = the ISO week containing 2026-04-15 (Sai project Day 1). All archive operations route through `week_utils.week_label_for(date)`.
 
-### Weekly Workflow
+### Weekly Workflow (now automatic — no Monday step)
+
+`index` and `pull` both call `ensure_week(today)` before they run, so the current
+week's folders are auto-created the moment you touch a week. You never run
+`create-week` by hand for the current week anymore.
+
+Each week scaffolds 26 folders:
+- `05_FOOTAGE_LIBRARY/<category>/W##/`  (17 categories)
+- `02_ACTIVE_PROJECTS/<format>/W##/`    (3 formats)
+- `03_DELIVERED/<format>/W##/`          (3 formats)
+- `04_ARCHIVE/<format>/W##/`            (3 formats)
+
+`create-week` remains for backfilling a specific past/future week on demand:
 
 ```bash
-# Every Monday: create this week's W##_MMM-DD-DD folder across:
-#   - 05_FOOTAGE_LIBRARY/<category>/W##/  (17 categories)
-#   - 02_ACTIVE_PROJECTS/<format>/W##/    (3 formats)
-#   - 03_DELIVERED/<format>/W##/          (3 formats)
-#   - 04_ARCHIVE/<format>/W##/            (3 formats)
-# Total: 26 folders per week, scaffolded ready for content
-python cli_index.py --client sai create-week
-
-# Backfill a specific past week
 python cli_index.py --client sai create-week --week 2026-04-13
 ```
 
-Idempotent. Future weeks are not pre-scaffolded — only weeks that have started exist on disk.
+Idempotent. Future weeks are not pre-scaffolded — only weeks that have been touched exist on disk.
 
 ### Pull Lifecycle (no-duplication rule)
 

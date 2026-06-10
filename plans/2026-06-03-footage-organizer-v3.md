@@ -1,7 +1,7 @@
 # Footage Organizer v3 — Plan
 
 **Date:** 2026-06-03
-**Status:** DRAFT — awaiting Gray's approval + 3 open-question answers before any code
+**Status:** IN PROGRESS — **Phase 1 (lazy week creation) shipped 2026-06-10** (`ensure_week` helper; `index`+`pull` auto-create the current week; `create-week` now backfill-only; tests 29/29). Phases 2–4 still awaiting Gray's 3 open-question answers below.
 **Tool:** `python-scripts/footage-organizer/`
 
 ---
@@ -81,7 +81,7 @@ The index stores POSIX-relative paths and already auto-wipes legacy absolute-pat
 
 ## Suggested phasing (each shippable on its own)
 
-1. **Lazy week creation** (Workstream 2 core) — smallest, highest daily relief, no schema change.
+1. ✅ **Lazy week creation** (Workstream 2 core) — DONE 2026-06-10. Smallest, highest daily relief, no schema change.
 2. **Manual categorization + freeform index** (Workstream 3) — unblocks you hand-sorting today.
 3. **Batch command** (Workstream 1) — needs the schema change; do once #1/#2 are proven.
 4. **Stage-transition helpers** (Workstream 2 rest) — after you answer #2.

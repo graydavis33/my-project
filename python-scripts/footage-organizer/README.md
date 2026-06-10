@@ -62,17 +62,19 @@ When you run `--archive DATE`, clips move from `01_ORGANIZED/<category>/<date>/`
 
 Library is category-first then week-second — sorts perfectly chronologically AND tells you which week of the Sai project at a glance.
 
-### Weekly workflow
+### Weekly workflow (now automatic)
+
+`index` and `pull` auto-create the **current** week's folders before they run, so
+you never have to remember to scaffold a week by hand. `create-week` stays as a
+manual backfill for a past or future week.
 
 ```bash
-# Every Monday — scaffold the new week's folders across all 17 categories
-python cli_index.py --client sai create-week
-
-# Backfill a specific week
+# Backfill a specific (past or future) week
 python cli_index.py --client sai create-week --week 2026-04-13
 ```
 
-Idempotent — safe to run twice. Only weeks that have been started exist on disk; future weeks aren't pre-scaffolded.
+Idempotent — safe to run twice. Only weeks that have been touched exist on disk;
+future weeks aren't pre-scaffolded.
 
 ### Hard rule: no permanent duplication
 
