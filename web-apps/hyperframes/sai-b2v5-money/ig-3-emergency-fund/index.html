@@ -10,15 +10,17 @@
         width: 1080px; height: 1920px; overflow: hidden;
         background: transparent; font-family: "Montserrat", system-ui, sans-serif;
       }
-      .scene { position: relative; width: 100%; height: 100%; }
-      .wrap { position: absolute; inset: 0; display: flex; flex-direction: column;
-        align-items: center; justify-content: center; padding: 130px 80px; gap: 52px; }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
 
-      .kicker { font-weight: 900; font-size: 88px; color: #fff; text-transform: uppercase;
+      /* the camera — pan + zoom by transforming this world */
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      .kicker { position: absolute; left: 0; width: 100%; text-align: center; top: 556px;
+        font-weight: 900; font-size: 88px; color: #fff; text-transform: uppercase;
         letter-spacing: -0.015em; text-shadow: 0 5px 14px rgba(0,0,0,0.45); will-change: transform, opacity; }
 
       /* vertical airport runway */
-      .runwaywrap { position: relative; width: 224px; height: 660px; will-change: transform, opacity; }
+      .runwaywrap { position: absolute; left: 428px; top: 648px; width: 224px; height: 660px; will-change: transform, opacity; }
       .tarmac { position: absolute; inset: 0; border-radius: 16px;
         background: linear-gradient(100deg, #38322E 0%, #2A2522 55%, #201C19 100%);
         box-shadow: inset 0 2px 4px rgba(255,255,255,0.08), 0 12px 30px rgba(0,0,0,0.4); }
@@ -42,16 +44,21 @@
       .plane .body { fill: url(#pg); stroke: #fff; stroke-width: 3; }
       .plane .wing { fill: url(#pg); stroke: #fff; stroke-width: 2.5; }
       .plane .glass { fill: rgba(255,245,230,0.92); }
+
+      /* the word that pairs with the runway 6 -> "6 MONTHS" */
+      .months { position: absolute; left: 660px; top: 1198px; opacity: 0;
+        font-weight: 900; font-size: 70px; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.01em; text-shadow: 0 4px 12px rgba(0,0,0,0.45); will-change: transform, opacity; }
     </style>
   </head>
   <body>
-    <div data-hf-id="hf-h6jb" id="root" data-composition-id="main" data-start="0" data-duration="3.6" data-width="1080" data-height="1920">
-      <div data-hf-id="hf-8mm6" id="scene" class="scene clip" data-start="0" data-duration="3.6" data-track-index="1">
-        <div data-hf-id="hf-wnm4" class="wrap">
+    <div data-hf-id="hf-yp4c" id="root" data-composition-id="main" data-start="0" data-duration="4.6" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-ks7r" id="scene" class="scene clip" data-start="0" data-duration="4.6" data-track-index="1">
+        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
 
           <div data-hf-id="hf-vli2" id="kicker" class="kicker">Emergency Fund</div>
 
-          <div data-hf-id="hf-5r0m" id="runway" class="runwaywrap">
+          <div data-hf-id="hf-j5kf" id="runway" class="runwaywrap" data-layout-allow-overflow="">
             <div data-hf-id="hf-9f06" class="tarmac"></div>
             <div data-hf-id="hf-76k3" class="edge l"></div>
             <div data-hf-id="hf-e3xp" class="edge r"></div>
@@ -77,6 +84,8 @@
             </svg>
           </div>
 
+          <div data-hf-id="hf-l89l" id="months" class="months">Months</div>
+
         </div>
       </div>
     </div>
@@ -88,24 +97,28 @@
         const rnumEl = document.getElementById("rnum");
         const counter = { v: 0 };
 
+        // intro
         tl.from("#kicker", { y: -22, opacity: 0, duration: 0.45, ease: "power3.out" }, 0.1);
         tl.from("#runway", { scale: 0.9, opacity: 0, duration: 0.5, ease: "back.out(1.4)", transformOrigin: "50% 50%" }, 0.28);
         tl.from("#keys .key", { scaleY: 0, opacity: 0, duration: 0.32, ease: "back.out(1.7)", stagger: 0.05, transformOrigin: "50% 0%" }, 0.5);
         tl.from("#dashes", { opacity: 0, duration: 0.45, ease: "power1.out" }, 0.6);
         tl.from("#rnum", { scale: 0.5, opacity: 0, duration: 0.45, ease: "back.out(1.6)", transformOrigin: "50% 100%" }, 0.72);
 
-        // plane appears at the bottom of the runway, then taxis up the runway
-        tl.fromTo("#plane", { y: 350, opacity: 0, scale: 0.96 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 0.95);
-        tl.to("#plane", { y: 0, scale: 1, duration: 1.05, ease: "power1.in" }, 1.25);
+        // plane appears at the bottom, then moves at CONSTANT speed up and off the track
+        tl.fromTo("#plane", { y: 350, opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 0.95);
+        tl.to("#plane", { y: -90, duration: 1.7, ease: "none" }, 1.15);
+        // fades out as it leaves the track (no stop)
+        tl.to("#plane", { opacity: 0, duration: 0.45, ease: "power1.in" }, 2.5);
+        // runway number counts 0 -> 6 in lockstep with the plane crossing the runway
+        tl.to(counter, { v: 6, duration: 1.35, ease: "none",
+          onUpdate: () => { rnumEl.textContent = Math.round(counter.v); } }, 1.15);
 
-        // runway number counts 0 -> 6 in lockstep with the plane moving up the runway
-        tl.to(counter, { v: 6, duration: 1.05, ease: "power1.in",
-          onUpdate: () => { rnumEl.textContent = Math.round(counter.v); } }, 1.25);
-
-        // then the plane keeps its trajectory, flies off the top of the runway,
-        // and fades out right under the EMERGENCY FUND text
-        tl.to("#plane", { y: -82, duration: 0.62, ease: "power1.in" }, 2.3);
-        tl.to("#plane", { opacity: 0, duration: 0.5, ease: "power1.in" }, 2.48);
+        // CAMERA: as the plane leaves the track, pan right on the x-axis
+        tl.to("#world", { x: -200, duration: 0.65, ease: "power1.inOut" }, 2.55);
+        // MONTHS fades in on the right (-> reads "6 MONTHS")
+        tl.fromTo("#months", { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 2.75);
+        // CAMERA: zoom in on "6 MONTHS" (centered; EMERGENCY FUND lifts off the top)
+        tl.to("#world", { x: -664, y: -1136, scale: 1.7, duration: 0.95, ease: "power2.inOut" }, 3.2);
 
         window.__timelines["main"] = tl;
       })();
