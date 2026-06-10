@@ -121,6 +121,7 @@ def _sha1_head(filepath: Path, n_bytes: int = 1_048_576) -> str:
 def cmd_index(args):
     client = args.client
     library = _library(client)
+    _autocreate_week(library)
     db_path = _db(client)
     index.init(db_path)
 
@@ -168,6 +169,7 @@ def cmd_index(args):
 def cmd_pull(args):
     client = args.client
     library = _library(client)
+    _autocreate_week(library)
     db_path = _db(client)
     if not db_path.exists():
         print(f"Error: index not built yet. Run: python cli_index.py --client {client} index")
@@ -217,15 +219,17 @@ def cmd_pull(args):
         print(f"  Linked {result.count} clip(s); fallback copies: {result.fallback_copies}\n")
 
 
-def cmd_create_week(args):
-    """Create the current (or specified) week's folder across:
+def ensure_week(library: Path, target: date) -> tuple[int, int]:
+    """Create `target`'s week folders across:
       - 05_FOOTAGE_LIBRARY/<category>/<W##>/   (17 categories)
       - 02_ACTIVE_PROJECTS/<format>/<W##>/      (3 format buckets)
       - 03_DELIVERED/<format>/<W##>/            (3 format buckets)
       - 04_ARCHIVE/<format>/<W##>/              (3 format buckets)
-    Idempotent — folders that already exist are skipped."""
-    library = _library(args.client)
-    target = date.fromisoformat(args.week) if args.week else date.today()
+    Idempotent — folders that already exist are skipped. Returns (created, skipped).
+
+    Single source of truth for both the manual `create-week` command and the
+    lazy auto-creation that every command runs first, so Gray never has to
+    remember to scaffold a week by hand."""
     label = week_label_for(target)
 
     targets = []
@@ -245,6 +249,26 @@ def cmd_create_week(args):
             continue
         path.mkdir(parents=True)
         created += 1
+    return created, skipped
+
+
+def _autocreate_week(library: Path) -> None:
+    """Lazy week creation — every command calls this first so the current
+    week's folders always exist. Quiet unless it actually creates something."""
+    created, _ = ensure_week(library, date.today())
+    if created:
+        print(f"  + Lazy-created {created} folder(s) for week {current_week_label()}")
+
+
+def cmd_create_week(args):
+    """Create the current (or specified) week's folders. Manual backfill — every
+    other command auto-scaffolds the current week via ensure_week, so this is
+    only needed to pre-create a past or future week on demand."""
+    library = _library(args.client)
+    target = date.fromisoformat(args.week) if args.week else date.today()
+    label = week_label_for(target)
+
+    created, skipped = ensure_week(library, target)
 
     print(f"\n  Week {label} ({args.client.upper()})")
     print(f"  Created {created} folder(s), skipped {skipped} existing")
