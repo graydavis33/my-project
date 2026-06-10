@@ -1,5 +1,11 @@
 # Sai Batch 2 Vid 5 — How I Manage My Money — Graphics Package
 
+> ⭐ **FLAGSHIP REFERENCE: `ig-3-emergency-fund/` (the airplane runway).** Gray starred this
+> as one of our most important + advanced animations — the benchmark for the cinematic,
+> engaging "AE-3D" motion-graphics style we want to keep making (camera pan+zoom synced with
+> no overshoot, object moving through space). Use it as the bar for future infographics.
+> See memory `feedback_prefers_3d_motion_graphics.md`.
+
 Source: **C2574** ("How I manage my money", Vid 5). Same locked Sai HyperFrames brand
 style as Vid 9 (`sai-b2v9-mentors/`), Vid 7, Vid 4.
 
