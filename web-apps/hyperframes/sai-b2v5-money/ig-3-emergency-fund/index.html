@@ -115,11 +115,9 @@
 
         // MONTHS fades in on the right (-> reads "6 MONTHS")
         tl.fromTo("#months", { opacity: 0, x: 32 }, { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" }, 2.8);
-        // CAMERA: the X pan and the Y+Z zoom are two separately-eased moves that OVERLAP and
-        // finish together — the pan leads, the zoom eases in mid-pan, both power2.inOut so it
-        // glides (no waypoint kink). Same smooth feel as the first version, just blended.
-        tl.to("#world", { x: -664, duration: 1.9, ease: "power2.inOut" }, 2.6);
-        tl.to("#world", { y: -1136, scale: 1.7, duration: 1.4, ease: "power2.inOut" }, 3.1);
+        // CAMERA: pan (X) and zoom (Y + Z) move TOGETHER in one synced ease, so "6 MONTHS"
+        // glides straight to center — no x overshoot / swing past and come back.
+        tl.to("#world", { x: -664, y: -1136, scale: 1.7, duration: 1.8, ease: "power2.inOut" }, 2.7);
 
         window.__timelines["main"] = tl;
       })();
