@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      .wrap { position: absolute; inset: 0; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; padding: 170px 90px; gap: 56px; }
+
+      .glass {
+        background:
+          radial-gradient(ellipse 100% 55% at 50% 0%,
+            rgba(255,220,180,0.55) 0%, rgba(255,200,150,0.20) 35%, rgba(255,180,120,0) 65%),
+          linear-gradient(180deg, rgba(255,168,88,1) 0%, rgba(242,129,41,1) 38%, rgba(214,100,22,1) 100%);
+        border: 2px solid #fff;
+        box-shadow: inset 0 2px 0 rgba(255,240,215,0.55), inset 0 -3px 10px rgba(140,55,8,0.45),
+          0 0 22px rgba(242,129,41,0.5), 0 8px 22px rgba(0,0,0,0.3); }
+
+      .header { display: flex; align-items: center; gap: 26px; }
+      .shield { width: 96px; height: 96px; will-change: transform, opacity;
+        filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35)); }
+      .shield .body { fill: url(#shg); stroke: #fff; stroke-width: 3; }
+      .shield .check { fill: none; stroke: #fff; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+      .kicker { font-weight: 900; font-size: 56px; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.01em; text-shadow: 0 4px 12px rgba(0,0,0,0.45); }
+
+      .tiles { display: flex; gap: 20px; }
+      .tile { width: 116px; height: 116px; border-radius: 26px; will-change: transform, opacity;
+        display: flex; align-items: center; justify-content: center; }
+      .tile .sym { font-weight: 900; font-size: 50px; color: #fff; text-shadow: 0 3px 8px rgba(0,0,0,0.4); }
+
+      .runway { display: flex; align-items: baseline; gap: 22px; }
+      .six { font-weight: 900; font-size: 168px; line-height: 0.9; color: #F7A455;
+        letter-spacing: -0.02em; text-shadow: 0 5px 16px rgba(0,0,0,0.45); will-change: transform, opacity;
+        font-variant-numeric: tabular-nums; }
+      .months { font-weight: 900; font-size: 64px; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.01em; text-shadow: 0 4px 12px rgba(0,0,0,0.45); will-change: transform, opacity; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-int5" id="root" data-composition-id="main" data-start="0" data-duration="3.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-wxgc" id="scene" class="scene clip" data-start="0" data-duration="3.4" data-track-index="1">
+        <div data-hf-id="hf-wnm4" class="wrap">
+
+          <div data-hf-id="hf-4y7z" class="header">
+            <svg data-hf-id="hf-aba2" class="shield" id="shield" viewBox="0 0 100 100">
+              <defs data-hf-id="hf-mh0t">
+                <lineargradient data-hf-id="hf-pmzw" id="shg" x1="0" y1="0" x2="0" y2="1">
+                  <stop data-hf-id="hf-g7d4" offset="0" stop-color="#FFA858" /><stop data-hf-id="hf-831v" offset="0.5" stop-color="#F28129" />
+                  <stop data-hf-id="hf-lnxy" offset="1" stop-color="#D66416" />
+                </lineargradient>
+              </defs>
+              <path data-hf-id="hf-w8qh" class="body" d="M50 6 L88 20 V52 C88 78 50 96 50 96 C50 96 12 78 12 52 V20 Z" />
+              <path data-hf-id="hf-fxa2" class="check" d="M34 50 L46 63 L68 38" />
+            </svg>
+            <div data-hf-id="hf-vli2" id="kicker" class="kicker">Emergency Fund</div>
+          </div>
+
+          <div data-hf-id="hf-0xyc" class="tiles" id="tiles">
+            <div data-hf-id="hf-ydy0" class="tile glass"><div data-hf-id="hf-niaz" class="sym">$</div></div>
+            <div data-hf-id="hf-wltc" class="tile glass"><div data-hf-id="hf-uiq3" class="sym">$</div></div>
+            <div data-hf-id="hf-vew9" class="tile glass"><div data-hf-id="hf-u4f2" class="sym">$</div></div>
+            <div data-hf-id="hf-vt7a" class="tile glass"><div data-hf-id="hf-tq41" class="sym">$</div></div>
+            <div data-hf-id="hf-uma7" class="tile glass"><div data-hf-id="hf-tbt0" class="sym">$</div></div>
+            <div data-hf-id="hf-v0l8" class="tile glass"><div data-hf-id="hf-sxhz" class="sym">$</div></div>
+          </div>
+
+          <div data-hf-id="hf-k7p8" class="runway">
+            <div data-hf-id="hf-myco" id="six" class="six">6</div>
+            <div data-hf-id="hf-m9nv" id="months" class="months">Months Runway</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.from("#shield", { scale: 0, opacity: 0, duration: 0.5, ease: "back.out(1.7)", transformOrigin: "50% 50%" }, 0.12);
+        tl.from("#kicker", { x: -26, opacity: 0, duration: 0.45, ease: "power3.out" }, 0.3);
+        // 6 months of cash fill in, one per month
+        tl.from("#tiles .tile", { y: 26, scale: 0.5, opacity: 0, duration: 0.4, ease: "back.out(1.7)", stagger: 0.13, transformOrigin: "50% 100%" }, 0.6);
+        tl.from("#six", { scale: 0.5, opacity: 0, duration: 0.5, ease: "back.out(1.6)", transformOrigin: "50% 100%" }, 1.55);
+        tl.from("#months", { x: -24, opacity: 0, duration: 0.45, ease: "power2.out" }, 1.78);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

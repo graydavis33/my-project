@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      .wrap { position: absolute; inset: 0; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; padding: 150px 90px; gap: 60px; }
+
+      .donutwrap { position: relative; width: 470px; height: 470px; }
+      .donut { width: 470px; height: 470px;
+        filter: drop-shadow(0 8px 18px rgba(0,0,0,0.32)); }
+      .arc { fill: none; stroke-width: 54; stroke-linecap: butt; }
+      .centerd { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+        font-weight: 900; font-size: 132px; color: #fff; letter-spacing: -0.02em;
+        text-shadow: 0 5px 16px rgba(0,0,0,0.45); will-change: transform, opacity; }
+
+      .legend { display: flex; flex-direction: column; gap: 26px; width: 700px; }
+      .legrow { display: flex; align-items: center; gap: 24px; will-change: transform, opacity; }
+      .dot { width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+      .lbl { font-weight: 800; font-size: 40px; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.01em; text-shadow: 0 3px 10px rgba(0,0,0,0.45); flex-grow: 1; }
+      .pct { font-weight: 900; font-size: 60px; color: #fff; letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums; text-shadow: 0 4px 12px rgba(0,0,0,0.45); }
+
+      .c-cash   { color: #F2B66A; } .bg-cash   { background: #F2B66A; }
+      .c-index  { color: #F28129; } .bg-index  { background: #F28129; }
+      .c-stock  { color: #C8631A; } .bg-stock  { background: #C8631A; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-int5" id="root" data-composition-id="main" data-start="0" data-duration="3.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-wxgc" id="scene" class="scene clip" data-start="0" data-duration="3.4" data-track-index="1">
+        <div data-hf-id="hf-wnm4" class="wrap">
+
+          <div data-hf-id="hf-c5ps" class="donutwrap">
+            <svg data-hf-id="hf-rupq" class="donut" viewBox="0 0 400 400">
+              <g data-hf-id="hf-5912" transform="rotate(-90 200 200)">
+                <circle data-hf-id="hf-4rpw" id="arc1" class="arc bg" cx="200" cy="200" r="160" stroke="#F2B66A" style="stroke-dasharray: 301.6 1005.3; stroke-dashoffset: 301.6;" />
+              </g>
+              <g data-hf-id="hf-egqf" transform="rotate(18 200 200)">
+                <circle data-hf-id="hf-o8i3" id="arc2" class="arc" cx="200" cy="200" r="160" stroke="#F28129" style="stroke-dasharray: 402.1 1005.3; stroke-dashoffset: 402.1;" />
+              </g>
+              <g data-hf-id="hf-t7rv" transform="rotate(162 200 200)">
+                <circle data-hf-id="hf-gztm" id="arc3" class="arc" cx="200" cy="200" r="160" stroke="#C8631A" style="stroke-dasharray: 301.6 1005.3; stroke-dashoffset: 301.6;" />
+              </g>
+            </svg>
+            <div data-hf-id="hf-lsar" id="dollar" class="centerd">$</div>
+          </div>
+
+          <div data-hf-id="hf-ovnn" class="legend">
+            <div data-hf-id="hf-oxan" id="row1" class="legrow">
+              <div data-hf-id="hf-kl8y" class="dot bg-cash"></div>
+              <div data-hf-id="hf-f2gp" class="lbl">Cash</div>
+              <div data-hf-id="hf-8vb4" class="pct c-cash">30%</div>
+            </div>
+            <div data-hf-id="hf-g9es" id="row2" class="legrow">
+              <div data-hf-id="hf-v2ml" class="dot bg-index"></div>
+              <div data-hf-id="hf-cxn0" class="lbl">Indexes + Treasuries</div>
+              <div data-hf-id="hf-y4dc" class="pct c-index">40%</div>
+            </div>
+            <div data-hf-id="hf-h12l" id="row3" class="legrow">
+              <div data-hf-id="hf-s40j" class="dot bg-stock"></div>
+              <div data-hf-id="hf-u7yg" class="lbl">Long-Term Stocks</div>
+              <div data-hf-id="hf-nkmr" class="pct c-stock">30%</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.from("#dollar", { scale: 0, opacity: 0, duration: 0.5, ease: "back.out(1.7)", transformOrigin: "50% 50%" }, 0.15);
+
+        // arcs draw in sequence; each legend row pops as its arc lands
+        tl.to("#arc1", { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" }, 0.35);
+        tl.from("#row1", { x: -28, opacity: 0, duration: 0.42, ease: "power3.out" }, 0.6);
+
+        tl.to("#arc2", { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" }, 0.95);
+        tl.from("#row2", { x: -28, opacity: 0, duration: 0.42, ease: "power3.out" }, 1.25);
+
+        tl.to("#arc3", { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" }, 1.6);
+        tl.from("#row3", { x: -28, opacity: 0, duration: 0.42, ease: "power3.out" }, 1.85);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      .wrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+        gap: 90px; padding: 200px 110px; }
+
+      .tubecol { position: relative; width: 188px; height: 600px; }
+      /* draining money tube */
+      .tube { position: absolute; inset: 0; border-radius: 56px;
+        border: 4px solid #fff; overflow: hidden;
+        background: rgba(230,57,70,0.16);
+        box-shadow: 0 0 22px rgba(242,129,41,0.3), 0 10px 26px rgba(0,0,0,0.3); }
+      .fill { position: absolute; left: 0; bottom: 0; width: 100%; height: 100%;
+        transform-origin: 50% 100%; will-change: transform;
+        background: linear-gradient(180deg, #FFA858 0%, #F28129 45%, #D66416 100%);
+        box-shadow: inset 0 3px 0 rgba(255,240,215,0.5); }
+      .lost$ { position: absolute; font-weight: 900; color: #E63946; will-change: transform, opacity;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.3); }
+
+      .info { display: flex; flex-direction: column; align-items: flex-start; }
+      .big90 { font-weight: 900; font-size: 230px; line-height: 0.9; color: #E63946;
+        letter-spacing: -0.03em; text-shadow: 0 6px 18px rgba(0,0,0,0.4); will-change: transform, opacity;
+        font-variant-numeric: tabular-nums; }
+      .gone { font-weight: 900; font-size: 70px; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.01em; text-shadow: 0 4px 12px rgba(0,0,0,0.45); margin-top: 6px;
+        will-change: transform, opacity; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-int5" id="root" data-composition-id="main" data-start="0" data-duration="3.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-wxgc" id="scene" class="scene clip" data-start="0" data-duration="3.4" data-track-index="1">
+        <div data-hf-id="hf-wnm4" class="wrap">
+
+          <div data-hf-id="hf-a7xd" class="tubecol" data-layout-allow-overflow="">
+            <div data-hf-id="hf-gc1m" id="tube" class="tube">
+              <div data-hf-id="hf-thd6" id="fill" class="fill"></div>
+            </div>
+            <div data-hf-id="hf-vosl" id="ls1" class="lost$" style="left:50px; top:70px; font-size:54px;">$</div>
+            <div data-hf-id="hf-p6mf" id="ls2" class="lost$" style="left:96px; top:160px; font-size:40px;">$</div>
+            <div data-hf-id="hf-vswb" id="ls3" class="lost$" style="left:40px; top:250px; font-size:46px;">$</div>
+          </div>
+
+          <div data-hf-id="hf-46jo" class="info">
+            <div data-hf-id="hf-lpb8" id="big90" class="big90">90%</div>
+            <div data-hf-id="hf-457j" id="gone" class="gone">Gone by 18</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.from("#tube", { scale: 0.85, opacity: 0, duration: 0.5, ease: "back.out(1.4)", transformOrigin: "50% 100%" }, 0.15);
+        // the money drains away — fill drops from full to 10%
+        tl.to("#fill", { scaleY: 0.1, duration: 0.95, ease: "power2.in" }, 0.6);
+        // dollars float up and out as it drains
+        tl.fromTo("#ls1", { opacity: 0, y: 0 }, { opacity: 1, y: -70, duration: 0.7, ease: "power1.out" }, 0.7);
+        tl.to("#ls1", { opacity: 0, y: -150, duration: 0.5, ease: "power1.in" }, 1.4);
+        tl.fromTo("#ls2", { opacity: 0, y: 0 }, { opacity: 1, y: -80, duration: 0.7, ease: "power1.out" }, 0.95);
+        tl.to("#ls2", { opacity: 0, y: -160, duration: 0.5, ease: "power1.in" }, 1.65);
+        tl.fromTo("#ls3", { opacity: 0, y: 0 }, { opacity: 1, y: -75, duration: 0.7, ease: "power1.out" }, 1.2);
+        tl.to("#ls3", { opacity: 0, y: -150, duration: 0.5, ease: "power1.in" }, 1.9);
+        // the number lands
+        tl.from("#big90", { scale: 0.6, opacity: 0, duration: 0.55, ease: "back.out(1.6)", transformOrigin: "0% 50%" }, 1.15);
+        tl.from("#gone", { y: 24, opacity: 0, duration: 0.45, ease: "power3.out" }, 1.55);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
