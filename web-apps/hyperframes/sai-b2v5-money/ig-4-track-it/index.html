@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      .wrap { position: absolute; inset: 0; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; padding: 175px 100px; gap: 54px; }
+
+      .chart { position: relative; width: 580px; height: 430px; }
+      .axis { position: absolute; left: 0; bottom: 0; width: 100%; height: 5px; border-radius: 999px;
+        background: rgba(255,255,255,0.3); }
+      .bar { position: absolute; bottom: 5px; width: 80px; border-radius: 16px 16px 0 0;
+        transform-origin: 50% 100%; will-change: transform;
+        background: linear-gradient(180deg, #FFA858 0%, #F28129 50%, #D66416 100%);
+        border: 2px solid #fff; border-bottom: none;
+        box-shadow: inset 0 2px 0 rgba(255,240,215,0.5), 0 0 16px rgba(242,129,41,0.4); }
+      .chk { position: absolute; width: 40px; height: 40px; border-radius: 50%; background: #fff;
+        display: flex; align-items: center; justify-content: center; will-change: transform, opacity;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.3); }
+      .chk svg { width: 24px; height: 24px; }
+      .chk path { fill: none; stroke: #E0741F; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+
+      .magnify { position: absolute; width: 150px; height: 150px; right: 20px; top: 20px;
+        will-change: transform, opacity; filter: drop-shadow(0 6px 14px rgba(0,0,0,0.3)); }
+      .magnify .ring { fill: rgba(255,255,255,0.12); stroke: #fff; stroke-width: 9; }
+      .magnify .handle { stroke: #fff; stroke-width: 13; stroke-linecap: round; }
+
+      .track { font-weight: 900; font-size: 116px; line-height: 0.92; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.02em; text-shadow: 0 5px 16px rgba(0,0,0,0.45); will-change: transform, opacity; }
+      .cadence { font-weight: 800; font-size: 40px; color: #F7A455; text-transform: uppercase;
+        letter-spacing: 0.04em; text-shadow: 0 3px 10px rgba(0,0,0,0.4); will-change: transform, opacity; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-h6jb" id="root" data-composition-id="main" data-start="0" data-duration="3.6" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-8mm6" id="scene" class="scene clip" data-start="0" data-duration="3.6" data-track-index="1">
+        <div data-hf-id="hf-wnm4" class="wrap">
+
+          <div data-hf-id="hf-70cy" class="chart" id="chart">
+            <div data-hf-id="hf-2hmb" class="axis"></div>
+            <!-- 5 ascending bars -->
+            <div data-hf-id="hf-k2bk" class="bar b" style="left:18px;  height:110px;"></div>
+            <div data-hf-id="hf-sg5y" class="bar b" style="left:128px; height:170px;"></div>
+            <div data-hf-id="hf-qk0g" class="bar b" style="left:238px; height:235px;"></div>
+            <div data-hf-id="hf-25nn" class="bar b" style="left:348px; height:300px;"></div>
+            <div data-hf-id="hf-hvli" class="bar b" style="left:458px; height:365px;"></div>
+            <!-- check dots on each bar top -->
+            <div data-hf-id="hf-2s3a" class="chk k" style="left:38px;  top:295px;"><svg data-hf-id="hf-y9f5" viewBox="0 0 24 24"><path data-hf-id="hf-5a2a" d="M6 13 L10 17 L18 7" /></svg></div>
+            <div data-hf-id="hf-s7kc" class="chk k" style="left:148px; top:235px;"><svg data-hf-id="hf-svtx" viewBox="0 0 24 24"><path data-hf-id="hf-xomu" d="M6 13 L10 17 L18 7" /></svg></div>
+            <div data-hf-id="hf-ykla" class="chk k" style="left:258px; top:170px;"><svg data-hf-id="hf-u2r0" viewBox="0 0 24 24"><path data-hf-id="hf-y2xv" d="M6 13 L10 17 L18 7" /></svg></div>
+            <div data-hf-id="hf-cimu" class="chk k" style="left:368px; top:105px;"><svg data-hf-id="hf-tofz" viewBox="0 0 24 24"><path data-hf-id="hf-yh8w" d="M6 13 L10 17 L18 7" /></svg></div>
+            <div data-hf-id="hf-38k8" class="chk k" style="left:478px; top:40px;"><svg data-hf-id="hf-uvd2" viewBox="0 0 24 24"><path data-hf-id="hf-vp3p" d="M6 13 L10 17 L18 7" /></svg></div>
+            <!-- magnifier -->
+            <svg data-hf-id="hf-amns" class="magnify" id="magnify" viewBox="0 0 150 150">
+              <circle data-hf-id="hf-lhud" class="ring" cx="62" cy="62" r="46" />
+              <line data-hf-id="hf-99sl" class="handle" x1="96" y1="96" x2="132" y2="132" />
+            </svg>
+          </div>
+
+          <div data-hf-id="hf-pyto" id="track" class="track">Track It</div>
+          <div data-hf-id="hf-7uvl" id="cadence" class="cadence">Weekly · Monthly Review</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // bars grow up in sequence, each with its tracked check
+        tl.from("#chart .b", { scaleY: 0, opacity: 0, duration: 0.42, ease: "back.out(1.4)", stagger: 0.14, transformOrigin: "50% 100%" }, 0.2);
+        tl.from("#chart .k", { scale: 0, opacity: 0, duration: 0.32, ease: "back.out(2)", stagger: 0.14, transformOrigin: "50% 50%" }, 0.42);
+        // magnifier inspects the trend
+        tl.from("#magnify", { scale: 0.4, opacity: 0, duration: 0.5, ease: "back.out(1.6)", transformOrigin: "50% 50%" }, 1.1);
+        tl.from("#track", { y: 28, scale: 0.85, opacity: 0, duration: 0.5, ease: "back.out(1.5)" }, 1.4);
+        tl.from("#cadence", { y: 18, opacity: 0, duration: 0.42, ease: "power2.out" }, 1.7);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
