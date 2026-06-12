@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-11T14:35:48Z",
+  "generated_at": "2026-06-12T14:11:09Z",
   "month": "2026-06",
   "expenses": [
     {
@@ -14,7 +14,7 @@
       "date": "2026-06-07",
       "vendor": "Epidemic Sound",
       "amount": 17.99,
-      "category": "Software & Tools"
+      "category": "Streaming"
     },
     {
       "email_id": "19e8e6556f81e75c",
