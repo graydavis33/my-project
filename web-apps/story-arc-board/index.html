@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Story-Arc Board · Sai Long-form</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">Story-Arc Board <span>· long-form</span></div>
+  <div class="board-controls">
+    <input id="boardName" placeholder="Board name (e.g. W09 recruiting-creators)" />
+    <button id="saveBtn" class="primary">Save</button>
+    <select id="loadSelect"><option value="">Load board…</option></select>
+  </div>
+</header>
+
+<!-- LOCK-FIRST PANEL: the one story + title + thumbnail, decided BEFORE the A-roll -->
+<section class="spine">
+  <div class="spine-field">
+    <label>① The ONE story <small>(the single spine — everything builds off this)</small></label>
+    <input id="spineStory" placeholder="e.g. Recruiting creators" />
+  </div>
+  <div class="spine-field">
+    <label>② Title <small>(lock before filming the A-roll)</small></label>
+    <input id="spineTitle" placeholder="Working title…" />
+  </div>
+  <div class="spine-field thumb">
+    <label>③ Thumbnail <small>(click a clip's ★ to set)</small></label>
+    <div id="thumbSlot" class="thumb-slot">no thumbnail yet</div>
+  </div>
+</section>
+
+<div class="loader">
+  <input id="folderPath" placeholder="Paste the week's footage folder, e.g. D:\Sai\01_ORGANIZED\Longform Pod" />
+  <label class="rec"><input type="checkbox" id="recursive"> include subfolders</label>
+  <button id="loadFolder" class="primary">Load clips</button>
+  <span id="scanStatus" class="status"></span>
+</div>
+
+<main class="workspace">
+  <aside class="pool">
+    <div class="lane-head">
+      <h3>Unplaced clips</h3>
+      <button id="addNote" title="Add a text plot-point card">+ note</button>
+    </div>
+    <div id="poolCards" class="cards droptarget" data-lane="pool"></div>
+  </aside>
+
+  <section id="arc" class="arc">
+    <!-- lanes injected by app.js -->
+  </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>
