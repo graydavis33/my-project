@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      /* camera + group */
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+      .doc { position: absolute; inset: 0; will-change: transform; }
+
+      /* stack contact shadow */
+      .stackshadow { position: absolute; left: 230px; top: 1346px; width: 620px; height: 64px;
+        border-radius: 50%; opacity: 0; z-index: 0; will-change: opacity;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 70%); }
+
+      /* paper sheets */
+      .sheet { position: absolute; width: 560px; height: 740px; border-radius: 14px;
+        background: #FCFCFD; border: 1px solid #E3E7EC; filter: blur(0px);
+        box-shadow: 0 20px 44px rgba(0,0,0,0.30), 0 5px 14px rgba(0,0,0,0.18);
+        will-change: transform, filter; }
+      .contract { overflow: hidden; }
+
+      .letterhead { position: absolute; left: 0; top: 0; width: 100%; height: 98px;
+        display: flex; align-items: center; justify-content: center;
+        background: radial-gradient(120% 160% at 50% 0%, #FFC68A 0%, #F28129 56%, #D66416 100%);
+        box-shadow: inset 0 -3px 10px rgba(0,0,0,0.18); }
+      .letterhead span { font-weight: 900; font-size: 50px; color: #fff; letter-spacing: 2px;
+        text-transform: uppercase; text-shadow: 0 3px 8px rgba(0,0,0,0.30); }
+
+      .tline { position: absolute; left: 48px; height: 18px; border-radius: 9px; background: #D7DCE3; }
+      .sigline { position: absolute; left: 56px; top: 602px; width: 360px; height: 5px;
+        border-radius: 3px; background: #A7AEB9; }
+
+      .signature { position: absolute; left: 300px; top: 1140px; width: 340px; height: 100px; z-index: 6; }
+      .signature path { fill: none; stroke: #22304F; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+
+      .pen { position: absolute; left: 248px; top: 1082px; width: 150px; height: 150px; z-index: 9;
+        opacity: 0; will-change: transform, opacity;
+        filter: drop-shadow(0 6px 10px rgba(0,0,0,0.32)); }
+
+      .seal { position: absolute; left: 610px; top: 1148px; width: 180px; height: 180px; border-radius: 50%;
+        z-index: 8; border: 4px solid #fff; opacity: 0; will-change: transform, opacity;
+        background: radial-gradient(130% 130% at 50% 28%, #FFD4A6 0%, #F28129 52%, #C8631A 100%);
+        box-shadow: 0 0 38px rgba(242,129,41,0.6), 0 12px 26px rgba(0,0,0,0.36), inset 0 3px 10px rgba(255,255,255,0.5); }
+      .seal path { fill: none; stroke: #fff; stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; }
+
+      .ring { position: absolute; left: 610px; top: 1148px; width: 180px; height: 180px; border-radius: 50%;
+        border: 5px solid rgba(242,129,41,0.75); opacity: 0; z-index: 7; will-change: transform, opacity; }
+      .flash { position: absolute; left: 560px; top: 1098px; width: 280px; height: 280px; border-radius: 50%;
+        opacity: 0; z-index: 7; pointer-events: none;
+        background: radial-gradient(circle, rgba(255,243,224,0.95) 0%, rgba(242,129,41,0.4) 42%, rgba(242,129,41,0) 72%); }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-root" id="root" data-composition-id="main" data-start="0" data-duration="5.5" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-scene" id="scene" class="scene clip" data-start="0" data-duration="5.5" data-track-index="1">
+        <div data-hf-id="hf-world" id="world" class="world" data-layout-allow-overflow="">
+          <div data-hf-id="hf-doc" id="doc" class="doc" data-layout-allow-overflow="">
+
+            <div data-hf-id="hf-sshadow" id="stackshadow" class="stackshadow"></div>
+
+            <!-- under sheets (peek out behind the contract) -->
+            <div data-hf-id="hf-s5" id="s5" class="sheet" style="left:244px; top:632px; z-index:1;"></div>
+            <div data-hf-id="hf-s4" id="s4" class="sheet" style="left:274px; top:626px; z-index:2;"></div>
+            <div data-hf-id="hf-s3" id="s3" class="sheet" style="left:252px; top:622px; z-index:3;"></div>
+            <div data-hf-id="hf-s2" id="s2" class="sheet" style="left:266px; top:620px; z-index:4;"></div>
+
+            <!-- the contract (top sheet) -->
+            <div data-hf-id="hf-contract" id="contract" class="sheet contract" style="left:260px; top:620px; z-index:5;">
+              <div data-hf-id="hf-lh" class="letterhead"><span data-hf-id="hf-lhs">Fortune 500</span></div>
+              <div data-hf-id="hf-l1" class="tline" style="top:144px; width:300px;"></div>
+              <div data-hf-id="hf-l2" class="tline" style="top:190px; width:432px;"></div>
+              <div data-hf-id="hf-l3" class="tline" style="top:236px; width:360px;"></div>
+              <div data-hf-id="hf-l4" class="tline" style="top:282px; width:410px;"></div>
+              <div data-hf-id="hf-l5" class="tline" style="top:328px; width:248px;"></div>
+              <div data-hf-id="hf-l6" class="tline" style="top:420px; width:386px;"></div>
+              <div data-hf-id="hf-l7" class="tline" style="top:466px; width:300px;"></div>
+              <div data-hf-id="hf-sl" class="sigline"></div>
+            </div>
+
+            <!-- signature drawn on the line -->
+            <svg data-hf-id="hf-sigsvg" class="signature" viewBox="0 0 340 100">
+              <path data-hf-id="hf-sig" id="sig" d="M8,72 C26,18 44,86 66,46 C82,16 96,80 116,50 C134,24 150,84 176,46 C198,16 220,80 244,50 C266,26 286,60 300,30 C308,14 322,30 332,52" />
+            </svg>
+
+            <!-- pen -->
+            <svg data-hf-id="hf-pensvg" id="pen" class="pen" viewBox="0 0 150 150">
+              <g data-hf-id="hf-peng" transform="rotate(40 75 75)">
+                <rect data-hf-id="hf-pb" x="66" y="14" width="18" height="98" rx="8" fill="#2B313C" />
+                <rect data-hf-id="hf-pc" x="66" y="14" width="18" height="26" rx="8" fill="#F28129" />
+                <rect data-hf-id="hf-pcb" x="66" y="40" width="18" height="7" fill="#C8631A" />
+                <polygon data-hf-id="hf-pcone" points="66,112 84,112 75,140" fill="#C9CDD6" />
+                <polygon data-hf-id="hf-pnib" points="72,131 78,131 75,144" fill="#22304F" />
+              </g>
+            </svg>
+
+            <!-- approval seal -->
+            <div data-hf-id="hf-flash" id="flash" class="flash"></div>
+            <div data-hf-id="hf-ring1" id="ring1" class="ring"></div>
+            <div data-hf-id="hf-ring2" id="ring2" class="ring"></div>
+            <div data-hf-id="hf-seal" id="seal" class="seal">
+              <svg data-hf-id="hf-sealsvg" viewBox="0 0 180 180" style="width:100%;height:100%;">
+                <path data-hf-id="hf-check" d="M50,96 L80,128 L138,58" />
+              </svg>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // signature starts undrawn (exact path length)
+        const sig = document.getElementById("sig");
+        const L = sig.getTotalLength();
+        gsap.set(sig, { strokeDasharray: L, strokeDashoffset: L });
+
+        // FALL — papers drop from above and stack (motion blur clears on land)
+        tl.fromTo("#s5", { y: -1150, rotation: -26, filter: "blur(12px)" }, { y: 0, rotation: -4, filter: "blur(0px)", duration: 0.72, ease: "power3.out" }, 0.12);
+        tl.fromTo("#s4", { y: -1150, rotation: 30, filter: "blur(12px)" }, { y: 0, rotation: 3, filter: "blur(0px)", duration: 0.72, ease: "power3.out" }, 0.36);
+        tl.fromTo("#s3", { y: -1150, rotation: -20, filter: "blur(12px)" }, { y: 0, rotation: -2, filter: "blur(0px)", duration: 0.72, ease: "power3.out" }, 0.60);
+        tl.fromTo("#s2", { y: -1150, rotation: 22, filter: "blur(12px)" }, { y: 0, rotation: 2, filter: "blur(0px)", duration: 0.72, ease: "power3.out" }, 0.84);
+        tl.fromTo("#contract", { y: -1200, rotation: -12, filter: "blur(12px)" }, { y: 0, rotation: 0, filter: "blur(0px)", duration: 0.78, ease: "power3.out" }, 1.10);
+
+        // contact shadow firms up as the stack forms
+        tl.to("#stackshadow", { opacity: 1, duration: 0.7, ease: "power2.out" }, 0.9);
+
+        // SIGN — pen swoops in, signature draws as the pen tracks across
+        tl.fromTo("#pen", { x: 300, y: -150, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 2.0);
+        tl.to("#sig", { strokeDashoffset: 0, duration: 0.85, ease: "power1.inOut" }, 2.45);
+        tl.to("#pen", { x: 300, duration: 0.85, ease: "power1.inOut" }, 2.45);
+        tl.to("#pen", { y: -90, opacity: 0, duration: 0.3, ease: "power2.in" }, 3.35);
+
+        // SEAL — approval stamp slams down: flash, rings, paper jolt
+        tl.fromTo("#seal", { scale: 2.3, opacity: 0, rotation: -34 },
+          { scale: 1, opacity: 1, rotation: -8, duration: 0.4, ease: "back.out(2)", transformOrigin: "50% 50%", immediateRender: false }, 3.5);
+        tl.to("#flash", { opacity: 0.9, duration: 0.12, ease: "power1.out" }, 3.56);
+        tl.to("#flash", { opacity: 0, duration: 0.42, ease: "power1.in" }, 3.68);
+        tl.fromTo("#ring1", { scale: 0.5, opacity: 0.8 }, { scale: 1.7, opacity: 0, duration: 0.8, ease: "power1.out", transformOrigin: "50% 50%", immediateRender: false }, 3.58);
+        tl.fromTo("#ring2", { scale: 0.5, opacity: 0.6 }, { scale: 2.1, opacity: 0, duration: 0.95, ease: "power1.out", transformOrigin: "50% 50%", immediateRender: false }, 3.76);
+        tl.to("#doc", { y: "+=10", duration: 0.06, repeat: 3, yoyo: true, ease: "power1.inOut" }, 3.55);
+
+        // CAMERA — synced pan+zoom push-in on the signed + sealed contract (one ease)
+        tl.to("#world", { x: -162, y: -574, scale: 1.3, duration: 1.4, ease: "power2.inOut" }, 3.95);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

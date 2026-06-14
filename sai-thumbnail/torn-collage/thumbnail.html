@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family:'Playfair'; src:url('PlayfairDisplay.ttf') format('truetype'); font-weight:900; }
+  @font-face { font-family:'Mont'; src:url('../../python-scripts/sai-captions/fonts/Montserrat.ttf') format('truetype'); font-weight:700; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:1280px; height:720px; overflow:hidden; }
+
+  .stage {
+    position:relative; width:1280px; height:720px;
+    background:
+      radial-gradient(120% 95% at 50% 8%, #30302f 0%, #1a1a1b 55%, #0d0d0e 100%),
+      linear-gradient(180deg,#242423 0%,#141415 100%);
+    background-color:#19191a;
+    font-family:'Mont',sans-serif; overflow:hidden;
+  }
+  .stage::after {
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(135% 105% at 50% 40%, transparent 52%, rgba(0,0,0,.6) 100%);
+  }
+
+  /* ---- torn paper tiles ---- */
+  .tile {
+    position:absolute; background:#fff; padding:11px 11px 26px 11px;
+    filter:url(#torn) drop-shadow(0 14px 22px rgba(0,0,0,.6));
+  }
+  .tile .photo { width:100%; height:100%; background-size:cover; }
+
+  #t-office  { left:-16px; top:-20px; width:355px; height:290px; transform:rotate(-4deg); }
+  #t-office  .photo { background-image:url('tile_office.jpg'); background-position:center; }
+
+  #t-grind   { left:240px; top:182px; width:225px; height:180px; transform:rotate(5deg); z-index:2; }
+  #t-grind   .photo { background-image:url('tile_grind.jpg'); background-position:center; }
+
+  #t-nyc     { left:880px; top:-24px; width:420px; height:262px; transform:rotate(4deg); }
+  #t-nyc     .photo { background-image:url('tile_nyc.jpg'); background-position:center; }
+
+  #t-team    { left:968px; top:250px; width:332px; height:250px; transform:rotate(-3deg); }
+  #t-team    .photo { background-image:url('tile_team.jpg'); background-position:center 30%; }
+
+  #t-filming { left:-20px; top:328px; width:326px; height:326px; transform:rotate(3deg); }
+  #t-filming .photo { background-image:url('tile_filming.jpg'); background-position:center 54%; }
+
+  #t-zoom    { left:884px; top:500px; width:416px; height:248px; transform:rotate(-2deg); }
+  #t-zoom    .photo { background-image:url('tile_zoom.jpg'); background-position:center; }
+
+  /* ---- center subject (cut-out) ---- */
+  .glow {
+    position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+    width:560px; height:560px; z-index:4; pointer-events:none;
+    background:radial-gradient(50% 50% at 50% 55%, rgba(255,230,200,.30) 0%, rgba(255,210,160,.12) 45%, rgba(0,0,0,0) 70%);
+  }
+  .subject {
+    position:absolute; left:50%; bottom:-6px; transform:translateX(-50%);
+    width:440px; height:610px; overflow:hidden; z-index:5;
+  }
+  .subject img {
+    position:absolute; top:0; left:50%; transform:translateX(-50%);
+    width:900px;
+    filter:
+      drop-shadow(0 0 3px rgba(255,255,255,.55))
+      drop-shadow(0 0 1px rgba(255,255,255,.85))
+      drop-shadow(0 16px 20px rgba(0,0,0,.6));
+  }
+
+  /* ---- headline ---- */
+  .kicker {
+    position:absolute; left:48px; bottom:142px; z-index:8;
+    font-family:'Mont',sans-serif; font-weight:700; font-size:21px;
+    letter-spacing:.22em; text-transform:uppercase; color:#F28129;
+    text-shadow:0 2px 8px rgba(0,0,0,.8);
+  }
+  .headline {
+    position:absolute; left:44px; bottom:24px; z-index:8;
+    font-family:'Playfair',serif; font-weight:900;
+    font-size:90px; line-height:.95; color:#fff; white-space:nowrap;
+    text-shadow:0 4px 22px rgba(0,0,0,.95), 0 2px 3px rgba(0,0,0,.85);
+  }
+  .headline .hl { background:linear-gradient(to top,#FFC21E 0 36%, transparent 36%); padding:0 .06em; border-radius:2px; }
+
+  .badge {
+    position:absolute; right:18px; bottom:14px; z-index:9;
+    background:rgba(0,0,0,.85); color:#fff;
+    font-family:'Mont',sans-serif; font-weight:700; font-size:20px;
+    padding:4px 9px; border-radius:5px; letter-spacing:.03em;
+  }
+</style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="torn">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022 0.026" numOctaves="3" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <div class="stage">
+    <div class="tile" id="t-office"><div class="photo"></div></div>
+    <div class="tile" id="t-grind"><div class="photo"></div></div>
+    <div class="tile" id="t-nyc"><div class="photo"></div></div>
+    <div class="tile" id="t-team"><div class="photo"></div></div>
+    <div class="tile" id="t-filming"><div class="photo"></div></div>
+    <div class="tile" id="t-zoom"><div class="photo"></div></div>
+
+    <div class="glow"></div>
+    <div class="subject"><img src="sai_cutout.png"></div>
+
+    <div class="kicker">Episode 1 &middot; Behind the Scenes</div>
+    <div class="headline">It&rsquo;s not just <span class="hl">business</span></div>
+    <div class="badge">17:59</div>
+  </div>
+</body>
+</html>

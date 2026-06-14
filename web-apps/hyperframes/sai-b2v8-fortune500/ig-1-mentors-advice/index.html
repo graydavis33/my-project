@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .kicker { position: absolute; left: 0; width: 100%; text-align: center; top: 470px;
+        font-weight: 900; font-size: 70px; color: #F28129; text-transform: uppercase;
+        letter-spacing: -0.015em; text-shadow: 0 5px 14px rgba(0,0,0,0.45);
+        will-change: transform, opacity; }
+
+      .fig { position: absolute; will-change: transform, opacity; }
+      .avatar { width: 100%; height: 100%; }
+      .sil { fill: #fff; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.38)); }
+      .eye { fill: #3A2A20; }
+      .mouth { fill: #3A2A20; }
+
+      .badge { position: absolute; will-change: transform, opacity;
+        font-weight: 900; font-size: 46px; color: #fff; letter-spacing: -0.01em;
+        padding: 12px 30px; border-radius: 999px; border: 2px solid #fff;
+        background: radial-gradient(120% 100% at 50% 0%, #FFC68A 0%, #F28129 52%, #D66416 100%);
+        box-shadow: inset 0 2px 6px rgba(255,255,255,0.45), 0 0 22px rgba(242,129,41,0.5), 0 8px 18px rgba(0,0,0,0.32);
+        font-variant-numeric: tabular-nums; }
+
+      .bubble { position: absolute; left: 320px; top: 690px; width: 440px;
+        background: radial-gradient(120% 130% at 50% 0%, #FFC68A 0%, #F28129 54%, #D66416 100%);
+        border: 3px solid #fff; border-radius: 26px;
+        padding: 26px 0; text-align: center;
+        box-shadow: inset 0 2px 8px rgba(255,255,255,0.45), 0 0 26px rgba(242,129,41,0.5), 0 10px 24px rgba(0,0,0,0.28);
+        will-change: transform, opacity; }
+      .bubble .txt { font-weight: 900; font-size: 60px; color: #fff;
+        text-transform: uppercase; letter-spacing: -0.01em; text-shadow: 0 3px 8px rgba(0,0,0,0.32); }
+      .bubble .tail { position: absolute; bottom: -20px; left: 50%; margin-left: -16px;
+        width: 32px; height: 32px; background: #F28129; border-right: 3px solid #fff;
+        border-bottom: 3px solid #fff; transform: rotate(45deg); }
+
+      .stamp { position: absolute; left: 416px; top: 648px; width: 248px; height: 248px;
+        opacity: 0; will-change: transform, opacity;
+        filter: drop-shadow(0 8px 18px rgba(0,0,0,0.4)); }
+      .stamp .x { fill: none; stroke: url(#xg); stroke-width: 40; stroke-linecap: round; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-yp4c" id="root" data-composition-id="main" data-start="0" data-duration="4.6" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-ks7r" id="scene" class="scene clip" data-start="0" data-duration="4.6" data-track-index="1">
+
+        <!-- MENTOR A -->
+        <div data-hf-id="hf-mt31" id="figA" class="fig" style="left:250px; top:840px; width:244px; height:309px;">
+          <svg data-hf-id="hf-6t3v" class="avatar" viewBox="0 0 300 380">
+            <use data-hf-id="hf-1d2x" href="#busthead" class="sil" />
+            <circle data-hf-id="hf-tre4" class="eye" cx="124" cy="116" r="9" />
+            <circle data-hf-id="hf-y3vn" class="eye" cx="176" cy="116" r="9" />
+            <ellipse data-hf-id="hf-3g5n" id="mouthA" class="mouth" cx="150" cy="166" rx="15" ry="15" />
+          </svg>
+        </div>
+        <!-- MENTOR B -->
+        <div data-hf-id="hf-b0dk" id="figB" class="fig" style="left:586px; top:840px; width:244px; height:309px;">
+          <svg data-hf-id="hf-desb" class="avatar" viewBox="0 0 300 380">
+            <use data-hf-id="hf-sx1p" href="#busthead" class="sil" />
+            <circle data-hf-id="hf-c7lw" class="eye" cx="124" cy="116" r="9" />
+            <circle data-hf-id="hf-xo2r" class="eye" cx="176" cy="116" r="9" />
+            <ellipse data-hf-id="hf-b4vc" id="mouthB" class="mouth" cx="150" cy="166" rx="15" ry="15" />
+          </svg>
+        </div>
+
+        <!-- their advice -->
+        <div data-hf-id="hf-37jm" id="bubble" class="bubble">
+          <div data-hf-id="hf-rs28" class="txt">Don't Do It</div>
+          <div data-hf-id="hf-1jja" class="tail"></div>
+        </div>
+
+        <!-- he turned it down -->
+        <svg data-hf-id="hf-povg" id="stamp" class="stamp" viewBox="0 0 200 200">
+          <path data-hf-id="hf-6x7o" class="x" d="M 44 44 L 156 156" />
+          <path data-hf-id="hf-giic" class="x" d="M 156 44 L 44 156" />
+        </svg>
+
+      </div>
+    </div>
+
+    <!-- shared head + shoulders bust + gradient defs (after #root so root id resolves) -->
+    <svg data-hf-id="hf-i1du" style="width:0;height:0;position:absolute" aria-hidden="true">
+      <defs data-hf-id="hf-mh0t">
+        <g data-hf-id="hf-6dpj" id="busthead">
+          <path data-hf-id="hf-2til" d="M 60 380 Q 60 250 110 224 Q 132 210 150 209 Q 168 210 190 224 Q 240 250 240 380 Z" />
+          <circle data-hf-id="hf-zesm" cx="150" cy="120" r="92" />
+        </g>
+        <lineargradient data-hf-id="hf-cbv0" id="xg" x1="0" y1="0" x2="1" y2="1">
+          <stop data-hf-id="hf-3x2k" offset="0" stop-color="#FFB877" /><stop data-hf-id="hf-831v" offset="0.5" stop-color="#F28129" />
+          <stop data-hf-id="hf-65r9" offset="1" stop-color="#D6551A" />
+        </lineargradient>
+      </defs>
+    </svg>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.from("#figA", { scale: 0.7, opacity: 0, y: 36, duration: 0.5, ease: "back.out(1.6)", transformOrigin: "50% 100%" }, 0.26);
+        tl.from("#figB", { scale: 0.7, opacity: 0, y: 36, duration: 0.5, ease: "back.out(1.6)", transformOrigin: "50% 100%" }, 0.4);
+
+        // advice bubble appears, mentors "talk"
+        tl.from("#bubble", { scale: 0, opacity: 0, duration: 0.4, ease: "back.out(1.7)", transformOrigin: "50% 120%" }, 0.95);
+        tl.to("#mouthA", { scaleY: 0.18, duration: 0.16, ease: "sine.inOut", yoyo: true, repeat: 19, svgOrigin: "150 166" }, 1.0);
+        tl.to("#mouthB", { scaleY: 0.18, duration: 0.17, ease: "sine.inOut", yoyo: true, repeat: 17, svgOrigin: "150 166" }, 1.2);
+
+        // he turns it down — X slams over the advice, bubble dims
+        tl.fromTo("#stamp", { scale: 1.9, opacity: 0, rotation: -18 },
+          { scale: 1, opacity: 1, rotation: -8, duration: 0.34, ease: "back.out(2)", transformOrigin: "50% 50%" }, 2.5);
+        tl.to("#stamp", { rotation: -8, x: "+=10", duration: 0.07, repeat: 3, yoyo: true, ease: "power1.inOut" }, 2.84);
+        tl.to("#bubble", { opacity: 0.42, duration: 0.3, ease: "power2.out" }, 2.5);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

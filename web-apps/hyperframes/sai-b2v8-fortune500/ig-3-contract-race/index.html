@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      /* camera world */
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      /* ground contact shadows */
+      .ground { position: absolute; height: 46px; border-radius: 50%; z-index: 1;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0.40) 0%, rgba(0,0,0,0) 70%);
+        will-change: transform, opacity; }
+
+      /* competitor + Sai towers */
+      .tower { position: absolute; border-radius: 14px 14px 4px 4px; overflow: hidden; z-index: 10;
+        will-change: transform, opacity, filter; }
+      .tower.steel { border: 2px solid #D7DDE5; filter: brightness(1);
+        background: linear-gradient(180deg, #C2CAD4 0%, #7C838E 48%, #474C55 100%);
+        box-shadow: 0 14px 32px rgba(0,0,0,0.36), inset 0 2px 6px rgba(255,255,255,0.25); }
+      .tower.sai { border: 2px solid #fff;
+        background: linear-gradient(180deg, #FFC68A 0%, #F28129 52%, #D66416 100%);
+        box-shadow: 0 12px 26px rgba(0,0,0,0.32); }
+
+      .facade { position: absolute; inset: 0; }
+      .steel .facade {
+        background-image:
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 26px, rgba(14,18,24,0.30) 26px 32px),
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0 30px, rgba(14,18,24,0.30) 30px 36px); }
+      .sai .facade {
+        background-image:
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 22px, rgba(120,52,12,0.30) 22px 27px),
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0 26px, rgba(120,52,12,0.30) 26px 31px); }
+
+      /* dark veil — Sai starts dormant, steel dims when not chosen */
+      .veil { position: absolute; inset: 0; background: #0A0C12; border-radius: inherit;
+        will-change: opacity; }
+
+      /* Sai ignite glow halo (sibling so it isn't clipped by tower overflow) */
+      .saiglow { position: absolute; left: 562px; top: 1034px; width: 186px; height: 282px;
+        border-radius: 16px; opacity: 0; z-index: 8; pointer-events: none; will-change: transform, opacity;
+        box-shadow: 0 0 58px 16px rgba(242,129,41,0.85); }
+
+      /* stage spotlight (slides along the lineup) */
+      .light { position: absolute; inset: 0; z-index: 20; opacity: 0; will-change: transform, opacity; }
+      .beam { position: absolute; inset: 0; width: 1080px; height: 1920px; filter: blur(7px); }
+      .pool { position: absolute; left: 350px; top: 1264px; width: 380px; height: 104px;
+        border-radius: 50%; filter: blur(2px); will-change: transform;
+        background: radial-gradient(ellipse at center, rgba(255,243,224,0.88) 0%, rgba(242,129,41,0.34) 42%, rgba(242,129,41,0) 72%); }
+
+      /* energy rings from the chosen tower */
+      .ring { position: absolute; left: 580px; top: 1075px; width: 150px; height: 150px;
+        border-radius: 50%; border: 5px solid rgba(242,129,41,0.75); opacity: 0; z-index: 25;
+        will-change: transform, opacity; }
+
+      /* WON payoff banner */
+      .won { position: absolute; left: 505px; top: 866px; width: 300px; height: 112px;
+        border-radius: 22px; border: 3px solid #fff; z-index: 600;
+        display: flex; align-items: center; justify-content: center; opacity: 0;
+        background: radial-gradient(120% 130% at 50% 0%, #FFC68A 0%, #F28129 54%, #C8631A 100%);
+        box-shadow: inset 0 3px 10px rgba(255,255,255,0.5), 0 0 40px rgba(242,129,41,0.6), 0 14px 28px rgba(0,0,0,0.4);
+        will-change: transform, opacity; }
+      .won span { font-weight: 900; font-size: 88px; color: #fff; text-transform: uppercase;
+        letter-spacing: 0.01em; text-shadow: 0 5px 14px rgba(0,0,0,0.4); }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-root" id="root" data-composition-id="main" data-start="0" data-duration="5.5" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-scene" id="scene" class="scene clip" data-start="0" data-duration="5.5" data-track-index="1">
+        <div data-hf-id="hf-world" id="world" class="world" data-layout-allow-overflow="">
+
+          <!-- ground shadows -->
+          <div data-hf-id="hf-g1" class="ground" style="left:100px; top:1282px; width:230px;"></div>
+          <div data-hf-id="hf-g2" class="ground" style="left:318px; top:1282px; width:254px;"></div>
+          <div data-hf-id="hf-g3" class="ground" style="left:560px; top:1282px; width:190px;"></div>
+          <div data-hf-id="hf-g4" class="ground" style="left:742px; top:1282px; width:246px;"></div>
+
+          <!-- Sai ignite glow (behind Sai tower) -->
+          <div data-hf-id="hf-saiglow" id="saiGlow" class="saiglow"></div>
+
+          <!-- 3 bigger steel agencies -->
+          <div data-hf-id="hf-t1" id="t1" class="tower steel" style="left:120px; top:830px; width:190px; height:470px;">
+            <div data-hf-id="hf-t1f" class="facade"></div>
+            <div data-hf-id="hf-t1v" class="veil sv" style="opacity:0;"></div>
+          </div>
+          <div data-hf-id="hf-t2" id="t2" class="tower steel" style="left:350px; top:780px; width:190px; height:520px;">
+            <div data-hf-id="hf-t2f" class="facade"></div>
+            <div data-hf-id="hf-t2v" class="veil sv" style="opacity:0;"></div>
+          </div>
+          <div data-hf-id="hf-t4" id="t4" class="tower steel" style="left:770px; top:850px; width:190px; height:450px;">
+            <div data-hf-id="hf-t4f" class="facade"></div>
+            <div data-hf-id="hf-t4v" class="veil sv" style="opacity:0;"></div>
+          </div>
+
+          <!-- Sai — small, orange, starts dormant -->
+          <div data-hf-id="hf-sai" id="sai" class="tower sai" style="left:580px; top:1050px; width:150px; height:250px;">
+            <div data-hf-id="hf-saif" class="facade"></div>
+            <div data-hf-id="hf-saiv" id="saiVeil" class="veil" style="opacity:0.34;"></div>
+          </div>
+
+          <!-- spotlight -->
+          <div data-hf-id="hf-light" id="light" class="light">
+            <svg data-hf-id="hf-beam" class="beam" viewBox="0 0 1080 1920">
+              <defs data-hf-id="hf-beamdefs">
+                <lineargradient data-hf-id="hf-beamg" id="beamg" x1="0" y1="0" x2="0" y2="1">
+                  <stop data-hf-id="hf-bs0" offset="0" stop-color="#FFF7EC" stop-opacity="0.05" />
+                  <stop data-hf-id="hf-bs1" offset="0.45" stop-color="#FFE9CC" stop-opacity="0.30" />
+                  <stop data-hf-id="hf-bs2" offset="1" stop-color="#FFCF94" stop-opacity="0.03" />
+                </lineargradient>
+              </defs>
+              <polygon data-hf-id="hf-beampoly" points="485,160 615,160 730,1316 350,1316" fill="url(#beamg)" />
+            </svg>
+            <div data-hf-id="hf-pool" id="pool" class="pool"></div>
+          </div>
+
+          <!-- energy rings -->
+          <div data-hf-id="hf-ring1" id="ring1" class="ring"></div>
+          <div data-hf-id="hf-ring2" id="ring2" class="ring"></div>
+
+          <!-- payoff -->
+          <div data-hf-id="hf-won" id="won" class="won"><span data-hf-id="hf-wonsp">Won</span></div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // ENTRANCE — towers rise from the floor
+        tl.from(".ground", { opacity: 0, duration: 0.4, ease: "power1.out" }, 0.1);
+        tl.from("#t1", { y: 42, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.15);
+        tl.from("#t2", { y: 48, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.24);
+        tl.from("#t4", { y: 44, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.33);
+        tl.from("#sai", { y: 34, opacity: 0, duration: 0.5, ease: "back.out(1.5)" }, 0.42);
+
+        // SPOTLIGHT appears over the leftmost, then scans the lineup
+        tl.fromTo("#light", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 0.8);
+        tl.fromTo("#light", { x: -325 }, { x: 325, duration: 1.1, ease: "sine.inOut" }, 0.85);
+        // ...considers everyone, then settles back onto the small orange one (Sai)
+        tl.to("#light", { x: 115, duration: 0.55, ease: "power2.out", overwrite: "auto" }, 1.95);
+
+        // glints as the light sweeps across each steel tower
+        tl.to("#t1", { filter: "brightness(1.4)", duration: 0.18, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0.92);
+        tl.to("#t2", { filter: "brightness(1.4)", duration: 0.18, yoyo: true, repeat: 1, ease: "sine.inOut" }, 1.22);
+        tl.to("#t4", { filter: "brightness(1.4)", duration: 0.18, yoyo: true, repeat: 1, ease: "sine.inOut" }, 1.9);
+
+        // LOCK on Sai (~2.5) — chosen one ignites, losers dim
+        tl.to("#saiVeil", { opacity: 0, duration: 0.4, ease: "power2.out" }, 2.5);
+        tl.to("#saiGlow", { opacity: 1, y: -46, duration: 0.55, ease: "power2.out" }, 2.5);
+        tl.to("#sai", { y: -46, scale: 1.07, duration: 0.6, ease: "back.out(1.6)", transformOrigin: "50% 100%" }, 2.5);
+        tl.to(".sv", { opacity: 0.52, duration: 0.45, ease: "power1.out" }, 2.55);
+        tl.to("#pool", { scale: 1.12, duration: 0.42, yoyo: true, repeat: 1, ease: "sine.inOut", transformOrigin: "50% 50%" }, 2.5);
+
+        // energy rings burst from Sai (contained)
+        tl.fromTo("#ring1", { scale: 0.5, opacity: 0.8 }, { scale: 1.7, opacity: 0, duration: 0.9, ease: "power1.out", transformOrigin: "50% 50%", immediateRender: false }, 2.55);
+        tl.fromTo("#ring2", { scale: 0.5, opacity: 0.65 }, { scale: 2.0, opacity: 0, duration: 1.05, ease: "power1.out", transformOrigin: "50% 50%", immediateRender: false }, 2.78);
+
+        // WON slams in above Sai
+        tl.fromTo("#won", { scale: 2.0, opacity: 0, rotation: -8 },
+          { scale: 1, opacity: 1, rotation: -4, duration: 0.42, ease: "back.out(2)", transformOrigin: "50% 50%", immediateRender: false }, 2.85);
+        tl.to("#won", { x: "+=12", duration: 0.07, repeat: 3, yoyo: true }, 3.3);
+
+        // CAMERA — synced pan+zoom push-in onto the winner (one ease, no overshoot)
+        tl.to("#world", { x: -325, y: -373, scale: 1.32, duration: 1.5, ease: "power2.inOut" }, 3.45);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .kicker { position: absolute; left: 0; width: 100%; text-align: center; top: 770px;
+        font-weight: 900; font-size: 68px; color: #F28129; text-transform: uppercase;
+        letter-spacing: -0.015em; text-shadow: 0 5px 14px rgba(0,0,0,0.45); will-change: transform, opacity; }
+
+      .chip { position: absolute; width: 150px; height: 150px; border-radius: 26px;
+        border: 2px solid #fff; will-change: transform, opacity;
+        background: linear-gradient(160deg, #FFFFFF 0%, #E6EAEF 100%);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.22); }
+      .dim { position: absolute; inset: 0; border-radius: 24px; opacity: 0;
+        background: linear-gradient(160deg, #6B7280 0%, #434953 100%); }
+      .xmark { position: absolute; inset: 0; opacity: 0; }
+      .xmark path { fill: none; stroke: rgba(255,255,255,0.92); stroke-width: 13; stroke-linecap: round; }
+
+      .orange { position: absolute; inset: 0; border-radius: 24px; opacity: 0;
+        background: radial-gradient(120% 120% at 50% 0%, #FFC68A 0%, #F28129 54%, #D66416 100%);
+        box-shadow: inset 0 2px 8px rgba(255,255,255,0.5), 0 0 30px rgba(242,129,41,0.6); }
+      .x100 { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+        font-weight: 900; font-size: 56px; color: #fff; letter-spacing: -0.02em; opacity: 0;
+        text-shadow: 0 3px 8px rgba(0,0,0,0.35); }
+
+      .ring { position: absolute; width: 150px; height: 150px; border-radius: 50%;
+        border: 5px solid rgba(242,129,41,0.7); opacity: 0; will-change: transform, opacity; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-7lhe" id="root" data-composition-id="main" data-start="0" data-duration="4.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-6l01" id="scene" class="scene clip" data-start="0" data-duration="4.4" data-track-index="1">
+
+        <div data-hf-id="hf-fai3" id="kicker" class="kicker">1 In 10 Bets</div>
+
+        <!-- row 0 -->
+        <div data-hf-id="hf-cmo2" class="chip loser" id="c0" style="left:93px; top:880px;"><div data-hf-id="hf-y8te" class="dim"></div><svg data-hf-id="hf-s9jh" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-o2vz" d="M48 48 L102 102" /><path data-hf-id="hf-7dbd" d="M102 48 L48 102" /></svg></div>
+        <div data-hf-id="hf-ef6h" class="chip loser" id="c1" style="left:279px; top:880px;"><div data-hf-id="hf-cphi" class="dim"></div><svg data-hf-id="hf-ydfl" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-wdun" d="M48 48 L102 102" /><path data-hf-id="hf-wufx" d="M102 48 L48 102" /></svg></div>
+        <div data-hf-id="hf-mw31" class="chip loser" id="c2" style="left:465px; top:880px;"><div data-hf-id="hf-d3sj" class="dim"></div><svg data-hf-id="hf-zkco" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-vzjm" d="M48 48 L102 102" /><path data-hf-id="hf-y1d0" d="M102 48 L48 102" /></svg></div>
+        <div data-hf-id="hf-gsb9" class="chip loser" id="c3" style="left:651px; top:880px;"><div data-hf-id="hf-di3k" class="dim"></div><svg data-hf-id="hf-z61n" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-vl8l" d="M48 48 L102 102" /><path data-hf-id="hf-xn1z" d="M102 48 L48 102" /></svg></div>
+        <div data-hf-id="hf-3lm2" class="chip loser" id="c4" style="left:837px; top:880px;"><div data-hf-id="hf-apyd" class="dim"></div><svg data-hf-id="hf-x6ii" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-ydds" d="M48 48 L102 102" /><path data-hf-id="hf-ytz2" d="M102 48 L48 102" /></svg></div>
+
+        <!-- row 1 -->
+        <div data-hf-id="hf-kdzx" class="chip loser" id="c5" style="left:93px; top:1100px;"><div data-hf-id="hf-b49e" class="dim"></div><svg data-hf-id="hf-ws7h" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-xz2r" d="M48 48 L102 102" /><path data-hf-id="hf-yfo1" d="M102 48 L48 102" /></svg></div>
+        <div data-hf-id="hf-bghg" class="chip loser" id="c6" style="left:279px; top:1100px;"><div data-hf-id="hf-bikf" class="dim"></div><svg data-hf-id="hf-xz4k" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-xkrq" d="M48 48 L102 102" /><path data-hf-id="hf-zml4" d="M102 48 L48 102" /></svg></div>
+
+        <!-- the winner -->
+        <div data-hf-id="hf-de7w" class="ring" id="ring1" style="left:465px; top:1100px;"></div>
+        <div data-hf-id="hf-adfj" class="ring" id="ring2" style="left:465px; top:1100px;"></div>
+        <div data-hf-id="hf-0uz3" class="chip win" id="c7" style="left:465px; top:1100px;"><div data-hf-id="hf-242p" class="orange" id="orange7"></div><span data-hf-id="hf-o2le" class="x100" id="x100">100X</span></div>
+
+        <div data-hf-id="hf-0qgs" class="chip loser" id="c8" style="left:651px; top:1100px;"><div data-hf-id="hf-bwvg" class="dim"></div><svg data-hf-id="hf-xktj" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-x6gp" d="M48 48 L102 102" /><path data-hf-id="hf-z8a3" d="M102 48 L48 102" /></svg></div>
+        <div data-hf-id="hf-r0d7" class="chip loser" id="c9" style="left:837px; top:1100px;"><div data-hf-id="hf-94q9" class="dim"></div><svg data-hf-id="hf-1y6u" class="xmark" viewBox="0 0 150 150"><path data-hf-id="hf-tlpg" d="M48 48 L102 102" /><path data-hf-id="hf-0f76" d="M102 48 L48 102" /></svg></div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const losers = ["#c0", "#c1", "#c2", "#c3", "#c4", "#c5", "#c6", "#c8", "#c9"];
+
+        tl.from("#kicker", { y: -22, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.1);
+
+        // all 10 chips pop in
+        tl.from(".chip", { scale: 0.3, opacity: 0, duration: 0.4, ease: "back.out(1.7)", stagger: 0.05, transformOrigin: "50% 50%" }, 0.3);
+
+        // the 9 losers go dim + X (staggered)
+        tl.to(losers.map(s => s + " .dim"), { opacity: 1, duration: 0.3, ease: "power1.out", stagger: 0.085 }, 1.25);
+        tl.to(losers.map(s => s + " .xmark"), { opacity: 1, duration: 0.3, ease: "power1.out", stagger: 0.085 }, 1.32);
+        tl.to(losers, { scale: 0.9, duration: 0.3, ease: "power1.out", stagger: 0.085, transformOrigin: "50% 50%" }, 1.25);
+
+        // the 1 winner ignites
+        tl.to("#orange7", { opacity: 1, duration: 0.35, ease: "power2.out" }, 2.35);
+        tl.to("#c7", { scale: 1.32, duration: 0.5, ease: "back.out(1.8)", transformOrigin: "50% 50%" }, 2.35);
+        tl.to("#x100", { opacity: 1, duration: 0.35, ease: "power2.out" }, 2.5);
+        tl.fromTo("#x100", { scale: 0.7 }, { scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%" }, 2.5);
+        tl.fromTo("#ring1", { scale: 0.6, opacity: 0.8 }, { scale: 3.2, opacity: 0, duration: 1.1, ease: "power1.out", transformOrigin: "50% 50%", repeat: 1, immediateRender: false }, 2.4);
+        tl.fromTo("#ring2", { scale: 0.6, opacity: 0.65 }, { scale: 3.8, opacity: 0, duration: 1.25, ease: "power1.out", transformOrigin: "50% 50%", repeat: 1, immediateRender: false }, 2.7);
+
+        // winner heartbeat
+        tl.fromTo("#c7", { scale: 1.32 }, { scale: 1.4, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 2, transformOrigin: "50% 50%" }, 3.0);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
