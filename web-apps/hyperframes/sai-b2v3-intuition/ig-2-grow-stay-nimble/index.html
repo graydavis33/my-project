@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      /* camera world */
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      .ground { position: absolute; left: 140px; top: 1560px; width: 800px; height: 4px;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+        opacity: 0; will-change: opacity; }
+
+      /* ---- towers (revealed bottom-up via scaleY) ---- */
+      .tower { position: absolute; width: 260px; will-change: transform, opacity; }
+
+      .grey { left: 230px; top: 660px; height: 900px;
+        border: 2px solid rgba(255,255,255,0.16); border-radius: 8px 8px 0 0;
+        background-image:
+          repeating-linear-gradient(to bottom, transparent 0 30px, rgba(0,0,0,0.32) 30px 37px),
+          repeating-linear-gradient(to right, transparent 0 30px, rgba(0,0,0,0.32) 30px 37px),
+          linear-gradient(155deg, #8A93A0 0%, #5C6470 55%, #3C424C 100%);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.34); }
+
+      .orange { left: 590px; top: 660px; height: 900px;
+        border: 2px solid #fff; border-radius: 10px 10px 0 0;
+        background-image:
+          repeating-linear-gradient(to bottom, transparent 0 30px, rgba(255,255,255,0.20) 30px 37px),
+          repeating-linear-gradient(to right, transparent 0 30px, rgba(255,255,255,0.20) 30px 37px),
+          linear-gradient(155deg, #FFC68A 0%, #F28129 55%, #D66416 100%);
+        box-shadow: 0 0 30px 7px rgba(242,129,41,0.55), 0 14px 32px rgba(0,0,0,0.34),
+          inset 0 2px 12px rgba(255,255,255,0.45); }
+
+      .aura { position: absolute; left: 540px; top: 560px; width: 360px; height: 1100px;
+        opacity: 0; will-change: opacity; pointer-events: none; border-radius: 50%;
+        background: radial-gradient(ellipse 50% 50% at 50% 55%,
+          rgba(242,129,41,0.40) 0%, rgba(242,129,41,0.10) 48%, rgba(242,129,41,0) 72%); }
+
+      /* ---- red tape bands + locks on the grey tower ---- */
+      .band { position: absolute; left: 214px; width: 292px; height: 36px;
+        border-radius: 4px; opacity: 0; will-change: transform, opacity;
+        background: repeating-linear-gradient(45deg, #C8443A 0 16px, #A83329 16px 32px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18); }
+      .lock { position: absolute; width: 56px; height: 56px; opacity: 0;
+        will-change: transform, opacity; filter: drop-shadow(0 4px 7px rgba(0,0,0,0.4)); }
+
+      /* ---- intuition sparks rising off the orange tower ---- */
+      .spark { position: absolute; width: 18px; height: 18px; border-radius: 50%; opacity: 0;
+        will-change: transform, opacity;
+        background: radial-gradient(circle at 50% 40%, #FFF1DF 0%, #FFB163 45%, #F28129 100%);
+        box-shadow: 0 0 14px 3px rgba(242,129,41,0.8); }
+
+      /* ---- base badges ---- */
+      .badge { position: absolute; top: 1592px; width: 260px; text-align: center;
+        font-weight: 900; font-size: 46px; letter-spacing: 0.02em; text-transform: uppercase;
+        opacity: 0; will-change: transform, opacity; text-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+      .badge.them { left: 230px; color: #AEB6C0; }
+      .badge.you  { left: 590px; color: #F28129; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-uipy" id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-3f1p" id="scene" class="scene clip" data-start="0" data-duration="6" data-track-index="1">
+        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
+
+          <div data-hf-id="hf-qlg6" id="ground" class="ground"></div>
+          <div data-hf-id="hf-zwku" id="aura" class="aura"></div>
+
+          <div data-hf-id="hf-4ifz" id="grey" class="tower grey"></div>
+          <div data-hf-id="hf-d3mz" id="orange" class="tower orange"></div>
+
+          <!-- red tape bands (separate overlay so scaleY doesn't distort them) -->
+          <div data-hf-id="hf-vzi3" id="band1" class="band" style="top:1380px;"></div>
+          <div data-hf-id="hf-chn2" id="band2" class="band" style="top:1180px;"></div>
+          <div data-hf-id="hf-1hbe" id="band3" class="band" style="top:980px;"></div>
+          <div data-hf-id="hf-sq0c" id="band4" class="band" style="top:790px;"></div>
+
+          <svg data-hf-id="hf-8uei" id="lockA" class="lock" style="left:332px; top:1370px;" viewBox="0 0 24 24">
+            <rect data-hf-id="hf-6dsw" x="4" y="10" width="16" height="11" rx="2.4" fill="#F2E9DF" />
+            <path data-hf-id="hf-71ym" d="M7.5 10V7.5a4.5 4.5 0 0 1 9 0V10" fill="none" stroke="#F2E9DF" stroke-width="2.4" />
+            <circle data-hf-id="hf-zfrk" cx="12" cy="15" r="1.8" fill="#3C424C" />
+          </svg>
+          <svg data-hf-id="hf-e5tq" id="lockB" class="lock" style="left:332px; top:970px;" viewBox="0 0 24 24">
+            <rect data-hf-id="hf-4rx4" x="4" y="10" width="16" height="11" rx="2.4" fill="#F2E9DF" />
+            <path data-hf-id="hf-xodu" d="M7.5 10V7.5a4.5 4.5 0 0 1 9 0V10" fill="none" stroke="#F2E9DF" stroke-width="2.4" />
+            <circle data-hf-id="hf-fdk8" cx="12" cy="15" r="1.8" fill="#3C424C" />
+          </svg>
+
+          <!-- sparks drifting up off the orange tower -->
+          <div data-hf-id="hf-lhjp" id="sp1" class="spark" style="left:640px; top:1180px;"></div>
+          <div data-hf-id="hf-paen" id="sp2" class="spark" style="left:730px; top:1280px;"></div>
+          <div data-hf-id="hf-lwrv" id="sp3" class="spark" style="left:800px; top:1120px;"></div>
+          <div data-hf-id="hf-1sln" id="sp4" class="spark" style="left:680px; top:980px;"></div>
+          <div data-hf-id="hf-42aa" id="sp5" class="spark" style="left:770px; top:1040px;"></div>
+          <div data-hf-id="hf-0puc" id="sp6" class="spark" style="left:705px; top:860px;"></div>
+
+          <div data-hf-id="hf-rfa7" id="bThem" class="badge them">them</div>
+          <div data-hf-id="hf-c48g" id="bYou" class="badge you">you</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // ground
+        tl.from("#ground", { opacity: 0, duration: 0.4, ease: "power2.out" }, 0.1);
+        tl.set("#ground", { opacity: 1 }, 0.5);
+
+        // both towers rise from the baseline
+        tl.fromTo("#grey",   { scaleY: 0, opacity: 1 }, { scaleY: 1, duration: 1.1, ease: "power3.out", transformOrigin: "50% 100%", immediateRender: false }, 0.3);
+        tl.fromTo("#orange", { scaleY: 0, opacity: 1 }, { scaleY: 1, duration: 1.1, ease: "power3.out", transformOrigin: "50% 100%", immediateRender: false }, 0.3);
+
+        // base badges
+        tl.from("#bThem", { opacity: 0, y: 18, duration: 0.45, ease: "power2.out" }, 1.2);
+        tl.from("#bYou",  { opacity: 0, y: 18, duration: 0.45, ease: "back.out(1.6)" }, 1.35);
+
+        // grey tower gets wrapped in red tape (bottom -> up), stiffens
+        tl.fromTo(["#band1","#band2","#band3","#band4"],
+          { scaleX: 0, opacity: 0 },
+          { scaleX: 1, opacity: 1, duration: 0.4, ease: "power2.out", transformOrigin: "50% 50%", stagger: 0.18, immediateRender: false }, 1.5);
+        tl.fromTo(["#lockA","#lockB"],
+          { scale: 0, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.2)", transformOrigin: "50% 50%", stagger: 0.42, immediateRender: false }, 1.7);
+        // a small stiff clamp shudder once tape is on
+        tl.fromTo("#grey", { x: 0 }, { x: -4, duration: 0.07, ease: "power1.inOut", yoyo: true, repeat: 3, immediateRender: false }, 2.5);
+
+        // orange tower stays lit: aura + rising intuition sparks
+        tl.fromTo("#aura", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", immediateRender: false }, 1.5);
+        tl.fromTo("#aura", { scale: 0.95 }, { scale: 1.05, duration: 1.3, ease: "sine.inOut", yoyo: true, repeat: 2, transformOrigin: "50% 55%", immediateRender: false }, 2.0);
+
+        const sparks = ["#sp1","#sp2","#sp3","#sp4","#sp5","#sp6"];
+        const sdelay = [1.7, 2.0, 2.3, 2.1, 2.5, 2.6];
+        sparks.forEach((s, i) => {
+          tl.fromTo(s, { opacity: 0, y: 40, scale: 0.6 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, sdelay[i]);
+          tl.fromTo(s, { y: 0, opacity: 1 },
+            { y: -120, opacity: 0, duration: 1.5, ease: "power1.in", repeat: 1, immediateRender: false }, sdelay[i] + 0.4);
+        });
+
+        // ---- synced camera push toward the orange tower (X + Y + scale, one ease) ----
+        // frame world point (720,1100) at scale 1.4: tx=540-1.4*720=-468, ty=960-1.4*1100=-580
+        tl.fromTo("#world",
+          { x: 0, y: 0, scale: 1 },
+          { x: -468, y: -580, scale: 1.4, duration: 1.6, ease: "power2.inOut", transformOrigin: "0 0", immediateRender: false }, 3.8);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

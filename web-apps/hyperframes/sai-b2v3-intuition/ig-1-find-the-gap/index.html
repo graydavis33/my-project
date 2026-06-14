@@ -64,28 +64,28 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="5.4" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="5.4" data-track-index="1">
+    <div data-hf-id="hf-gm97" id="root" data-composition-id="main" data-start="0" data-duration="5.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-624y" id="scene" class="scene clip" data-start="0" data-duration="5.4" data-track-index="1">
 
-        <div id="kicker" class="kicker">what's <span class="hl">missing</span>?</div>
+        <div data-hf-id="hf-k463" id="kicker" class="kicker">what's <span data-hf-id="hf-fqgb" class="hl">missing</span>?</div>
 
-        <div id="ground" class="ground"></div>
+        <div data-hf-id="hf-qlg6" id="ground" class="ground"></div>
 
         <!-- grey skyline; gap is slot 3 (left 546) -->
-        <div id="b0" class="bldg" style="left:60px;  height:430px; top:1056px;"></div>
-        <div id="b1" class="bldg" style="left:222px; height:540px; top:946px;"></div>
-        <div id="b2" class="bldg" style="left:384px; height:470px; top:1016px;"></div>
-        <div id="b4" class="bldg" style="left:708px; height:560px; top:926px;"></div>
-        <div id="b5" class="bldg" style="left:870px; height:410px; top:1076px;"></div>
+        <div data-hf-id="hf-6lta" id="b0" class="bldg" style="left:60px;  height:430px; top:1056px;"></div>
+        <div data-hf-id="hf-59dq" id="b1" class="bldg" style="left:222px; height:540px; top:946px;"></div>
+        <div data-hf-id="hf-95m1" id="b2" class="bldg" style="left:384px; height:470px; top:1016px;"></div>
+        <div data-hf-id="hf-2r0g" id="b4" class="bldg" style="left:708px; height:560px; top:926px;"></div>
+        <div data-hf-id="hf-tczg" id="b5" class="bldg" style="left:870px; height:410px; top:1076px;"></div>
 
-        <div id="lot" class="lot"></div>
-        <div id="qmark" class="qmark">?</div>
+        <div data-hf-id="hf-gg3k" id="lot" class="lot"></div>
+        <div data-hf-id="hf-el07" id="qmark" class="qmark">?</div>
 
-        <div id="spot" class="spot"></div>
-        <div id="glow" class="glow"></div>
+        <div data-hf-id="hf-hq77" id="spot" class="spot" data-layout-allow-overflow=""></div>
+        <div data-hf-id="hf-35j2" id="glow" class="glow"></div>
 
         <!-- gapfill: 640px tall, sits on baseline 1486 -> top 846 -->
-        <div id="gapfill" class="gapfill" style="height:640px; top:846px;"></div>
+        <div data-hf-id="hf-1o5o" id="gapfill" class="gapfill" style="height:640px; top:846px;"></div>
 
       </div>
     </div>
@@ -116,7 +116,7 @@
 
         // the gap fills: orange tower rises out of the lot
         tl.to("#lot", { opacity: 0, duration: 0.3, ease: "power1.in" }, 3.45);
-        tl.to("#qmark", { opacity: 0, y: -30, duration: 0.3, ease: "power1.in" }, 3.4);
+        tl.to("#qmark", { opacity: 0, y: -30, duration: 0.3, ease: "power1.in", overwrite: "auto" }, 3.4);
         tl.fromTo("#gapfill", { scaleY: 0, opacity: 1 }, { scaleY: 1, duration: 0.85, ease: "power3.out", transformOrigin: "50% 100%", immediateRender: false }, 3.5);
         tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out", immediateRender: false }, 3.7);
         tl.fromTo("#glow", { scale: 0.94 }, { scale: 1.05, duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "50% 75%", immediateRender: false }, 4.2);

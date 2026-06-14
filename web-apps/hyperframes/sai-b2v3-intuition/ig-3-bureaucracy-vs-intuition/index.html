@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .divider { position: absolute; left: 538px; top: 640px; width: 4px; height: 640px;
+        border-radius: 2px; opacity: 0; will-change: opacity;
+        background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%); }
+
+      /* ---- LEFT: grey bureaucratic machine ---- */
+      .gearwrap { position: absolute; will-change: transform, opacity; }
+      .gear .body { fill: #5C6470; stroke: rgba(255,255,255,0.14); stroke-width: 2; }
+      .gear .tooth { fill: #5C6470; stroke: rgba(0,0,0,0.25); stroke-width: 1.5; }
+      .gear .hub { fill: #3C424C; }
+
+      .tape { position: absolute; height: 34px; border-radius: 4px; opacity: 0;
+        will-change: transform, opacity;
+        background: repeating-linear-gradient(45deg, #C8443A 0 16px, #A83329 16px 32px);
+        box-shadow: 0 3px 10px rgba(0,0,0,0.35); }
+
+      /* ---- RIGHT: fluid orange stream ---- */
+      .stream { position: absolute; left: 540px; top: 620px; width: 540px; height: 720px;
+        will-change: opacity; }
+      .ribbon { fill: none; stroke: url(#og); stroke-width: 22; stroke-linecap: round;
+        filter: drop-shadow(0 0 16px rgba(242,129,41,0.7)); }
+      .orb { position: absolute; width: 40px; height: 40px; border-radius: 50%; opacity: 0;
+        will-change: transform, opacity;
+        background: radial-gradient(circle at 50% 38%, #FFF4E6 0%, #FFB163 45%, #F28129 100%);
+        box-shadow: 0 0 26px 8px rgba(242,129,41,0.85); }
+      .spark { position: absolute; width: 16px; height: 16px; border-radius: 50%; opacity: 0;
+        will-change: transform, opacity;
+        background: radial-gradient(circle at 50% 40%, #FFF1DF 0%, #FFB163 45%, #F28129 100%);
+        box-shadow: 0 0 12px 3px rgba(242,129,41,0.8); }
+
+      /* ---- badges ---- */
+      .badge { position: absolute; top: 1340px; width: 480px; text-align: center;
+        font-weight: 900; font-size: 50px; letter-spacing: 0.01em; text-transform: uppercase;
+        opacity: 0; will-change: transform, opacity; text-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+      .badge.b { left: 40px;  color: #AEB6C0; }
+      .badge.i { left: 560px; color: #F28129; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-yk9p" id="root" data-composition-id="main" data-start="0" data-duration="5.6" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-408w" id="scene" class="scene clip" data-start="0" data-duration="5.6" data-track-index="1">
+
+        <div data-hf-id="hf-8l98" id="divider" class="divider"></div>
+
+        <!-- LEFT gears -->
+        <div data-hf-id="hf-y12i" id="gear1" class="gearwrap" style="left:120px; top:760px; width:240px; height:240px;">
+          <svg data-hf-id="hf-lew2" class="gear" viewBox="-60 -60 120 120" width="240" height="240">
+            <circle data-hf-id="hf-e28m" class="body" r="42" />
+            <rect data-hf-id="hf-e81i" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(0)" />
+            <rect data-hf-id="hf-brnx" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(45)" />
+            <rect data-hf-id="hf-3u0j" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(90)" />
+            <rect data-hf-id="hf-cotz" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(135)" />
+            <rect data-hf-id="hf-ltan" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(180)" />
+            <rect data-hf-id="hf-djhn" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(225)" />
+            <rect data-hf-id="hf-ryq9" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(270)" />
+            <rect data-hf-id="hf-dv8b" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(315)" />
+            <circle data-hf-id="hf-p1x3" class="hub" r="15" />
+          </svg>
+        </div>
+        <div data-hf-id="hf-ti22" id="gear2" class="gearwrap" style="left:300px; top:910px; width:180px; height:180px;">
+          <svg data-hf-id="hf-d1e2" class="gear" viewBox="-60 -60 120 120" width="180" height="180">
+            <circle data-hf-id="hf-5x2y" class="body" r="42" />
+            <rect data-hf-id="hf-rgd6" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(0)" />
+            <rect data-hf-id="hf-3jep" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(45)" />
+            <rect data-hf-id="hf-in83" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(90)" />
+            <rect data-hf-id="hf-q1mf" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(135)" />
+            <rect data-hf-id="hf-fwz3" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(180)" />
+            <rect data-hf-id="hf-02x7" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(225)" />
+            <rect data-hf-id="hf-mcjp" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(270)" />
+            <rect data-hf-id="hf-2zdn" class="tooth" x="-10" y="-58" width="20" height="22" rx="3" transform="rotate(315)" />
+            <circle data-hf-id="hf-nojb" class="hub" r="15" />
+          </svg>
+        </div>
+
+        <!-- red tape jamming the machine -->
+        <div data-hf-id="hf-eepf" id="tape1" class="tape" style="left:90px;  top:880px;  width:340px; transform: rotate(-18deg);"></div>
+        <div data-hf-id="hf-d990" id="tape2" class="tape" style="left:120px; top:1000px; width:320px; transform: rotate(14deg);"></div>
+
+        <!-- RIGHT fluid stream -->
+        <svg data-hf-id="hf-tgge" id="stream" class="stream" viewBox="0 0 540 720">
+          <defs data-hf-id="hf-mh0t">
+            <lineargradient data-hf-id="hf-qtg6" id="og" x1="0" y1="1" x2="0" y2="0">
+              <stop data-hf-id="hf-xueq" offset="0%" stop-color="#D66416" />
+              <stop data-hf-id="hf-943r" offset="55%" stop-color="#F28129" />
+              <stop data-hf-id="hf-a2fc" offset="100%" stop-color="#FFC68A" />
+            </lineargradient>
+          </defs>
+          <path data-hf-id="hf-ytu5" id="ribbon" class="ribbon" d="M 270 700 C 150 560, 400 470, 250 330 S 150 150, 290 30" />
+        </svg>
+        <div data-hf-id="hf-8s7k" id="orb" class="orb"></div>
+        <div data-hf-id="hf-90tq" id="sp1" class="spark" style="left:760px; top:1120px;"></div>
+        <div data-hf-id="hf-jilb" id="sp2" class="spark" style="left:840px; top:980px;"></div>
+        <div data-hf-id="hf-meqv" id="sp3" class="spark" style="left:800px; top:800px;"></div>
+
+        <div data-hf-id="hf-uv5x" id="bB" class="badge b">bureaucracy</div>
+        <div data-hf-id="hf-hm1q" id="bI" class="badge i">intuition</div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 5.6;
+
+        tl.from("#divider", { opacity: 0, duration: 0.5, ease: "power2.out" }, 0.1);
+        tl.set("#divider", { opacity: 1 }, 0.6);
+
+        // gears appear
+        tl.from("#gear1", { scale: 0.6, opacity: 0, duration: 0.55, ease: "back.out(1.6)", transformOrigin: "50% 50%" }, 0.25);
+        tl.from("#gear2", { scale: 0.6, opacity: 0, duration: 0.55, ease: "back.out(1.6)", transformOrigin: "50% 50%" }, 0.4);
+
+        // slow grinding rotation, counter-meshed (finite repeats)
+        const spin = 14; // s per full turn -> slow
+        const reps = Math.ceil(DUR / spin) ; // partial turn over the card
+        tl.fromTo("#gear1", { rotation: 0 }, { rotation: 130, duration: DUR - 0.5, ease: "none", transformOrigin: "50% 50%", immediateRender: false }, 0.5);
+        tl.fromTo("#gear2", { rotation: 0 }, { rotation: -170, duration: DUR - 0.5, ease: "none", transformOrigin: "50% 50%", immediateRender: false }, 0.5);
+
+        // red tape slaps on -> machine jams (small stutter)
+        tl.fromTo("#tape1", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.35, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, 1.2);
+        tl.fromTo("#tape2", { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.35, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, 1.45);
+
+        // stream draws in FAST + free, leaving the ribbon lit
+        const rib = document.getElementById("ribbon");
+        const len = rib.getTotalLength();
+        gsap.set(rib, { strokeDasharray: len, strokeDashoffset: len, opacity: 0 });
+        tl.to(rib, { opacity: 1, duration: 0.2, ease: "power1.out" }, 1.5);
+        tl.to(rib, { strokeDashoffset: 0, duration: 1.0, ease: "power2.out" }, 1.5);
+
+        // orb shoots up the stream fast, repeats
+        const orbY = [1300, 600];   // start near bottom-right, fly up
+        tl.fromTo("#orb", { opacity: 0, x: 770, y: 1290, scale: 0.7 },
+          { opacity: 1, scale: 1, duration: 0.25, ease: "power1.out", immediateRender: false }, 1.6);
+        tl.fromTo("#orb", { x: 770, y: 1290 },
+          { x: 820, y: 660, duration: 0.85, ease: "power2.in", immediateRender: false }, 1.7);
+        tl.to("#orb", { opacity: 0, duration: 0.2, ease: "power1.out" }, 2.45);
+        // second pass
+        tl.fromTo("#orb", { opacity: 0, x: 760, y: 1280, scale: 0.7 },
+          { opacity: 1, scale: 1, duration: 0.25, ease: "power1.out", immediateRender: false }, 3.1);
+        tl.fromTo("#orb", { x: 760, y: 1280 },
+          { x: 830, y: 650, duration: 0.85, ease: "power2.in", immediateRender: false }, 3.2);
+        tl.to("#orb", { opacity: 0, duration: 0.2, ease: "power1.out" }, 3.95);
+
+        // sparks twinkle on the lit stream
+        ["#sp1","#sp2","#sp3"].forEach((s, i) => {
+          tl.fromTo(s, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 3, immediateRender: false }, 2.2 + i * 0.3);
+        });
+
+        // badges
+        tl.from("#bB", { opacity: 0, y: 18, duration: 0.45, ease: "power2.out" }, 1.0);
+        tl.from("#bI", { opacity: 0, y: 18, duration: 0.45, ease: "back.out(1.6)" }, 1.15);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

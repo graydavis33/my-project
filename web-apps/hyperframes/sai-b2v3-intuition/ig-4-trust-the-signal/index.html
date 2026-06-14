@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .kicker { position: absolute; left: 0; width: 100%; text-align: center; top: 1300px;
+        font-weight: 900; font-size: 64px; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.02em; text-shadow: 0 5px 16px rgba(0,0,0,0.5);
+        will-change: transform, opacity; }
+      .kicker .hl { color: #F28129; }
+
+      /* faint stars = the universe */
+      .star { position: absolute; width: 14px; height: 14px; border-radius: 50%; opacity: 0;
+        will-change: transform, opacity;
+        background: radial-gradient(circle at 50% 40%, #FFF6EA 0%, #FFD9AE 55%, rgba(242,129,41,0.5) 100%);
+        box-shadow: 0 0 10px 2px rgba(242,129,41,0.5); }
+
+      /* descending idea spark */
+      .spark { position: absolute; left: 0; top: 0; width: 40px; height: 40px; border-radius: 50%;
+        opacity: 0; will-change: transform, opacity;
+        background: radial-gradient(circle at 50% 38%, #FFF7EC 0%, #FFB163 45%, #F28129 100%);
+        box-shadow: 0 0 30px 9px rgba(242,129,41,0.9); }
+      .beam { position: absolute; left: 528px; top: 300px; width: 24px; height: 620px;
+        opacity: 0; will-change: opacity; pointer-events: none; border-radius: 12px;
+        background: linear-gradient(180deg, rgba(242,129,41,0) 0%, rgba(242,129,41,0.5) 60%, rgba(242,129,41,0.85) 100%);
+        filter: blur(2px); }
+
+      /* figure */
+      .aura { position: absolute; left: 380px; top: 700px; width: 320px; height: 360px;
+        border-radius: 50%; opacity: 0; will-change: transform, opacity;
+        background: radial-gradient(circle at 50% 50%, rgba(242,129,41,0.5) 0%, rgba(242,129,41,0.16) 44%, rgba(242,129,41,0) 70%); }
+      .fig { position: absolute; left: 375px; top: 820px; width: 330px; height: 418px;
+        will-change: transform, opacity; }
+      .avatar { width: 100%; height: 100%; }
+      .sil { fill: #fff; filter: drop-shadow(0 12px 20px rgba(0,0,0,0.38)); }
+      .eye { fill: #3A2A20; }
+
+      /* glowing core at the head + signal rings */
+      .core { position: absolute; left: 492px; top: 904px; width: 96px; height: 96px;
+        border-radius: 50%; border: 2px solid #fff; opacity: 0; will-change: transform, opacity;
+        background: radial-gradient(circle at 50% 38%, #FFE3C2 0%, #FFA858 40%, #F28129 70%, #D66416 100%);
+        box-shadow: 0 0 30px 8px rgba(242,129,41,0.78), inset 0 2px 8px rgba(255,255,255,0.6); }
+      .ring { position: absolute; left: 492px; top: 904px; width: 96px; height: 96px;
+        border-radius: 50%; border: 5px solid rgba(242,129,41,0.7); opacity: 0;
+        will-change: transform, opacity; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-nfa1" id="root" data-composition-id="main" data-start="0" data-duration="5.2" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-aado" id="scene" class="scene clip" data-start="0" data-duration="5.2" data-track-index="1">
+
+        <!-- the universe -->
+        <div data-hf-id="hf-vc8m" id="st1" class="star" style="left:300px; top:360px;"></div>
+        <div data-hf-id="hf-6pfg" id="st2" class="star" style="left:760px; top:420px;"></div>
+        <div data-hf-id="hf-15l2" id="st3" class="star" style="left:430px; top:250px;"></div>
+        <div data-hf-id="hf-r1do" id="st4" class="star" style="left:660px; top:300px;"></div>
+        <div data-hf-id="hf-3ehh" id="st5" class="star" style="left:200px; top:520px;"></div>
+        <div data-hf-id="hf-uugt" id="st6" class="star" style="left:850px; top:560px;"></div>
+
+        <div data-hf-id="hf-bi06" id="beam" class="beam"></div>
+        <div data-hf-id="hf-b0o8" id="spark" class="spark"></div>
+
+        <div data-hf-id="hf-zwku" id="aura" class="aura"></div>
+
+        <div data-hf-id="hf-pd2y" id="fig" class="fig">
+          <svg data-hf-id="hf-6t3v" class="avatar" viewBox="0 0 300 380">
+            <use data-hf-id="hf-1d2x" href="#busthead" class="sil" />
+            <circle data-hf-id="hf-tre4" class="eye" cx="124" cy="116" r="9" />
+            <circle data-hf-id="hf-y3vn" class="eye" cx="176" cy="116" r="9" />
+            <path data-hf-id="hf-ptad" d="M 132 168 Q 150 178 168 168" fill="none" stroke="#3A2A20" stroke-width="7" stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <div data-hf-id="hf-diuv" id="ring1" class="ring"></div>
+        <div data-hf-id="hf-2nd8" id="ring2" class="ring"></div>
+        <div data-hf-id="hf-5mmt" id="ring3" class="ring"></div>
+        <div data-hf-id="hf-dtei" id="core" class="core"></div>
+
+        <div data-hf-id="hf-p9w3" id="kicker" class="kicker">trust the <span data-hf-id="hf-f0j9" class="hl">signal</span></div>
+
+      </div>
+    </div>
+
+    <svg data-hf-id="hf-i1du" style="width:0;height:0;position:absolute" aria-hidden="true">
+      <defs data-hf-id="hf-mh0t">
+        <g data-hf-id="hf-6dpj" id="busthead">
+          <path data-hf-id="hf-2til" d="M 60 380 Q 60 250 110 224 Q 132 210 150 209 Q 168 210 190 224 Q 240 250 240 380 Z" />
+          <circle data-hf-id="hf-zesm" cx="150" cy="120" r="92" />
+        </g>
+      </defs>
+    </svg>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // figure settles in
+        tl.from("#fig", { scale: 0.8, opacity: 0, y: 34, duration: 0.55, ease: "back.out(1.5)", transformOrigin: "50% 100%" }, 0.15);
+
+        // the universe twinkles in
+        const stars = ["#st1","#st2","#st3","#st4","#st5","#st6"];
+        const sd = [0.4, 0.55, 0.7, 0.5, 0.65, 0.8];
+        stars.forEach((s, i) => {
+          tl.fromTo(s, { opacity: 0, scale: 0.4 }, { opacity: 0.85, scale: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, sd[i]);
+          tl.fromTo(s, { scale: 1 }, { scale: 1.25, opacity: 0.5, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 2, transformOrigin: "50% 50%", immediateRender: false }, sd[i] + 0.4);
+        });
+
+        // one star ignites and the idea spark streaks DOWN into the head
+        tl.fromTo("#st3", { scale: 1 }, { scale: 1.8, opacity: 1, duration: 0.3, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, 1.5);
+        tl.fromTo("#beam", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out", immediateRender: false }, 1.6);
+        // spark center starts at the igniting star (437,257) -> head forehead (540,930)
+        tl.fromTo("#spark", { opacity: 0, x: 417, y: 237, scale: 0.7 },
+          { opacity: 1, scale: 1, duration: 0.25, ease: "power1.out", immediateRender: false }, 1.7);
+        tl.fromTo("#spark", { x: 417, y: 237 },
+          { x: 520, y: 910, duration: 0.7, ease: "power2.in", immediateRender: false }, 1.9);
+        tl.to("#spark", { opacity: 0, scale: 0.6, duration: 0.2, ease: "power1.out" }, 2.55);
+
+        // head core ignites on impact + aura
+        tl.to("#core", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.0)", transformOrigin: "50% 50%" }, 2.55);
+        tl.fromTo("#core", { scale: 1 }, { scale: 1.14, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 3, transformOrigin: "50% 50%", immediateRender: false }, 2.95);
+        tl.to("#aura", { opacity: 1, duration: 0.55, ease: "power2.out" }, 2.55);
+        tl.fromTo("#aura", { scale: 0.92 }, { scale: 1.07, duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 2, transformOrigin: "50% 50%", immediateRender: false }, 3.0);
+
+        // signal rings radiate from the head
+        tl.fromTo("#ring1", { scale: 0.5, opacity: 0.75 }, { scale: 2.0, opacity: 0, duration: 1.2, ease: "power1.out", transformOrigin: "50% 50%", repeat: 1, immediateRender: false }, 2.7);
+        tl.fromTo("#ring2", { scale: 0.5, opacity: 0.7 },  { scale: 2.5, opacity: 0, duration: 1.4, ease: "power1.out", transformOrigin: "50% 50%", repeat: 1, immediateRender: false }, 3.1);
+        tl.fromTo("#ring3", { scale: 0.5, opacity: 0.6 },  { scale: 2.9, opacity: 0, duration: 1.5, ease: "power1.out", transformOrigin: "50% 50%", immediateRender: false }, 3.5);
+
+        // beam fades after delivery
+        tl.to("#beam", { opacity: 0, duration: 0.5, ease: "power1.out" }, 2.7);
+
+        // kicker
+        tl.from("#kicker", { y: 24, opacity: 0, duration: 0.5, ease: "power3.out" }, 2.8);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
