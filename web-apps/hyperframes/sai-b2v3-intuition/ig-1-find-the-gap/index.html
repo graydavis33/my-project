@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .kicker { position: absolute; left: 0; width: 100%; text-align: center; top: 700px;
+        font-weight: 900; font-size: 76px; color: #fff; text-transform: uppercase;
+        letter-spacing: -0.02em; text-shadow: 0 5px 16px rgba(0,0,0,0.5);
+        will-change: transform, opacity; }
+      .kicker .hl { color: #F28129; }
+
+      /* ground line */
+      .ground { position: absolute; left: 60px; top: 1486px; width: 960px; height: 4px;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 100%);
+        opacity: 0; will-change: opacity; }
+
+      /* buildings sit on the ground, grow up from the baseline */
+      .bldg { position: absolute; top: 0; width: 150px;
+        border: 2px solid rgba(255,255,255,0.18);
+        border-radius: 6px 6px 0 0; will-change: transform, opacity;
+        background-image:
+          repeating-linear-gradient(to bottom, transparent 0 26px, rgba(0,0,0,0.30) 26px 32px),
+          repeating-linear-gradient(to right, transparent 0 26px, rgba(0,0,0,0.30) 26px 32px),
+          linear-gradient(150deg, #8A93A0 0%, #5C6470 55%, #3C424C 100%);
+        box-shadow: 0 10px 26px rgba(0,0,0,0.30); }
+
+      /* the orange-glass tower that fills the gap */
+      .gapfill { position: absolute; top: 0; left: 546px; width: 150px;
+        border: 2px solid #fff; border-radius: 8px 8px 0 0;
+        will-change: transform, opacity;
+        background-image:
+          repeating-linear-gradient(to bottom, transparent 0 26px, rgba(255,255,255,0.20) 26px 32px),
+          repeating-linear-gradient(to right, transparent 0 26px, rgba(255,255,255,0.20) 26px 32px),
+          linear-gradient(150deg, #FFC68A 0%, #F28129 55%, #D66416 100%);
+        box-shadow: 0 0 28px 6px rgba(242,129,41,0.6), 0 12px 28px rgba(0,0,0,0.32),
+          inset 0 2px 10px rgba(255,255,255,0.45); }
+
+      /* empty-lot placeholder in the gap */
+      .lot { position: absolute; left: 546px; width: 150px; height: 150px; top: 1336px;
+        border: 3px dashed rgba(255,255,255,0.45); border-radius: 8px; opacity: 0;
+        will-change: opacity; }
+      .qmark { position: absolute; left: 546px; width: 150px; top: 1356px; text-align: center;
+        font-weight: 900; font-size: 96px; color: rgba(255,255,255,0.65); opacity: 0;
+        will-change: transform, opacity; }
+
+      /* spotlight pool + beam */
+      .spot { position: absolute; top: 980px; left: 0px; width: 460px; height: 700px;
+        opacity: 0; will-change: transform, opacity; pointer-events: none;
+        background: radial-gradient(ellipse 50% 50% at 50% 60%,
+          rgba(242,129,41,0.42) 0%, rgba(242,129,41,0.14) 45%, rgba(242,129,41,0) 72%); }
+      .glow { position: absolute; left: 526px; top: 700px; width: 190px; height: 820px;
+        opacity: 0; will-change: opacity; pointer-events: none;
+        background: radial-gradient(ellipse 50% 60% at 50% 70%,
+          rgba(242,129,41,0.5) 0%, rgba(242,129,41,0) 70%); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5.4" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5.4" data-track-index="1">
+
+        <div id="kicker" class="kicker">what's <span class="hl">missing</span>?</div>
+
+        <div id="ground" class="ground"></div>
+
+        <!-- grey skyline; gap is slot 3 (left 546) -->
+        <div id="b0" class="bldg" style="left:60px;  height:430px; top:1056px;"></div>
+        <div id="b1" class="bldg" style="left:222px; height:540px; top:946px;"></div>
+        <div id="b2" class="bldg" style="left:384px; height:470px; top:1016px;"></div>
+        <div id="b4" class="bldg" style="left:708px; height:560px; top:926px;"></div>
+        <div id="b5" class="bldg" style="left:870px; height:410px; top:1076px;"></div>
+
+        <div id="lot" class="lot"></div>
+        <div id="qmark" class="qmark">?</div>
+
+        <div id="spot" class="spot"></div>
+        <div id="glow" class="glow"></div>
+
+        <!-- gapfill: 640px tall, sits on baseline 1486 -> top 846 -->
+        <div id="gapfill" class="gapfill" style="height:640px; top:846px;"></div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // skyline establishes
+        tl.from("#ground", { opacity: 0, duration: 0.4, ease: "power2.out" }, 0.1);
+        tl.set("#ground", { opacity: 1 }, 0.5);
+        tl.from(["#b0", "#b1", "#b2", "#b4", "#b5"], {
+          scaleY: 0, opacity: 0, duration: 0.6, ease: "power3.out",
+          transformOrigin: "50% 100%", stagger: 0.09 }, 0.2);
+
+        // the empty lot + question
+        tl.fromTo("#lot", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, 0.95);
+        tl.fromTo("#qmark", { opacity: 0, y: 14, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.7)", immediateRender: false }, 1.05);
+        tl.fromTo("#qmark", { y: 0 }, { y: -12, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 2, immediateRender: false }, 1.6);
+
+        // kicker
+        tl.from("#kicker", { y: -24, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.35);
+
+        // spotlight sweeps in from the left and settles on the gap
+        tl.fromTo("#spot", { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, 2.0);
+        tl.to("#spot", { x: 310, duration: 0.95, ease: "power2.inOut" }, 2.5);  // lands centered on lot (left 546, w150 center 621; spot center 230 -> +391... settle near gap)
+
+        // the gap fills: orange tower rises out of the lot
+        tl.to("#lot", { opacity: 0, duration: 0.3, ease: "power1.in" }, 3.45);
+        tl.to("#qmark", { opacity: 0, y: -30, duration: 0.3, ease: "power1.in" }, 3.4);
+        tl.fromTo("#gapfill", { scaleY: 0, opacity: 1 }, { scaleY: 1, duration: 0.85, ease: "power3.out", transformOrigin: "50% 100%", immediateRender: false }, 3.5);
+        tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out", immediateRender: false }, 3.7);
+        tl.fromTo("#glow", { scale: 0.94 }, { scale: 1.05, duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "50% 75%", immediateRender: false }, 4.2);
+        tl.to("#spot", { opacity: 0, duration: 0.5, ease: "power1.out" }, 4.2);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
