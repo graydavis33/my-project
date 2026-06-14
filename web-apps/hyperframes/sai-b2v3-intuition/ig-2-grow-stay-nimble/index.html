@@ -12,98 +12,114 @@
       }
       .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
 
-      /* camera world */
+      /* the camera — cranes up the tower */
       .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
 
-      .ground { position: absolute; left: 140px; top: 1560px; width: 800px; height: 4px;
-        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
-        opacity: 0; will-change: opacity; }
+      /* base haze + ground glow */
+      .haze { position: absolute; left: -200px; top: 1480px; width: 1480px; height: 520px;
+        opacity: 0; will-change: opacity; pointer-events: none;
+        background: radial-gradient(ellipse 46% 60% at 50% 30%, rgba(242,129,41,0.34) 0%, rgba(242,129,41,0.08) 46%, rgba(242,129,41,0) 72%); }
 
-      /* ---- towers (revealed bottom-up via scaleY) ---- */
-      .tower { position: absolute; width: 260px; will-change: transform, opacity; }
-
-      .grey { left: 230px; top: 660px; height: 900px;
-        border: 2px solid rgba(255,255,255,0.16); border-radius: 8px 8px 0 0;
+      /* dim grey corporate towers left behind at the base */
+      .greys { position: absolute; left: 0; top: 0; width: 1080px; filter: blur(2px) saturate(0.5) brightness(0.62); }
+      .grey { position: absolute; border-radius: 5px 5px 0 0; border: 1px solid rgba(255,255,255,0.06);
         background-image:
-          repeating-linear-gradient(to bottom, transparent 0 30px, rgba(0,0,0,0.32) 30px 37px),
-          repeating-linear-gradient(to right, transparent 0 30px, rgba(0,0,0,0.32) 30px 37px),
-          linear-gradient(155deg, #8A93A0 0%, #5C6470 55%, #3C424C 100%);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.34); }
+          repeating-linear-gradient(to bottom, rgba(0,0,0,0.40) 0 5px, transparent 5px 40px),
+          repeating-linear-gradient(to right, rgba(0,0,0,0.40) 0 5px, transparent 5px 44px),
+          linear-gradient(160deg, #79828F 0%, #4E555F 60%, #343A42 100%);
+        box-shadow: 0 14px 36px rgba(0,0,0,0.4); }
 
-      .orange { left: 590px; top: 660px; height: 900px;
-        border: 2px solid #fff; border-radius: 10px 10px 0 0;
+      /* ===== the hero: soaring orange-glass tower ===== */
+      .towerwrap { position: absolute; left: 392px; top: -1520px; width: 296px; height: 3220px;
+        clip-path: polygon(9% 0, 91% 0, 100% 100%, 0 100%); overflow: hidden;
+        will-change: transform, opacity; filter: drop-shadow(0 0 46px rgba(242,129,41,0.45)); }
+
+      .face { position: absolute; inset: 0; }
+      /* dim, "asleep" facade */
+      .face.dim {
         background-image:
-          repeating-linear-gradient(to bottom, transparent 0 30px, rgba(255,255,255,0.20) 30px 37px),
-          repeating-linear-gradient(to right, transparent 0 30px, rgba(255,255,255,0.20) 30px 37px),
-          linear-gradient(155deg, #FFC68A 0%, #F28129 55%, #D66416 100%);
-        box-shadow: 0 0 30px 7px rgba(242,129,41,0.55), 0 14px 32px rgba(0,0,0,0.34),
-          inset 0 2px 12px rgba(255,255,255,0.45); }
-
-      .aura { position: absolute; left: 540px; top: 560px; width: 360px; height: 1100px;
-        opacity: 0; will-change: opacity; pointer-events: none; border-radius: 50%;
-        background: radial-gradient(ellipse 50% 50% at 50% 55%,
-          rgba(242,129,41,0.40) 0%, rgba(242,129,41,0.10) 48%, rgba(242,129,41,0) 72%); }
-
-      /* ---- red tape bands + locks on the grey tower ---- */
-      .band { position: absolute; left: 214px; width: 292px; height: 36px;
-        border-radius: 4px; opacity: 0; will-change: transform, opacity;
-        background: repeating-linear-gradient(45deg, #C8443A 0 16px, #A83329 16px 32px);
-        box-shadow: 0 3px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.18); }
-      .lock { position: absolute; width: 56px; height: 56px; opacity: 0;
-        will-change: transform, opacity; filter: drop-shadow(0 4px 7px rgba(0,0,0,0.4)); }
-
-      /* ---- intuition sparks rising off the orange tower ---- */
-      .spark { position: absolute; width: 18px; height: 18px; border-radius: 50%; opacity: 0;
+          repeating-linear-gradient(to bottom, rgba(0,0,0,0.34) 0 6px, transparent 6px 46px),
+          repeating-linear-gradient(to right, rgba(0,0,0,0.36) 0 7px, transparent 7px 52px),
+          linear-gradient(155deg, #B9824F 0%, #8C5C32 58%, #5E3C20 100%);
+        background-position: center bottom; }
+      /* lit facade, revealed bottom-up as we ascend */
+      .lit { position: absolute; left: 0; right: 0; bottom: 0; height: 0; overflow: hidden; will-change: height; }
+      .lit .face {
+        position: absolute; left: 0; right: 0; top: auto; bottom: 0; height: 3220px;
+        background-image:
+          repeating-linear-gradient(to bottom, rgba(255,240,220,0.16) 0 6px, transparent 6px 46px),
+          repeating-linear-gradient(to right, rgba(255,240,220,0.18) 0 7px, transparent 7px 52px),
+          linear-gradient(155deg, #FFE0B8 0%, #F8923A 52%, #D86B1C 100%);
+        background-position: center bottom;
+        box-shadow: inset 0 0 60px rgba(255,210,150,0.5); }
+      /* bloom band riding the top edge of the lit fill (child of towerwrap, animated up) */
+      .bloom { position: absolute; left: -10%; right: -10%; bottom: -20px; height: 78px; opacity: 0;
         will-change: transform, opacity;
-        background: radial-gradient(circle at 50% 40%, #FFF1DF 0%, #FFB163 45%, #F28129 100%);
-        box-shadow: 0 0 14px 3px rgba(242,129,41,0.8); }
+        background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,236,200,0.95) 0%, rgba(255,170,90,0.4) 45%, rgba(255,150,70,0) 75%);
+        filter: blur(3px); }
 
-      /* ---- base badges ---- */
-      .badge { position: absolute; top: 1592px; width: 260px; text-align: center;
-        font-weight: 900; font-size: 46px; letter-spacing: 0.02em; text-transform: uppercase;
-        opacity: 0; will-change: transform, opacity; text-shadow: 0 4px 12px rgba(0,0,0,0.5); }
-      .badge.them { left: 230px; color: #AEB6C0; }
-      .badge.you  { left: 590px; color: #F28129; }
+      /* left rim light + right depth face for dimensionality */
+      .rim { position: absolute; left: 0; top: 0; width: 16px; height: 100%;
+        background: linear-gradient(90deg, rgba(255,240,220,0.85), rgba(255,240,220,0)); }
+      .depth { position: absolute; right: 0; top: 0; width: 30px; height: 100%;
+        background: linear-gradient(270deg, rgba(0,0,0,0.45), rgba(0,0,0,0)); }
+
+      /* crown spire + beacon */
+      .spire { position: absolute; left: 528px; top: -1612px; width: 24px; height: 110px;
+        background: linear-gradient(180deg, #FFD9A8, #F28129); border-radius: 12px 12px 0 0;
+        opacity: 0; will-change: transform, opacity; filter: drop-shadow(0 0 14px rgba(242,129,41,0.8)); }
+      .beacon { position: absolute; left: 524px; top: -1640px; width: 32px; height: 32px; border-radius: 50%;
+        background: radial-gradient(circle at 50% 40%, #FFF6E8 0%, #FFB163 50%, #F28129 100%);
+        opacity: 0; will-change: transform, opacity; box-shadow: 0 0 30px 10px rgba(242,129,41,0.9); }
+      .glint { position: absolute; left: 470px; top: -1690px; width: 140px; height: 140px; opacity: 0;
+        will-change: transform, opacity; pointer-events: none;
+        background:
+          linear-gradient(0deg, transparent 47%, rgba(255,245,225,0.95) 50%, transparent 53%),
+          linear-gradient(90deg, transparent 47%, rgba(255,245,225,0.95) 50%, transparent 53%);
+        filter: blur(0.5px); }
+
+      /* embers drifting up the face (subtle, with vertical blur) */
+      .ember { position: absolute; width: 10px; height: 26px; border-radius: 50%; opacity: 0;
+        will-change: transform, opacity; filter: blur(1px);
+        background: linear-gradient(180deg, rgba(255,200,140,0) 0%, #FFB163 60%, #F28129 100%);
+        box-shadow: 0 0 12px 3px rgba(242,129,41,0.6); }
     </style>
   </head>
   <body>
-    <div data-hf-id="hf-uipy" id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
-      <div data-hf-id="hf-3f1p" id="scene" class="scene clip" data-start="0" data-duration="6" data-track-index="1">
-        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="6" data-track-index="1">
+        <div id="world" class="world" data-layout-allow-overflow>
 
-          <div data-hf-id="hf-qlg6" id="ground" class="ground"></div>
-          <div data-hf-id="hf-zwku" id="aura" class="aura"></div>
+          <div id="haze" class="haze"></div>
 
-          <div data-hf-id="hf-4ifz" id="grey" class="tower grey"></div>
-          <div data-hf-id="hf-d3mz" id="orange" class="tower orange"></div>
+          <!-- grey towers clustered low at the base -->
+          <div class="greys" data-layout-allow-overflow>
+            <div class="grey" style="left:70px;  top:1230px; width:150px; height:330px;"></div>
+            <div class="grey" style="left:240px; top:1140px; width:130px; height:420px;"></div>
+            <div class="grey" style="left:720px; top:1180px; width:140px; height:380px;"></div>
+            <div class="grey" style="left:880px; top:1260px; width:150px; height:300px;"></div>
+            <div class="grey" style="left:610px; top:1300px; width:90px;  height:260px;"></div>
+          </div>
 
-          <!-- red tape bands (separate overlay so scaleY doesn't distort them) -->
-          <div data-hf-id="hf-vzi3" id="band1" class="band" style="top:1380px;"></div>
-          <div data-hf-id="hf-chn2" id="band2" class="band" style="top:1180px;"></div>
-          <div data-hf-id="hf-1hbe" id="band3" class="band" style="top:980px;"></div>
-          <div data-hf-id="hf-sq0c" id="band4" class="band" style="top:790px;"></div>
+          <!-- HERO tower -->
+          <div id="towerwrap" class="towerwrap" data-layout-allow-overflow>
+            <div class="face dim"></div>
+            <div id="lit" class="lit" data-layout-allow-overflow>
+              <div class="face"></div>
+            </div>
+            <div id="bloom" class="bloom" data-layout-allow-overflow></div>
+            <div class="rim"></div>
+            <div class="depth"></div>
+          </div>
 
-          <svg data-hf-id="hf-8uei" id="lockA" class="lock" style="left:332px; top:1370px;" viewBox="0 0 24 24">
-            <rect data-hf-id="hf-6dsw" x="4" y="10" width="16" height="11" rx="2.4" fill="#F2E9DF" />
-            <path data-hf-id="hf-71ym" d="M7.5 10V7.5a4.5 4.5 0 0 1 9 0V10" fill="none" stroke="#F2E9DF" stroke-width="2.4" />
-            <circle data-hf-id="hf-zfrk" cx="12" cy="15" r="1.8" fill="#3C424C" />
-          </svg>
-          <svg data-hf-id="hf-e5tq" id="lockB" class="lock" style="left:332px; top:970px;" viewBox="0 0 24 24">
-            <rect data-hf-id="hf-4rx4" x="4" y="10" width="16" height="11" rx="2.4" fill="#F2E9DF" />
-            <path data-hf-id="hf-xodu" d="M7.5 10V7.5a4.5 4.5 0 0 1 9 0V10" fill="none" stroke="#F2E9DF" stroke-width="2.4" />
-            <circle data-hf-id="hf-fdk8" cx="12" cy="15" r="1.8" fill="#3C424C" />
-          </svg>
+          <div id="spire" class="spire"></div>
+          <div id="beacon" class="beacon"></div>
+          <div id="glint" class="glint"></div>
 
-          <!-- sparks drifting up off the orange tower -->
-          <div data-hf-id="hf-lhjp" id="sp1" class="spark" style="left:640px; top:1180px;"></div>
-          <div data-hf-id="hf-paen" id="sp2" class="spark" style="left:730px; top:1280px;"></div>
-          <div data-hf-id="hf-lwrv" id="sp3" class="spark" style="left:800px; top:1120px;"></div>
-          <div data-hf-id="hf-1sln" id="sp4" class="spark" style="left:680px; top:980px;"></div>
-          <div data-hf-id="hf-42aa" id="sp5" class="spark" style="left:770px; top:1040px;"></div>
-          <div data-hf-id="hf-0puc" id="sp6" class="spark" style="left:705px; top:860px;"></div>
-
-          <div data-hf-id="hf-rfa7" id="bThem" class="badge them">them</div>
-          <div data-hf-id="hf-c48g" id="bYou" class="badge you">you</div>
+          <div id="em1" class="ember" style="left:430px; top:1300px;"></div>
+          <div id="em2" class="ember" style="left:630px; top:1180px;"></div>
+          <div id="em3" class="ember" style="left:500px; top:980px;"></div>
+          <div id="em4" class="ember" style="left:590px; top:760px;"></div>
 
         </div>
       </div>
@@ -114,46 +130,38 @@
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
-        // ground
-        tl.from("#ground", { opacity: 0, duration: 0.4, ease: "power2.out" }, 0.1);
-        tl.set("#ground", { opacity: 1 }, 0.5);
+        // camera starts framed on the base of the tower (grey towers in shot)
+        gsap.set("#world", { x: 0, y: -80, scale: 1.0 });
 
-        // both towers rise from the baseline
-        tl.fromTo("#grey",   { scaleY: 0, opacity: 1 }, { scaleY: 1, duration: 1.1, ease: "power3.out", transformOrigin: "50% 100%", immediateRender: false }, 0.3);
-        tl.fromTo("#orange", { scaleY: 0, opacity: 1 }, { scaleY: 1, duration: 1.1, ease: "power3.out", transformOrigin: "50% 100%", immediateRender: false }, 0.3);
+        // settle in
+        tl.from("#towerwrap", { opacity: 0, duration: 0.5, ease: "power2.out" }, 0.0);
+        tl.fromTo("#haze", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", immediateRender: false }, 0.2);
 
-        // base badges
-        tl.from("#bThem", { opacity: 0, y: 18, duration: 0.45, ease: "power2.out" }, 1.2);
-        tl.from("#bYou",  { opacity: 0, y: 18, duration: 0.45, ease: "back.out(1.6)" }, 1.35);
+        // the light ignites and races up the tower (bottom -> top)
+        tl.to("#lit", { height: 3220, duration: 3.6, ease: "power1.in" }, 0.6);
+        // bloom rides the leading edge of the lit fill (same ease so it stays on the wavefront)
+        tl.to("#bloom", { opacity: 1, duration: 0.4, ease: "power2.out" }, 0.7);
+        tl.to("#bloom", { y: -3190, duration: 3.6, ease: "power1.in" }, 0.6);
+        tl.to("#bloom", { opacity: 0, duration: 0.4, ease: "power1.out" }, 4.0);
 
-        // grey tower gets wrapped in red tape (bottom -> up), stiffens
-        tl.fromTo(["#band1","#band2","#band3","#band4"],
-          { scaleX: 0, opacity: 0 },
-          { scaleX: 1, opacity: 1, duration: 0.4, ease: "power2.out", transformOrigin: "50% 50%", stagger: 0.18, immediateRender: false }, 1.5);
-        tl.fromTo(["#lockA","#lockB"],
-          { scale: 0, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.2)", transformOrigin: "50% 50%", stagger: 0.42, immediateRender: false }, 1.7);
-        // a small stiff clamp shudder once tape is on
-        tl.fromTo("#grey", { x: 0 }, { x: -4, duration: 0.07, ease: "power1.inOut", yoyo: true, repeat: 3, immediateRender: false }, 2.5);
+        // CAMERA cranes UP the tower, synced (Y + slight scale + tiny x to stay centered)
+        // start (0,-80,1.0) -> end (-43, 2050, 1.08); one ease so the crown glides to frame
+        tl.to("#world", { x: -43, y: 2050, scale: 1.08, duration: 3.9, ease: "power2.inOut" }, 0.7);
 
-        // orange tower stays lit: aura + rising intuition sparks
-        tl.fromTo("#aura", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", immediateRender: false }, 1.5);
-        tl.fromTo("#aura", { scale: 0.95 }, { scale: 1.05, duration: 1.3, ease: "sine.inOut", yoyo: true, repeat: 2, transformOrigin: "50% 55%", immediateRender: false }, 2.0);
-
-        const sparks = ["#sp1","#sp2","#sp3","#sp4","#sp5","#sp6"];
-        const sdelay = [1.7, 2.0, 2.3, 2.1, 2.5, 2.6];
-        sparks.forEach((s, i) => {
-          tl.fromTo(s, { opacity: 0, y: 40, scale: 0.6 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, sdelay[i]);
-          tl.fromTo(s, { y: 0, opacity: 1 },
-            { y: -120, opacity: 0, duration: 1.5, ease: "power1.in", repeat: 1, immediateRender: false }, sdelay[i] + 0.4);
+        // embers drift up the face as we rise
+        const ems = ["#em1","#em2","#em3","#em4"];
+        const ed  = [0.9, 1.4, 2.0, 2.6];
+        ems.forEach((e, i) => {
+          tl.fromTo(e, { opacity: 0, y: 60 }, { opacity: 0.9, y: 0, duration: 0.4, ease: "power2.out", immediateRender: false }, ed[i]);
+          tl.fromTo(e, { y: 0, opacity: 0.9 }, { y: -180, opacity: 0, duration: 1.6, ease: "power1.in", immediateRender: false }, ed[i] + 0.4);
         });
 
-        // ---- synced camera push toward the orange tower (X + Y + scale, one ease) ----
-        // frame world point (720,1100) at scale 1.4: tx=540-1.4*720=-468, ty=960-1.4*1100=-580
-        tl.fromTo("#world",
-          { x: 0, y: 0, scale: 1 },
-          { x: -468, y: -580, scale: 1.4, duration: 1.6, ease: "power2.inOut", transformOrigin: "0 0", immediateRender: false }, 3.8);
+        // reaching the crown: spire + beacon + glint bloom
+        tl.fromTo("#spire", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", immediateRender: false }, 3.7);
+        tl.fromTo("#beacon", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2.2)", transformOrigin: "50% 50%", immediateRender: false }, 4.1);
+        tl.fromTo("#beacon", { scale: 1 }, { scale: 1.18, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 2, transformOrigin: "50% 50%", immediateRender: false }, 4.55);
+        tl.fromTo("#glint", { opacity: 0, scale: 0.3, rotation: 0 }, { opacity: 0.95, scale: 1, rotation: 45, duration: 0.5, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, 4.3);
+        tl.to("#glint", { opacity: 0, scale: 1.3, duration: 0.7, ease: "power1.out" }, 4.8);
 
         window.__timelines["main"] = tl;
       })();
