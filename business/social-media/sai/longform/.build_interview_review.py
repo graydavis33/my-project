@@ -63,7 +63,8 @@ button:hover{border-color:var(--accent)}button.primary{background:var(--accent);
 .block{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:18px}
 .block h2{margin:0 0 2px;font-size:16px}.block .feeds{color:var(--accent);font-size:12px;margin-bottom:12px}
 .q{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-bottom:8px}
-.q.cut{opacity:.45}
+.cutinfo{font-size:12px;color:var(--muted);margin-top:6px}
+.cutinfo a{color:var(--accent);cursor:pointer;text-decoration:underline}
 .star{cursor:pointer;font-size:18px;line-height:1.3;color:var(--line);user-select:none}
 .star.on{color:var(--star)}
 .qbody{flex:1}
@@ -110,7 +111,7 @@ function qRow(bi,qi,base,extraIdx){
   const cut  = !!ov.cut;
   const note = ov.note||"";
   const id = extraIdx!=null?("x"+extraIdx):qi;
-  return `<div class="q ${cut?'cut':''}">
+  return `<div class="q">
      <span class="star ${must?'on':''}" data-bi="${bi}" data-id="${id}" data-act="must">★</span>
      <div class="qbody">
        <textarea class="qtext" data-bi="${bi}" data-id="${id}" data-f="text" rows="1">${esc(text)}</textarea>
@@ -124,13 +125,15 @@ function render(){
   const list=document.getElementById("list"); list.innerHTML="";
   DATA.blocks.forEach((blk,bi)=>{
     const b=bs(bi);
-    let rows = blk.qs.map((base,qi)=>qRow(bi,qi,base,null)).join("");
-    rows += (b.extra||[]).map((e,xi)=>qRow(bi,null,null,xi)).join("");
+    let rows="",cutCount=0;
+    blk.qs.forEach((base,qi)=>{const o=b.q[qi]||{};if(o.cut){cutCount++;return;}rows+=qRow(bi,qi,base,null);});
+    (b.extra||[]).forEach((e,xi)=>{if(e.cut){cutCount++;return;}rows+=qRow(bi,null,null,xi);});
     const el=document.createElement("div"); el.className="block";
     el.innerHTML=`<h2>Block ${esc(blk.letter)} — ${esc(blk.title)}</h2>
       ${blk.feeds?`<div class="feeds">↳ feeds: ${esc(blk.feeds)}</div>`:''}
       ${rows}
-      <button class="addq" data-bi="${bi}">+ add question</button>`;
+      <button class="addq" data-bi="${bi}">+ add question</button>
+      ${cutCount?`<div class="cutinfo">${cutCount} cut · <a class="restore" data-bi="${bi}">restore</a></div>`:''}`;
     list.appendChild(el);
   });
   list.querySelectorAll(".star,.cutbtn").forEach(el=>el.onclick=()=>{
@@ -145,6 +148,7 @@ function render(){
     if(el.classList.contains("qtext")){el.style.height="auto";el.style.height=el.scrollHeight+"px";}
   });
   list.querySelectorAll(".addq").forEach(el=>el.onclick=()=>{bs(el.dataset.bi).extra.push({text:"",must:false,note:""});save();render();});
+  list.querySelectorAll(".restore").forEach(el=>el.onclick=()=>{const b=bs(el.dataset.bi);for(const k in b.q)b.q[k].cut=false;(b.extra||[]).forEach(e=>e.cut=false);save();render();});
   list.querySelectorAll(".qtext").forEach(el=>{el.style.height="auto";el.style.height=el.scrollHeight+"px";});
   renderProg();
 }
