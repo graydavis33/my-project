@@ -64,3 +64,43 @@ This folder is the workspace-side mirror — for SOPs that need to live next to 
 4. **5/03 "Day X of building Trendify" cinematic daily diary is DEAD.** Do not propose it.
 5. **Every post passes the pre-post checklist or it doesn't ship.**
 6. **Track views-to-followers conversion %, not raw views.**
+
+---
+
+## Pipeline — stages & status (updated 2026-06-15, from the 2026-06-14 production-system review)
+
+Status: 🟢 built/live · 🟡 planned/next. This is the living map of the COS as we build it.
+
+### SHORTS
+1. **Capture** — Gray's end-of-day on-set notes (interesting moments → short ideas) — 🟡 planned
+2. **Plan** — weekly format MENU + topics in Notion; Sai approves/swaps morning-of — 🟡 planned
+3. **Research** — Sandcastles: proven hooks / formats / top performers in the niche — 🟢 live
+4. **Script** — cross-merge Sai's real talking points × proven formats → scriptwriter writes A/B/C hooks, **each with a distinct VISUAL treatment** — 🟢 built (Batch 3)
+5. **Review** — editable batch-review HTML (`scripts/.build_batch_review.py`); pick hook, Approve/Swap/Cut, edit text, Sandcastles ref links — 🟢 built
+6. **Produce** — film → selects cut + caption layer (`_b2_edit/pipeline.py`) — 🟢 live
+7. **Measure** — retention-only dashboard + outlier flag — 🟡 planned
+
+### LONG-FORM (cinematic BTS doc — focus of the 6/15 build)
+1. **Transcribe** the week's raw footage (local Whisper) — 🟢 live
+2. **Map the story arc** — `story-arc-board` web tool (folder-scoped) + `EP{N}-ARC-MAP.md` — 🟢 built
+3. **Lock title + thumbnail** (BEFORE the A-roll) — ideation pass + editable HTML — 🟡 next
+4. **Interview questions** derived from the arc — `EP{N}-INTERVIEW-QUESTIONS.md` — 🟢 built (EP2)
+5. **Review interview Qs** — editable HTML for Sai (`longform/.build_interview_review.py`) — 🟢 built
+6. **Pre-edit pool** — clips duplicated into `07_QUERY_PULLS/EP{N}-arc-map/`, renamed in story order + `_EDIT-GUIDE.md` — 🟢 built (EP2)
+7. **Film → Premiere edit** (interview = spine, B-roll cut under it) — 🟢 Gray
+8. **Series template** (repeatable skeleton) — `longform/ep2/_SERIES-TEMPLATE.md` — 🟢 exists
+
+### LINKEDIN
+1. **Draft** — `python-scripts/sai-linkedin` (keep as-is, Sai loves it) — 🟢 live
+2. **Reusable image Drive** — a stock of visuals to choose from — 🟡 planned
+3. **Repurpose** — into carousels / stories / BTS culture videos (recruiting) — 🟡 planned
+
+### What changed (2026-06-14 review)
+- **Variety is the mandate** — formats, graphics, content types (shorts were too samey).
+- **Long-form = STORY, not tutorial** — map the arc + lock title/thumbnail before the A-roll; one story per video.
+- **Instagram is the priority platform; retention is the only shorts metric Sai cares about.**
+- **Division of labor:** Gray owns format + topics (from daily notes); Sai scripts the words.
+- **New rule:** A/B/C trial-reel hooks must differ VISUALLY, not just verbally.
+- **New tooling:** `story-arc-board`, two reusable editable-HTML review generators (batch + interview), Sandcastles-cross-merge scripting.
+
+Full review + backlog: `business/social-media/sai/reviews/2026-06-14-production-system-review.md` + `SYSTEM-BACKLOG.md`.
