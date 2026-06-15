@@ -260,6 +260,19 @@ python cli_index.py --client sai ship --video "<delivered video name>"
 - Footage located by parsing `Batch N Vid M` from the name, or `--footage <folder>`. Overrides: `--project`, `--category`, `--format`, `--week`/`--no-week`, `--yes`.
 - **Safe:** plan-first (nothing moves until you confirm), pure moves, never overwrites; warns + skips a half it can't locate instead of guessing. `_ship_plan`/`_execute_ship` are split so a future folder-watcher can reuse the engine headless.
 
+### v3.2: Auto-watch (watch_delivered.py) → Slack approval
+
+`watch_delivered.py` watches `03_DELIVERED`; on a new finished export it builds the `ship` plan, posts it to Slack, and on your ✅ reaction runs the moves + re-index.
+
+```bash
+.venv/bin/python watch_delivered.py --client sai             # foreground watcher
+.venv/bin/python watch_delivered.py --client sai --self-test  # verify Slack post + reaction read
+```
+
+- Needs `SLACK_BOT_TOKEN` + `SLACK_USER_ID` in `.env` (reuse the other tools' values) and the bot's `reactions:read` scope.
+- Debounces until the file size is stable (export done); baselines existing files on first run → reacts only to NEW drops; handled set persisted in `.ship-watch-state.json`.
+- **One watcher per machine** (one-scheduler rule). The footage drive is local, so it runs on the Mac, not the VPS. Daemonize via launchd only after a clean foreground test.
+
 ### Talking to Claude in chat
 
 > Gray says: "pull all vertical clips from April 16"

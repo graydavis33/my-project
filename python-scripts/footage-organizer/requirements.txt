@@ -1,3 +1,4 @@
 anthropic>=0.84.0
 python-dotenv>=1.2.0
 pytest>=8.0
+slack_sdk>=3.27   # delivered-folder watcher → Slack approval

@@ -192,6 +192,30 @@ It plans two moves:
 - **Safe:** plan-first, pure moves, never overwrites; if it can't find the project or footage it **warns and skips that half** rather than guessing.
 - The `_ship_plan` / `_execute_ship` split lets a folder-watcher reuse the same engine headless — the planned "drop a file → auto-plan → approve" trigger.
 
+## v3.2 — Auto-watch delivered → Slack approval (watch_delivered.py)
+
+A background watcher that turns the `ship` engine into the "just drop a file" flow:
+
+```bash
+.venv/bin/python watch_delivered.py --client sai
+```
+
+When you export/drop a video into `03_DELIVERED`, it:
+1. notices the new file and **waits until it stops growing** (export finished),
+2. builds the `ship` plan,
+3. **posts it to your Slack** — you react ✅ to approve or ❌ to skip,
+4. on ✅ it moves the files + re-indexes and reports back in Slack.
+
+**One-time setup:** add `SLACK_BOT_TOKEN` + `SLACK_USER_ID` to `.env` (same values your other tools use). The bot needs the `reactions:read` scope so it can see your ✅. Test the link first:
+
+```bash
+.venv/bin/python watch_delivered.py --client sai --self-test   # posts a test msg; react ✅
+```
+
+- **Baselines** the existing delivered files on first run, so it only reacts to NEW exports.
+- Handled set is persisted in `.ship-watch-state.json` at the library root.
+- One watcher per machine (one-scheduler rule); the footage drive is local so it runs on the Mac, not the VPS. Run it in the foreground while testing; daemonize (launchd) only after a clean test.
+
 ## --source flag (cleanup mode)
 
 For loose footage already in your library that needs to be classified:

@@ -85,6 +85,11 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - Project found by name (reuses `_find_stage_item`); footage located by parsing `Batch N Vid M` from the video name → `Batch_0N/Vid_0M`, else `--footage`. A missing half → warn + skip (never guesses). Overwrite → abort.
 - The `(moves, warnings)` split is deliberate: a planned folder-watcher reuses `_ship_plan`/`_execute_ship` headless to do "drop file in 03_DELIVERED → auto-plan → approve → execute". The watcher MUST wait for the export to finish writing (file size stable) before planning, or it'll act on a half-written file.
 
+**v3.2 — delivered watcher (`watch_delivered.py`, 2026-06-15):**
+- Poll-based local watcher (no watchdog dep). `_delivered_videos` lists video files under 03_DELIVERED; `_stable_new_items` returns a new file only once its size is unchanged across two scans (export-done debounce); first run baselines existing files into `.ship-watch-state.json` so it reacts to NEW drops only.
+- Reuses the ship engine headless: `_ship_plan` → post to Slack → `_await_reaction` polls `reactions.get` for ✅/❌ → `_execute_ship` + `_reindex`. Slack via slack_sdk WebClient + `SLACK_BOT_TOKEN`/`SLACK_USER_ID` (same pattern as morning-briefing/creator-intel); imported LAZILY so the pure helpers unit-test without slack_sdk or creds.
+- NEEDS: `SLACK_BOT_TOKEN` + `SLACK_USER_ID` in .env + the bot's `reactions:read` scope (verify with `--self-test`). One watcher per machine (one-scheduler rule); Mac-only (local drive). launchd daemonization deferred until a clean foreground test.
+
 **Hard rules:**
 - Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
 - `08_QUERY_PULLS/` is the ONLY place duplicates are tolerated — and only temporarily, until the edit ships
