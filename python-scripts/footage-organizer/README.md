@@ -135,6 +135,29 @@ python cli_index.py --client sai pull --category interview-solo --filmed-after 2
    etc.
 ```
 
+## v3 — Batch shoots by Vid
+
+When a shoot is a batch of shorts (each video is its own set of takes), file it by Vid in one command instead of hand-sorting:
+
+```bash
+python cli_index.py --client sai batch --num 2 \
+    --from "01_ORGANIZED/2026-06-07" \
+    --map "1:C2493-C2495 2:C2496-C2498 3:C2500"
+```
+
+What it does, in order:
+1. Ensures this week's folders exist (lazy `ensure_week`).
+2. Creates `01_ORGANIZED/Batch_02/Vid_01/`, `Vid_02/`, …
+3. Moves each mapped clip range into its Vid folder (the 3 hook takes land together).
+4. Re-indexes — tagging those clips `batch_num=2, vid_num=1…` in the SQLite index.
+5. Reports anything **unmapped** (video left in the source) and any **mapped clip with no file** — nothing is silently dropped.
+
+- `--from` is relative to the library root (or an absolute path).
+- `--map` is space-separated `Vid:clips`, where clips is a single id (`C2500`), a range (`C2493-C2495`), or a comma list (`C2493,C2495`).
+- Sony sidecars (e.g. `C2493M01.XML`) move with their clip.
+- Re-running is safe — clips already in a Vid folder are left as-is (idempotent).
+- **No Vision/AI on batch footage** — it's mapped, not classified, so $0 API spend. The `batch_num`/`vid_num` tags are derived from the folder path, so a plain `index` re-run keeps them correct.
+
 ## --source flag (cleanup mode)
 
 For loose footage already in your library that needs to be classified:

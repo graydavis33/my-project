@@ -221,6 +221,21 @@ read time.
 
 All `pull` filters: `--category`, `--orientation`, `--filmed-date`, `--filmed-after`, `--filmed-before`, `--min-duration`, `--max-duration`
 
+### v3: Batch command (file a shoot by Vid)
+
+For batch shorts shoots, `batch` files each video's takes into `01_ORGANIZED/Batch_NN/Vid_MM/` and re-indexes — one command, no hand-sorting and nothing left to remember:
+
+```bash
+python cli_index.py --client sai batch --num 2 \
+    --from "01_ORGANIZED/2026-06-07" \
+    --map "1:C2493-C2495 2:C2496-C2498 3:C2500"
+```
+
+- Ensures the week → makes `Batch_02/Vid_01..NN/` → moves the mapped clips → re-indexes (tags `batch_num`/`vid_num`).
+- `--map`: `Vid:clips`, where clips is a single id, a `Cxxxx-Cyyyy` range, or a comma list. Sony sidecars move with their clip.
+- Reports **unmapped** source video + any **mapped clip with no file** — nothing is silently dropped. Idempotent on re-run.
+- **No Vision** on batch footage (mapped, not classified) → $0. `batch_num`/`vid_num` are derived from the folder path, so a later plain `index` re-derives them.
+
 ### Talking to Claude in chat
 
 > Gray says: "pull all vertical clips from April 16"

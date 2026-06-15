@@ -50,7 +50,6 @@ CREATE INDEX IF NOT EXISTS idx_filmed_date ON clips(filmed_date);
 CREATE INDEX IF NOT EXISTS idx_category    ON clips(category);
 CREATE INDEX IF NOT EXISTS idx_format      ON clips(format);
 CREATE INDEX IF NOT EXISTS idx_sha1        ON clips(sha1);
-CREATE INDEX IF NOT EXISTS idx_batch       ON clips(batch_num, vid_num);
 """
 
 
@@ -70,6 +69,9 @@ def _migrate(conn) -> None:
         conn.execute("ALTER TABLE clips ADD COLUMN batch_num INTEGER")
     if "vid_num" not in cols:
         conn.execute("ALTER TABLE clips ADD COLUMN vid_num INTEGER")
+    # Created here (not in _SCHEMA) so it runs AFTER the columns exist on an
+    # older DB being migrated in place.
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_batch ON clips(batch_num, vid_num)")
 
 
 def upsert(db_path: Path, rec: ClipRecord) -> None:

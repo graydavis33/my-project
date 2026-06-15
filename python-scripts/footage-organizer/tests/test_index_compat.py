@@ -58,7 +58,8 @@ def test_legacy_absolute_path_db_is_detected(tmp_path):
     db = tmp_path / "legacy.sqlite"; index.init(db)
     with sqlite3.connect(db) as conn:
         conn.execute(
-            "INSERT INTO clips VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO clips (path, category, format, filmed_date, upload_date, "
+            "duration_s, width, height, codec, sha1) VALUES (?,?,?,?,?,?,?,?,?,?)",
             ("/Volumes/Footage/Sai/05_FOOTAGE_LIBRARY/misc/W01_Apr-15-19/x.mp4",
              "misc", "long-form", "2026-04-16", "2026-04-16",
              1.0, 1920, 1080, "h264", "abc"),
@@ -71,7 +72,8 @@ def test_legacy_windows_absolute_path_db_is_detected(tmp_path):
     db = tmp_path / "legacy.sqlite"; index.init(db)
     with sqlite3.connect(db) as conn:
         conn.execute(
-            "INSERT INTO clips VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO clips (path, category, format, filmed_date, upload_date, "
+            "duration_s, width, height, codec, sha1) VALUES (?,?,?,?,?,?,?,?,?,?)",
             ("D:/Sai/05_FOOTAGE_LIBRARY/misc/W01_Apr-15-19/x.mp4",
              "misc", "long-form", "2026-04-16", "2026-04-16",
              1.0, 1920, 1080, "h264", "abc"),
@@ -84,7 +86,8 @@ def test_wipe_clips_then_reindex_produces_relative_paths(tmp_path):
     db = tmp_path / "idx.sqlite"; index.init(db)
     with sqlite3.connect(db) as conn:
         conn.execute(
-            "INSERT INTO clips VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO clips (path, category, format, filmed_date, upload_date, "
+            "duration_s, width, height, codec, sha1) VALUES (?,?,?,?,?,?,?,?,?,?)",
             ("/Volumes/Footage/Sai/05_FOOTAGE_LIBRARY/misc/x.mp4",
              "misc", "long-form", "2026-04-16", "2026-04-16",
              1.0, 1920, 1080, "h264", "abc"),

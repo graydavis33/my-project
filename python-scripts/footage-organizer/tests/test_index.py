@@ -99,7 +99,8 @@ def test_has_legacy_paths_detects_absolute(tmp_path):
     # Insert one legacy-format absolute path directly (simulating pre-migration DB)
     with sqlite3.connect(db) as conn:
         conn.execute(
-            "INSERT INTO clips VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "INSERT INTO clips (path, category, format, filmed_date, upload_date, "
+            "duration_s, width, height, codec, sha1) VALUES (?,?,?,?,?,?,?,?,?,?)",
             ("/Volumes/Footage/Sai/05_FOOTAGE_LIBRARY/misc/x.mp4",
              "misc", "long-form", "2026-04-16", "2026-04-16",
              1.0, 1920, 1080, "h264", "abc"),

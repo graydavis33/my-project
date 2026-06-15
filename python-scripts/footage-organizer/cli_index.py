@@ -3,8 +3,11 @@ CLI for the v2 index + pull layer. Kept separate from main.py so the existing
 organize/archive flow is untouched.
 
 Commands:
-  index   — scan the library, upsert every clip into SQLite
-  pull    — filter index → hardlink results into _pulls/<slug>/
+  index         — scan the library, upsert every clip into SQLite
+  pull          — filter index → hardlink results into 07_QUERY_PULLS/<slug>/
+  batch         — file a shoot into 01_ORGANIZED/Batch_NN/Vid_MM/ then re-index
+  create-week   — backfill a past/future week's folder scaffold
+  pull-cleanup  — delete query-pull folders after the edit ships
 """
 import argparse
 import hashlib
@@ -355,6 +358,138 @@ def cmd_pull_cleanup(args):
     print(f"\n  Done. Deleted {deleted} of {len(folders)} folder(s).\n")
 
 
+def _expand_clip_segment(seg: str) -> list[str]:
+    """Expand one map segment into clip IDs (uppercased):
+      'C2493'          -> ['C2493']
+      'C2493-C2495'    -> ['C2493', 'C2494', 'C2495']
+    Range endpoints share a letter prefix; the low endpoint's digit width sets
+    the zero-padding (so C0008-C0011 stays 4-wide)."""
+    seg = seg.strip().upper()
+    if "-" not in seg:
+        return [seg]
+    lo, hi = (s.strip() for s in seg.split("-", 1))
+    m_lo, m_hi = re.match(r"^([A-Z]*)(\d+)$", lo), re.match(r"^([A-Z]*)(\d+)$", hi)
+    if not (m_lo and m_hi):
+        raise ValueError(f"bad clip range '{seg}' (expected e.g. C2493-C2495)")
+    prefix, width = m_lo.group(1), len(m_lo.group(2))
+    start, end = int(m_lo.group(2)), int(m_hi.group(2))
+    if end < start:
+        raise ValueError(f"range '{seg}' ends before it starts")
+    return [f"{prefix}{n:0{width}d}" for n in range(start, end + 1)]
+
+
+def _parse_map(map_str: str) -> dict:
+    """Parse the --map string into {vid_num: [clip_id, ...]}.
+      '1:C2493-C2495 2:C2496,C2498' -> {1: ['C2493','C2494','C2495'], 2: ['C2496','C2498']}"""
+    mapping: dict[int, list[str]] = {}
+    for token in map_str.split():
+        if ":" not in token:
+            raise ValueError(f"bad map token '{token}' (expected VID:CLIPS, e.g. 1:C2493-C2495)")
+        vid_str, clips_str = token.split(":", 1)
+        vid = int(vid_str)
+        for seg in clips_str.split(","):
+            if seg.strip():
+                mapping.setdefault(vid, []).extend(_expand_clip_segment(seg))
+    return mapping
+
+
+def _matching_files(source: Path, clip_id: str) -> list[Path]:
+    """Files in `source` (non-recursive) belonging to clip_id: exact stem match,
+    or stem starting with clip_id followed by a non-digit (Sony sidecars like
+    C2493M01.XML, C2493.WAV). The non-digit guard stops C249 matching C2493.
+    Skips AppleDouble (`._*`) + .DS_Store."""
+    cid = clip_id.upper()
+    out = []
+    for f in source.iterdir():
+        if not f.is_file() or f.name.startswith("._") or f.name == ".DS_Store":
+            continue
+        stem = f.stem.upper()
+        if stem == cid:
+            out.append(f)
+        elif stem.startswith(cid) and not stem[len(cid):len(cid) + 1].isdigit():
+            out.append(f)
+    return out
+
+
+def _file_batch(source: Path, batch_root: Path, mapping: dict) -> dict:
+    """Move mapped clip files from `source` into `batch_root/Vid_MM/`. Pure file
+    ops, no indexing (so it's unit-testable without ffprobe). Returns a summary:
+      {moved, not_found:[(vid,cid)], unmapped:[name], per_vid:{vid:[name]}}.
+    A clip already present in its Vid folder is left as-is (idempotent re-run)."""
+    moved = 0
+    not_found = []
+    per_vid: dict[int, list[str]] = {}
+    for vid in sorted(mapping):
+        vid_folder = batch_root / f"Vid_{vid:02d}"
+        vid_folder.mkdir(parents=True, exist_ok=True)
+        per_vid[vid] = []
+        for cid in mapping[vid]:
+            files = _matching_files(source, cid)
+            if not files:
+                not_found.append((vid, cid))
+                continue
+            for f in files:
+                dest = vid_folder / f.name
+                if not dest.exists():
+                    shutil.move(str(f), str(dest))
+                    moved += 1
+                per_vid[vid].append(f.name)
+    unmapped = sorted(
+        f.name for f in source.iterdir()
+        if f.is_file() and not f.name.startswith("._") and f.name != ".DS_Store"
+        and f.suffix in VIDEO_EXTENSIONS
+    )
+    return {"moved": moved, "not_found": not_found, "unmapped": unmapped, "per_vid": per_vid}
+
+
+def cmd_batch(args):
+    """File a batch shoot into 01_ORGANIZED/Batch_NN/Vid_MM/ then re-index.
+    One command = one whole stage: ensure the week, make the folders, move the
+    mapped clips, re-index (tags batch_num/vid_num), report anything unmapped."""
+    client = args.client
+    library = _library(client)
+    _autocreate_week(library)
+
+    source = Path(args.source)
+    if not source.is_absolute():
+        source = library / args.source
+    if not source.is_dir():
+        print(f"Error: --from folder not found: {source}")
+        sys.exit(1)
+
+    try:
+        mapping = _parse_map(args.map)
+    except ValueError as e:
+        print(f"Error parsing --map: {e}")
+        sys.exit(1)
+
+    batch_label = f"Batch_{args.num:02d}"
+    batch_root = library / FOLDER_ORGANIZED / batch_label
+
+    print(f"\n  Batch {args.num} ← {source}")
+    print(f"  → {batch_root}\n")
+
+    result = _file_batch(source, batch_root, mapping)
+    for vid in sorted(result["per_vid"]):
+        names = result["per_vid"][vid]
+        print(f"    Vid_{vid:02d} ← {len(names)} file(s): {', '.join(names) or '(none)'}")
+
+    print(f"\n  Moved {result['moved']} file(s) into {batch_label}.")
+    if result["not_found"]:
+        print(f"  ! {len(result['not_found'])} mapped clip(s) had no file in source:")
+        for vid, cid in result["not_found"]:
+            print(f"      Vid_{vid:02d}: {cid}")
+    if result["unmapped"]:
+        print(f"  ! {len(result['unmapped'])} video file(s) in source were NOT mapped (left in place):")
+        for name in result["unmapped"]:
+            print(f"      {name}")
+
+    db_path = _db(client)
+    added, skipped, removed = _reindex(library, db_path)
+    print(f"\n  Re-indexed: {added} clip(s), skipped {skipped}, removed {removed} missing")
+    print(f"  DB: {db_path}\n")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Footage index + pull (v2)")
     ap.add_argument("--client", "-c", required=True, choices=list(CLIENT_ROOTS.keys()))
@@ -373,6 +508,14 @@ def main():
     p.add_argument("--by-week", action="store_true",
                    help="Group results into W##_MMM-DD-DD subfolders by filmed date")
     p.set_defaults(func=cmd_pull)
+
+    b = sub.add_parser("batch", help="File a batch shoot into 01_ORGANIZED/Batch_NN/Vid_MM/ and re-index")
+    b.add_argument("--num", type=int, required=True, help="Batch number, e.g. 2")
+    b.add_argument("--from", dest="source", required=True,
+                   help="Source folder holding the shoot's clips (relative to the library root, or absolute)")
+    b.add_argument("--map", required=True,
+                   help='Vid→clips map, e.g. "1:C2493-C2495 2:C2496-C2498 3:C2500"')
+    b.set_defaults(func=cmd_batch)
 
     cw = sub.add_parser("create-week", help="Create this week's folder under every category in FOOTAGE_LIBRARY")
     cw.add_argument("--week", help="YYYY-MM-DD; defaults to today")

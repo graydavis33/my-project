@@ -68,6 +68,13 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - `ensure_week` now **discovers freeform folders on disk** (top-level dirs in `05_FOOTAGE_LIBRARY`, skipping `_`-prefixed helpers like `_TO_SORT`) and creates the weekly subfolder in each, in addition to the 17 seeded standard categories.
 - `_TO_SORT/` is a holding area inside the library for un-categorized shoots Gray will sort by hand; underscore prefix keeps it out of week-scaffolding.
 
+**v3 Phase 3 — batch command (2026-06-15):**
+- `batch --num N --from <folder> --map "1:Cxxxx-Cyyyy …"` files a batch shoot into `01_ORGANIZED/Batch_NN/Vid_MM/` then re-indexes. The pure move logic (`_file_batch`) is split from the re-index so it's unit-testable without ffprobe.
+- `batch_num` / `vid_num` are NEW index columns, **derived from the folder path** by `_batch_vid_from_path` (adjacent `Batch_NN` + `Vid_MM` parts) — same folders-are-truth pattern as `_category_from_path`, so a plain `index` re-derives them.
+- Schema change is **non-destructive**: `index._migrate` runs `ALTER TABLE ADD COLUMN` for the two columns if missing (NOT a rebuild), so the live 800+-clip DB keeps every row. `idx_batch` is created inside `_migrate` (after the columns exist), never in `_SCHEMA` — putting it in `_SCHEMA` crashed migrating an old DB (`CREATE INDEX` ran before `ALTER`).
+- `--map` parsing: `_parse_map` → `_expand_clip_segment` (ranges preserve zero-pad width). `_matching_files` moves Sony sidecars (`C2493M01.XML`) with their clip; a non-digit guard stops `C249` matching `C2493`.
+- Reports unmapped source clips + mapped-but-missing clips; idempotent re-run; no Vision ($0).
+
 **Hard rules:**
 - Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
 - `08_QUERY_PULLS/` is the ONLY place duplicates are tolerated — and only temporarily, until the edit ships
