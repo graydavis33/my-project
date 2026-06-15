@@ -116,10 +116,18 @@ textarea.edit{resize:vertical}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:20}
 .modal.show{display:flex}.modal .inner{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:680px;width:92%;max-height:82vh;overflow:auto}
 .modal pre{white-space:pre-wrap;font-size:12.5px;color:var(--text)}
+.card.added{border-style:dashed}
+.newtag{color:var(--accent);font-weight:700;letter-spacing:.5px;font-size:11px;text-transform:uppercase;margin-bottom:4px}
+.titleedit{width:100%;font-size:17px;font-weight:600;background:transparent;border:1px solid transparent;color:var(--text);border-radius:6px;padding:4px 7px;font-family:inherit;margin:2px 0}
+.titleedit:hover{border-color:var(--line)}.titleedit:focus{border-color:var(--accent);background:var(--panel2);outline:none}
+.fmtedit{width:100%;font-size:13px;color:var(--accent);background:transparent;border:1px solid transparent;border-radius:6px;padding:3px 7px;font-family:inherit;margin-bottom:6px}
+.fmtedit:hover{border-color:var(--line)}.fmtedit:focus{border-color:var(--accent);background:var(--panel2);outline:none}
+.addcard{display:block;width:100%;padding:14px;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:12px;font-size:14px;margin-bottom:18px;cursor:pointer}
+.addcard:hover{border-color:var(--accent);color:var(--accent)}
 </style></head><body>
 <header>
   <div><h1>__PAGE_TITLE__</h1><div class="sub">Editable — change hooks, visuals & script text inline. Pick a hook, set Approve/Swap/Cut. Saves in your browser.</div></div>
-  <div class="bar"><span class="progress" id="prog"></span><button id="copyBtn" class="primary">Copy decisions + edits</button><button id="resetBtn">Reset</button></div>
+  <div class="bar"><span class="progress" id="prog"></span><button id="addBtnTop">+ Add card</button><button id="copyBtn" class="primary">Copy decisions + edits</button><button id="resetBtn">Reset</button></div>
 </header>
 <div class="wrap">
   <div class="banner">Everything you type here is editable and saved automatically in this browser. When done, hit <b>Copy decisions + edits</b> to export your picks, statuses, notes, and any edited script text.</div>
@@ -130,10 +138,20 @@ textarea.edit{resize:vertical}
 const DATA = __DATA__;
 const KEY = "batch-review-__SLUG__";
 let state = JSON.parse(localStorage.getItem(KEY) || "{}");
+if(!state.added) state.added = [];
 function save(){localStorage.setItem(KEY, JSON.stringify(state));renderProg();}
 function st(n){if(!state[n])state[n]={hook:null,status:null,notes:"",hk:{},body:null};return state[n];}
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function escAttr(s){return esc(s).replace(/"/g,"&quot;");}
+function allCards(){return DATA.concat(state.added);}
+function newCard(){
+  state.seq=(state.seq||0)+1;
+  const id="new-"+state.seq;
+  state.added.push({num:id,title:"",format:"",why:"",refHtml:"",hooks:[{label:"A",verbal:"",visual:""},{label:"B",verbal:"",visual:""},{label:"C",verbal:"",visual:""}],body:"",prop:"",flags:"",added:true});
+  save();render();
+  const el=document.querySelector('[data-num="'+id+'"][data-f="title"]');
+  if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.focus();}
+}
 
 function render(){
   const list = document.getElementById("list");
@@ -144,11 +162,11 @@ function render(){
     b.innerHTML=`${deleted.length} video${deleted.length>1?'s':''} deleted (#${deleted.map(s=>s.num).join(", #")}) · <a id="restoreAll">restore all</a>`;
     list.appendChild(b);
   }
-  DATA.forEach(s=>{
+  allCards().forEach(s=>{
     const cur = st(s.num);
     if(cur.deleted) return;
     const card = document.createElement("div");
-    card.className = "card" + (cur.status?(" "+cur.status):"");
+    card.className = "card" + (cur.status?(" "+cur.status):"") + (s.added?" added":"");
     const hooks = s.hooks.map(h=>{
       const e = (cur.hk && cur.hk[h.label]) || {};
       const v = e.verbal!==undefined ? e.verbal : h.verbal;
@@ -161,20 +179,25 @@ function render(){
         </div></div>`;
     }).join("");
     const bodyVal = cur.body!==null && cur.body!==undefined ? cur.body : s.body;
-    const editedBody = (cur.body!==null && cur.body!==undefined && cur.body!==s.body);
-    card.innerHTML = `
-      <span class="delbtn" data-num="${s.num}" title="delete this video from the batch">🗑 delete</span>
-      <div class="fmt">#${s.num} · ${esc(s.format)}</div>
+    const titleVal = (cur.title!==undefined && cur.title!==null) ? cur.title : s.title;
+    const fmtVal = (cur.format!==undefined && cur.format!==null) ? cur.format : s.format;
+    const head = s.added
+      ? `<div class="newtag">✦ New card</div>
+      <input class="edit titleedit" data-num="${s.num}" data-f="title" value="${escAttr(titleVal)}" placeholder="Title…">
+      <input class="edit fmtedit" data-num="${s.num}" data-f="format" value="${escAttr(fmtVal)}" placeholder="Format (optional)…">`
+      : `<div class="fmt">#${s.num} · ${esc(s.format)}</div>
       <h2>${esc(s.title)}</h2>
       ${s.why?`<div class="why">${esc(s.why)}</div>`:''}
-      ${s.refHtml?`<div class="refrow">📊 Modeled on: ${s.refHtml}</div>`:''}
+      ${s.refHtml?`<div class="refrow">📊 Modeled on: ${s.refHtml}</div>`:''}`;
+    card.innerHTML = `
+      <span class="delbtn" data-num="${s.num}" title="${s.added?'remove this card':'delete this video from the batch'}">${s.added?'✕ remove':'🗑 delete'}</span>
+      ${head}
       <div class="section-label">Hooks — click a letter to pick the one to test; edit text directly</div>
       ${hooks}
-      <div class="section-label">Script <span class="edited-badge">· edited</span></div>
-      <div class="${editedBody?'edited':''}"><div class="section-label" style="display:none"></div></div>
-      <textarea class="edit bodyedit" data-num="${s.num}" data-f="body">${esc(bodyVal)}</textarea>
-      ${s.prop?`<div class="note"><b>Setup:</b> ${esc(s.prop)}</div>`:''}
-      ${s.flags?`<div class="flag"><b>⚑ Invented:</b> ${esc(s.flags)}</div>`:''}
+      <div class="section-label">Script</div>
+      <textarea class="edit bodyedit" data-num="${s.num}" data-f="body" placeholder="Script lines, one per line…">${esc(bodyVal)}</textarea>
+      ${(!s.added&&s.prop)?`<div class="note"><b>Setup:</b> ${esc(s.prop)}</div>`:''}
+      ${(!s.added&&s.flags)?`<div class="flag"><b>⚑ Invented:</b> ${esc(s.flags)}</div>`:''}
       <div class="controls">
         <div class="pill approve ${cur.status==='approve'?'on':''}" data-num="${s.num}" data-status="approve">✓ Approve</div>
         <div class="pill swap ${cur.status==='swap'?'on':''}" data-num="${s.num}" data-status="swap">↻ Swap</div>
@@ -183,12 +206,21 @@ function render(){
       <textarea class="notes" data-num="${s.num}" data-f="notes" placeholder="Notes / direction for this one…">${esc(cur.notes||"")}</textarea>`;
     list.appendChild(card);
   });
+  const addBtn = document.createElement("button");
+  addBtn.className = "addcard"; addBtn.textContent = "+ Add a card";
+  addBtn.onclick = newCard;
+  list.appendChild(addBtn);
   // pick a hook
   list.querySelectorAll(".tag").forEach(el=>el.onclick=()=>{const c=st(el.dataset.num);c.hook=(c.hook===el.dataset.hook?null:el.dataset.hook);save();render();});
   // toggle status
   list.querySelectorAll(".pill").forEach(el=>el.onclick=()=>{const c=st(el.dataset.num);c.status=(c.status===el.dataset.status?null:el.dataset.status);save();render();});
-  // delete a whole video / restore all
-  list.querySelectorAll(".delbtn").forEach(el=>el.onclick=()=>{st(el.dataset.num).deleted=true;save();render();});
+  // delete a video — built-in = soft delete (restorable); added card = remove
+  list.querySelectorAll(".delbtn").forEach(el=>el.onclick=()=>{
+    const n=el.dataset.num;
+    if(String(n).indexOf("new-")===0){state.added=state.added.filter(c=>c.num!==n);delete state[n];}
+    else{st(n).deleted=true;}
+    save();render();
+  });
   const ra=document.getElementById("restoreAll"); if(ra) ra.onclick=()=>{DATA.forEach(s=>{if(state[s.num])state[s.num].deleted=false;});save();render();};
   // edits (hooks + body + notes) — save without re-render to keep focus
   list.querySelectorAll(".edit, .notes").forEach(el=>el.oninput=()=>{
@@ -196,17 +228,34 @@ function render(){
     if(f==="verbal"||f==="visual"){c.hk[el.dataset.hook]=c.hk[el.dataset.hook]||{};c.hk[el.dataset.hook][f]=el.value;}
     else if(f==="body"){c.body=el.value;}
     else if(f==="notes"){c.notes=el.value;}
+    else if(f==="title"){c.title=el.value;}
+    else if(f==="format"){c.format=el.value;}
     save();
   });
   renderProg();
 }
 function renderProg(){
-  const done = DATA.filter(s=>state[s.num] && state[s.num].status).length;
-  document.getElementById("prog").textContent = done+" / "+DATA.length+" reviewed";
+  const all = allCards();
+  const done = all.filter(s=>state[s.num] && state[s.num].status).length;
+  document.getElementById("prog").textContent = done+" / "+all.length+" reviewed";
 }
 document.getElementById("copyBtn").onclick=()=>{
   let out = "BATCH DECISIONS + EDITS\n\n";
-  DATA.forEach(s=>{const c=state[s.num]||{};
+  allCards().forEach(s=>{const c=state[s.num]||{};
+    if(s.added){
+      if(c.deleted) return;
+      out += `NEW CARD: ${c.title||"(untitled)"}\n`;
+      if(c.format) out += `  format: ${c.format}\n`;
+      out += `  status: ${c.status||"(none)"} | hook: ${c.hook||"(none)"}\n`;
+      if(c.hk) for(const k of ["A","B","C"]){const e=c.hk[k]; if(e){
+        if(e.verbal) out+=`  hook ${k} verbal: ${e.verbal}\n`;
+        if(e.visual) out+=`  hook ${k} visual: ${e.visual}\n`;
+      }}
+      if(c.body) out+=`  script:\n    ${c.body.replace(/\n/g,"\n    ")}\n`;
+      if(c.notes) out += `  notes: ${c.notes}\n`;
+      out += "\n";
+      return;
+    }
     if(c.deleted){out+=`#${s.num} ${s.title}\n  DELETED\n\n`;return;}
     out += `#${s.num} ${s.title}\n  status: ${c.status||"(none)"} | hook: ${c.hook||"(none)"}\n`;
     if(c.hk) for(const k of ["A","B","C"]){const e=c.hk[k]; if(e&&(e.verbal!==undefined||e.visual!==undefined)){
@@ -222,7 +271,8 @@ document.getElementById("copyBtn").onclick=()=>{
   if(navigator.clipboard) navigator.clipboard.writeText(out);
 };
 document.getElementById("closeModal").onclick=()=>document.getElementById("modal").classList.remove("show");
-document.getElementById("resetBtn").onclick=()=>{if(confirm("Clear all decisions AND edits in this browser?")){state={};save();render();}};
+document.getElementById("resetBtn").onclick=()=>{if(confirm("Clear all decisions AND edits in this browser?")){state={added:[]};save();render();}};
+document.getElementById("addBtnTop").onclick=newCard;
 render();
 </script></body></html>"""
 
