@@ -156,8 +156,10 @@ const KEY = "batch-review-__SLUG__";
 const SLUG = "__SLUG__";
 let SAVED = null;
 try{const _el=document.getElementById("saved-state");if(_el&&_el.textContent.trim()&&_el.textContent.trim()!=="null")SAVED=JSON.parse(_el.textContent);}catch(e){}
-let state = JSON.parse(localStorage.getItem(KEY) || "null");
-if(!state){ state = SAVED || {}; if(SAVED) localStorage.setItem(KEY, JSON.stringify(state)); }
+let _local = JSON.parse(localStorage.getItem(KEY) || "null");
+let state;
+if(SAVED && (!_local || (SAVED.savedAt||0) > (_local.savedAt||0))){ state = SAVED; localStorage.setItem(KEY, JSON.stringify(state)); }
+else { state = _local || SAVED || {}; }
 if(!state.added) state.added = [];
 if(!state.author) state.author = "Gray";
 function save(){localStorage.setItem(KEY, JSON.stringify(state));renderProg();}
@@ -190,6 +192,8 @@ function buildSavedHtml(){
   return out;
 }
 async function saveFile(){
+  state.savedAt = Date.now();
+  save();
   const out=buildSavedHtml();
   const name=SLUG+"-saved.html";
   const btn=document.getElementById("saveBtn");const orig=btn.textContent;
