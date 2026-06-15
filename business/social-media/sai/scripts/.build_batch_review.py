@@ -130,14 +130,19 @@ textarea.edit{resize:vertical}
   <div class="bar"><span class="progress" id="prog"></span><button id="addBtnTop">+ Add card</button><button id="saveBtn">💾 Save file</button><button id="copyBtn" class="primary">Copy decisions + edits</button><button id="resetBtn">Reset</button></div>
 </header>
 <div class="wrap">
-  <div class="banner">Everything you type here is editable and saved automatically in this browser. When done, hit <b>Copy decisions + edits</b> to export your picks, statuses, notes, and any edited script text.</div>
+  <div class="banner">Everything you type is saved automatically in this browser. Hit <b>💾 Save file</b> to download a complete copy (the originals <i>plus</i> all your edits) that anyone can reopen and keep editing. <b>Copy decisions + edits</b> exports just your picks &amp; changes as plain text.</div>
   <div id="list"></div>
 </div>
 <div class="modal" id="modal"><div class="inner"><h2 style="margin-top:0">Decisions + edits</h2><pre id="summary"></pre><div style="margin-top:12px"><button id="closeModal">Close</button></div></div></div>
+<script id="saved-state" type="application/json">null</script>
 <script>
 const DATA = __DATA__;
 const KEY = "batch-review-__SLUG__";
-let state = JSON.parse(localStorage.getItem(KEY) || "{}");
+const SLUG = "__SLUG__";
+let SAVED = null;
+try{const _el=document.getElementById("saved-state");if(_el&&_el.textContent.trim()&&_el.textContent.trim()!=="null")SAVED=JSON.parse(_el.textContent);}catch(e){}
+let state = JSON.parse(localStorage.getItem(KEY) || "null");
+if(!state){ state = SAVED || {}; if(SAVED) localStorage.setItem(KEY, JSON.stringify(state)); }
 if(!state.added) state.added = [];
 function save(){localStorage.setItem(KEY, JSON.stringify(state));renderProg();}
 function st(n){if(!state[n])state[n]={hook:null,status:null,notes:"",hk:{},body:null};return state[n];}
@@ -151,6 +156,36 @@ function newCard(){
   save();render();
   const el=document.querySelector('[data-num="'+id+'"][data-f="title"]');
   if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.focus();}
+}
+function downloadFile(text,name){
+  const blob=new Blob([text],{type:"text/html"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},0);
+}
+function buildSavedHtml(){
+  const ss=document.getElementById("saved-state");
+  const prev=ss.textContent;
+  ss.textContent=JSON.stringify(state).replace(/</g,"\\u003c");
+  const listEl=document.getElementById("list");const keep=listEl.innerHTML;listEl.innerHTML="";
+  const out="<!DOCTYPE html>\n"+document.documentElement.outerHTML;
+  listEl.innerHTML=keep;ss.textContent=prev;
+  return out;
+}
+async function saveFile(){
+  const out=buildSavedHtml();
+  const name=SLUG+"-saved.html";
+  const btn=document.getElementById("saveBtn");const orig=btn.textContent;
+  if(window.showSaveFilePicker){
+    try{
+      const h=await window.showSaveFilePicker({suggestedName:name,types:[{description:"HTML file",accept:{"text/html":[".html"]}}]});
+      const w=await h.createWritable();await w.write(out);await w.close();
+      btn.textContent="Saved ✓";setTimeout(function(){btn.textContent=orig;},1500);return;
+    }catch(e){if(e&&e.name==="AbortError")return;}
+  }
+  downloadFile(out,name);
+  btn.textContent="Downloaded ✓";setTimeout(function(){btn.textContent=orig;},1500);
 }
 
 function render(){
@@ -273,6 +308,7 @@ document.getElementById("copyBtn").onclick=()=>{
 document.getElementById("closeModal").onclick=()=>document.getElementById("modal").classList.remove("show");
 document.getElementById("resetBtn").onclick=()=>{if(confirm("Clear all decisions AND edits in this browser?")){state={added:[]};save();render();}};
 document.getElementById("addBtnTop").onclick=newCard;
+document.getElementById("saveBtn").onclick=saveFile;
 render();
 </script></body></html>"""
 
