@@ -68,9 +68,9 @@ button:hover{border-color:var(--accent)}button.primary{background:var(--accent);
 .star{cursor:pointer;font-size:18px;line-height:1.3;color:var(--line);user-select:none}
 .star.on{color:var(--star)}
 .qbody{flex:1}
-.qtext{width:100%;background:transparent;border:1px solid transparent;color:var(--text);border-radius:6px;padding:5px 7px;font-family:inherit;font-size:14.5px;line-height:1.45;resize:vertical;min-height:30px}
+.qtext{width:100%;background:transparent;border:1px solid transparent;color:var(--text);border-radius:6px;padding:5px 7px;font-family:inherit;font-size:14.5px;line-height:1.45;resize:none;overflow:hidden;min-height:30px}
 .qtext:hover{border-color:var(--line)}.qtext:focus{border-color:var(--accent);background:var(--panel2);outline:none}
-.qnote{width:100%;margin-top:5px;background:transparent;border:1px dashed var(--line);color:var(--muted);border-radius:6px;padding:4px 7px;font-family:inherit;font-size:12.5px}
+.qnote{width:100%;margin-top:5px;background:transparent;border:1px dashed var(--line);color:var(--muted);border-radius:6px;padding:4px 7px;font-family:inherit;font-size:12.5px;line-height:1.4;resize:none;overflow:hidden}
 .qnote:focus{border-color:var(--accent);color:var(--text);outline:none}
 .cutbtn{cursor:pointer;border:1px solid var(--line);border-radius:6px;padding:3px 9px;font-size:12px;color:var(--muted);user-select:none;white-space:nowrap}
 .cutbtn.on{background:var(--bad);color:#2c0d0d;border-color:var(--bad);font-weight:600}
@@ -115,7 +115,7 @@ function qRow(bi,qi,base,extraIdx){
      <span class="star ${must?'on':''}" data-bi="${bi}" data-id="${id}" data-act="must">★</span>
      <div class="qbody">
        <textarea class="qtext" data-bi="${bi}" data-id="${id}" data-f="text" rows="1">${esc(text)}</textarea>
-       <input class="qnote" data-bi="${bi}" data-id="${id}" data-f="note" placeholder="note / how I'd answer…" value="${esc(note).replace(/"/g,'&quot;')}">
+       <textarea class="qnote" data-bi="${bi}" data-id="${id}" data-f="note" rows="1" placeholder="note / how I'd answer…">${esc(note)}</textarea>
      </div>
      <span class="cutbtn ${cut?'on':''}" data-bi="${bi}" data-id="${id}" data-act="cut">${cut?'cut':'Cut'}</span>
    </div>`;
@@ -141,15 +141,15 @@ function render(){
     let o; if(id[0]==="x"){o=bs(bi).extra[+id.slice(1)];} else {o=qs(bi,id);}
     if(act==="must")o.must=!o.must; else o.cut=!o.cut; save(); render();
   });
+  const grow=el=>{el.style.height="auto";el.style.height=el.scrollHeight+"px";};
   list.querySelectorAll(".qtext,.qnote").forEach(el=>el.oninput=()=>{
     const bi=el.dataset.bi,id=el.dataset.id,f=el.dataset.f;
     let o; if(id[0]==="x"){o=bs(bi).extra[+id.slice(1)];} else {o=qs(bi,id);}
-    o[f]=el.value; save();
-    if(el.classList.contains("qtext")){el.style.height="auto";el.style.height=el.scrollHeight+"px";}
+    o[f]=el.value; save(); grow(el);
   });
   list.querySelectorAll(".addq").forEach(el=>el.onclick=()=>{bs(el.dataset.bi).extra.push({text:"",must:false,note:""});save();render();});
   list.querySelectorAll(".restore").forEach(el=>el.onclick=()=>{const b=bs(el.dataset.bi);for(const k in b.q)b.q[k].cut=false;(b.extra||[]).forEach(e=>e.cut=false);save();render();});
-  list.querySelectorAll(".qtext").forEach(el=>{el.style.height="auto";el.style.height=el.scrollHeight+"px";});
+  list.querySelectorAll(".qtext,.qnote").forEach(grow);
   renderProg();
 }
 function renderProg(){

@@ -22,7 +22,7 @@ You are Gray Davis's AI operator and executive assistant. Read context files to 
 - `decisions/log.md` — append-only log of meaningful decisions, never delete entries
 - `python-scripts/` — 15 automation tools (one folder per project). Newest: `gdocs-cli/` — programmatic Google Docs (create / update / find / read) running on the Karra Media Automation Cloud project.
 - `web-apps/` — HTML/CSS/JS tools (Analytical SaaS, Payday Checklist, Brand Board, etc.). Newest: `story-arc-board/` — folder-scoped long-form storyboarding (Python stdlib server + drag-drop arc lanes; loads clips from a specific footage folder you point it at, NOT the whole index; built from the 2026-06-14 Sai production review).
-- `business/` — contracts, leads, reference docs (Sai job notes)
+- `business/` — contracts, leads, reference docs (Sai job notes). Includes `sai-karra/content-os/` — the **Content Operating System (COS)** pipeline: per-platform SOPs + the living stage map (shorts / long-form / LinkedIn, with status). Read its README before content-pipeline work. Long-form weekly pipeline lives in `social-media/sai/longform/` (arc map → title/thumbnail → interview Qs); both the shorts batch review and the interview-Q review are generated as editable HTML by `.build_batch_review.py` / `longform/.build_interview_review.py`.
 - `deploy/` — VPS deployment: vps-setup.sh + 3 .service files for systemd
 - `references/` — source library: framework docs and templates studied to build this workspace
 - `templates/` — reusable templates (currently session-summary.md)
