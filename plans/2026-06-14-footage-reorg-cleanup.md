@@ -1,7 +1,7 @@
 # Footage Drive Reorganization & Cleanup — Plan
 
 **Date:** 2026-06-14
-**Status:** AWAITING GRAY'S APPROVAL + dispositions (see §6 table)
+**Status:** ✅ EXECUTED 2026-06-15. Drive root is back to the clean 9-folder scheme (+ protected `Rest of week` Ep2 raw); root strays + the `01_ORGANIZED` clog are drained; the `_TO_DELETE/` holding folder was emptied 2026-06-15 after Gray's final yes (~11GB reclaimed: 12 Ep1 render drafts — kept the newest, `Ep 1 Longform Doc Windows Final.mp4`, in `03_DELIVERED/episodes/` — plus junk + the stray `token.json` security item). NOTE: landing spots for the big moved items (Onboarding 94G, Longfrom Doc 57G, etc. in §6) were confirmed GONE from root/`01_ORGANIZED` but their destination folders were not all re-verified this session.
 **Scope:** `D:/Sai/` on disk only. Pairs with the v3 code work (`plans/2026-06-03-footage-organizer-v3.md`) — the freeform-folder index change lands after the disk is clean.
 
 ---
