@@ -95,10 +95,11 @@ def _category_from_path(filepath: Path, library: Path) -> str:
     """Infer category from the folder it lives in. Accepts both shapes:
       FOOTAGE_LIBRARY/{category}/{week_or_date}/clip.mp4
       ORGANIZED/{category}/{date}/clip.mp4
-    The `rel[1] in CATEGORIES` guard means new W##_MMM-DD-DD week folders parse correctly.
+    Freeform (v3): ANY folder name under FOOTAGE_LIBRARY or ORGANIZED is its own
+    category — not just the fixed 17 — so Gray's own folders index correctly.
     """
     rel = filepath.relative_to(library).parts
-    if len(rel) >= 4 and rel[0] in (FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED) and rel[1] in CATEGORIES:
+    if len(rel) >= 4 and rel[0] in (FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED):
         return rel[1]
     return "misc"
 
@@ -231,11 +232,21 @@ def ensure_week(library: Path, target: date) -> tuple[int, int]:
     lazy auto-creation that every command runs first, so Gray never has to
     remember to scaffold a week by hand."""
     label = week_label_for(target)
+    lib_root = library / FOLDER_FOOTAGE_LIB
+
+    # Seed the 17 standard categories, PLUS any freeform folders Gray already
+    # made on disk (v3) so his own folders get weekly subfolders too. Skip
+    # underscore-prefixed helpers like _TO_SORT — those aren't categories.
+    freeform = []
+    if lib_root.is_dir():
+        freeform = [p.name for p in lib_root.iterdir()
+                    if p.is_dir() and not p.name.startswith("_")]
+    categories = sorted(set(CATEGORIES) | set(freeform))
 
     targets = []
-    # Footage library: one folder per category
-    for category in CATEGORIES:
-        targets.append(library / FOLDER_FOOTAGE_LIB / category / label)
+    # Footage library: one folder per category (standard + freeform)
+    for category in categories:
+        targets.append(lib_root / category / label)
     # Project folders: one per format bucket per top-level
     for top in (FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE):
         for fmt in PROJECT_FORMAT_BUCKETS:

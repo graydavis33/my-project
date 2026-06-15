@@ -23,3 +23,17 @@ def test_ensure_week_is_idempotent(tmp_path):
     created, skipped = ensure_week(tmp_path, date(2026, 4, 21))
     assert created == 0
     assert skipped == WEEK_FOLDER_COUNT
+
+
+def test_ensure_week_includes_freeform_folders(tmp_path):
+    # Gray made his own library folder; it should get a weekly subfolder too
+    (tmp_path / "05_FOOTAGE_LIBRARY" / "nyc-street").mkdir(parents=True)
+    ensure_week(tmp_path, date(2026, 4, 21))  # W02
+    assert (tmp_path / "05_FOOTAGE_LIBRARY" / "nyc-street" / "W02_Apr-20-26").is_dir()
+
+
+def test_ensure_week_skips_underscore_helper_folders(tmp_path):
+    # _TO_SORT is a holding folder, not a category — no weekly subfolder
+    (tmp_path / "05_FOOTAGE_LIBRARY" / "_TO_SORT").mkdir(parents=True)
+    ensure_week(tmp_path, date(2026, 4, 21))
+    assert not (tmp_path / "05_FOOTAGE_LIBRARY" / "_TO_SORT" / "W02_Apr-20-26").exists()
