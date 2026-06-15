@@ -9,6 +9,7 @@ Commands:
 import argparse
 import hashlib
 import os
+import re
 import shutil
 import sys
 from datetime import date, datetime, timedelta
@@ -104,6 +105,24 @@ def _category_from_path(filepath: Path, library: Path) -> str:
     return "misc"
 
 
+_BATCH_RE = re.compile(r"^Batch_(\d+)$")
+_VID_RE = re.compile(r"^Vid_(\d+)$")
+
+
+def _batch_vid_from_path(filepath: Path, library: Path):
+    """Derive (batch_num, vid_num) from an adjacent Batch_NN/Vid_MM folder pair
+    anywhere in the clip's path. Folders are the source of truth, so a plain
+    re-index re-derives these — same pattern as _category_from_path.
+    Returns (None, None) when the clip isn't under a batch/vid folder."""
+    parts = filepath.relative_to(library).parts
+    for i in range(len(parts) - 1):
+        bm = _BATCH_RE.match(parts[i])
+        vm = _VID_RE.match(parts[i + 1])
+        if bm and vm:
+            return int(bm.group(1)), int(vm.group(1))
+    return None, None
+
+
 def _format_from_resolution(w: int, h: int) -> str:
     return FORMAT_SHORT_FORM if h > w else FORMAT_LONG_FORM
 
@@ -119,18 +138,15 @@ def _sha1_head(filepath: Path, n_bytes: int = 1_048_576) -> str:
     return h.hexdigest()
 
 
-def cmd_index(args):
-    client = args.client
-    library = _library(client)
-    _autocreate_week(library)
-    db_path = _db(client)
+def _reindex(library: Path, db_path: Path) -> tuple[int, int, int]:
+    """Scan the library into the SQLite index, then prune rows whose files are
+    gone. Returns (added, skipped, removed). Shared by `index` and `batch` (which
+    re-indexes after moving clips so the new Batch_NN/Vid_MM clips get tagged)."""
     index.init(db_path)
-
     _check_legacy_db(db_path)
 
     added = 0
     skipped = 0
-
     for sub in INDEX_SCAN_ROOTS:
         root = library / sub
         if not root.exists():
@@ -147,6 +163,7 @@ def cmd_index(args):
 
             upload = datetime.fromtimestamp(clip.stat().st_mtime).strftime("%Y-%m-%d")
             rel_path = clip.relative_to(library).as_posix()
+            batch_num, vid_num = _batch_vid_from_path(clip, library)
             rec = index.ClipRecord(
                 path=rel_path,
                 category=_category_from_path(clip, library),
@@ -158,11 +175,22 @@ def cmd_index(args):
                 height=h,
                 codec="",  # codec is optional — leave empty unless needed
                 sha1=_sha1_head(clip),
+                batch_num=batch_num,
+                vid_num=vid_num,
             )
             index.upsert(db_path, rec)
             added += 1
 
     removed = index.remove_missing(db_path, library_root=library)
+    return added, skipped, removed
+
+
+def cmd_index(args):
+    client = args.client
+    library = _library(client)
+    _autocreate_week(library)
+    db_path = _db(client)
+    added, skipped, removed = _reindex(library, db_path)
     print(f"\n  Indexed {added} clip(s), skipped {skipped}, removed {removed} missing")
     print(f"  DB: {db_path}\n")
 
