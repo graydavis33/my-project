@@ -18,12 +18,8 @@ Pulled from across the week, trailer-style:
 - [A-ROLL] Ep1 callback line (VO): "Last week the plan was to finally turn the ads back on… that's not what happened."
 → smash to TITLE.
 
-## ② TITLE — theme-only card
-"Systems Over Stress" (working — not locked).
-
 ## ③ WEEK-AHEAD — the intention (Setup)
 - 🎙️ **C2614** (1m25s) — the plan: launch site + ads, build the editor workflow (creators create / editors edit), revamp creator roster + recruiting, build the utilization dashboard, fewer calls → more deep work.
-  ⚠️ Sai says "Monday" on a Sat-dated clip — confirm the day before any date lower-third.
 
 ## ④ THE THEME — name the lesson
 - [A-ROLL] Block C cut-in: the epiphany — every stress is a missing system; structure is what frees his creativity. Plant it here, pay it off across the acts.
@@ -39,7 +35,7 @@ Pulled from across the week, trailer-style:
 - 🎬 **C2657** (0m59s) — the SOP-building session (Rocio).
 - 🎬 **C2658** (0m23s) — heading to the co-working spot to build.
 - 🎙️ **C2668** (1m00s) — formats insight: the #1 creative lever after the creators themselves.
-- 🎬 **C2678–C2684** — Friday strategy page coming together (Erica / master Notion strategy page). ⚠️ source files not located.
+- 🎬 **C2678–C2684** — Friday strategy page coming together (Erica / master Notion strategy page). 
 - [A-ROLL] Block C/D cut-in: what "building systems" actually means, and why it's the opposite of Act 1's stress.
 
 ## ⑦ MID-DOC REHOOK (~6:30)
@@ -47,8 +43,7 @@ Pulled from across the week, trailer-style:
 
 ## ⑧ ACT 3 — THE WHY (Character Arc) — the emotional core
 - 🎙️ **C2669** (the walk-and-talk) — agency = people; the UGA college-loneliness story; the office he dreams of = the social life he never had; "I'm excited about you watching this, even if you're just one person." ⚠️ source file not located — THIS is the heart, prioritize finding it.
-- 🎬 **C2654** (3m42s) — the MacBook gift: generosity as the same build-the-people instinct. ⚠️ privacy/consent — Gray heavily on camera; confirm OK to include.
-- 🎬 **C2670** — breakfast with Saikarra (light texture under VO). ⚠️ source file not located.
+- 🎬 **C2654** (3m42s) — the MacBook gift: generosity as the same build-the-people instinct. 
 - [A-ROLL] Block E cut-in: the UGA story, the office-he-dreams-of, "why make videos with nothing to sell."
 
 ## ⑨ FRIDAY WRAP + CLOSER (Resolution)

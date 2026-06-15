@@ -26,7 +26,7 @@ sit-down interview** filmed after the week, with raw footage cut in around the i
 | **Closer** | A quotable Sai line + a next-week cliffhanger |
 | **Continuity** | Season-long thread — callback to last week, tease next week, one big question across the season |
 | **Music** | Licensed cinematic score (swells under story, dips under talking) |
-| **Title** | Theme only (e.g. "Systems Over Stress") — no episode number, no date |
+| **Title card** | On-screen card = series name + episode number ONLY — "Trendified Diaries, Episode N". Not a thematic title. (The theme is the editorial spine; the YouTube headline is separate.) |
 
 ---
 
@@ -50,7 +50,7 @@ This is the most important part of the format. Order of operations every week:
 
 ```
 0:00  COLD OPEN      ~30s epic recap of the week (captioned, scored, fast but not flashy)
-0:30  TITLE CARD     theme-only title sequence
+0:30  TITLE CARD     "Trendified Diaries, Episode N" — series-branding card (not thematic)
               ↓
       WEEK-AHEAD     Sai states the week's plan/intention (fixture)
               ↓

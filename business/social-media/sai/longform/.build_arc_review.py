@@ -63,6 +63,10 @@ button:hover{border-color:var(--accent)}button.primary{background:var(--accent);
 .x:hover{color:var(--bad)}
 .addc{margin-top:8px;font-size:12.5px;color:var(--accent);background:none;border:1px dashed var(--line);width:100%}
 .cutinfo{font-size:12px;color:var(--muted);margin-top:6px}.cutinfo a{color:var(--accent);cursor:pointer;text-decoration:underline}
+.beatdel{float:right;cursor:pointer;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 9px;font-size:12px}
+.beatdel:hover{color:var(--bad);border-color:var(--bad)}
+.delbanner{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 13px;margin-bottom:14px;color:var(--muted);font-size:13px}
+.delbanner a{color:var(--accent);cursor:pointer;text-decoration:underline}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:20}
 .modal.show{display:flex}.modal .inner{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:700px;width:92%;max-height:82vh;overflow:auto}
 .modal pre{white-space:pre-wrap;font-size:12.5px}
@@ -89,12 +93,17 @@ function init(){
   save();
 }
 init();
+if(!state.delSec)state.delSec={};
 let drag=null;
 const grow=el=>{el.style.height="auto";el.style.height=el.scrollHeight+"px";};
 
 function render(){
   const board=document.getElementById("board");board.innerHTML="";
+  const delBeats=DATA.sections.map((s,si)=>si).filter(si=>state.delSec[si]);
+  if(delBeats.length){const b=document.createElement("div");b.className="delbanner";
+    b.innerHTML=`${delBeats.length} beat${delBeats.length>1?'s':''} deleted · <a id="restoreBeats">restore all beats</a>`;board.appendChild(b);}
   DATA.sections.forEach((s,si)=>{
+    if(state.delSec[si])return;
     const ids=state.cols[si]||[];
     let cut=0;
     const cards=ids.map(id=>{const c=state.card[id]||{};if(c.cut){cut++;return"";}
@@ -103,7 +112,7 @@ function render(){
         <textarea class="ctext" data-id="${id}" rows="1">${esc(c.text)}</textarea>
         <span class="x" data-id="${id}" title="cut">✕</span></div>`;}).join("");
     const el=document.createElement("div");el.className="beat";
-    el.innerHTML=`<h2>${esc(s.title)}</h2>${s.desc?`<div class="desc">${esc(s.desc)}</div>`:''}
+    el.innerHTML=`<span class="beatdel" data-si="${si}" title="delete this whole beat box">🗑</span><h2>${esc(s.title)}</h2>${s.desc?`<div class="desc">${esc(s.desc)}</div>`:''}
       <div class="zone" data-si="${si}">${cards}</div>
       <button class="addc" data-si="${si}">+ add card</button>
       ${cut?`<div class="cutinfo">${cut} cut · <a class="restore" data-si="${si}">restore</a></div>`:''}`;
@@ -114,6 +123,8 @@ function render(){
   // cut / restore / add
   board.querySelectorAll(".x").forEach(x=>x.onclick=()=>{state.card[x.dataset.id].cut=true;save();render();});
   board.querySelectorAll(".restore").forEach(r=>r.onclick=()=>{(state.cols[r.dataset.si]||[]).forEach(id=>{if(state.card[id])state.card[id].cut=false;});save();render();});
+  board.querySelectorAll(".beatdel").forEach(d=>d.onclick=()=>{state.delSec[+d.dataset.si]=true;save();render();});
+  const rb=document.getElementById("restoreBeats");if(rb)rb.onclick=()=>{state.delSec={};save();render();};
   board.querySelectorAll(".addc").forEach(a=>a.onclick=()=>{const id="c"+(state.next++);state.card[id]={text:"",cut:false};state.cols[+a.dataset.si].push(id);save();render();});
   // drag
   board.querySelectorAll(".card").forEach(c=>{
@@ -133,7 +144,7 @@ function render(){
 }
 document.getElementById("copyBtn").onclick=()=>{
   let out=DATA.title.toUpperCase()+"\n\n";
-  DATA.sections.forEach((s,si)=>{out+=s.title+"\n";
+  DATA.sections.forEach((s,si)=>{if(state.delSec[si])return;out+=s.title+"\n";
     (state.cols[si]||[]).forEach(id=>{const c=state.card[id]||{};if(c.cut||!(c.text||"").trim())return;out+="  - "+c.text+"\n";});
     out+="\n";});
   document.getElementById("summary").textContent=out;
