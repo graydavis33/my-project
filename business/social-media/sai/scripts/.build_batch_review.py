@@ -127,7 +127,7 @@ textarea.edit{resize:vertical}
 </style></head><body>
 <header>
   <div><h1>__PAGE_TITLE__</h1><div class="sub">Editable — change hooks, visuals & script text inline. Pick a hook, set Approve/Swap/Cut. Saves in your browser.</div></div>
-  <div class="bar"><span class="progress" id="prog"></span><button id="addBtnTop">+ Add card</button><button id="copyBtn" class="primary">Copy decisions + edits</button><button id="resetBtn">Reset</button></div>
+  <div class="bar"><span class="progress" id="prog"></span><button id="addBtnTop">+ Add card</button><button id="saveBtn">💾 Save file</button><button id="copyBtn" class="primary">Copy decisions + edits</button><button id="resetBtn">Reset</button></div>
 </header>
 <div class="wrap">
   <div class="banner">Everything you type here is editable and saved automatically in this browser. When done, hit <b>Copy decisions + edits</b> to export your picks, statuses, notes, and any edited script text.</div>
