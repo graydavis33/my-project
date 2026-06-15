@@ -80,7 +80,11 @@ button:hover{border-color:var(--accent)}button.primary{background:var(--accent);
 .progress{color:var(--muted);font-size:13px}
 .wrap{max-width:880px;margin:0 auto;padding:22px}
 .banner{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:10px 14px;color:var(--muted);font-size:13px;margin-bottom:18px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px;position:relative}
+.delbtn{position:absolute;top:14px;right:16px;cursor:pointer;color:var(--muted);font-size:12px;border:1px solid var(--line);border-radius:6px;padding:2px 9px;user-select:none}
+.delbtn:hover{color:var(--bad);border-color:var(--bad)}
+.delbanner{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 13px;margin-bottom:16px;color:var(--muted);font-size:13px}
+.delbanner a{color:var(--accent);cursor:pointer;text-decoration:underline}
 .card.approve{border-color:var(--good)}.card.swap{border-color:var(--warn)}.card.cut{border-color:var(--bad);opacity:.72}
 .card h2{margin:0 0 4px;font-size:17px}.fmt{color:var(--accent);font-size:13px;margin-bottom:2px}
 .why{color:var(--muted);font-size:12.5px;margin-bottom:8px}
@@ -134,8 +138,15 @@ function escAttr(s){return esc(s).replace(/"/g,"&quot;");}
 function render(){
   const list = document.getElementById("list");
   list.innerHTML = "";
+  const deleted = DATA.filter(s=>st(s.num).deleted);
+  if(deleted.length){
+    const b=document.createElement("div"); b.className="delbanner";
+    b.innerHTML=`${deleted.length} video${deleted.length>1?'s':''} deleted (#${deleted.map(s=>s.num).join(", #")}) · <a id="restoreAll">restore all</a>`;
+    list.appendChild(b);
+  }
   DATA.forEach(s=>{
     const cur = st(s.num);
+    if(cur.deleted) return;
     const card = document.createElement("div");
     card.className = "card" + (cur.status?(" "+cur.status):"");
     const hooks = s.hooks.map(h=>{
@@ -152,6 +163,7 @@ function render(){
     const bodyVal = cur.body!==null && cur.body!==undefined ? cur.body : s.body;
     const editedBody = (cur.body!==null && cur.body!==undefined && cur.body!==s.body);
     card.innerHTML = `
+      <span class="delbtn" data-num="${s.num}" title="delete this video from the batch">🗑 delete</span>
       <div class="fmt">#${s.num} · ${esc(s.format)}</div>
       <h2>${esc(s.title)}</h2>
       ${s.why?`<div class="why">${esc(s.why)}</div>`:''}
@@ -175,6 +187,9 @@ function render(){
   list.querySelectorAll(".tag").forEach(el=>el.onclick=()=>{const c=st(el.dataset.num);c.hook=(c.hook===el.dataset.hook?null:el.dataset.hook);save();render();});
   // toggle status
   list.querySelectorAll(".pill").forEach(el=>el.onclick=()=>{const c=st(el.dataset.num);c.status=(c.status===el.dataset.status?null:el.dataset.status);save();render();});
+  // delete a whole video / restore all
+  list.querySelectorAll(".delbtn").forEach(el=>el.onclick=()=>{st(el.dataset.num).deleted=true;save();render();});
+  const ra=document.getElementById("restoreAll"); if(ra) ra.onclick=()=>{DATA.forEach(s=>{if(state[s.num])state[s.num].deleted=false;});save();render();};
   // edits (hooks + body + notes) — save without re-render to keep focus
   list.querySelectorAll(".edit, .notes").forEach(el=>el.oninput=()=>{
     const c=st(el.dataset.num), f=el.dataset.f;
@@ -192,6 +207,7 @@ function renderProg(){
 document.getElementById("copyBtn").onclick=()=>{
   let out = "BATCH DECISIONS + EDITS\n\n";
   DATA.forEach(s=>{const c=state[s.num]||{};
+    if(c.deleted){out+=`#${s.num} ${s.title}\n  DELETED\n\n`;return;}
     out += `#${s.num} ${s.title}\n  status: ${c.status||"(none)"} | hook: ${c.hook||"(none)"}\n`;
     if(c.hk) for(const k of ["A","B","C"]){const e=c.hk[k]; if(e&&(e.verbal!==undefined||e.visual!==undefined)){
       const orig=s.hooks.find(h=>h.label===k)||{};
