@@ -1,7 +1,7 @@
 # Footage Organizer v3 — Plan
 
 **Date:** 2026-06-03
-**Status:** IN PROGRESS — **Phase 1 (lazy week creation) shipped 2026-06-10** (`ensure_week` helper; `index`+`pull` auto-create the current week; `create-week` now backfill-only; tests 29/29). Phases 2–4 still awaiting Gray's 3 open-question answers below.
+**Status:** IN PROGRESS — **Phase 1 (lazy week creation) shipped 2026-06-10**. **Phase 2 (freeform-folder indexing + ensure_week freeform discovery) shipped 2026-06-15** (tests 34/34). Open questions answered 2026-06-15: batch folders → `01_ORGANIZED/Batch_NN/Vid_MM`; forgotten moves → ACTIVE→DELIVERED, DELIVERED→ARCHIVE, pull-cleanup; library → keep 17 as-is + seed freeform starter set. Phases 3 (batch cmd + schema) & 4 (stage-transition cmds) remain. Pairs with the disk cleanup in `plans/2026-06-14-footage-reorg-cleanup.md`.
 **Tool:** `python-scripts/footage-organizer/`
 
 ---

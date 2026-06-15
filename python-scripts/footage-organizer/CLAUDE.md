@@ -63,6 +63,11 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 
 **`ensure_week` scaffolds across all four W##-bucketed locations** (FOOTAGE_LIBRARY × 17 categories + ACTIVE/DELIVERED/ARCHIVE × 3 formats = 26 folders per week). As of v3 Phase 1 (2026-06-10), `index` and `pull` auto-call `ensure_week(today)` first, so the current week is created automatically — no manual Monday step. `create-week` remains for backfilling a specific past/future week. (`ensure_week` is the shared helper in `cli_index.py`; `create-week` and the lazy auto-call both route through it.)
 
+**v3 Phase 2 — freeform folders (2026-06-15):**
+- `_category_from_path` now treats **ANY folder name** under `05_FOOTAGE_LIBRARY/<name>/...` or `01_ORGANIZED/<name>/...` as the category — not just the fixed 17. Gray's own folders index + pull correctly. The AI Vision classifier stays paused; folders are hand-made.
+- `ensure_week` now **discovers freeform folders on disk** (top-level dirs in `05_FOOTAGE_LIBRARY`, skipping `_`-prefixed helpers like `_TO_SORT`) and creates the weekly subfolder in each, in addition to the 17 seeded standard categories.
+- `_TO_SORT/` is a holding area inside the library for un-categorized shoots Gray will sort by hand; underscore prefix keeps it out of week-scaffolding.
+
 **Hard rules:**
 - Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
 - `08_QUERY_PULLS/` is the ONLY place duplicates are tolerated — and only temporarily, until the edit ships
