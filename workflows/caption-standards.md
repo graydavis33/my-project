@@ -77,6 +77,14 @@ are built — no exceptions unless Gray overrides for a specific video.
 
 Reference implementation: `web-apps/sai-b01v06-captions/`.
 
+**Re-captioning a finished cut (SMOOTH no-flicker alpha layer):**
+`python python-scripts/sai-captions/recaption_smooth.py "<cut.mp4>" --out "<... - captions.mov>" --preview`
+— cross-platform: auto-selects **mlx-whisper large-v3** on Mac / Apple Silicon and
+**CUDA openai-whisper** on Windows. Re-transcribes the final cut and renders a ProRes
+4444 alpha caption layer + a watchable PREVIEW.mp4, enforcing the no-flicker rule
+(fade-in only over blank, hard-cut contiguous cards). Supersedes the old Windows-only
+copy at `<footage>/.../Batch 2/_b2_edit/recaption_smooth.py`.
+
 ---
 
 ## Token Efficiency (applies to the whole video pipeline)
