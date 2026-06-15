@@ -175,6 +175,23 @@ python cli_index.py --client sai promote --item "Subway Challenge Day 1" --to ar
 - Lands in `<stage>/<format>/<current-week>/` by default — `--week YYYY-MM-DD` targets a specific week, `--no-week` places it loose under the format bucket.
 - **Never overwrites** (errors if the destination exists) and **never deletes** — it only moves. Ambiguous names (same name in two buckets) abort with a list. These stages aren't indexed, so the SQLite index is untouched.
 
+## v3.1 — Post-delivery cleanup (ship)
+
+When a video is finished and dropped into `03_DELIVERED`, `ship` does the after-the-fact cleanup in one reviewed step — **it shows you the plan and moves nothing until you confirm**:
+
+```bash
+python cli_index.py --client sai ship --video "Batch 2 Vid 1 - 10 Truths About Ads"
+```
+
+It plans two moves:
+1. The matching **edit project** in `02_ACTIVE_PROJECTS` → `04_ARCHIVE/<format>/<week>/`.
+2. The video's **raw footage** in `01_ORGANIZED` → `05_FOOTAGE_LIBRARY/<video-name>/<week>/`, then re-indexes.
+
+- It finds the project by name; footage is located by parsing `Batch N Vid M` from the video name, or you pass `--footage <folder>`.
+- Overrides: `--project "exact name"`, `--footage <path>`, `--category <library subfolder>`, `--format`, `--week`, `--no-week`, `--yes` (skip the prompt).
+- **Safe:** plan-first, pure moves, never overwrites; if it can't find the project or footage it **warns and skips that half** rather than guessing.
+- The `_ship_plan` / `_execute_ship` split lets a folder-watcher reuse the same engine headless — the planned "drop a file → auto-plan → approve" trigger.
+
 ## --source flag (cleanup mode)
 
 For loose footage already in your library that needs to be classified:

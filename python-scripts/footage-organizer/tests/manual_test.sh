@@ -61,6 +61,19 @@ ERR="$("$PY" "$TOOL_DIR/cli_index.py" --client sai promote --item "Does Not Exis
 if echo "$ERR" | grep -qi "not found"; then say_ok "clear error on a missing item"; else say_bad "no clear error"; fi
 
 echo
+echo "TEST 4 — ship: after delivery, archive the edit project + file the footage in one step"
+V="Batch 9 Vid 1 - Demo"
+mkdir -p "$SANDBOX/03_DELIVERED/shorts" "$SANDBOX/02_ACTIVE_PROJECTS/shorts/$V" "$SANDBOX/01_ORGANIZED/Batch_09/Vid_01"
+echo x > "$SANDBOX/03_DELIVERED/shorts/$V.mp4"
+echo x > "$SANDBOX/02_ACTIVE_PROJECTS/shorts/$V/edit.prproj"
+ffmpeg -loglevel error -f lavfi -i testsrc=duration=1:size=320x240:rate=10 \
+       -pix_fmt yuv420p "$SANDBOX/01_ORGANIZED/Batch_09/Vid_01/C9001.MP4" -y
+"$PY" "$TOOL_DIR/cli_index.py" --client sai ship --video "$V" --yes >/dev/null
+if [ ! -d "$SANDBOX/02_ACTIVE_PROJECTS/shorts/$V" ]; then say_ok "edit project left ACTIVE"; else say_bad "project still in ACTIVE"; fi
+if find "$SANDBOX/04_ARCHIVE/shorts" -name edit.prproj | grep -q .; then say_ok "project archived"; else say_bad "project not archived"; fi
+if find "$SANDBOX/05_FOOTAGE_LIBRARY" -name C9001.MP4 | grep -q .; then say_ok "footage filed into the library"; else say_bad "footage not filed"; fi
+
+echo
 echo "── Result: $ok passed, $bad failed ──"
 echo "Cleaning up the sandbox…"
 rm -rf "$SANDBOX"

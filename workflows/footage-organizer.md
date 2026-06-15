@@ -248,6 +248,18 @@ python cli_index.py --client sai promote --item "<file or folder name>" --to arc
 - `--to delivered` ← active, `--to archive` ← delivered (override with `--from`). Format bucket inferred from the item's location (`--format` if it's outside one). Lands in `<stage>/<format>/<week>/` (default current week; `--week DATE` or `--no-week`).
 - **Safe:** pure move (never copies/deletes), refuses to overwrite, aborts on ambiguous names. Stages 02/03/04 aren't indexed, so the SQLite index is untouched.
 
+### v3.1: Ship (post-delivery cleanup)
+
+After a finished video lands in `03_DELIVERED`, `ship` archives its edit project AND files its raw footage into the library — one reviewed step, plan shown first:
+
+```bash
+python cli_index.py --client sai ship --video "<delivered video name>"
+```
+
+- Plans: project `02_ACTIVE_PROJECTS` → `04_ARCHIVE`; footage `01_ORGANIZED` → `05_FOOTAGE_LIBRARY/<video>/<week>/` (then re-indexes).
+- Footage located by parsing `Batch N Vid M` from the name, or `--footage <folder>`. Overrides: `--project`, `--category`, `--format`, `--week`/`--no-week`, `--yes`.
+- **Safe:** plan-first (nothing moves until you confirm), pure moves, never overwrites; warns + skips a half it can't locate instead of guessing. `_ship_plan`/`_execute_ship` are split so a future folder-watcher can reuse the engine headless.
+
 ### Talking to Claude in chat
 
 > Gray says: "pull all vertical clips from April 16"

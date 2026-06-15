@@ -7,6 +7,7 @@ Commands:
   pull          — filter index → hardlink results into 07_QUERY_PULLS/<slug>/
   batch         — file a shoot into 01_ORGANIZED/Batch_NN/Vid_MM/ then re-index
   promote       — move a finished project ACTIVE→DELIVERED→ARCHIVE
+  ship          — post-delivery cleanup: archive the edit project + file the footage
   create-week   — backfill a past/future week's folder scaffold
   pull-cleanup  — delete query-pull folders after the edit ships
 """
@@ -602,6 +603,124 @@ def cmd_promote(args):
     print(f"    → {result['dest']}\n")
 
 
+# ---- ship: post-delivery cleanup (v3.1) -----------------------------------
+# When a finished video lands in 03_DELIVERED, archive its edit project AND file
+# its raw footage into the library — in ONE reviewed step. Builds a plan first;
+# nothing moves until confirmed. Reuses promote's find/infer helpers. The
+# (moves, warnings) split lets a future folder-watcher reuse _ship_plan headless.
+
+def _ship_plan(library: Path, video: str, project_name, footage_path,
+               category, fmt, week_target):
+    """Build the post-delivery cleanup plan for `video`. Returns (moves, warnings):
+    moves = [{what, src(Path), dest(Path)}], warnings = [str]. Moves nothing.
+    Raises ValueError on an ambiguous project or a destination that already exists."""
+    moves, warnings = [], []
+
+    # sanity: is there actually a delivered item by this name? (soft — names vary)
+    delivered_root = library / FOLDER_DELIVERED
+    if delivered_root.is_dir():
+        hit = [p for p in delivered_root.rglob("*") if p.name == video or p.stem == video]
+        if not hit:
+            warnings.append(f"no item named '{video}' found in {FOLDER_DELIVERED} "
+                            f"(double-check the name)")
+
+    # 1) edit project (02_ACTIVE_PROJECTS) → 04_ARCHIVE
+    active_root = library / FOLDER_PROJECTS
+    pname = project_name or video
+    found = _find_stage_item(active_root, pname) if active_root.is_dir() else []
+    if len(found) > 1:
+        listing = ", ".join(p.relative_to(library).as_posix() for p in found)
+        raise ValueError(f"project '{pname}' is ambiguous in active projects: {listing}. "
+                         f"Pass --project \"exact name\".")
+    if found:
+        src = found[0]
+        pfmt = fmt or _infer_format(src, active_root) or "shorts"
+        dest_dir = library / FOLDER_ARCHIVE / pfmt
+        if week_target is not None:
+            dest_dir = dest_dir / week_label_for(week_target)
+        moves.append({"what": "edit project → archive", "src": src, "dest": dest_dir / src.name})
+    else:
+        warnings.append(f"no active project matched '{pname}' — skipping the project archive "
+                        f"(pass --project to point at it)")
+
+    # 2) raw footage (01_ORGANIZED) → 05_FOOTAGE_LIBRARY
+    fsrc = None
+    if footage_path:
+        p = Path(footage_path)
+        fsrc = p if p.is_absolute() else library / footage_path
+    else:
+        m = re.search(r"[Bb]atch[\s_]*0*(\d+).*?[Vv]id[\s_]*0*(\d+)", video)
+        if m:
+            guess = library / FOLDER_ORGANIZED / f"Batch_{int(m.group(1)):02d}" / f"Vid_{int(m.group(2)):02d}"
+            if guess.is_dir():
+                fsrc = guess
+    if fsrc and fsrc.exists():
+        cat = category or video
+        dest_dir = library / FOLDER_FOOTAGE_LIB / cat
+        if week_target is not None:
+            dest_dir = dest_dir / week_label_for(week_target)
+        moves.append({"what": "raw footage → library", "src": fsrc, "dest": dest_dir / fsrc.name})
+    else:
+        warnings.append("couldn't locate the raw footage — pass --footage <folder> to include it "
+                        "(skipping the footage move)")
+
+    for mv in moves:
+        if mv["dest"].exists():
+            raise ValueError(f"destination already exists, refusing to overwrite: "
+                             f"{mv['dest'].relative_to(library).as_posix()}")
+    return moves, warnings
+
+
+def _execute_ship(moves) -> None:
+    for mv in moves:
+        mv["dest"].parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(mv["src"]), str(mv["dest"]))
+
+
+def cmd_ship(args):
+    """Post-delivery cleanup: archive the edit project + file the footage, after
+    showing the plan. Nothing moves until confirmed (or --yes)."""
+    library = _library(args.client)
+    if args.no_week:
+        week_target = None
+    elif args.week:
+        week_target = date.fromisoformat(args.week)
+    else:
+        week_target = date.today()
+
+    try:
+        moves, warnings = _ship_plan(library, args.video, args.project, args.footage,
+                                     args.category, args.format, week_target)
+    except ValueError as e:
+        print(f"\n  Error: {e}\n")
+        sys.exit(1)
+
+    print(f"\n  Ship cleanup for: {args.video}")
+    for w in warnings:
+        print(f"  ! {w}")
+    if not moves:
+        print("\n  Nothing to move — check the name, or pass --project / --footage.\n")
+        return
+
+    print("\n  Planned moves (nothing has moved yet):")
+    for mv in moves:
+        print(f"    • {mv['what']}")
+        print(f"        {mv['src'].relative_to(library).as_posix()}")
+        print(f"        → {mv['dest'].relative_to(library).as_posix()}")
+
+    if not args.yes:
+        ans = input("\n  Proceed with these moves? [y/N]: ").strip().lower()
+        if ans != "y":
+            print("  Cancelled — nothing moved.\n")
+            return
+
+    _execute_ship(moves)
+    print(f"\n  Done — moved {len(moves)} item(s).")
+    db_path = _db(args.client)
+    added, skipped, removed = _reindex(library, db_path)
+    print(f"  Re-indexed: {added} clip(s), skipped {skipped}, removed {removed} missing\n")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Footage index + pull (v2)")
     ap.add_argument("--client", "-c", required=True, choices=list(CLIENT_ROOTS.keys()))
@@ -640,6 +759,18 @@ def main():
     pr.add_argument("--no-week", action="store_true",
                     help="Place directly under the format bucket, not a week folder")
     pr.set_defaults(func=cmd_promote)
+
+    sh = sub.add_parser("ship", help="After delivery: archive the edit project + file the footage into the library (shows a plan first)")
+    sh.add_argument("--video", required=True, help="Name of the delivered video (the file you dropped in 03_DELIVERED)")
+    sh.add_argument("--project", help="Override: exact active-project name to archive")
+    sh.add_argument("--footage", help="Override: footage folder to file into the library (relative or absolute)")
+    sh.add_argument("--category", help="Library sub-folder for the footage (default: the video name)")
+    sh.add_argument("--format", choices=PROJECT_FORMAT_BUCKETS,
+                    help="Format bucket for the archived project (inferred if omitted)")
+    sh.add_argument("--week", help="YYYY-MM-DD destination week (default: current week)")
+    sh.add_argument("--no-week", action="store_true", help="Place directly under the bucket, not a week folder")
+    sh.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")
+    sh.set_defaults(func=cmd_ship)
 
     cw = sub.add_parser("create-week", help="Create this week's folder under every category in FOOTAGE_LIBRARY")
     cw.add_argument("--week", help="YYYY-MM-DD; defaults to today")
