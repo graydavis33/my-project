@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"Base white","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Stroke width (px)","default":2},{"id":"cornerRadius","type":"number","label":"Card corner radius (px)","default":22},{"id":"messyCount","type":"number","label":"Messy page count","default":11},{"id":"cleanCount","type":"number","label":"Clean page count","default":3},{"id":"kickerText","type":"string","label":"Payoff kicker","default":"10 PAGES TO 3"},{"id":"stackEnterTime","type":"number","label":"Stack enter time (s)","default":0.15},{"id":"collapseTime","type":"number","label":"Collapse start (s)","default":1.5},{"id":"sealTime","type":"number","label":"Check seal time (s)","default":3.0},{"id":"kickerTime","type":"number","label":"Kicker time (s)","default":3.35},{"id":"cameraTime","type":"number","label":"Camera push time (s)","default":2.95}]'>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      /* camera world */
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      /* dark high-contrast stage card every icon sits on */
+      .stage { position: absolute; left: 210px; top: 470px; width: 660px; height: 1080px;
+        border-radius: 28px; will-change: transform, opacity;
+        background: linear-gradient(120deg, #34302C 0%, #272320 55%, #1C1916 100%);
+        box-shadow: inset 0 2px 5px rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.5); }
+
+      /* a single document sheet */
+      .sheet { position: absolute; border-radius: 10px; background: #FFFFFF;
+        will-change: transform, opacity;
+        box-shadow: 0 10px 22px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.9); }
+      .sheet .ln { position: absolute; left: 18px; height: 8px; border-radius: 4px;
+        background: #CDD2DA; }
+      /* messy sheets read greyish/cool; clean sheets stay crisp white */
+      .messy .sheet { background: #EEF1F5; }
+      .messy .sheet .ln { background: #B9C0CB; }
+
+      /* orange check seal */
+      .seal { position: absolute; width: 150px; height: 150px; opacity: 0;
+        will-change: transform, opacity; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.4)); }
+      .seal .disc { fill: url(#og); stroke: #fff; stroke-width: 4; }
+      .seal .tick { fill: none; stroke: #fff; stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
+
+      /* payoff kicker */
+      .kicker { position: absolute; left: 0; width: 100%; text-align: center; top: 700px;
+        font-weight: 900; font-size: 84px; color: #F28129; text-transform: uppercase;
+        letter-spacing: -0.02em; text-shadow: 0 6px 16px rgba(0,0,0,0.45);
+        opacity: 0; will-change: transform, opacity; white-space: nowrap; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5.0" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="5.0" data-track-index="1">
+        <div id="world" class="world" data-layout-allow-overflow="">
+
+          <div id="stage" class="stage"></div>
+
+          <!-- messy tall leaning stack (built by JS) -->
+          <div id="messy" class="messy" data-layout-allow-overflow=""></div>
+
+          <!-- clean squared 3-page stack (built by JS) -->
+          <div id="clean" data-layout-allow-overflow=""></div>
+
+          <svg id="seal" class="seal" viewBox="0 0 100 100" style="left:632px; top:918px;">
+            <defs>
+              <lineargradient id="og" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#FFC68A" /><stop offset="0.5" stop-color="#F28129" />
+                <stop offset="1" stop-color="#C8631A" />
+              </lineargradient>
+            </defs>
+            <circle class="disc" cx="50" cy="50" r="44" />
+            <path class="tick" d="M30 52 L44 66 L72 34" />
+          </svg>
+
+          <div id="kicker" class="kicker" data-layout-allow-overflow="">10 PAGES TO 3</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        // --- variables (max-agency) with hardcoded fallbacks ---
+        const V = (window.__hyperframes && window.__hyperframes.getVariables)
+          ? window.__hyperframes.getVariables() : {};
+        const orange       = V.orange       ?? "#F28129";
+        const white        = V.white        ?? "#FFFFFF";
+        const strokeWidth  = V.strokeWidth  ?? 2;
+        const cornerRadius = V.cornerRadius ?? 22;
+        const messyCount   = V.messyCount   ?? 11;
+        const cleanCount   = V.cleanCount   ?? 3;
+        const kickerText   = V.kickerText   ?? "10 PAGES TO 3";
+        const stackEnterT  = V.stackEnterTime ?? 0.15;
+        const collapseT    = V.collapseTime   ?? 1.5;
+        const sealT        = V.sealTime       ?? 3.0;
+        const kickerT      = V.kickerTime     ?? 3.35;
+        const cameraT      = V.cameraTime     ?? 2.95;
+
+        document.getElementById("kicker").textContent = kickerText;
+        document.getElementById("kicker").style.color = orange;
+        document.querySelectorAll(".seal .disc, .seal .tick").forEach(()=>{});
+
+        // seeded PRNG (mulberry32) — deterministic jitter for the messy stack
+        function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+        const rand = mulberry32(20260615);
+
+        const stageCx = 540;          // stage horizontal center
+        const sheetW = 340, sheetH = 440;
+
+        // --- build messy leaning stack: many sheets, jittered offset/rotation, tall ---
+        const messy = document.getElementById("messy");
+        const baseMessyY = 1470;      // bottom of the messy pile (inside stage)
+        const messyPitch = 52;
+        for (let i = 0; i < messyCount; i++) {
+          const dx = (rand() * 2 - 1) * 42;
+          const rot = (rand() * 2 - 1) * 6;
+          const s = document.createElement("div");
+          s.className = "sheet";
+          s.id = "m" + i;
+          s.style.width = sheetW + "px";
+          s.style.height = sheetH + "px";
+          s.style.left = (stageCx - sheetW / 2 + dx) + "px";
+          // each page stacked up, slightly overlapping → a leaning tower
+          s.style.top = (baseMessyY - sheetH - i * messyPitch) + "px";
+          s.style.transform = "rotate(" + rot + "deg)";
+          s.style.zIndex = i;
+          // a few faint content lines
+          for (let l = 0; l < 4; l++) {
+            const ln = document.createElement("div");
+            ln.className = "ln";
+            ln.style.top = (40 + l * 46) + "px";
+            ln.style.width = (sheetW - 36 - rand() * 70) + "px";
+            s.appendChild(ln);
+          }
+          messy.appendChild(s);
+        }
+
+        // --- build clean squared 3-page stack (final state, centered on stage) ---
+        const clean = document.getElementById("clean");
+        const cleanCx = stageCx;
+        const cleanBaseY = 1060;      // sits centered in the lower-mid of the stage
+        for (let i = 0; i < cleanCount; i++) {
+          const s = document.createElement("div");
+          s.className = "sheet";
+          s.id = "c" + i;
+          s.style.width = sheetW + "px";
+          s.style.height = sheetH + "px";
+          s.style.left = (cleanCx - sheetW / 2) + "px";
+          s.style.top = (cleanBaseY - i * 26) + "px";   // tidy fanned stack
+          s.style.transform = "rotate(0deg)";
+          s.style.zIndex = i;
+          s.style.opacity = "0";
+          for (let l = 0; l < 4; l++) {
+            const ln = document.createElement("div");
+            ln.className = "ln";
+            ln.style.top = (40 + l * 46) + "px";
+            ln.style.width = (sheetW - 36 - (l === 3 ? 130 : 20)) + "px";
+            s.appendChild(ln);
+          }
+          clean.appendChild(s);
+        }
+
+        // apply stroke/corner brand vars to the stage
+        document.getElementById("stage").style.borderRadius = (cornerRadius + 6) + "px";
+
+        // --- timeline ---
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        gsap.set("#world", { x: 0, y: 0, scale: 1.0 });
+
+        // stage establishes
+        tl.from("#stage", { scaleY: 0.92, opacity: 0, duration: 0.5, ease: "back.out(1.3)", transformOrigin: "50% 100%" }, 0.05);
+
+        // messy stack tumbles in, top-down (the bloated 10+ pages)
+        for (let i = messyCount - 1; i >= 0; i--) {
+          const at = stackEnterT + (messyCount - 1 - i) * 0.07;
+          tl.fromTo("#m" + i,
+            { opacity: 0, y: -70, scale: 0.85 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, at);
+        }
+
+        // ONE MOTION: the messy tower collapses/simplifies → fades & squishes down,
+        // the clean 3-stack rises crisp out of the same spot
+        tl.to("#messy .sheet", { opacity: 0, y: 120, scaleY: 0.4, duration: 0.55,
+          ease: "power2.in", stagger: 0.03 }, collapseT);
+        tl.fromTo("#clean .sheet",
+          { opacity: 0, y: 80, scale: 0.9 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.5)", stagger: 0.08, immediateRender: false }, collapseT + 0.45);
+
+        // orange check seal slams onto the clean stack
+        tl.fromTo("#seal",
+          { opacity: 0, scale: 0.4, rotation: -18 },
+          { opacity: 1, scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.2)", transformOrigin: "50% 50%", immediateRender: false }, sealT);
+
+        // CAMERA payoff: pan + zoom together (one synced ease) onto the kicker + clean stack
+        // frame world point (~540, ~1040) at scale 1.22 → tx = 540 - s*Px, ty = 960 - s*Py
+        const s = 1.22, Px = 540, Py = 1040;
+        tl.to("#world", { x: 540 - s * Px, y: 960 - s * Py, scale: s, duration: 1.5, ease: "power2.inOut" }, cameraT);
+
+        // payoff kicker
+        tl.fromTo("#kicker", { opacity: 0, y: -22 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", immediateRender: false }, kickerT);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
