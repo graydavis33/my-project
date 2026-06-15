@@ -17,11 +17,9 @@ This folder is the workspace-side mirror — for SOPs that need to live next to 
 | `instagram-reels-sop.md` | Daily IG Reels workflow — Trial Reels |
 | `instagram-stories-sop.md` | Daily IG Stories — ≥3/day for retention |
 | `youtube-shorts-sop.md` | Daily YT Shorts — same edit as TikTok/Reels |
-| `youtube-longform-sop.md` | Weekly cinematic long-form (in-progress, finalizing before handoff) |
-| `linkedin-sop.md` | LinkedIn — business-focused, NOT IG repurpose (awaiting Sai's direction) |
-| `founder-series-sop.md` | Founder Series interview workflow |
+| `youtube-longform-sop.md` | Bi-Weekly cinematic long-form (in-progress, finalizing before handoff) |
+| `linkedin-sop.md` | LinkedIn — **OUTSOURCED**: a 3rd-party AI tool interviews Sai + drafts the posts; Gray adds images + reviews; post daily |
 
----
 
 ## Production tiers (quick reference)
 
@@ -30,9 +28,8 @@ This folder is the workspace-side mirror — for SOPs that need to live next to 
 | Short-form (TikTok / IG Reels / YT Shorts) | LOW (~3 min/edit) | 5-10+/day | Sai films, Gray edits |
 | Stories (IG + TikTok) | NONE | ≥3/day | Sai + Gray when together |
 | Long-form YouTube | HIGH | Weekly | Gray |
-| Founder Series | HIGH | Ad-hoc | Gray |
 | Paid Ads (Trendify) | HIGH | Per need | Gray + Editor team |
-| LinkedIn | MEDIUM | Daily target | Sai writes → Gray drafts |
+| LinkedIn | LOW (outsourced) | Daily | 3rd-party AI interviews Sai + drafts → Gray adds images + reviews |
 
 **Rule:** Each platform has its own strategy. Strategies do NOT cross-pollinate.
 
@@ -44,7 +41,6 @@ This folder is the workspace-side mirror — for SOPs that need to live next to 
 - [ ] Stand up Asana for editing pipeline status
 - [ ] Finalize `youtube-longform-sop.md` before handoff
 - [ ] 3 thumbnail options per long-form video going forward
-- [ ] Edit Founder Series long-form (raw footage, no time-cost)
 - [ ] Build content-alignment theses dashboard (what worked + why)
 - [ ] Develop funnel map: shorts → long-form → podcast → LinkedIn
 
@@ -90,10 +86,15 @@ Status: 🟢 built/live · 🟡 planned/next. This is the living map of the COS 
 7. **Film → Premiere edit** (interview = spine, B-roll cut under it) — 🟢 Gray
 8. **Series template** (repeatable skeleton) — `longform/ep2/_SERIES-TEMPLATE.md` — 🟢 exists
 
-### LINKEDIN
-1. **Draft** — `python-scripts/sai-linkedin` (keep as-is, Sai loves it) — 🟢 live
-2. **Reusable image Drive** — a stock of visuals to choose from — 🟡 planned
-3. **Repurpose** — into carousels / stories / BTS culture videos (recruiting) — 🟡 planned
+### LINKEDIN (OUTSOURCED)
+1. **Interview** — Sai talks to a 3rd-party AI tool that gathers data, interviews him, and drafts the posts — 🟢 live (external)
+2. **Images** — Gray adds pictures to each post — 🟢 Gray
+3. **Review** — Gray reviews the drafts before they go out — 🟢 Gray
+4. **Post** — daily — 🟢 live
+5. **Reusable image Drive** — a stock of visuals to pull from — 🟡 planned
+6. **Repurpose** — into carousels / stories / BTS culture videos (recruiting) — 🟡 planned
+
+_Our `python-scripts/sai-linkedin` tool is superseded for LinkedIn drafting by the outsourced AI-interview tool._
 
 ### What changed (2026-06-14 review)
 - **Variety is the mandate** — formats, graphics, content types (shorts were too samey).
@@ -102,5 +103,6 @@ Status: 🟢 built/live · 🟡 planned/next. This is the living map of the COS 
 - **Division of labor:** Gray owns format + topics (from daily notes); Sai scripts the words.
 - **New rule:** A/B/C trial-reel hooks must differ VISUALLY, not just verbally.
 - **New tooling:** `story-arc-board`, two reusable editable-HTML review generators (batch + interview), Sandcastles-cross-merge scripting.
+- **2026-06-15:** LinkedIn is now **outsourced** (3rd-party AI interviews Sai + drafts; Gray adds images + reviews; daily). **Founder Series is retired.** Long-form cadence is bi-weekly.
 
 Full review + backlog: `business/social-media/sai/reviews/2026-06-14-production-system-review.md` + `SYSTEM-BACKLOG.md`.
