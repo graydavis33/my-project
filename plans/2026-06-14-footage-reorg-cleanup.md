@@ -6,6 +6,17 @@
 
 ---
 
+## 0. PROTECTED — DO NOT TOUCH (Episode 2 documentary raw footage)
+
+Per Gray (2026-06-14). These folders are **off-limits** to every phase — no move, no rename, no merge, no delete:
+- `Rest of week/` (root, 5.8G — C2669+ raw)
+- `01_ORGANIZED/2026-06-06`
+- `01_ORGANIZED/2026-06-09`
+- `01_ORGANIZED/2026-06-10`
+- `07_QUERY_PULLS/EP2-arc-map/`
+
+Note: 06-06/09/10 were renamed in Phase A from illegal-char names (`06"06"26` etc.) — folder names only changed, raw files 100% intact. Pending Gray's OK to keep the clean names vs revert.
+
 ## 1. Goal
 
 Drain the clog and kill the strays so the drive matches the documented 9-folder scheme again. **No mass-moving of irreplaceable footage on guesses** — every judgment call is in the §6 table for Gray to confirm first.
