@@ -236,6 +236,18 @@ python cli_index.py --client sai batch --num 2 \
 - Reports **unmapped** source video + any **mapped clip with no file** — nothing is silently dropped. Idempotent on re-run.
 - **No Vision** on batch footage (mapped, not classified) → $0. `batch_num`/`vid_num` are derived from the folder path, so a later plain `index` re-derives them.
 
+### v3: Promote (stage transitions ACTIVE→DELIVERED→ARCHIVE)
+
+When a video ships or a delivered project retires, `promote` moves the whole thing to the next stage so the move can't be forgotten:
+
+```bash
+python cli_index.py --client sai promote --item "<file or folder name>" --to delivered
+python cli_index.py --client sai promote --item "<file or folder name>" --to archive
+```
+
+- `--to delivered` ← active, `--to archive` ← delivered (override with `--from`). Format bucket inferred from the item's location (`--format` if it's outside one). Lands in `<stage>/<format>/<week>/` (default current week; `--week DATE` or `--no-week`).
+- **Safe:** pure move (never copies/deletes), refuses to overwrite, aborts on ambiguous names. Stages 02/03/04 aren't indexed, so the SQLite index is untouched.
+
 ### Talking to Claude in chat
 
 > Gray says: "pull all vertical clips from April 16"

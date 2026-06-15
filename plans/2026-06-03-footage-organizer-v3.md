@@ -1,7 +1,7 @@
 # Footage Organizer v3 — Plan
 
 **Date:** 2026-06-03
-**Status:** IN PROGRESS — **Phase 1 (lazy week creation) shipped 2026-06-10**. **Phase 2 (freeform-folder indexing + ensure_week freeform discovery) shipped 2026-06-15** (tests 34/34). Open questions answered 2026-06-15: batch folders → `01_ORGANIZED/Batch_NN/Vid_MM`; forgotten moves → ACTIVE→DELIVERED, DELIVERED→ARCHIVE, pull-cleanup; library → keep 17 as-is + seed freeform starter set. **Phase 3 (batch command + batch_num/vid_num schema) shipped 2026-06-15** (tests 54/54; end-to-end verified on a temp library — clips moved into Batch_NN/Vid_MM, index tagged, unmapped reported). Phase 4 (stage-transition cmds) remains. Pairs with the disk cleanup in `plans/2026-06-14-footage-reorg-cleanup.md`.
+**Status:** IN PROGRESS — **Phase 1 (lazy week creation) shipped 2026-06-10**. **Phase 2 (freeform-folder indexing + ensure_week freeform discovery) shipped 2026-06-15** (tests 34/34). Open questions answered 2026-06-15: batch folders → `01_ORGANIZED/Batch_NN/Vid_MM`; forgotten moves → ACTIVE→DELIVERED, DELIVERED→ARCHIVE, pull-cleanup; library → keep 17 as-is + seed freeform starter set. **Phase 3 (batch command + batch_num/vid_num schema) shipped 2026-06-15** (tests 54/54; end-to-end verified on a temp library — clips moved into Batch_NN/Vid_MM, index tagged, unmapped reported). **Phase 4 (promote / stage transitions ACTIVE→DELIVERED→ARCHIVE) shipped 2026-06-15 — v3 COMPLETE** (tests 70/70; end-to-end verified — project promoted active→delivered→archive, format inferred, overwrite/not-found guards fire). Pairs with the disk cleanup in `plans/2026-06-14-footage-reorg-cleanup.md`.
 **Tool:** `python-scripts/footage-organizer/`
 
 ---

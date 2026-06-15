@@ -75,6 +75,11 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - `--map` parsing: `_parse_map` → `_expand_clip_segment` (ranges preserve zero-pad width). `_matching_files` moves Sony sidecars (`C2493M01.XML`) with their clip; a non-digit guard stops `C249` matching `C2493`.
 - Reports unmapped source clips + mapped-but-missing clips; idempotent re-run; no Vision ($0).
 
+**v3 Phase 4 — promote / stage transitions (2026-06-15, v3 COMPLETE):**
+- `promote --item NAME --to {delivered|archive}` moves a finished project to the next stage. `--from` defaults via `_DEFAULT_FROM` (active→delivered, delivered→archive). Format inferred by `_infer_format` from the item's location (or `--format`); lands in `<stage>/<format>/<week?>/` (current week default; `--week`/`--no-week`).
+- `_find_stage_item` is an exact-name search that PRUNES into a matched dir (returns the project folder whole, not its children); >1 match aborts with a list.
+- Pure file move (`_promote_item`): never copies/deletes/overwrites (dest-exists aborts). Stages 02/03/04 are NOT in `INDEX_SCAN_ROOTS`, so there's no index/ffprobe involvement — that's why it's pure file ops.
+
 **Hard rules:**
 - Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
 - `08_QUERY_PULLS/` is the ONLY place duplicates are tolerated — and only temporarily, until the edit ships

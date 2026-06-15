@@ -193,6 +193,13 @@
   }
   .proj-foot .mono { font-family: 'SF Mono','Fira Code',monospace; }
 
+  .proj-next {
+    font-size: 12px; color: var(--gold); line-height: 1.5;
+    background: var(--gold-soft); border: 1px solid var(--gold-border);
+    border-radius: 10px; padding: 9px 12px; margin-bottom: 14px;
+  }
+  .proj-next b { color: var(--gold); font-weight: 700; letter-spacing: 0.3px; }
+
   /* BADGES */
   .badge {
     display: inline-flex; align-items: center; gap: 6px;
@@ -248,7 +255,7 @@
   <div class="hero">
     <div class="wordmark">Graydient Media // Internal</div>
     <h1 class="title">Content OS — Build Tracker</h1>
-    <p class="subtitle">Live status of the 6 sub-projects that turn manual creative work into an orchestrated AI operating system. Every row here is a step closer to Gray doing only what Gray uniquely can do.</p>
+    <p class="subtitle">Live status of Sai Karra's Content Operating System — every stage of each platform pipeline, what's built, where it stands, and what still needs to change. Re-pointed by the 2026-06-14 production-system review.</p>
     <div class="metabar" id="metabar"></div>
   </div>
 
@@ -264,8 +271,8 @@
   <section>
     <div class="sec-head">
       <div>
-        <div class="sec-tag">Sub-projects</div>
-        <h2 class="sec-title">A → F — The Build Plan</h2>
+        <div class="sec-tag">Pipelines &amp; Systems</div>
+        <h2 class="sec-title">The Sai Content OS — Stages &amp; Status</h2>
       </div>
       <div class="sec-meta" id="projMeta"></div>
     </div>
@@ -304,162 +311,183 @@
 // Sub-project state: "ship" | "active" | "pending" | "blocked"
 // ============================================================
 const DATA = {
-  lastUpdated: "2026-04-21",
+  lastUpdated: "2026-06-15",
   projects: [
     {
-      letter: "A",
-      title: "Playbook Edits (Graydient)",
-      phase: "Week 1",
-      state: "ship",
-      badge: { text: "Shipped", cls: "b-ok" },
-      desc: "Surgical edits to the Creative Director Playbook: capacity rules, 7-series list, Layer 7, long-form paths, Sai pointer, one-video-all-platforms.",
-      tasks: [
-        { label: "Insert Capacity & Constraints section", status: "done" },
-        { label: "Expand Content Series 5 → 7 + Flex Rules", status: "done" },
-        { label: "Add Long-Form Production Paths to Layer 3", status: "done" },
-        { label: "Simplify Layer 4 Distribution (one-video-all-platforms)", status: "done" },
-        { label: "Move Audio Strategy to Layer 1", status: "done" },
-        { label: "Insert Layer 7 — Iteration & Tagging System", status: "done" },
-        { label: "Add Sai Karra content pointer", status: "done" }
-      ],
-      target: "Shipped 2026-04-21",
-      link: "business/social-media/content-playbook.md"
-    },
-    {
-      letter: "B",
-      title: "Sai Playbook v1",
-      phase: "Week 2–4",
-      state: "pending",
-      badge: { text: "Awaiting Data", cls: "b-violet" },
-      desc: "Stand up a separate playbook for the Sai Karra brand. Needs post-Week-1 performance data before it can be written accurately.",
-      tasks: [
-        { label: "Complete Sai Week 1 filming + posts", status: "wip" },
-        { label: "Pull 7-day analytics for Sai outputs", status: "pending" },
-        { label: "Draft Sai series list (separate from Graydient)", status: "pending" },
-        { label: "Write business/sai/content-playbook.md", status: "pending" },
-        { label: "Cross-link from Graydient playbook Sai pointer", status: "pending" }
-      ],
-      target: "Week 2–4 of Sai engagement",
-      link: "business/sai/ (pending)"
-    },
-    {
-      letter: "C",
-      title: "Iteration & Tagging System",
-      phase: "Week 1–2",
+      letter: "1",
+      title: "Shorts Pipeline",
+      phase: "TikTok · IG Reels · YT Shorts",
       state: "active",
-      badge: { text: "Half Shipped", cls: "b-gold" },
-      desc: "Build the Layer 7 infrastructure — video-log, killed-archive, winning-patterns — in both the file system and the Obsidian vault.",
+      badge: { text: "Live · 2 gaps", cls: "b-gold" },
+      desc: "Daily low-production UGC shorts — Sai films, Gray edits. IG is the priority platform, retention is the only metric, strip-down editing only (no B-roll / music / HyperFrames on daily UGC).",
       tasks: [
-        { label: "video-log.csv with schema + enums", status: "done" },
+        { label: "Capture — Gray's end-of-day on-set idea notes", status: "pending" },
+        { label: "Plan — weekly format MENU + topics in Notion, Sai approves morning-of", status: "pending" },
+        { label: "Research — Sandcastles proven hooks / formats / outliers", status: "done" },
+        { label: "Script — talking points × formats → A/B/C hooks, each a distinct VISUAL", status: "done" },
+        { label: "Review — editable batch-review HTML (pick / approve / swap / cut / edit)", status: "done" },
+        { label: "Produce — selects cut + caption layer (_b2_edit/pipeline.py)", status: "done" },
+        { label: "Measure — retention-only dashboard + outlier flag", status: "pending" }
+      ],
+      next: "Build the front end (Capture → Plan: daily notes feeding a Notion format menu) and the retention dashboard — the only two stages not yet live.",
+      target: "5–10+ / day",
+      link: "content-os/ (per-platform SOPs)"
+    },
+    {
+      letter: "2",
+      title: "Long-Form Pipeline",
+      phase: "Cinematic BTS doc · bi-weekly",
+      state: "active",
+      badge: { text: "Built · 1 gap", cls: "b-gold" },
+      desc: "Weekly→bi-weekly founder documentary. STORY, not tutorial — map the arc and lock title/thumbnail BEFORE filming the A-roll; one story per video; the sit-down interview is the narration spine.",
+      tasks: [
+        { label: "Transcribe the week's raw footage (local Whisper)", status: "done" },
+        { label: "Map the story arc — story-arc-board + EP{N}-ARC-MAP.md", status: "done" },
+        { label: "Lock title + thumbnail (before the A-roll)", status: "wip" },
+        { label: "Interview questions derived from the arc", status: "done" },
+        { label: "Review interview Qs — editable HTML for Sai", status: "done" },
+        { label: "Pre-edit pool — clips renamed in story order + EDIT-GUIDE", status: "done" },
+        { label: "Film → Premiere edit (interview spine, B-roll under)", status: "done" },
+        { label: "Repeatable series template", status: "done" }
+      ],
+      next: "Build the title + thumbnail ideation/lock step (decide them before the A-roll) — the one loose stage. EP2's scripted interview still needs filming.",
+      target: "EP2 in progress",
+      link: "business/social-media/sai/longform/"
+    },
+    {
+      letter: "3",
+      title: "LinkedIn Pipeline",
+      phase: "Outsourced · daily",
+      state: "ship",
+      badge: { text: "Live (outsourced)", cls: "b-ok" },
+      desc: "Business-focused, custom — never repurposed from IG. A 3rd-party AI tool interviews Sai and drafts the posts; Gray adds images + reviews; posts daily. Our old sai-linkedin tool is superseded for drafting.",
+      tasks: [
+        { label: "Interview — 3rd-party AI gathers data + drafts", status: "done" },
+        { label: "Images — Gray adds visuals to each post", status: "done" },
+        { label: "Review — Gray reviews drafts before they ship", status: "done" },
+        { label: "Post — daily", status: "done" },
+        { label: "Reusable image Drive to pull visuals from", status: "pending" },
+        { label: "Repurpose into carousels / stories / recruiting BTS", status: "pending" }
+      ],
+      next: "Stand up the reusable image Drive, then start repurposing posts into carousels / stories.",
+      target: "daily",
+      link: "content-os/linkedin-sop.md"
+    },
+    {
+      letter: "4",
+      title: "Iteration & Measurement",
+      phase: "Layer 7 · the weak spot",
+      state: "active",
+      badge: { text: "Scaffolded, unused", cls: "b-warn" },
+      desc: "The feedback loop — track what worked + why, kill what didn't. The template files exist but aren't being filled, and retention/conversion tracking isn't wired yet. This is the biggest gap in the OS.",
+      tasks: [
+        { label: "video-log.csv schema + enums", status: "done" },
+        { label: "Actually populate the video-log (currently empty headers)", status: "pending" },
         { label: "killed-archive.md template", status: "done" },
         { label: "winning-patterns.md template", status: "done" },
-        { label: "Obsidian content-os/video-log/ folder", status: "pending" },
-        { label: "Obsidian content-os/killed-archive/ folder", status: "pending" },
-        { label: "Obsidian content-os/winning-patterns/ folder", status: "pending" },
-        { label: "Script: auto-tag video from Social Analytics pull", status: "pending" }
+        { label: "Track views→followers conversion %, not raw views", status: "pending" },
+        { label: "Retention-only shorts dashboard", status: "pending" },
+        { label: "Auto-tag a video from the Social Analytics pull", status: "pending" }
       ],
-      target: "Week 1–2",
-      link: "business/social-media/"
+      next: "Pick the lightest way to log every post + its retention, then build the retention/conversion dashboard. Templates are ready — they're just empty.",
+      target: "needs a habit + a dashboard",
+      link: "business/social-media/video-log.csv"
     },
     {
-      letter: "D",
-      title: "Workflow Inventory + Tool Iteration",
-      phase: "Week 3–4",
+      letter: "5",
+      title: "Tooling & Skills",
+      phase: "The engines under the OS",
       state: "active",
-      badge: { text: "Inventory Done", cls: "b-gold" },
-      desc: "Rank all 14 tools against the Agent Evolution Framework. Iterate the 6 that pass the hybrid filter — research, hook, pipeline, creator intel, analytics, footage.",
+      badge: { text: "Mostly shipped", cls: "b-gold" },
+      desc: "The tools each stage runs on. Most are live. The original idea of a single content-os.py orchestrator was dropped in favor of focused tools + SOPs.",
       tasks: [
-        { label: "Tool inventory doc (all 14 ranked)", status: "done" },
-        { label: "6 SKILL.md skeletons for priority-tier tools", status: "done" },
-        { label: "Content Researcher: daily_trend_brief()", status: "pending" },
-        { label: "Hook Optimizer: batch CLI + Slack", status: "pending" },
-        { label: "Content Pipeline: export_all_formats.py", status: "pending" },
-        { label: "Creator Intel: weekly_outlier_report.py", status: "pending" },
-        { label: "Social Analytics → Analytical SaaS backend", status: "pending" },
-        { label: "Footage Organizer eval.py + test-set.csv", status: "pending" }
+        { label: "Sandcastles research MCP (hooks / formats / outliers)", status: "done" },
+        { label: "scriptwriter subagent (Sai/Gray voice, story-arc grounded)", status: "done" },
+        { label: "story-arc-board (folder-scoped long-form arc tool)", status: "done" },
+        { label: "Batch-review HTML generator (+ add-card / save / comments)", status: "done" },
+        { label: "Interview-review HTML generator", status: "done" },
+        { label: "footage-organizer (index + pull + auto-organize)", status: "done" },
+        { label: "transcriber — local Whisper (was content-pipeline)", status: "done" },
+        { label: "Single content-os.py command-center", status: "blocked" }
       ],
-      target: "Week 3–4",
-      link: "docs/tool-inventory.md"
+      next: "content-os.py orchestrator dropped — replaced by focused tools + SOPs. Next tooling job: wire Social Analytics into the retention dashboard.",
+      target: "iterating per production use",
+      link: ".claude/skills/ + python-scripts/"
     },
     {
-      letter: "E",
-      title: "Content OS Command-Center",
-      phase: "Month 2",
-      state: "pending",
-      badge: { text: "Scoped", cls: "b-neu" },
-      desc: "Wrapper tool + manager-agent design. `content-os.py --mode=daily|weekly` ties all of the above into one command. Also absorbs schedule_week.py.",
-      tasks: [
-        { label: "Spec: content-os.py --daily mode", status: "pending" },
-        { label: "Spec: content-os.py --weekly mode", status: "pending" },
-        { label: "Design: manager-agent orchestration shape", status: "pending" },
-        { label: "Build: daily Slack DM integration", status: "pending" },
-        { label: "Build: schedule_week.py (Buffer/Later API)", status: "pending" }
-      ],
-      target: "Month 2",
-      link: "python-scripts/content-os/ (not created)"
-    },
-    {
-      letter: "F",
-      title: "Per-Workflow Skill Builds",
-      phase: "Month 2–N",
+      letter: "6",
+      title: "Strategy & Governance",
+      phase: "Locked 5/10 · reset 6/14",
       state: "active",
-      badge: { text: "6 Skeletons Live", cls: "b-gold" },
-      desc: "One agent per workflow. Fill in each SKILL.md with real prompts, guardrails, and cost notes as tools get run end-to-end in production.",
+      badge: { text: "Direction set", cls: "b-violet" },
+      desc: "The rules and direction the whole OS runs on. Locked at the Month-1 recap (5/10), live since 5/26, re-pointed by the 6/14 production-system review.",
       tasks: [
-        { label: "Skeletons for 6 priority-tier tools", status: "done" },
-        { label: "content-researcher SKILL.md → full SOP", status: "pending" },
-        { label: "content-pipeline SKILL.md → full SOP", status: "pending" },
-        { label: "creator-intel SKILL.md → full SOP", status: "pending" },
-        { label: "hook-optimizer SKILL.md → full SOP", status: "pending" },
-        { label: "social-media-analytics SKILL.md → full SOP", status: "pending" },
-        { label: "footage-organizer SKILL.md → full SOP", status: "pending" },
-        { label: "Stage-F pass on deferred 8 tools (with production data)", status: "pending" }
+        { label: "COS locked + ground-running (5/10 → 5/26)", status: "done" },
+        { label: "Pre-post 4-question gate (Honest / Craft / Value / True)", status: "done" },
+        { label: "Hard rules (no virality, no IG→LI repurpose, no B-roll on UGC)", status: "done" },
+        { label: "6/14 review reset — variety + front-load creative decisions", status: "done" },
+        { label: "Division of labor — Gray owns format/topics, Sai owns words", status: "done" },
+        { label: "Founder Series retired; cinematic daily-diary killed", status: "done" },
+        { label: "Asana for editing-pipeline status", status: "pending" },
+        { label: "Funnel map: shorts → long-form → podcast → LinkedIn", status: "pending" },
+        { label: "Content-alignment theses dashboard (what worked + why)", status: "pending" }
       ],
-      target: "Month 2–N",
-      link: ".claude/skills/"
+      next: "Open Creative-Director deliverables: stand up Asana for pipeline status, draw the funnel map, and build the content-alignment theses dashboard.",
+      target: "living",
+      link: "reviews/2026-06-14-production-system-review.md"
     }
   ],
   activity: [
     {
+      date: "2026-06-15",
+      msg: "LinkedIn moved to outsourced + Founder Series retired; COS pipeline map refreshed",
+      sub: "3rd-party AI interviews Sai + drafts • Gray adds images + reviews • long-form cadence → bi-weekly • batch-3 + EP2 review HTML tooling shipped"
+    },
+    {
+      date: "2026-06-14",
+      msg: "Production-system review reset the direction (Sai's 3 voice memos)",
+      sub: "Variety is the mandate • long-form = STORY not tutorial • IG priority • retention-only • Gray owns format/topics, Sai owns words • hooks must differ visually"
+    },
+    {
+      date: "2026-06-13",
+      msg: "EP2 built + repeatable long-form series template locked",
+      sub: "Arc map • scripted interview • shorts list • _SERIES-TEMPLATE.md for all future episodes"
+    },
+    {
+      date: "2026-06-10",
+      msg: "Story-arc board shipped — first system out of the review",
+      sub: "Folder-scoped drag-drop arc lanes + lock-first title/thumbnail spine (web-apps/story-arc-board/)"
+    },
+    {
+      date: "2026-06-02",
+      msg: "Sandcastles wired in as the shorts research layer; tools re-scoped",
+      sub: "content-pipeline → transcriber (transcription-only) • hook-optimizer archived • content-researcher repositioned as a Graydient-brand tool"
+    },
+    {
+      date: "2026-05-26",
+      msg: "COS went live — ground-running date",
+      sub: "Per-platform SOPs active; trial-reels volume begins"
+    },
+    {
+      date: "2026-05-10",
+      msg: "Content OS locked (Month 1 recap voice memo)",
+      sub: "Per-platform strategies that do NOT cross-pollinate; canonical strategy doc lives in Obsidian"
+    },
+    {
       date: "2026-04-21",
-      msg: "Sub-projects A, C (file-system half), D shipped in one overnight build",
-      sub: "7 playbook edits • 3 Layer 7 scaffolds • tool-inventory.md • 6 SKILL.md skeletons • content-os-log.md"
-    },
-    {
-      date: "2026-04-15",
-      msg: "Content OS master roadmap approved — six sub-projects A→F",
-      sub: "Design spec at docs/superpowers/specs/2026-04-15-content-playbook-edits-design.md"
-    },
-    {
-      date: "2026-04-15",
-      msg: "All 6 edit sections for sub-project A approved in brainstorming",
-      sub: "Capacity & Constraints • 7-series list • Layer 7 • long-form paths • Sai pointer • one-video-all-platforms"
-    },
-    {
-      date: "2026-04-15",
-      msg: "Hybrid tool-iteration filter adopted (Option 3)",
-      sub: "Iterate NOW only if (1) tool is in content pipeline AND (2) has a known blocking gap"
-    },
-    {
-      date: "2026-04-15",
-      msg: "Agent Evolution Framework adopted",
-      sub: "Manual → Assisted → SOP → Agent → Orchestrated. No advancement below manual quality."
+      msg: "Build tracker created; playbook edits + Layer 7 scaffolds shipped",
+      sub: "This dashboard's original A→F build plan — since superseded by the live pipeline model"
     }
   ],
   files: [
-    { path: "business/social-media/content-playbook.md", desc: "The playbook itself — 7 layers, 7 series" },
-    { path: "docs/superpowers/specs/2026-04-15-content-playbook-edits-design.md", desc: "Master roadmap spec (A → F)" },
-    { path: "decisions/content-os-log.md", desc: "Content OS decision log (scoped separate from main log)" },
-    { path: "business/social-media/video-log.csv", desc: "Layer 7 video tracking (schema + enums)" },
-    { path: "business/social-media/killed-archive.md", desc: "Layer 7 killed series/format archive" },
-    { path: "business/social-media/winning-patterns.md", desc: "Layer 7 winning-patterns registry" },
-    { path: "docs/tool-inventory.md", desc: "All 14 tools ranked by Agent Evolution stage" },
-    { path: ".claude/skills/content-researcher/SKILL.md", desc: "Skeleton — trend brief + Reddit synth" },
-    { path: ".claude/skills/content-pipeline/SKILL.md", desc: "Skeleton — video → drafts folder" },
-    { path: ".claude/skills/creator-intel/SKILL.md", desc: "Skeleton — weekly outlier report" },
-    { path: ".claude/skills/hook-optimizer/SKILL.md", desc: "Skeleton — hook scoring + batch" },
-    { path: ".claude/skills/social-media-analytics/SKILL.md", desc: "Skeleton — 4-platform pull" },
-    { path: ".claude/skills/footage-organizer/SKILL.md", desc: "Skeleton — Haiku Vision clip sorter" }
+    { path: "business/sai-karra/content-os/README.md", desc: "Living COS stage map + per-platform SOPs (source of truth)" },
+    { path: "…/sai/reviews/2026-06-14-production-system-review.md", desc: "The review that reset the direction" },
+    { path: "…/sai/reviews/SYSTEM-BACKLOG.md", desc: "Living list of systems still to build" },
+    { path: "web-apps/story-arc-board/", desc: "Long-form story-arc board (folder-scoped)" },
+    { path: "…/sai/scripts/.build_batch_review.py", desc: "Shorts batch-review HTML generator (add-card / save / comments)" },
+    { path: "…/sai/longform/ep2/_SERIES-TEMPLATE.md", desc: "Repeatable long-form episode skeleton" },
+    { path: "business/social-media/video-log.csv", desc: "Layer 7 video tracking — schema ready, not yet populated" },
+    { path: "decisions/content-os-log.md", desc: "Content OS decision log" }
   ]
 };
 
@@ -487,7 +515,7 @@ function render() {
 
   // Metabar
   document.getElementById("metabar").innerHTML = `
-    <span class="meta-pill gold">${DATA.projects.length} sub-projects</span>
+    <span class="meta-pill gold">${DATA.projects.length} pipelines + systems</span>
     <span class="meta-pill">${ship} shipped</span>
     <span class="meta-pill">${active} in progress</span>
     <span class="meta-pill">${pending} pending</span>
@@ -529,6 +557,7 @@ function render() {
         <div class="proj-bar"><span style="width:${pct}%"></span></div>
         <p class="proj-desc">${p.desc}</p>
         <ul class="task-list">${tasksHtml}</ul>
+        ${p.next ? `<div class="proj-next"><b>▸ Changes / next:</b> ${p.next}</div>` : ""}
         <div class="proj-foot">
           <span>${p.target}</span>
           <span class="mono">${p.link}</span>

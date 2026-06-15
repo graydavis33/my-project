@@ -6,6 +6,7 @@ Commands:
   index         — scan the library, upsert every clip into SQLite
   pull          — filter index → hardlink results into 07_QUERY_PULLS/<slug>/
   batch         — file a shoot into 01_ORGANIZED/Batch_NN/Vid_MM/ then re-index
+  promote       — move a finished project ACTIVE→DELIVERED→ARCHIVE
   create-week   — backfill a past/future week's folder scaffold
   pull-cleanup  — delete query-pull folders after the edit ships
 """
@@ -490,6 +491,117 @@ def cmd_batch(args):
     print(f"  DB: {db_path}\n")
 
 
+# ---- stage transitions (v3 Phase 4): ACTIVE → DELIVERED → ARCHIVE ----------
+# Project stages (02/03/04) are NOT in the index (INDEX_SCAN_ROOTS is 01 + 05),
+# so these are pure, safe file moves — no ffprobe, no index rebuild.
+
+_STAGE_DIRS = {
+    "active": FOLDER_PROJECTS,
+    "delivered": FOLDER_DELIVERED,
+    "archive": FOLDER_ARCHIVE,
+}
+# The natural next stage, so `--to delivered` implies `--from active`, etc.
+_DEFAULT_FROM = {"delivered": "active", "archive": "delivered"}
+
+
+def _find_stage_item(stage_root: Path, name: str) -> list:
+    """Find file/dir entries named exactly `name` anywhere under stage_root.
+    Does NOT descend into a matched directory (so a project folder is returned
+    whole, not also its children). Skips AppleDouble sidecars."""
+    matches = []
+    for dirpath, dirnames, filenames in os.walk(stage_root):
+        d = Path(dirpath)
+        if name in dirnames:
+            matches.append(d / name)
+        # prune the matched dir + AppleDouble so we don't walk into them
+        dirnames[:] = [n for n in dirnames if n != name and not n.startswith("._")]
+        for n in filenames:
+            if n == name and not n.startswith("._"):
+                matches.append(d / n)
+    return matches
+
+
+def _infer_format(path: Path, stage_root: Path):
+    """If the item sits inside a format bucket (episodes/linkedin/shorts), return
+    that bucket name; otherwise None (caller must then require --format)."""
+    rel = path.relative_to(stage_root).parts
+    if rel and rel[0] in PROJECT_FORMAT_BUCKETS:
+        return rel[0]
+    return None
+
+
+def _promote_item(library: Path, name: str, from_stage: str, to_stage: str,
+                  fmt, week_target) -> dict:
+    """Move a finished project (file or folder) named `name` from one stage to the
+    next, into <to_stage>/<format>/<week?>/. Pure file op. Never overwrites.
+    Raises ValueError on not-found / ambiguous / unknown-format / dest-exists."""
+    if from_stage == to_stage:
+        raise ValueError("source and destination stage are the same")
+
+    src_root = library / _STAGE_DIRS[from_stage]
+    if not src_root.is_dir():
+        raise ValueError(f"{from_stage} stage folder doesn't exist: {src_root}")
+
+    found = _find_stage_item(src_root, name)
+    if not found:
+        raise ValueError(f"'{name}' not found anywhere under {from_stage} ({src_root})")
+    if len(found) > 1:
+        listing = "\n".join(f"      {p.relative_to(library).as_posix()}" for p in found)
+        raise ValueError(
+            f"'{name}' is ambiguous in {from_stage} ({len(found)} matches):\n{listing}\n"
+            f"      Rename one so it's unique, or move it by hand."
+        )
+    src = found[0]
+
+    fmt = fmt or _infer_format(src, src_root)
+    if not fmt:
+        raise ValueError(f"can't infer the format of '{name}' — pass "
+                         f"--format {'|'.join(PROJECT_FORMAT_BUCKETS)}")
+
+    dest_dir = library / _STAGE_DIRS[to_stage] / fmt
+    if week_target is not None:
+        dest_dir = dest_dir / week_label_for(week_target)
+    dest = dest_dir / name
+    if dest.exists():
+        raise ValueError(f"destination already exists, refusing to overwrite: "
+                         f"{dest.relative_to(library).as_posix()}")
+
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(src), str(dest))
+    return {
+        "src": src.relative_to(library).as_posix(),
+        "dest": dest.relative_to(library).as_posix(),
+        "format": fmt,
+    }
+
+
+def cmd_promote(args):
+    """Move a finished project ACTIVE→DELIVERED→ARCHIVE so the stage move can't be
+    forgotten. Finds the item by name in the source stage, infers its format, and
+    files it into the destination stage's format/week folder."""
+    library = _library(args.client)
+    to_stage = args.to
+    from_stage = args.from_stage or _DEFAULT_FROM[to_stage]
+
+    if args.no_week:
+        week_target = None
+    elif args.week:
+        week_target = date.fromisoformat(args.week)
+    else:
+        week_target = date.today()
+
+    try:
+        result = _promote_item(library, args.item, from_stage, to_stage,
+                               args.format, week_target)
+    except ValueError as e:
+        print(f"\n  Error: {e}\n")
+        sys.exit(1)
+
+    print(f"\n  Promoted ({from_stage} → {to_stage}, {result['format']}):")
+    print(f"    {result['src']}")
+    print(f"    → {result['dest']}\n")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Footage index + pull (v2)")
     ap.add_argument("--client", "-c", required=True, choices=list(CLIENT_ROOTS.keys()))
@@ -516,6 +628,18 @@ def main():
     b.add_argument("--map", required=True,
                    help='Vid→clips map, e.g. "1:C2493-C2495 2:C2496-C2498 3:C2500"')
     b.set_defaults(func=cmd_batch)
+
+    pr = sub.add_parser("promote", help="Move a finished project ACTIVE→DELIVERED→ARCHIVE into the right format/week folder")
+    pr.add_argument("--item", required=True, help="Exact name of the file or folder to move")
+    pr.add_argument("--to", required=True, choices=["delivered", "archive"], help="Destination stage")
+    pr.add_argument("--from", dest="from_stage", choices=["active", "delivered"],
+                    help="Source stage (default: active→delivered, delivered→archive)")
+    pr.add_argument("--format", choices=PROJECT_FORMAT_BUCKETS,
+                    help="Format bucket (inferred from the item's location if omitted)")
+    pr.add_argument("--week", help="YYYY-MM-DD destination week folder (default: current week)")
+    pr.add_argument("--no-week", action="store_true",
+                    help="Place directly under the format bucket, not a week folder")
+    pr.set_defaults(func=cmd_promote)
 
     cw = sub.add_parser("create-week", help="Create this week's folder under every category in FOOTAGE_LIBRARY")
     cw.add_argument("--week", help="YYYY-MM-DD; defaults to today")

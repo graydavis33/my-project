@@ -158,6 +158,23 @@ What it does, in order:
 - Re-running is safe — clips already in a Vid folder are left as-is (idempotent).
 - **No Vision/AI on batch footage** — it's mapped, not classified, so $0 API spend. The `batch_num`/`vid_num` tags are derived from the folder path, so a plain `index` re-run keeps them correct.
 
+## v3 — Stage transitions (promote)
+
+When a video is finished, `promote` moves the whole project to the next stage so you never forget the step:
+
+```bash
+# Active project shipped → Delivered
+python cli_index.py --client sai promote --item "Batch 2 Vid 1 - 10 Truths About Ads" --to delivered
+
+# Delivered project retired → Archive
+python cli_index.py --client sai promote --item "Subway Challenge Day 1" --to archive
+```
+
+- `--to delivered` moves from `02_ACTIVE_PROJECTS`; `--to archive` moves from `03_DELIVERED` (override with `--from active|delivered`).
+- The item (a file or folder) is found by exact name; its **format bucket is inferred** from where it lives (pass `--format episodes|linkedin|shorts` if it sits outside one).
+- Lands in `<stage>/<format>/<current-week>/` by default — `--week YYYY-MM-DD` targets a specific week, `--no-week` places it loose under the format bucket.
+- **Never overwrites** (errors if the destination exists) and **never deletes** — it only moves. Ambiguous names (same name in two buckets) abort with a list. These stages aren't indexed, so the SQLite index is untouched.
+
 ## --source flag (cleanup mode)
 
 For loose footage already in your library that needs to be classified:
