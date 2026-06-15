@@ -57,8 +57,11 @@ for block in parts[1:]:
         return g.group(1).strip() if g else ""
     prop = grab("Setup/prop note")
     flags = grab("Invented-line flags")
+    ref = grab("Sandcastles ref")
+    ref_html = re.sub(r"\[([^\]]+)\]\(([^)]+)\)",
+                      r'<a href="\2" target="_blank" rel="noopener">\1</a>', ref) if ref else ""
 
-    scripts.append({"num": num, "title": title, "format": fmt, "why": why,
+    scripts.append({"num": num, "title": title, "format": fmt, "why": why, "refHtml": ref_html,
                     "hooks": hooks, "body": "\n".join(body), "prop": prop, "flags": flags})
 
 DATA = json.dumps(scripts)
@@ -80,7 +83,10 @@ button:hover{border-color:var(--accent)}button.primary{background:var(--accent);
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
 .card.approve{border-color:var(--good)}.card.swap{border-color:var(--warn)}.card.cut{border-color:var(--bad);opacity:.72}
 .card h2{margin:0 0 4px;font-size:17px}.fmt{color:var(--accent);font-size:13px;margin-bottom:2px}
-.why{color:var(--muted);font-size:12.5px;margin-bottom:14px}
+.why{color:var(--muted);font-size:12.5px;margin-bottom:8px}
+.refrow{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.refrow a{color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent)}
+.refrow a:hover{text-decoration:none;border-bottom-style:solid}
 .section-label{text-transform:uppercase;letter-spacing:.6px;font-size:11px;color:var(--muted);margin:16px 0 8px}
 .hook{border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;display:flex;gap:11px;align-items:flex-start}
 .hook.picked{border-color:var(--accent);background:rgba(242,129,41,.08)}
@@ -149,6 +155,7 @@ function render(){
       <div class="fmt">#${s.num} · ${esc(s.format)}</div>
       <h2>${esc(s.title)}</h2>
       ${s.why?`<div class="why">${esc(s.why)}</div>`:''}
+      ${s.refHtml?`<div class="refrow">📊 Modeled on: ${s.refHtml}</div>`:''}
       <div class="section-label">Hooks — click a letter to pick the one to test; edit text directly</div>
       ${hooks}
       <div class="section-label">Script <span class="edited-badge">· edited</span></div>
