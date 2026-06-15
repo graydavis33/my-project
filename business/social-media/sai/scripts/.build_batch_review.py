@@ -124,13 +124,28 @@ textarea.edit{resize:vertical}
 .fmtedit:hover{border-color:var(--line)}.fmtedit:focus{border-color:var(--accent);background:var(--panel2);outline:none}
 .addcard{display:block;width:100%;padding:14px;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:12px;font-size:14px;margin-bottom:18px;cursor:pointer}
 .addcard:hover{border-color:var(--accent);color:var(--accent)}
+.authorsel{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.authorsel select{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:6px 8px;font-family:inherit;font-size:13px}
+.comments{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.thread{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.cmt{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 26px 8px 10px;font-size:13.5px;position:relative}
+.cmt .who{font-weight:700}.cmt .who.whoGray{color:var(--accent)}.cmt .who.whoSai{color:var(--good)}
+.cmt .when{color:var(--muted);font-size:11.5px;margin-left:6px}
+.cmt .ctext{margin-top:3px;white-space:pre-wrap}
+.cmt .cdel{position:absolute;top:6px;right:8px;color:var(--muted);cursor:pointer;font-size:11px;user-select:none}
+.cmt .cdel:hover{color:var(--bad)}
+.empty-thread{color:var(--muted);font-size:12.5px;font-style:italic}
+.addcomment{display:flex;gap:8px;align-items:flex-start}
+.commentinput{flex:1;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px;font-family:inherit;font-size:13.5px;resize:vertical;min-height:38px}
+.commentinput:focus{border-color:var(--accent);outline:none}
+.commentbtn{white-space:nowrap}
 </style></head><body>
 <header>
   <div><h1>__PAGE_TITLE__</h1><div class="sub">Editable — change hooks, visuals & script text inline. Pick a hook, set Approve/Swap/Cut. Saves in your browser.</div></div>
-  <div class="bar"><span class="progress" id="prog"></span><button id="addBtnTop">+ Add card</button><button id="saveBtn">💾 Save file</button><button id="copyBtn" class="primary">Copy decisions + edits</button><button id="resetBtn">Reset</button></div>
+  <div class="bar"><span class="authorsel">Commenting as <select id="author"><option>Gray</option><option>Sai</option></select></span><span class="progress" id="prog"></span><button id="addBtnTop">+ Add card</button><button id="saveBtn">💾 Save file</button><button id="copyBtn" class="primary">Copy decisions + edits</button><button id="resetBtn">Reset</button></div>
 </header>
 <div class="wrap">
-  <div class="banner">Everything you type is saved automatically in this browser. Hit <b>💾 Save file</b> to download a complete copy (the originals <i>plus</i> all your edits) that anyone can reopen and keep editing. <b>Copy decisions + edits</b> exports just your picks &amp; changes as plain text.</div>
+  <div class="banner">Everything you type is saved automatically in this browser. Set <b>Commenting as</b> (top) to your name, then leave 💬 comments on any card. Hit <b>💾 Save file</b> to download a complete copy — originals <i>plus</i> all edits &amp; comments — to hand off: the next person opens it, sees everything, and adds their own. <b>Copy decisions + edits</b> exports the lot as plain text.</div>
   <div id="list"></div>
 </div>
 <div class="modal" id="modal"><div class="inner"><h2 style="margin-top:0">Decisions + edits</h2><pre id="summary"></pre><div style="margin-top:12px"><button id="closeModal">Close</button></div></div></div>
@@ -144,6 +159,7 @@ try{const _el=document.getElementById("saved-state");if(_el&&_el.textContent.tri
 let state = JSON.parse(localStorage.getItem(KEY) || "null");
 if(!state){ state = SAVED || {}; if(SAVED) localStorage.setItem(KEY, JSON.stringify(state)); }
 if(!state.added) state.added = [];
+if(!state.author) state.author = "Gray";
 function save(){localStorage.setItem(KEY, JSON.stringify(state));renderProg();}
 function st(n){if(!state[n])state[n]={hook:null,status:null,notes:"",hk:{},body:null};return state[n];}
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
@@ -224,6 +240,8 @@ function render(){
       <h2>${esc(s.title)}</h2>
       ${s.why?`<div class="why">${esc(s.why)}</div>`:''}
       ${s.refHtml?`<div class="refrow">📊 Modeled on: ${s.refHtml}</div>`:''}`;
+    const cmts = (cur.comments||[]).map((c,ci)=>`<div class="cmt"><span class="cdel" data-num="${s.num}" data-ci="${ci}" title="delete comment">✕</span><span class="who ${c.by==='Sai'?'whoSai':'whoGray'}">${esc(c.by)}</span><span class="when">${esc(c.at||'')}</span><div class="ctext">${esc(c.text)}</div></div>`).join("");
+    const commentsBlock = `<div class="comments"><div class="section-label">💬 Comments</div><div class="thread">${cmts||'<div class="empty-thread">No comments yet.</div>'}</div><div class="addcomment"><textarea class="commentinput" data-num="${s.num}" placeholder="Add a comment as ${escAttr(state.author)}…"></textarea><button class="commentbtn" data-num="${s.num}">Comment</button></div></div>`;
     card.innerHTML = `
       <span class="delbtn" data-num="${s.num}" title="${s.added?'remove this card':'delete this video from the batch'}">${s.added?'✕ remove':'🗑 delete'}</span>
       ${head}
@@ -238,7 +256,8 @@ function render(){
         <div class="pill swap ${cur.status==='swap'?'on':''}" data-num="${s.num}" data-status="swap">↻ Swap</div>
         <div class="pill cut ${cur.status==='cut'?'on':''}" data-num="${s.num}" data-status="cut">✕ Cut</div>
       </div>
-      <textarea class="notes" data-num="${s.num}" data-f="notes" placeholder="Notes / direction for this one…">${esc(cur.notes||"")}</textarea>`;
+      <textarea class="notes" data-num="${s.num}" data-f="notes" placeholder="Notes / direction for this one…">${esc(cur.notes||"")}</textarea>
+      ${commentsBlock}`;
     list.appendChild(card);
   });
   const addBtn = document.createElement("button");
@@ -267,6 +286,19 @@ function render(){
     else if(f==="format"){c.format=el.value;}
     save();
   });
+  list.querySelectorAll(".commentbtn").forEach(el=>el.onclick=()=>{
+    const n=el.dataset.num;
+    const ta=document.querySelector('.commentinput[data-num="'+n+'"]');
+    const txt=(ta&&ta.value.trim())||"";
+    if(!txt) return;
+    const c=st(n); if(!c.comments) c.comments=[];
+    c.comments.push({by:state.author||"Gray",at:new Date().toLocaleDateString(undefined,{month:"short",day:"numeric"}),text:txt});
+    save();render();
+  });
+  list.querySelectorAll(".cdel").forEach(el=>el.onclick=()=>{
+    const n=el.dataset.num,ci=+el.dataset.ci;const c=st(n);
+    if(c.comments){c.comments.splice(ci,1);save();render();}
+  });
   renderProg();
 }
 function renderProg(){
@@ -288,6 +320,7 @@ document.getElementById("copyBtn").onclick=()=>{
       }}
       if(c.body) out+=`  script:\n    ${c.body.replace(/\n/g,"\n    ")}\n`;
       if(c.notes) out += `  notes: ${c.notes}\n`;
+      if(c.comments&&c.comments.length) for(const cm of c.comments) out += `  [${cm.by} ${cm.at||''}] ${cm.text}\n`;
       out += "\n";
       return;
     }
@@ -300,15 +333,19 @@ document.getElementById("copyBtn").onclick=()=>{
     }}
     if(c.body!==undefined&&c.body!==null&&c.body!==s.body) out+=`  EDITED script:\n    ${c.body.replace(/\n/g,"\n    ")}\n`;
     if(c.notes) out += `  notes: ${c.notes}\n`;
+    if(c.comments&&c.comments.length) for(const cm of c.comments) out += `  [${cm.by} ${cm.at||''}] ${cm.text}\n`;
     out += "\n";});
   document.getElementById("summary").textContent = out;
   document.getElementById("modal").classList.add("show");
   if(navigator.clipboard) navigator.clipboard.writeText(out);
 };
 document.getElementById("closeModal").onclick=()=>document.getElementById("modal").classList.remove("show");
-document.getElementById("resetBtn").onclick=()=>{if(confirm("Clear all decisions AND edits in this browser?")){state={added:[]};save();render();}};
+document.getElementById("resetBtn").onclick=()=>{if(confirm("Clear all decisions AND edits in this browser?")){state={added:[],author:"Gray"};save();authSel.value="Gray";render();}};
 document.getElementById("addBtnTop").onclick=newCard;
 document.getElementById("saveBtn").onclick=saveFile;
+const authSel=document.getElementById("author");
+authSel.value=state.author||"Gray";
+authSel.onchange=()=>{state.author=authSel.value;save();render();};
 render();
 </script></body></html>"""
 
