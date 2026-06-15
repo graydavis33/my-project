@@ -23,11 +23,20 @@ Orange-glass = Sai's nimble, glowing, intuitive advantage.
 - "bureaucracy / rules / regulations limit creativity" → **ig-3-bureaucracy-vs-intuition**
 - "trust the universe will give you ideas / the voice hard to explain" → **ig-4-trust-the-signal**
 
-> ⭐ **FLAGSHIP TARGET: `ig-2-grow-stay-nimble/`.** In the league of the b2v5 airplane-runway
-> (the starred benchmark): two towers rise through space + a synced 3D camera push-in. The grey
-> corporate tower accretes red-tape layers + locks and stiffens; Sai's orange-glass tower grows
-> just as tall but stays glowing/fluid with intuition sparks. See memory
-> `feedback_prefers_3d_motion_graphics.md`.
+> ⭐ **FLAGSHIP `ig-2-grow-stay-nimble/`.** v1 (textured CSS towers / gears / spotlight) was
+> rejected by Gray ("all of these suck — look cheap/flat"). Root cause: dense graph-paper window
+> grids on gradient rectangles read like a ruler, not architecture. **Lesson from studying the
+> b2v5 airplane render (the bar): premium = a clean recognizable ICON on a high-contrast dark
+> "stage" card with crisp white markings + soft drop shadow + ONE clear motion + a camera payoff,
+> with heavy restraint — NOT texture.** A static "building" can't carry that; a vehicle can.
+> ig-2 rebuilt as an orange **rocket** (clean icon, plane-grade material) launching up a dark
+> track-card past dim grey competitor towers, camera push-in as it clears, bold orange title.
+> Self-verified against the airplane bar before re-showing.
+>
+> **STYLE RULE for the remaining beats (ig-1/3/4):** redo in this same idiom — one clean iconic
+> object/vehicle on a dark stage card (or clean negative space), crisp bold marks, soft shadows,
+> big bold orange title, one motion + camera move. No textured rectangle "buildings," no busy
+> multi-element diagrams, no on-card label clutter. See `feedback_prefers_3d_motion_graphics.md`.
 
 ## Format
 - 1080×1920 vertical. Beat cards 24fps; the flagship (`ig-2`) renders at **60fps** for the

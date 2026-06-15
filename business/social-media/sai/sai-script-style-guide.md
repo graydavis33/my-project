@@ -126,6 +126,18 @@ Confirmed via 2026-05-27 revision review — these are what Sai cut from Gray's 
 | T6 — Decision-point + signal | Best for framework-shaped scripts |
 | T10 — Retrospective wisdom | Best for "lessons learned" content with a clear what-I'd-do-differently |
 
+## ⭐ Hook Testing — Visual Differentiation (NEW 2026-06-14)
+
+A/B/C hooks are for **trial-reel testing**, and verbal-only variants don't test anything — three rewordings of the same shot just test phrasing. **Each hook variant must be a wildly different VISUAL, not just a different line.** Vary at least one of these hard across A/B/C:
+
+- **Graphic title** — a different on-screen text card
+- **Shot** — tight / wide / OTS / handheld / walking
+- **Location** — desk / street / coffee shop / office / window
+- **Person** — Sai, Gray, or a team member delivering/appearing
+- **Effect** — zoom punch-in, green-screen point, split-screen, B-roll cold open
+
+So every hook line now carries a one-line **Visual:** spec, written so Sai/Gray shoot each variant as its own distinct take. The hook (whether it's the 1st or 2nd hook in the reel) needs to look wildly different across the ABCs. (See memory `feedback_sai_hooks_need_visual_variation`.)
+
 ## Hook Patterns Retired (don't use)
 
 - "Stop [X] right now"
@@ -210,7 +222,7 @@ Per Gray's running feedback:
 - **No** `---` separator lines above or below script titles
 - **No** quotation marks around hook lines
 - **No** ★ or asterisk markers for mini-hooks — use **bold** if emphasis is needed
-- **No** lane / format / visual metadata headers above each script
+- **UPDATED 2026-06-14:** per-hook **Visual:** treatment specs are now REQUIRED (see Hook Testing section). The old "no visual metadata" rule was about clutter above the script body — it does NOT apply to the per-hook visual specs, which are now mandatory for trial-reel testing. A short script-level Format label is also fine.
 - **Keep** "Script:" and "What I'd add:" section labels
 - **Keep** bold for mini-hooks within script bodies (no symbol prefix)
 

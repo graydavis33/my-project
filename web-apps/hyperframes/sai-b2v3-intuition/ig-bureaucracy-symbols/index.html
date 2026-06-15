@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+
+      .item { position: absolute; width: 230px; opacity: 0; will-change: transform, opacity;
+        display: flex; flex-direction: column; align-items: center; }
+      .tile { width: 200px; height: 200px; border-radius: 34px; background: #fff;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 24px 44px rgba(0,0,0,0.26), 0 6px 14px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.9); }
+      .tile svg { width: 116px; height: 116px; }
+      .label { margin-top: 26px; font-weight: 900; font-size: 50px; text-transform: uppercase;
+        letter-spacing: -0.01em; text-align: center; line-height: 1.0; text-shadow: 0 4px 10px rgba(0,0,0,0.18); }
+      .grey { color: #FFFFFF; text-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+      .red  { color: #C8443A; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-yp4c" id="root" data-composition-id="main" data-start="0" data-duration="4.6" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-ks7r" id="scene" class="scene clip" data-start="0" data-duration="4.6" data-track-index="1">
+
+        <!-- apex: RULES -->
+        <div data-hf-id="hf-ij8e" id="it-rules" class="item" style="left:425px; top:560px;">
+          <div data-hf-id="hf-f6ek" class="tile">
+            <svg data-hf-id="hf-demx" viewBox="0 0 100 100">
+              <rect data-hf-id="hf-1hmf" x="24" y="14" width="52" height="20" rx="6" fill="#9AA1AB" />
+              <rect data-hf-id="hf-bz7o" x="18" y="24" width="64" height="66" rx="9" fill="none" stroke="#5C6470" stroke-width="6" />
+              <path data-hf-id="hf-kphe" d="M30 46 l6 6 l12 -12" fill="none" stroke="#5C6470" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+              <line data-hf-id="hf-d6zb" x1="54" y1="48" x2="74" y2="48" stroke="#9AA1AB" stroke-width="6" stroke-linecap="round" />
+              <path data-hf-id="hf-llcg" d="M30 66 l6 6 l12 -12" fill="none" stroke="#5C6470" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+              <line data-hf-id="hf-sjj7" x1="54" y1="68" x2="74" y2="68" stroke="#9AA1AB" stroke-width="6" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div data-hf-id="hf-85me" class="label grey">rules</div>
+        </div>
+
+        <!-- bottom-left: REGULATIONS -->
+        <div data-hf-id="hf-edfb" id="it-regs" class="item" style="left:150px; top:1000px;">
+          <div data-hf-id="hf-8r7o" class="tile">
+            <svg data-hf-id="hf-214d" viewBox="0 0 100 100">
+              <rect data-hf-id="hf-sjx5" x="22" y="14" width="50" height="72" rx="8" fill="none" stroke="#5C6470" stroke-width="6" />
+              <line data-hf-id="hf-b4o9" x1="32" y1="32" x2="62" y2="32" stroke="#9AA1AB" stroke-width="5" stroke-linecap="round" />
+              <line data-hf-id="hf-6s3d" x1="32" y1="44" x2="62" y2="44" stroke="#9AA1AB" stroke-width="5" stroke-linecap="round" />
+              <line data-hf-id="hf-baxe" x1="32" y1="56" x2="54" y2="56" stroke="#9AA1AB" stroke-width="5" stroke-linecap="round" />
+              <circle data-hf-id="hf-frct" cx="66" cy="70" r="20" fill="#5C6470" />
+              <path data-hf-id="hf-ty42" d="M58 70 l6 7 l12 -13" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div data-hf-id="hf-w5js" class="label grey">regulations</div>
+        </div>
+
+        <!-- bottom-right: RED TAPE -->
+        <div data-hf-id="hf-r11l" id="it-tape" class="item" style="left:700px; top:1000px;">
+          <div data-hf-id="hf-7kal" class="tile">
+            <svg data-hf-id="hf-381g" viewBox="0 0 100 100">
+              <g data-hf-id="hf-k0m7" transform="rotate(45 50 50)">
+                <rect data-hf-id="hf-zrwn" x="6" y="38" width="88" height="24" rx="3" fill="#C8443A" />
+                <rect data-hf-id="hf-ea8g" x="6" y="38" width="88" height="24" rx="3" fill="url(#stripe)" opacity="0.5" />
+              </g>
+              <g data-hf-id="hf-ygae" transform="rotate(-45 50 50)">
+                <rect data-hf-id="hf-27fr" x="6" y="38" width="88" height="24" rx="3" fill="#C8443A" />
+                <rect data-hf-id="hf-kmjs" x="6" y="38" width="88" height="24" rx="3" fill="url(#stripe)" opacity="0.5" />
+              </g>
+              <defs data-hf-id="hf-mh0t">
+                <pattern data-hf-id="hf-7n61" id="stripe" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <rect data-hf-id="hf-z1gb" width="8" height="16" fill="rgba(0,0,0,0.22)" />
+                </pattern>
+              </defs>
+            </svg>
+          </div>
+          <div data-hf-id="hf-zz7q" class="label red">red tape</div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // fade in from the bottom up, one by one, slightly delayed:
+        // the two bottom points first, then the apex.
+        tl.fromTo("#it-regs",  { opacity: 0, y: 56, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.4)", immediateRender: false }, 0.2);
+        tl.fromTo("#it-tape",  { opacity: 0, y: 56, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.4)", immediateRender: false }, 0.55);
+        tl.fromTo("#it-rules", { opacity: 0, y: 56, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.4)", immediateRender: false }, 0.9);
+
+        // gentle settle hover (subtle, varied phase) after each lands
+        const items = [["#it-regs",2.6,1.0],["#it-tape",2.8,1.35],["#it-rules",2.5,1.7]];
+        items.forEach(([sel, dur, at]) => {
+          const reps = Math.ceil((4.6 - at) / dur) + 1;
+          tl.fromTo(sel, { y: 0 }, { y: -10, duration: dur, ease: "sine.inOut", yoyo: true, repeat: reps, immediateRender: false }, at);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

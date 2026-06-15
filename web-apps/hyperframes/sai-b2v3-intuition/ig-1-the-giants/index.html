@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .world { position: absolute; inset: 0; transform-origin: 50% 50%; will-change: transform; }
+
+      .floatwrap { position: absolute; opacity: 0; will-change: transform, opacity; }
+      .tile { width: 100%; height: 100%; border-radius: 30px; background: #FFFFFF;
+        display: flex; align-items: center; justify-content: center; padding: 30px;
+        will-change: transform;
+        box-shadow: 0 26px 46px rgba(0,0,0,0.28), 0 6px 14px rgba(0,0,0,0.14),
+          inset 0 1px 0 rgba(255,255,255,0.9); }
+      .tile.wide { padding: 34px 40px; }
+      .tile.fb { background: #1877F2; }
+      .logo { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+      .tile.fb .logo { filter: brightness(0) invert(1); }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-yk9p" id="root" data-composition-id="main" data-start="0" data-duration="5.6" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-408w" id="scene" class="scene clip" data-start="0" data-duration="5.6" data-track-index="1">
+        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
+
+          <!-- row 1 -->
+          <div data-hf-id="hf-rdi1" id="w-google" class="floatwrap" style="left:130px; top:430px; width:200px; height:200px;">
+            <div data-hf-id="hf-f6ek" class="tile"><img data-hf-id="hf-6nhf" class="logo" src="logos/google.svg" alt="Google"></div></div>
+          <div data-hf-id="hf-g6xx" id="w-microsoft" class="floatwrap" style="left:440px; top:400px; width:200px; height:200px;">
+            <div data-hf-id="hf-8r7o" class="tile"><img data-hf-id="hf-hix3" class="logo" src="logos/microsoft.svg" alt="Microsoft"></div></div>
+          <div data-hf-id="hf-6qky" id="w-amazon" class="floatwrap" style="left:760px; top:440px; width:210px; height:210px;">
+            <div data-hf-id="hf-7kal" class="tile"><img data-hf-id="hf-ep7b" class="logo" src="logos/amazon.svg" alt="Amazon"></div></div>
+
+          <!-- row 2 -->
+          <div data-hf-id="hf-unrt" id="w-coca" class="floatwrap" style="left:96px; top:766px; width:330px; height:172px;">
+            <div data-hf-id="hf-nee9" class="tile wide"><img data-hf-id="hf-mzio" class="logo" src="logos/cocacola.svg" alt="Coca-Cola"></div></div>
+          <div data-hf-id="hf-rr8m" id="w-nike" class="floatwrap" style="left:472px; top:728px; width:190px; height:190px;">
+            <div data-hf-id="hf-7ylm" class="tile"><img data-hf-id="hf-3z8b" class="logo" src="logos/nike.svg" alt="Nike"></div></div>
+          <div data-hf-id="hf-gtu8" id="w-netflix" class="floatwrap" style="left:772px; top:768px; width:190px; height:190px;">
+            <div data-hf-id="hf-9y4r" class="tile"><img data-hf-id="hf-rhkf" class="logo" src="logos/netflix.svg" alt="Netflix"></div></div>
+
+          <!-- row 3 -->
+          <div data-hf-id="hf-hmng" id="w-apple" class="floatwrap" style="left:150px; top:1086px; width:190px; height:190px;">
+            <div data-hf-id="hf-acfs" class="tile"><img data-hf-id="hf-4qi7" class="logo" src="logos/apple.svg" alt="Apple"></div></div>
+          <div data-hf-id="hf-fe82" id="w-walmart" class="floatwrap" style="left:418px; top:1092px; width:330px; height:172px;">
+            <div data-hf-id="hf-6a45" class="tile wide"><img data-hf-id="hf-o3tz" class="logo" src="logos/walmart.svg" alt="Walmart"></div></div>
+          <div data-hf-id="hf-t132" id="w-fb" class="floatwrap" style="left:800px; top:1086px; width:196px; height:196px;">
+            <div data-hf-id="hf-5jm4" class="tile fb"><img data-hf-id="hf-yn5b" class="logo" src="logos/facebook.svg" alt="Facebook"></div></div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 5.6;
+        gsap.set("#world", { scale: 1.0, y: 0 });
+
+        // entrance order (loose center-out feel)
+        const ids = ["w-microsoft","w-google","w-amazon","w-nike","w-coca","w-netflix","w-walmart","w-apple","w-fb"];
+        const bobAmt = [11,-13,10,-12,9,13,-11,12,-10];
+        const swAmt  = [1.2,-1.4,1.1,-1.3,1.0,1.4,-1.2,1.3,-1.1];
+        const bobDur = [2.6,2.9,2.4,2.7,3.0,2.5,2.8,2.6,2.9];
+
+        ids.forEach((id, i) => {
+          const at = 0.15 + i * 0.14;
+          // fade in + ease in + float in
+          tl.fromTo("#" + id,
+            { opacity: 0, y: 60, scale: 0.82 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "back.out(1.5)", immediateRender: false }, at);
+          // gentle independent hover on the inner tile (no conflict with wrapper)
+          const bobAt = at + 0.85;
+          const reps = Math.ceil((DUR - bobAt) / bobDur[i]) + 1;
+          tl.fromTo("#" + id + " .tile", { y: 0 },
+            { y: bobAmt[i], duration: bobDur[i], ease: "sine.inOut", yoyo: true, repeat: reps, immediateRender: false }, bobAt);
+          tl.fromTo("#" + id + " .tile", { rotation: 0 },
+            { rotation: swAmt[i], duration: bobDur[i] * 1.1, ease: "sine.inOut", yoyo: true, repeat: reps, transformOrigin: "50% 50%", immediateRender: false }, bobAt);
+        });
+
+        // subtle camera drift
+        tl.to("#world", { scale: 1.03, y: -14, duration: DUR, ease: "sine.inOut" }, 0);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      .card { position: absolute; width: 520px; height: 700px; border-radius: 26px; background: #fff;
+        will-change: transform, opacity; opacity: 0;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.28), 0 8px 18px rgba(0,0,0,0.14); }
+      .card .head { position: absolute; left: 0; top: 0; width: 100%; height: 96px;
+        border-radius: 26px 26px 0 0; background: linear-gradient(120deg, #FFC98C, #F2872F 55%, #D66416); }
+      .line { position: absolute; left: 46px; height: 22px; border-radius: 11px; background: #E2E6EC; }
+      .sigline { position: absolute; left: 60px; right: 60px; height: 5px; border-radius: 3px; background: #C2C8D2; }
+      .sigx { position: absolute; font-weight: 900; font-size: 40px; color: #C2C8D2; }
+
+      .sig { position: absolute; will-change: opacity; }
+      .sig path { fill: none; stroke: #F2872F; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+
+      .pen { position: absolute; left: 0; top: 0; width: 150px; height: 240px; opacity: 0;
+        will-change: transform, opacity; filter: drop-shadow(0 12px 16px rgba(0,0,0,0.4)); }
+
+      .seal { position: absolute; left: 0; top: 0; width: 190px; height: 190px; opacity: 0;
+        will-change: transform, opacity; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.35)); }
+      .seal .disc { fill: url(#sg); stroke: #fff; stroke-width: 6; }
+      .seal .check { fill: none; stroke: #fff; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-gm97" id="root" data-composition-id="main" data-start="0" data-duration="5.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-624y" id="scene" class="scene clip" data-start="0" data-duration="5.4" data-track-index="1">
+        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
+
+          <div data-hf-id="hf-xy30" id="card2" class="card" style="left:330px; top:520px; transform: rotate(-5deg);">
+            <div data-hf-id="hf-z992" class="head"></div>
+          </div>
+
+          <div data-hf-id="hf-sxxz" id="card1" class="card" style="left:280px; top:600px;">
+            <div data-hf-id="hf-gwvu" class="head"></div>
+            <div data-hf-id="hf-brk7" class="line" style="top:168px; width:300px;"></div>
+            <div data-hf-id="hf-2hf4" class="line" style="top:212px; width:420px;"></div>
+            <div data-hf-id="hf-s3zl" class="line" style="top:256px; width:360px;"></div>
+            <div data-hf-id="hf-fqo5" class="line" style="top:340px; width:430px;"></div>
+            <div data-hf-id="hf-ouo3" class="line" style="top:384px; width:380px;"></div>
+            <div data-hf-id="hf-bzbq" class="sigline" style="top:566px;"></div>
+            <div data-hf-id="hf-9o6q" class="sigx" style="left:60px; top:512px;">✕</div>
+          </div>
+
+          <!-- signature path lives at world (350,1066) + path coords -->
+          <svg data-hf-id="hf-4heg" id="sig" class="sig" style="left:350px; top:1066px;" width="360" height="120" viewBox="0 0 360 120">
+            <path data-hf-id="hf-3xaz" id="sigpath" d="M14 86 C40 30, 70 30, 78 78 C84 110, 60 110, 70 70 C84 24, 120 22, 132 70 C150 30, 184 26, 196 76 C214 36, 250 36, 262 80 C300 40, 332 58, 348 40" />
+          </svg>
+
+          <!-- a real pencil; tip is at viewBox (100,300), rotated about the tip so the tip stays put -->
+          <svg data-hf-id="hf-q34n" id="pen" class="pen" viewBox="0 0 200 320">
+            <defs data-hf-id="hf-mh0t">
+              <lineargradient data-hf-id="hf-l4f5" id="sg" x1="0" y1="0" x2="1" y2="1">
+                <stop data-hf-id="hf-3x2k" offset="0" stop-color="#FFB877" /><stop data-hf-id="hf-kwpv" offset="0.55" stop-color="#F2872F" /><stop data-hf-id="hf-lnxy" offset="1" stop-color="#D66416" />
+              </lineargradient>
+            </defs>
+            <g data-hf-id="hf-16uc" transform="rotate(-32 100 300)">
+              <!-- eraser -->
+              <rect data-hf-id="hf-sntk" x="80" y="8" width="40" height="32" rx="11" fill="#F29DB2" />
+              <!-- ferrule -->
+              <rect data-hf-id="hf-hrqg" x="80" y="38" width="40" height="22" fill="#BFC5CE" />
+              <rect data-hf-id="hf-5mpf" x="80" y="44" width="40" height="3" fill="#9AA1AB" />
+              <rect data-hf-id="hf-7nti" x="80" y="52" width="40" height="3" fill="#9AA1AB" />
+              <!-- body -->
+              <rect data-hf-id="hf-8bpy" x="80" y="58" width="40" height="192" fill="#F2B400" />
+              <rect data-hf-id="hf-60o9" x="80" y="58" width="13" height="192" fill="rgba(255,255,255,0.30)" />
+              <rect data-hf-id="hf-3qjb" x="107" y="58" width="13" height="192" fill="rgba(0,0,0,0.16)" />
+              <!-- wood cone -->
+              <path data-hf-id="hf-juyy" d="M80 250 L120 250 L100 296 Z" fill="#EAC893" />
+              <path data-hf-id="hf-uwut" d="M100 250 L120 250 L100 296 Z" fill="rgba(0,0,0,0.14)" />
+              <!-- graphite tip -->
+              <path data-hf-id="hf-r95u" d="M92 280 L108 280 L100 300 Z" fill="#33373E" />
+            </g>
+          </svg>
+
+          <svg data-hf-id="hf-y3pg" id="seal" class="seal" style="left:600px; top:1160px;" viewBox="0 0 100 100">
+            <circle data-hf-id="hf-iwj4" class="disc" cx="50" cy="50" r="44" />
+            <path data-hf-id="hf-gr56" class="check" d="M30 52 L44 66 L72 34" />
+          </svg>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        gsap.set("#world", { x: 0, y: 0, scale: 1 });
+
+        const sp = document.getElementById("sigpath");
+        const L = sp.getTotalLength();
+        const SIG_X = 350, SIG_Y = 1066;        // sig svg origin in world
+        const TIP_X = 75, TIP_Y = 225;           // pencil tip in element px (viewBox 100,300 * 0.75)
+        gsap.set(sp, { strokeDasharray: L, strokeDashoffset: L });
+        gsap.set("#sig", { opacity: 1 });
+
+        // place pencil tip at the start of the signature
+        const p0 = sp.getPointAtLength(0);
+        gsap.set("#pen", { x: SIG_X + p0.x - TIP_X, y: SIG_Y + p0.y - TIP_Y });
+
+        // cards in
+        tl.fromTo("#card2", { opacity: 0, y: 60, rotation: -12 }, { opacity: 1, y: 0, rotation: -5, duration: 0.55, ease: "power3.out", transformOrigin: "50% 100%", immediateRender: false }, 0.1);
+        tl.fromTo("#card1", { opacity: 0, y: 70, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.4)", transformOrigin: "50% 100%", immediateRender: false }, 0.3);
+
+        // pencil drops in to the signature start
+        tl.fromTo("#pen", { opacity: 0, scale: 0.7, transformOrigin: `${TIP_X}px ${TIP_Y}px` },
+          { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)", immediateRender: false }, 1.0);
+
+        // WRITE: tip rides the exact signature path while the stroke reveals (one proxy drives both)
+        const prox = { p: 0 };
+        tl.to(prox, { p: 1, duration: 1.55, ease: "power1.inOut",
+          onUpdate: () => {
+            const len = prox.p * L;
+            sp.style.strokeDashoffset = String(L - len);
+            const pt = sp.getPointAtLength(len);
+            gsap.set("#pen", { x: SIG_X + pt.x - TIP_X, y: SIG_Y + pt.y - TIP_Y });
+          } }, 1.4);
+
+        // pencil lifts away
+        tl.to("#pen", { opacity: 0, y: "-=70", x: "+=40", duration: 0.4, ease: "power1.in" }, 3.05);
+
+        // approval seal SLAMS down
+        tl.fromTo("#seal", { opacity: 0, scale: 2.2, rotation: -22 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.4, ease: "power3.out", transformOrigin: "50% 50%", immediateRender: false }, 3.2);
+        tl.fromTo("#card1", { y: 0 }, { y: 9, duration: 0.07, ease: "power2.inOut", yoyo: true, repeat: 1, immediateRender: false }, 3.25);
+        tl.fromTo("#seal", { scale: 1 }, { scale: 1.08, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "50% 50%", immediateRender: false }, 3.62);
+
+        // camera push toward the signed seal
+        tl.to("#world", { x: -150, y: -260, scale: 1.22, duration: 1.2, ease: "power2.inOut" }, 3.3);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

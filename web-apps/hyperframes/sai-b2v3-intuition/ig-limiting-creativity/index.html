@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .world { position: absolute; inset: 0; transform-origin: 50% 50%; will-change: transform; }
+
+      /* the bureaucratic board with wrong-shaped holes */
+      .board { position: absolute; left: 130px; top: 860px; width: 820px; height: 300px;
+        opacity: 0; will-change: transform, opacity; filter: drop-shadow(0 22px 30px rgba(0,0,0,0.4)); }
+
+      /* the orange square peg (3D block) */
+      .peg { position: absolute; left: 230px; top: 700px; width: 180px; height: 180px;
+        border-radius: 16px; opacity: 0; will-change: transform, opacity;
+        background: linear-gradient(150deg, #FFCB8C 0%, #F2872F 52%, #C8631A 100%);
+        box-shadow: 0 18px 0 #9C4D14, 0 26px 30px rgba(0,0,0,0.4),
+          inset 3px 3px 0 rgba(255,255,255,0.45), inset -4px -10px 0 rgba(0,0,0,0.22);
+        border: 3px solid rgba(255,255,255,0.65); }
+
+      /* blocked impact flash */
+      .flash { position: absolute; width: 150px; height: 150px; opacity: 0; will-change: transform, opacity;
+        pointer-events: none; }
+      .flash::before, .flash::after { content: ""; position: absolute; left: 50%; top: 50%;
+        width: 110px; height: 16px; margin: -8px 0 0 -55px; border-radius: 8px; background: #E5483B;
+        box-shadow: 0 0 16px rgba(229,72,59,0.7); }
+      .flash::before { transform: rotate(45deg); }
+      .flash::after  { transform: rotate(-45deg); }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-yk9p" id="root" data-composition-id="main" data-start="0" data-duration="5.6" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-408w" id="scene" class="scene clip" data-start="0" data-duration="5.6" data-track-index="1">
+        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
+
+          <svg data-hf-id="hf-cn8v" id="board" class="board" viewBox="0 0 820 300">
+            <defs data-hf-id="hf-mh0t">
+              <lineargradient data-hf-id="hf-pi3b" id="bg" x1="0" y1="0" x2="0" y2="1">
+                <stop data-hf-id="hf-dxj3" offset="0" stop-color="#9AA3AF" /><stop data-hf-id="hf-r9ql" offset="0.5" stop-color="#6A7280" /><stop data-hf-id="hf-v9co" offset="1" stop-color="#454C56" />
+              </lineargradient>
+              <lineargradient data-hf-id="hf-2ulg" id="hole" x1="0" y1="0" x2="0" y2="1">
+                <stop data-hf-id="hf-gj9m" offset="0" stop-color="#15181D" /><stop data-hf-id="hf-yikb" offset="1" stop-color="#363B44" />
+              </lineargradient>
+            </defs>
+            <rect data-hf-id="hf-0qws" x="0" y="0" width="820" height="300" rx="26" fill="url(#bg)" />
+            <rect data-hf-id="hf-1e60" x="0" y="0" width="820" height="14" rx="7" fill="rgba(255,255,255,0.28)" />
+            <!-- circle hole -->
+            <circle data-hf-id="hf-tbjb" cx="190" cy="150" r="80" fill="url(#hole)" />
+            <circle data-hf-id="hf-djlj" cx="190" cy="150" r="80" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="6" />
+            <path data-hf-id="hf-g5eo" d="M120 178 A80 80 0 0 0 260 178" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="6" />
+            <!-- triangle hole -->
+            <path data-hf-id="hf-hkzc" d="M410 78 L482 222 L338 222 Z" fill="url(#hole)" />
+            <path data-hf-id="hf-t1yo" d="M410 78 L482 222 L338 222 Z" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="6" stroke-linejoin="round" />
+            <!-- trapezoid hole -->
+            <path data-hf-id="hf-pew8" d="M598 84 L692 84 L720 220 L570 220 Z" fill="url(#hole)" />
+            <path data-hf-id="hf-53hc" d="M598 84 L692 84 L720 220 L570 220 Z" fill="none" stroke="rgba(0,0,0,0.45)" stroke-width="6" stroke-linejoin="round" />
+          </svg>
+
+          <div data-hf-id="hf-u95m" id="flash" class="flash"></div>
+          <div data-hf-id="hf-x7ie" id="peg" class="peg"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        gsap.set("#world", { x: 0, y: 0, scale: 1 });
+
+        // board establishes
+        tl.fromTo("#board", { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.3)", transformOrigin: "50% 50%", immediateRender: false }, 0.1);
+
+        // peg drops in above the circle hole
+        tl.fromTo("#peg", { opacity: 0, y: -120 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, 0.6);
+
+        // one failed attempt at a hole: peg pushes DOWN toward it, gets blocked, jolts back, board shakes
+        // (peg x positions: circle 230, triangle 450, trapezoid 670  -> peg left so 180-wide peg centers on the hole)
+        function attempt(at, holeX, holeY) {
+          // push down into the hole
+          tl.to("#peg", { y: 150, scaleY: 0.9, duration: 0.22, ease: "power2.in", transformOrigin: "50% 100%" }, at);
+          // BLOCKED — recoil up, squash overshoot
+          tl.to("#peg", { y: 0, scaleY: 1.06, duration: 0.16, ease: "power3.out", transformOrigin: "50% 100%" }, at + 0.22);
+          tl.to("#peg", { scaleY: 1, duration: 0.18, ease: "elastic.out(1,0.5)" }, at + 0.38);
+          // board shake on impact
+          tl.fromTo("#board", { x: 0 }, { x: 7, duration: 0.05, ease: "power1.inOut", yoyo: true, repeat: 3, immediateRender: false }, at + 0.2);
+          // red blocked flash at the hole
+          tl.set("#flash", { left: holeX - 75, top: holeY - 75 }, at + 0.18);
+          tl.fromTo("#flash", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.14, ease: "power2.out", immediateRender: false }, at + 0.2);
+          tl.to("#flash", { opacity: 0, scale: 1.3, duration: 0.3, ease: "power1.out" }, at + 0.4);
+        }
+
+        // attempt 1: circle (peg already over it)
+        attempt(1.3, 320, 1010);
+
+        // slide to the triangle, try again
+        tl.to("#peg", { x: 220, duration: 0.5, ease: "power2.inOut" }, 2.1);
+        attempt(2.7, 540, 1010);
+
+        // slide to the trapezoid, try again
+        tl.to("#peg", { x: 440, duration: 0.5, ease: "power2.inOut" }, 3.5);
+        attempt(4.1, 760, 1010);
+
+        // give up — peg sags, a final small failed nudge
+        tl.to("#peg", { y: 14, duration: 0.5, ease: "power2.inOut" }, 5.0);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
