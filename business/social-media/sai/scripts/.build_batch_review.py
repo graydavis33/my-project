@@ -1,7 +1,8 @@
-"""Generate a self-contained HTML review page from a batch script .md file.
+"""Generate a self-contained, EDITABLE HTML review page from a batch script .md file.
 Parses ### N — Title blocks, their A/B/C hooks (+ Visual: lines), body, notes/flags,
-and renders a reviewable page with hook-pick + Approve/Swap/Cut + notes (localStorage),
-plus a 'Copy decisions' export. No server, no deps — just open the .html."""
+and renders a reviewable page where the hook lines, visual notes, and body text are all
+editable inline; plus hook-pick + Approve/Swap/Cut + notes (localStorage) and a
+'Copy decisions' export that includes every edit. No server, no deps — just open the .html."""
 import json, re, sys, html, os
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else "2026-06-15-batch-3.md"
@@ -10,7 +11,6 @@ src_path = os.path.join(HERE, SRC)
 out_path = os.path.splitext(src_path)[0] + "-review.html"
 
 text = open(src_path, encoding="utf-8").read()
-# intro = everything before first "### "
 parts = re.split(r"\n### ", text)
 intro = parts[0]
 title_m = re.search(r"^#\s*(.+)", intro)
@@ -20,31 +20,29 @@ scripts = []
 for block in parts[1:]:
     lines = block.split("\n")
     head = lines[0].strip()
-    if head.startswith("#"):  # hit the trailing "## Open Questions" section
+    if head.startswith("#"):
         continue
     m = re.match(r"(\d+)\s*[—-]\s*(.+)", head)
     num = m.group(1) if m else "?"
     title = (m.group(2) if m else head).strip()
     body_md = "\n".join(lines[1:])
 
-    fmt = ""
     fm = re.search(r"\*\*Format:\*\*\s*(.+)", body_md)
-    if fm: fmt = fm.group(1).strip()
+    fmt = fm.group(1).strip() if fm else ""
+    wm = re.search(r"\*\*Why it works:?\*\*\s*(.+)", body_md)
+    why = wm.group(1).strip() if wm else ""
 
-    # hooks: lines "A. text" optionally followed by "**Visual:** ..."
     hooks = []
     hl = body_md.split("\n")
     for i, ln in enumerate(hl):
         hm = re.match(r"^([ABC])\.\s+(.+)", ln)
         if hm:
-            verbal = hm.group(2).strip()
             visual = ""
             if i + 1 < len(hl):
                 vm = re.match(r"\*\*Visual:\*\*\s*(.+)", hl[i+1].strip())
                 if vm: visual = vm.group(1).strip()
-            hooks.append({"label": hm.group(1), "verbal": verbal, "visual": visual})
+            hooks.append({"label": hm.group(1), "verbal": hm.group(2).strip(), "visual": visual})
 
-    # body: blockquote lines after **Script:**
     body = []
     sm = re.search(r"\*\*Script:\*\*\n(.*?)(?:\n\*\*|\Z)", body_md, re.S)
     if sm:
@@ -59,14 +57,13 @@ for block in parts[1:]:
         return g.group(1).strip() if g else ""
     prop = grab("Setup/prop note")
     flags = grab("Invented-line flags")
-    why = grab("Why it works")
 
     scripts.append({"num": num, "title": title, "format": fmt, "why": why,
-                    "hooks": hooks, "body": body, "prop": prop, "flags": flags})
+                    "hooks": hooks, "body": "\n".join(body), "prop": prop, "flags": flags})
 
 DATA = json.dumps(scripts)
 
-HTML = """<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+HTML = r"""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__PAGE_TITLE__ — Review</title>
 <style>
@@ -78,18 +75,24 @@ header h1{font-size:18px;margin:0}header .sub{color:var(--muted);font-size:13px}
 button{background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:13px}
 button:hover{border-color:var(--accent)}button.primary{background:var(--accent);border-color:var(--accent);color:#11130f;font-weight:600}
 .progress{color:var(--muted);font-size:13px}
-.wrap{max-width:860px;margin:0 auto;padding:22px}
+.wrap{max-width:880px;margin:0 auto;padding:22px}
+.banner{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:10px 14px;color:var(--muted);font-size:13px;margin-bottom:18px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px}
-.card.approve{border-color:var(--good)}.card.swap{border-color:var(--warn)}.card.cut{border-color:var(--bad);opacity:.7}
+.card.approve{border-color:var(--good)}.card.swap{border-color:var(--warn)}.card.cut{border-color:var(--bad);opacity:.72}
 .card h2{margin:0 0 4px;font-size:17px}.fmt{color:var(--accent);font-size:13px;margin-bottom:2px}
 .why{color:var(--muted);font-size:12.5px;margin-bottom:14px}
-.section-label{text-transform:uppercase;letter-spacing:.6px;font-size:11px;color:var(--muted);margin:14px 0 8px}
-.hook{border:1px solid var(--line);border-radius:9px;padding:11px 13px;margin-bottom:8px;cursor:pointer;display:flex;gap:11px;align-items:flex-start}
-.hook:hover{border-color:var(--accent)}.hook.picked{border-color:var(--accent);background:rgba(242,129,41,.08)}
-.hook .tag{font-weight:700;color:var(--accent);min-width:18px}
-.hook .verbal{font-weight:600}.hook .visual{color:var(--muted);font-size:12.5px;margin-top:3px}
-.body{background:var(--panel2);border-radius:9px;padding:14px 16px;font-size:14.5px}
-.body p{margin:0 0 7px}
+.section-label{text-transform:uppercase;letter-spacing:.6px;font-size:11px;color:var(--muted);margin:16px 0 8px}
+.hook{border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:8px;display:flex;gap:11px;align-items:flex-start}
+.hook.picked{border-color:var(--accent);background:rgba(242,129,41,.08)}
+.hook .tag{font-weight:700;color:var(--accent);min-width:24px;cursor:pointer;user-select:none;border:1px solid var(--line);border-radius:6px;text-align:center;padding:2px 0}
+.hook.picked .tag{background:var(--accent);color:#11130f;border-color:var(--accent)}
+.hook .fields{flex:1}
+.edit{width:100%;background:transparent;border:1px solid transparent;color:var(--text);border-radius:6px;padding:5px 7px;font-family:inherit;font-size:14px;line-height:1.45}
+.edit:hover{border-color:var(--line)}.edit:focus{border-color:var(--accent);background:var(--panel2);outline:none}
+.edit.verbal{font-weight:600}
+.edit.visual{color:var(--muted);font-size:12.5px}
+textarea.edit{resize:vertical}
+.bodyedit{min-height:150px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;font-size:14.5px}
 .note{font-size:12.5px;color:var(--muted);margin-top:10px}.note b{color:var(--text)}
 .flag{font-size:12.5px;color:var(--warn);margin-top:6px}
 .controls{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
@@ -97,47 +100,60 @@ button:hover{border-color:var(--accent)}button.primary{background:var(--accent);
 .pill.approve.on{background:var(--good);color:#06281a;border-color:var(--good);font-weight:600}
 .pill.swap.on{background:var(--warn);color:#3a2a0d;border-color:var(--warn);font-weight:600}
 .pill.cut.on{background:var(--bad);color:#2c0d0d;border-color:var(--bad);font-weight:600}
-textarea{width:100%;margin-top:10px;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:10px;font-family:inherit;font-size:13.5px;resize:vertical;min-height:48px}
+.edited-badge{font-size:11px;color:var(--accent);margin-left:8px;display:none}
+.edited .edited-badge{display:inline}
+.notes{width:100%;margin-top:10px;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:10px;font-family:inherit;font-size:13.5px;resize:vertical;min-height:46px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:20}
-.modal.show{display:flex}.modal .inner{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:640px;width:92%;max-height:80vh;overflow:auto}
-.modal pre{white-space:pre-wrap;font-size:13px;color:var(--text)}
+.modal.show{display:flex}.modal .inner{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:680px;width:92%;max-height:82vh;overflow:auto}
+.modal pre{white-space:pre-wrap;font-size:12.5px;color:var(--text)}
 </style></head><body>
 <header>
-  <div><h1>__PAGE_TITLE__</h1><div class="sub">Hook pick + Approve / Swap / Cut + notes. Saves in your browser automatically.</div></div>
-  <div class="bar"><span class="progress" id="prog"></span><button id="copyBtn" class="primary">Copy decisions</button><button id="resetBtn">Reset</button></div>
+  <div><h1>__PAGE_TITLE__</h1><div class="sub">Editable — change hooks, visuals & script text inline. Pick a hook, set Approve/Swap/Cut. Saves in your browser.</div></div>
+  <div class="bar"><span class="progress" id="prog"></span><button id="copyBtn" class="primary">Copy decisions + edits</button><button id="resetBtn">Reset</button></div>
 </header>
-<div class="wrap" id="wrap"></div>
-<div class="modal" id="modal"><div class="inner"><h2 style="margin-top:0">Decisions summary</h2><pre id="summary"></pre><div style="margin-top:12px"><button id="closeModal">Close</button></div></div></div>
+<div class="wrap">
+  <div class="banner">Everything you type here is editable and saved automatically in this browser. When done, hit <b>Copy decisions + edits</b> to export your picks, statuses, notes, and any edited script text.</div>
+  <div id="list"></div>
+</div>
+<div class="modal" id="modal"><div class="inner"><h2 style="margin-top:0">Decisions + edits</h2><pre id="summary"></pre><div style="margin-top:12px"><button id="closeModal">Close</button></div></div></div>
 <script>
 const DATA = __DATA__;
 const KEY = "batch-review-__SLUG__";
 let state = JSON.parse(localStorage.getItem(KEY) || "{}");
 function save(){localStorage.setItem(KEY, JSON.stringify(state));renderProg();}
-function st(n){return state[n] || (state[n] = {hook:null,status:null,notes:""});}
+function st(n){if(!state[n])state[n]={hook:null,status:null,notes:"",hk:{},body:null};return state[n];}
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function escAttr(s){return esc(s).replace(/"/g,"&quot;");}
 
 function render(){
-  const wrap = document.getElementById("wrap");
-  wrap.innerHTML = "";
+  const list = document.getElementById("list");
+  list.innerHTML = "";
   DATA.forEach(s=>{
     const cur = st(s.num);
     const card = document.createElement("div");
     card.className = "card" + (cur.status?(" "+cur.status):"");
-    card.id = "c"+s.num;
-    let hooks = s.hooks.map(h=>`
-      <div class="hook ${cur.hook===h.label?'picked':''}" data-num="${s.num}" data-hook="${h.label}">
-        <div class="tag">${h.label}</div>
-        <div><div class="verbal">${esc(h.verbal)}</div>${h.visual?`<div class="visual">🎬 ${esc(h.visual)}</div>`:''}</div>
-      </div>`).join("");
-    let body = s.body.map(p=>`<p>${esc(p)}</p>`).join("");
+    const hooks = s.hooks.map(h=>{
+      const e = (cur.hk && cur.hk[h.label]) || {};
+      const v = e.verbal!==undefined ? e.verbal : h.verbal;
+      const vis = e.visual!==undefined ? e.visual : h.visual;
+      return `<div class="hook ${cur.hook===h.label?'picked':''}">
+        <div class="tag" data-num="${s.num}" data-hook="${h.label}" title="pick this hook to test">${h.label}</div>
+        <div class="fields">
+          <input class="edit verbal" data-num="${s.num}" data-hook="${h.label}" data-f="verbal" value="${escAttr(v)}">
+          <input class="edit visual" data-num="${s.num}" data-hook="${h.label}" data-f="visual" value="${escAttr(vis)}" placeholder="🎬 visual treatment…">
+        </div></div>`;
+    }).join("");
+    const bodyVal = cur.body!==null && cur.body!==undefined ? cur.body : s.body;
+    const editedBody = (cur.body!==null && cur.body!==undefined && cur.body!==s.body);
     card.innerHTML = `
       <div class="fmt">#${s.num} · ${esc(s.format)}</div>
       <h2>${esc(s.title)}</h2>
       ${s.why?`<div class="why">${esc(s.why)}</div>`:''}
-      <div class="section-label">Hooks — pick the one to test (visual + verbal)</div>
+      <div class="section-label">Hooks — click a letter to pick the one to test; edit text directly</div>
       ${hooks}
-      <div class="section-label">Script</div>
-      <div class="body">${body}</div>
+      <div class="section-label">Script <span class="edited-badge">· edited</span></div>
+      <div class="${editedBody?'edited':''}"><div class="section-label" style="display:none"></div></div>
+      <textarea class="edit bodyedit" data-num="${s.num}" data-f="body">${esc(bodyVal)}</textarea>
       ${s.prop?`<div class="note"><b>Setup:</b> ${esc(s.prop)}</div>`:''}
       ${s.flags?`<div class="flag"><b>⚑ Invented:</b> ${esc(s.flags)}</div>`:''}
       <div class="controls">
@@ -145,12 +161,21 @@ function render(){
         <div class="pill swap ${cur.status==='swap'?'on':''}" data-num="${s.num}" data-status="swap">↻ Swap</div>
         <div class="pill cut ${cur.status==='cut'?'on':''}" data-num="${s.num}" data-status="cut">✕ Cut</div>
       </div>
-      <textarea data-num="${s.num}" placeholder="Notes / changes for this one…">${esc(cur.notes)}</textarea>`;
-    wrap.appendChild(card);
+      <textarea class="notes" data-num="${s.num}" data-f="notes" placeholder="Notes / direction for this one…">${esc(cur.notes||"")}</textarea>`;
+    list.appendChild(card);
   });
-  wrap.querySelectorAll(".hook").forEach(el=>el.onclick=()=>{const n=el.dataset.num;st(n).hook=el.dataset.hook;save();render();});
-  wrap.querySelectorAll(".pill").forEach(el=>el.onclick=()=>{const n=el.dataset.num;const s=st(n);s.status=(s.status===el.dataset.status?null:el.dataset.status);save();render();});
-  wrap.querySelectorAll("textarea").forEach(el=>el.oninput=()=>{st(el.dataset.num).notes=el.value;save();});
+  // pick a hook
+  list.querySelectorAll(".tag").forEach(el=>el.onclick=()=>{const c=st(el.dataset.num);c.hook=(c.hook===el.dataset.hook?null:el.dataset.hook);save();render();});
+  // toggle status
+  list.querySelectorAll(".pill").forEach(el=>el.onclick=()=>{const c=st(el.dataset.num);c.status=(c.status===el.dataset.status?null:el.dataset.status);save();render();});
+  // edits (hooks + body + notes) — save without re-render to keep focus
+  list.querySelectorAll(".edit, .notes").forEach(el=>el.oninput=()=>{
+    const c=st(el.dataset.num), f=el.dataset.f;
+    if(f==="verbal"||f==="visual"){c.hk[el.dataset.hook]=c.hk[el.dataset.hook]||{};c.hk[el.dataset.hook][f]=el.value;}
+    else if(f==="body"){c.body=el.value;}
+    else if(f==="notes"){c.notes=el.value;}
+    save();
+  });
   renderProg();
 }
 function renderProg(){
@@ -158,16 +183,23 @@ function renderProg(){
   document.getElementById("prog").textContent = done+" / "+DATA.length+" reviewed";
 }
 document.getElementById("copyBtn").onclick=()=>{
-  let out = "BATCH DECISIONS\\n\\n";
+  let out = "BATCH DECISIONS + EDITS\n\n";
   DATA.forEach(s=>{const c=state[s.num]||{};
-    out += `#${s.num} ${s.title}\\n  status: ${c.status||"(none)"} | hook: ${c.hook||"(none)"}\\n`;
-    if(c.notes) out += `  notes: ${c.notes}\\n`; out += "\\n";});
+    out += `#${s.num} ${s.title}\n  status: ${c.status||"(none)"} | hook: ${c.hook||"(none)"}\n`;
+    if(c.hk) for(const k of ["A","B","C"]){const e=c.hk[k]; if(e&&(e.verbal!==undefined||e.visual!==undefined)){
+      const orig=s.hooks.find(h=>h.label===k)||{};
+      if(e.verbal!==undefined&&e.verbal!==orig.verbal) out+=`  EDITED hook ${k} verbal: ${e.verbal}\n`;
+      if(e.visual!==undefined&&e.visual!==orig.visual) out+=`  EDITED hook ${k} visual: ${e.visual}\n`;
+    }}
+    if(c.body!==undefined&&c.body!==null&&c.body!==s.body) out+=`  EDITED script:\n    ${c.body.replace(/\n/g,"\n    ")}\n`;
+    if(c.notes) out += `  notes: ${c.notes}\n`;
+    out += "\n";});
   document.getElementById("summary").textContent = out;
   document.getElementById("modal").classList.add("show");
-  navigator.clipboard && navigator.clipboard.writeText(out);
+  if(navigator.clipboard) navigator.clipboard.writeText(out);
 };
 document.getElementById("closeModal").onclick=()=>document.getElementById("modal").classList.remove("show");
-document.getElementById("resetBtn").onclick=()=>{if(confirm("Clear all your review decisions?")){state={};save();render();}};
+document.getElementById("resetBtn").onclick=()=>{if(confirm("Clear all decisions AND edits in this browser?")){state={};save();render();}};
 render();
 </script></body></html>"""
 
@@ -176,7 +208,4 @@ HTML = (HTML.replace("__PAGE_TITLE__", html.escape(page_title))
             .replace("__DATA__", DATA)
             .replace("__SLUG__", slug))
 open(out_path, "w", encoding="utf-8").write(HTML)
-print("wrote", out_path)
-print("scripts parsed:", len(scripts))
-for s in scripts:
-    print(f"  #{s['num']} {s['title']}  ({len(s['hooks'])} hooks, {len(s['body'])} body lines)")
+print("wrote", out_path, "| scripts:", len(scripts))
