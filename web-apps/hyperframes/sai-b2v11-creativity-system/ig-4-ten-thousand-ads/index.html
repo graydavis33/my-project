@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      /* dark stage card */
+      .stage { position: absolute; left: 180px; top: 360px; width: 720px; height: 1200px;
+        border-radius: 30px; will-change: transform, opacity;
+        background: linear-gradient(112deg, #34302C 0%, #272320 55%, #1C1916 100%);
+        box-shadow: inset 0 2px 6px rgba(255,255,255,0.08), 0 20px 48px rgba(0,0,0,0.5); }
+
+      /* identity header */
+      .head { position: absolute; left: 180px; width: 720px; text-align: center; top: 416px;
+        font-weight: 900; font-size: 96px; letter-spacing: -0.02em; line-height: 1; color: #FFFFFF;
+        text-shadow: 0 6px 16px rgba(0,0,0,0.5); font-variant-numeric: tabular-nums;
+        opacity: 0; will-change: transform, opacity; }
+      .headsub { position: absolute; left: 180px; width: 720px; text-align: center; top: 524px;
+        font-weight: 800; font-size: 30px; letter-spacing: 0.16em; color: rgba(255,255,255,0.6);
+        text-transform: uppercase; opacity: 0; will-change: opacity; }
+
+      /* the grid of "ads" */
+      .grid { position: absolute; left: 221px; top: 600px; width: 638px;
+        display: grid; grid-template-columns: repeat(14, 40px); gap: 6px; }
+      .tile { position: relative; width: 40px; height: 40px; border-radius: 7px;
+        will-change: opacity, transform; opacity: 0;
+        background: linear-gradient(150deg, #5C6470 0%, #3D434C 100%); }
+      .tile .lit { position: absolute; inset: 0; border-radius: 7px; opacity: 0;
+        will-change: opacity; pointer-events: none;
+        background: linear-gradient(150deg, #FFC68A 0%, #F28129 55%, #D66416 100%);
+        box-shadow: 0 0 12px rgba(242,129,41,0.75), inset 0 1px 2px rgba(255,255,255,0.45); }
+
+      /* sweep bar that travels across igniting tiles */
+      .sweep { position: absolute; left: 205px; top: 588px; width: 26px; height: 944px;
+        border-radius: 14px; opacity: 0; will-change: transform, opacity; pointer-events: none;
+        background: linear-gradient(180deg, rgba(255,210,150,0.0), rgba(255,170,90,0.95) 50%, rgba(255,210,150,0.0));
+        box-shadow: 0 0 40px 14px rgba(242,135,47,0.65); }
+
+      /* bottom status labels (swap once: 5 -> all) */
+      .status { position: absolute; left: 180px; width: 720px; text-align: center; top: 1456px;
+        font-weight: 900; font-size: 56px; letter-spacing: -0.01em; line-height: 1;
+        text-transform: uppercase; text-shadow: 0 4px 14px rgba(0,0,0,0.5);
+        opacity: 0; will-change: transform, opacity; }
+      #stat-five { color: rgba(255,255,255,0.82); }
+      #stat-five b { color: #F28129; }
+      #stat-all { color: #F28129; text-shadow: 0 0 26px rgba(242,129,41,0.6), 0 4px 14px rgba(0,0,0,0.5); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="7" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="7" data-track-index="1">
+        <div id="world" class="world" data-layout-allow-overflow="">
+
+          <div id="stage" class="stage"></div>
+          <div id="head" class="head">10,000 ADS</div>
+          <div id="headsub" class="headsub">every one needs creativity</div>
+
+          <div id="grid" class="grid"></div>
+          <div id="sweep" class="sweep"></div>
+
+          <div id="stat-five" class="status">ONLY <b>5</b> CREATIVE</div>
+          <div id="stat-all" class="status">EVERY SINGLE ONE</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+
+        // ---- build the grid deterministically (synchronous, at load) ----
+        const COLS = 14, ROWS = 20, N = COLS * ROWS;
+        const gridEl = document.getElementById("grid");
+        // the 5 scattered "already creative" cells (row,col) -> index
+        const creativeCells = [[3,2],[6,10],[11,5],[15,11],[17,3]];
+        const creativeIdx = new Set(creativeCells.map(([r,c]) => r*COLS + c));
+        const tiles = [];
+        for (let i = 0; i < N; i++) {
+          const t = document.createElement("div");
+          t.className = "tile" + (creativeIdx.has(i) ? " seed" : "");
+          const lit = document.createElement("div");
+          lit.className = "lit";
+          t.appendChild(lit);
+          gridEl.appendChild(t);
+          tiles.push(t);
+        }
+        const allLit = tiles.map(t => t.firstChild);
+        const seedLit = tiles.filter(t => t.classList.contains("seed")).map(t => t.firstChild);
+
+        const tl = gsap.timeline({ paused: true });
+        gsap.set("#world", { x: 0, y: 0, scale: 1.0 });
+
+        // stage establishes
+        tl.from("#stage", { scaleY: 0.94, opacity: 0, duration: 0.5, ease: "back.out(1.2)", transformOrigin: "50% 100%" }, 0.1);
+        tl.fromTo("#head", { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", immediateRender: false }, 0.4);
+        tl.fromTo("#headsub", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out", immediateRender: false }, 0.7);
+
+        // grey grid fades in (grid-aware ripple from top-left)
+        tl.to(tiles, { opacity: 1, duration: 0.45, ease: "power2.out",
+          stagger: { each: 0.004, grid: [ROWS, COLS], from: "start" } }, 0.6);
+
+        // only the 5 scattered creative tiles ignite
+        tl.to(seedLit, { opacity: 1, duration: 0.5, ease: "power2.out", stagger: 0.08 }, 1.5);
+        tl.fromTo("#stat-five", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, 1.7);
+        // soft pulse on the 5 so the eye finds them in the grey sea
+        tl.to(seedLit, { scale: 1.12, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 1, transformOrigin: "50% 50%" }, 2.1);
+
+        // ---- the SYSTEM sweep: bar travels L->R, every tile ignites as it passes ----
+        // swap the status label
+        tl.to("#stat-five", { opacity: 0, y: -16, duration: 0.35, ease: "power2.in" }, 3.0);
+        // sweep bar travels across the grid width (~660px) in sync with the ignite stagger
+        gsap.set("#sweep", { x: 0 });
+        tl.fromTo("#sweep", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power1.out", immediateRender: false }, 3.05);
+        tl.to("#sweep", { x: 654, duration: 1.5, ease: "none" }, 3.15);
+        tl.to("#sweep", { opacity: 0, duration: 0.3, ease: "power1.in" }, 4.55);
+        // every tile ignites, swept left->right to match the bar
+        tl.to(allLit, { opacity: 1, duration: 0.5, ease: "power2.out",
+          stagger: { amount: 1.5, grid: [ROWS, COLS], axis: "x", from: "start" } }, 3.15);
+
+        // payoff label + camera push-in
+        tl.fromTo("#stat-all", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)", immediateRender: false }, 4.6);
+        tl.to("#world", { x: -32, y: -118, scale: 1.06, duration: 1.4, ease: "power2.inOut" }, 4.5);
+
+        // whole-grid glow breath (finite, seekable)
+        tl.to(allLit, { opacity: 0.82, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 1 }, 5.4);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

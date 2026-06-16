@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      .stage { position: absolute; left: 180px; top: 360px; width: 720px; height: 1200px;
+        border-radius: 30px; will-change: transform, opacity;
+        background: linear-gradient(112deg, #34302C 0%, #272320 55%, #1C1916 100%);
+        box-shadow: inset 0 2px 6px rgba(255,255,255,0.08), 0 20px 48px rgba(0,0,0,0.5); }
+
+      .lbl { position: absolute; left: 180px; width: 720px; text-align: center;
+        font-weight: 900; letter-spacing: -0.01em; line-height: 1; text-transform: uppercase;
+        text-shadow: 0 4px 14px rgba(0,0,0,0.5); opacity: 0; will-change: transform, opacity; }
+      #lbl-top { top: 432px; font-size: 60px; color: rgba(255,255,255,0.92); }
+      #lbl-bot { top: 1452px; font-size: 60px; color: #F28129;
+        text-shadow: 0 0 26px rgba(242,129,41,0.55), 0 4px 14px rgba(0,0,0,0.5); }
+
+      /* spark cloud (built in JS) */
+      .spark { position: absolute; width: 30px; height: 30px; opacity: 0;
+        border-radius: 8px; transform: rotate(45deg); will-change: transform, opacity;
+        background: linear-gradient(150deg, #FFD9A8 0%, #F28129 60%, #D66416 100%);
+        box-shadow: 0 0 14px rgba(242,135,47,0.8); }
+
+      /* funnel (the system) */
+      .funnel { position: absolute; left: 360px; top: 792px; width: 360px; height: 250px;
+        opacity: 0; will-change: transform, opacity;
+        background: linear-gradient(160deg, #FFC68A 0%, #F28129 55%, #D66416 100%);
+        clip-path: polygon(0% 0%, 100% 0%, 61% 56%, 61% 100%, 39% 100%, 39% 56%);
+        filter: drop-shadow(0 0 22px rgba(242,135,47,0.5)) drop-shadow(0 10px 20px rgba(0,0,0,0.35)); }
+      .funnel-rim { position: absolute; left: 360px; top: 792px; width: 360px; height: 8px;
+        border-radius: 6px; background: rgba(255,255,255,0.85); opacity: 0;
+        box-shadow: 0 0 14px rgba(255,255,255,0.6); will-change: opacity, transform; }
+      /* glow pulse at the neck when sparks pass through */
+      .neck-glow { position: absolute; left: 470px; top: 1000px; width: 140px; height: 90px;
+        opacity: 0; pointer-events: none; will-change: opacity, transform;
+        background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,200,140,0.9) 0%, rgba(242,135,47,0.4) 45%, rgba(242,135,47,0) 72%); }
+
+      /* ordered output — a neat aligned stack (the systemized result) */
+      .bar { position: absolute; left: 270px; width: 540px; height: 66px; border-radius: 14px;
+        opacity: 0; will-change: transform, opacity;
+        background: linear-gradient(100deg, #FFC68A 0%, #F28129 55%, #D66416 100%);
+        border: 2px solid rgba(255,255,255,0.92);
+        box-shadow: 0 0 22px rgba(242,129,41,0.5), 0 8px 18px rgba(0,0,0,0.3); }
+      .bar .dot { position: absolute; left: 26px; top: 50%; transform: translateY(-50%);
+        width: 26px; height: 26px; border-radius: 50%; background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
+      .bar .row { position: absolute; left: 78px; top: 50%; transform: translateY(-50%);
+        height: 14px; width: 320px; border-radius: 7px; background: rgba(255,255,255,0.85); }
+      #b1 { top: 1120px; } #b2 { top: 1206px; } #b3 { top: 1292px; } #b4 { top: 1378px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6.6" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="6.6" data-track-index="1">
+        <div id="world" class="world" data-layout-allow-overflow="">
+
+          <div id="stage" class="stage"></div>
+          <div id="lbl-top" class="lbl">CREATIVITY</div>
+
+          <div id="sparks"></div>
+
+          <div id="funnel" class="funnel"></div>
+          <div id="funnel-rim" class="funnel-rim"></div>
+          <div id="neck-glow" class="neck-glow"></div>
+
+          <div id="b1" class="bar"><div class="dot"></div><div class="row"></div></div>
+          <div id="b2" class="bar"><div class="dot"></div><div class="row"></div></div>
+          <div id="b3" class="bar"><div class="dot"></div><div class="row"></div></div>
+          <div id="b4" class="bar"><div class="dot"></div><div class="row"></div></div>
+
+          <div id="lbl-bot" class="lbl">A SYSTEM</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+        const rnd = mulberry32(1109);
+
+        // ---- build the chaotic spark cloud ----
+        const sparksEl = document.getElementById("sparks");
+        const NS = 15;
+        const sparks = [];
+        const cloud = { x0: 300, x1: 780, y0: 524, y1: 752 };
+        const neck = { x: 540, y: 1006 };
+        for (let i = 0; i < NS; i++) {
+          const s = document.createElement("div");
+          s.className = "spark";
+          const px = cloud.x0 + rnd() * (cloud.x1 - cloud.x0);
+          const py = cloud.y0 + rnd() * (cloud.y1 - cloud.y0);
+          s.style.left = px + "px";
+          s.style.top = py + "px";
+          const sc = 0.6 + rnd() * 0.9;
+          s.dataset.sc = sc;
+          s.dataset.drift = (rnd() * 2 - 1).toFixed(3);
+          sparksEl.appendChild(s);
+          sparks.push(s);
+        }
+
+        const tl = gsap.timeline({ paused: true });
+        gsap.set("#world", { x: 0, y: 0, scale: 1.0 });
+        sparks.forEach(s => gsap.set(s, { rotation: 45, scale: +s.dataset.sc }));
+
+        // stage + top label
+        tl.from("#stage", { scaleY: 0.94, opacity: 0, duration: 0.5, ease: "back.out(1.2)", transformOrigin: "50% 100%" }, 0.1);
+        tl.fromTo("#lbl-top", { opacity: 0, y: -18 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", immediateRender: false }, 0.4);
+
+        // sparks pop in scattered
+        tl.to(sparks, { opacity: 1, duration: 0.4, ease: "power2.out", stagger: { each: 0.04, from: "random" } }, 0.7);
+        // chaotic swirl (each drifts differently, finite yoyo)
+        sparks.forEach((s, i) => {
+          const dx = (+s.dataset.drift) * 46, dy = ((i % 2) ? 1 : -1) * (22 + rnd() * 30);
+          tl.to(s, { x: dx, y: dy, rotation: 45 + (+s.dataset.drift) * 60, duration: 0.9 + rnd() * 0.5,
+            ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.1 + (i % 5) * 0.05);
+        });
+
+        // funnel establishes
+        tl.fromTo("#funnel", { opacity: 0, scaleY: 0.8, y: -20 }, { opacity: 1, scaleY: 1, y: 0, duration: 0.6, ease: "back.out(1.3)", transformOrigin: "50% 0%", immediateRender: false }, 1.9);
+        tl.fromTo("#funnel-rim", { opacity: 0, scaleX: 0.8 }, { opacity: 1, scaleX: 1, duration: 0.45, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, 2.05);
+
+        // ---- sparks get pulled into the funnel neck, shrinking ----
+        sparks.forEach((s, i) => {
+          const curLeft = parseFloat(s.style.left), curTop = parseFloat(s.style.top);
+          tl.to(s, {
+            x: neck.x - curLeft, y: neck.y - curTop, scale: 0.18, opacity: 0,
+            rotation: 45 + 180, duration: 0.7, ease: "power2.in"
+          }, 2.7 + i * 0.045);
+        });
+        // neck glow pulses as they stream through
+        tl.fromTo("#neck-glow", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1.1, duration: 0.5, ease: "sine.out", immediateRender: false }, 3.0);
+        tl.to("#neck-glow", { opacity: 0, duration: 0.6, ease: "sine.in" }, 3.7);
+
+        // ---- ordered output bars rise into a neat stack ----
+        ["#b1","#b2","#b3","#b4"].forEach((b, i) => {
+          tl.fromTo(b, { opacity: 0, y: 30, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)", immediateRender: false }, 3.5 + i * 0.16);
+        });
+        tl.fromTo("#lbl-bot", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)", immediateRender: false }, 4.25);
+
+        // gentle camera settle on the ordered output + idle
+        tl.to("#world", { y: -34, scale: 1.05, duration: 1.3, ease: "power2.inOut" }, 4.2);
+        tl.to(["#b1","#b2","#b3","#b4"], { y: "-=6", duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1 }, 5.4);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
