@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif; }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      .stage { position: absolute; left: 215px; top: 560px; width: 650px; height: 800px;
+        border-radius: 26px; will-change: transform, opacity;
+        background: linear-gradient(110deg, #34302C 0%, #272320 55%, #1C1916 100%);
+        box-shadow: inset 0 2px 6px rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.5); }
+
+      .glow { position: absolute; left: 300px; top: 720px; width: 480px; height: 480px; opacity: 0;
+        will-change: opacity; pointer-events: none;
+        background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(242,135,47,0.45) 0%, rgba(242,135,47,0.14) 48%, rgba(242,135,47,0) 72%); }
+
+      .ring { position: absolute; left: 280px; top: 700px; width: 520px; height: 520px; will-change: opacity; }
+      .ring circle { fill: none; stroke: #F28129; stroke-width: 15; stroke-linecap: round;
+        filter: drop-shadow(0 0 8px rgba(242,129,41,0.5)); }
+
+      .orbit { position: absolute; left: 540px; top: 960px; width: 0; height: 0;
+        transform-origin: 0 0; will-change: transform; }
+      .dot { position: absolute; left: -16px; top: -244px; width: 32px; height: 32px; border-radius: 50%;
+        background: radial-gradient(circle at 38% 34%, #FFE6C8, #F28129 70%);
+        box-shadow: 0 0 22px rgba(242,129,41,0.9); opacity: 0; will-change: opacity; }
+
+      /* center feedback-form icon with a big orange check */
+      .form { position: absolute; left: 420px; top: 812px; width: 240px; height: 296px; border-radius: 16px;
+        background: #FFFFFF; box-shadow: 0 12px 26px rgba(0,0,0,0.4); opacity: 0;
+        will-change: transform, opacity; }
+      .form .tab { position: absolute; left: 26px; top: 24px; width: 110px; height: 15px; border-radius: 8px;
+        background: linear-gradient(90deg, #FFC68A, #F28129); }
+      .check { position: absolute; left: 480px; top: 900px; width: 120px; height: 120px; opacity: 0;
+        will-change: transform, opacity; }
+      .check path { fill: none; stroke: #F28129; stroke-width: 16; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-gm97" id="root" data-composition-id="main" data-start="0" data-duration="5.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-624y" id="scene" class="scene clip" data-start="0" data-duration="5.4" data-track-index="1">
+        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
+
+          <div data-hf-id="hf-lp42" id="stage" class="stage"></div>
+          <div data-hf-id="hf-35j2" id="glow" class="glow"></div>
+
+          <svg data-hf-id="hf-qoja" id="ring" class="ring" viewBox="0 0 520 520"><circle data-hf-id="hf-lvq4" cx="260" cy="260" r="228" /></svg>
+
+          <div data-hf-id="hf-src2" id="form" class="form"><div data-hf-id="hf-clpx" class="tab"></div></div>
+          <svg data-hf-id="hf-1ed2" id="check" class="check" viewBox="0 0 120 120"><path data-hf-id="hf-hdnl" d="M24 64 L50 90 L96 34" /></svg>
+
+          <div data-hf-id="hf-iql2" id="orbit" class="orbit"><div data-hf-id="hf-yyrk" id="dot" class="dot"></div></div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        gsap.set("#world", { x: 0, y: 0, scale: 1.0 });
+
+        const C = 2 * Math.PI * 228;
+        gsap.set("#ring circle", { strokeDasharray: C, strokeDashoffset: C });
+
+        tl.from("#stage", { scaleY: 0.93, opacity: 0, duration: 0.5, ease: "back.out(1.2)", transformOrigin: "50% 100%" }, 0.1);
+
+        // center feedback form + check
+        tl.fromTo("#form", { opacity: 0, scale: 0.7, y: 18 }, { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: "back.out(1.5)", immediateRender: false }, 0.4);
+        tl.fromTo("#check", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)", transformOrigin: "50% 50%", immediateRender: false }, 0.8);
+
+        // glow + ring draws on (the loop)
+        tl.to("#glow", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.9);
+        tl.fromTo("#ring circle", { strokeDashoffset: C }, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut", immediateRender: false }, 1.0);
+
+        // the dot travels the loop — continuous improvement (finite loops)
+        tl.to("#dot", { opacity: 1, duration: 0.25 }, 2.1);
+        tl.fromTo("#orbit", { rotation: 0 }, { rotation: 360, duration: 1.6, ease: "none", repeat: 1, immediateRender: false }, 2.1);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

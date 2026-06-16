@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden;
+        background: transparent; font-family: "Montserrat", system-ui, sans-serif; }
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
+
+      .stage { position: absolute; left: 215px; top: 470px; width: 650px; height: 980px;
+        border-radius: 26px; will-change: transform, opacity; z-index: 1;
+        background: linear-gradient(110deg, #34302C 0%, #272320 55%, #1C1916 100%);
+        box-shadow: inset 0 2px 6px rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.5); }
+
+      /* a recessed vertical lane ("avenue") — contains its own fill */
+      .lane { position: absolute; width: 150px; height: 820px; top: 560px; border-radius: 75px;
+        overflow: hidden; z-index: 2; will-change: transform, opacity; opacity: 0;
+        background: linear-gradient(180deg, #211D1A 0%, #15110F 100%);
+        box-shadow: inset 0 0 0 2px rgba(255,255,255,0.05), inset 0 6px 16px rgba(0,0,0,0.55); }
+      /* the orange progress fill that rises up an owned lane */
+      .fill { position: absolute; left: 14px; right: 14px; bottom: 14px; top: 14px; border-radius: 64px;
+        transform-origin: 50% 100%; will-change: transform; opacity: 0;
+        background: linear-gradient(180deg, #FFC68A 0%, #F28129 55%, #D66416 100%);
+        box-shadow: 0 0 26px rgba(242,129,41,0.5); }
+      /* chevron at the top of each lane */
+      .chev { position: absolute; width: 64px; height: 44px; opacity: 0; z-index: 3;
+        will-change: transform, opacity; filter: drop-shadow(0 0 10px rgba(242,129,41,0.6)); }
+      .chev path { fill: none; stroke: #F28129; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; }
+      /* locked white stickfigure owning the lane */
+      .fig { position: absolute; width: 92px; height: 120px; opacity: 0; z-index: 5;
+        will-change: transform, opacity; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)); }
+      .fig path, .fig circle { fill: #FFFFFF; }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-gm97" id="root" data-composition-id="main" data-start="0" data-duration="5.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-624y" id="scene" class="scene clip" data-start="0" data-duration="5.4" data-track-index="1">
+        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
+
+          <div data-hf-id="hf-lp42" id="stage" class="stage"></div>
+
+          <div data-hf-id="hf-ufqj" id="l1" class="lane" style="left:280px;"><div data-hf-id="hf-l4ci" id="f1" class="fill"></div></div>
+          <div data-hf-id="hf-y7cb" id="l2" class="lane" style="left:465px;"><div data-hf-id="hf-eymp" id="f2" class="fill"></div></div>
+          <div data-hf-id="hf-1yeo" id="l3" class="lane" style="left:650px;"><div data-hf-id="hf-e6yw" id="f3" class="fill"></div></div>
+
+          <svg data-hf-id="hf-5i8q" id="c1" class="chev" style="left:323px; top:516px;" viewBox="0 0 64 44"><path data-hf-id="hf-eo90" d="M8 36 L32 12 L56 36" /></svg>
+          <svg data-hf-id="hf-376k" id="c2" class="chev" style="left:508px; top:516px;" viewBox="0 0 64 44"><path data-hf-id="hf-ii64" d="M8 36 L32 12 L56 36" /></svg>
+          <svg data-hf-id="hf-yqdk" id="c3" class="chev" style="left:693px; top:516px;" viewBox="0 0 64 44"><path data-hf-id="hf-hb91" d="M8 36 L32 12 L56 36" /></svg>
+
+          <svg data-hf-id="hf-26ev" id="g1" class="fig" style="left:309px; top:1240px;" viewBox="0 0 92 120"><circle data-hf-id="hf-vvp8" cx="46" cy="26" r="22" /><path data-hf-id="hf-gi80" d="M46 50 C20 50 14 78 14 120 L78 120 C78 78 72 50 46 50 Z" /></svg>
+          <svg data-hf-id="hf-vqz7" id="g2" class="fig" style="left:494px; top:1240px;" viewBox="0 0 92 120"><circle data-hf-id="hf-45h0" cx="46" cy="26" r="22" /><path data-hf-id="hf-6wjc" d="M46 50 C20 50 14 78 14 120 L78 120 C78 78 72 50 46 50 Z" /></svg>
+          <svg data-hf-id="hf-pr71" id="g3" class="fig" style="left:679px; top:1240px;" viewBox="0 0 92 120"><circle data-hf-id="hf-2yjx" cx="46" cy="26" r="22" /><path data-hf-id="hf-5pm9" d="M46 50 C20 50 14 78 14 120 L78 120 C78 78 72 50 46 50 Z" /></svg>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        gsap.set("#world", { x: 0, y: 0, scale: 1.0 });
+        gsap.set(".fill", { scaleY: 0 });
+
+        tl.from("#stage", { scaleY: 0.93, opacity: 0, duration: 0.5, ease: "back.out(1.2)", transformOrigin: "50% 100%" }, 0.1);
+
+        // lanes rise in
+        tl.fromTo(["#l1","#l2","#l3"], { opacity: 0, scaleY: 0.82 }, { opacity: 1, scaleY: 1, duration: 0.5, ease: "power3.out", transformOrigin: "50% 100%", stagger: 0.12, immediateRender: false }, 0.35);
+
+        // figures pop in at the base of each lane (each OWNS one)
+        tl.fromTo(["#g1","#g2","#g3"], { opacity: 0, y: 30, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)", stagger: 0.14, immediateRender: false }, 0.7);
+
+        // orange progress fills rise up each owned lane (the ONE motion)
+        tl.to("#f1", { opacity: 1, duration: 0.18 }, 1.25);
+        tl.to("#f2", { opacity: 1, duration: 0.18 }, 1.45);
+        tl.to("#f3", { opacity: 1, duration: 0.18 }, 1.65);
+        tl.to("#f1", { scaleY: 1, duration: 1.0, ease: "power2.out" }, 1.25);
+        tl.to("#f2", { scaleY: 1, duration: 1.0, ease: "power2.out" }, 1.45);
+        tl.to("#f3", { scaleY: 1, duration: 1.0, ease: "power2.out" }, 1.65);
+
+        // chevrons light at the top as each fill arrives
+        tl.fromTo("#c1", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", immediateRender: false }, 2.25);
+        tl.fromTo("#c2", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", immediateRender: false }, 2.45);
+        tl.fromTo("#c3", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out", immediateRender: false }, 2.65);
+
+        // subtle idle bob on the figures (finite)
+        tl.to(["#g1","#g2","#g3"], { y: "-=7", duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1, stagger: 0.1 }, 3.4);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

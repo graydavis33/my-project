@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Accent orange","default":"#F28129"},{"id":"white","type":"color","label":"Base white","default":"#FFFFFF"},{"id":"strokeWidth","type":"number","label":"Stroke width (px)","default":2},{"id":"cornerRadius","type":"number","label":"Card corner radius (px)","default":22},{"id":"messyCount","type":"number","label":"Messy page count","default":11},{"id":"cleanCount","type":"number","label":"Clean page count","default":3},{"id":"kickerText","type":"string","label":"Payoff kicker","default":"10 PAGES TO 3"},{"id":"stackEnterTime","type":"number","label":"Stack enter time (s)","default":0.15},{"id":"collapseTime","type":"number","label":"Collapse start (s)","default":1.5},{"id":"sealTime","type":"number","label":"Check seal time (s)","default":3.0},{"id":"kickerTime","type":"number","label":"Kicker time (s)","default":3.35},{"id":"cameraTime","type":"number","label":"Camera push time (s)","default":2.95}]'>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -11,64 +11,72 @@
         background: transparent; font-family: "Montserrat", system-ui, sans-serif;
       }
       .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
-
-      /* camera world */
       .world { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
 
-      /* dark high-contrast stage card every icon sits on */
-      .stage { position: absolute; left: 210px; top: 470px; width: 660px; height: 1080px;
-        border-radius: 28px; will-change: transform, opacity;
-        background: linear-gradient(120deg, #34302C 0%, #272320 55%, #1C1916 100%);
-        box-shadow: inset 0 2px 5px rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.5); }
+      /* dark stage card */
+      .stage { position: absolute; left: 215px; top: 520px; width: 650px; height: 900px;
+        border-radius: 26px; will-change: transform, opacity;
+        background: linear-gradient(110deg, #34302C 0%, #272320 55%, #1C1916 100%);
+        box-shadow: inset 0 2px 6px rgba(255,255,255,0.08), 0 18px 42px rgba(0,0,0,0.5); }
 
-      /* a single document sheet */
-      .sheet { position: absolute; border-radius: 10px; background: #FFFFFF;
-        will-change: transform, opacity;
-        box-shadow: 0 10px 22px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.9); }
-      .sheet .ln { position: absolute; left: 18px; height: 8px; border-radius: 4px;
-        background: #CDD2DA; }
-      /* messy sheets read greyish/cool; clean sheets stay crisp white */
-      .messy .sheet { background: #EEF1F5; }
-      .messy .sheet .ln { background: #B9C0CB; }
+      /* big number label at the top of the card */
+      .num { position: absolute; left: 215px; width: 650px; text-align: center; top: 556px;
+        font-weight: 900; font-size: 150px; letter-spacing: -0.03em; line-height: 1;
+        text-shadow: 0 6px 16px rgba(0,0,0,0.45); will-change: transform, opacity; opacity: 0;
+        font-variant-numeric: tabular-nums; }
+      #ten { color: #FFFFFF; }
+      #three { color: #F28129; text-shadow: 0 0 26px rgba(242,129,41,0.65), 0 6px 16px rgba(0,0,0,0.5); }
+      .num { line-height: 1; height: 150px; }
+      .kick { position: absolute; left: 215px; width: 650px; text-align: center; top: 736px;
+        font-weight: 800; font-size: 32px; letter-spacing: 0.12em; color: rgba(255,255,255,0.72);
+        text-transform: uppercase; opacity: 0; will-change: opacity; }
 
-      /* orange check seal */
-      .seal { position: absolute; width: 150px; height: 150px; opacity: 0;
-        will-change: transform, opacity; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.4)); }
-      .seal .disc { fill: url(#og); stroke: #fff; stroke-width: 4; }
-      .seal .tick { fill: none; stroke: #fff; stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
+      /* orange payoff glow behind the clean stack */
+      .glow { position: absolute; left: 280px; top: 700px; width: 520px; height: 580px; opacity: 0;
+        will-change: transform, opacity; pointer-events: none;
+        background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(242,135,47,0.55) 0%, rgba(242,135,47,0.18) 45%, rgba(242,135,47,0) 72%);
+        filter: blur(2px); }
 
-      /* payoff kicker */
-      .kicker { position: absolute; left: 0; width: 100%; text-align: center; top: 700px;
-        font-weight: 900; font-size: 84px; color: #F28129; text-transform: uppercase;
-        letter-spacing: -0.02em; text-shadow: 0 6px 16px rgba(0,0,0,0.45);
-        opacity: 0; will-change: transform, opacity; white-space: nowrap; }
+      /* pages — white rounded cards with thin grey content lines */
+      .page { position: absolute; width: 330px; height: 450px; border-radius: 16px;
+        background: #FFFFFF; will-change: transform, opacity; opacity: 0;
+        box-shadow: 0 12px 26px rgba(0,0,0,0.34); }
+      .page .ln { position: absolute; left: 30px; height: 11px; border-radius: 6px;
+        background: rgba(120,128,140,0.5); }
+      .page .ln.l1 { top: 56px; width: 200px; } .page .ln.l2 { top: 92px; width: 250px; }
+      .page .ln.l3 { top: 128px; width: 230px; } .page .ln.l4 { top: 164px; width: 180px; }
+      /* the front "clean" page gets an orange header tab */
+      .page .tab { position: absolute; left: 30px; top: 26px; width: 120px; height: 16px;
+        border-radius: 8px; background: linear-gradient(90deg, #FFC68A, #F28129); display: none; }
+      .page.keep.front .tab { display: block; }
+      .page.keep.front { box-shadow: 0 0 24px rgba(242,129,41,0.55), 0 12px 26px rgba(0,0,0,0.34),
+        inset 0 0 0 2px rgba(242,129,41,0.85); }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="5.0" data-width="1080" data-height="1920">
-      <div id="scene" class="scene clip" data-start="0" data-duration="5.0" data-track-index="1">
-        <div id="world" class="world" data-layout-allow-overflow="">
+    <div data-hf-id="hf-gm97" id="root" data-composition-id="main" data-start="0" data-duration="5.4" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-624y" id="scene" class="scene clip" data-start="0" data-duration="5.4" data-track-index="1">
+        <div data-hf-id="hf-e6wx" id="world" class="world" data-layout-allow-overflow="">
 
-          <div id="stage" class="stage"></div>
+          <div data-hf-id="hf-lp42" id="stage" class="stage"></div>
+          <div data-hf-id="hf-35j2" id="glow" class="glow"></div>
 
-          <!-- messy tall leaning stack (built by JS) -->
-          <div id="messy" class="messy" data-layout-allow-overflow=""></div>
+          <!-- drop pages (7) — the messy old version that gets cut -->
+          <div data-hf-id="hf-qq9o" id="d1" class="page drop" style="left:250px; top:820px;"><div data-hf-id="hf-6im3" class="ln l1"></div><div data-hf-id="hf-xuq8" class="ln l2"></div><div data-hf-id="hf-yme1" class="ln l3"></div><div data-hf-id="hf-nqwe" class="ln l4"></div></div>
+          <div data-hf-id="hf-ecs2" id="d2" class="page drop" style="left:560px; top:760px;"><div data-hf-id="hf-pfgb" class="ln l1"></div><div data-hf-id="hf-pm7c" class="ln l2"></div><div data-hf-id="hf-eld9" class="ln l3"></div></div>
+          <div data-hf-id="hf-d9wl" id="d3" class="page drop" style="left:300px; top:690px;"><div data-hf-id="hf-p15a" class="ln l1"></div><div data-hf-id="hf-ofa9" class="ln l2"></div><div data-hf-id="hf-fsac" class="ln l3"></div><div data-hf-id="hf-klpu" class="ln l4"></div></div>
+          <div data-hf-id="hf-tmt7" id="d4" class="page drop" style="left:520px; top:880px;"><div data-hf-id="hf-omu9" class="ln l1"></div><div data-hf-id="hf-otla" class="ln l2"></div><div data-hf-id="hf-fdzb" class="ln l3"></div></div>
+          <div data-hf-id="hf-ozsx" id="d5" class="page drop" style="left:410px; top:700px;"><div data-hf-id="hf-o8j8" class="ln l1"></div><div data-hf-id="hf-nmo7" class="ln l2"></div><div data-hf-id="hf-gkwe" class="ln l3"></div><div data-hf-id="hf-l00v" class="ln l4"></div></div>
+          <div data-hf-id="hf-pago" id="d6" class="page drop" style="left:600px; top:930px;"><div data-hf-id="hf-nu87" class="ln l1"></div><div data-hf-id="hf-o0z8" class="ln l2"></div><div data-hf-id="hf-g6ld" class="ln l3"></div></div>
+          <div data-hf-id="hf-nrsq" id="d7" class="page drop" style="left:230px; top:930px;"><div data-hf-id="hf-nfx6" class="ln l1"></div><div data-hf-id="hf-mu25" class="ln l2"></div><div data-hf-id="hf-hdig" class="ln l3"></div><div data-hf-id="hf-lebw" class="ln l4"></div></div>
 
-          <!-- clean squared 3-page stack (built by JS) -->
-          <div id="clean" data-layout-allow-overflow=""></div>
+          <!-- keep pages (3) — the clean simplified set -->
+          <div data-hf-id="hf-vlbh" id="k3" class="page keep" style="left:345px; top:788px;"><div data-hf-id="hf-n1m5" class="ln l1"></div><div data-hf-id="hf-n8d6" class="ln l2"></div><div data-hf-id="hf-gz7f" class="ln l3"></div></div>
+          <div data-hf-id="hf-q8rg" id="k2" class="page keep" style="left:405px; top:772px;"><div data-hf-id="hf-t07k" class="ln l1"></div><div data-hf-id="hf-secj" class="ln l2"></div><div data-hf-id="hf-i64i" class="ln l3"></div></div>
+          <div data-hf-id="hf-15ih" id="k1" class="page keep front" style="left:375px; top:780px;"><div data-hf-id="hf-clpx" class="tab"></div><div data-hf-id="hf-slwj" class="ln l1"></div><div data-hf-id="hf-ssnk" class="ln l2"></div><div data-hf-id="hf-hrth" class="ln l3"></div><div data-hf-id="hf-lsmx" class="ln l4"></div></div>
 
-          <svg id="seal" class="seal" viewBox="0 0 100 100" style="left:632px; top:918px;">
-            <defs>
-              <lineargradient id="og" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#FFC68A" /><stop offset="0.5" stop-color="#F28129" />
-                <stop offset="1" stop-color="#C8631A" />
-              </lineargradient>
-            </defs>
-            <circle class="disc" cx="50" cy="50" r="44" />
-            <path class="tick" d="M30 52 L44 66 L72 34" />
-          </svg>
-
-          <div id="kicker" class="kicker" data-layout-allow-overflow="">10 PAGES TO 3</div>
+          <div data-hf-id="hf-nsky" id="ten" class="num">10</div>
+          <div data-hf-id="hf-x9fj" id="three" class="num">3</div>
 
         </div>
       </div>
@@ -76,125 +84,54 @@
 
     <script>
       (function () {
-        // --- variables (max-agency) with hardcoded fallbacks ---
-        const V = (window.__hyperframes && window.__hyperframes.getVariables)
-          ? window.__hyperframes.getVariables() : {};
-        const orange       = V.orange       ?? "#F28129";
-        const white        = V.white        ?? "#FFFFFF";
-        const strokeWidth  = V.strokeWidth  ?? 2;
-        const cornerRadius = V.cornerRadius ?? 22;
-        const messyCount   = V.messyCount   ?? 11;
-        const cleanCount   = V.cleanCount   ?? 3;
-        const kickerText   = V.kickerText   ?? "10 PAGES TO 3";
-        const stackEnterT  = V.stackEnterTime ?? 0.15;
-        const collapseT    = V.collapseTime   ?? 1.5;
-        const sealT        = V.sealTime       ?? 3.0;
-        const kickerT      = V.kickerTime     ?? 3.35;
-        const cameraT      = V.cameraTime     ?? 2.95;
-
-        document.getElementById("kicker").textContent = kickerText;
-        document.getElementById("kicker").style.color = orange;
-        document.querySelectorAll(".seal .disc, .seal .tick").forEach(()=>{});
-
-        // seeded PRNG (mulberry32) — deterministic jitter for the messy stack
-        function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
-        const rand = mulberry32(20260615);
-
-        const stageCx = 540;          // stage horizontal center
-        const sheetW = 340, sheetH = 440;
-
-        // --- build messy leaning stack: many sheets, jittered offset/rotation, tall ---
-        const messy = document.getElementById("messy");
-        const baseMessyY = 1470;      // bottom of the messy pile (inside stage)
-        const messyPitch = 52;
-        for (let i = 0; i < messyCount; i++) {
-          const dx = (rand() * 2 - 1) * 42;
-          const rot = (rand() * 2 - 1) * 6;
-          const s = document.createElement("div");
-          s.className = "sheet";
-          s.id = "m" + i;
-          s.style.width = sheetW + "px";
-          s.style.height = sheetH + "px";
-          s.style.left = (stageCx - sheetW / 2 + dx) + "px";
-          // each page stacked up, slightly overlapping → a leaning tower
-          s.style.top = (baseMessyY - sheetH - i * messyPitch) + "px";
-          s.style.transform = "rotate(" + rot + "deg)";
-          s.style.zIndex = i;
-          // a few faint content lines
-          for (let l = 0; l < 4; l++) {
-            const ln = document.createElement("div");
-            ln.className = "ln";
-            ln.style.top = (40 + l * 46) + "px";
-            ln.style.width = (sheetW - 36 - rand() * 70) + "px";
-            s.appendChild(ln);
-          }
-          messy.appendChild(s);
-        }
-
-        // --- build clean squared 3-page stack (final state, centered on stage) ---
-        const clean = document.getElementById("clean");
-        const cleanCx = stageCx;
-        const cleanBaseY = 1060;      // sits centered in the lower-mid of the stage
-        for (let i = 0; i < cleanCount; i++) {
-          const s = document.createElement("div");
-          s.className = "sheet";
-          s.id = "c" + i;
-          s.style.width = sheetW + "px";
-          s.style.height = sheetH + "px";
-          s.style.left = (cleanCx - sheetW / 2) + "px";
-          s.style.top = (cleanBaseY - i * 26) + "px";   // tidy fanned stack
-          s.style.transform = "rotate(0deg)";
-          s.style.zIndex = i;
-          s.style.opacity = "0";
-          for (let l = 0; l < 4; l++) {
-            const ln = document.createElement("div");
-            ln.className = "ln";
-            ln.style.top = (40 + l * 46) + "px";
-            ln.style.width = (sheetW - 36 - (l === 3 ? 130 : 20)) + "px";
-            s.appendChild(ln);
-          }
-          clean.appendChild(s);
-        }
-
-        // apply stroke/corner brand vars to the stage
-        document.getElementById("stage").style.borderRadius = (cornerRadius + 6) + "px";
-
-        // --- timeline ---
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
+
         gsap.set("#world", { x: 0, y: 0, scale: 1.0 });
 
+        // messy start states (all 10 pages jumbled in the pile)
+        gsap.set("#d1", { rotation: -18 }); gsap.set("#d2", { rotation: 14 });
+        gsap.set("#d3", { rotation: 22 });  gsap.set("#d4", { rotation: -12 });
+        gsap.set("#d5", { rotation: 8 });   gsap.set("#d6", { rotation: -22 });
+        gsap.set("#d7", { rotation: 16 });
+        gsap.set("#k1", { rotation: -3, x: 8,  y: -10 });
+        gsap.set("#k2", { rotation: 16, x: 34, y: 6 });
+        gsap.set("#k3", { rotation: -15, x: -30, y: 4 });
+
         // stage establishes
-        tl.from("#stage", { scaleY: 0.92, opacity: 0, duration: 0.5, ease: "back.out(1.3)", transformOrigin: "50% 100%" }, 0.05);
+        tl.from("#stage", { scaleY: 0.92, opacity: 0, duration: 0.5, ease: "back.out(1.2)", transformOrigin: "50% 100%" }, 0.1);
 
-        // messy stack tumbles in, top-down (the bloated 10+ pages)
-        for (let i = messyCount - 1; i >= 0; i--) {
-          const at = stackEnterT + (messyCount - 1 - i) * 0.07;
-          tl.fromTo("#m" + i,
-            { opacity: 0, y: -70, scale: 0.85 },
-            { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, at);
-        }
+        // the messy pile of 10 fades in, staggered
+        tl.to(["#d3","#d5","#d2","#d4","#d1","#d6","#d7","#k3","#k2","#k1"],
+          { opacity: 1, duration: 0.4, ease: "power2.out", stagger: 0.05 }, 0.35);
+        tl.fromTo("#ten", { opacity: 0, y: -16 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", immediateRender: false }, 0.6);
 
-        // ONE MOTION: the messy tower collapses/simplifies → fades & squishes down,
-        // the clean 3-stack rises crisp out of the same spot
-        tl.to("#messy .sheet", { opacity: 0, y: 120, scaleY: 0.4, duration: 0.55,
-          ease: "power2.in", stagger: 0.03 }, collapseT);
-        tl.fromTo("#clean .sheet",
-          { opacity: 0, y: 80, scale: 0.9 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.5)", stagger: 0.08, immediateRender: false }, collapseT + 0.45);
+        // 7 messy pages fly outward and clear off the card
+        const flyout = [
+          ["#d1", -380, 120, -60], ["#d2", 420, -90, 70], ["#d3", -300, -260, 90],
+          ["#d4", 360, 270, -70], ["#d5", 70, -360, 40], ["#d6", 420, 300, -90], ["#d7", -420, 300, 80],
+        ];
+        flyout.forEach((f, i) => {
+          tl.to(f[0], { x: f[1], y: f[2], rotation: "+=" + f[3], opacity: 0, duration: 0.6, ease: "power2.in" }, 1.9 + i * 0.05);
+        });
+        tl.to("#ten", { opacity: 0, y: -18, duration: 0.4, ease: "power2.in" }, 2.0);
 
-        // orange check seal slams onto the clean stack
-        tl.fromTo("#seal",
-          { opacity: 0, scale: 0.4, rotation: -18 },
-          { opacity: 1, scale: 1, rotation: 0, duration: 0.5, ease: "back.out(2.2)", transformOrigin: "50% 50%", immediateRender: false }, sealT);
+        // the 3 keepers straighten + neaten into a clean fanned stack
+        tl.to("#k3", { rotation: -6, x: 0, y: 0, duration: 0.7, ease: "power3.out" }, 2.35);
+        tl.to("#k2", { rotation: 5,  x: 0, y: 0, duration: 0.7, ease: "power3.out" }, 2.42);
+        tl.to("#k1", { rotation: 0,  x: 0, y: 0, duration: 0.7, ease: "back.out(1.3)" }, 2.48);
 
-        // CAMERA payoff: pan + zoom together (one synced ease) onto the kicker + clean stack
-        // frame world point (~540, ~1040) at scale 1.22 → tx = 540 - s*Px, ty = 960 - s*Py
-        const s = 1.22, Px = 540, Py = 1040;
-        tl.to("#world", { x: 540 - s * Px, y: 960 - s * Py, scale: s, duration: 1.5, ease: "power2.inOut" }, cameraT);
+        // orange glow ignites behind the clean stack
+        tl.fromTo("#glow", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out", transformOrigin: "50% 50%", immediateRender: false }, 2.55);
 
-        // payoff kicker
-        tl.fromTo("#kicker", { opacity: 0, y: -22 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", immediateRender: false }, kickerT);
+        // camera push-in to frame the clean stack (pan + zoom in ONE synced ease)
+        tl.to("#world", { x: -86, y: -182, scale: 1.16, duration: 1.5, ease: "power2.inOut" }, 2.5);
+
+        // "3" payoff + kicker
+        tl.fromTo("#three", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)", immediateRender: false }, 3.05);
+
+        // subtle idle float on the clean stack (finite, seekable)
+        tl.to(["#k1","#k2","#k3"], { y: "-=8", duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: 1 }, 3.7);
 
         window.__timelines["main"] = tl;
       })();
