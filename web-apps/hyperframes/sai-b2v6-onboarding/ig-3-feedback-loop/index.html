@@ -83,9 +83,6 @@
         tl.to("#dot", { opacity: 1, duration: 0.25 }, 2.1);
         tl.fromTo("#orbit", { rotation: 0 }, { rotation: 360, duration: 1.6, ease: "none", repeat: 1, immediateRender: false }, 2.1);
 
-        // gentle camera breathe-in
-        tl.to("#world", { scale: 1.06, y: -26, duration: 1.6, ease: "power2.inOut" }, 1.6);
-
         window.__timelines["main"] = tl;
       })();
     </script>
