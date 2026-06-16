@@ -107,3 +107,7 @@ _memory/github.md
 
 # Note: analytical.db is intentionally tracked (cross-machine sync)
 # Will be removed + .gitignored once Analytical has real users (PII concern)
+
+# HyperFrames per-comp temp artifacts
+**/.verify/
+**/preview.log
