@@ -69,10 +69,33 @@
     border-top: 1px solid #eee;
     padding-top: 14px;
   }
+  .toolbar {
+    width: 8.5in;
+    margin: 24px auto 0;
+    text-align: right;
+  }
+  .dl-btn {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: #1a1a1a;
+    border: none;
+    border-radius: 7px;
+    padding: 11px 22px;
+    cursor: pointer;
+  }
+  .dl-btn:hover { background: #333; }
+  @media print { .toolbar { display: none !important; } }
 </style>
 </head>
 <body>
-<div class="page">
+
+<div class="toolbar">
+  <button class="dl-btn" onclick="downloadPDF()">Download PDF</button>
+</div>
+
+<div class="page" id="voe-doc">
 
   <h1>Verification of Employment</h1>
 
@@ -123,5 +146,20 @@
   </p>
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+  function downloadPDF() {
+    var el = document.getElementById('voe-doc');
+    var opt = {
+      margin: 0,
+      filename: 'Gray-Davis-Verification-of-Employment.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(el).save();
+  }
+</script>
 </body>
 </html>
