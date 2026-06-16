@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Curve color","default":"#F28129"},{"id":"white","type":"color","label":"Axes / grid color","default":"#FFFFFF"},{"id":"curveDuration","type":"number","label":"Curve draw duration (s)","default":2.4},{"id":"strokeWidth","type":"number","label":"Curve stroke width (px)","default":14},{"id":"startZoom","type":"number","label":"Start zoom level","default":2.6},{"id":"endZoom","type":"number","label":"End zoom level","default":1.0}]'>
-=======
-<html lang="en" data-composition-variables='[{"id":"orange","type":"color","label":"Curve color","default":"#F28129"},{"id":"axisColor","type":"color","label":"Axes / grid color","default":"#F28129"},{"id":"curveDuration","type":"number","label":"Curve draw duration (s)","default":2.4},{"id":"strokeWidth","type":"number","label":"Curve stroke width (px)","default":14},{"id":"gridOpacity","type":"number","label":"Grid-line final opacity","default":0.5}]'>
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920">
@@ -48,34 +44,19 @@
         stroke-linecap: round;
       }
 
-<<<<<<< HEAD
       .axis      { stroke-width: 6; }
       .grid-line { stroke-width: 2; opacity: 0.35; }
-=======
-      .axis      { stroke-width: 5; opacity: 1; }
-      .grid-line { stroke-width: 1.75; opacity: 0.5; }
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
 
       .curve {
         fill: none;
         stroke-linecap: round;
         stroke-linejoin: round;
-<<<<<<< HEAD
         filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.3));
-=======
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
       }
 
       .head-dot {
         filter: drop-shadow(0 0 22px rgba(242, 129, 41, 1.0));
       }
-<<<<<<< HEAD
-=======
-
-      .card {
-        filter: drop-shadow(0 14px 36px rgba(0, 0, 0, 0.28));
-      }
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
     </style>
   </head>
   <body>
@@ -83,21 +64,6 @@
       <div id="scene" class="scene clip" data-start="0" data-duration="3.6" data-track-index="1">
         <div id="camera" class="camera" data-layout-allow-overflow>
           <svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
-<<<<<<< HEAD
-=======
-            <defs>
-              <radialGradient id="corner-tint" cx="100%" cy="100%" r="78%">
-                <stop offset="0%"  stop-color="#FFFFFF" stop-opacity="0.95"/>
-                <stop offset="55%" stop-color="#FFFFFF" stop-opacity="0"/>
-              </radialGradient>
-            </defs>
-
-            <g id="card" class="card">
-              <rect x="80" y="520" width="920" height="940" rx="44" ry="44" fill="#F2EFE9"/>
-              <rect x="80" y="520" width="920" height="940" rx="44" ry="44" fill="url(#corner-tint)"/>
-            </g>
-
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
             <g id="grid">
               <line class="grid-line" id="grid-h-1" x1="140" y1="1247" x2="940" y2="1247" data-axis="y" data-pos="1247"/>
               <line class="grid-line" id="grid-h-2" x1="140" y1="1113" x2="940" y2="1113" data-axis="y" data-pos="1113"/>
@@ -126,11 +92,7 @@
         const vars = window.__hyperframes.getVariables();
 
         document.querySelectorAll(".axis, .grid-line").forEach(function (el) {
-<<<<<<< HEAD
           el.setAttribute("stroke", vars.white);
-=======
-          el.setAttribute("stroke", vars.axisColor);
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         });
         const curveEl  = document.getElementById("curve");
         const headDot  = document.getElementById("head-dot");
@@ -139,12 +101,6 @@
         curveEl.setAttribute("stroke-width", vars.strokeWidth);
         headDot.setAttribute("fill", vars.orange);
 
-<<<<<<< HEAD
-=======
-        // Camera locked to identity — full graph visible the entire time, no zoom/pan
-        cameraEl.style.transform = "translate(0px, 0px) scale(1)";
-
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         // === Build exponential curve path ===
         const X0 = 140, X1 = 940;
         const Y_BOT = 1340, Y_TOP = 620;
@@ -171,7 +127,6 @@
         curveEl.style.strokeDasharray  = pathLen;
         curveEl.style.strokeDashoffset = pathLen;
 
-<<<<<<< HEAD
         // === Geometry constants ===
         const SCREEN_CX = 540, SCREEN_CY = 960;
         const CHART_CX  = 540, CHART_CY  = 960;
@@ -202,16 +157,6 @@
         }
 
         // Frame 0 state
-=======
-        // Drive curve dash-offset + head-dot position from a single progress value.
-        function applyProgress(p) {
-          curveEl.style.strokeDashoffset = pathLen * (1 - p);
-          const pt = curveEl.getPointAtLength(p * pathLen);
-          headDot.setAttribute("cx", pt.x);
-          headDot.setAttribute("cy", pt.y);
-        }
-
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         applyProgress(0);
 
         // === Find path-length fraction at which curve crosses each gridline ===
@@ -268,11 +213,7 @@
           if (frac === undefined) return;
           const easedTime = inversePower2InOut(frac) * vars.curveDuration;
           tl.to(g, {
-<<<<<<< HEAD
             opacity: 0.35,
-=======
-            opacity: vars.gridOpacity,
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
             duration: 0.35,
             ease: "power2.inOut"
           }, CURVE_START + easedTime);

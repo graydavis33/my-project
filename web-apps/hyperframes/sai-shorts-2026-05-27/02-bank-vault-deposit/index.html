@@ -40,17 +40,10 @@
       }
 
       /* === Bank card (LEFT) ===
-<<<<<<< HEAD
          background: chroma green so bills passing behind it are occluded.
          Green is keyed out in Premiere; in final composite the card is "transparent"
          (showing Sai's A-roll through it), but bills behind it are NEVER rendered
          orange in source, so they don't reappear when green is keyed out. */
-=======
-         Glossy orange-glass fill: radial specular highlight at top + linear body gradient.
-         Opaque so chroma-key (#00FF00 body bg) keys cleanly around — card surfaces remain
-         as orange-glass overlay in the keyed composite. Bills behind it are still occluded
-         (cards are higher z-index). */
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
       .bank-card {
         display: flex;
         flex-direction: column;
@@ -58,23 +51,7 @@
         justify-content: center;
         width: 280px;
         height: 300px;
-<<<<<<< HEAD
         background: #00FF00;
-=======
-        background:
-          radial-gradient(
-            ellipse 100% 60% at 50% 0%,
-            rgba(255, 220, 180, 0.55) 0%,
-            rgba(255, 200, 150, 0.20) 35%,
-            rgba(255, 180, 120, 0.0) 65%
-          ),
-          linear-gradient(
-            180deg,
-            rgba(255, 168, 88, 1) 0%,
-            rgba(242, 129, 41, 1) 35%,
-            rgba(214, 100, 22, 1) 100%
-          );
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         border-style: solid;
         gap: 18px;
       }
@@ -117,13 +94,8 @@
       }
 
       /* === Vault card (RIGHT) ===
-<<<<<<< HEAD
          Chroma-green fill so bills passing behind it are occluded.
          "Immediately disappear" at the edge — the green covers them sharply. */
-=======
-         Same orange-glass treatment as bank card. Bills are still occluded
-         behind it via z-index — they "disappear into" the vault. */
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
       .vault-card {
         position: relative;
         display: flex;
@@ -132,23 +104,7 @@
         justify-content: center;
         width: 280px;
         height: 300px;
-<<<<<<< HEAD
         background: #00FF00;
-=======
-        background:
-          radial-gradient(
-            ellipse 100% 60% at 50% 0%,
-            rgba(255, 220, 180, 0.55) 0%,
-            rgba(255, 200, 150, 0.20) 35%,
-            rgba(255, 180, 120, 0.0) 65%
-          ),
-          linear-gradient(
-            180deg,
-            rgba(255, 168, 88, 1) 0%,
-            rgba(242, 129, 41, 1) 35%,
-            rgba(214, 100, 22, 1) 100%
-          );
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         border-style: solid;
         gap: 18px;
         overflow: visible;
@@ -158,11 +114,7 @@
       .vault-label {
         font-size: 44px;
         font-weight: 600;
-<<<<<<< HEAD
         color: var(--orange);
-=======
-        color: var(--white);
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         letter-spacing: 0.02em;
       }
@@ -189,11 +141,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-<<<<<<< HEAD
         color: var(--orange);
-=======
-        color: var(--white);
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
         font-weight: 700;
         will-change: transform, opacity;
@@ -264,45 +212,22 @@
         document.documentElement.style.setProperty("--white", vars.white);
         document.documentElement.style.setProperty("--orange", vars.orange);
 
-<<<<<<< HEAD
         // Card styling
-=======
-        // Card styling — orange-glass: white edge, inner top highlight,
-        // inner bottom shadow for depth, outer orange bloom, base drop shadow.
-        const glassShadow = [
-          "inset 0 2px 0 rgba(255, 240, 215, 0.55)",   // top inner highlight (specular)
-          "inset 0 -4px 14px rgba(140, 55, 8, 0.45)",  // bottom inner shadow (depth)
-          "0 0 28px rgba(242, 129, 41, 0.55)",          // outer orange bloom
-          "0 8px 24px rgba(0, 0, 0, 0.28)",             // base drop shadow
-        ].join(", ");
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
         const bankCard = document.getElementById("bank-card");
         const vaultCard = document.getElementById("vault-card");
         bankCard.style.borderWidth = vars.strokeWidth + "px";
         bankCard.style.borderColor = vars.white;
         bankCard.style.borderRadius = vars.cornerRadius + "px";
-<<<<<<< HEAD
         bankCard.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)";
         vaultCard.style.borderWidth = vars.strokeWidth + "px";
         vaultCard.style.borderColor = vars.white;
         vaultCard.style.borderRadius = vars.cornerRadius + "px";
         vaultCard.style.boxShadow = "0 4px 16px rgba(0,0,0,0.25)";
-=======
-        bankCard.style.boxShadow = glassShadow;
-        vaultCard.style.borderWidth = vars.strokeWidth + "px";
-        vaultCard.style.borderColor = vars.white;
-        vaultCard.style.borderRadius = vars.cornerRadius + "px";
-        vaultCard.style.boxShadow = glassShadow;
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
 
         // Text content
         document.getElementById("bank-label").textContent = vars.bankLabel;
         document.getElementById("vault-label").textContent = vars.vaultLabel;
-<<<<<<< HEAD
         document.getElementById("vault-label").style.color = vars.orange;
-=======
-        document.getElementById("vault-label").style.color = vars.white;
->>>>>>> 258d0bd (Session update: Sai Product/Service gold-medal stamp HyperFrames asset)
 
         // SVG stroke / fill colors
         document.querySelectorAll("svg [stroke]").forEach(function (el) {
