@@ -1,18 +1,4 @@
-"""Generate the 4 small lower-third step title cards for Vid 6 (locked Sai title-card style:
-rounded dark bar + orange number badge + white summary, slide-up + fade, transparent/alpha).
-Writes step-N/index.html for each."""
-import os
-HERE = os.path.dirname(os.path.abspath(__file__))
-
-STEPS = [
-    (1, "Review what went wrong"),
-    (2, "Implement the changes"),
-    (3, "Reorder it chronologically"),
-    (4, "Simplify — cut the rest"),
-    (5, "Creators fill out a feedback form"),
-]
-
-TPL = r"""<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -52,10 +38,10 @@ TPL = r"""<!DOCTYPE html>
     <div id="root" data-composition-id="main" data-start="0" data-duration="3" data-width="1080" data-height="1920">
       <div id="scene" class="scene clip" data-start="0" data-duration="3" data-track-index="1">
         <div id="card" class="card">
-          <div id="badge" class="badge"><span>__NUM__</span></div>
+          <div id="badge" class="badge"><span>5</span></div>
           <div class="text">
-            <div id="kick" class="kick">Step __NUM__</div>
-            <div id="label" class="label">__LABEL__</div>
+            <div id="kick" class="kick">Step 5</div>
+            <div id="label" class="label">Creators fill out a feedback form</div>
           </div>
         </div>
       </div>
@@ -74,11 +60,3 @@ TPL = r"""<!DOCTYPE html>
     </script>
   </body>
 </html>
-"""
-
-for num, label in STEPS:
-    d = os.path.join(HERE, f"step-{num}")
-    os.makedirs(d, exist_ok=True)
-    html = TPL.replace("__NUM__", str(num)).replace("__LABEL__", label)
-    open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(html)
-    print("wrote", f"step-{num}/index.html")
