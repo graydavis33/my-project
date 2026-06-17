@@ -1,5 +1,7 @@
 # Workflow: Footage Organizer
 
+> **New here? Start with the [New Hire Operator's Manual](footage-organizer-onboarding.md)** — a teach-from-scratch guide to operating the tool. This file is the dev/iteration reference.
+
 **Status:** LIVE on Mac + Windows
 **Cost:** ~$0.003/clip (Claude Haiku Vision, 4 frames). Re-runs hit the permanent cache = $0.
 **Script:** `python-scripts/footage-organizer/`
