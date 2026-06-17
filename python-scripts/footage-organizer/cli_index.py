@@ -728,7 +728,7 @@ def main():
 
     sub.add_parser("index", help="Scan library and refresh the SQLite index").set_defaults(func=cmd_index)
 
-    p = sub.add_parser("pull", help="Filter index → output folder under 08_QUERY_PULLS/")
+    p = sub.add_parser("pull", help="Filter index → output folder under 07_QUERY_PULLS/")
     p.add_argument("--category")
     p.add_argument("--orientation", choices=["vertical", "horizontal"])
     p.add_argument("--filmed-date", help="YYYY-MM-DD")
