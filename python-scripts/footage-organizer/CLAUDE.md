@@ -92,7 +92,7 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 
 **Hard rules:**
 - Every clip exists in exactly ONE permanent location (`06_FOOTAGE_LIBRARY/`)
-- `08_QUERY_PULLS/` is the ONLY place duplicates are tolerated — and only temporarily, until the edit ships
+- `07_QUERY_PULLS/` is the ONLY place duplicates are tolerated — and only temporarily, until the edit ships
 - `pull-cleanup` deletes pull folders after publish, restoring the no-duplication invariant
 
 **Weekly workflow:**

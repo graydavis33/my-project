@@ -64,7 +64,7 @@ Idempotent. Future weeks are not pre-scaffolded — only weeks that have been to
 
 ### Pull Lifecycle (no-duplication rule)
 
-Every clip lives in ONE permanent location. Pull operations create temp duplicates in `08_QUERY_PULLS/<slug>/`. After the edit ships, run cleanup:
+Every clip lives in ONE permanent location. Pull operations create temp duplicates in `07_QUERY_PULLS/<slug>/`. After the edit ships, run cleanup:
 
 ```bash
 # Interactive: prompts per-folder

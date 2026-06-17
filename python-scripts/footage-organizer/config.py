@@ -89,6 +89,6 @@ VIDEO_EXTENSIONS = {".mp4", ".mov", ".MP4", ".MOV"}
 
 # v2 — index + pull
 INDEX_DB_NAME    = ".footage-index.sqlite"   # lives at the client library root
-PULL_FOLDER_NAME = FOLDER_QUERY_PULLS        # 08_QUERY_PULLS/<slug>/ — Premiere-ready output folders
+PULL_FOLDER_NAME = FOLDER_QUERY_PULLS        # 07_QUERY_PULLS/<slug>/ — Premiere-ready output folders
 # Roots inside the library that the index scans (ORGANIZED is dated; FOOTAGE_LIBRARY is permanent).
 INDEX_SCAN_ROOTS = [FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED]

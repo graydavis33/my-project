@@ -78,7 +78,7 @@ future weeks aren't pre-scaffolded.
 
 ### Hard rule: no permanent duplication
 
-Every clip exists in exactly ONE permanent location. Duplicates only live temporarily in `08_QUERY_PULLS/<slug>/` during active editing. After the video ships:
+Every clip exists in exactly ONE permanent location. Duplicates only live temporarily in `07_QUERY_PULLS/<slug>/` during active editing. After the video ships:
 
 ```bash
 # Interactive — prompts per-folder keep/delete
