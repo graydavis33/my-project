@@ -15,17 +15,19 @@ HERE = Path(__file__).resolve().parent
 HEAD, TAIL = 0.10, 0.25
 W, H = 1280, 720
 
-# src proxy, source-in, source-out, read-along text
-# (B-cam / MVI_5041 timecodes; bcam.mp4 is the 720p proxy)
+# src proxy, source-in, source-out, read-along text, tag, head-pad, tail-pad
+# (B-cam / MVI_5041 timecodes; bcam.mp4 is the 720p proxy). head/tail default to HEAD/TAIL.
 SEGMENTS = [
-    ("bcam.mp4", 26.60, 30.36, "What do you believe about business that almost everyone disagrees with?", "HOOK — your question"),
-    ("bcam.mp4", 67.44, 69.44, "I think business is spiritual.", ""),
-    ("bcam.mp4", 73.10, 78.36, "You learn more about yourself through building something authentically than you learn through anything else.", ""),
-    ("bcam.mp4", 110.88, 115.30, "And in that same sense, the more you align yourself deeply with your morals and ethics,", ""),
-    ("bcam.mp4", 118.16, 123.32, "you'll interestingly find that opportunities start to find you.", ""),
-    ("bcam.mp4", 142.68, 146.48, "The universe starts bringing the right people into your orbit.", ""),
-    ("bcam.mp4", 149.66, 152.00, "And as a result, you start to make more money.", ""),
-    ("bcam.mp4", 156.16, 161.10, "So I'd say, the more aligned you are with your values and ethics, the more money you make in business.", ""),
+    ("bcam.mp4", 26.60, 30.36, "What do you believe about business that almost everyone disagrees with?", "HOOK — your question", None, None),
+    ("bcam.mp4", 67.44, 69.44, "I think business is spiritual.", "", None, None),
+    ("bcam.mp4", 73.10, 78.36, "You learn more about yourself through building something authentically than you learn through anything else.", "", None, None),
+    ("bcam.mp4", 110.88, 115.30, "And in that same sense, the more you align yourself deeply with your morals and ethics,", "", None, None),
+    ("bcam.mp4", 118.16, 123.32, "you'll interestingly find that opportunities start to find you.", "", None, None),
+    # head=0.0: the dropped duplicate's "...orbit." butts right up against "The" with no gap; any head pad grabs a clipped fragment
+    ("bcam.mp4", 142.68, 146.48, "The universe starts bringing the right people into your orbit.", "", 0.0, None),
+    ("bcam.mp4", 149.66, 152.00, "And as a result, you start to make more money.", "", None, None),
+    # tail=0.80: Whisper marks "business." end early; the word rings out — give it room so it isn't clipped
+    ("bcam.mp4", 156.16, 161.10, "So I'd say, the more aligned you are with your values and ethics, the more money you make in business.", "", None, 0.80),
 ]
 
 
@@ -36,9 +38,11 @@ def esc(s):
 def main():
     clips, caps = [], []
     cum_ms = 0  # integer milliseconds -> no float drift, exact touch boundaries
-    for i, (src, sin, sout, text, tag) in enumerate(SEGMENTS):
-        media_in = max(0.0, sin - HEAD)
-        dur_ms = round(((sout + TAIL) - media_in) * 1000)
+    for i, (src, sin, sout, text, tag, head, tail) in enumerate(SEGMENTS):
+        head = HEAD if head is None else head
+        tail = TAIL if tail is None else tail
+        media_in = max(0.0, sin - head)
+        dur_ms = round(((sout + tail) - media_in) * 1000)
         start = cum_ms / 1000
         dur = (dur_ms - 3) / 1000  # 3ms sub-frame guard so float end never overlaps next start
         clips.append(
