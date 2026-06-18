@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  #root { position: relative; width: 1920px; height: 1080px; background: #000; overflow: hidden; font-family: 'Montserrat', sans-serif; }
+  #root video { position: absolute; inset: 0; width: 1920px; height: 1080px; object-fit: cover; z-index: 1; }
+  .capline { position: absolute; left: 0; right: 0; bottom: 120px; text-align: center; opacity: 0; z-index: 5; }
+  .w { display: inline-block; font-weight: 600; font-size: 66px; color: #fff; margin: 0 7px;
+        text-shadow: 0 3px 10px rgba(0,0,0,.9), 0 0 3px rgba(0,0,0,.95); }
+  .kw { color: #F28129; }
+  .bar { display: block; height: 7px; width: 240px; background: #F28129; margin: 14px auto 0; border-radius: 4px;
+          box-shadow: 0 2px 8px rgba(0,0,0,.6); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-width="1920" data-height="1080" data-start="0" data-duration="6.0">
+  <video src="bg.mp4" muted playsinline data-start="0" data-duration="6.0" data-track-index="0"></video>
+  <div class="capline" id="line0"><span class="w" id="l0w0">business</span> <span class="w" id="l0w1">is</span> <span class="w kw" id="l0w2">spiritual</span> </div>
+  <div class="capline" id="line1"><span class="w" id="l1w0">align</span> <span class="w" id="l1w1">your</span> <span class="w kw" id="l1w2">values</span> </div>
+  <div class="capline" id="line2"><span class="w kw" id="l2w0">money</span> <span class="w" id="l2w1">follows</span> <span class="w" id="l2w2">you</span> </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  tl.set("#line0", {opacity: 1}, 0.0);
+  tl.set("#line0", {opacity: 0}, 2.0);
+  tl.set("#line1", {opacity: 1}, 2.0);
+  tl.set("#line1", {opacity: 0}, 4.0);
+  tl.set("#line2", {opacity: 1}, 4.0);
+  tl.from("#l0w0", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 0.15);
+  tl.fromTo("#l0w0", {color: "#F28129"}, {color: "#ffffff", duration: 0.40, ease: "power1.out"}, 0.15);
+  tl.from("#l0w1", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 0.32);
+  tl.fromTo("#l0w1", {color: "#F28129"}, {color: "#ffffff", duration: 0.40, ease: "power1.out"}, 0.32);
+  tl.from("#l0w2", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 0.49);
+  tl.fromTo("#l0w2", {color: "#F28129"}, {color: "#F28129", duration: 0.40, ease: "power1.out"}, 0.49);
+  tl.from("#l1w0", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 2.15);
+  tl.fromTo("#l1w0", {color: "#F28129"}, {color: "#ffffff", duration: 0.40, ease: "power1.out"}, 2.15);
+  tl.from("#l1w1", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 2.32);
+  tl.fromTo("#l1w1", {color: "#F28129"}, {color: "#ffffff", duration: 0.40, ease: "power1.out"}, 2.32);
+  tl.from("#l1w2", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 2.49);
+  tl.fromTo("#l1w2", {color: "#F28129"}, {color: "#F28129", duration: 0.40, ease: "power1.out"}, 2.49);
+  tl.from("#l2w0", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 4.15);
+  tl.fromTo("#l2w0", {color: "#F28129"}, {color: "#F28129", duration: 0.40, ease: "power1.out"}, 4.15);
+  tl.from("#l2w1", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 4.32);
+  tl.fromTo("#l2w1", {color: "#F28129"}, {color: "#ffffff", duration: 0.40, ease: "power1.out"}, 4.32);
+  tl.from("#l2w2", {opacity: 0, y: 12, duration: 0.22, ease: "power2.out"}, 4.49);
+  tl.fromTo("#l2w2", {color: "#F28129"}, {color: "#ffffff", duration: 0.40, ease: "power1.out"}, 4.49);
+
+  window.__timelines["root"] = tl;
+  </script>
+</div>
+</body>
+</html>
