@@ -44,7 +44,7 @@ Built directly with the multicam pipeline (full sources → sync → mlx transcr
 - **TAIL must be ~0.30, not 0.05–0.10.** Whisper marks word-*ends* early, so the old "kill the air → 0.05–0.10 tail" clips trailing words ("people"@22s, "anger"@36s both clipped at 0.0–0.06 tail). REFINED master rule: collapse genuine **held silence between/within** lines, but give each kept word **~0.25–0.30s tail** so it rings. "Kill the air" = remove dead pauses, NOT shave a word's natural decay.
 - **Heed Sai's own cut cues.** He ended with "…I am exactly where I'm supposed to be" then said *"Actually, last part cut out. I think we're good"* — i.e. cut that line. Ending on it felt unresolved. End where content resolves ("…with self-belief and self-love").
 - **Unsalvageable stutter → ask Gray.** Offered keep-clean-but-clipped / keep-natural-delivery / splice. **Gray chose KEEP NATURAL DELIVERY** for the closer.
-- **AUDIO RULE UPDATED:** finals use **B-cam audio ONLY** (the "A-Rode-answer + B-question" mix above is deprecated as of 2026-06-19).
+- **AUDIO RULE:** finals use the **LAV-MIC camera's audio only** — which camera that is VARIES per shoot (one cam carries the lav, the other only the room mic). Confirm/detect per video (lav = cleaner/closer/louder, less reverb). Vid 1–3 = B-cam, but don't assume. (Both the old "B-cam only always" and the older A-answer/B-question blend are deprecated.)
 - **B-roll standard (Gray, 2026-06-19):** **5 horizontal videos per talking point**, no photos, no vertical; primary source = the "B-roll Ep 2" shoot (`Sai/B-roll 06:17:26`) + the horizontal footage library.
 
 ### Earlier batches (carried forward)

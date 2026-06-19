@@ -43,23 +43,27 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 **Library root (`/Volumes/Footage/Sai/` on Mac, `D:/Sai/` on Windows):**
 ```
 00_TEMPLATES/                                            project templates, LUTs, title cards
-01_ORGANIZED/<date>/                                     drop loose footage here for the day's shoot
+01_ORGANIZED/_INBOX/<date>/                              raw drop — the dedicated inbox for unsorted footage
 01_ORGANIZED/<category>/<date>/                          AI-categorized output (post-organize)
+01_ORGANIZED/Batch_NN/Vid_MM/                            batch interview takes during production (filed by `batch`)
 02_ACTIVE_PROJECTS/<format>/W##_MMM-DD-DD/               active editing projects, weekly
 03_DELIVERED/<format>/W##_MMM-DD-DD/                     finished published exports, weekly
 04_ARCHIVE/<format>/W##_MMM-DD-DD/                       retired projects, weekly
-05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/             permanent reusable footage, weekly
+05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/             permanent reusable B-ROLL, by category then week
+05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/             permanent batch interview originals (own scheme, index-skipped)
 06_ASSETS/                                               brand assets, fonts, music, SFX
 07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
 08_AI_EDITS/<pipeline>/<source>/                         AI pipeline outputs grouped by pipeline
 .footage-index.sqlite                                    SQLite index of all clips
 ```
 
+**Two filing systems in the footage library (by design):** `05_FOOTAGE_LIBRARY/<category>/W##_*/` is for reusable **B-roll** (category + week). `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` is for **batch interview originals** — same library, totally different scheme (by batch/vid, no week). The `_`-prefix keeps `_BATCHES` out of the search index, so finished interview takes don't pollute B-roll searches. The index walker now skips ALL `_`-prefixed helper folders (`_INBOX`, `_TO_SORT`, `_BATCHES`).
+
 **Format buckets** (used in 02/03/04): `episodes/`, `shorts/`, `linkedin/`. Same scheme across all three project folders for symmetry.
 
 **Legacy capitalized folders** (`Longform/`, `Shortform/`, `Paid Ads/` in archive; `Onboarding/` in delivered) are **left alone** — they pre-date the weekly scheme and contain mixed content.
 
-`RAW_INCOMING` was eliminated 2026-05-01: Gray drops loose footage directly into `01_ORGANIZED/<date>/` instead. Running the organizer categorizes those loose files in place into `01_ORGANIZED/<category>/<date>/`.
+`RAW_INCOMING` was eliminated 2026-05-01: Gray drops loose footage into the dedicated inbox `01_ORGANIZED/_INBOX/<date>/` (renamed from the bare `01_ORGANIZED/<date>/` on 2026-06-19 so the raw drop and the categorized output never get confused). Running the organizer categorizes those loose files into `01_ORGANIZED/<category>/<date>/` and clears the emptied inbox date folder.
 
 **`ensure_week` scaffolds across all four W##-bucketed locations** (FOOTAGE_LIBRARY × 17 categories + ACTIVE/DELIVERED/ARCHIVE × 3 formats = 26 folders per week). As of v3 Phase 1 (2026-06-10), `index` and `pull` auto-call `ensure_week(today)` first, so the current week is created automatically — no manual Monday step. `create-week` remains for backfilling a specific past/future week. (`ensure_week` is the shared helper in `cli_index.py`; `create-week` and the lazy auto-call both route through it.)
 
@@ -70,6 +74,7 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 
 **v3 Phase 3 — batch command (2026-06-15):**
 - `batch --num N --from <folder> --map "1:Cxxxx-Cyyyy …"` files a batch shoot into `01_ORGANIZED/Batch_NN/Vid_MM/` then re-indexes. The pure move logic (`_file_batch`) is split from the re-index so it's unit-testable without ffprobe.
+- **Move-and-clear (2026-06-19):** after filing, `cmd_batch` removes the `--from` source folder if it's now empty — so pointing `--from` at the inbox (`01_ORGANIZED/_INBOX/<date>/`) leaves the inbox clean. Only deletes when truly empty (unmapped leftovers keep it).
 - `batch_num` / `vid_num` are NEW index columns, **derived from the folder path** by `_batch_vid_from_path` (adjacent `Batch_NN` + `Vid_MM` parts) — same folders-are-truth pattern as `_category_from_path`, so a plain `index` re-derives them.
 - Schema change is **non-destructive**: `index._migrate` runs `ALTER TABLE ADD COLUMN` for the two columns if missing (NOT a rebuild), so the live 800+-clip DB keeps every row. `idx_batch` is created inside `_migrate` (after the columns exist), never in `_SCHEMA` — putting it in `_SCHEMA` crashed migrating an old DB (`CREATE INDEX` ran before `ALTER`).
 - `--map` parsing: `_parse_map` → `_expand_clip_segment` (ranges preserve zero-pad width). `_matching_files` moves Sony sidecars (`C2493M01.XML`) with their clip; a non-digit guard stops `C249` matching `C2493`.
@@ -80,8 +85,10 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - `_find_stage_item` is an exact-name search that PRUNES into a matched dir (returns the project folder whole, not its children); >1 match aborts with a list.
 - Pure file move (`_promote_item`): never copies/deletes/overwrites (dest-exists aborts). Stages 02/03/04 are NOT in `INDEX_SCAN_ROOTS`, so there's no index/ffprobe involvement — that's why it's pure file ops.
 
-**v3.1 — ship (post-delivery cleanup, 2026-06-15):**
-- `ship --video NAME` chains the two cleanup moves after a video is delivered: edit project (02 → 04_ARCHIVE) + raw footage (01 → 05_FOOTAGE_LIBRARY/<video>/<week>). Plan-first: `_ship_plan` returns a `(moves, warnings)` list and moves NOTHING; `cmd_ship` prints it + prompts; `_execute_ship` performs it; then `_reindex` (footage entered an indexed root).
+**v3.1 — ship (post-delivery cleanup, 2026-06-15; footage destination revised 2026-06-19):**
+- `ship --video NAME` chains the two cleanup moves after a video is delivered: edit project (02 → 04_ARCHIVE) + raw footage (01 → 05_FOOTAGE_LIBRARY). Plan-first: `_ship_plan` returns a `(moves, warnings)` list and moves NOTHING; `cmd_ship` prints it + prompts; `_execute_ship` performs it; then `_reindex`.
+- **Footage destination splits by type (2026-06-19):** batch footage (auto-detected `Batch N Vid M` in the video name) → `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` (no week, index-skipped — its own scheme); loose `--footage` shoots → `05_FOOTAGE_LIBRARY/<category>/<week>/` (the b-roll scheme). The old behavior dumped batch footage into `05_FOOTAGE_LIBRARY/<video>/<week>`, mixing it into b-roll — Gray's call to separate them. `batch_dest` in `_ship_plan` carries the batch path; `week_target` is ignored for batch.
+- After ship, the `_reindex` PRUNES the batch clips from the index (they left indexed `01_ORGANIZED` for index-skipped `_BATCHES`) — intentional: source takes are searchable during production, gone from search once shipped.
 - Project found by name (reuses `_find_stage_item`); footage located by parsing `Batch N Vid M` from the video name → `Batch_0N/Vid_0M`, else `--footage`. A missing half → warn + skip (never guesses). Overwrite → abort.
 - The `(moves, warnings)` split is deliberate: a planned folder-watcher reuses `_ship_plan`/`_execute_ship` headless to do "drop file in 03_DELIVERED → auto-plan → approve → execute". The watcher MUST wait for the export to finish writing (file size stable) before planning, or it'll act on a half-written file.
 

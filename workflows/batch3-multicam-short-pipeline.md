@@ -51,7 +51,9 @@ From one interview take (Gray asks a question off-camera, Sai answers, filmed on
 
 ## THE AUDIO RULE (current standard)
 
-**The deliverable audio is the B-cam audio, only.** Once the two cams are synced, every finished export uses the **B-cam's audio track** end to end (it has the clear question and is consistent through the answer). Do **not** mix in A-cam audio. (Earlier Vid 2 used a B-question/A-answer blend — that's deprecated; B-cam-only is the rule now.)
+**Use the audio from whichever camera has the LAV MIC that shoot — it varies.** One camera carries the lav (clean, close, direct); the other only has the on-camera room mic. The deliverable audio (on BOTH the A-cam and B-cam exports) = the **lav-mic camera's audio**, used end to end. Do NOT mix the two cams' audio, and do NOT blend question/answer from different cams.
+
+**How to pick per video:** confirm with Gray which cam had the lav, OR detect it — the lav track is noticeably cleaner/closer (higher speech level, less room reverb) than the other cam's. Vid 1–3 happened to be **B-cam**, but never assume; check each shoot. (The old "B-cam audio only, always" and the even older B-question/A-answer blend are both deprecated.)
 
 ---
 
@@ -93,8 +95,8 @@ Edit `build_cut.py` (`VID`, `SEGMENTS`, `B_OFFSET`, the question-splice) then ru
 - 1920×1080, Montserrat SemiBold white, soft drop shadow, lower-third, 2–3 words/card.
 - Driven by `caption_words.json` (no re-transcription → nothing clips). Output `Vid_NN_captions.mov` (ProRes 4444 alpha).
 
-### 6 — Render finals (A-cam + B-cam versions) — **B-CAM AUDIO ONLY**
-For each angle: video = that angle's CUT, overlay `captions.mov`, **audio = the B-cam CUT's audio track (both versions use B-cam audio).** libx264 crf18, faststart.
+### 6 — Render finals (A-cam + B-cam versions) — **LAV-MIC CAMERA'S AUDIO ONLY**
+For each angle: video = that angle's CUT, overlay `captions.mov`, **audio = the lav-mic camera's audio track (BOTH versions use the same lav audio — see THE AUDIO RULE; it's whichever cam had the lav that shoot, not always B-cam).** libx264 crf18, faststart.
 - **Verify:** decode-clean (`ffmpeg -v error … -f null -`), `freezedetect` finds nothing, both versions equal length.
 - Optional deliverable: `Vid_NN B-cam audio.wav` (B-cam audio of the cut, 48k stereo).
 
@@ -117,7 +119,7 @@ Light proxy of the captioned cut → minimal HyperFrames project (`web-apps/hype
 4. **Watch for retakes** butting a kept line → use the clean take with air after it.
 5. **Concat = re-encode**, never stream-copy → or QuickTime freezes.
 6. **fps-lock both cams to 23.976** so cuts align.
-7. **Deliverable audio = B-cam only.**
+7. **Deliverable audio = the LAV-MIC camera's audio** (varies per shoot — confirm which cam had the lav; not always B-cam).
 8. **B-roll: horizontal-only (display orientation) + never photos.** Everything runs free.
 
 ---
@@ -149,6 +151,6 @@ Light proxy of the captioned cut → minimal HyperFrames project (`web-apps/hype
 - [ ] Synced pair residual ≈ 0 ms.
 - [ ] Both CUT files identical length, ≈0 ms apart, 23.976 fps.
 - [ ] No clipped words at cut joins (longer tail / clean retake).
-- [ ] Finals: decode-clean, no freeze, **B-cam audio**, captions aligned.
+- [ ] Finals: decode-clean, no freeze, **lav-mic camera's audio** (confirmed per shoot), captions aligned.
 - [ ] B-roll: every clip horizontal, zero photos.
 ```

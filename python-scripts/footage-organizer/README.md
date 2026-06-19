@@ -194,6 +194,20 @@ It plans two moves:
 - **Safe:** plan-first, pure moves, never overwrites; if it can't find the project or footage it **warns and skips that half** rather than guessing.
 - The `_ship_plan` / `_execute_ship` split lets a folder-watcher reuse the same engine headless — the planned "drop a file → auto-plan → approve" trigger.
 
+## Order of operations — a batch video, start to finish
+
+Where the **original** A-cam/B-cam files live at each step. The originals move exactly **once** (at ship), and the AI editor never touches them — it only reads them and writes new files to `08_AI_EDITS/`.
+
+| Step | Command | Originals live in |
+|---|---|---|
+| 1. Offload the card | drop files | `01_ORGANIZED/_INBOX/<date>/` |
+| 2. File the batch | `batch --num N --from … --map …` | `01_ORGANIZED/Batch_NN/Vid_MM/` (inbox auto-clears) |
+| 3. AI edit | your AI editor | **stay put**; new clips → `08_AI_EDITS/<pipeline>/<source>/` |
+| 4. Edit + export | Premiere → `03_DELIVERED` | still in `Batch_NN/Vid_MM/` |
+| 5. Ship / cleanup | `ship --video "…Batch N Vid M…"` | → `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` (permanent) |
+
+Index lifecycle: batch originals **are** searchable (tagged `batch_num`/`vid_num`) while in `01_ORGANIZED` during production, then **drop out of the search index** once `ship` files them into `_BATCHES` — by design, so finished source takes don't clutter b-roll searches.
+
 ## v3.2 — Auto-watch delivered → Slack approval (watch_delivered.py)
 
 A background watcher that turns the `ship` engine into the "just drop a file" flow:
