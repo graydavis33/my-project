@@ -144,6 +144,8 @@ Light proxy of the captioned cut → minimal HyperFrames project (`web-apps/hype
 
 **B-roll standard:** 5 horizontal videos per talking point. Primary source = the Ep 2 shoot (`Sai/B-roll 06:17:26`) + the horizontal footage library. Never photos, never vertical.
 
+**Footage lifecycle (Gray's decision, 2026-06-19):** original footage → **organized** (synced, filed, grouped in `01_ORGANIZED/Batch_03`) → **AI edits run** (trim, captions, finals) → once edits are done, the **organized originals get moved to a per-batch folder in `05_FOOTAGE_LIBRARY`** (archival). So `01_ORGANIZED/Batch_03` is just the working bay; after a batch is edited its source clips live in the library. Deliverables (`08_AI_EDITS/Batch_03`) and B-roll pulls (`07_QUERY_PULLS`) are NOT moved. The library batch-folder mechanism is owned by the footage-organizer workflow — don't hand-move originals here unless asked.
+
 ---
 
 ## Verification checklist (before calling a video done)
