@@ -83,7 +83,7 @@ def test_missing_footage_warns(tmp_path):
 
 def test_ambiguous_project_raises(tmp_path):
     (tmp_path / FOLDER_PROJECTS / "shorts" / VIDEO).mkdir(parents=True)
-    (tmp_path / FOLDER_PROJECTS / "episodes" / VIDEO).mkdir(parents=True)
+    (tmp_path / FOLDER_PROJECTS / "longform" / VIDEO).mkdir(parents=True)
     try:
         _ship_plan(tmp_path, VIDEO, None, None, None, None, WEEK)
         assert False, "expected ValueError"

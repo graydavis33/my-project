@@ -42,9 +42,9 @@ def test_find_project_folder(tmp_path):
 
 def test_find_loose_file(tmp_path):
     root = tmp_path / FOLDER_PROJECTS
-    _make_file(root / "episodes", "Ep 1 Final.mp4")
+    _make_file(root / "longform", "Ep 1 Final.mp4")
     found = _find_stage_item(root, "Ep 1 Final.mp4")
-    assert found == [root / "episodes" / "Ep 1 Final.mp4"]
+    assert found == [root / "longform" / "Ep 1 Final.mp4"]
 
 
 def test_find_does_not_descend_into_matched_dir(tmp_path):
@@ -59,7 +59,7 @@ def test_find_does_not_descend_into_matched_dir(tmp_path):
 def test_find_ambiguous_returns_all(tmp_path):
     root = tmp_path / FOLDER_PROJECTS
     _make_project(root / "shorts", "Dup")
-    _make_project(root / "episodes", "Dup")
+    _make_project(root / "longform", "Dup")
     assert len(_find_stage_item(root, "Dup")) == 2
 
 
@@ -91,9 +91,9 @@ def test_promote_active_to_delivered_infers_format(tmp_path):
 
 
 def test_promote_delivered_to_archive(tmp_path):
-    _make_project(tmp_path / FOLDER_DELIVERED / "episodes", "Old Ep")
+    _make_project(tmp_path / FOLDER_DELIVERED / "longform", "Old Ep")
     _promote_item(tmp_path, "Old Ep", "delivered", "archive", None, WEEK)
-    assert (tmp_path / FOLDER_ARCHIVE / "episodes" / WEEK_LABEL / "Old Ep").is_dir()
+    assert (tmp_path / FOLDER_ARCHIVE / "longform" / WEEK_LABEL / "Old Ep").is_dir()
 
 
 def test_promote_no_week_places_loose(tmp_path):
@@ -120,7 +120,7 @@ def test_promote_not_found_raises(tmp_path):
 
 def test_promote_ambiguous_raises(tmp_path):
     _make_project(tmp_path / FOLDER_PROJECTS / "shorts", "Dup")
-    _make_project(tmp_path / FOLDER_PROJECTS / "episodes", "Dup")
+    _make_project(tmp_path / FOLDER_PROJECTS / "longform", "Dup")
     try:
         _promote_item(tmp_path, "Dup", "active", "delivered", None, WEEK)
         assert False, "expected ValueError"

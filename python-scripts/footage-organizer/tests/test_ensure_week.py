@@ -15,7 +15,7 @@ def test_ensure_week_creates_full_week_scaffold(tmp_path):
     assert skipped == 0
     assert (tmp_path / "05_FOOTAGE_LIBRARY" / "interview-solo" / "W02_Apr-20-26").is_dir()
     assert (tmp_path / "02_ACTIVE_PROJECTS" / "shorts" / "W02_Apr-20-26").is_dir()
-    assert (tmp_path / "04_ARCHIVE" / "episodes" / "W02_Apr-20-26").is_dir()
+    assert (tmp_path / "04_ARCHIVE" / "longform" / "W02_Apr-20-26").is_dir()
 
 
 def test_ensure_week_is_idempotent(tmp_path):

@@ -53,15 +53,15 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/             permanent batch interview originals (own scheme, index-skipped)
 06_ASSETS/                                               brand assets, fonts, music, SFX
 07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
-08_AI_EDITS/<format>/<source>/                           AI-edited outputs by format: shorts/ (batch) · longform/ (episodes)
+08_AI_EDITS/<format>/<source>/                           AI-edited outputs by format: shorts/ (batch) · longform/
 .footage-index.sqlite                                    SQLite index of all clips
 ```
 
-**AI edits are filed by content format (2026-06-19):** `08_AI_EDITS/shorts/<source>/` for batch / short-form edits, `08_AI_EDITS/longform/<source>/` for long-form / episode edits. `--setup` creates both buckets. (`longform/` here == the `episodes` content elsewhere; Gray calls it "longform" for AI edits.)
+**AI edits are filed by content format (2026-06-19):** `08_AI_EDITS/shorts/<source>/` for batch / short-form edits, `08_AI_EDITS/longform/<source>/` for long-form edits. `--setup` creates both buckets. The format names match the project buckets below (`longform`/`shorts`/`linkedin`).
 
 **Two filing systems in the footage library (by design):** `05_FOOTAGE_LIBRARY/<category>/W##_*/` is for reusable **B-roll** (category + week). `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` is for **batch interview originals** — same library, totally different scheme (by batch/vid, no week). The `_`-prefix keeps `_BATCHES` out of the search index, so finished interview takes don't pollute B-roll searches. The index walker now skips ALL `_`-prefixed helper folders (`_INBOX`, `_TO_SORT`, `_BATCHES`).
 
-**Format buckets** (used in 02/03/04): `episodes/`, `shorts/`, `linkedin/`. Same scheme across all three project folders for symmetry.
+**Format buckets** (used in 02/03/04): `longform/`, `shorts/`, `linkedin/`. Same scheme across all three project folders for symmetry. (`longform` was renamed from `episodes` on 2026-06-19 — `longform` is the format; "episodes" is just one kind of longform — so it matches `08_AI_EDITS/longform/`. The legacy capitalized `04_ARCHIVE/Longform/` is a separate pre-restructure folder, left alone.)
 
 **Legacy capitalized folders** (`Longform/`, `Shortform/`, `Paid Ads/` in archive; `Onboarding/` in delivered) are **left alone** — they pre-date the weekly scheme and contain mixed content.
 

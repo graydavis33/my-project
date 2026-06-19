@@ -32,13 +32,13 @@ The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIEN
 05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/             permanent batch interview originals (own scheme, index-skipped)
 06_ASSETS/brand · fonts · music · sfx/                   reusable assets
 07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
-08_AI_EDITS/<format>/<source>/                           AI-edited outputs by format: shorts/ (batch) · longform/ (episodes)
+08_AI_EDITS/<format>/<source>/                           AI-edited outputs by format: shorts/ (batch) · longform/
 .footage-index.sqlite                                    SQLite index of every clip
 ```
 
-**AI edits file by content format:** `08_AI_EDITS/shorts/<source>/` (batch / short-form) and `08_AI_EDITS/longform/<source>/` (long-form / episodes). `--setup` creates both buckets.
+**AI edits file by content format:** `08_AI_EDITS/shorts/<source>/` (batch / short-form) and `08_AI_EDITS/longform/<source>/` (long-form). `--setup` creates both buckets. These match the 02/03/04 project buckets.
 
-**Format buckets** under `02_ACTIVE_PROJECTS/`, `03_DELIVERED/`, `04_ARCHIVE/`: `episodes/`, `shorts/`, `linkedin/`. Same shape across all three.
+**Format buckets** under `02_ACTIVE_PROJECTS/`, `03_DELIVERED/`, `04_ARCHIVE/`: `longform/`, `shorts/`, `linkedin/`. Same shape across all three. (`longform` was `episodes` until 2026-06-19 — renamed so the format names are consistent everywhere, incl. `08_AI_EDITS/longform/`.)
 
 **Legacy capitalized folders** (`Longform/`, `Shortform/`, `Paid Ads/`, `Onboarding/`) sit alongside the format buckets and are left alone — they hold pre-restructure mixed content.
 

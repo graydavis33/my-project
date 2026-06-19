@@ -34,7 +34,7 @@ from config import (
     FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BATCHES,
 )
 
-PROJECT_FORMAT_BUCKETS = ["episodes", "linkedin", "shorts"]
+PROJECT_FORMAT_BUCKETS = ["longform", "linkedin", "shorts"]
 from extractor import get_resolution, get_duration, get_shoot_date
 from week_utils import week_label_for, current_week_label
 import index
@@ -534,7 +534,7 @@ def _find_stage_item(stage_root: Path, name: str) -> list:
 
 
 def _infer_format(path: Path, stage_root: Path):
-    """If the item sits inside a format bucket (episodes/linkedin/shorts), return
+    """If the item sits inside a format bucket (longform/linkedin/shorts), return
     that bucket name; otherwise None (caller must then require --format)."""
     rel = path.relative_to(stage_root).parts
     if rel and rel[0] in PROJECT_FORMAT_BUCKETS:

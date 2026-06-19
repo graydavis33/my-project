@@ -79,7 +79,7 @@ There's also a hidden file at the root, `.footage-index.sqlite` — that's the s
 ### Two folders have an extra layer of structure
 
 **`02 / 03 / 04` are split by FORMAT** — the kind of video:
-- `episodes/` (long-form)
+- `longform/` (long-form — renamed from `episodes` on 2026-06-19)
 - `shorts/` (vertical short-form)
 - `linkedin/`
 
@@ -100,7 +100,7 @@ There's also a hidden file at the root, `.footage-index.sqlite` — that's the s
 | **Index** | The searchable database of every clip. "Re-index" = update it after files change. |
 | **Category** | What's in a clip (`interview-solo`, `insert-hands`, …). **= the folder name** it sits in. |
 | **Format** | The video shape: `long-form` (horizontal) or `short-form` (vertical). Auto-detected from the clip's dimensions. |
-| **Format bucket** | The folders `episodes` / `shorts` / `linkedin` inside 02/03/04. |
+| **Format bucket** | The folders `longform` / `shorts` / `linkedin` inside 02/03/04. |
 | **Week label** | A folder like `W09_Jun-8-14`. Week 1 (`W01`) = the week of Apr 15, 2026 (Sai project Day 1). The tool calculates these for you. |
 | **Pull** | Grab a working set of clips out of the library into a temporary folder for editing. |
 | **Slug** | The auto-generated name of a pull folder, e.g. `2026-06-10-vertical`. |
@@ -291,7 +291,7 @@ python cli_index.py --client sai promote --item "Subway Challenge Day 1" --to ar
 - `--item` = the **exact** name of the folder (or file) to move.
 - `--to delivered` automatically pulls from Active; `--to archive` pulls from Delivered. (Override the source with `--from active|delivered` if needed.)
 - Lands in `<stage>/<format>/<current-week>/`. Use `--week 2026-06-10` for a specific week, or `--no-week` to skip the week subfolder.
-- The **format** (episodes/shorts/linkedin) is guessed from where the item currently lives; pass `--format shorts` if it can't tell.
+- The **format** (longform/shorts/linkedin) is guessed from where the item currently lives; pass `--format shorts` if it can't tell.
 
 **Safety:** it only **moves** (never copies or deletes), it **refuses to overwrite** an existing destination, and if the name matches two places it **stops and lists them** so you can be specific.
 

@@ -126,7 +126,7 @@ Light proxy of the captioned cut → minimal HyperFrames project (`web-apps/hype
 
 ## Output layout / filing convention (per video) — locked 2026-06-19
 
-**Deliverables go in a clean per-video folder under `08_AI_EDITS/shorts/Batch_03/` (AI edits file by content format — `shorts/` for batch/short-form, `longform/` for episodes); working files stay in `01_ORGANIZED`; B-roll stays in `07_QUERY_PULLS`.** Naming: `B3_V##_<type>`.
+**Deliverables go in a clean per-video folder under `08_AI_EDITS/shorts/Batch_03/` (AI edits file by content format — `shorts/` for batch/short-form, `longform/` for long-form); working files stay in `01_ORGANIZED`; B-roll stays in `07_QUERY_PULLS`.** Naming: `B3_V##_<type>`.
 
 ```
 08_AI_EDITS/shorts/Batch_03/B3_V## - <Title>/ <- DELIVERABLES (what Gray imports)

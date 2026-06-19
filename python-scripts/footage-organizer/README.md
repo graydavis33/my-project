@@ -171,7 +171,7 @@ python cli_index.py --client sai promote --item "Subway Challenge Day 1" --to ar
 ```
 
 - `--to delivered` moves from `02_ACTIVE_PROJECTS`; `--to archive` moves from `03_DELIVERED` (override with `--from active|delivered`).
-- The item (a file or folder) is found by exact name; its **format bucket is inferred** from where it lives (pass `--format episodes|linkedin|shorts` if it sits outside one).
+- The item (a file or folder) is found by exact name; its **format bucket is inferred** from where it lives (pass `--format longform|linkedin|shorts` if it sits outside one).
 - Lands in `<stage>/<format>/<current-week>/` by default — `--week YYYY-MM-DD` targets a specific week, `--no-week` places it loose under the format bucket.
 - **Never overwrites** (errors if the destination exists) and **never deletes** — it only moves. Ambiguous names (same name in two buckets) abort with a list. These stages aren't indexed, so the SQLite index is untouched.
 
