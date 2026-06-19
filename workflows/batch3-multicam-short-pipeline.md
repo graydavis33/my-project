@@ -130,7 +130,7 @@ Light proxy of the captioned cut → minimal HyperFrames project (`web-apps/hype
 
 ```
 08_AI_EDITS/shorts/Batch_03/B3_V## - <Title>/ <- DELIVERABLES (what Gray imports)
-  ANGLES/    B3_V##_A-cam.mp4   B3_V##_B-cam.mp4     (no captions, B-cam audio)
+  ANGLES/    B3_V##_A-cam.mp4   B3_V##_B-cam.mp4     (no captions, lav-cam audio)
   CAPTIONS/  B3_V##_captions.mov                     (alpha overlay, optional)
   _INFO.txt  (title, sync offset, audio note, cut summary, pointers)
 
