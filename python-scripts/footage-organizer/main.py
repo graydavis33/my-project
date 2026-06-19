@@ -12,7 +12,7 @@ Folder structure (inside each client's library root):
   05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
   06_ASSETS/                                       brand assets, fonts, music, SFX
   07_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
-  08_AI_EDITS/<source>/<pipeline>/                 AI pipeline outputs grouped by source clip
+  08_AI_EDITS/<pipeline>/<source>/                 AI pipeline outputs grouped by pipeline, then source
 
 Usage:
   # First-time setup — create all folders
@@ -98,7 +98,7 @@ def parse_args():
     parser.add_argument(
         "--source",
         metavar="PATH",
-        help="Process this folder directly instead of 01_ORGANIZED/<date>/. "
+        help="Process this folder directly instead of 01_ORGANIZED/_INBOX/<date>/. "
              "Useful for one-off cleanup of loose footage already in the library. "
              "Defaults to MOVE; pass --copy if you want originals preserved.",
     )
@@ -186,6 +186,7 @@ def setup_structure(library, client):
     dirs = [
         os.path.join(library, FOLDER_TEMPLATES),
         os.path.join(library, FOLDER_ORGANIZED),
+        os.path.join(library, FOLDER_ORGANIZED, FOLDER_INBOX),
         os.path.join(library, FOLDER_PROJECTS, "episodes"),
         os.path.join(library, FOLDER_PROJECTS, "shorts"),
         os.path.join(library, FOLDER_PROJECTS, "linkedin"),
@@ -213,14 +214,14 @@ def setup_structure(library, client):
     print()
     print(f"  Folders created:")
     print(f"    {FOLDER_TEMPLATES}/    ← LUTs, Premiere templates, title cards")
-    print(f"    {FOLDER_ORGANIZED}/   ← drop loose footage in <date>/, AI categorizes in place")
+    print(f"    {FOLDER_ORGANIZED}/   ← {FOLDER_INBOX}/<date>/ raw drop → <category>/<date>/ output")
     print(f"    {FOLDER_PROJECTS}/    ← active edits")
     print(f"    {FOLDER_DELIVERED}/   ← finished published exports")
     print(f"    {FOLDER_ARCHIVE}/     ← old/retired projects")
     print(f"    {FOLDER_FOOTAGE_LIB}/  ← {len(CATEGORIES)} category folders, each with week subfolders")
     print(f"    {FOLDER_ASSETS}/      ← brand assets, fonts, music, SFX")
     print()
-    print(f"  Next step: drop today's card into {FOLDER_ORGANIZED}/{date.today().strftime('%Y-%m-%d')}/")
+    print(f"  Next step: drop today's card into {FOLDER_ORGANIZED}/{FOLDER_INBOX}/{date.today().strftime('%Y-%m-%d')}/")
     print(f"  Then run:  python main.py --client {client}\n")
 
 
@@ -254,15 +255,16 @@ def run_organize(client, date_str, move, source_folder=None, format_override=Non
     log_run("footage-organizer")
     library = get_library(client)
 
-    # Default source = 01_ORGANIZED/<date>/ (the loose-drop subfolder).
-    # After organize, files move into 01_ORGANIZED/<category>/<date>/ — same parent folder, just nested.
-    drop_folder   = source_folder or os.path.join(library, FOLDER_ORGANIZED, date_str)
+    # Default source = 01_ORGANIZED/_INBOX/<date>/ (the dedicated raw-drop folder).
+    # After organize, files move into 01_ORGANIZED/<category>/<date>/ — a sibling of
+    # _INBOX, so the raw drop and the categorized output never get confused.
+    drop_folder   = source_folder or os.path.join(library, FOLDER_ORGANIZED, FOLDER_INBOX, date_str)
     organized_dir = os.path.join(library, FOLDER_ORGANIZED)
 
     if not os.path.isdir(drop_folder):
         print(f"\n  Error: drop folder not found: {drop_folder}")
         print(f"  Drop your loose footage there first, then re-run.")
-        print(f"  Expected path: {FOLDER_ORGANIZED}/{date_str}/")
+        print(f"  Expected path: {FOLDER_ORGANIZED}/{FOLDER_INBOX}/{date_str}/")
         sys.exit(1)
 
     print(f"\n  {'=' * 56}")

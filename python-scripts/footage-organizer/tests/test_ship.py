@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from cli_index import _ship_plan, _execute_ship
 from config import (
     FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_ORGANIZED,
-    FOLDER_FOOTAGE_LIB,
+    FOLDER_FOOTAGE_LIB, FOLDER_BATCHES,
 )
 from week_utils import week_label_for
 
@@ -44,8 +44,8 @@ def test_plan_finds_project_and_batch_footage(tmp_path):
     assert proj["dest"] == tmp_path / FOLDER_ARCHIVE / "shorts" / WK / VIDEO
 
     foot = next(m for m in moves if m["what"].startswith("raw footage"))
-    # footage folder (Vid_01) filed under a library folder named after the video
-    assert foot["dest"] == tmp_path / FOLDER_FOOTAGE_LIB / VIDEO / WK / "Vid_01"
+    # batch originals get their OWN scheme: _BATCHES/Batch_NN/Vid_MM, no week folder
+    assert foot["dest"] == tmp_path / FOLDER_FOOTAGE_LIB / FOLDER_BATCHES / "Batch_02" / "Vid_01"
 
 
 def test_batch_vid_parsed_from_video_name(tmp_path):
@@ -109,13 +109,23 @@ def test_execute_moves_everything(tmp_path):
     # project archived
     assert (tmp_path / FOLDER_ARCHIVE / "shorts" / WK / VIDEO / "edit.prproj").exists()
     assert not (tmp_path / FOLDER_PROJECTS / "shorts" / VIDEO).exists()
-    # footage filed
-    assert (tmp_path / FOLDER_FOOTAGE_LIB / VIDEO / WK / "Vid_01" / "C2493.MP4").exists()
+    # footage filed into the batch archive (_BATCHES/Batch_02/Vid_01), out of the b-roll scheme
+    assert (tmp_path / FOLDER_FOOTAGE_LIB / FOLDER_BATCHES / "Batch_02" / "Vid_01" / "C2493.MP4").exists()
     assert not (tmp_path / FOLDER_ORGANIZED / "Batch_02" / "Vid_01").exists()
 
 
-def test_no_week_places_loose(tmp_path):
+def test_batch_footage_ignores_week(tmp_path):
+    # batch originals file by Batch/Vid regardless of week_target — never a week folder
     _mkfile(tmp_path / FOLDER_ORGANIZED / "Batch_02" / "Vid_01" / "C1.MP4")
     moves, _ = _ship_plan(tmp_path, VIDEO, None, None, None, None, None)
     foot = [m for m in moves if m["what"].startswith("raw footage")][0]
-    assert foot["dest"] == tmp_path / FOLDER_FOOTAGE_LIB / VIDEO / "Vid_01"
+    assert foot["dest"] == tmp_path / FOLDER_FOOTAGE_LIB / FOLDER_BATCHES / "Batch_02" / "Vid_01"
+
+
+def test_loose_shoot_still_uses_category_week(tmp_path):
+    # a non-batch --footage shoot keeps the b-roll category/week scheme (unchanged)
+    _mkfile(tmp_path / FOLDER_ORGANIZED / "loose-shoot" / "C1.MP4")
+    moves, _ = _ship_plan(tmp_path, "Random Vlog", None,
+                          "01_ORGANIZED/loose-shoot", "candid-people", None, WEEK)
+    foot = [m for m in moves if m["what"].startswith("raw footage")][0]
+    assert foot["dest"] == tmp_path / FOLDER_FOOTAGE_LIB / "candid-people" / WK / "loose-shoot"

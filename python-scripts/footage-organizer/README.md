@@ -24,7 +24,7 @@ python main.py --client sai --archive 2026-04-17
 ```
 
 ## How It Works
-1. Scans the dated `01_ORGANIZED/{date}/` folder for `.mp4` / `.mov` files
+1. Scans the dated `01_ORGANIZED/_INBOX/{date}/` drop folder for `.mp4` / `.mov` files
 2. Detects format by orientation: horizontal → `long-form`, vertical → `short-form`
 3. Extracts 4 frames per video (at 20/40/60/80% through the clip) via ffmpeg
 4. Sends all 4 frames to Claude Haiku Vision in one API call
@@ -126,7 +126,7 @@ python cli_index.py --client sai pull --category interview-solo --filmed-after 2
 ### Daily Sai loop
 
 ```
-1. Dump card → 01_ORGANIZED/<today>/
+1. Dump card → 01_ORGANIZED/_INBOX/<today>/
 2. python main.py --client sai          (Vision categorizes + files into FOOTAGE_LIBRARY/)
 3. python cli_index.py --client sai index   (refresh the SQLite index)
 4. As you edit, pull working sets:
@@ -185,7 +185,9 @@ python cli_index.py --client sai ship --video "Batch 2 Vid 1 - 10 Truths About A
 
 It plans two moves:
 1. The matching **edit project** in `02_ACTIVE_PROJECTS` → `04_ARCHIVE/<format>/<week>/`.
-2. The video's **raw footage** in `01_ORGANIZED` → `05_FOOTAGE_LIBRARY/<video-name>/<week>/`, then re-indexes.
+2. The video's **raw footage** in `01_ORGANIZED` → its permanent home, then re-indexes. The destination depends on the footage type:
+   - **Batch interview originals** (`Batch_NN/Vid_MM`, auto-detected from the video name) → `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` — their own filing system, by batch/vid, **no week folder**, and **kept out of the b-roll search index** (the `_` prefix). A finished batch's source takes won't clutter footage searches.
+   - **Loose b-roll shoots** (passed with `--footage`) → `05_FOOTAGE_LIBRARY/<category>/<week>/` — the normal category/week b-roll scheme.
 
 - It finds the project by name; footage is located by parsing `Batch N Vid M` from the video name, or you pass `--footage <folder>`.
 - Overrides: `--project "exact name"`, `--footage <path>`, `--category <library subfolder>`, `--format`, `--week`, `--no-week`, `--yes` (skip the prompt).
