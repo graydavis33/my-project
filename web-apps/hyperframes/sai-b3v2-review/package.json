@@ -1,0 +1,9 @@
+{
+  "name": "sai-b3v2-review",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.6.51 preview",
+    "check": "npx --yes hyperframes@0.6.51 lint && npx --yes hyperframes@0.6.51 validate && npx --yes hyperframes@0.6.51 inspect"
+  }
+}
