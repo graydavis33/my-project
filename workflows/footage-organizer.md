@@ -22,12 +22,14 @@ The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIEN
 
 ```
 00_TEMPLATES/                                            LUTs, title cards, Premiere templates
-01_ORGANIZED/<date>/                                     drop loose footage here for the day's shoot
+01_ORGANIZED/_INBOX/<date>/                              raw drop — the dedicated inbox for unsorted footage
 01_ORGANIZED/<category>/<date>/                          AI-categorized output (post-organize)
+01_ORGANIZED/Batch_NN/Vid_MM/                            batch interview takes during production (filed by `batch`)
 02_ACTIVE_PROJECTS/<format>/W##_MMM-DD-DD/               active editing projects, weekly
 03_DELIVERED/<format>/W##_MMM-DD-DD/                     finished published exports, weekly
 04_ARCHIVE/<format>/W##_MMM-DD-DD/                       retired projects, weekly
-05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/             permanent reusable footage, weekly
+05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/             permanent reusable B-ROLL, by category then week
+05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/             permanent batch interview originals (own scheme, index-skipped)
 06_ASSETS/brand · fonts · music · sfx/                   reusable assets
 07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
 08_AI_EDITS/<pipeline>/<source>/                         AI pipeline outputs grouped by pipeline
@@ -38,7 +40,7 @@ The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIEN
 
 **Legacy capitalized folders** (`Longform/`, `Shortform/`, `Paid Ads/`, `Onboarding/`) sit alongside the format buckets and are left alone — they hold pre-restructure mixed content.
 
-`RAW_INCOMING` was removed in the 2026-05-01 restructure — Gray now drops loose footage directly into `01_ORGANIZED/<date>/` and the organize command categorizes in place.
+`RAW_INCOMING` was removed in the 2026-05-01 restructure — Gray drops loose footage into the dedicated inbox `01_ORGANIZED/_INBOX/<date>/` (renamed from the bare `01_ORGANIZED/<date>/` on 2026-06-19 so the raw drop and the categorized output never collide) and the organize command categorizes in place, then clears the emptied inbox date folder.
 
 Archive subfolders now use the **week label** (`W##_MMM-DD-DD`), not the exact shoot date. Week numbering: W01 = the ISO week containing 2026-04-15 (Sai project Day 1). All archive operations route through `week_utils.week_label_for(date)`.
 
@@ -97,7 +99,7 @@ python main.py --client sai --date old-broll
 # Default mode is MOVE (RAW folder deleted after). Pass --copy to keep originals.
 python main.py --client sai --copy
 
-# Process loose footage already in the library (e.g., 01_ORGANIZED/<date>/ flat dump).
+# Process loose footage already in the library (e.g., a 01_ORGANIZED/_INBOX/<date>/ flat dump).
 # --source defaults to MOVE; --format overrides orientation detection; --top-level-only
 # skips subdirs (existing categorized output, Premiere project files, etc.)
 python main.py --client sai --source "D:/Sai/01_ORGANIZED/2026-04-21" --date 2026-04-21 --format short-form --top-level-only
@@ -129,7 +131,7 @@ Category names map directly to folder names. Use the eval harness before adding 
 
 ## What It Does (Step by Step)
 
-1. Reads `01_ORGANIZED/{date}/` (recursive — finds `.mp4` / `.mov`)
+1. Reads `01_ORGANIZED/_INBOX/{date}/` (recursive — finds `.mp4` / `.mov`)
 2. Reads width/height with ffprobe → picks `long-form/` or `short-form/`
 3. Checks `.cache.json` (keyed by filename + filesize) — skips analysis if hit
 4. Extracts 4 frames per clip at 20/40/60/80% via ffmpeg
@@ -258,7 +260,7 @@ After a finished video lands in `03_DELIVERED`, `ship` archives its edit project
 python cli_index.py --client sai ship --video "<delivered video name>"
 ```
 
-- Plans: project `02_ACTIVE_PROJECTS` → `04_ARCHIVE`; footage `01_ORGANIZED` → `05_FOOTAGE_LIBRARY/<video>/<week>/` (then re-indexes).
+- Plans: project `02_ACTIVE_PROJECTS` → `04_ARCHIVE`; footage `01_ORGANIZED` → the library (then re-indexes). Footage destination splits by type (2026-06-19): **batch** originals (auto-detected `Batch N Vid M`) → `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` (own scheme, no week, index-skipped); **loose** `--footage` shoots → `05_FOOTAGE_LIBRARY/<category>/<week>/` (b-roll scheme).
 - Footage located by parsing `Batch N Vid M` from the name, or `--footage <folder>`. Overrides: `--project`, `--category`, `--format`, `--week`/`--no-week`, `--yes`.
 - **Safe:** plan-first (nothing moves until you confirm), pure moves, never overwrites; warns + skips a half it can't locate instead of guessing. `_ship_plan`/`_execute_ship` are split so a future folder-watcher can reuse the engine headless.
 

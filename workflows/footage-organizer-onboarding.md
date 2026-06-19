@@ -301,7 +301,7 @@ python cli_index.py --client sai promote --item "Subway Challenge Day 1" --to ar
 
 **What it does:** This is the everyday "I'm done, clean up after me" command. After a finished video lands in `03_DELIVERED`, `ship` does **two** chores at once:
 1. Moves the **edit project** from `02_ACTIVE_PROJECTS` → `04_ARCHIVE`.
-2. Moves the **raw footage** from `01_ORGANIZED` → `05_FOOTAGE_LIBRARY/<video-name>/<week>/`, then re-indexes.
+2. Moves the **raw footage** from `01_ORGANIZED` into the library, then re-indexes. A **batch** video's interview originals go to `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` (their own scheme, kept out of b-roll search); a loose `--footage` shoot goes to `05_FOOTAGE_LIBRARY/<category>/<week>/`.
 
 **It shows you the plan first and moves NOTHING until you type `y`.**
 
@@ -377,7 +377,7 @@ python cli_index.py --client sai pull-cleanup --older-than 30
 
 You won't run this unless Gray re-enables AI sorting. For completeness, it categorizes raw clips with Claude Vision:
 ```bash
-python main.py --client sai                 # categorize today's 01_ORGANIZED/<date>/ dump
+python main.py --client sai                 # categorize today's 01_ORGANIZED/_INBOX/<date>/ dump
 python main.py --client sai --date 2026-06-10
 python main.py --client sai --archive 2026-06-10   # file an organized date into the library
 ```

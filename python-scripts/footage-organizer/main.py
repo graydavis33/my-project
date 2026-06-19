@@ -336,7 +336,7 @@ def run_organize(client, date_str, move, source_folder=None, format_override=Non
 
     real_skips = [s for s in skipped if not s.startswith("._")]
     if not real_skips and source_folder is None:
-        # Default-mode cleanup: drop folder is 01_ORGANIZED/<date>/ — empty after MOVE.
+        # Default-mode cleanup: drop folder is 01_ORGANIZED/_INBOX/<date>/ — empty after MOVE.
         # Only delete if truly empty (don't want to nuke a category folder by accident).
         if os.path.isdir(drop_folder) and not os.listdir(drop_folder):
             os.rmdir(drop_folder)
