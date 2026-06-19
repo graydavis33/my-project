@@ -202,9 +202,11 @@ Where the **original** A-cam/B-cam files live at each step. The originals move e
 |---|---|---|
 | 1. Offload the card | drop files | `01_ORGANIZED/_INBOX/<date>/` |
 | 2. File the batch | `batch --num N --from … --map …` | `01_ORGANIZED/Batch_NN/Vid_MM/` (inbox auto-clears) |
-| 3. AI edit | your AI editor | **stay put**; new clips → `08_AI_EDITS/<pipeline>/<source>/` |
+| 3. AI edit | your AI editor | **stay put**; new clips → `08_AI_EDITS/shorts/<source>/` |
 | 4. Edit + export | Premiere → `03_DELIVERED` | still in `Batch_NN/Vid_MM/` |
 | 5. Ship / cleanup | `ship --video "…Batch N Vid M…"` | → `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` (permanent) |
+
+**AI edits are filed by content format** — `08_AI_EDITS/<format>/<source>/`: batch/short-form edits go under `shorts/`, long-form/episode edits under `longform/`. So a batch video's edited clips land in `08_AI_EDITS/shorts/<source>/` (step 3), and a long-form edit lands in `08_AI_EDITS/longform/<source>/`.
 
 Index lifecycle: batch originals **are** searchable (tagged `batch_num`/`vid_num`) while in `01_ORGANIZED` during production, then **drop out of the search index** once `ship` files them into `_BATCHES` — by design, so finished source takes don't clutter b-roll searches.
 

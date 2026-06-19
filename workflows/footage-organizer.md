@@ -32,9 +32,11 @@ The organizer operates on a client library root (`SAI_LIBRARY_ROOT` or `GRAYDIEN
 05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/             permanent batch interview originals (own scheme, index-skipped)
 06_ASSETS/brand · fonts · music · sfx/                   reusable assets
 07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
-08_AI_EDITS/<pipeline>/<source>/                         AI pipeline outputs grouped by pipeline
+08_AI_EDITS/<format>/<source>/                           AI-edited outputs by format: shorts/ (batch) · longform/ (episodes)
 .footage-index.sqlite                                    SQLite index of every clip
 ```
+
+**AI edits file by content format:** `08_AI_EDITS/shorts/<source>/` (batch / short-form) and `08_AI_EDITS/longform/<source>/` (long-form / episodes). `--setup` creates both buckets.
 
 **Format buckets** under `02_ACTIVE_PROJECTS/`, `03_DELIVERED/`, `04_ARCHIVE/`: `episodes/`, `shorts/`, `linkedin/`. Same shape across all three.
 

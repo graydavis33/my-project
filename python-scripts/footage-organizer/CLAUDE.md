@@ -53,9 +53,11 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/             permanent batch interview originals (own scheme, index-skipped)
 06_ASSETS/                                               brand assets, fonts, music, SFX
 07_QUERY_PULLS/<slug>/                                   temp query results — deleted after publish
-08_AI_EDITS/<pipeline>/<source>/                         AI pipeline outputs grouped by pipeline
+08_AI_EDITS/<format>/<source>/                           AI-edited outputs by format: shorts/ (batch) · longform/ (episodes)
 .footage-index.sqlite                                    SQLite index of all clips
 ```
+
+**AI edits are filed by content format (2026-06-19):** `08_AI_EDITS/shorts/<source>/` for batch / short-form edits, `08_AI_EDITS/longform/<source>/` for long-form / episode edits. `--setup` creates both buckets. (`longform/` here == the `episodes` content elsewhere; Gray calls it "longform" for AI edits.)
 
 **Two filing systems in the footage library (by design):** `05_FOOTAGE_LIBRARY/<category>/W##_*/` is for reusable **B-roll** (category + week). `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` is for **batch interview originals** — same library, totally different scheme (by batch/vid, no week). The `_`-prefix keeps `_BATCHES` out of the search index, so finished interview takes don't pollute B-roll searches. The index walker now skips ALL `_`-prefixed helper folders (`_INBOX`, `_TO_SORT`, `_BATCHES`).
 

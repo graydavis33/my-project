@@ -12,7 +12,7 @@ Folder structure (inside each client's library root):
   05_FOOTAGE_LIBRARY/<category>/W##_MMM-DD-DD/     permanent reusable footage, weekly
   06_ASSETS/                                       brand assets, fonts, music, SFX
   07_QUERY_PULLS/<slug>/                           temp query results — deleted after publish
-  08_AI_EDITS/<pipeline>/<source>/                 AI pipeline outputs grouped by pipeline, then source
+  08_AI_EDITS/<format>/<source>/                   AI-edited outputs by format (shorts | longform), then source
 
 Usage:
   # First-time setup — create all folders
@@ -54,6 +54,7 @@ from config import (
     CLIENT_ROOTS, VIDEO_EXTENSIONS,
     FOLDER_TEMPLATES, FOLDER_ORGANIZED, FOLDER_INBOX, FOLDER_PROJECTS,
     FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_FOOTAGE_LIB, FOLDER_ASSETS,
+    FOLDER_AI_EDITS, AI_EDIT_FORMAT_BUCKETS,
     CATEGORIES,
     FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
 )
@@ -201,6 +202,9 @@ def setup_structure(library, client):
         os.path.join(library, FOLDER_ASSETS, "sfx"),
         os.path.join(library, FOLDER_ASSETS, "brand"),
     ]
+    # AI-edited outputs are filed by content format: 08_AI_EDITS/{shorts,longform}/<source>/
+    for bucket in AI_EDIT_FORMAT_BUCKETS:
+        dirs.append(os.path.join(library, FOLDER_AI_EDITS, bucket))
     for cat in CATEGORIES:
         dirs.append(os.path.join(library, FOLDER_FOOTAGE_LIB, cat))
 

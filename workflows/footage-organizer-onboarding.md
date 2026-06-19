@@ -72,7 +72,7 @@ Everything lives under one "library root" per client. On Gray's Mac that's `/Vol
 | `05_FOOTAGE_LIBRARY/` | **The permanent home** for all reusable raw clips, sorted by category. |
 | `06_ASSETS/` | Brand assets — fonts, music, sound effects, graphics (the HyperFrames renders go here). |
 | `07_QUERY_PULLS/` | **Temporary scratch folders.** Output of `pull`. Delete after the edit ships. |
-| `08_AI_EDITS/` | Outputs from the AI editing pipelines, grouped by pipeline. |
+| `08_AI_EDITS/` | Outputs from the AI editing pipelines, grouped by content **format** then source — `shorts/<source>/` (batch / short-form) and `longform/<source>/` (long-form / episodes). |
 
 There's also a hidden file at the root, `.footage-index.sqlite` — that's the searchable database. You never open it directly; the tool manages it.
 

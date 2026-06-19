@@ -126,10 +126,10 @@ Light proxy of the captioned cut → minimal HyperFrames project (`web-apps/hype
 
 ## Output layout / filing convention (per video) — locked 2026-06-19
 
-**Deliverables go in a clean per-video folder under `08_AI_EDITS/Batch_03/`; working files stay in `01_ORGANIZED`; B-roll stays in `07_QUERY_PULLS`.** Naming: `B3_V##_<type>`.
+**Deliverables go in a clean per-video folder under `08_AI_EDITS/shorts/Batch_03/` (AI edits file by content format — `shorts/` for batch/short-form, `longform/` for episodes); working files stay in `01_ORGANIZED`; B-roll stays in `07_QUERY_PULLS`.** Naming: `B3_V##_<type>`.
 
 ```
-08_AI_EDITS/Batch_03/B3_V## - <Title>/        <- DELIVERABLES (what Gray imports)
+08_AI_EDITS/shorts/Batch_03/B3_V## - <Title>/ <- DELIVERABLES (what Gray imports)
   ANGLES/    B3_V##_A-cam.mp4   B3_V##_B-cam.mp4     (no captions, B-cam audio)
   CAPTIONS/  B3_V##_captions.mov                     (alpha overlay, optional)
   _INFO.txt  (title, sync offset, audio note, cut summary, pointers)
@@ -144,7 +144,7 @@ Light proxy of the captioned cut → minimal HyperFrames project (`web-apps/hype
 
 **B-roll standard:** 5 horizontal videos per talking point. Primary source = the Ep 2 shoot (`Sai/B-roll 06:17:26`) + the horizontal footage library. Never photos, never vertical.
 
-**Footage lifecycle (Gray's decision, 2026-06-19):** original footage → **organized** (synced, filed, grouped in `01_ORGANIZED/Batch_03`) → **AI edits run** (trim, captions, finals) → once edits are done, the **organized originals get moved to a per-batch folder in `05_FOOTAGE_LIBRARY`** (archival). So `01_ORGANIZED/Batch_03` is just the working bay; after a batch is edited its source clips live in the library. Deliverables (`08_AI_EDITS/Batch_03`) and B-roll pulls (`07_QUERY_PULLS`) are NOT moved. The library batch-folder mechanism is owned by the footage-organizer workflow — don't hand-move originals here unless asked.
+**Footage lifecycle (Gray's decision, 2026-06-19):** original footage → **organized** (synced, filed, grouped in `01_ORGANIZED/Batch_03`) → **AI edits run** (trim, captions, finals) → once edits are done, the **organized originals get moved to `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/`** (archival — its own filing system, index-skipped; done by the footage-organizer `ship` command). So `01_ORGANIZED/Batch_03` is just the working bay; after a batch is edited its source clips live in the library's `_BATCHES` area. Deliverables (`08_AI_EDITS/shorts/Batch_03`) and B-roll pulls (`07_QUERY_PULLS`) are NOT moved. The library batch-folder mechanism is owned by the footage-organizer workflow — don't hand-move originals here unless asked.
 
 ---
 

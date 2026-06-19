@@ -44,7 +44,11 @@ FOLDER_ARCHIVE        = "04_ARCHIVE"         # Retired project files, dated subf
 FOLDER_FOOTAGE_LIB    = "05_FOOTAGE_LIBRARY" # Reusable footage: category/ → week/
 FOLDER_ASSETS         = "06_ASSETS"          # Brand assets, fonts, music, SFX
 FOLDER_QUERY_PULLS    = "07_QUERY_PULLS"     # Temp query result folders — deleted after publish
-FOLDER_AI_EDITS       = "08_AI_EDITS"        # AI pipeline outputs grouped by pipeline, then source
+FOLDER_AI_EDITS       = "08_AI_EDITS"        # AI-edited outputs, grouped by content format then source
+# AI-edited outputs are filed by CONTENT FORMAT first: 08_AI_EDITS/<format>/<source>/.
+#   shorts/   — batch / short-form AI edits (e.g. 08_AI_EDITS/shorts/Batch_03/B3_V## - Title/)
+#   longform/ — long-form / episode AI edits (e.g. 08_AI_EDITS/longform/Longform-Pod/)
+AI_EDIT_FORMAT_BUCKETS = ["shorts", "longform"]
 
 # Permanent home for batch interview originals — lives INSIDE the footage library
 # but runs on its OWN filing system: by Batch_NN/Vid_MM (NOT the category/week
