@@ -84,9 +84,14 @@ def _walk_videos(root: Path):
         # Prune Premiere project subdirs — they generate .mp4 preview renders
         # that are NOT real footage. Skip names like "Adobe Premiere Pro Video
         # Previews/" and any "*.PRV" sidecar dirs.
+        # Also prune underscore-prefixed helper folders (_INBOX raw drop, _TO_SORT
+        # holding area) — those hold un-categorized footage and must stay out of
+        # the searchable index (same convention ensure_week uses to skip them).
         dirnames[:] = [
             d for d in dirnames
-            if not d.startswith(_PREMIERE_DIR_PREFIXES) and not d.endswith(".PRV")
+            if not d.startswith(_PREMIERE_DIR_PREFIXES)
+            and not d.endswith(".PRV")
+            and not d.startswith("_")
         ]
         for name in filenames:
             # Mac on exFAT sprinkles `._<name>` AppleDouble sidecars + `.DS_Store`.

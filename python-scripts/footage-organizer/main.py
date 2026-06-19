@@ -4,7 +4,7 @@ Analyzes raw video using Claude AI and organizes by format + content type.
 
 Folder structure (inside each client's library root):
   00_TEMPLATES/                                    LUTs, title cards, Premiere templates
-  01_ORGANIZED/<date>/                             drop loose footage here; categorizes in place
+  01_ORGANIZED/_INBOX/<date>/                      drop raw, unsorted footage here
   01_ORGANIZED/<category>/<date>/                  categorized output (post-organize)
   02_ACTIVE_PROJECTS/                              active editing projects
   03_DELIVERED/                                    finished published exports
@@ -18,7 +18,7 @@ Usage:
   # First-time setup — create all folders
   python main.py --client sai --setup
 
-  # Organize today's drop (defaults to 01_ORGANIZED/<today>/)
+  # Organize today's drop (defaults to 01_ORGANIZED/_INBOX/<today>/)
   python main.py --client sai
 
   # Organize a specific date

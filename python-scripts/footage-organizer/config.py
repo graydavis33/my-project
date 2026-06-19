@@ -27,11 +27,17 @@ CLIENT_ROOTS = {
 }
 
 # Top-level folder names inside each client library root
-# Workflow: drop loose footage into 01_ORGANIZED/<date>/ → run organize → clips
-# get categorized into 01_ORGANIZED/<category>/<date>/ → after publishing video,
-# run --archive <date> → clips move to 05_FOOTAGE_LIBRARY/<category>/W##_*/.
+# Workflow: drop loose footage into 01_ORGANIZED/_INBOX/<date>/ → run organize →
+# clips get categorized into 01_ORGANIZED/<category>/<date>/ → after publishing
+# video, run --archive <date> → clips move to 05_FOOTAGE_LIBRARY/<category>/W##_*/.
 FOLDER_TEMPLATES      = "00_TEMPLATES"      # Reusable project templates, LUTs, title cards
-FOLDER_ORGANIZED      = "01_ORGANIZED"      # Drop loose footage here; AI categorizes in place
+FOLDER_ORGANIZED      = "01_ORGANIZED"      # Holds the _INBOX drop + the categorized output
+# Dedicated drop folder for raw, unsorted footage. Lives INSIDE 01_ORGANIZED so the
+# inbox and the categorized output never get confused (the old flow dropped loose
+# footage straight into 01_ORGANIZED/<date>/, which collided with <category>/<date>/).
+# Underscore prefix marks it a helper folder — the index walker skips it, so raw
+# inbox clips are never indexed as a bogus "_INBOX" category.
+FOLDER_INBOX          = "_INBOX"            # 01_ORGANIZED/_INBOX/<date>/ — drop raw footage here
 FOLDER_PROJECTS       = "02_ACTIVE_PROJECTS" # Active editing projects
 FOLDER_DELIVERED      = "03_DELIVERED"       # Finished exports by format, then date
 FOLDER_ARCHIVE        = "04_ARCHIVE"         # Retired project files, dated subfolders
