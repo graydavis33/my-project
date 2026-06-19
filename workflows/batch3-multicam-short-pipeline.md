@@ -122,16 +122,25 @@ Light proxy of the captioned cut → minimal HyperFrames project (`web-apps/hype
 
 ---
 
-## Output layout (per video)
+## Output layout / filing convention (per video) — locked 2026-06-19
+
+**Deliverables go in a clean per-video folder under `08_AI_EDITS/Batch_03/`; working files stay in `01_ORGANIZED`; B-roll stays in `07_QUERY_PULLS`.** Naming: `B3_V##_<type>`.
 
 ```
-01_ORGANIZED/Batch_03/Vid_NN/
+08_AI_EDITS/Batch_03/B3_V## - <Title>/        <- DELIVERABLES (what Gray imports)
+  ANGLES/    B3_V##_A-cam.mp4   B3_V##_B-cam.mp4     (no captions, B-cam audio)
+  CAPTIONS/  B3_V##_captions.mov                     (alpha overlay, optional)
+  _INFO.txt  (title, sync offset, audio note, cut summary, pointers)
+
+07_QUERY_PULLS/b3v##-broll/<beat>/             <- B-ROLL: 5 horizontal videos per talking point
+                                                  (beats numbered by script order; no photos, no vertical)
+
+01_ORGANIZED/Batch_03/Vid_NN/                  <- WORKING (intermediates; safe to delete)
   Synced/  Vid_NN_{A,B}-cam_synced.mp4  (+ A-cam .json transcript)
-  Cut/     Vid_NN_{A,B}-cam_CUT.mp4   Vid_NN_captions.mov
-           Vid_NN ... - {A,B}-cam FINAL.mp4   (captions burned, B-cam audio)
-           caption_words.json   cut_plan.txt
-07_QUERY_PULLS/b3vNN-broll-deep/<beat>/   (horizontal video clips + _PULL-MANIFEST.md)
+  Cut/     Vid_NN_{A,B}-cam_CUT.mp4   Vid_NN_captions.mov   caption_words.json   cut_plan.txt
 ```
+
+**B-roll standard:** 5 horizontal videos per talking point. Primary source = the Ep 2 shoot (`Sai/B-roll 06:17:26`) + the horizontal footage library. Never photos, never vertical.
 
 ---
 

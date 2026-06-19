@@ -31,7 +31,7 @@ from config import (
     CATEGORIES, CLIENT_ROOTS, VIDEO_EXTENSIONS, INDEX_DB_NAME, PULL_FOLDER_NAME,
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
     FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
-    FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE,
+    FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BATCHES,
 )
 
 PROJECT_FORMAT_BUCKETS = ["episodes", "linkedin", "shorts"]
@@ -491,6 +491,12 @@ def cmd_batch(args):
         for name in result["unmapped"]:
             print(f"      {name}")
 
+    # Move-and-clear: once everything's filed into Batch_NN/Vid_MM, drop the now-empty
+    # source (e.g. the _INBOX/<date>/ drop folder) so the inbox doesn't linger empty.
+    if source.is_dir() and not any(source.iterdir()):
+        source.rmdir()
+        print(f"  Cleared empty source folder: {source}")
+
     db_path = _db(client)
     added, skipped, removed = _reindex(library, db_path)
     print(f"\n  Re-indexed: {added} clip(s), skipped {skipped}, removed {removed} missing")
@@ -649,22 +655,34 @@ def _ship_plan(library: Path, video: str, project_name, footage_path,
                         f"(pass --project to point at it)")
 
     # 2) raw footage (01_ORGANIZED) → 05_FOOTAGE_LIBRARY
+    # Two filing systems on purpose:
+    #   - batch interview originals → 05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/
+    #     (by batch/vid, NO week, index-skipped — its own system, kept off b-roll search)
+    #   - loose b-roll shoots (--footage) → 05_FOOTAGE_LIBRARY/<category>/<week>/<folder>
     fsrc = None
+    batch_dest = None
     if footage_path:
         p = Path(footage_path)
         fsrc = p if p.is_absolute() else library / footage_path
     else:
         m = re.search(r"[Bb]atch[\s_]*0*(\d+).*?[Vv]id[\s_]*0*(\d+)", video)
         if m:
-            guess = library / FOLDER_ORGANIZED / f"Batch_{int(m.group(1)):02d}" / f"Vid_{int(m.group(2)):02d}"
+            bn, vn = int(m.group(1)), int(m.group(2))
+            guess = library / FOLDER_ORGANIZED / f"Batch_{bn:02d}" / f"Vid_{vn:02d}"
             if guess.is_dir():
                 fsrc = guess
+                batch_dest = (library / FOLDER_FOOTAGE_LIB / FOLDER_BATCHES
+                              / f"Batch_{bn:02d}" / f"Vid_{vn:02d}")
     if fsrc and fsrc.exists():
-        cat = category or video
-        dest_dir = library / FOLDER_FOOTAGE_LIB / cat
-        if week_target is not None:
-            dest_dir = dest_dir / week_label_for(week_target)
-        moves.append({"what": "raw footage → library", "src": fsrc, "dest": dest_dir / fsrc.name})
+        if batch_dest is not None:
+            dest = batch_dest
+        else:
+            cat = category or video
+            dest_dir = library / FOLDER_FOOTAGE_LIB / cat
+            if week_target is not None:
+                dest_dir = dest_dir / week_label_for(week_target)
+            dest = dest_dir / fsrc.name
+        moves.append({"what": "raw footage → library", "src": fsrc, "dest": dest})
     else:
         warnings.append("couldn't locate the raw footage — pass --footage <folder> to include it "
                         "(skipping the footage move)")

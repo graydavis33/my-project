@@ -44,7 +44,14 @@ FOLDER_ARCHIVE        = "04_ARCHIVE"         # Retired project files, dated subf
 FOLDER_FOOTAGE_LIB    = "05_FOOTAGE_LIBRARY" # Reusable footage: category/ → week/
 FOLDER_ASSETS         = "06_ASSETS"          # Brand assets, fonts, music, SFX
 FOLDER_QUERY_PULLS    = "07_QUERY_PULLS"     # Temp query result folders — deleted after publish
-FOLDER_AI_EDITS       = "08_AI_EDITS"        # AI pipeline outputs grouped by source clip
+FOLDER_AI_EDITS       = "08_AI_EDITS"        # AI pipeline outputs grouped by pipeline, then source
+
+# Permanent home for batch interview originals — lives INSIDE the footage library
+# but runs on its OWN filing system: by Batch_NN/Vid_MM (NOT the category/week
+# scheme b-roll uses). Underscore prefix keeps it OUT of the b-roll search index,
+# so a finished batch's source takes don't pollute footage searches.
+# Final resting place: 05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/
+FOLDER_BATCHES        = "_BATCHES"           # under 05_FOOTAGE_LIBRARY/
 
 # Format detection — orientation only (horizontal=long-form, vertical=short-form)
 # As of 2026-04-19: long-form is shot 1080p horizontal, short-form is shot vertical.
