@@ -88,6 +88,22 @@ python cli_index.py --client sai pull-cleanup
 python cli_index.py --client sai pull-cleanup --older-than 30
 ```
 
+### Drafts review folder + auto-clean
+
+`03_DELIVERED/drafts/` is a staging area for non-final versions that need a review pass (by Gray, Cy, or anyone) before they're discarded. It holds **neither originals nor finals** — only disposable draft exports — so it self-cleans on the same 7-day idle rule as query pulls:
+
+```bash
+# Interactive — prompts per item
+python cli_index.py --client sai drafts-cleanup
+
+# Auto-delete drafts untouched N+ days (no prompts)
+python cli_index.py --client sai drafts-cleanup --older-than 7
+```
+
+**Hard protection:** `drafts-cleanup` **never deletes project files** (`.prproj`, `.aep`/`.aepx`, `.psd`/`.psb`, `.ai`, `.drp`, ...). A loose project file is kept; a subfolder containing one anywhere is skipped whole. Handles loose files and subfolders (the pull sweep only does folders). Dotfiles (`.DS_Store`, `._*`) are ignored.
+
+Both sweeps (query-pulls + drafts) run together daily via one scheduled job — `sweep_query_pulls.bat` (Windows Task Scheduler) / `sweep_query_pulls.sh` (Mac launchd, `com.graydient.footage-query-sweep.plist`). To change the window, edit the `--older-than` value in **both** wrapper scripts.
+
 ## Setup
 1. Copy `.env.example` to `.env` and add `ANTHROPIC_API_KEY`
 2. Set `SAI_LIBRARY_ROOT` and/or `GRAYDIENT_LIBRARY_ROOT` in `.env` to the SSD path

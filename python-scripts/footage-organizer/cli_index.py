@@ -32,7 +32,21 @@ from config import (
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
     FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
     FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BATCHES,
+    FOLDER_DRAFTS,
 )
+
+# Editable project files we NEVER auto-delete from the drafts folder, even when
+# stale. If a folder in drafts/ contains any of these anywhere inside, the whole
+# folder is skipped. These are the source-of-truth edit files, not draft exports.
+PROJECT_FILE_EXTS = {
+    ".prproj", ".prel",            # Premiere Pro / Elements
+    ".aep", ".aepx", ".aet",       # After Effects
+    ".psd", ".psb",                # Photoshop
+    ".ai",                         # Illustrator
+    ".drp",                        # DaVinci Resolve
+    ".veg", ".vf",                 # Vegas
+    ".fcpbundle", ".motn",         # Final Cut / Motion
+}
 
 PROJECT_FORMAT_BUCKETS = ["longform", "linkedin", "shorts"]
 from extractor import get_resolution, get_duration, get_shoot_date
@@ -363,6 +377,65 @@ def cmd_pull_cleanup(args):
             print(f"    deleted {folder.name}")
 
     print(f"\n  Done. Deleted {deleted} of {len(folders)} folder(s).\n")
+
+
+def _contains_project_file(item: Path) -> bool:
+    """True if item is itself a project file, or (for a folder) holds one anywhere.
+    Used to shield editable Premiere/AE/PS files from the drafts auto-cleanup."""
+    if item.is_file():
+        return item.suffix.lower() in PROJECT_FILE_EXTS
+    return any(
+        c.is_file() and c.suffix.lower() in PROJECT_FILE_EXTS
+        for c in item.rglob("*")
+    )
+
+
+def cmd_drafts_cleanup(args):
+    """Delete review-staging items in 03_DELIVERED/drafts/ untouched for N+ days.
+    With --older-than N: delete non-interactively. Project files (.prproj/.aep/.psd/
+    ...) are NEVER deleted — a folder containing one is skipped whole. Handles loose
+    files and subfolders (the query-pull sweep only does folders)."""
+    library = _library(args.client)
+    drafts_root = library / FOLDER_DELIVERED / FOLDER_DRAFTS
+    if not drafts_root.is_dir():
+        print(f"\n  No {FOLDER_DELIVERED}/{FOLDER_DRAFTS}/ folder yet. Nothing to clean.\n")
+        return
+
+    # Skip dotfiles (e.g. Mac ._* sidecars, .DS_Store) — never count them as drafts.
+    items = sorted(p for p in drafts_root.iterdir() if not p.name.startswith("."))
+    if not items:
+        print(f"\n  {FOLDER_DELIVERED}/{FOLDER_DRAFTS}/ is empty.\n")
+        return
+
+    def _remove(p: Path):
+        shutil.rmtree(p) if p.is_dir() else p.unlink()
+
+    today = date.today()
+    deleted = 0
+    print(f"\n  Drafts cleanup ({args.client.upper()})")
+    print(f"  Root: {drafts_root}\n")
+
+    for item in items:
+        age_days = (today - date.fromtimestamp(item.stat().st_mtime)).days
+
+        if _contains_project_file(item):
+            print(f"    keep    {item.name} (project file — never auto-deleted)")
+            continue
+
+        if args.older_than is not None:
+            if age_days >= args.older_than:
+                _remove(item)
+                deleted += 1
+                print(f"    deleted {item.name} ({age_days}d old)")
+            continue
+
+        ans = input(f"  Delete {item.name}? ({age_days}d old) [y/N]: ").strip().lower()
+        if ans == "y":
+            _remove(item)
+            deleted += 1
+            print(f"    deleted {item.name}")
+
+    print(f"\n  Done. Deleted {deleted} of {len(items)} item(s).\n")
 
 
 def _expand_clip_segment(seg: str) -> list[str]:
@@ -802,6 +875,10 @@ def main():
     pc = sub.add_parser("pull-cleanup", help="Delete query-pull folders after the edit ships")
     pc.add_argument("--older-than", type=int, help="Auto-delete pulls N+ days old (no prompts)")
     pc.set_defaults(func=cmd_pull_cleanup)
+
+    dc = sub.add_parser("drafts-cleanup", help="Delete review drafts in 03_DELIVERED/drafts/ untouched N+ days (never deletes project files)")
+    dc.add_argument("--older-than", type=int, help="Auto-delete drafts N+ days old (no prompts)")
+    dc.set_defaults(func=cmd_drafts_cleanup)
 
     args = ap.parse_args()
     args.func(args)

@@ -40,6 +40,12 @@ FOLDER_ORGANIZED      = "01_ORGANIZED"      # Holds the _INBOX drop + the catego
 FOLDER_INBOX          = "_INBOX"            # 01_ORGANIZED/_INBOX/<date>/ — drop raw footage here
 FOLDER_PROJECTS       = "02_ACTIVE_PROJECTS" # Active editing projects
 FOLDER_DELIVERED      = "03_DELIVERED"       # Finished exports by format, then date
+# Review-staging area for non-final versions/drafts that someone (Gray, Cy, a
+# reviewer) needs to look at before they're discarded. Lives inside 03_DELIVERED.
+# Auto-cleaned: items untouched for N+ days are deleted (`drafts-cleanup`), EXCEPT
+# project files (.prproj/.aep/.psd/...), which are never auto-deleted. Holds neither
+# originals nor finals — only disposable draft exports — so auto-deletion is safe.
+FOLDER_DRAFTS         = "drafts"             # 03_DELIVERED/drafts/ — review staging, auto-cleaned
 FOLDER_ARCHIVE        = "04_ARCHIVE"         # Retired project files, dated subfolders
 FOLDER_FOOTAGE_LIB    = "05_FOOTAGE_LIBRARY" # Reusable footage: category/ → week/
 FOLDER_ASSETS         = "06_ASSETS"          # Brand assets, fonts, music, SFX
