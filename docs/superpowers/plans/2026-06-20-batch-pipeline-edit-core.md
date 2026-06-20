@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build ONE cross-platform `python-scripts/batch-pipeline/` that runs an organized batch video through sync → cut+clip-guard → captions → verify → package (ProRes 422 angles + alpha captions + _INFO), proven to reproduce Batch 4 Vid 4, then delete the two old drift-prone script families.
+**Goal:** Build ONE cross-platform `python-scripts/batch-pipeline/` that runs an organized batch video through sync → cut+clip-guard → captions → verify → package (ProRes 422 angles + alpha captions + _INFO), proven to reproduce Batch 3 Vid 4, then delete the two old drift-prone script families.
 
 **Architecture:** A driver (`run.py`) walks a per-video config through ordered, independently-tested stage modules. All paths come from `SAI_LIBRARY_ROOT` and the Whisper backend is auto-detected, so the same code runs identically on Mac and Windows — that is the drift fix. Stages are ports of today's proven code (`_cut_v04.py`, `_caption_v04.py`, `multicam-mirror/sync.py`) consolidated and config-driven.
 
@@ -624,9 +624,9 @@ def _angle(cut_video, lav_wav, dst):
         "-ar","48000","-ac","2","-shortest","-movflags","+faststart",str(dst)],
         check=True, capture_output=True)
 
-def deliver(batch_n, vid_n, title, a_cut, b_cut, lav_wav, captions_mov, info):
-    root = config.library_root()
-    pkg = root/"08_AI_EDITS"/"shorts"/f"Batch_{batch_n:02d}"/folder_name(batch_n, vid_n, title)
+def deliver(batch_n, vid_n, title, a_cut, b_cut, lav_wav, captions_mov, info, out_root=None):
+    root = out_root or (config.library_root()/"08_AI_EDITS"/"shorts")
+    pkg = root/f"Batch_{batch_n:02d}"/folder_name(batch_n, vid_n, title)
     (pkg/"ANGLES").mkdir(parents=True, exist_ok=True); (pkg/"CAPTIONS").mkdir(exist_ok=True)
     tag = f"B{batch_n}_V{vid_n:02d}"
     _angle(a_cut, lav_wav, pkg/"ANGLES"/f"{tag}_A-cam.mov")
@@ -652,36 +652,38 @@ git commit -m "feat(batch-pipeline): deliverable package (ANGLES/CAPTIONS/_INFO)
 
 ---
 
-### Task 9: `run.py` driver + Batch 4 Vid 4 parity (integration)
+### Task 9: `run.py` driver + Batch 3 Vid 4 parity (integration)
 
 **Files:**
 - Create: `python-scripts/batch-pipeline/run.py`
-- Create: `python-scripts/batch-pipeline/videos/B4_V04.json` (per-video config: sources, lav cam, offset, title, ranges — from today's V04)
+- Create: `python-scripts/batch-pipeline/videos/B3_V04.json` (per-video config: sources, lav cam, offset, title, ranges — from today's V04)
 - Test: manual integration (real media; documented, not a unit test)
 
 **Interfaces:**
 - Consumes: all stage modules.
-- Produces: `run_video(cfg: dict) -> dict` — sync (or use cfg offset) → extract lav wav → transcribe (or load cfg transcript) → `cut.build_cut` → `captions.render` → `verify.gate` → `package.deliver`; returns paths + gate result. CLI: `python run.py --video videos/B4_V04.json`.
+- Produces: `run_video(cfg: dict, out_root: Path|None=None) -> dict` — sync (or use cfg offset) → extract lav wav → transcribe (or load cfg transcript) → `cut.build_cut` → `captions.render` → `verify.gate` → `package.deliver(..., out_root=out_root)`; returns paths + gate result. CLI: `python run.py --video videos/B3_V04.json [--out-root <dir>]`.
 
-- [ ] **Step 1: Write the per-video config** `videos/B4_V04.json` using the values proven today (offset −6.156, lav = B, the 9 ranges from `_cut_v04.py`, title "Money Reflects Who You Are", full sources under `01_ORGANIZED/Batch_03/Vid_04`). Sources referenced as POSIX-relative to library root.
+> **Parity-run safety:** B3_V04 already exists as a hand-made deliverable (possibly open in Premiere → overwriting a `.mov` in use fails with EBUSY). The parity run MUST write to a scratch dir via `--out-root`, NOT the live `08_AI_EDITS/shorts/Batch_03/` path. Compare, then (with Gray's OK) re-run without `--out-root` to upgrade the live V04 to ProRes.
 
-- [ ] **Step 2: Write `run.py`** wiring the stages in order, reading the JSON, resolving paths against `config.library_root()`, extracting the lav wav with ffmpeg, calling each stage, printing the gate result and package path. (Full wiring — each call uses the exact signatures from Tasks 2–8.)
+- [ ] **Step 1: Write the per-video config** `videos/B3_V04.json` using the values proven today (offset −6.156, lav = B, the 9 ranges from `_cut_v04.py`, title "Money Reflects Who You Are", full sources under `01_ORGANIZED/Batch_03/Vid_04`). Sources referenced as POSIX-relative to library root. May reuse the existing `Synced/Vid_04_B-cam_synced.json` transcript to skip re-transcription.
 
-- [ ] **Step 3: Run it on Windows**
+- [ ] **Step 2: Write `run.py`** wiring the stages in order, reading the JSON, resolving paths against `config.library_root()`, extracting the lav wav with ffmpeg, calling each stage, printing the gate result and package path, threading `out_root` through to `package.deliver`. (Full wiring — each call uses the exact signatures from Tasks 2–8.)
 
-Run: `py python-scripts/batch-pipeline/run.py --video python-scripts/batch-pipeline/videos/B4_V04.json`
-Expected: gate `passed: True`; package written to `08_AI_EDITS/shorts/Batch_04/B4_V04 - Money Reflects Who You Are/`.
+- [ ] **Step 3: Run it to a SCRATCH dir (do not clobber live V04)**
+
+Run: `py python-scripts/batch-pipeline/run.py --video python-scripts/batch-pipeline/videos/B3_V04.json --out-root "D:/Sai/01_ORGANIZED/Batch_03/Vid_04/_parity"`
+Expected: gate `passed: True`; package written under `…/Vid_04/_parity/Batch_03/B3_V04 - Money Reflects Who You Are/`.
 
 - [ ] **Step 4: Parity check vs today's hand-made V04**
 
-Run a diff of specs (duration within 0.1s, ProRes422 angles, captions alpha, audio MD5 equal on both angles, cut_plan ranges match `_cut_v04` within 1 frame). Document the comparison in the commit message.
-Expected: matches (now ProRes instead of the hand-made H.264 — that's the intended upgrade).
+Compare the scratch package against the live `08_AI_EDITS/shorts/Batch_03/B3_V04 …`: cut duration within 0.1s, captions alpha valid, audio MD5 equal on both angles, `cut_plan` ranges match `_cut_v04` within 1 frame. The angles will now be **ProRes 422** vs the live H.264 — that codec change is the intended upgrade, not a parity failure. Document the comparison in the commit message.
+Expected: matches (ProRes is the intended difference). Then delete the `_parity` scratch dir.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add python-scripts/batch-pipeline/run.py python-scripts/batch-pipeline/videos/B4_V04.json
-git commit -m "feat(batch-pipeline): driver + Batch4 Vid4 parity (ProRes422)"
+git add python-scripts/batch-pipeline/run.py python-scripts/batch-pipeline/videos/B3_V04.json
+git commit -m "feat(batch-pipeline): driver + Batch3 Vid4 parity (ProRes422)"
 ```
 
 ---

@@ -70,7 +70,7 @@ python-scripts/batch-pipeline/
 
 `run.py --batch 04`:
 
-1. **Discover** `01_ORGANIZED/Batch_04/Vid_*`; read each video's A/B sources + title.
+1. **Discover** `01_ORGANIZED/Batch_NN/Vid_*`; read each video's A/B sources + title.
 2. **Prep each video** (independent, parallelizable):
    sync → verify residual → **audio-clean lav** → transcribe (clean audio) → **auto-select** proposed cut → **cut + clip-guard** → captions → **verify gate**.
    A video that fails the gate is flagged, not silently advanced.
@@ -153,7 +153,7 @@ Adobe Podcast Enhance is web/app-first; API access is gated/unverified. Evaluate
 ## Testing
 
 - **Unit:** `select.py` rejection/dedupe/pause-collapse on synthetic transcripts; `clipguard` on synthetic energy curves (incl. the "word rings past Whisper's marked end" case from Vid 4); `config` platform-detect; manifest parsing.
-- **Integration:** run end-to-end on **Batch 4 Vid 4** (already produced this session) → package must match V03 specs; verification gate passes.
+- **Integration:** run end-to-end on **Batch 3 Vid 4** (already produced this session) → package must match V03 specs; verification gate passes.
 - **Regression:** a transcript+audio fixture where a naive fixed tail clips the last word → assert the guard prevents it (the exact bug from this session).
 
 ---
