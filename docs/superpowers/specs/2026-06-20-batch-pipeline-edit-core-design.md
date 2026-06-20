@@ -118,7 +118,7 @@ Condensed ruleset (full detail + citations in those files):
 **`package.py`:** matches the locked convention exactly (verified against V01–V03):
 ```
 08_AI_EDITS/shorts/Batch_NN/B#_V## - Title/
-  ANGLES/    B#_V##_A-cam.mp4   B#_V##_B-cam.mp4   (h264 1920x1080 23.976, AAC 48k stereo, LAV audio both, NO captions)
+  ANGLES/    B#_V##_A-cam.mov   B#_V##_B-cam.mov   (ProRes 422 HQ 1920x1080 23.976, PCM/AAC 48k stereo, LAV audio both, NO captions)
   CAPTIONS/  B#_V##_captions.mov                   (ProRes 4444 alpha)
   _INFO.txt
 ```
