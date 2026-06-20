@@ -35,19 +35,6 @@ from config import (
     FOLDER_DRAFTS,
 )
 
-# Editable project files we NEVER auto-delete from the drafts folder, even when
-# stale. If a folder in drafts/ contains any of these anywhere inside, the whole
-# folder is skipped. These are the source-of-truth edit files, not draft exports.
-PROJECT_FILE_EXTS = {
-    ".prproj", ".prel",            # Premiere Pro / Elements
-    ".aep", ".aepx", ".aet",       # After Effects
-    ".psd", ".psb",                # Photoshop
-    ".ai",                         # Illustrator
-    ".drp",                        # DaVinci Resolve
-    ".veg", ".vf",                 # Vegas
-    ".fcpbundle", ".motn",         # Final Cut / Motion
-}
-
 PROJECT_FORMAT_BUCKETS = ["longform", "linkedin", "shorts"]
 from extractor import get_resolution, get_duration, get_shoot_date
 from week_utils import week_label_for, current_week_label
@@ -379,29 +366,17 @@ def cmd_pull_cleanup(args):
     print(f"\n  Done. Deleted {deleted} of {len(folders)} folder(s).\n")
 
 
-def _contains_project_file(item: Path) -> bool:
-    """True if item is itself a project file, or (for a folder) holds one anywhere.
-    Used to shield editable Premiere/AE/PS files from the drafts auto-cleanup."""
-    if item.is_file():
-        return item.suffix.lower() in PROJECT_FILE_EXTS
-    return any(
-        c.is_file() and c.suffix.lower() in PROJECT_FILE_EXTS
-        for c in item.rglob("*")
-    )
-
-
 def cmd_drafts_cleanup(args):
     """Delete review-staging items in 03_DELIVERED/drafts/ untouched for N+ days.
-    With --older-than N: delete non-interactively. Project files (.prproj/.aep/.psd/
-    ...) are NEVER deleted — a folder containing one is skipped whole. Handles loose
-    files and subfolders (the query-pull sweep only does folders)."""
+    Same rule as the query-pull sweep — anything (videos AND project files) idle
+    7+ days is removed, no exceptions. Handles loose files and subfolders (the
+    query-pull sweep only does folders). Dotfiles (.DS_Store, ._*) are ignored."""
     library = _library(args.client)
     drafts_root = library / FOLDER_DELIVERED / FOLDER_DRAFTS
     if not drafts_root.is_dir():
         print(f"\n  No {FOLDER_DELIVERED}/{FOLDER_DRAFTS}/ folder yet. Nothing to clean.\n")
         return
 
-    # Skip dotfiles (e.g. Mac ._* sidecars, .DS_Store) — never count them as drafts.
     items = sorted(p for p in drafts_root.iterdir() if not p.name.startswith("."))
     if not items:
         print(f"\n  {FOLDER_DELIVERED}/{FOLDER_DRAFTS}/ is empty.\n")
@@ -417,10 +392,6 @@ def cmd_drafts_cleanup(args):
 
     for item in items:
         age_days = (today - date.fromtimestamp(item.stat().st_mtime)).days
-
-        if _contains_project_file(item):
-            print(f"    keep    {item.name} (project file — never auto-deleted)")
-            continue
 
         if args.older_than is not None:
             if age_days >= args.older_than:

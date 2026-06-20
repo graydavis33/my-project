@@ -100,7 +100,7 @@ python cli_index.py --client sai drafts-cleanup
 python cli_index.py --client sai drafts-cleanup --older-than 7
 ```
 
-**Hard protection:** `drafts-cleanup` **never deletes project files** (`.prproj`, `.aep`/`.aepx`, `.psd`/`.psb`, `.ai`, `.drp`, ...). A loose project file is kept; a subfolder containing one anywhere is skipped whole. Handles loose files and subfolders (the pull sweep only does folders). Dotfiles (`.DS_Store`, `._*`) are ignored.
+**Same idle rule as query pulls, no exceptions:** anything untouched 7+ days is removed — videos AND project files (`.prproj`/`.aep`/`.psd`/...) alike. `drafts/` is only ever a holding spot for disposable versions, so nothing in it is protected. Handles loose files and subfolders (the pull sweep only does folders). Dotfiles (`.DS_Store`, `._*`) are ignored. **Note (same caveat as pulls):** the clock is mtime-based, so it resets on *edit/re-export*, not on merely opening/previewing a file.
 
 Both sweeps (query-pulls + drafts) run together daily via one scheduled job — `sweep_query_pulls.bat` (Windows Task Scheduler) / `sweep_query_pulls.sh` (Mac launchd, `com.graydient.footage-query-sweep.plist`). To change the window, edit the `--older-than` value in **both** wrapper scripts.
 

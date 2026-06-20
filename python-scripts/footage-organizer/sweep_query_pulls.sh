@@ -1,9 +1,9 @@
 #!/bin/bash
 # Mac/Linux equivalent of sweep_query_pulls.bat.
-# Daily footage cleanup sweep (two jobs, both 7-day, duplicates/drafts only):
+# Daily footage cleanup sweep (two jobs, both 7-day idle rule):
 #   1) 07_QUERY_PULLS/      — delete pull folders untouched 7+ days (originals never touched)
-#   2) 03_DELIVERED/drafts/ — delete review drafts untouched 7+ days (NEVER deletes
-#      project files .prproj/.aep/.psd, finals, or originals)
+#   2) 03_DELIVERED/drafts/ — delete ANY review item (video or project file) untouched
+#      7+ days. drafts/ holds only disposable versions, never finals or originals.
 # Safely no-ops if the footage drive isn't mounted.
 # Run from launchd (see com.graydient.footage-query-sweep.plist) or cron.
 

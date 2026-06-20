@@ -1,7 +1,7 @@
-"""The drafts-cleanup sweep deletes stale review files in 03_DELIVERED/drafts/
-but must NEVER delete editable project files (.prproj/.aep/.psd/...), and must
-leave recent drafts alone. Mirrors the query-pull sweep but also handles loose
-files (not just folders) and the project-file shield.
+"""The drafts-cleanup sweep deletes stale review items in 03_DELIVERED/drafts/
+on the same rule as the query-pull sweep: anything idle N+ days is removed, with
+NO exceptions (videos AND project files alike). It also handles loose files, not
+just folders, and ignores dotfiles.
 """
 import os
 import sys
@@ -25,14 +25,6 @@ def _age(p: Path, days: int):
     os.utime(p, (old, old))
 
 
-def _run(tmp_path, monkeypatch, older_than):
-    drafts = tmp_path / "03_DELIVERED" / "drafts"
-    drafts.mkdir(parents=True)
-    monkeypatch.setattr(cli_index, "_library", lambda client: tmp_path)
-    cli_index.cmd_drafts_cleanup(SimpleNamespace(client="sai", older_than=older_than))
-    return drafts
-
-
 def test_deletes_stale_files_keeps_recent(tmp_path, monkeypatch):
     drafts = tmp_path / "03_DELIVERED" / "drafts"
     drafts.mkdir(parents=True)
@@ -46,39 +38,33 @@ def test_deletes_stale_files_keeps_recent(tmp_path, monkeypatch):
     assert recent.exists()         # 2d old → kept
 
 
-def test_never_deletes_project_files(tmp_path, monkeypatch):
+def test_deletes_stale_project_files_too(tmp_path, monkeypatch):
     drafts = tmp_path / "03_DELIVERED" / "drafts"
     drafts.mkdir(parents=True)
     prproj = _mk(drafts / "edit.prproj"); _age(prproj, 30)
     aep = _mk(drafts / "comp.aep"); _age(aep, 30)
-    psd = _mk(drafts / "thumb.psd"); _age(psd, 30)
+    fresh_psd = _mk(drafts / "wip.psd"); _age(fresh_psd, 1)
     monkeypatch.setattr(cli_index, "_library", lambda client: tmp_path)
 
     cli_index.cmd_drafts_cleanup(SimpleNamespace(client="sai", older_than=7))
 
-    assert prproj.exists() and aep.exists() and psd.exists()  # all shielded
+    assert not prproj.exists()     # stale project file → deleted (no exception)
+    assert not aep.exists()        # stale project file → deleted
+    assert fresh_psd.exists()      # 1d old → kept (only the idle rule protects it)
 
 
-def test_folder_with_project_file_is_skipped_whole(tmp_path, monkeypatch):
+def test_deletes_stale_subfolders(tmp_path, monkeypatch):
     drafts = tmp_path / "03_DELIVERED" / "drafts"
     drafts.mkdir(parents=True)
-    proj_dir = drafts / "Vid 5 edit"
-    _mk(proj_dir / "render.mp4")
-    _mk(proj_dir / "Vid 5.prproj")
-    _age(proj_dir / "render.mp4", 30)
-    _age(proj_dir / "Vid 5.prproj", 30)
-    _age(proj_dir, 30)
-
-    plain_dir = drafts / "old renders"
-    _mk(plain_dir / "v1.mp4")
-    _age(plain_dir / "v1.mp4", 30)
-    _age(plain_dir, 30)
-
+    old_dir = drafts / "old renders"
+    _mk(old_dir / "v1.mp4")
+    _age(old_dir / "v1.mp4", 30)
+    _age(old_dir, 30)
     monkeypatch.setattr(cli_index, "_library", lambda client: tmp_path)
+
     cli_index.cmd_drafts_cleanup(SimpleNamespace(client="sai", older_than=7))
 
-    assert proj_dir.exists()        # contains a .prproj → whole folder kept
-    assert not plain_dir.exists()   # no project file + stale → deleted
+    assert not old_dir.exists()    # stale folder → deleted whole
 
 
 def test_ignores_dotfiles(tmp_path, monkeypatch):
@@ -87,6 +73,5 @@ def test_ignores_dotfiles(tmp_path, monkeypatch):
     ds = _mk(drafts / ".DS_Store"); _age(ds, 30)
     monkeypatch.setattr(cli_index, "_library", lambda client: tmp_path)
 
-    # Should not crash on / count dotfiles; they're just left alone.
     cli_index.cmd_drafts_cleanup(SimpleNamespace(client="sai", older_than=7))
-    assert ds.exists()
+    assert ds.exists()             # dotfiles aren't treated as drafts

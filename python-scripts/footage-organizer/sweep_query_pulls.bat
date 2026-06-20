@@ -1,8 +1,8 @@
 @echo off
-REM Daily footage cleanup sweep (two jobs, both 7-day, duplicates/drafts only):
+REM Daily footage cleanup sweep (two jobs, both 7-day idle rule):
 REM   1) 07_QUERY_PULLS/  — delete pull folders untouched 7+ days (originals never touched)
-REM   2) 03_DELIVERED/drafts/ — delete review drafts untouched 7+ days (NEVER deletes
-REM      project files .prproj/.aep/.psd, finals, or originals)
+REM   2) 03_DELIVERED/drafts/ — delete ANY review item (video or project file) untouched
+REM      7+ days. drafts/ holds only disposable versions, never finals or originals.
 REM Registered as Windows Task Scheduler job "Footage Query-Pull Sweep" (daily).
 cd /d "C:\Users\Gray Davis\my-project\python-scripts\footage-organizer"
 echo ---------------------------------------------------------------- >> ".query-sweep.log"
