@@ -92,6 +92,18 @@ Gray's hands-on time = the one review pass (+ range tweaks). Everything else run
 - **Collapse dead air** between kept words beyond a pause threshold.
 - Output: ordered keep-ranges `(synced_in, synced_out)` per video. Imperfect is OK — Gray approves each.
 
+**Auto-select training corpus** — `select.py` is built from Gray's documented rules, not invented. Canonical sources the implementation must load and encode:
+- `business/social-media/sai/editing/shorts-auto-edit-training.md` (live Batch 3 training log — most recent)
+- `business/social-media/sai/editing/sai-shorts-editing-sop.md`, `training_notes.md`
+- `ai-edit-vs-final-study-*.md` (AI cut vs Gray's final Premiere edit — the before/after diffs)
+- memories: `feedback_sai_short_form_ai_edit_lessons.md` (Rules 1–8), `feedback_graydient_take_session_edit_rules.md`, `feedback_long_form_editing_from_gray_diff.md`, `workflow_sai_batch3_2cam_qa.md`, the `feedback_caption_*` set
+
+Condensed ruleset (full detail + citations in those files):
+- **Take selection:** last clean take wins; drop false-start vetoes ("No.", "All right."); drop aborted-then-restated sentences; keep continuous mid-sentence stumbles whole (no-pause restarts clip if cut); RMS-detect hidden restarts inside a single long Whisper "word" and keep the post-pause attempt; composite across takes at word boundaries when the best version spans two; duplicate hook → keep the punchier/more specific one.
+- **What to cut:** collapse dead air ≥0.30s → ~0.10s breath; cut redundant phrase repetitions to one instance; drop setup/meta-narration before the punchline; drop isolated leading connectors (And/So/But/Then/Now) when their antecedent was removed — KEEP when they bridge ideas or carry contrast; cut tangents and post-sign-off chatter.
+- **Pacing/length:** target 30–40s, bias tight; if keeping >50% of body words, keeping too much.
+- **Hook/ring-out:** hook = Gray's off-cam question, always (never Sai's paraphrase); generous tail on the closer (~0.8s) — clip-guard handles this; head-pad 0 when a dropped retake butts the kept take.
+
 **`clipguard.py`** (today's, generalized): for each cut-out, search `[sout, sout+0.6]` (capped at the next transcript word − 0.02s) and cut at the **quietest 60ms** — so a trailing word always rings out and we never bleed into a following hesitation/breath/retake.
 
 **`cut.py`:** word-level keep-ranges; LEAD/TAIL pads via clip-guard; fps-lock both cams to `24000/1001`; concat must **re-encode** (never `-c copy` → QuickTime freeze). Emits `Vid_NN_{A,B}-cam_CUT.mp4` (identical length), `caption_words.json`, `cut_plan.txt`.
@@ -145,6 +157,17 @@ Adobe Podcast Enhance is web/app-first; API access is gated/unverified. Evaluate
 - **Regression:** a transcript+audio fixture where a naive fixed tail clips the last word → assert the guard prevents it (the exact bug from this session).
 
 ---
+
+## Open questions for Gray (training gaps surfaced by the deep dive)
+
+1. **Codec conflict (decide first — it's a real drift example).** The two old script families disagree: the Mac `batch3_pipeline` exports **H.264** (and V01–V03 deliverables ARE h264), but the Windows `_b3_edit/cut_final_b3.py` exports **ProRes 422** with a comment that all-intra avoids GOP-seam scrub glitches in Premiere. Pick one as the standard. (Leaning ProRes 422 for the angle cuts — cleaner in Premiere — but that changes the V01–V03 convention.)
+2. **Composite vs. single take** — rule says "composite when the best version spans two takes," but the threshold (how many flubs before compositing is worth it) is implied, not explicit.
+3. **A vs B angle preference** — when both cams have a clean take of a line, is there a rule, or do you always angle-cut in Premiere? (Affects whether the package hints a default angle.)
+4. **Color/level matching between takes** — no rule found. Manual in Premiere, or should the pipeline normalize audio loudness at least?
+5. **B-roll per-beat selection thresholds** — "5 horizontal per beat" is set, but the content+fit criteria are thin. Want to tighten what makes a clip fit a beat?
+6. **Tail by ending phoneme** — current tail is ~0.25–0.30s + clip-guard; fricative endings (s/f/sh) may ring longer than stops (t/p/k). Clip-guard already adapts by energy, so likely a non-issue — confirming.
+
+I don't need all of these to start; #1 is the only one that blocks the build. The rest refine `select.py` and we can tune them against the before/after diffs.
 
 ## Out of scope (Phase 1)
 
