@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Mac launchd equivalent of the Windows "Footage Query-Pull Sweep" task.
+  Runs the query-pull sweep daily at noon. If the Mac is off/asleep at noon,
+  launchd runs the missed job when the Mac next starts up (matches the Windows
+  StartWhenAvailable behavior).
+
+  SETUP on the Mac:
+    1. Edit the path below — replace __YOUR_MAC_USERNAME__ with your real username,
+       and confirm the full path matches where this repo lives on the Mac. Find it with:
+         ls "$HOME/my-project/python-scripts/footage-organizer/sweep_query_pulls.sh"
+    2. Copy the plist into your LaunchAgents folder:
+         cp python-scripts/footage-organizer/com.graydient.footage-query-sweep.plist ~/Library/LaunchAgents/
+    3. Load it:
+         launchctl load ~/Library/LaunchAgents/com.graydient.footage-query-sweep.plist
+    4. Test it immediately:
+         launchctl start com.graydient.footage-query-sweep
+       then check python-scripts/footage-organizer/.query-sweep.log
+
+  To turn it off:
+    launchctl unload ~/Library/LaunchAgents/com.graydient.footage-query-sweep.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.graydient.footage-query-sweep</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/__YOUR_MAC_USERNAME__/my-project/python-scripts/footage-organizer/sweep_query_pulls.sh</string>
+    </array>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>12</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>
