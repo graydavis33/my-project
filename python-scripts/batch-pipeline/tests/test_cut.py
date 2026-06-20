@@ -10,4 +10,5 @@ def test_plan_drops_dead_air_and_maps_caption_times():
     keep, caps, total = cut.plan(words, ranges, audio, sr)
     assert len(keep) == 1
     assert caps[0]["word"] == "hello" and abs(caps[0]["start"]) < 0.2  # first kept word near t=0
+    assert caps[1]["word"] == "world"
     assert total > 0.9
