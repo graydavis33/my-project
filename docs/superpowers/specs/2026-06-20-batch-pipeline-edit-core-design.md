@@ -160,7 +160,7 @@ Adobe Podcast Enhance is web/app-first; API access is gated/unverified. Evaluate
 
 ## Open questions for Gray (training gaps surfaced by the deep dive)
 
-1. **Codec conflict (decide first — it's a real drift example).** The two old script families disagree: the Mac `batch3_pipeline` exports **H.264** (and V01–V03 deliverables ARE h264), but the Windows `_b3_edit/cut_final_b3.py` exports **ProRes 422** with a comment that all-intra avoids GOP-seam scrub glitches in Premiere. Pick one as the standard. (Leaning ProRes 422 for the angle cuts — cleaner in Premiere — but that changes the V01–V03 convention.)
+1. **Codec — RESOLVED (2026-06-20): ProRes 422 HQ for angle cuts.** These are editing intermediates (multicam scrubbing + re-export from Premiere), so all-intra ProRes wins: glitch-free scrubbing/concat seams and no stacked generation loss. Captions stay ProRes 4444 alpha. V01–V03 (H.264) are grandfathered; standard applies V04 onward. (This was the concrete "drift" example — the two old families disagreed H.264 vs ProRes 422.)
 2. **Composite vs. single take** — rule says "composite when the best version spans two takes," but the threshold (how many flubs before compositing is worth it) is implied, not explicit.
 3. **A vs B angle preference** — when both cams have a clean take of a line, is there a rule, or do you always angle-cut in Premiere? (Affects whether the package hints a default angle.)
 4. **Color/level matching between takes** — no rule found. Manual in Premiere, or should the pipeline normalize audio loudness at least?
@@ -182,5 +182,5 @@ I don't need all of these to start; #1 is the only one that blocks the build. Th
 - One command runs an organized batch end-to-end on **either machine, identical code**.
 - Every shipped cut passes the verification gate — **no clipped words reach Gray**, ever.
 - Gray's only hands-on step is the batched review.
-- Output packages are byte-for-byte conventional (match V01–V03) and FCPXML-ready for Phase 3.
+- Output packages follow the locked layout (ANGLES/CAPTIONS/_INFO); angle codec standardized to ProRes 422 HQ from V04 onward (V01–V03 H.264 grandfathered); FCPXML-ready for Phase 3.
 - A new batch goes from organized → reviewed packages in well under "30 minutes each, daily."
