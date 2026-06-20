@@ -1,8 +1,11 @@
 import numpy as np
 
-def _rms(a, sr, t, win=0.06):
-    s = a[int(t*sr): int((t+win)*sr)]
-    return float(np.sqrt(np.mean(s**2))) if len(s) else 0.0
+def _rms(a, sr, t, win=0.06, end=None):
+    t_end = min(t + win, end) if end is not None else t + win
+    s = a[int(t*sr): int(t_end*sr)]
+    if not len(s):
+        return 1e18 if end is not None else 0.0
+    return float(np.sqrt(np.mean(s**2)))
 
 def snap_out(audio, sr, sout, next_word_start):
     hard_cap = sout + 0.6
@@ -13,7 +16,7 @@ def snap_out(audio, sr, sout, next_word_start):
     t = sout
     while t <= hard_cap + 1e-6:
         if t >= lo_bound:
-            e = _rms(audio, sr, t)
+            e = _rms(audio, sr, t, end=hard_cap)
             if e < best_e:
                 best_e, best_t = e, t
         t += 0.02
