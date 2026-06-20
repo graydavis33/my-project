@@ -111,3 +111,6 @@ _memory/github.md
 # HyperFrames per-comp temp artifacts
 **/.verify/
 **/preview.log
+
+# Footage organizer query-pull sweep runtime log
+**/.query-sweep.log
