@@ -1038,7 +1038,7 @@ def cmd_tag(args):
         print(f"  (--retag: re-tagging already-tagged clips too)")
 
     if not todo:
-        print("  Nothing to tag — all b-roll clips already tagged.\n")
+        print(f"  Nothing to tag — all {target_category} clips already tagged.\n")
         return
 
     if not args.yes:
