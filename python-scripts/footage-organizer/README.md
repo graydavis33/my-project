@@ -237,6 +237,19 @@ python cli_index.py --client sai tag --retag     # re-tag already-tagged clips
 - `emotion`/`action` are set only when a person is in frame; `location`/`objects` on every clip. Tags cached by file-hash (`.tag-cache.json`) so each clip is paid once ever.
 - A plain `index` re-scan **never wipes tags** (the upsert COALESCEs them) — only `tag` / the dashboard write them.
 
+### Pull by tag
+
+Once tagged, build a Premiere-ready folder by any combination of tags (AND-combined):
+
+```bash
+python cli_index.py --client sai pull --location office --emotion focused
+python cli_index.py --client sai pull --action walking --location "nyc street"
+python cli_index.py --client sai pull --object laptop
+```
+
+- `--emotion / --action / --location` are exact matches; `--object` is a contains-match (collision-safe via pipe-wrapped storage).
+- Combine with the existing `pull` filters (`--filmed-date`, `--by-week`, etc.). Output lands in `07_QUERY_PULLS/<slug>/` (slug built from the tags) and is swept by the daily 7-day auto-clean — same as every other pull.
+
 ### Review dashboard
 
 `python tagger/server.py --client sai` → opens a local browser grid (thumbnails + full-clip video scrubbing) showing each tagged clip with `emotion · action · location`. `--vertical N` shows detected-vertical clips for orientation confirmation. Phase 4 will add in-place tag editing + bulk-apply here.
