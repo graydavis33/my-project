@@ -319,6 +319,101 @@ git commit -m "docs(footage): documentary episode finalize pipeline"
 
 ---
 
+## Task 4: `tag --episode` — tag documentary footage in place (usable before ship)
+
+**Why:** Batch shorts need fresh B-roll, which only comes from documentary shoots. Today `tag` only tags the `b-roll/` library, so episode footage sitting in `01_ORGANIZED/<episode>/` is invisible to B-roll pulls until the episode publishes + ships. This lets you tag it the moment you organize it, so `pull --action ... --location ...` surfaces it for concurrent batch edits — nothing moves until ship. The tag cache is keyed by filename+filesize (path-independent), so when `ship` later moves a pre-tagged clip into `b-roll/<week>`, its auto-tag pass hits the cache and re-applies tags to the new path for free (no double Vision cost).
+
+**Files:**
+- Modify: `python-scripts/footage-organizer/cli_index.py` (`cmd_tag` + the `tag` subparser)
+- Test: `python-scripts/footage-organizer/tests/test_tag_episode.py`
+
+**Interfaces:**
+- Consumes: `index.query`, `_reindex`, `_is_untagged`, `_run_tagging`, `_category_from_path`, `VISION_TAG_COST_PER_CLIP`, `FOLDER_BROLL`.
+- Produces: `tag --episode "Name"` tags clips whose index category == `"Name"` (the episode folder under `01_ORGANIZED`, since `_category_from_path` derives the category from the first folder under `01_ORGANIZED`). Plain `tag` (no `--episode`) is unchanged (tags `b-roll/`).
+
+- [ ] **Step 1: Write the failing test**
+
+```python
+# tests/test_tag_episode.py
+import os, sys
+from pathlib import Path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import cli_index as cli
+import index
+from index import ClipRecord
+
+def test_category_from_path_episode_folder():
+    lib = Path("/Sai")
+    clip = lib / "01_ORGANIZED" / "ep2 doc" / "2026-06-10" / "C1.MP4"
+    assert cli._category_from_path(clip, lib) == "ep2 doc"
+
+def test_query_by_episode_category_excludes_broll(tmp_path):
+    db = tmp_path / "i.sqlite"
+    index.init(db)
+    def rec(p, cat):
+        return ClipRecord(path=p, category=cat, format="long-form",
+                          filmed_date="2026-06-10", upload_date="", duration_s=3.0,
+                          width=1920, height=1080, codec="", sha1=p)
+    index.upsert(db, rec("01_ORGANIZED/ep2 doc/2026-06-10/C1.MP4", "ep2 doc"))
+    index.upsert(db, rec("05_FOOTAGE_LIBRARY/b-roll/W07/C9.MP4", "b-roll"))
+    got = [r.path for r in index.query(db, category="ep2 doc")]
+    assert got == ["01_ORGANIZED/ep2 doc/2026-06-10/C1.MP4"]
+```
+
+- [ ] **Step 2: Run test to verify it fails**
+
+Run: `python -m pytest tests/test_tag_episode.py -q`
+Expected: the first test FAILS only if `_category_from_path`'s signature differs; the second should pass against the existing index. If both already pass (the helpers exist), that's fine — these tests pin the foundation `tag --episode` relies on. (If `_category_from_path` takes different args, adjust the call to match its real signature and note it.)
+
+- [ ] **Step 3: Write minimal implementation**
+
+In `cli_index.py`, add the flag to the `tag` subparser (use the real subparser variable, shown here as `<var>`):
+
+```python
+    <var>.add_argument("--episode", help="Tag a documentary episode's footage in place (01_ORGANIZED/<episode>/) so it's pull-able as b-roll before the episode ships. Default tags the b-roll library.")
+```
+
+In `cmd_tag`, replace the fixed b-roll query with an episode-aware target. Find:
+
+```python
+    clips = index.query(db_path, category=FOLDER_BROLL)
+```
+
+Replace with:
+
+```python
+    if args.episode:
+        # freshly-organized episode footage may not be indexed yet — refresh first
+        _reindex(library, db_path)
+        target_category = args.episode
+    else:
+        target_category = FOLDER_BROLL
+    clips = index.query(db_path, category=target_category)
+```
+
+Update the print line that announces the run so it names the target, e.g. change the header print to include `target_category` (whatever the current wording is — keep its style, just append `→ {target_category}` or similar). Do NOT change the cost/prompt/`_run_tagging` logic — it already operates on `clips`/`todo` generically, and `_run_tagging`'s `index.upsert` preserves each clip's existing category, so episode clips stay in their episode folder rows.
+
+- [ ] **Step 4: Run test to verify it passes**
+
+Run: `python -m pytest tests/test_tag_episode.py -q`
+Expected: PASS (2 passed). Then run the FULL suite (`python -m pytest tests/ -q`) — confirm no regressions.
+
+- [ ] **Step 5: Live verification (no paid call)**
+
+Run: `python cli_index.py --client sai tag --help`
+Expected: shows the new `--episode` flag. (Do NOT run a real `tag --episode` here — it makes paid Vision calls; Gray runs it on real footage when ready.)
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add python-scripts/footage-organizer/cli_index.py python-scripts/footage-organizer/tests/test_tag_episode.py
+git commit -m "feat(footage): tag --episode (tag documentary footage in place)"
+```
+
+(End the commit body with the `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>` trailer.)
+
+---
+
 ## Self-Review
 
 **1. Spec coverage:**
