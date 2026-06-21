@@ -32,6 +32,8 @@ MIN_DUR    = 0.35
 PAUSE_BREAK = 0.45
 
 FONT_VARIATION = "SemiBold"
+# NOTE: These dimensions assume HORIZONTAL (landscape) output.
+# A future vertical batch would need VIDEO_W / VIDEO_H sourced from the ref video.
 VIDEO_W, VIDEO_H = 1920, 1080
 
 
