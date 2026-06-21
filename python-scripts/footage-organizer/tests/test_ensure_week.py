@@ -3,19 +3,22 @@ from datetime import date
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from cli_index import ensure_week
-from config import CATEGORIES
+from config import FOLDER_BROLL, FOLDER_VERTICAL
 
-# 17 footage-library categories + (ACTIVE/DELIVERED/ARCHIVE) × 3 format buckets
-WEEK_FOLDER_COUNT = len(CATEGORIES) + 9
+# v4: b-roll + vertical footage buckets + (ACTIVE/DELIVERED/ARCHIVE) × 3 format buckets
+WEEK_FOLDER_COUNT = 2 + 9
 
 
 def test_ensure_week_creates_full_week_scaffold(tmp_path):
     created, skipped = ensure_week(tmp_path, date(2026, 4, 21))  # W02
     assert created == WEEK_FOLDER_COUNT
     assert skipped == 0
-    assert (tmp_path / "05_FOOTAGE_LIBRARY" / "interview-solo" / "W02_Apr-20-26").is_dir()
+    assert (tmp_path / "05_FOOTAGE_LIBRARY" / FOLDER_BROLL / "W02_Apr-20-26").is_dir()
+    assert (tmp_path / "05_FOOTAGE_LIBRARY" / FOLDER_VERTICAL / "W02_Apr-20-26").is_dir()
     assert (tmp_path / "02_ACTIVE_PROJECTS" / "shorts" / "W02_Apr-20-26").is_dir()
     assert (tmp_path / "04_ARCHIVE" / "longform" / "W02_Apr-20-26").is_dir()
+    # the dead 17 categories are NOT recreated
+    assert not (tmp_path / "05_FOOTAGE_LIBRARY" / "interview-solo" / "W02_Apr-20-26").exists()
 
 
 def test_ensure_week_is_idempotent(tmp_path):

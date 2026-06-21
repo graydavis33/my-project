@@ -32,7 +32,7 @@ from config import (
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
     FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
     FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BATCHES,
-    FOLDER_DRAFTS, FOLDER_BROLL, FOLDER_VERTICAL,
+    FOLDER_DRAFTS, FOLDER_BROLL, FOLDER_VERTICAL, FOLDER_INBOX,
     VISION_TAG_MODEL, VISION_TAG_COST_PER_CLIP,
 )
 
@@ -263,10 +263,10 @@ def cmd_pull(args):
 
 def ensure_week(library: Path, target: date) -> tuple[int, int]:
     """Create `target`'s week folders across:
-      - 05_FOOTAGE_LIBRARY/<category>/<W##>/   (17 categories)
-      - 02_ACTIVE_PROJECTS/<format>/<W##>/      (3 format buckets)
-      - 03_DELIVERED/<format>/<W##>/            (3 format buckets)
-      - 04_ARCHIVE/<format>/<W##>/              (3 format buckets)
+      - 05_FOOTAGE_LIBRARY/{b-roll,vertical}/<W##>/  (the v4 footage buckets)
+      - 02_ACTIVE_PROJECTS/<format>/<W##>/            (3 format buckets)
+      - 03_DELIVERED/<format>/<W##>/                  (3 format buckets)
+      - 04_ARCHIVE/<format>/<W##>/                    (3 format buckets)
     Idempotent — folders that already exist are skipped. Returns (created, skipped).
 
     Single source of truth for both the manual `create-week` command and the
@@ -275,14 +275,14 @@ def ensure_week(library: Path, target: date) -> tuple[int, int]:
     label = week_label_for(target)
     lib_root = library / FOLDER_FOOTAGE_LIB
 
-    # Seed the 17 standard categories, PLUS any freeform folders Gray already
-    # made on disk (v3) so his own folders get weekly subfolders too. Skip
-    # underscore-prefixed helpers like _TO_SORT — those aren't categories.
+    # v4: seed only the b-roll + vertical buckets — the old 17 categories were
+    # flattened away in the v4 consolidation, so don't recreate them. Plus any
+    # freeform folder already on disk (skip underscore-prefixed helpers).
     freeform = []
     if lib_root.is_dir():
         freeform = [p.name for p in lib_root.iterdir()
                     if p.is_dir() and not p.name.startswith("_")]
-    categories = sorted(set(CATEGORIES) | set(freeform))
+    categories = sorted({FOLDER_BROLL, FOLDER_VERTICAL} | set(freeform))
 
     targets = []
     # Footage library: one folder per category (standard + freeform)
@@ -324,7 +324,7 @@ def cmd_create_week(args):
 
     print(f"\n  Week {label} ({args.client.upper()})")
     print(f"  Created {created} folder(s), skipped {skipped} existing")
-    print(f"  Spans: FOOTAGE_LIBRARY ({len(CATEGORIES)} categories) + ACTIVE/DELIVERED/ARCHIVE ({len(PROJECT_FORMAT_BUCKETS)} formats × 3 = {len(PROJECT_FORMAT_BUCKETS) * 3})")
+    print(f"  Spans: FOOTAGE_LIBRARY ({FOLDER_BROLL} + {FOLDER_VERTICAL} + freeform) + ACTIVE/DELIVERED/ARCHIVE ({len(PROJECT_FORMAT_BUCKETS)} formats × 3 = {len(PROJECT_FORMAT_BUCKETS) * 3})")
     print(f"  Library: {library}\n")
 
 
@@ -818,6 +818,121 @@ def cmd_split_vertical(args):
     print(f"  DB: {db_path}\n")
 
 
+# ---- v4: intake a new dump → b-roll/<week> | vertical/<week> ----------------
+# Ongoing intake (the loop after a shoot): route each new clip into the right
+# week folder by orientation + filmed date. Horizontal → b-roll (tag next),
+# vertical → vertical (parked). Weeks come from each clip's filmed date, so a
+# multi-day card lands in the correct weeks.
+
+def _filmed_week(clip: Path):
+    """Week label from the clip's filmed date (ffprobe). None if undeterminable."""
+    try:
+        return week_label_for(date.fromisoformat(get_shoot_date(str(clip))))
+    except Exception:
+        return None
+
+
+def _intake_plan(source: Path, library: Path, default_week: str,
+                 orient_fn=None, week_fn=None):
+    """Plan routing every clip in `source` into b-roll/<week>/ (horizontal) or
+    vertical/<week>/ (vertical). Week = clip's filmed date, else default_week.
+    Returns (moves, counts, by_week, unknown, collisions)."""
+    orient_fn = orient_fn or (lambda p: get_display_orientation(str(p)))
+    week_fn = week_fn or _filmed_week
+    moves, unknown, collisions = [], [], []
+    counts = {"horizontal": 0, "vertical": 0}
+    by_week: dict[str, dict] = {}
+    seen, processed = set(), set()
+
+    for clip in _walk_videos(source):
+        if clip in processed:
+            continue
+        group = _clip_group(clip)
+        for f in group:
+            processed.add(f)
+        orientation, _flip = orient_fn(clip)
+        bucket = (FOLDER_BROLL if orientation == "horizontal"
+                  else FOLDER_VERTICAL if orientation == "vertical" else None)
+        if bucket is None:
+            unknown.append(clip.relative_to(source).as_posix() if source in clip.parents else clip.name)
+            continue
+        week = week_fn(clip) or default_week
+        dest_dir = library / FOLDER_FOOTAGE_LIB / bucket / week
+        for f in group:
+            dest = dest_dir / f.name
+            if dest.exists() or dest.as_posix() in seen:
+                collisions.append((f.name, dest.relative_to(library).as_posix()))
+                continue
+            seen.add(dest.as_posix())
+            moves.append((f, dest))
+        key = "horizontal" if bucket == FOLDER_BROLL else "vertical"
+        counts[key] += 1
+        by_week.setdefault(week, {"horizontal": 0, "vertical": 0})[key] += 1
+    return moves, counts, by_week, unknown, collisions
+
+
+def cmd_intake(args):
+    """Route a new footage dump into the weekly b-roll/vertical folders.
+    Plan-first; then run `tag` to tag the new horizontal clips."""
+    client = args.client
+    library = _library(client)
+    _autocreate_week(library)
+
+    if args.source:
+        source = Path(args.source)
+        if not source.is_absolute():
+            source = library / args.source
+    else:
+        date_str = args.date or date.today().isoformat()
+        source = library / FOLDER_ORGANIZED / FOLDER_INBOX / date_str
+    if not source.is_dir():
+        print(f"Error: intake source not found: {source}")
+        sys.exit(1)
+
+    default_week = week_label_for(date.fromisoformat(args.date)) if args.date else current_week_label()
+    moves, counts, by_week, unknown, collisions = _intake_plan(source, library, default_week)
+
+    print(f"\n  Intake ← {source}  ({client.upper()})")
+    print(f"  Horizontal → {FOLDER_BROLL}/: {counts['horizontal']}    Vertical → {FOLDER_VERTICAL}/: {counts['vertical']}")
+    if by_week:
+        print(f"\n  By week:")
+        for wk in sorted(by_week):
+            b = by_week[wk]
+            print(f"    {wk}: {b['horizontal']} horizontal, {b['vertical']} vertical")
+    if unknown:
+        print(f"  ! {len(unknown)} clip(s) had undetermined orientation — LEFT in source:")
+        for p in unknown[:20]:
+            print(f"      {p}")
+    if collisions:
+        print(f"  ! {len(collisions)} file(s) collide at the destination — SKIPPED:")
+        for name, dest in collisions[:20]:
+            print(f"      {name} -> {dest}")
+
+    if not moves:
+        print("\n  Nothing to intake.\n")
+        return
+
+    if not args.yes:
+        ans = input("\n  Route these clips? [y/N]: ").strip().lower()
+        if ans != "y":
+            print("  Aborted — nothing moved.\n")
+            return
+
+    moved = _execute_consolidation(moves)
+    if source.is_dir() and not any(source.iterdir()):
+        source.rmdir()
+        print(f"\n  Cleared empty source: {source}")
+    else:
+        print()
+
+    db_path = _db(client)
+    added, skipped, removed = _reindex(library, db_path)
+    print(f"  Moved {moved} file(s). Re-indexed: {added} clip(s), skipped {skipped}, removed {removed} missing")
+    if counts["horizontal"]:
+        print(f"  Next: tag the {counts['horizontal']} new horizontal clip(s) → python cli_index.py --client {client} tag")
+    print(f"  DB: {db_path}\n")
+
+
 # ---- v4 Phase 3: AI Vision tagging of b-roll -------------------------------
 
 def _apply_tags_to_record(rec, tags: dict):
@@ -1208,6 +1323,12 @@ def main():
     cb = sub.add_parser("consolidate-broll", help="Flatten all category folders into 05_FOOTAGE_LIBRARY/b-roll/<week>/ (original weeks preserved); plan-first")
     cb.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")
     cb.set_defaults(func=cmd_consolidate_broll)
+
+    ik = sub.add_parser("intake", help="Route a new footage dump → b-roll/<week>/ (horizontal) or vertical/<week>/ (vertical) by orientation + filmed date; plan-first")
+    ik.add_argument("--from", dest="source", help="Folder to intake (relative to library or absolute). Default: 01_ORGANIZED/_INBOX/<date>/")
+    ik.add_argument("--date", help="YYYY-MM-DD: default inbox date + fallback week for clips with no readable filmed date")
+    ik.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")
+    ik.set_defaults(func=cmd_intake)
 
     sv = sub.add_parser("split-vertical", help="Move vertical clips out of b-roll/ into vertical/<week>/ (parked, untagged); plan-first, rotation-aware")
     sv.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")

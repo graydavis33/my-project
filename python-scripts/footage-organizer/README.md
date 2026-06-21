@@ -205,6 +205,23 @@ python cli_index.py --client sai split-vertical --yes  # skip the prompt
 - Plan-first + pure moves (never overwrites); re-indexes after.
 - There is **no `a-roll` folder** — A-roll is freely reused as b-roll, so horizontal talking clips stay in `b-roll/`.
 
+## v4 — Weekly intake (`intake`)
+
+The ongoing loop after a shoot: route a fresh card dump into the right **week** folder by **orientation**, so new footage lands where it belongs automatically.
+
+```bash
+python cli_index.py --client sai intake --from "01_ORGANIZED/_INBOX/2026-06-21"   # plan-first
+python cli_index.py --client sai intake                                            # defaults to _INBOX/<today>
+```
+
+- Horizontal → `b-roll/<week>/`, vertical → `vertical/<week>/`. **Week comes from each clip's filmed date** (ffprobe), so a multi-day card lands in the correct weeks; `--date` sets the fallback week.
+- Plan-first (shows per-week horizontal/vertical counts, undetermined-orientation clips, collisions). Sidecars follow their clip. Clears the source folder if it empties.
+- After intake, run `tag` to Vision-tag the new horizontal clips.
+
+**Weekly folders auto-create:** `ensure_week` (run on every `index`/`pull`) now scaffolds `b-roll/<week>/` + `vertical/<week>/` for the current week automatically — it no longer recreates the old 17 category folders (flattened away in v4). So a new calendar week → new b-roll/vertical week folders, no manual step.
+
+**Full loop:** `film → drop card in _INBOX → intake → tag → pull --location office --emotion focused`
+
 ## v4 — AI Vision tagging (`tag`)
 
 Vision-tags horizontal b-roll clips → `emotion / action / location / objects` in the index (the search layer; pull-by-tag uses these).
