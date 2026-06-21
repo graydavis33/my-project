@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 """Simple HTTP server to preview trimmed A/B cam videos."""
+import sys
+sys.stdout.reconfigure(encoding="utf-8")
 import http.server
 import socketserver
 from pathlib import Path
 
 PORT = 3013
-TRIM_FOLDER = Path("D:/Sai/05_FOOTAGE_LIBRARY/01_ORGANIZED/Batch_03/Vid_13/Synced/trimmed")
+TRIM_FOLDER = Path("D:/Sai/08_AI_EDITS/shorts/Batch_03/B3_V13 - The Real Lover Is You")
 
 class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
