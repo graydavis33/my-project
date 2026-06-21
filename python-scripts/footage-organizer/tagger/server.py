@@ -205,6 +205,7 @@ _PAGE = r"""<!doctype html><html><head><meta charset="utf-8">
     <select id="bfield"><option value="emotion">emotion</option><option value="action">action</option><option value="location">location</option><option value="object">+ object</option></select>
     <input id="bval" list="dl-emotion" placeholder="value…">
     <button id="bapply">Apply to selected</button>
+    <button id="bvert" style="background:#a52;border-color:#a52">⇄ mark vertical (move out)</button>
     <button id="bclear" style="background:#333;border-color:#333">clear selection</button>
   </div>
 </header>
@@ -315,6 +316,12 @@ document.getElementById('bapply').addEventListener('click',()=>{
     render(); refreshVocab(); document.getElementById('bval').value='';
   });
 });
+document.getElementById('bvert').addEventListener('click',()=>{
+  const paths=[...sel]; if(!paths.length) return;
+  if(!confirm('Move '+paths.length+' clip(s) to vertical and out of b-roll? They lose their tags.')) return;
+  fetch('/api/reclassify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paths})})
+    .then(r=>r.json()).then(res=>{ if(res.ok){ CLIPS=CLIPS.filter(c=>!sel.has(c.path)); sel.clear(); render(); setSelCount(); } else alert('move failed'); });
+});
 document.getElementById('bclear').addEventListener('click',()=>{sel.clear();render();setSelCount();});
 
 Promise.all([fetch('/api/clips').then(r=>r.json()), refreshVocab()]).then(([clips])=>{
@@ -373,9 +380,17 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self._json({"error": "bad json"}, 400); return
 
         if route == "/api/reclassify":  # move b-roll↔vertical; allowed in any mode
-            new_rel = _reclassify(data.get("path", ""), data.get("to", ""))
-            self._json({"ok": bool(new_rel), "path": new_rel} if new_rel else {"error": "failed"},
-                       200 if new_rel else 400)
+            paths = data.get("paths") or ([data["path"]] if data.get("path") else [])
+            to = data.get("to") or None
+            moved = []
+            for p in paths:
+                parts = Path(p).parts
+                # default target = flip the clip's current bucket
+                target = to or (FOLDER_VERTICAL if (len(parts) > 1 and parts[1] == FOLDER_BROLL) else FOLDER_BROLL)
+                nr = _reclassify(p, target)
+                if nr:
+                    moved.append(nr)
+            self._json({"ok": len(moved) > 0, "moved": len(moved)})
             return
 
         if VERTICAL_N:  # read-only orientation-review mode (tag writes only)
