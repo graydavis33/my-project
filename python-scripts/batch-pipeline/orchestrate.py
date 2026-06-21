@@ -225,9 +225,19 @@ def orchestrate(batch_n: int, vid_n: int):
     config_json.write_text(json.dumps(config_dict, indent=2))
     print(f"\n✓ Config saved: {config_json}")
 
-    # --- Now run the standard cut/captions/verify/package pipeline ---
-    print(f"\nRunning CUT → CAPTIONS → VERIFY → PACKAGE...")
-    subprocess.run([sys.executable, "run.py", "--video", str(config_json)], check=True)
+    # Done. Output files are ready for manual editing in Premiere.
+    print(f"\n{'='*60}")
+    print(f"DONE — Materials ready for editing:")
+    print(f"{'='*60}")
+    print(f"Synced A-cam:    {synced_a}")
+    print(f"Synced B-cam:    {synced_b}")
+    print(f"Cleaned audio:   {lav_wav_clean}")
+    print(f"Auto-selected ranges: {len(proposed_ranges)} segments, {total_duration:.1f}s")
+    print(f"Range details:   {config_json}")
+    print(f"\nImport the synced MOVs into Premiere on a multicam timeline.")
+    print(f"Use the cleaned audio as your lav track.")
+    print(f"Cut to the ranges in config.json for editorial guidance.")
+    print(f"{'='*60}\n")
 
 
 if __name__ == "__main__":
