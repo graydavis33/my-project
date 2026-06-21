@@ -68,12 +68,13 @@ Constants and environment helpers shared by all stages.
 ### 2. `sync.py` — audio offset detection
 - `compute_offset(a_wav, b_wav, window_s=30.0) -> float` — cross-correlates the first
   `window_s` seconds of two WAV files; returns the offset in seconds such that
-  `A_timestamp + offset = B_timestamp`. Positive means B started after A.
+  `A_timestamp + offset = B_timestamp`. Negative means B started after A.
 
 ### 3. `clipguard.py` — clean output trim
-- `snap_out(audio, sr, sout, next_word_start) -> float` — scans a 0–600 ms window
-  past the nominal cut point and returns the quietest moment within that window,
-  capped before the next word starts. Prevents audio clipping at segment boundaries.
+- `snap_out(audio, sr, sout, next_word_start) -> float` — scans past the nominal cut point
+  from +100 ms to +600 ms (grace zone before scoring window) and returns the quietest moment
+  within that 100–600 ms scoring window, capped before the next word starts. Prevents audio
+  clipping at segment boundaries.
 
 ### 4. `transcribe.py` — Whisper transcription
 - `to_words(raw, shift) -> dict` — normalises a raw Whisper JSON result, shifting all
