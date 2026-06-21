@@ -155,6 +155,32 @@ def _reclassify(path_rel: str, to_bucket: str):
     return new_rel
 
 
+def _delete_clip(path_rel: str) -> bool:
+    """PERMANENTLY delete a clip (+ its sidecars) from the footage drive and drop
+    its index row. Only allowed under 05_FOOTAGE_LIBRARY/{b-roll,vertical}/. No
+    recycle bin — the file is gone. Returns True if the clip file was deleted."""
+    parts = list(Path(path_rel).parts)  # (05_FOOTAGE_LIBRARY, <bucket>, <week>, <name>)
+    if len(parts) < 4 or parts[0] != FOLDER_FOOTAGE_LIB or parts[1] not in (FOLDER_BROLL, FOLDER_VERTICAL):
+        return False
+    src = (LIBRARY / path_rel).resolve()
+    libroot = (LIBRARY / FOLDER_FOOTAGE_LIB).resolve()
+    if libroot not in src.parents or not src.is_file():
+        return False
+
+    stem = src.stem.upper()
+    for f in list(src.parent.iterdir()):  # clip + its sidecars (same stem)
+        if not f.is_file():
+            continue
+        s = f.stem.upper()
+        if s == stem or (s.startswith(stem) and not s[len(stem):len(stem) + 1].isdigit()):
+            try:
+                f.unlink()
+            except OSError:
+                pass
+    index.remove(DB, path_rel)
+    return not src.exists()
+
+
 def _thumb(target: Path) -> Path:
     _THUMB_DIR.mkdir(parents=True, exist_ok=True)
     out = _THUMB_DIR / (str(abs(hash(str(target)))) + ".jpg")
@@ -196,6 +222,8 @@ _PAGE = r"""<!doctype html><html><head><meta charset="utf-8">
   .rc{margin-top:8px}
   .rcbtn{background:#2a2a2a;color:#bbb;border:1px solid #383838;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer}
   .rcbtn:hover{background:#3a2a2a;color:#ff9b9b;border-color:#633}
+  .delbtn{margin-left:8px;background:#2a1818;color:#e66;border:1px solid #633;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer}
+  .delbtn:hover{background:#5a1a1a;color:#fff;border-color:#a33}
 </style></head><body>
 <header>
   <h1>B-roll tagger</h1>
@@ -206,6 +234,7 @@ _PAGE = r"""<!doctype html><html><head><meta charset="utf-8">
     <input id="bval" list="dl-emotion" placeholder="value…">
     <button id="bapply">Apply to selected</button>
     <button id="bvert" style="background:#a52;border-color:#a52">⇄ mark vertical (move out)</button>
+    <button id="bdel" style="background:#7a1f1f;border-color:#a33">🗑 delete from drive</button>
     <button id="bclear" style="background:#333;border-color:#333">clear selection</button>
   </div>
 </header>
@@ -241,7 +270,7 @@ function render(){
         <div class="row"><label>action</label><input class="ac f" data-f="action" list="dl-action" value="${c.action}"></div>
         <div class="row"><label>location</label><input class="lo f" data-f="location" list="dl-location" value="${c.location}"></div>
         <div class="objs">${objChips(c)}</div>
-        <div class="rc"><button class="rcbtn" data-to="${c.path.includes('/b-roll/')?'vertical':'b-roll'}">${c.path.includes('/b-roll/')?'⇄ mark vertical (move out)':'⇄ mark horizontal'}</button></div>
+        <div class="rc"><button class="rcbtn" data-to="${c.path.includes('/b-roll/')?'vertical':'b-roll'}">${c.path.includes('/b-roll/')?'⇄ mark vertical (move out)':'⇄ mark horizontal'}</button><button class="delbtn">🗑 delete from drive</button></div>
       </div>`;
     g.appendChild(div);
   });
@@ -302,6 +331,13 @@ document.getElementById('grid').addEventListener('click',e=>{
       .then(r=>r.json()).then(res=>{ if(res.ok){ CLIPS=CLIPS.filter(x=>x.path!==c.path); sel.delete(c.path); render(); setSelCount(); }
         else alert('move failed'); });
   }
+  if(e.target.classList.contains('delbtn')){
+    const card=e.target.closest('.card'), c=CLIPS[+card.dataset.i];
+    if(!confirm('PERMANENTLY delete '+c.name+' from the footage drive? This cannot be undone — there is no recycle bin.')) return;
+    fetch('/api/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:c.path})})
+      .then(r=>r.json()).then(res=>{ if(res.ok){ CLIPS=CLIPS.filter(x=>x.path!==c.path); sel.delete(c.path); render(); setSelCount(); }
+        else alert('delete failed'); });
+  }
 });
 
 // bulk apply
@@ -321,6 +357,12 @@ document.getElementById('bvert').addEventListener('click',()=>{
   if(!confirm('Move '+paths.length+' clip(s) to vertical and out of b-roll? They lose their tags.')) return;
   fetch('/api/reclassify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paths})})
     .then(r=>r.json()).then(res=>{ if(res.ok){ CLIPS=CLIPS.filter(c=>!sel.has(c.path)); sel.clear(); render(); setSelCount(); } else alert('move failed'); });
+});
+document.getElementById('bdel').addEventListener('click',()=>{
+  const paths=[...sel]; if(!paths.length) return;
+  if(!confirm('PERMANENTLY delete '+paths.length+' clip(s) from the footage drive? This cannot be undone — there is no recycle bin.')) return;
+  fetch('/api/delete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paths})})
+    .then(r=>r.json()).then(res=>{ if(res.ok){ CLIPS=CLIPS.filter(c=>!sel.has(c.path)); sel.clear(); render(); setSelCount(); } else alert('delete failed'); });
 });
 document.getElementById('bclear').addEventListener('click',()=>{sel.clear();render();setSelCount();});
 
@@ -371,13 +413,19 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
         route = urllib.parse.urlparse(self.path).path
-        if route not in ("/api/tag", "/api/reclassify"):
+        if route not in ("/api/tag", "/api/reclassify", "/api/delete"):
             self.send_error(404); return
         length = int(self.headers.get("Content-Length") or 0)
         try:
             data = json.loads(self.rfile.read(length) or b"{}")
         except Exception:
             self._json({"error": "bad json"}, 400); return
+
+        if route == "/api/delete":  # PERMANENT delete from disk + index; any mode
+            paths = data.get("paths") or ([data["path"]] if data.get("path") else [])
+            deleted = sum(1 for p in paths if _delete_clip(p))
+            self._json({"ok": deleted > 0, "deleted": deleted})
+            return
 
         if route == "/api/reclassify":  # move b-roll↔vertical; allowed in any mode
             paths = data.get("paths") or ([data["path"]] if data.get("path") else [])

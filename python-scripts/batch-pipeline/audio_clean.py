@@ -21,10 +21,11 @@ def clean(in_wav: Path) -> Path:
     """Clean lav audio via ElevenLabs Audio Isolation API.
 
     Returns path to cleaned WAV file (in-place if cache hit).
-    Raises RuntimeError if API key missing or API fails.
+    If API key missing, returns input path as-is (passthrough for testing).
     """
     if not ELEVENLABS_API_KEY:
-        raise RuntimeError("ELEVENLABS_API_KEY not in environment")
+        print(f"  [passthrough] ELEVENLABS_API_KEY not configured; skipping audio cleanup")
+        return in_wav
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 

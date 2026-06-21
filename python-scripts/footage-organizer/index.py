@@ -248,6 +248,13 @@ def relocate(db_path: Path, old_path: str, new_path: str, category: str) -> int:
                             (new_path, category, old_path)).rowcount
 
 
+def remove(db_path: Path, path: str) -> int:
+    """Delete a single clip's index row by path. Returns rows removed (0 or 1).
+    Used when the dashboard permanently deletes a clip from disk."""
+    with sqlite3.connect(db_path) as conn:
+        return conn.execute("DELETE FROM clips WHERE path = ?", (path,)).rowcount
+
+
 def distinct_tag_values(db_path: Path) -> dict:
     """All distinct tag values currently in the index — feeds dashboard autocomplete.
     Returns {emotion:[...], action:[...], location:[...], object:[...]}."""

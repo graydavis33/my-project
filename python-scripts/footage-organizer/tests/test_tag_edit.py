@@ -60,6 +60,15 @@ def test_relocate_repoints_path_and_category(tmp_path):
     assert moved is not None and moved.category == "vertical"
 
 
+def test_remove_deletes_row(tmp_path):
+    db = tmp_path / "i.sqlite"
+    _seed(db, path="b-roll/W05/C1.MP4")
+    assert index.get(db, "b-roll/W05/C1.MP4") is not None
+    assert index.remove(db, "b-roll/W05/C1.MP4") == 1
+    assert index.get(db, "b-roll/W05/C1.MP4") is None
+    assert index.remove(db, "b-roll/W05/C1.MP4") == 0  # already gone
+
+
 def test_distinct_tag_values(tmp_path):
     db = tmp_path / "i.sqlite"
     _seed(db, path="b-roll/W05/A.MP4", emotion="focused", location="office",
