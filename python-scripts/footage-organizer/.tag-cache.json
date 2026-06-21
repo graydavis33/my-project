@@ -83,5 +83,163 @@
         "ring"
       ]
     }
+  },
+  "7b2c5281452be9818010e98a7a205f41": {
+    "filename": "C2462.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "office",
+      "objects": [
+        "whiteboard",
+        "markers",
+        "eraser",
+        "window"
+      ]
+    }
+  },
+  "c41b9b96685f0ca08e2374ec57285408": {
+    "filename": "C2326.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "office",
+      "objects": [
+        "monitor",
+        "microphone",
+        "headphones",
+        "laptop",
+        "keyboard",
+        "desk",
+        "water bottle",
+        "office chair",
+        "window"
+      ]
+    }
+  },
+  "054ac60c3e1b9e86176640b70c6f8bd8": {
+    "filename": "C2328.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "talking",
+      "location": "podcast studio",
+      "objects": [
+        "microphone",
+        "headphones",
+        "window",
+        "watch",
+        "chair"
+      ]
+    }
+  },
+  "7b48ede24c20c6e3971c19aaadd941e0": {
+    "filename": "C2329.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "talking",
+      "location": "office",
+      "objects": [
+        "headphones",
+        "microphone",
+        "monitor",
+        "keyboard",
+        "laptop",
+        "window"
+      ]
+    }
+  },
+  "dd332ff8981c81632cf90845601784ea": {
+    "filename": "C2330.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "home office",
+      "objects": [
+        "monitor",
+        "headphones",
+        "desk",
+        "office chair",
+        "backpack",
+        "water bottle",
+        "wall art",
+        "floor lamp"
+      ]
+    }
+  },
+  "4f8f48cddc69d44da85b9072331fd6ba": {
+    "filename": "C2333.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "talking",
+      "location": "office",
+      "objects": [
+        "headphones",
+        "microphone",
+        "monitor",
+        "laptop",
+        "keyboard",
+        "mouse",
+        "desk",
+        "window"
+      ]
+    }
+  },
+  "27c08667f9bd802235036c43e6e6b90b": {
+    "filename": "C2334.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "office",
+      "objects": [
+        "microphone",
+        "headphones",
+        "laptop",
+        "water bottle",
+        "floor lamp",
+        "monitor",
+        "chair"
+      ]
+    }
+  },
+  "ef51e44ccf8c4f291470c1d4f79e306c": {
+    "filename": "C2336.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "office",
+      "objects": [
+        "microphone",
+        "monitor",
+        "keyboard",
+        "vr headset",
+        "desk",
+        "floor lamp",
+        "mouse"
+      ]
+    }
+  },
+  "96beb31e7970a265dd1a35ec580e5379": {
+    "filename": "C2337.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "nyc street",
+      "objects": [
+        "truck",
+        "traffic cones",
+        "building",
+        "backpack",
+        "hand truck"
+      ]
+    }
   }
 }

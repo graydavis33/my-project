@@ -191,6 +191,39 @@ python cli_index.py --client sai consolidate-broll --yes  # skip the prompt
 - **A/B-cam interview footage is never b-roll** — it lives only in `_BATCHES/` (filed by `ship`) and is untouched here.
 - After moving, empty category folders are pruned and the index re-built (every clip indexes as `category=b-roll`).
 
+## v4 — Split vertical out of b-roll (`split-vertical`)
+
+All current filming is horizontal, so **horizontal = reusable b-roll** (gets tagged) and **vertical = legacy short-form** (parked, never tagged — no point paying to categorize footage that won't be reused).
+
+```bash
+python cli_index.py --client sai split-vertical        # plan-first, prompts before moving
+python cli_index.py --client sai split-vertical --yes  # skip the prompt
+```
+
+- Moves every **vertical** clip out of `b-roll/` into `05_FOOTAGE_LIBRARY/vertical/<original-week>/` (weeks preserved); horizontal clips stay in `b-roll/`.
+- **Rotation-aware:** Sony records vertical clips as stored-1920×1080 + a rotation flag (so they *display* vertical). Detection reads the Display Matrix, not just width/height. Plan output flags the rotation-flipped ones; orientation it can't determine is left in `b-roll/` and reported.
+- Plan-first + pure moves (never overwrites); re-indexes after.
+- There is **no `a-roll` folder** — A-roll is freely reused as b-roll, so horizontal talking clips stay in `b-roll/`.
+
+## v4 — AI Vision tagging (`tag`)
+
+Vision-tags horizontal b-roll clips → `emotion / action / location / objects` in the index (the search layer; pull-by-tag uses these).
+
+```bash
+python cli_index.py --client sai tag --limit 5   # sample run (eyeball accuracy first)
+python cli_index.py --client sai tag             # tag all untagged b-roll (plan-first, shows est. cost)
+python cli_index.py --client sai tag --model claude-haiku-4-5   # cheap incremental run for new clips
+python cli_index.py --client sai tag --retag     # re-tag already-tagged clips
+```
+
+- Default model **Opus 4.8** for the initial pass (~$0.015/clip); drop to **Haiku** later for new clips (~$0.003/clip).
+- `emotion`/`action` are set only when a person is in frame; `location`/`objects` on every clip. Tags cached by file-hash (`.tag-cache.json`) so each clip is paid once ever.
+- A plain `index` re-scan **never wipes tags** (the upsert COALESCEs them) — only `tag` / the dashboard write them.
+
+### Review dashboard
+
+`python tagger/server.py --client sai` → opens a local browser grid (thumbnails + full-clip video scrubbing) showing each tagged clip with `emotion · action · location`. `--vertical N` shows detected-vertical clips for orientation confirmation. Phase 4 will add in-place tag editing + bulk-apply here.
+
 ## v3 — Stage transitions (promote)
 
 When a video is finished, `promote` moves the whole project to the next stage so you never forget the step:
