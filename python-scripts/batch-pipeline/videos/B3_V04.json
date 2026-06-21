@@ -1,0 +1,18 @@
+{
+  "batch_n": 3, "vid_n": 4, "title": "Money Reflects Who You Are", "lav": "B",
+  "synced_a": "01_ORGANIZED/Batch_03/Vid_04/Synced/Vid_04_A-cam_synced.mp4",
+  "synced_b": "01_ORGANIZED/Batch_03/Vid_04/Synced/Vid_04_B-cam_synced.mp4",
+  "lav_wav":  "01_ORGANIZED/Batch_03/Vid_04/Synced/_B.wav",
+  "words_json":"01_ORGANIZED/Batch_03/Vid_04/Synced/Vid_04_B-cam_synced.json",
+  "ranges": [
+    [14.30, 18.88, null, null],
+    [188.16, 190.96, null, null],
+    [191.86, 195.08, null, null],
+    [196.60, 207.42, null, null],
+    [212.90, 217.10, null, 0.05],
+    [221.56, 224.78, 0.08, null],
+    [233.32, 237.18, null, null],
+    [238.22, 242.40, null, null],
+    [243.16, 245.88, null, 0.40]
+  ]
+}
