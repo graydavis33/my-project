@@ -253,7 +253,12 @@ def _guard_structure(library: Path):
 
 
 def cmd_check_structure(args):
-    library = _library(args.client)
+    # Hook-safe: stay silent if the drive isn't mounted (SessionStart runs this on
+    # every machine, incl. Mac / drive-unplugged).
+    root = CLIENT_ROOTS.get(args.client, "")
+    if not root or not Path(root).exists():
+        return
+    library = Path(root)
     misnested = _find_misnested(library)
     if not misnested:
         print(f"\n  Structure OK — all top-level folders are where they belong.\n")
