@@ -2924,5 +2924,34 @@
         "shelf"
       ]
     }
+  },
+  "a79c096bd6040c57ff929d3259070daa": {
+    "filename": "C2485.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "working",
+      "location": "office",
+      "objects": [
+        "sticky note",
+        "wall",
+        "desk"
+      ]
+    }
+  },
+  "aa90dce6ab9b7e2376aef227fb28f4a6": {
+    "filename": "C2491.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "office",
+      "objects": [
+        "sticky notes",
+        "mirror",
+        "glass wall",
+        "light fixture"
+      ]
+    }
   }
 }

@@ -940,7 +940,19 @@ def cmd_intake(args):
     db_path = _db(client)
     added, skipped, removed = _reindex(library, db_path)
     print(f"  Moved {moved} file(s). Re-indexed: {added} clip(s), skipped {skipped}, removed {removed} missing")
-    if counts["horizontal"]:
+
+    if args.tag and counts["horizontal"]:
+        todo = [c for c in index.query(db_path, category=FOLDER_BROLL) if _is_untagged(c)]
+        per_clip = VISION_TAG_COST_PER_CLIP.get(args.tag_model, 0.015)
+        print(f"\n  Auto-tag: {len(todo)} untagged b-roll clip(s)  "
+              f"Model: {args.tag_model}  Est. cost: ~${len(todo) * per_clip:.2f}")
+        go = args.yes or input("  Proceed with the paid Vision run? [y/N]: ").strip().lower() == "y"
+        if go and todo:
+            tagged, cache_hits, failed = _run_tagging(library, db_path, todo, args.tag_model)
+            print(f"\n  Tagged {tagged} clip(s) ({cache_hits} from cache, {failed} skipped).")
+        elif not go:
+            print(f"  Skipped tagging — run later: python cli_index.py --client {client} tag")
+    elif counts["horizontal"]:
         print(f"  Next: tag the {counts['horizontal']} new horizontal clip(s) → python cli_index.py --client {client} tag")
     print(f"  DB: {db_path}\n")
 
@@ -961,6 +973,38 @@ def _apply_tags_to_record(rec, tags: dict):
 
 def _is_untagged(rec) -> bool:
     return not (rec.emotion or rec.action or rec.location or rec.objects)
+
+
+def _run_tagging(library, db_path, todo, model, retag=False):
+    """Vision-tag a list of ClipRecords → write tags to the index. Shared by the
+    `tag` command and intake's `--tag`. Returns (tagged, cache_hits, failed)."""
+    import analyzer
+    from cache import get_cached_tags, store_cached_tags
+
+    tagged = failed = cache_hits = 0
+    for c in todo:
+        abspath = str(library / c.path)
+        name = Path(c.path).name
+        cached = None if retag else get_cached_tags(abspath)
+        if cached is not None:
+            tags = cached
+            cache_hits += 1
+        else:
+            try:
+                dur = get_duration(abspath)
+                frames = extract_frames(abspath, dur)
+                tags = analyzer.tag_video(frames, name, model)
+                store_cached_tags(abspath, tags)
+            except Exception as e:
+                print(f"    [skip] {name}: {e}")
+                failed += 1
+                continue
+        _apply_tags_to_record(c, tags)
+        index.upsert(db_path, c)
+        tagged += 1
+        print(f"    {name}: emotion={c.emotion} action={c.action} "
+              f"location={c.location} objects={index.unpack_objects(c.objects)}")
+    return tagged, cache_hits, failed
 
 
 def cmd_tag(args):
@@ -997,33 +1041,7 @@ def cmd_tag(args):
             print("  Aborted — no API calls made.\n")
             return
 
-    import analyzer
-    from cache import get_cached_tags, store_cached_tags
-
-    tagged = failed = cache_hits = 0
-    for c in todo:
-        abspath = str(library / c.path)
-        name = Path(c.path).name
-        cached = None if args.retag else get_cached_tags(abspath)
-        if cached is not None:
-            tags = cached
-            cache_hits += 1
-        else:
-            try:
-                dur = get_duration(abspath)
-                frames = extract_frames(abspath, dur)
-                tags = analyzer.tag_video(frames, name, args.model)
-                store_cached_tags(abspath, tags)
-            except Exception as e:
-                print(f"    [skip] {name}: {e}")
-                failed += 1
-                continue
-        _apply_tags_to_record(c, tags)
-        index.upsert(db_path, c)
-        tagged += 1
-        print(f"    {name}: emotion={c.emotion} action={c.action} "
-              f"location={c.location} objects={index.unpack_objects(c.objects)}")
-
+    tagged, cache_hits, failed = _run_tagging(library, db_path, todo, args.model, args.retag)
     print(f"\n  Tagged {tagged} clip(s) ({cache_hits} from cache, {failed} skipped).")
     print(f"  DB: {db_path}\n")
 
@@ -1343,6 +1361,8 @@ def main():
     ik = sub.add_parser("intake", help="Route a new footage dump → b-roll/<week>/ (horizontal) or vertical/<week>/ (vertical) by orientation + filmed date; plan-first")
     ik.add_argument("--from", dest="source", help="Folder to intake (relative to library or absolute). Default: 01_ORGANIZED/_INBOX/<date>/")
     ik.add_argument("--date", help="YYYY-MM-DD: default inbox date + fallback week for clips with no readable filmed date")
+    ik.add_argument("--tag", action="store_true", help="After filing, AI Vision-tag the new horizontal b-roll clips in one go")
+    ik.add_argument("--tag-model", default=VISION_TAG_MODEL, help=f"Vision model for --tag (default {VISION_TAG_MODEL})")
     ik.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")
     ik.set_defaults(func=cmd_intake)
 

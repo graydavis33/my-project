@@ -212,11 +212,12 @@ The ongoing loop after a shoot: route a fresh card dump into the right **week** 
 ```bash
 python cli_index.py --client sai intake --from "01_ORGANIZED/_INBOX/2026-06-21"   # plan-first
 python cli_index.py --client sai intake                                            # defaults to _INBOX/<today>
+python cli_index.py --client sai intake --from "<folder>" --tag                    # file AND auto-tag in one go
 ```
 
 - Horizontal → `b-roll/<week>/`, vertical → `vertical/<week>/`. **Week comes from each clip's filmed date** (ffprobe), so a multi-day card lands in the correct weeks; `--date` sets the fallback week.
 - Plan-first (shows per-week horizontal/vertical counts, undetermined-orientation clips, collisions). Sidecars follow their clip. Clears the source folder if it empties.
-- After intake, run `tag` to Vision-tag the new horizontal clips.
+- `--tag` runs the Vision tagger on the new horizontal b-roll clips right after filing (one command instead of intake-then-tag). It shows the est. cost and confirms first (or pass `--yes` to skip the prompt); `--tag-model claude-haiku-4-5` for the cheap pass. Vertical clips are never tagged. Otherwise, run `tag` separately afterward.
 
 **Weekly folders auto-create:** `ensure_week` (run on every `index`/`pull`) now scaffolds `b-roll/<week>/` + `vertical/<week>/` for the current week automatically — it no longer recreates the old 17 category folders (flattened away in v4). So a new calendar week → new b-roll/vertical week folders, no manual step.
 
