@@ -171,11 +171,17 @@ def orchestrate(batch_n: int, vid_n: int):
     sr, lav_data = wavfile.read(str(lav_wav_raw))
     if lav_data.ndim > 1:
         lav_data = lav_data.mean(axis=1)
-    i_start = int(lav_offset * sr)
-    i_end = int((lav_offset + sync_duration) * sr)
-    lav_data_trimmed = lav_data[i_start:i_end]
+    i_start = max(0, int(lav_offset * sr))
+    i_end = min(len(lav_data), int((lav_offset + sync_duration) * sr))
+    lav_data_trimmed = lav_data[i_start:i_end].astype(np.int16)
+
     lav_wav_trimmed = work_dir / "lav_trimmed.wav"
+    print(f"  writing trimmed audio: {i_start//sr:.2f}–{i_end//sr:.2f}s ({len(lav_data_trimmed)} samples)")
     wavfile.write(str(lav_wav_trimmed), sr, lav_data_trimmed)
+
+    if not lav_wav_trimmed.exists():
+        raise RuntimeError(f"Failed to create {lav_wav_trimmed}")
+    print(f"  ✓ trimmed LAV audio: {lav_wav_trimmed.name}")
 
     # Clean
     lav_wav_clean = audio_clean.clean(lav_wav_trimmed)
