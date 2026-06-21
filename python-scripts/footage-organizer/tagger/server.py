@@ -27,16 +27,45 @@ except Exception:
     pass
 
 import index
-from config import CLIENT_ROOTS, INDEX_DB_NAME, FOLDER_BROLL, FOLDER_FOOTAGE_LIB
+from config import (CLIENT_ROOTS, INDEX_DB_NAME, FOLDER_BROLL, FOLDER_FOOTAGE_LIB,
+                    VIDEO_EXTENSIONS)
+from extractor import get_display_orientation
 
 LIBRARY = Path(".")
 DB = Path(".")
 SHOW_ALL = False
 LIMIT = None
+VERTICAL_N = None  # when set, show the first N detected-vertical b-roll clips instead
 _THUMB_DIR = Path(tempfile.gettempdir()) / "broll-review-thumbs"
 
 
+def _vertical_sample(n: int):
+    """First n b-roll clips that detect as vertical — for confirming the split
+    before parking them. Title shows the orientation, video plays so you can see it."""
+    broll = LIBRARY / FOLDER_FOOTAGE_LIB / FOLDER_BROLL
+    out = []
+    for clip in sorted(broll.rglob("*")):
+        if len(out) >= n:
+            break
+        if not clip.is_file() or clip.suffix not in VIDEO_EXTENSIONS or clip.name.startswith("._"):
+            continue
+        orientation, flipped = get_display_orientation(str(clip))
+        if orientation != "vertical":
+            continue
+        rel = clip.relative_to(LIBRARY).as_posix()
+        week = next((p for p in rel.split("/") if p.startswith("W") or p == "unknown-week"), "")
+        out.append({
+            "path": rel, "name": clip.name,
+            "emotion": "VERTICAL",
+            "action": "rotation-flag" if flipped else "native-portrait",
+            "location": week, "objects": [],
+        })
+    return out
+
+
 def _clips():
+    if VERTICAL_N:
+        return _vertical_sample(VERTICAL_N)
     recs = index.query(DB, category=FOLDER_BROLL)
     if not SHOW_ALL:
         recs = [r for r in recs if (r.emotion or r.action or r.location or r.objects)]
@@ -193,11 +222,12 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
 
 def main():
-    global LIBRARY, DB, SHOW_ALL, LIMIT
+    global LIBRARY, DB, SHOW_ALL, LIMIT, VERTICAL_N
     ap = argparse.ArgumentParser()
     ap.add_argument("--client", default="sai")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--all", action="store_true", help="Show all b-roll clips, not just tagged ones")
+    ap.add_argument("--vertical", type=int, metavar="N", help="Show the first N detected-vertical b-roll clips (orientation-split confirmation)")
     ap.add_argument("--port", type=int, default=4600)
     args = ap.parse_args()
 
@@ -209,6 +239,7 @@ def main():
     DB = LIBRARY / INDEX_DB_NAME
     SHOW_ALL = args.all
     LIMIT = args.limit
+    VERTICAL_N = args.vertical
 
     n = len(_clips())
     print(f"\n  B-roll tag review — {n} clip(s)")
