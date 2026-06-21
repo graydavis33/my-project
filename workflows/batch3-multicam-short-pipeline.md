@@ -1,9 +1,9 @@
 # SOP: Batch 3 Multicam Short Pipeline (A/B-cam interview shorts)
 
-**Status:** LIVE — Mac, free (mlx_whisper + ffmpeg, no paid APIs)
+**Status:** LIVE — cross-platform (Mac mlx_whisper / Windows CUDA-whisper + ffmpeg, free).
 **Audience:** Gray, a handoff editor/assistant, or any future Claude session. Written so someone who didn't build it can run it.
-**Proven on:** Batch 3 Vid 1 ("Business is Spiritual") + Vid 2 ("Scaling — Every Unit as Good as 10,000"), Jun 2026.
-**Scripts:** `python-scripts/multicam-mirror/batch3_pipeline/` (`build_cut.py`, `caption_render.py`) + `python-scripts/multicam-mirror/sync.py`.
+**Proven on:** Batch 3 Vid 1–4, Jun 2026 (V04 reproduced by the unified tool, parity-verified 2026-06-21).
+**Tooling (2026-06-21):** The mechanical pipeline is now the unified cross-platform tool **`python-scripts/batch-pipeline/`** (sync → cut+clip-guard → captions → verify gate → package). Run a configured video: `python python-scripts/batch-pipeline/run.py --video <cfg.json>` (set `SAI_LIBRARY_ROOT`). The OLD per-stage scripts (`multicam-mirror/batch3_pipeline/` and the on-drive `_b3_edit/`) are **RETIRED** — superseded to kill Mac/Windows drift. See `python-scripts/batch-pipeline/README.md` + the spec/plan in `docs/superpowers/`. The steps below describe the proven process the tool automates; the gotchas/audio-rule remain authoritative. STILL MANUAL (Plan 2): the drop→split→group front-door, auto-select, audio cleanup, and the FCPXML timeline.
 
 ---
 
