@@ -1,7 +1,12 @@
 {
   "location": [
     "ZZ_TEST_LOC",
-    "office"
+    "office",
+    "Verci",
+    "Verci Roof",
+    "living room",
+    "li",
+    "cafe"
   ],
   "object": [
     "zz_test_obj"
