@@ -29,6 +29,15 @@ class ClipRecord:
     sha1: str             # for dedup across paths (hardlinks share content)
     batch_num: Optional[int] = None  # set when filed under Batch_NN/Vid_MM (v3 batch command)
     vid_num: Optional[int] = None
+    # v4 b-roll tags — set by Vision (Opus) + the tagging dashboard, NOT by the
+    # ffprobe scan. A plain re-index leaves these None; upsert COALESCEs so a
+    # rescan never wipes a tag. emotion/action/location are single-valued;
+    # objects is a pipe-wrapped multi-value string ("|cup|laptop|") — use
+    # pack_objects/unpack_objects. emotion present ⇒ Sai in frame.
+    emotion: Optional[str] = None
+    action: Optional[str] = None
+    location: Optional[str] = None
+    objects: Optional[str] = None
 
 
 _SCHEMA = """
@@ -44,13 +53,36 @@ CREATE TABLE IF NOT EXISTS clips (
     codec        TEXT NOT NULL,
     sha1         TEXT NOT NULL,
     batch_num    INTEGER,
-    vid_num      INTEGER
+    vid_num      INTEGER,
+    emotion      TEXT,
+    action       TEXT,
+    location     TEXT,
+    objects      TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_filmed_date ON clips(filmed_date);
 CREATE INDEX IF NOT EXISTS idx_category    ON clips(category);
 CREATE INDEX IF NOT EXISTS idx_format      ON clips(format);
 CREATE INDEX IF NOT EXISTS idx_sha1        ON clips(sha1);
 """
+
+# objects is stored pipe-WRAPPED ("|cup|laptop|") so a LIKE '%|cup|%' match
+# can't collide on a substring ("cup" never matches "coffee cup").
+OBJ_DELIM = "|"
+
+
+def pack_objects(objs) -> Optional[str]:
+    """List of object tags → pipe-wrapped storage string (None when empty)."""
+    cleaned = [o.strip() for o in (objs or []) if o and o.strip()]
+    if not cleaned:
+        return None
+    return OBJ_DELIM + OBJ_DELIM.join(cleaned) + OBJ_DELIM
+
+
+def unpack_objects(stored: Optional[str]) -> list:
+    """Pipe-wrapped storage string → list of object tags."""
+    if not stored:
+        return []
+    return [o for o in stored.strip(OBJ_DELIM).split(OBJ_DELIM) if o]
 
 
 def init(db_path: Path) -> None:
@@ -69,9 +101,14 @@ def _migrate(conn) -> None:
         conn.execute("ALTER TABLE clips ADD COLUMN batch_num INTEGER")
     if "vid_num" not in cols:
         conn.execute("ALTER TABLE clips ADD COLUMN vid_num INTEGER")
-    # Created here (not in _SCHEMA) so it runs AFTER the columns exist on an
+    # v4 b-roll tag columns — non-destructive ALTER, idempotent per machine.
+    for tag_col in ("emotion", "action", "location", "objects"):
+        if tag_col not in cols:
+            conn.execute(f"ALTER TABLE clips ADD COLUMN {tag_col} TEXT")
+    # Created here (not in _SCHEMA) so they run AFTER the columns exist on an
     # older DB being migrated in place.
     conn.execute("CREATE INDEX IF NOT EXISTS idx_batch ON clips(batch_num, vid_num)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_tags ON clips(emotion, action, location)")
 
 
 def upsert(db_path: Path, rec: ClipRecord) -> None:
@@ -80,10 +117,12 @@ def upsert(db_path: Path, rec: ClipRecord) -> None:
             """
             INSERT INTO clips (path, category, format, filmed_date, upload_date,
                                duration_s, width, height, codec, sha1,
-                               batch_num, vid_num)
+                               batch_num, vid_num,
+                               emotion, action, location, objects)
             VALUES (:path, :category, :format, :filmed_date, :upload_date,
                     :duration_s, :width, :height, :codec, :sha1,
-                    :batch_num, :vid_num)
+                    :batch_num, :vid_num,
+                    :emotion, :action, :location, :objects)
             ON CONFLICT(path) DO UPDATE SET
                 category    = excluded.category,
                 format      = excluded.format,
@@ -95,7 +134,14 @@ def upsert(db_path: Path, rec: ClipRecord) -> None:
                 codec       = excluded.codec,
                 sha1        = excluded.sha1,
                 batch_num   = excluded.batch_num,
-                vid_num     = excluded.vid_num
+                vid_num     = excluded.vid_num,
+                -- Tags are set by Vision/the dashboard, never by the ffprobe scan.
+                -- COALESCE(excluded, existing) keeps the tag when a rescan passes
+                -- NULL; an explicit write (value or "" to clear) still updates it.
+                emotion     = COALESCE(excluded.emotion,  clips.emotion),
+                action      = COALESCE(excluded.action,   clips.action),
+                location    = COALESCE(excluded.location, clips.location),
+                objects     = COALESCE(excluded.objects,  clips.objects)
             """,
             asdict(rec),
         )
@@ -114,6 +160,10 @@ def query(
     max_duration: Optional[float] = None,
     batch_num: Optional[int] = None,
     vid_num: Optional[int] = None,
+    emotion: Optional[str] = None,
+    action: Optional[str] = None,
+    location: Optional[str] = None,
+    object: Optional[str] = None,
 ) -> list[ClipRecord]:
     where, params = [], {}
     if category:
@@ -136,8 +186,18 @@ def query(
         where.append("batch_num = :batch_num"); params["batch_num"] = batch_num
     if vid_num is not None:
         where.append("vid_num = :vid_num"); params["vid_num"] = vid_num
+    if emotion:
+        where.append("emotion = :emotion"); params["emotion"] = emotion
+    if action:
+        where.append("action = :action"); params["action"] = action
+    if location:
+        where.append("location = :location"); params["location"] = location
+    if object:
+        # objects is pipe-wrapped, so match the delimited token (no substring collisions)
+        where.append("objects LIKE :object_pat")
+        params["object_pat"] = f"%{OBJ_DELIM}{object}{OBJ_DELIM}%"
 
-    sql = "SELECT path, category, format, filmed_date, upload_date, duration_s, width, height, codec, sha1, batch_num, vid_num FROM clips"
+    sql = "SELECT path, category, format, filmed_date, upload_date, duration_s, width, height, codec, sha1, batch_num, vid_num, emotion, action, location, objects FROM clips"
     if where:
         sql += " WHERE " + " AND ".join(where)
     sql += " ORDER BY filmed_date DESC, path"
