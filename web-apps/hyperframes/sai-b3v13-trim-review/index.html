@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B3V13 Trim Review</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 { font-size: 28px; margin-bottom: 5px; }
+        .header p { color: #888; font-size: 14px; }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        .video-pane {
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .video-pane h2 {
+            font-size: 14px;
+            padding: 12px 16px;
+            background: #222;
+            border-bottom: 1px solid #333;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #000;
+        }
+        .controls {
+            padding: 16px;
+            background: #1a1a1a;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .controls button {
+            padding: 8px 16px;
+            background: #F28129;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .controls button:hover { background: #e57319; }
+        .controls button:active { opacity: 0.9; }
+        .sync-indicator {
+            padding: 16px;
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+        }
+        .sync-indicator.locked {
+            background: #1a3a1a;
+            color: #4ade80;
+            font-weight: 600;
+        }
+        @media (max-width: 1200px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>B3V13 Trim Review — "The Real Lover Is You"</h1>
+        <p>Preview trimmed A-cam and B-cam footage (41s, 14 segments)</p>
+    </div>
+
+    <div class="container">
+        <div class="video-pane">
+            <h2>A-Cam (Sony)</h2>
+            <video id="videoA" controls>
+                <source src="file:///D:/Sai/05_FOOTAGE_LIBRARY/01_ORGANIZED/Batch_03/Vid_13/Synced/trimmed/B3_V13_A-cam_SYNCED_trimmed.mov" type="video/quicktime">
+                Browser does not support video playback
+            </video>
+        </div>
+
+        <div class="video-pane">
+            <h2>B-Cam (Canon)</h2>
+            <video id="videoB" controls>
+                <source src="file:///D:/Sai/05_FOOTAGE_LIBRARY/01_ORGANIZED/Batch_03/Vid_13/Synced/trimmed/B3_V13_B-cam_SYNCED_trimmed.mov" type="video/quicktime">
+                Browser does not support video playback
+            </video>
+        </div>
+    </div>
+
+    <div style="max-width: 1800px; margin: 30px auto;">
+        <div class="controls">
+            <button onclick="syncVideos()">🔗 Sync Play</button>
+            <button onclick="document.getElementById('videoA').play(); document.getElementById('videoB').play()">▶ Play Both</button>
+            <button onclick="document.getElementById('videoA').pause(); document.getElementById('videoB').pause()">⏸ Pause Both</button>
+            <button onclick="resetVideos()">⟲ Reset</button>
+        </div>
+        <div class="sync-indicator" id="syncIndicator">
+            Use "Sync Play" to watch both angles locked together. Click either video to control playback.
+        </div>
+    </div>
+
+    <script>
+        const videoA = document.getElementById('videoA');
+        const videoB = document.getElementById('videoB');
+        const syncIndicator = document.getElementById('syncIndicator');
+        let isSynced = false;
+
+        function syncVideos() {
+            isSynced = !isSynced;
+            syncIndicator.textContent = isSynced ? '🔗 Playback synced (A↔B locked)' : 'Playback unsynchronized';
+            syncIndicator.classList.toggle('locked', isSynced);
+
+            if (isSynced) {
+                videoA.play();
+                videoB.play();
+                syncPlayback();
+            }
+        }
+
+        function syncPlayback() {
+            if (!isSynced) return;
+
+            const updateInterval = setInterval(() => {
+                if (!isSynced) {
+                    clearInterval(updateInterval);
+                    return;
+                }
+
+                const timeDiff = Math.abs(videoA.currentTime - videoB.currentTime);
+                if (timeDiff > 0.1) {
+                    videoB.currentTime = videoA.currentTime;
+                }
+
+                if (!videoA.paused && !videoB.paused) {
+                    if (videoA.ended || videoB.ended) {
+                        videoA.pause();
+                        videoB.pause();
+                    }
+                }
+            }, 100);
+
+            videoA.addEventListener('pause', () => {
+                if (isSynced) videoB.pause();
+            }, { once: true });
+            videoB.addEventListener('pause', () => {
+                if (isSynced) videoA.pause();
+            }, { once: true });
+        }
+
+        function resetVideos() {
+            videoA.currentTime = 0;
+            videoB.currentTime = 0;
+            videoA.pause();
+            videoB.pause();
+            isSynced = false;
+            syncIndicator.textContent = 'Reset. Ready to review.';
+            syncIndicator.classList.remove('locked');
+        }
+
+        // Allow independent playback control
+        videoA.addEventListener('play', () => {
+            if (isSynced && videoB.paused) videoB.play();
+        });
+        videoB.addEventListener('play', () => {
+            if (isSynced && videoA.paused) videoA.play();
+        });
+    </script>
+</body>
+</html>

@@ -1019,14 +1019,20 @@ def cmd_tag(args):
         sys.exit(1)
     _check_legacy_db(db_path)
 
-    clips = index.query(db_path, category=FOLDER_BROLL)
+    if args.episode:
+        # freshly-organized episode footage may not be indexed yet — refresh first
+        _reindex(library, db_path)
+        target_category = args.episode
+    else:
+        target_category = FOLDER_BROLL
+    clips = index.query(db_path, category=target_category)
     todo = clips if args.retag else [c for c in clips if _is_untagged(c)]
     if args.limit:
         todo = todo[:args.limit]
 
     per_clip = VISION_TAG_COST_PER_CLIP.get(args.model, 0.015)
     est = len(todo) * per_clip
-    print(f"\n  Vision-tag b-roll ({client_name.upper()})")
+    print(f"\n  Vision-tag {target_category} ({client_name.upper()})")
     print(f"  Model: {args.model}   Clips to tag: {len(todo)}   Est. cost: ~${est:.2f}")
     if args.retag:
         print(f"  (--retag: re-tagging already-tagged clips too)")
@@ -1477,6 +1483,7 @@ def main():
     tg.add_argument("--limit", type=int, help="Only tag the first N untagged clips (sample run)")
     tg.add_argument("--retag", action="store_true", help="Re-tag even already-tagged clips")
     tg.add_argument("--yes", "-y", action="store_true", help="Skip the cost-confirmation prompt")
+    tg.add_argument("--episode", help="Tag a documentary episode's footage in place (01_ORGANIZED/<episode>/) so it's pull-able as b-roll before the episode ships. Default tags the b-roll library.")
     tg.set_defaults(func=cmd_tag)
 
     args = ap.parse_args()
