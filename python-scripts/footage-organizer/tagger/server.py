@@ -14,6 +14,7 @@ import argparse
 import http.server
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -28,8 +29,8 @@ except Exception:
     pass
 
 import index
-from config import (CLIENT_ROOTS, INDEX_DB_NAME, FOLDER_BROLL, FOLDER_FOOTAGE_LIB,
-                    VIDEO_EXTENSIONS, EMOTION_TAGS, ACTION_TAGS)
+from config import (CLIENT_ROOTS, INDEX_DB_NAME, FOLDER_BROLL, FOLDER_VERTICAL,
+                    FOLDER_FOOTAGE_LIB, VIDEO_EXTENSIONS, EMOTION_TAGS, ACTION_TAGS)
 from extractor import get_display_orientation
 
 LIBRARY = Path(".")
@@ -119,6 +120,41 @@ def _safe_clip_path(rel: str):
     return target
 
 
+def _reclassify(path_rel: str, to_bucket: str):
+    """Move a clip (+ sidecars) between b-roll/ and vertical/ in the same week,
+    and repoint its index row. Used by the dashboard's 'mark vertical' button when
+    an orientation is wrong. Returns the new relative path, or None on failure."""
+    if to_bucket not in (FOLDER_BROLL, FOLDER_VERTICAL):
+        return None
+    parts = list(Path(path_rel).parts)  # (05_FOOTAGE_LIBRARY, <bucket>, <week>, <name>)
+    if len(parts) < 4 or parts[0] != FOLDER_FOOTAGE_LIB or parts[1] not in (FOLDER_BROLL, FOLDER_VERTICAL):
+        return None
+    src = (LIBRARY / path_rel).resolve()
+    libroot = (LIBRARY / FOLDER_FOOTAGE_LIB).resolve()
+    if libroot not in src.parents or not src.is_file():
+        return None
+
+    parts[1] = to_bucket
+    new_rel = "/".join(parts)
+    dst = LIBRARY / Path(*parts)
+    dst.parent.mkdir(parents=True, exist_ok=True)
+
+    stem = src.stem.upper()
+    for f in list(src.parent.iterdir()):  # clip + its sidecars (same stem)
+        if not f.is_file() or f.name.startswith("._") or f.name == ".DS_Store":
+            continue
+        s = f.stem.upper()
+        if s == stem or (s.startswith(stem) and not s[len(stem):len(stem) + 1].isdigit()):
+            target = dst.parent / f.name
+            if not target.exists():
+                shutil.move(str(f), str(target))
+
+    index.relocate(DB, path_rel, new_rel, to_bucket)
+    if to_bucket == FOLDER_VERTICAL:  # vertical clips are parked/untagged
+        index.update_tags(DB, new_rel, emotion=None, action=None, location=None, objects=None)
+    return new_rel
+
+
 def _thumb(target: Path) -> Path:
     _THUMB_DIR.mkdir(parents=True, exist_ok=True)
     out = _THUMB_DIR / (str(abs(hash(str(target)))) + ".jpg")
@@ -157,6 +193,9 @@ _PAGE = r"""<!doctype html><html><head><meta charset="utf-8">
   .objs input{background:#161616;color:#eee;border:1px solid #2e2e2e;border-radius:999px;padding:2px 8px;font-size:11px;width:90px}
   .saved{position:absolute;top:8px;right:10px;color:#2a5;font-size:11px;opacity:0;transition:opacity .2s}
   .saved.show{opacity:1}
+  .rc{margin-top:8px}
+  .rcbtn{background:#2a2a2a;color:#bbb;border:1px solid #383838;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer}
+  .rcbtn:hover{background:#3a2a2a;color:#ff9b9b;border-color:#633}
 </style></head><body>
 <header>
   <h1>B-roll tagger</h1>
@@ -201,6 +240,7 @@ function render(){
         <div class="row"><label>action</label><input class="ac f" data-f="action" list="dl-action" value="${c.action}"></div>
         <div class="row"><label>location</label><input class="lo f" data-f="location" list="dl-location" value="${c.location}"></div>
         <div class="objs">${objChips(c)}</div>
+        <div class="rc"><button class="rcbtn" data-to="${c.path.includes('/b-roll/')?'vertical':'b-roll'}">${c.path.includes('/b-roll/')?'⇄ mark vertical (move out)':'⇄ mark horizontal'}</button></div>
       </div>`;
     g.appendChild(div);
   });
@@ -252,6 +292,14 @@ document.getElementById('grid').addEventListener('click',e=>{
   if(e.target.tagName==='B' && e.target.dataset.o!==undefined){
     const card=e.target.closest('.card'), c=CLIPS[+card.dataset.i], val=e.target.dataset.o;
     save({paths:[c.path],remove_object:val}).then(()=>{c.objects=c.objects.filter(o=>o!==val);render();});
+  }
+  if(e.target.classList.contains('rcbtn')){
+    const card=e.target.closest('.card'), c=CLIPS[+card.dataset.i], to=e.target.dataset.to;
+    const verb = to==='vertical' ? 'mark VERTICAL and move it out of b-roll (it loses its tags)' : 'mark HORIZONTAL and move it back to b-roll';
+    if(!confirm('Move '+c.name+' — '+verb+'?')) return;
+    fetch('/api/reclassify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:c.path,to})})
+      .then(r=>r.json()).then(res=>{ if(res.ok){ CLIPS=CLIPS.filter(x=>x.path!==c.path); sel.delete(c.path); render(); setSelCount(); }
+        else alert('move failed'); });
   }
 });
 
@@ -315,14 +363,22 @@ class Handler(http.server.BaseHTTPRequestHandler):
             self.send_error(404)
 
     def do_POST(self):
-        if urllib.parse.urlparse(self.path).path != "/api/tag":
+        route = urllib.parse.urlparse(self.path).path
+        if route not in ("/api/tag", "/api/reclassify"):
             self.send_error(404); return
         length = int(self.headers.get("Content-Length") or 0)
         try:
             data = json.loads(self.rfile.read(length) or b"{}")
         except Exception:
             self._json({"error": "bad json"}, 400); return
-        if VERTICAL_N:  # read-only orientation-review mode
+
+        if route == "/api/reclassify":  # move b-roll↔vertical; allowed in any mode
+            new_rel = _reclassify(data.get("path", ""), data.get("to", ""))
+            self._json({"ok": bool(new_rel), "path": new_rel} if new_rel else {"error": "failed"},
+                       200 if new_rel else 400)
+            return
+
+        if VERTICAL_N:  # read-only orientation-review mode (tag writes only)
             self._json({"error": "read-only"}, 403); return
 
         paths = data.get("paths") or []

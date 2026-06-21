@@ -238,6 +238,16 @@ def update_tags(db_path: Path, path: str, *, emotion=_UNSET, action=_UNSET,
         return conn.execute(f"UPDATE clips SET {assignment} WHERE path = :path", params).rowcount
 
 
+def relocate(db_path: Path, old_path: str, new_path: str, category: str) -> int:
+    """Repoint a clip's index row to a new path + category (e.g. b-roll→vertical
+    when an orientation was wrong). Drops any stale row at new_path first to avoid
+    a UNIQUE(path) clash. Returns rows updated."""
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("DELETE FROM clips WHERE path = ?", (new_path,))
+        return conn.execute("UPDATE clips SET path = ?, category = ? WHERE path = ?",
+                            (new_path, category, old_path)).rowcount
+
+
 def distinct_tag_values(db_path: Path) -> dict:
     """All distinct tag values currently in the index — feeds dashboard autocomplete.
     Returns {emotion:[...], action:[...], location:[...], object:[...]}."""

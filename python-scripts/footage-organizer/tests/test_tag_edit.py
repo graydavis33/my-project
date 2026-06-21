@@ -49,6 +49,17 @@ def test_update_tags_objects_roundtrip(tmp_path):
     assert index.unpack_objects(index.get(db, "b-roll/W05/C1.MP4").objects) == ["mic", "laptop"]
 
 
+def test_relocate_repoints_path_and_category(tmp_path):
+    db = tmp_path / "i.sqlite"
+    _seed(db, path="05_FOOTAGE_LIBRARY/b-roll/W05/C1.MP4", emotion="happy")
+    n = index.relocate(db, "05_FOOTAGE_LIBRARY/b-roll/W05/C1.MP4",
+                       "05_FOOTAGE_LIBRARY/vertical/W05/C1.MP4", "vertical")
+    assert n == 1
+    assert index.get(db, "05_FOOTAGE_LIBRARY/b-roll/W05/C1.MP4") is None
+    moved = index.get(db, "05_FOOTAGE_LIBRARY/vertical/W05/C1.MP4")
+    assert moved is not None and moved.category == "vertical"
+
+
 def test_distinct_tag_values(tmp_path):
     db = tmp_path / "i.sqlite"
     _seed(db, path="b-roll/W05/A.MP4", emotion="focused", location="office",

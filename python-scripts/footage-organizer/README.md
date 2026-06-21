@@ -262,7 +262,8 @@ Local browser editor for all b-roll tags:
 - **Inline edit** emotion / action / location (autocomplete) + object chips (add/remove).
 - **Bulk-apply:** check clips, shift-click for a range, then set one tag on all selected (great for merging near-dupe values like `rooftop`/`rooftop terrace`).
 - **Type-to-add vocabulary:** a new value is remembered in `tagger/vocab.json` and autocompletes next time (merged with the config seeds + live index values).
-- Writes go straight to the index (`index.update_tags`). `--vertical N` is a read-only mode that shows detected-vertical clips for orientation confirmation.
+- **"⇄ mark vertical (move out)"** per clip: for a clip that's actually vertical (orientation was wrong) — moves it (+ sidecars) to `vertical/<same-week>/`, recategorizes it in the index, and clears its tags (vertical is parked/untagged). Removes it from the tagged set. (In `--vertical` review mode the button reads "mark horizontal" and moves the other way.)
+- Writes go straight to the index (`index.update_tags` / `index.relocate`). `--vertical N` is a read-only review mode for detected-vertical clips.
 
 ## v3 — Stage transitions (promote)
 
