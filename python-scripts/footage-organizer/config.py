@@ -68,6 +68,10 @@ FOLDER_FOOTAGE_LIB    = "05_FOOTAGE_LIBRARY" # Reusable footage: category/ → w
 # findability comes from index tags (emotion/action/location/object), not from the
 # old 17 category folders. Lives beside _BATCHES (interview originals, never b-roll).
 FOLDER_BROLL          = "b-roll"             # under 05_FOOTAGE_LIBRARY/
+# All current filming is horizontal, so horizontal = reusable b-roll (tagged).
+# Vertical clips are the legacy short-form era — parked here by week, NEVER tagged
+# (Gray won't reuse them). Lives beside b-roll/ in the footage library.
+FOLDER_VERTICAL       = "vertical"           # under 05_FOOTAGE_LIBRARY/
 FOLDER_ASSETS         = "06_ASSETS"          # Brand assets, fonts, music, SFX
 FOLDER_QUERY_PULLS    = "07_QUERY_PULLS"     # Temp query result folders — deleted after publish
 FOLDER_AI_EDITS       = "08_AI_EDITS"        # AI-edited outputs, grouped by content format then source

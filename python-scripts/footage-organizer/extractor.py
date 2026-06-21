@@ -69,6 +69,59 @@ def get_resolution(filepath: str) -> tuple[int, int]:
         raise RuntimeError(f"Could not parse resolution from ffprobe: '{raw}'")
 
 
+def get_display_orientation(filepath: str) -> tuple[str, bool]:
+    """Return (orientation, flipped) where orientation is 'horizontal' | 'vertical'
+    | 'square' | 'unknown' and flipped is True when a rotation flag changed the
+    orientation vs the stored dimensions.
+
+    Sony often records 1920x1080 (stored landscape) + a 90/270 rotation flag, so
+    it DISPLAYS vertical. Trusting width/height alone mislabels those — so we read
+    the rotation (stream tag `rotate` or side-data Display Matrix `rotation`) and
+    swap accordingly. `flipped=True` marks the tricky ones worth a human spot-check.
+    """
+    import json
+    cmd = [
+        "ffprobe", "-v", "error", "-select_streams", "v:0",
+        "-show_entries", "stream=width,height:stream_tags=rotate:side_data=rotation",
+        "-of", "json", filepath,
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        streams = json.loads(result.stdout or "{}").get("streams", [])
+    except Exception:
+        return ("unknown", False)
+    if not streams:
+        return ("unknown", False)
+    s = streams[0]
+    w, h = int(s.get("width") or 0), int(s.get("height") or 0)
+    if not w or not h:
+        return ("unknown", False)
+
+    rot = 0
+    tag_rot = (s.get("tags") or {}).get("rotate")
+    if tag_rot is not None:
+        try:
+            rot = int(tag_rot)
+        except (TypeError, ValueError):
+            rot = 0
+    for sd in (s.get("side_data_list") or []):
+        if "rotation" in sd:
+            try:
+                rot = int(sd["rotation"])
+            except (TypeError, ValueError):
+                pass
+            break
+    rot = abs(rot) % 180  # 0 or 90 is all that matters for orientation
+    dw, dh = (h, w) if rot == 90 else (w, h)
+
+    def _orient(a, b):
+        return "vertical" if b > a else ("horizontal" if a > b else "square")
+
+    display = _orient(dw, dh)
+    stored = _orient(w, h)
+    return (display, display != stored)
+
+
 def get_duration(filepath: str) -> float:
     """
     Get video duration in seconds via ffprobe.

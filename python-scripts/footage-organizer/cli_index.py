@@ -32,11 +32,13 @@ from config import (
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
     FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
     FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BATCHES,
-    FOLDER_DRAFTS, FOLDER_BROLL, VISION_TAG_MODEL, VISION_TAG_COST_PER_CLIP,
+    FOLDER_DRAFTS, FOLDER_BROLL, FOLDER_VERTICAL,
+    VISION_TAG_MODEL, VISION_TAG_COST_PER_CLIP,
 )
 
 PROJECT_FORMAT_BUCKETS = ["longform", "linkedin", "shorts"]
-from extractor import get_resolution, get_duration, get_shoot_date, extract_frames
+from extractor import (get_resolution, get_duration, get_shoot_date,
+                       extract_frames, get_display_orientation)
 from week_utils import week_label_for, current_week_label
 import index
 import pull as pull_mod
@@ -720,6 +722,105 @@ def cmd_consolidate_broll(args):
     print(f"  DB: {db_path}\n")
 
 
+# ---- v4: split vertical clips out of b-roll/ -------------------------------
+# All current filming is horizontal, so horizontal = reusable b-roll (tagged).
+# Vertical = legacy short-form, parked in vertical/<week>/ (never tagged).
+# Orientation is rotation-aware (Sony 1920x1080 + rotate flag = display-vertical).
+
+def _orientation_plan(library: Path, orient_fn=None):
+    """Plan moving every VERTICAL clip in b-roll/ → vertical/<same-week>/.
+    orient_fn(path) -> (orientation, flipped); defaults to ffprobe. Returns
+    (moves, counts, flipped, unknown, collisions):
+      moves      — (src, dest) for vertical clips + sidecars
+      counts     — {"horizontal": n, "vertical": n}
+      flipped    — [rel_path] vertical-by-rotation-flag (worth a human spot-check)
+      unknown    — [rel_path] orientation undetermined (left in place)
+      collisions — [(src_rel, dest_rel)] dest taken (skipped)"""
+    orient_fn = orient_fn or (lambda p: get_display_orientation(str(p)))
+    broll_root = library / FOLDER_FOOTAGE_LIB / FOLDER_BROLL
+    moves, flipped, unknown, collisions = [], [], [], []
+    counts = {"horizontal": 0, "vertical": 0}
+    seen, processed = set(), set()
+    if not broll_root.is_dir():
+        return moves, counts, flipped, unknown, collisions
+
+    for clip in _walk_videos(broll_root):
+        if clip in processed:
+            continue
+        orientation, was_flipped = orient_fn(clip)
+        if orientation == "horizontal":
+            counts["horizontal"] += 1
+            for f in _clip_group(clip):
+                processed.add(f)
+            continue
+        if orientation not in ("vertical",):  # unknown / square → leave + report
+            unknown.append(clip.relative_to(library).as_posix())
+            for f in _clip_group(clip):
+                processed.add(f)
+            continue
+        # vertical → vertical/<same week>/
+        week = _week_from_path(clip, library) or UNKNOWN_WEEK
+        dest_dir = library / FOLDER_FOOTAGE_LIB / FOLDER_VERTICAL / week
+        for f in _clip_group(clip):
+            processed.add(f)
+            dest = dest_dir / f.name
+            if dest.exists() or dest.as_posix() in seen:
+                collisions.append((f.relative_to(library).as_posix(),
+                                   dest.relative_to(library).as_posix()))
+                continue
+            seen.add(dest.as_posix())
+            moves.append((f, dest))
+        counts["vertical"] += 1
+        if was_flipped:
+            flipped.append(clip.relative_to(library).as_posix())
+    return moves, counts, flipped, unknown, collisions
+
+
+def cmd_split_vertical(args):
+    """Move vertical clips out of b-roll/ into vertical/<week>/ (parked, untagged).
+    Plan-first — shows counts + the rotation-flipped clips to spot-check, and moves
+    nothing until you confirm. Horizontal clips stay in b-roll/ for tagging."""
+    client = args.client
+    library = _library(client)
+    moves, counts, flipped, unknown, collisions = _orientation_plan(library)
+
+    print(f"\n  Split vertical out of {FOLDER_BROLL}/  ({client.upper()})")
+    print(f"  Horizontal (stay as b-roll): {counts['horizontal']}")
+    print(f"  Vertical (→ {FOLDER_VERTICAL}/<week>/, untagged): {counts['vertical']}")
+    if flipped:
+        print(f"\n  ! {len(flipped)} clip(s) are vertical ONLY because of a rotation flag — SPOT-CHECK these:")
+        for p in flipped[:30]:
+            print(f"      {p}")
+        if len(flipped) > 30:
+            print(f"      … +{len(flipped) - 30} more")
+    if unknown:
+        print(f"  ! {len(unknown)} clip(s) had undetermined orientation — LEFT IN b-roll:")
+        for p in unknown[:20]:
+            print(f"      {p}")
+    if collisions:
+        print(f"  ! {len(collisions)} file(s) collide at the destination — SKIPPED:")
+        for src, dest in collisions[:20]:
+            print(f"      {src} -> {dest}")
+
+    if not moves:
+        print("\n  No vertical clips to move.\n")
+        return
+
+    if not args.yes:
+        ans = input("\n  Move the vertical clips? [y/N]: ").strip().lower()
+        if ans != "y":
+            print("  Aborted — nothing moved.\n")
+            return
+
+    moved = _execute_consolidation(moves)
+    print(f"\n  Moved {moved} file(s) into {FOLDER_VERTICAL}/.")
+
+    db_path = _db(client)
+    added, skipped, removed = _reindex(library, db_path)
+    print(f"  Re-indexed: {added} clip(s), skipped {skipped}, removed {removed} missing")
+    print(f"  DB: {db_path}\n")
+
+
 # ---- v4 Phase 3: AI Vision tagging of b-roll -------------------------------
 
 def _apply_tags_to_record(rec, tags: dict):
@@ -1110,6 +1211,10 @@ def main():
     cb = sub.add_parser("consolidate-broll", help="Flatten all category folders into 05_FOOTAGE_LIBRARY/b-roll/<week>/ (original weeks preserved); plan-first")
     cb.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")
     cb.set_defaults(func=cmd_consolidate_broll)
+
+    sv = sub.add_parser("split-vertical", help="Move vertical clips out of b-roll/ into vertical/<week>/ (parked, untagged); plan-first, rotation-aware")
+    sv.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")
+    sv.set_defaults(func=cmd_split_vertical)
 
     tg = sub.add_parser("tag", help="AI Vision-tag b-roll clips → emotion/action/location/objects in the index")
     tg.add_argument("--model", default=VISION_TAG_MODEL, help=f"Vision model (default {VISION_TAG_MODEL}; pass claude-haiku-4-5 for cheap incremental runs)")
