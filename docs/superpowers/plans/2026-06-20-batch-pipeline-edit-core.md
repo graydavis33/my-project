@@ -652,6 +652,11 @@ git commit -m "feat(batch-pipeline): deliverable package (ANGLES/CAPTIONS/_INFO)
 
 ---
 
+> **Seam notes from the Phase-1 final review (address in this task):**
+> - **Flatten transcribe→cut/captions:** `transcribe.to_words` returns nested `{"segments":[{"words":[…]}]}`, but `cut.plan` and `captions.group` consume a FLAT word list. `run.py` must flatten in ONE place: `words = [w for s in t["segments"] for w in s["words"]]` — don't let two callers flatten differently.
+> - **Feed the gate cut's own out-points (don't recompute):** `cut.build_cut` now returns `synced_outs` (the snapped cut-out times). Pass THOSE into `verify.gate(..., synced_outs)` — never recompute `snap_out` in `run.py` (that reintroduces drift).
+> - **Settle the audio/MD5 contract BEFORE the parity run:** the gate checks `audio_md5(a)==audio_md5(b)`. Cuts carry AAC lav audio on both angles; on V04 today the MD5s matched (ffmpeg AAC is deterministic for identical input), so this likely passes — but confirm empirically on the first real run. If it false-fails, switch the angle audio to PCM (ProRes can hold PCM) or compare each angle against the source-lav MD5 instead of A-vs-B.
+
 ### Task 9: `run.py` driver + Batch 3 Vid 4 parity (integration)
 
 **Files:**
