@@ -7,6 +7,8 @@ def _rms(a, sr, t, win=0.06):
 
 def check_no_clips(lav_wav, synced_outs):
     sr, a = wavfile.read(str(lav_wav)); a = a.astype(np.float32)
+    if np.issubdtype(np.asarray(a).dtype, np.floating) and np.max(np.abs(a)) <= 1.0:
+        a = a * 32768.0
     out = []
     for t in synced_outs:
         inside, after = _rms(a, sr, t-0.06), _rms(a, sr, t)
@@ -37,6 +39,6 @@ def gate(a_cut, b_cut, lav_wav, synced_outs):
     res = {"clips": clips, "a_decode": decode_clean(a_cut), "b_decode": decode_clean(b_cut),
            "length_match": same_length(a_cut, b_cut),
            "audio_match": audio_md5(a_cut) == audio_md5(b_cut)}
-    res["passed"] = (all(c["ok"] for c in clips) and res["a_decode"] and res["b_decode"]
-                     and res["length_match"] and res["audio_match"])
+    res["passed"] = (bool(clips) and all(c["ok"] for c in clips) and res["a_decode"]
+                     and res["b_decode"] and res["length_match"] and res["audio_match"])
     return res
