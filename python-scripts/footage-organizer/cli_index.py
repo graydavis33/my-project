@@ -219,10 +219,15 @@ def cmd_pull(args):
 
     _check_legacy_db(db_path)
 
+    _slugify = lambda s: s.strip().lower().replace(" ", "-")
     slug_parts = []
     if args.filmed_date: slug_parts.append(args.filmed_date)
     if args.category:    slug_parts.append(args.category)
     if args.orientation: slug_parts.append(args.orientation)
+    if args.emotion:     slug_parts.append(_slugify(args.emotion))
+    if args.action:      slug_parts.append(_slugify(args.action))
+    if args.location:    slug_parts.append(_slugify(args.location))
+    if args.object:      slug_parts.append(_slugify(args.object))
     slug = "-".join(slug_parts) or "all"
     out = library / PULL_FOLDER_NAME / slug
 
@@ -250,6 +255,10 @@ def cmd_pull(args):
         filmed_before=args.filmed_before,
         min_duration=args.min_duration,
         max_duration=args.max_duration,
+        emotion=args.emotion,
+        action=args.action,
+        location=args.location,
+        object=args.object,
         subfolder_fn=subfolder_fn,
     )
 
@@ -1275,6 +1284,10 @@ def main():
     p.add_argument("--filmed-before", help="YYYY-MM-DD")
     p.add_argument("--min-duration", type=float)
     p.add_argument("--max-duration", type=float)
+    p.add_argument("--emotion", help="b-roll tag (exact), e.g. focused")
+    p.add_argument("--action", help="b-roll tag (exact), e.g. walking")
+    p.add_argument("--location", help="b-roll tag (exact), e.g. \"times square\"")
+    p.add_argument("--object", help="b-roll object tag (contains), e.g. \"coffee cup\"")
     p.add_argument("--by-week", action="store_true",
                    help="Group results into W##_MMM-DD-DD subfolders by filmed date")
     p.set_defaults(func=cmd_pull)
