@@ -1237,6 +1237,61 @@ def _ship_plan(library: Path, video: str, project_name, footage_path,
     return moves, warnings
 
 
+def _episode_ship_plan(library, episode, footage_root=None, orient_fn=None, week_fn=None):
+    """Finalize a delivered documentary episode. Move ALL its footage →
+    b-roll/<week> (horizontal) or vertical/<week> (vertical), and archive the
+    Premiere project → 04_ARCHIVE/longform/<week>/<episode>/. Returns
+    (moves, warnings). footage_root defaults to 01_ORGANIZED/<episode>/."""
+    orient_fn = orient_fn or (lambda p: get_display_orientation(str(p)))
+    week_fn = week_fn or _filmed_week
+    moves, warnings, seen, processed = [], [], set(), set()
+
+    ep_root = Path(footage_root) if footage_root else (
+        library / FOLDER_ORGANIZED / episode)
+    footage = list(_walk_videos(ep_root)) if ep_root.is_dir() else []
+    if not footage:
+        warnings.append(f"no footage found under {ep_root}")
+
+    archive_week = None
+    for clip in footage:
+        if clip in processed:
+            continue
+        group = _clip_group(clip)
+        for f in group:
+            processed.add(f)
+        orientation, _flip = orient_fn(clip)
+        bucket = (FOLDER_BROLL if orientation == "horizontal"
+                  else FOLDER_VERTICAL if orientation == "vertical" else None)
+        if bucket is None:
+            warnings.append(f"undetermined orientation, left in source: {clip.name}")
+            continue
+        week = week_fn(clip) or current_week_label()
+        archive_week = archive_week or week
+        dest_dir = library / FOLDER_FOOTAGE_LIB / bucket / week
+        for f in group:
+            dest = dest_dir / f.name
+            if dest.exists() or dest.as_posix() in seen:
+                warnings.append(f"collision skipped: {f.name} -> {dest.relative_to(library).as_posix()}")
+                continue
+            seen.add(dest.as_posix())
+            moves.append((f, dest))
+
+    matches = _find_stage_item(library / FOLDER_PROJECTS, episode)
+    if not matches:
+        warnings.append(f"no active project named '{episode}' to archive")
+    elif len(matches) > 1:
+        warnings.append(f"multiple projects named '{episode}' — archive by hand: "
+                        + ", ".join(str(m) for m in matches))
+    else:
+        wk = archive_week or current_week_label()
+        dest = library / FOLDER_ARCHIVE / "longform" / wk / episode
+        if dest.exists():
+            warnings.append(f"archive destination already exists: {dest.relative_to(library).as_posix()}")
+        else:
+            moves.append((matches[0], dest))
+    return moves, warnings
+
+
 def _execute_ship(moves) -> None:
     for mv in moves:
         mv["dest"].parent.mkdir(parents=True, exist_ok=True)
