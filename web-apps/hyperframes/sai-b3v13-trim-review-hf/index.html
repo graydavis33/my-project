@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>B3V13 Trim Review — HyperFrames</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; font-family: 'Montserrat', sans-serif; padding: 20px; }
+  h1 { color: #fff; margin-bottom: 20px; font-size: 24px; }
+  #root { position: relative; width: 1920px; height: 1080px; background: #000; overflow: hidden; }
+  .cam { position: absolute; top: 0; width: 50%; height: 100%; }
+  #cam-a { left: 0; }
+  #cam-b { right: 0; border-left: 2px solid #333; }
+  video { width: 100%; height: 100%; display: block; }
+  .label { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.7); color: #fff; padding: 8px 12px; font-size: 12px; font-weight: 600; z-index: 10; border-radius: 4px; }
+  #cam-b .label { left: auto; right: 10px; }
+  .controls { margin-top: 20px; display: flex; gap: 10px; }
+  button { padding: 10px 20px; background: #F28129; border: none; color: #fff; border-radius: 4px; font-weight: 600; cursor: pointer; }
+  button:hover { background: #e57319; }
+</style>
+</head>
+<body>
+
+<h1>B3V13 Trim Review — "The Real Lover Is You"</h1>
+<p style="color: #888; margin-bottom: 20px;">41 seconds, 14 segments, A and B cams synced</p>
+
+<div id="root">
+  <div id="cam-a" class="cam">
+    <div class="label">A-CAM (SONY)</div>
+    <video id="videoA" muted playsinline></video>
+  </div>
+  <div id="cam-b" class="cam">
+    <div class="label">B-CAM (CANON)</div>
+    <video id="videoB" muted playsinline></video>
+  </div>
+</div>
+
+<div class="controls">
+  <button onclick="syncPlay()">▶ Play (Synced)</button>
+  <button onclick="document.getElementById('videoA').pause(); document.getElementById('videoB').pause();">⏸ Pause</button>
+  <button onclick="reset()">⟲ Reset</button>
+</div>
+
+<script>
+const videoA = document.getElementById('videoA');
+const videoB = document.getElementById('videoB');
+
+// Load synced ProRes files
+videoA.src = 'B3_V13_A-cam_SYNCED.mov';
+videoB.src = 'B3_V13_B-cam_SYNCED.mov';
+
+let isSynced = false;
+
+function syncPlay() {
+  isSynced = true;
+  videoA.play();
+  videoB.play();
+  maintainSync();
+}
+
+function maintainSync() {
+  if (!isSynced) return;
+
+  const diff = Math.abs(videoA.currentTime - videoB.currentTime);
+  if (diff > 0.05) {
+    videoB.currentTime = videoA.currentTime;
+  }
+
+  if (!videoA.paused && !videoB.paused) {
+    requestAnimationFrame(maintainSync);
+  }
+}
+
+videoA.addEventListener('play', () => {
+  if (isSynced && videoB.paused) videoB.play();
+});
+videoB.addEventListener('play', () => {
+  if (isSynced && videoA.paused) videoA.play();
+});
+
+videoA.addEventListener('pause', () => {
+  if (isSynced) videoB.pause();
+});
+videoB.addEventListener('pause', () => {
+  if (isSynced) videoA.pause();
+});
+
+function reset() {
+  videoA.currentTime = 0;
+  videoB.currentTime = 0;
+  videoA.pause();
+  videoB.pause();
+  isSynced = false;
+}
+</script>
+
+</body>
+</html>
