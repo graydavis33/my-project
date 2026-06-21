@@ -87,6 +87,15 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - `_find_stage_item` is an exact-name search that PRUNES into a matched dir (returns the project folder whole, not its children); >1 match aborts with a list.
 - Pure file move (`_promote_item`): never copies/deletes/overwrites (dest-exists aborts). Stages 02/03/04 are NOT in `INDEX_SCAN_ROOTS`, so there's no index/ffprobe involvement — that's why it's pure file ops.
 
+**v4 — Documentary episode finalize (`ship --episode`, 2026-06-21):**
+- `ship --episode "Name" [--footage <path>] [--tag-model M] [--yes]` finalizes a delivered documentary episode in one reviewed step. Default footage location: `01_ORGANIZED/<episode>/`; `--footage` overrides.
+- **Why footage waits in `01_ORGANIZED`:** the episode's Premiere timeline draws only from its own footage — keeping it separate from the reusable b-roll library prevents past-week library clips bleeding into a different episode's project. It joins the library only at finalize.
+- **`02_ACTIVE_PROJECTS` holds only the Premiere project**, never raw footage. Raw footage lives in `01_ORGANIZED/<episode>/<day>/` for the whole edit. Gray organizes by hand; there is no intake/batch command for episodes.
+- **No A-roll/B-roll distinction, no shot-type detection (dropped).** ALL horizontal = b-roll (Gray reuses talking clips as b-roll anyway); ALL vertical = parked. Both go into the reusable library at finalize.
+- **Never `_BATCHES`.** That filing system is batch-shorts-only; episode footage never routes there.
+- After confirming the plan, `ship --episode` executes: walks `01_ORGANIZED/<episode>/` → routes horizontal clips to `05_FOOTAGE_LIBRARY/b-roll/<week>/`, vertical to `vertical/<week>/`, archives the Premiere project to `04_ARCHIVE/longform/<week>/<episode>/`, re-indexes, then prompts for the Vision auto-tag pass (Opus `claude-opus-4-8`, ~$0.015/clip; Haiku via `--tag-model claude-haiku-4-5` for cheap incremental). Undetermined-orientation clips are warned and left in source.
+- Plan-first, pure moves, never overwrites; missing footage or project → warns and skips that half. Implemented in `_episode_ship_plan` / `_cmd_ship_episode` (called from `cmd_ship` when `--episode` is set).
+
 **v3.1 — ship (post-delivery cleanup, 2026-06-15; footage destination revised 2026-06-19):**
 - `ship --video NAME` chains the two cleanup moves after a video is delivered: edit project (02 → 04_ARCHIVE) + raw footage (01 → 05_FOOTAGE_LIBRARY). Plan-first: `_ship_plan` returns a `(moves, warnings)` list and moves NOTHING; `cmd_ship` prints it + prompts; `_execute_ship` performs it; then `_reindex`.
 - **Footage destination splits by type (2026-06-19):** batch footage (auto-detected `Batch N Vid M` in the video name) → `05_FOOTAGE_LIBRARY/_BATCHES/Batch_NN/Vid_MM/` (no week, index-skipped — its own scheme); loose `--footage` shoots → `05_FOOTAGE_LIBRARY/<category>/<week>/` (the b-roll scheme). The old behavior dumped batch footage into `05_FOOTAGE_LIBRARY/<video>/<week>`, mixing it into b-roll — Gray's call to separate them. `batch_dest` in `_ship_plan` carries the batch path; `week_target` is ignored for batch.

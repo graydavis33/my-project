@@ -303,6 +303,64 @@ It plans two moves:
 - **Safe:** plan-first, pure moves, never overwrites; if it can't find the project or footage it **warns and skips that half** rather than guessing.
 - The `_ship_plan` / `_execute_ship` split lets a folder-watcher reuse the same engine headless — the planned "drop a file → auto-plan → approve" trigger.
 
+## Documentary episodes
+
+Documentary episodes follow a different intake and finalize flow from batch shorts — Gray organizes the footage by hand, and a single `ship --episode` command finalizes everything after delivery.
+
+### Lifecycle
+
+| Stage | Where footage lives | Who does it |
+|---|---|---|
+| Filming | Card dump → hand-sorted | Gray sorts by hand into `01_ORGANIZED/<episode name>/<day>/` |
+| Active edit | `01_ORGANIZED/<episode>/` (stays put) | Premiere project in `02_ACTIVE_PROJECTS/longform/<week>/` |
+| After delivery | finalize with `ship --episode` | Footage → library; project → archive |
+
+**Key rules:**
+- Gray organizes each episode's footage **by hand** under `01_ORGANIZED/<episode name>/<day>/` (folder = episode name, e.g. `ep2 doc`, with date subfolders inside). `_INBOX` is batch-only — do not use it for episode footage.
+- `02_ACTIVE_PROJECTS` holds only the **Premiere project**, never raw footage. Raw footage stays in `01_ORGANIZED` for the whole edit so the episode's timeline draws only from its own footage — no past-week library b-roll bleeding in from unrelated shoots.
+- Documentary footage is **never** filed into `_BATCHES`. That filing system is batch-shorts-only (unchanged).
+- Both A-roll (Sai talking) and b-roll become reusable library footage at finalize — there is no A-roll/B-roll distinction and no shot-type detection. All horizontal clips are b-roll; all vertical clips are parked.
+
+### Finalize command
+
+```bash
+# Finalize using the default footage location (01_ORGANIZED/<episode>/)
+python cli_index.py --client sai ship --episode "ep2 doc"
+
+# Override the footage location
+python cli_index.py --client sai ship --episode "ep2 doc" --footage "01_ORGANIZED/ep2 doc/custom-path"
+
+# Skip all confirmation prompts (footage + auto-tag)
+python cli_index.py --client sai ship --episode "ep2 doc" --yes
+
+# Use Haiku instead of Opus for the auto-tag pass (cheaper, lower accuracy)
+python cli_index.py --client sai ship --episode "ep2 doc" --tag-model claude-haiku-4-5
+```
+
+What `ship --episode` does, in order (shows a plan and moves nothing until you confirm):
+
+1. Walks ALL footage under `01_ORGANIZED/<episode>/` (or `--footage` path).
+2. Routes each clip by orientation:
+   - **Horizontal** → `05_FOOTAGE_LIBRARY/b-roll/<week>/` (tagged by Vision after the move)
+   - **Vertical** → `05_FOOTAGE_LIBRARY/vertical/<week>/` (parked, never tagged)
+   - Undetermined orientation → warned and left in source
+3. Archives the Premiere project from `02_ACTIVE_PROJECTS` → `04_ARCHIVE/longform/<week>/<episode>/`.
+4. Re-indexes the library.
+5. Auto-tags the new horizontal b-roll clips — shows the estimated cost (~$0.015/clip with Opus, the default) and asks to confirm unless `--yes`. Pass `--tag-model claude-haiku-4-5` for the cheap incremental pass (~$0.003/clip).
+
+**Safe:** plan-first, pure moves, never overwrites. Missing footage or project → warns and skips that half rather than guessing.
+
+### Order of operations — a documentary episode, start to finish
+
+| Step | Action | Where footage lives |
+|---|---|---|
+| 1. Offload card | Drop files, sort by hand | `01_ORGANIZED/<episode>/<day>/` |
+| 2. Active edit | Premiere reads from here | **stay put** in `01_ORGANIZED/<episode>/` |
+| 3. Export + deliver | Export to `03_DELIVERED/longform/` | still in `01_ORGANIZED/<episode>/` |
+| 4. Finalize | `ship --episode "ep2 doc"` | → `05_FOOTAGE_LIBRARY/b-roll/<week>/` + `vertical/<week>/` (permanent) |
+
+---
+
 ## Order of operations — a batch video, start to finish
 
 Where the **original** A-cam/B-cam files live at each step. The originals move exactly **once** (at ship), and the AI editor never touches them — it only reads them and writes new files to `08_AI_EDITS/`.
