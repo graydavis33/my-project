@@ -237,6 +237,7 @@ python cli_index.py --client sai tag --retag     # re-tag already-tagged clips
 - Default model **Opus 4.8** for the initial pass (~$0.015/clip); drop to **Haiku** later for new clips (~$0.003/clip).
 - `emotion`/`action` are set only when a person is in frame; `location`/`objects` on every clip. Tags cached by file-hash (`.tag-cache.json`) so each clip is paid once ever.
 - A plain `index` re-scan **never wipes tags** (the upsert COALESCEs them) — only `tag` / the dashboard write them.
+- **`tag --episode "ep2 doc"`** tags a documentary episode's footage in place (`01_ORGANIZED/<episode>/`) so clips are pull-able as b-roll *before* the episode ships — no need to wait for `ship --episode` to file them into the library.
 
 ### Pull by tag
 
