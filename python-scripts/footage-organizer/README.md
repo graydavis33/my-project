@@ -263,7 +263,8 @@ Local browser editor for all b-roll tags:
 - **Bulk-apply:** check clips, shift-click for a range, then set one tag on all selected (great for merging near-dupe values like `rooftop`/`rooftop terrace`).
 - **Type-to-add vocabulary:** a new value is remembered in `tagger/vocab.json` and autocompletes next time (merged with the config seeds + live index values).
 - **"⇄ mark vertical (move out)"** — for a clip that's actually vertical (orientation was wrong): moves it (+ sidecars) to `vertical/<same-week>/`, recategorizes it in the index, and clears its tags (vertical is parked/untagged). Works **per clip** (button on each card) **and in bulk** (select multiple → the "mark vertical (move out)" button in the selection bar moves them all at once). The bulk version auto-flips each clip's bucket, so it also works in `--vertical` review mode (vertical → b-roll).
-- Writes go straight to the index (`index.update_tags` / `index.relocate`). `--vertical N` is a read-only review mode for detected-vertical clips.
+- **"🗑 delete from drive"** — **PERMANENTLY** deletes a clip (+ its sidecars) off the footage drive and removes its index row. **No recycle bin — it's gone.** Per-clip button on each card and a bulk button in the selection bar (delete many at once). Both require a confirm. Guarded to only touch files under `05_FOOTAGE_LIBRARY/{b-roll,vertical}/` (`server._delete_clip` → `index.remove`).
+- Writes go straight to the index (`index.update_tags` / `index.relocate` / `index.remove`). `--vertical N` is a read-only review mode for detected-vertical clips.
 
 ## v3 — Stage transitions (promote)
 
