@@ -425,3 +425,8 @@ zero cost.
 - Intaked `05_FOOTAGE_LIBRARY/affirmations/` (11 clips, filmed 2026-05-26): 2 horizontal (C2485, C2491) → b-roll/W07_May-25-31, 9 vertical → vertical/W07_May-25-31 (parked). Tagged the 2 horizontal (~$0.03). Removed the emptied affirmations staging folder.
 - NOTE: intake's reindex re-walks the whole library (~572 clips, ffprobe each ≈ 1 min) — querying the index before it finishes shows stale state; not a bug. `--tag` is safe because it runs after the reindex completes synchronously.
 - STILL ON DISK: `05_FOOTAGE_LIBRARY/_TO_SORT/affirmations/` (1.8GB) is a byte-identical duplicate of the now-filed clips (index-skipped, so invisible to search/dashboard, but wasting space) — pending Gray's OK to delete.
+
+## 2026-06-21 — Documentary episode finalize (ship --episode); intake command dropped
+- Gray organizes each documentary episode's footage by hand under 01_ORGANIZED/<episode name>/<day>/ (folder = episode name, e.g. "ep2 doc", with date subfolders inside) while editing — _INBOX stays batch-only, no episode-intake command. 02_ACTIVE_PROJECTS holds only the Premiere project, never raw footage. Footage waits in organized so each episode edits from only its own week's timeline (no past-week library b-roll bleeding in).
+- `ship --episode "Name" [--footage <path>]` is the single finalize step: after delivery it moves ALL footage (A-roll talking + b-roll) → 05_FOOTAGE_LIBRARY/b-roll/<week> (auto-tagged) + vertical/<week> (parked), and archives the Premiere project → 04_ARCHIVE/longform/<week>/<Name>/. Default footage location 01_ORGANIZED/<episode>/.
+- No A-roll/B-roll distinction, no shot-type detector (dropped): both converge into the reusable library at finalize. Documentary footage never goes to _BATCHES; batch system unchanged.
