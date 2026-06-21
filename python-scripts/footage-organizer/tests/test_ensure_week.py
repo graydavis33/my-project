@@ -3,10 +3,10 @@ from datetime import date
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from cli_index import ensure_week
-from config import FOLDER_BROLL, FOLDER_VERTICAL
+from config import FOLDER_BROLL, FOLDER_VERTICAL, FOLDER_BATCHES
 
-# v4: b-roll + vertical footage buckets + (ACTIVE/DELIVERED/ARCHIVE) × 3 format buckets
-WEEK_FOLDER_COUNT = 2 + 9
+# v4: b-roll + vertical buckets + _BATCHES parent + (ACTIVE/DELIVERED/ARCHIVE) × 3 formats
+WEEK_FOLDER_COUNT = 2 + 1 + 9
 
 
 def test_ensure_week_creates_full_week_scaffold(tmp_path):
@@ -15,6 +15,7 @@ def test_ensure_week_creates_full_week_scaffold(tmp_path):
     assert skipped == 0
     assert (tmp_path / "05_FOOTAGE_LIBRARY" / FOLDER_BROLL / "W02_Apr-20-26").is_dir()
     assert (tmp_path / "05_FOOTAGE_LIBRARY" / FOLDER_VERTICAL / "W02_Apr-20-26").is_dir()
+    assert (tmp_path / "05_FOOTAGE_LIBRARY" / FOLDER_BATCHES).is_dir()  # parent, no week subfolder
     assert (tmp_path / "02_ACTIVE_PROJECTS" / "shorts" / "W02_Apr-20-26").is_dir()
     assert (tmp_path / "04_ARCHIVE" / "longform" / "W02_Apr-20-26").is_dir()
     # the dead 17 categories are NOT recreated

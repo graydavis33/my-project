@@ -285,9 +285,12 @@ def ensure_week(library: Path, target: date) -> tuple[int, int]:
     categories = sorted({FOLDER_BROLL, FOLDER_VERTICAL} | set(freeform))
 
     targets = []
-    # Footage library: one folder per category (standard + freeform)
+    # Footage library: weekly subfolder per bucket (b-roll, vertical, freeform)
     for category in categories:
         targets.append(lib_root / category / label)
+    # _BATCHES parent — batch interview originals are filed by Batch_NN/Vid_MM
+    # (via ship), NOT by week, so just guarantee the parent folder exists.
+    targets.append(lib_root / FOLDER_BATCHES)
     # Project folders: one per format bucket per top-level
     for top in (FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE):
         for fmt in PROJECT_FORMAT_BUCKETS:
