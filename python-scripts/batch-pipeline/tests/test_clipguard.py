@@ -70,3 +70,14 @@ def test_rms_window_does_not_spill_past_hard_cap():
         f"snap_out returned {out:.4f}, expected < 1.25; "
         "RMS window likely spilled past hard_cap, pulling selection to boundary"
     )
+
+def test_loud_breath_before_far_cap_does_not_pull_to_cap():
+    # Parity regression (B3 V04 hook): the word rings out to a quiet dip, then a
+    # LOUD breath sits right before hard_cap (next word far away). A previous
+    # clamp made near-cap windows degenerate to ~1 sample and score spuriously
+    # low, pulling the cut INTO the breath at the cap. With full-fit-only windows,
+    # the cut must land in the quiet dip, never in the loud breath near the cap.
+    sr = 48000
+    a = _env(sr, [(0.0, 1.20, 0.3), (1.22, 1.30, 0.05), (1.32, 1.58, 0.7)])
+    out = clipguard.snap_out(a, sr, sout=1.00, next_word_start=None)  # hard_cap=1.60
+    assert 1.18 < out < 1.32, f"snap_out returned {out:.4f}; expected the dip, not the breath/cap"
