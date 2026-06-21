@@ -33,6 +33,7 @@ from config import (
     FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
     FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BATCHES,
     FOLDER_DRAFTS, FOLDER_BROLL, FOLDER_VERTICAL, FOLDER_INBOX,
+    FOLDER_TEMPLATES, FOLDER_ASSETS, FOLDER_AI_EDITS,
     VISION_TAG_MODEL, VISION_TAG_COST_PER_CLIP,
 )
 
@@ -198,9 +199,85 @@ def _reindex(library: Path, db_path: Path) -> tuple[int, int, int]:
     return added, skipped, removed
 
 
+# ── structure guard: keep the canonical top-level folders at the top level ──
+# A canonical folder (e.g. 01_ORGANIZED) sometimes gets dragged INTO another in
+# Explorer (e.g. 05_FOOTAGE_LIBRARY/01_ORGANIZED). This detects that and moves it
+# back. Runs at the start of every footage command + on SessionStart.
+_CANONICAL_TOP = (FOLDER_TEMPLATES, FOLDER_ORGANIZED, FOLDER_PROJECTS, FOLDER_DELIVERED,
+                  FOLDER_ARCHIVE, FOLDER_FOOTAGE_LIB, FOLDER_ASSETS, FOLDER_QUERY_PULLS,
+                  FOLDER_AI_EDITS)
+
+
+def _find_misnested(library: Path):
+    """Find canonical top-level folders that have been moved INSIDE another
+    canonical folder (one level deep). Returns [(nested_path, correct_top_path)]."""
+    canon = set(_CANONICAL_TOP)
+    out = []
+    for parent in _CANONICAL_TOP:
+        pdir = library / parent
+        if not pdir.is_dir():
+            continue
+        for child in pdir.iterdir():
+            if child.is_dir() and child.name in canon:
+                out.append((child, library / child.name))
+    return out
+
+
+def _repair_structure(library: Path):
+    """Move any misnested canonical folder back to the top level. Only moves when
+    the correct top-level slot is free (never overwrites/merges). Returns
+    (repaired_names, warnings)."""
+    repaired, warnings = [], []
+    for nested, correct in _find_misnested(library):
+        rel = nested.relative_to(library).as_posix()
+        if correct.exists():
+            warnings.append(f"{rel} is nested but {correct.name} already exists at the top level — move it back by hand")
+        else:
+            shutil.move(str(nested), str(correct))
+            repaired.append(correct.name)
+    return repaired, warnings
+
+
+def _guard_structure(library: Path):
+    """Auto-repair misnested canonical folders before a command runs. Prints what
+    it did. Cheap (a few dir listings) and safe (only moves into a free slot)."""
+    try:
+        repaired, warnings = _repair_structure(library)
+    except OSError as e:
+        print(f"  [structure guard] could not check/repair: {e}")
+        return
+    for name in repaired:
+        print(f"  [structure guard] {name} had been nested inside another folder — moved it back to the top level. Re-index to refresh paths.")
+    for w in warnings:
+        print(f"  [structure guard] WARNING: {w}")
+
+
+def cmd_check_structure(args):
+    library = _library(args.client)
+    misnested = _find_misnested(library)
+    if not misnested:
+        print(f"\n  Structure OK — all top-level folders are where they belong.\n")
+        return
+    print(f"\n  Found {len(misnested)} misnested folder(s):")
+    for nested, correct in misnested:
+        print(f"    {nested.relative_to(library).as_posix()}  →  should be  {correct.name}/")
+    if args.repair:
+        repaired, warnings = _repair_structure(library)
+        for name in repaired:
+            print(f"  moved {name} back to the top level")
+        for w in warnings:
+            print(f"  WARNING: {w}")
+        if repaired:
+            print(f"  Re-index to refresh paths: python cli_index.py --client {args.client} index")
+    else:
+        print(f"  Run with --repair to move them back.")
+    print()
+
+
 def cmd_index(args):
     client = args.client
     library = _library(client)
+    _guard_structure(library)
     _autocreate_week(library)
     db_path = _db(client)
     added, skipped, removed = _reindex(library, db_path)
@@ -211,6 +288,7 @@ def cmd_index(args):
 def cmd_pull(args):
     client = args.client
     library = _library(client)
+    _guard_structure(library)
     _autocreate_week(library)
     db_path = _db(client)
     if not db_path.exists():
@@ -888,6 +966,7 @@ def cmd_intake(args):
     Plan-first; then run `tag` to tag the new horizontal clips."""
     client = args.client
     library = _library(client)
+    _guard_structure(library)
     _autocreate_week(library)
 
     if args.source:
@@ -1013,6 +1092,7 @@ def cmd_tag(args):
     re-runs never wipe tags. Default model Opus 4.8; --limit N for a sample run."""
     client_name = args.client
     library = _library(client_name)
+    _guard_structure(library)
     db_path = _db(client_name)
     if not db_path.exists():
         print(f"Error: index not built yet. Run: python cli_index.py --client {client_name} index")
@@ -1307,6 +1387,7 @@ def _execute_ship(moves) -> None:
 
 def _cmd_ship_episode(args, client):
     library = _library(client)
+    _guard_structure(library)
     footage_root = None
     if args.footage:
         footage_root = Path(args.footage)
@@ -1353,6 +1434,7 @@ def cmd_ship(args):
         print("\n  Error: --video is required (or use --episode for a documentary episode)\n")
         sys.exit(1)
     library = _library(args.client)
+    _guard_structure(library)
     if args.no_week:
         week_target = None
     elif args.week:
@@ -1485,6 +1567,10 @@ def main():
     tg.add_argument("--yes", "-y", action="store_true", help="Skip the cost-confirmation prompt")
     tg.add_argument("--episode", help="Tag a documentary episode's footage in place (01_ORGANIZED/<episode>/) so it's pull-able as b-roll before the episode ships. Default tags the b-roll library.")
     tg.set_defaults(func=cmd_tag)
+
+    cs = sub.add_parser("check-structure", help="Verify the top-level library folders are where they belong; --repair moves any misnested ones back")
+    cs.add_argument("--repair", action="store_true", help="Move misnested top-level folders back to where they belong")
+    cs.set_defaults(func=cmd_check_structure)
 
     args = ap.parse_args()
     args.func(args)
