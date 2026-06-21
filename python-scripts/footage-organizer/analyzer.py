@@ -10,7 +10,9 @@ import anthropic
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared'))
 from usage_logger import track_response
 
-from config import ANTHROPIC_API_KEY, MODEL, CATEGORIES
+import json
+
+from config import ANTHROPIC_API_KEY, MODEL, CATEGORIES, EMOTION_TAGS, ACTION_TAGS
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
@@ -90,3 +92,69 @@ def classify_video(frames_b64: list[str], filename: str) -> str:
         return "misc"
 
     return raw
+
+
+# ── v4 b-roll Vision tagging ────────────────────────────────────────────────
+
+_TAG_PROMPT = f"""You are tagging one reusable B-ROLL clip from a videographer's library.
+You have 4 frames sampled across the clip (20%, 40%, 60%, 80%).
+
+Return a single JSON object describing the clip for later search. Keys:
+- "person_present" (boolean): true if a PERSON is a clear subject of the clip.
+- "emotion" (string or null): the person's mood — ONLY when person_present is true, else null.
+    Prefer one of: {", ".join(EMOTION_TAGS)} (a different single word is OK if none fit).
+- "action" (string or null): what the person is doing — ONLY when person_present is true, else null.
+    Prefer one of: {", ".join(ACTION_TAGS)} (a different short word is OK if none fit).
+- "location" (string): the setting/place, lowercase, 1-3 words (e.g. "nyc street", "office",
+    "bedroom", "cafe", "gym", "subway"). Always give your best read.
+- "objects" (array of strings): notable objects in frame, lowercase short nouns
+    (e.g. "coffee cup", "laptop", "car", "building"). Most important for clips with NO person.
+    Use [] if nothing notable.
+
+Rules:
+- Output ONLY the JSON object. No markdown fences, no prose, no trailing text.
+- emotion and action MUST be null when person_present is false.
+- Keep every tag lowercase. Be concise and consistent so tags group well across clips."""
+
+
+def _coerce_tags(data: dict) -> dict:
+    """Normalize the model's JSON into the canonical tag shape with safe types.
+    Enforces the rule that emotion/action exist only when a person is present."""
+    person = bool(data.get("person_present"))
+    def _norm(v):
+        return v.strip().lower() if isinstance(v, str) and v.strip() else None
+    objs = data.get("objects") or []
+    if not isinstance(objs, list):
+        objs = []
+    objs = [o.strip().lower() for o in objs if isinstance(o, str) and o.strip()]
+    return {
+        "person_present": person,
+        "emotion": _norm(data.get("emotion")) if person else None,
+        "action": _norm(data.get("action")) if person else None,
+        "location": _norm(data.get("location")),
+        "objects": objs,
+    }
+
+
+def tag_video(frames_b64: list[str], filename: str, model: str) -> dict:
+    """Vision-tag one clip → {person_present, emotion, action, location, objects}.
+    Uses a strict JSON-only prompt (SDK-version-robust — no output_config needed)."""
+    content = [{
+        "type": "image",
+        "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
+    } for b64 in frames_b64]
+    content.append({"type": "text", "text": _TAG_PROMPT})
+
+    response = client.messages.create(
+        model=model,
+        max_tokens=400,
+        messages=[{"role": "user", "content": content}],
+    )
+    track_response(response)
+
+    raw = next((b.text for b in response.content if b.type == "text"), "").strip()
+    # Strip accidental markdown fences before parsing.
+    if raw.startswith("```"):
+        raw = raw.strip("`")
+        raw = raw[raw.find("{"):raw.rfind("}") + 1]
+    return _coerce_tags(json.loads(raw))

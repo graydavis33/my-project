@@ -17,6 +17,21 @@ ANTHROPIC_API_KEY = _require("ANTHROPIC_API_KEY")
 
 MODEL = "claude-haiku-4-5-20251001"
 
+# v4 b-roll Vision tagging. Opus 4.8 for the initial pass (strong model while
+# building the tag data set); drop to claude-haiku-4-5 for cheap incremental
+# tagging of new clips later (~5x cheaper). ~$0.015/clip on Opus, ~$0.003 on Haiku.
+VISION_TAG_MODEL = "claude-opus-4-8"
+VISION_TAG_COST_PER_CLIP = {"claude-opus-4-8": 0.015, "claude-haiku-4-5": 0.003}
+
+# Seed tag vocabularies — a STARTING POINT shown to the Vision model + the
+# dashboard, NOT a locked menu. New values are created by typing them in the
+# tagging dashboard (persisted to tagger/vocab.json). emotion/action apply only
+# when a person (Sai) is in frame; location/objects describe any clip.
+EMOTION_TAGS = ["happy", "excited", "stoic", "focused", "stressed",
+                "tired", "sad", "angry", "confident", "reflective"]
+ACTION_TAGS = ["walking", "talking", "eating", "drinking", "cooking", "working",
+               "filming", "driving", "sitting", "exercising", "on-phone", "presenting"]
+
 # Client library roots — set in .env to the root of each client's SSD folder.
 # Same physical exFAT drive across machines:
 #   Mac:     SAI_LIBRARY_ROOT=/Volumes/Footage/Sai

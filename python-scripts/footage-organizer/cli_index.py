@@ -32,11 +32,11 @@ from config import (
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
     FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
     FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BATCHES,
-    FOLDER_DRAFTS, FOLDER_BROLL,
+    FOLDER_DRAFTS, FOLDER_BROLL, VISION_TAG_MODEL, VISION_TAG_COST_PER_CLIP,
 )
 
 PROJECT_FORMAT_BUCKETS = ["longform", "linkedin", "shorts"]
-from extractor import get_resolution, get_duration, get_shoot_date
+from extractor import get_resolution, get_duration, get_shoot_date, extract_frames
 from week_utils import week_label_for, current_week_label
 import index
 import pull as pull_mod
@@ -720,6 +720,89 @@ def cmd_consolidate_broll(args):
     print(f"  DB: {db_path}\n")
 
 
+# ---- v4 Phase 3: AI Vision tagging of b-roll -------------------------------
+
+def _apply_tags_to_record(rec, tags: dict):
+    """Write a Vision tag dict onto a ClipRecord. Defensive: emotion/action are
+    forced None unless a person is present (so a stray model value can't slip in).
+    objects are pipe-packed. Pure — unit-testable without the API."""
+    person = bool(tags.get("person_present"))
+    rec.emotion = (tags.get("emotion") or None) if person else None
+    rec.action = (tags.get("action") or None) if person else None
+    rec.location = tags.get("location") or None
+    rec.objects = index.pack_objects(tags.get("objects") or [])
+    return rec
+
+
+def _is_untagged(rec) -> bool:
+    return not (rec.emotion or rec.action or rec.location or rec.objects)
+
+
+def cmd_tag(args):
+    """Vision-tag b-roll clips → emotion/action/location/objects in the index.
+    Plan-first (shows count + est cost), caches by file hash, COALESCE-upsert so
+    re-runs never wipe tags. Default model Opus 4.8; --limit N for a sample run."""
+    client_name = args.client
+    library = _library(client_name)
+    db_path = _db(client_name)
+    if not db_path.exists():
+        print(f"Error: index not built yet. Run: python cli_index.py --client {client_name} index")
+        sys.exit(1)
+    _check_legacy_db(db_path)
+
+    clips = index.query(db_path, category=FOLDER_BROLL)
+    todo = clips if args.retag else [c for c in clips if _is_untagged(c)]
+    if args.limit:
+        todo = todo[:args.limit]
+
+    per_clip = VISION_TAG_COST_PER_CLIP.get(args.model, 0.015)
+    est = len(todo) * per_clip
+    print(f"\n  Vision-tag b-roll ({client_name.upper()})")
+    print(f"  Model: {args.model}   Clips to tag: {len(todo)}   Est. cost: ~${est:.2f}")
+    if args.retag:
+        print(f"  (--retag: re-tagging already-tagged clips too)")
+
+    if not todo:
+        print("  Nothing to tag — all b-roll clips already tagged.\n")
+        return
+
+    if not args.yes:
+        ans = input("\n  Proceed with the paid Vision run? [y/N]: ").strip().lower()
+        if ans != "y":
+            print("  Aborted — no API calls made.\n")
+            return
+
+    import analyzer
+    from cache import get_cached_tags, store_cached_tags
+
+    tagged = failed = cache_hits = 0
+    for c in todo:
+        abspath = str(library / c.path)
+        name = Path(c.path).name
+        cached = None if args.retag else get_cached_tags(abspath)
+        if cached is not None:
+            tags = cached
+            cache_hits += 1
+        else:
+            try:
+                dur = get_duration(abspath)
+                frames = extract_frames(abspath, dur)
+                tags = analyzer.tag_video(frames, name, args.model)
+                store_cached_tags(abspath, tags)
+            except Exception as e:
+                print(f"    [skip] {name}: {e}")
+                failed += 1
+                continue
+        _apply_tags_to_record(c, tags)
+        index.upsert(db_path, c)
+        tagged += 1
+        print(f"    {name}: emotion={c.emotion} action={c.action} "
+              f"location={c.location} objects={index.unpack_objects(c.objects)}")
+
+    print(f"\n  Tagged {tagged} clip(s) ({cache_hits} from cache, {failed} skipped).")
+    print(f"  DB: {db_path}\n")
+
+
 # ---- stage transitions (v3 Phase 4): ACTIVE → DELIVERED → ARCHIVE ----------
 # Project stages (02/03/04) are NOT in the index (INDEX_SCAN_ROOTS is 01 + 05),
 # so these are pure, safe file moves — no ffprobe, no index rebuild.
@@ -1027,6 +1110,13 @@ def main():
     cb = sub.add_parser("consolidate-broll", help="Flatten all category folders into 05_FOOTAGE_LIBRARY/b-roll/<week>/ (original weeks preserved); plan-first")
     cb.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")
     cb.set_defaults(func=cmd_consolidate_broll)
+
+    tg = sub.add_parser("tag", help="AI Vision-tag b-roll clips → emotion/action/location/objects in the index")
+    tg.add_argument("--model", default=VISION_TAG_MODEL, help=f"Vision model (default {VISION_TAG_MODEL}; pass claude-haiku-4-5 for cheap incremental runs)")
+    tg.add_argument("--limit", type=int, help="Only tag the first N untagged clips (sample run)")
+    tg.add_argument("--retag", action="store_true", help="Re-tag even already-tagged clips")
+    tg.add_argument("--yes", "-y", action="store_true", help="Skip the cost-confirmation prompt")
+    tg.set_defaults(func=cmd_tag)
 
     args = ap.parse_args()
     args.func(args)

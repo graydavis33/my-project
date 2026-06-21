@@ -55,3 +55,41 @@ def store_cached(filepath: str, category: str):
         "category": category,
     }
     _save(cache)
+
+
+# ── v4 b-roll Vision tags — separate cache file, same path-independent key ──
+_TAG_CACHE_FILE = os.path.join(_DIR, ".tag-cache.json")
+
+
+def _load_tags() -> dict:
+    if os.path.exists(_TAG_CACHE_FILE):
+        try:
+            with open(_TAG_CACHE_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def _save_tags(cache: dict):
+    tmp = _TAG_CACHE_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(cache, f, indent=2)
+    os.replace(tmp, _TAG_CACHE_FILE)
+
+
+def get_cached_tags(filepath: str):
+    """Return the cached Vision tag dict for this clip, else None.
+    Keyed by filename+filesize so the paid Opus pass runs once per clip even if
+    the index is later wiped/rebuilt."""
+    entry = _load_tags().get(make_key(filepath))
+    return entry["tags"] if entry else None
+
+
+def store_cached_tags(filepath: str, tags: dict):
+    cache = _load_tags()
+    cache[make_key(filepath)] = {
+        "filename": os.path.basename(filepath),
+        "tags": tags,
+    }
+    _save_tags(cache)

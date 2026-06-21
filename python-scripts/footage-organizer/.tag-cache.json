@@ -1,0 +1,87 @@
+{
+  "2efe57154db192f6b06685c9cd470aac": {
+    "filename": "C2451.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "office",
+      "objects": [
+        "microphone",
+        "whiteboard",
+        "marker",
+        "monitor",
+        "office chair",
+        "water bottle",
+        "smartphone"
+      ]
+    }
+  },
+  "76481383d39222581a9b90a0fe7bc540": {
+    "filename": "C2453.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "office",
+      "objects": [
+        "whiteboard",
+        "microphone",
+        "monitor",
+        "water bottle",
+        "office chair",
+        "marker",
+        "backpack"
+      ]
+    }
+  },
+  "0617c2947a7e4e0ea616043da3003a69": {
+    "filename": "C2454.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "presenting",
+      "location": "office",
+      "objects": [
+        "whiteboard",
+        "monitor",
+        "microphone",
+        "chair",
+        "backpack",
+        "water bottle",
+        "markers"
+      ]
+    }
+  },
+  "df9052b7ddc14f349a11d2affa917ca7": {
+    "filename": "C2455.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "presenting",
+      "location": "office",
+      "objects": [
+        "whiteboard",
+        "markers",
+        "office chair",
+        "monitor",
+        "water bottle",
+        "backpack"
+      ]
+    }
+  },
+  "a3454e703201d97715ed7f05fdad5d90": {
+    "filename": "C2456.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "presenting",
+      "location": "office",
+      "objects": [
+        "whiteboard",
+        "markers",
+        "ring"
+      ]
+    }
+  }
+}
