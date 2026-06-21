@@ -174,6 +174,23 @@ What it does, in order:
 - Re-running is safe — clips already in a Vid folder are left as-is (idempotent).
 - **No Vision/AI on batch footage** — it's mapped, not classified, so $0 API spend. The `batch_num`/`vid_num` tags are derived from the folder path, so a plain `index` re-run keeps them correct.
 
+## v4 — Consolidate into a single b-roll library (`consolidate-broll`)
+
+Flattens the 17 content-category folders (+ any freeform folders) into one
+`05_FOOTAGE_LIBRARY/b-roll/<week>/` home. Findability moves to index **tags**
+(emotion/action/location/object — Phases 2–5), not folders.
+
+```bash
+python cli_index.py --client sai consolidate-broll        # plan-first, prompts before moving
+python cli_index.py --client sai consolidate-broll --yes  # skip the prompt
+```
+
+- **Plan-first:** prints the full move plan (clips per week, week-less clips, collisions) and moves nothing until you confirm.
+- **Weeks preserved:** each clip keeps its ORIGINAL week — read from its source week folder, else derived from its filmed date (ffprobe). Week-less clips with no readable date go to `b-roll/unknown-week/` so they're still consolidated + taggable.
+- **Pure moves:** never overwrites — a filename collision at the destination is reported and skipped (the duplicate stays at its source for you to delete). Sony sidecars move with their clip.
+- **A/B-cam interview footage is never b-roll** — it lives only in `_BATCHES/` (filed by `ship`) and is untouched here.
+- After moving, empty category folders are pruned and the index re-built (every clip indexes as `category=b-roll`).
+
 ## v3 — Stage transitions (promote)
 
 When a video is finished, `promote` moves the whole project to the next stage so you never forget the step:

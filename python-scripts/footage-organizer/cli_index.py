@@ -32,7 +32,7 @@ from config import (
     INDEX_SCAN_ROOTS, FORMAT_LONG_FORM, FORMAT_SHORT_FORM,
     FOLDER_FOOTAGE_LIB, FOLDER_ORGANIZED, FOLDER_QUERY_PULLS,
     FOLDER_PROJECTS, FOLDER_DELIVERED, FOLDER_ARCHIVE, FOLDER_BATCHES,
-    FOLDER_DRAFTS,
+    FOLDER_DRAFTS, FOLDER_BROLL,
 )
 
 PROJECT_FORMAT_BUCKETS = ["longform", "linkedin", "shorts"]
@@ -547,6 +547,179 @@ def cmd_batch(args):
     print(f"  DB: {db_path}\n")
 
 
+# ---- v4: consolidate all category folders into b-roll/<week>/ --------------
+# Flattens the 17 content categories (+ freeform folders) into a single
+# 05_FOOTAGE_LIBRARY/b-roll/<week>/ home. Findability moves to index tags, not
+# folders. Each clip keeps its ORIGINAL week (read from the source week folder,
+# else derived from filmed date) so no dates are lost. Plan-first + pure moves.
+
+_WEEK_RE = re.compile(r"^W\d+_")
+# Clips with no week folder AND no readable filmed-date land here so they're still
+# consolidated + taggable (Gray's choice). Re-file by hand later if a date surfaces.
+UNKNOWN_WEEK = "unknown-week"
+
+
+def _week_from_path(filepath: Path, library: Path):
+    """Return the W##_MMM-DD-DD week label from anywhere in the clip's path, or
+    None if it isn't under a week folder. Pure — this is the common case (existing
+    b-roll already lives in week folders), so it needs no ffprobe."""
+    for part in filepath.relative_to(library).parts:
+        if _WEEK_RE.match(part):
+            return part
+    return None
+
+
+def _resolve_week(filepath: Path, library: Path):
+    """Target week for a clip: its source week folder if present, else derived
+    from the clip's filmed date (ffprobe). None when neither is available — the
+    caller leaves those clips in place and reports them."""
+    week = _week_from_path(filepath, library)
+    if week:
+        return week
+    try:
+        return week_label_for(date.fromisoformat(get_shoot_date(str(filepath))))
+    except Exception:
+        return None
+
+
+def _clip_group(clip: Path) -> list[Path]:
+    """The clip plus any sidecars sharing its stem in the same folder (Sony
+    C####M01.XML, C####.WAV). Non-digit guard stops C249 grabbing C2493's files."""
+    cid = clip.stem.upper()
+    group = [clip]
+    for f in clip.parent.iterdir():
+        if f == clip or not f.is_file():
+            continue
+        if f.name.startswith("._") or f.name == ".DS_Store":
+            continue
+        stem = f.stem.upper()
+        if stem == cid or (stem.startswith(cid) and not stem[len(cid):len(cid) + 1].isdigit()):
+            group.append(f)
+    return group
+
+
+def _plan_consolidation(library: Path):
+    """Build the move plan: every clip under FOOTAGE_LIBRARY/<category>/ (except
+    b-roll itself and _-prefixed helpers) → b-roll/<week>/. Returns
+    (moves, per_week, unknown, collisions):
+      moves      — list of (src_file, dest_file) for clips + sidecars
+      per_week   — {week_label: clip_count}
+      unknown    — [rel_path] clips with no resolvable week (left in place)
+      collisions — [(src_rel, dest_rel)] dest already taken (skipped)"""
+    lib_root = library / FOLDER_FOOTAGE_LIB
+    moves, collisions, unknown = [], [], []
+    per_week: dict[str, int] = {}
+    seen_dest = set()
+    processed = set()
+    if not lib_root.is_dir():
+        return moves, per_week, unknown, collisions
+
+    for category_dir in sorted(lib_root.iterdir()):
+        if not category_dir.is_dir():
+            continue
+        if category_dir.name == FOLDER_BROLL or category_dir.name.startswith("_"):
+            continue
+        for clip in _walk_videos(category_dir):
+            if clip in processed:
+                continue
+            week = _resolve_week(clip, library)
+            if not week:
+                # No week folder, no readable filmed-date → still consolidate into
+                # b-roll/unknown-week/ (reported below so Gray can re-file later).
+                unknown.append(clip.relative_to(library).as_posix())
+                week = UNKNOWN_WEEK
+            dest_dir = lib_root / FOLDER_BROLL / week
+            for f in _clip_group(clip):
+                processed.add(f)
+                dest = dest_dir / f.name
+                if dest.exists() or dest.as_posix() in seen_dest:
+                    collisions.append((f.relative_to(library).as_posix(),
+                                       dest.relative_to(library).as_posix()))
+                    continue
+                seen_dest.add(dest.as_posix())
+                moves.append((f, dest))
+            per_week[week] = per_week.get(week, 0) + 1
+    return moves, per_week, unknown, collisions
+
+
+def _execute_consolidation(moves) -> int:
+    """Perform the planned moves. Never overwrites (dest-exists is skipped — the
+    plan already flagged it as a collision). Returns the count actually moved."""
+    moved = 0
+    for src, dest in moves:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if dest.exists():
+            continue
+        shutil.move(str(src), str(dest))
+        moved += 1
+    return moved
+
+
+def _prune_empty_dirs(root: Path, keep: str) -> None:
+    """Remove now-empty folders under root, bottom-up. Never touches root itself,
+    the `keep` subtree (b-roll), or _-prefixed helpers."""
+    for dirpath, _dirnames, _files in os.walk(root, topdown=False):
+        d = Path(dirpath)
+        if d == root:
+            continue
+        rel = d.relative_to(root).parts
+        if rel and (rel[0] == keep or rel[0].startswith("_")):
+            continue
+        try:
+            if not any(d.iterdir()):
+                d.rmdir()
+        except OSError:
+            pass
+
+
+def cmd_consolidate_broll(args):
+    """Flatten every category folder into b-roll/<week>/, weeks preserved.
+    Plan-first: shows the full move plan and moves nothing until you confirm."""
+    client = args.client
+    library = _library(client)
+    moves, per_week, unknown, collisions = _plan_consolidation(library)
+
+    print(f"\n  Consolidate → {FOLDER_FOOTAGE_LIB}/{FOLDER_BROLL}/<week>/  ({client.upper()})")
+    if per_week:
+        print(f"\n  Clips per week (kept in their original week):")
+        for week in sorted(per_week):
+            print(f"    {week}: {per_week[week]} clip(s)")
+    total_files = len(moves)
+    total_clips = sum(per_week.values())
+    print(f"\n  Plan: move {total_clips} clip(s) ({total_files} file(s) incl. sidecars).")
+    if unknown:
+        print(f"  ! {len(unknown)} clip(s) have no readable date → b-roll/{UNKNOWN_WEEK}/ (re-file later):")
+        for p in unknown[:20]:
+            print(f"      {p}")
+        if len(unknown) > 20:
+            print(f"      … +{len(unknown) - 20} more")
+    if collisions:
+        print(f"  ! {len(collisions)} file(s) would collide at the destination — SKIPPED:")
+        for src, dest in collisions[:20]:
+            print(f"      {src} -> {dest}")
+        if len(collisions) > 20:
+            print(f"      … +{len(collisions) - 20} more")
+
+    if not moves:
+        print("\n  Nothing to move.\n")
+        return
+
+    if not args.yes:
+        ans = input("\n  Proceed with the move? [y/N]: ").strip().lower()
+        if ans != "y":
+            print("  Aborted — nothing moved.\n")
+            return
+
+    moved = _execute_consolidation(moves)
+    _prune_empty_dirs(library / FOLDER_FOOTAGE_LIB, keep=FOLDER_BROLL)
+    print(f"\n  Moved {moved} file(s) into {FOLDER_BROLL}/.")
+
+    db_path = _db(client)
+    added, skipped, removed = _reindex(library, db_path)
+    print(f"  Re-indexed: {added} clip(s), skipped {skipped}, removed {removed} missing")
+    print(f"  DB: {db_path}\n")
+
+
 # ---- stage transitions (v3 Phase 4): ACTIVE → DELIVERED → ARCHIVE ----------
 # Project stages (02/03/04) are NOT in the index (INDEX_SCAN_ROOTS is 01 + 05),
 # so these are pure, safe file moves — no ffprobe, no index rebuild.
@@ -850,6 +1023,10 @@ def main():
     dc = sub.add_parser("drafts-cleanup", help="Delete review drafts in 03_DELIVERED/drafts/ untouched N+ days (never deletes project files)")
     dc.add_argument("--older-than", type=int, help="Auto-delete drafts N+ days old (no prompts)")
     dc.set_defaults(func=cmd_drafts_cleanup)
+
+    cb = sub.add_parser("consolidate-broll", help="Flatten all category folders into 05_FOOTAGE_LIBRARY/b-roll/<week>/ (original weeks preserved); plan-first")
+    cb.add_argument("--yes", "-y", action="store_true", help="Skip the confirmation prompt")
+    cb.set_defaults(func=cmd_consolidate_broll)
 
     args = ap.parse_args()
     args.func(args)

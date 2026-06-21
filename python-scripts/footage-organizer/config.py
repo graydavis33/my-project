@@ -48,6 +48,11 @@ FOLDER_DELIVERED      = "03_DELIVERED"       # Finished exports by format, then 
 FOLDER_DRAFTS         = "drafts"             # 03_DELIVERED/drafts/ — review staging, auto-cleaned
 FOLDER_ARCHIVE        = "04_ARCHIVE"         # Retired project files, dated subfolders
 FOLDER_FOOTAGE_LIB    = "05_FOOTAGE_LIBRARY" # Reusable footage: category/ → week/
+# v4: single consolidated b-roll home inside the footage library. All reusable
+# footage flattens into 05_FOOTAGE_LIBRARY/b-roll/<week>/ (original weeks preserved);
+# findability comes from index tags (emotion/action/location/object), not from the
+# old 17 category folders. Lives beside _BATCHES (interview originals, never b-roll).
+FOLDER_BROLL          = "b-roll"             # under 05_FOOTAGE_LIBRARY/
 FOLDER_ASSETS         = "06_ASSETS"          # Brand assets, fonts, music, SFX
 FOLDER_QUERY_PULLS    = "07_QUERY_PULLS"     # Temp query result folders — deleted after publish
 FOLDER_AI_EDITS       = "08_AI_EDITS"        # AI-edited outputs, grouped by content format then source
