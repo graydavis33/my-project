@@ -1241,7 +1241,8 @@ def _episode_ship_plan(library, episode, footage_root=None, orient_fn=None, week
     """Finalize a delivered documentary episode. Move ALL its footage →
     b-roll/<week> (horizontal) or vertical/<week> (vertical), and archive the
     Premiere project → 04_ARCHIVE/longform/<week>/<episode>/. Returns
-    (moves, warnings). footage_root defaults to 01_ORGANIZED/<episode>/."""
+    (moves, warnings). footage_root defaults to 01_ORGANIZED/<episode>/.
+    NOTE: moves are (src, dest) tuples — execute via _execute_consolidation, not _execute_ship."""
     orient_fn = orient_fn or (lambda p: get_display_orientation(str(p)))
     week_fn = week_fn or _filmed_week
     moves, warnings, seen, processed = [], [], set(), set()
@@ -1298,9 +1299,53 @@ def _execute_ship(moves) -> None:
         shutil.move(str(mv["src"]), str(mv["dest"]))
 
 
+def _cmd_ship_episode(args, client):
+    library = _library(client)
+    footage_root = None
+    if args.footage:
+        footage_root = Path(args.footage)
+        if not footage_root.is_absolute():
+            footage_root = library / args.footage
+    moves, warnings = _episode_ship_plan(library, args.episode, footage_root=footage_root)
+
+    print(f"\n  Finalize episode: {args.episode}  ({client.upper()})")
+    print(f"  Plan — {len(moves)} move(s):")
+    for s, d in moves[:60]:
+        print(f"    {s.name}  ->  {d.relative_to(library).as_posix()}")
+    if len(moves) > 60:
+        print(f"    … +{len(moves) - 60} more")
+    for w in warnings:
+        print(f"  ! {w}")
+    if not moves:
+        print("\n  Nothing to finalize.\n"); return
+    if not args.yes and input("\n  Execute this finalize? [y/N]: ").strip().lower() != "y":
+        print("  Aborted — nothing moved.\n"); return
+
+    _execute_consolidation(moves)
+    ep_root = footage_root or (library / FOLDER_ORGANIZED / args.episode)
+    if ep_root.is_dir():
+        _prune_empty_dirs(ep_root, keep="")
+    db_path = _db(client)
+    added, skipped, removed = _reindex(library, db_path)
+    print(f"\n  Re-indexed: {added}, skipped {skipped}, removed {removed} missing")
+
+    todo = [c for c in index.query(db_path, category=FOLDER_BROLL) if _is_untagged(c)]
+    per_clip = VISION_TAG_COST_PER_CLIP.get(args.tag_model, 0.015)
+    print(f"  Auto-tag {len(todo)} new b-roll clip(s)  Model: {args.tag_model}  Est. ~${len(todo) * per_clip:.2f}")
+    if todo and (args.yes or input("  Proceed with the paid Vision run? [y/N]: ").strip().lower() == "y"):
+        tagged, cache_hits, failed = _run_tagging(library, db_path, todo, args.tag_model)
+        print(f"  Tagged {tagged} clip(s) ({cache_hits} from cache, {failed} skipped).")
+    print(f"  Episode finalized. DB: {db_path}\n")
+
+
 def cmd_ship(args):
     """Post-delivery cleanup: archive the edit project + file the footage, after
     showing the plan. Nothing moves until confirmed (or --yes)."""
+    if getattr(args, "episode", None):
+        return _cmd_ship_episode(args, args.client)
+    if not getattr(args, "video", None):
+        print("\n  Error: --video is required (or use --episode for a documentary episode)\n")
+        sys.exit(1)
     library = _library(args.client)
     if args.no_week:
         week_target = None
@@ -1386,9 +1431,11 @@ def main():
     pr.set_defaults(func=cmd_promote)
 
     sh = sub.add_parser("ship", help="After delivery: archive the edit project + file the footage into the library (shows a plan first)")
-    sh.add_argument("--video", required=True, help="Name of the delivered video (the file you dropped in 03_DELIVERED)")
+    sh.add_argument("--video", help="Name of the delivered video (the file you dropped in 03_DELIVERED)")
+    sh.add_argument("--episode", help="Finalize a documentary episode: footage → library + auto-tag, project → archive")
     sh.add_argument("--project", help="Override: exact active-project name to archive")
     sh.add_argument("--footage", help="Override: footage folder to file into the library (relative or absolute)")
+    sh.add_argument("--tag-model", default=VISION_TAG_MODEL, help=f"Vision model for the auto-tag pass (default {VISION_TAG_MODEL})")
     sh.add_argument("--category", help="Library sub-folder for the footage (default: the video name)")
     sh.add_argument("--format", choices=PROJECT_FORMAT_BUCKETS,
                     help="Format bucket for the archived project (inferred if omitted)")
