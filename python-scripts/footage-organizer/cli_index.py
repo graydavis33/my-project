@@ -788,11 +788,8 @@ def cmd_split_vertical(args):
     print(f"  Horizontal (stay as b-roll): {counts['horizontal']}")
     print(f"  Vertical (→ {FOLDER_VERTICAL}/<week>/, untagged): {counts['vertical']}")
     if flipped:
-        print(f"\n  ! {len(flipped)} clip(s) are vertical ONLY because of a rotation flag — SPOT-CHECK these:")
-        for p in flipped[:30]:
-            print(f"      {p}")
-        if len(flipped) > 30:
-            print(f"      … +{len(flipped) - 30} more")
+        print(f"\n  ({len(flipped)} of the vertical clips are stored-landscape + a rotation flag —")
+        print(f"   normal for Sony vertical; detection is rotation-aware. Sample a few if unsure.)")
     if unknown:
         print(f"  ! {len(unknown)} clip(s) had undetermined orientation — LEFT IN b-roll:")
         for p in unknown[:20]:
