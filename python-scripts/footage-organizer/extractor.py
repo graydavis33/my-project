@@ -80,13 +80,17 @@ def get_display_orientation(filepath: str) -> tuple[str, bool]:
     swap accordingly. `flipped=True` marks the tricky ones worth a human spot-check.
     """
     import json
+    # Use stream_side_data (Display Matrix) — `side_data` without the `stream_`
+    # prefix forces ffprobe to read packets (~5s/file); stream_side_data reads
+    # the header only (~0.08s). stream_tags=rotate covers older clips. Per-file
+    # timeout so one corrupt clip can't stall a whole-library pass (→ "unknown").
     cmd = [
         "ffprobe", "-v", "error", "-select_streams", "v:0",
-        "-show_entries", "stream=width,height:stream_tags=rotate:side_data=rotation",
+        "-show_entries", "stream=width,height:stream_tags=rotate:stream_side_data=rotation",
         "-of", "json", filepath,
     ]
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True, timeout=20)
         streams = json.loads(result.stdout or "{}").get("streams", [])
     except Exception:
         return ("unknown", False)
