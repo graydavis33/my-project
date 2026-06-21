@@ -13,8 +13,13 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path.startswith("/video/"):
             # Serve video files
-            filename = self.path.split("/")[-1]
+            from urllib.parse import unquote
+            filename = unquote(self.path.split("/")[-1])
             filepath = TRIM_FOLDER / filename
+            print(f"REQUEST: {self.path}")
+            print(f"FILENAME: {filename}")
+            print(f"FILEPATH: {filepath}")
+            print(f"EXISTS: {filepath.exists()}")
             if filepath.exists():
                 self.send_response(200)
                 self.send_header("Content-Type", "video/quicktime")
@@ -22,6 +27,10 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 with open(filepath, "rb") as f:
                     self.wfile.write(f.read())
+                return
+            else:
+                self.send_response(404)
+                self.end_headers()
                 return
         # Serve other files from current directory
         return super().do_GET()
