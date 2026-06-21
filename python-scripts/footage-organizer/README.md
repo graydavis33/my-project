@@ -250,9 +250,19 @@ python cli_index.py --client sai pull --object laptop
 - `--emotion / --action / --location` are exact matches; `--object` is a contains-match (collision-safe via pipe-wrapped storage).
 - Combine with the existing `pull` filters (`--filmed-date`, `--by-week`, etc.). Output lands in `07_QUERY_PULLS/<slug>/` (slug built from the tags) and is swept by the daily 7-day auto-clean — same as every other pull.
 
-### Review dashboard
+### Tagging dashboard (`tagger/server.py`)
 
-`python tagger/server.py --client sai` → opens a local browser grid (thumbnails + full-clip video scrubbing) showing each tagged clip with `emotion · action · location`. `--vertical N` shows detected-vertical clips for orientation confirmation. Phase 4 will add in-place tag editing + bulk-apply here.
+```bash
+python tagger/server.py --client sai          # edit mode (default port 4600)
+python tagger/server.py --client sai --vertical 15   # read-only orientation check
+```
+
+Local browser editor for all b-roll tags:
+- Thumbnail grid + **full-clip video scrubbing** (lazy-loaded, so 200+ clips load fine).
+- **Inline edit** emotion / action / location (autocomplete) + object chips (add/remove).
+- **Bulk-apply:** check clips, shift-click for a range, then set one tag on all selected (great for merging near-dupe values like `rooftop`/`rooftop terrace`).
+- **Type-to-add vocabulary:** a new value is remembered in `tagger/vocab.json` and autocompletes next time (merged with the config seeds + live index values).
+- Writes go straight to the index (`index.update_tags`). `--vertical N` is a read-only mode that shows detected-vertical clips for orientation confirmation.
 
 ## v3 — Stage transitions (promote)
 

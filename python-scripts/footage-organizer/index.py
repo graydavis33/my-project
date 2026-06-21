@@ -208,6 +208,49 @@ def query(
     return [ClipRecord(*r) for r in rows]
 
 
+_SELECT_COLS = ("path, category, format, filmed_date, upload_date, duration_s, "
+                "width, height, codec, sha1, batch_num, vid_num, "
+                "emotion, action, location, objects")
+
+
+def get(db_path: Path, path: str):
+    """Fetch one clip by its relative path, or None."""
+    with sqlite3.connect(db_path) as conn:
+        row = conn.execute(f"SELECT {_SELECT_COLS} FROM clips WHERE path = ?", (path,)).fetchone()
+    return ClipRecord(*row) if row else None
+
+
+_UNSET = object()
+
+
+def update_tags(db_path: Path, path: str, *, emotion=_UNSET, action=_UNSET,
+                location=_UNSET, objects=_UNSET) -> int:
+    """Directly set tag columns on one clip (the dashboard's write path). Only
+    the fields you pass are touched — so "" clears a tag, a value sets it, and an
+    omitted field is left unchanged. Returns rows updated (0 if path unknown)."""
+    cols = {"emotion": emotion, "action": action, "location": location, "objects": objects}
+    params = {k: v for k, v in cols.items() if v is not _UNSET}
+    if not params:
+        return 0
+    assignment = ", ".join(f"{k} = :{k}" for k in params)
+    params["path"] = path
+    with sqlite3.connect(db_path) as conn:
+        return conn.execute(f"UPDATE clips SET {assignment} WHERE path = :path", params).rowcount
+
+
+def distinct_tag_values(db_path: Path) -> dict:
+    """All distinct tag values currently in the index — feeds dashboard autocomplete.
+    Returns {emotion:[...], action:[...], location:[...], object:[...]}."""
+    out = {"emotion": set(), "action": set(), "location": set(), "object": set()}
+    with sqlite3.connect(db_path) as conn:
+        for col in ("emotion", "action", "location"):
+            for (v,) in conn.execute(f"SELECT DISTINCT {col} FROM clips WHERE {col} IS NOT NULL AND {col} != ''"):
+                out[col].add(v)
+        for (v,) in conn.execute("SELECT objects FROM clips WHERE objects IS NOT NULL AND objects != ''"):
+            out["object"].update(unpack_objects(v))
+    return {k: sorted(s) for k, s in out.items()}
+
+
 def remove_missing(db_path: Path, library_root: Path) -> int:
     """Delete index rows whose file no longer exists on disk.
     Resolves each row's relative path against library_root. Returns count removed."""
