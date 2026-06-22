@@ -17,11 +17,18 @@ ANTHROPIC_API_KEY = _require("ANTHROPIC_API_KEY")
 
 MODEL = "claude-haiku-4-5-20251001"
 
-# v4 b-roll Vision tagging. Opus 4.8 for the initial pass (strong model while
-# building the tag data set); drop to claude-haiku-4-5 for cheap incremental
-# tagging of new clips later (~5x cheaper). ~$0.015/clip on Opus, ~$0.003 on Haiku.
-VISION_TAG_MODEL = "claude-opus-4-8"
-VISION_TAG_COST_PER_CLIP = {"claude-opus-4-8": 0.015, "claude-haiku-4-5": 0.003}
+# v4 b-roll Vision tagging. Switched Opus 4.8 -> Sonnet 4.6 as the default
+# 2026-06-22: tagging is bounded visual classification (emotion/action/location/
+# objects from 4 frames against a fixed vocabulary), not deep reasoning — Sonnet
+# handles it cleanly at ~half the cost after 120+ clips proved the schema holds.
+# Pass --model claude-haiku-4-5 for the cheapest incremental runs, or
+# claude-opus-4-8 to force the strongest model on a tricky batch.
+VISION_TAG_MODEL = "claude-sonnet-4-6"
+VISION_TAG_COST_PER_CLIP = {
+    "claude-opus-4-8": 0.015,
+    "claude-sonnet-4-6": 0.007,
+    "claude-haiku-4-5": 0.003,
+}
 
 # Seed tag vocabularies — a STARTING POINT shown to the Vision model + the
 # dashboard, NOT a locked menu. New values are created by typing them in the

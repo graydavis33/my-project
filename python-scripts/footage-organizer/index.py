@@ -27,6 +27,11 @@ class ClipRecord:
     height: int
     codec: str
     sha1: str             # for dedup across paths (hardlinks share content)
+    # TRUE display orientation from extractor.get_display_orientation (rotation-aware,
+    # so Sony 1920x1080 + 90° flag = 'vertical'). Set at scan time, overwritten on
+    # rescan like width/height (it's ffprobe-derived, NOT a tag). NULL until a row
+    # is re-indexed under the new code. 'horizontal'|'vertical'|'square'|'unknown'.
+    orientation: Optional[str] = None
     batch_num: Optional[int] = None  # set when filed under Batch_NN/Vid_MM (v3 batch command)
     vid_num: Optional[int] = None
     # v4 b-roll tags — set by Vision (Opus) + the tagging dashboard, NOT by the
@@ -52,6 +57,7 @@ CREATE TABLE IF NOT EXISTS clips (
     height       INTEGER NOT NULL,
     codec        TEXT NOT NULL,
     sha1         TEXT NOT NULL,
+    orientation  TEXT,
     batch_num    INTEGER,
     vid_num      INTEGER,
     emotion      TEXT,
@@ -101,6 +107,9 @@ def _migrate(conn) -> None:
         conn.execute("ALTER TABLE clips ADD COLUMN batch_num INTEGER")
     if "vid_num" not in cols:
         conn.execute("ALTER TABLE clips ADD COLUMN vid_num INTEGER")
+    # TRUE display orientation (rotation-aware) — ffprobe-derived, plain overwrite.
+    if "orientation" not in cols:
+        conn.execute("ALTER TABLE clips ADD COLUMN orientation TEXT")
     # v4 b-roll tag columns — non-destructive ALTER, idempotent per machine.
     for tag_col in ("emotion", "action", "location", "objects"):
         if tag_col not in cols:
@@ -108,6 +117,7 @@ def _migrate(conn) -> None:
     # Created here (not in _SCHEMA) so they run AFTER the columns exist on an
     # older DB being migrated in place.
     conn.execute("CREATE INDEX IF NOT EXISTS idx_batch ON clips(batch_num, vid_num)")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_orientation ON clips(orientation)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_tags ON clips(emotion, action, location)")
 
 
@@ -116,11 +126,11 @@ def upsert(db_path: Path, rec: ClipRecord) -> None:
         conn.execute(
             """
             INSERT INTO clips (path, category, format, filmed_date, upload_date,
-                               duration_s, width, height, codec, sha1,
+                               duration_s, width, height, codec, sha1, orientation,
                                batch_num, vid_num,
                                emotion, action, location, objects)
             VALUES (:path, :category, :format, :filmed_date, :upload_date,
-                    :duration_s, :width, :height, :codec, :sha1,
+                    :duration_s, :width, :height, :codec, :sha1, :orientation,
                     :batch_num, :vid_num,
                     :emotion, :action, :location, :objects)
             ON CONFLICT(path) DO UPDATE SET
@@ -133,6 +143,8 @@ def upsert(db_path: Path, rec: ClipRecord) -> None:
                 height      = excluded.height,
                 codec       = excluded.codec,
                 sha1        = excluded.sha1,
+                -- ffprobe-derived, plain overwrite (NOT COALESCE — it's not a tag).
+                orientation = excluded.orientation,
                 batch_num   = excluded.batch_num,
                 vid_num     = excluded.vid_num,
                 -- Tags are set by Vision/the dashboard, never by the ffprobe scan.
@@ -158,6 +170,7 @@ def query(
     upload_date: Optional[str] = None,
     min_duration: Optional[float] = None,
     max_duration: Optional[float] = None,
+    orientation: Optional[str] = None,
     batch_num: Optional[int] = None,
     vid_num: Optional[int] = None,
     emotion: Optional[str] = None,
@@ -182,6 +195,9 @@ def query(
         where.append("duration_s >= :min_duration"); params["min_duration"] = min_duration
     if max_duration is not None:
         where.append("duration_s <= :max_duration"); params["max_duration"] = max_duration
+    if orientation:
+        # TRUE display orientation (rotation-aware). NULL rows simply don't match.
+        where.append("orientation = :orientation"); params["orientation"] = orientation
     if batch_num is not None:
         where.append("batch_num = :batch_num"); params["batch_num"] = batch_num
     if vid_num is not None:
@@ -197,7 +213,7 @@ def query(
         where.append("objects LIKE :object_pat")
         params["object_pat"] = f"%{OBJ_DELIM}{object}{OBJ_DELIM}%"
 
-    sql = "SELECT path, category, format, filmed_date, upload_date, duration_s, width, height, codec, sha1, batch_num, vid_num, emotion, action, location, objects FROM clips"
+    sql = "SELECT path, category, format, filmed_date, upload_date, duration_s, width, height, codec, sha1, orientation, batch_num, vid_num, emotion, action, location, objects FROM clips"
     if where:
         sql += " WHERE " + " AND ".join(where)
     sql += " ORDER BY filmed_date DESC, path"
@@ -209,7 +225,7 @@ def query(
 
 
 _SELECT_COLS = ("path, category, format, filmed_date, upload_date, duration_s, "
-                "width, height, codec, sha1, batch_num, vid_num, "
+                "width, height, codec, sha1, orientation, batch_num, vid_num, "
                 "emotion, action, location, objects")
 
 

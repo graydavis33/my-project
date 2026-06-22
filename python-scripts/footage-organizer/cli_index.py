@@ -170,6 +170,7 @@ def _reindex(library: Path, db_path: Path) -> tuple[int, int, int]:
                 w, h = get_resolution(str(clip))
                 duration = get_duration(str(clip))
                 filmed = get_shoot_date(str(clip))
+                orientation = get_display_orientation(str(clip))[0]
             except Exception as e:
                 print(f"  [skip] {clip.name}: {e}")
                 skipped += 1
