@@ -30,6 +30,24 @@ Implementation plan: `docs/superpowers/plans/2026-06-20-batch-pipeline-edit-core
 
 ---
 
+## Orchestrator — human-in-the-loop (prep → review → render)
+
+`orchestrate.py` now runs the **proven manual trim recipe** (the Vid_09/Vid_13 "best first-try trim" process), NOT a fully-automatic cut. Shape:
+
+```
+python orchestrate.py --batch 3 --video 13 --prep     # verify-sync, transcribe B-cam, seed editable SEGMENTS.json, build trim-review
+#   -> open the HyperFrames trim-review (web-apps/hyperframes/sai-bNvMM-trim-review/), edit Cut/SEGMENTS.json
+python orchestrate.py --batch 3 --video 13 --render    # per-segment ProRes reels + H.264 angles -> deliverable
+```
+
+- **`--prep`** → `sync.verify_offset` (envelope + bandpassed 300–3000 Hz xcorr with a dominance/confidence check — sharper than `compute_offset`'s 30s window), word-level B-cam Whisper transcript, seeds `Cut/SEGMENTS.json` from `select.py` (now only a **first-draft proposal Gray edits**), and auto-builds the HyperFrames trim-review via `review.py`.
+- **You** scrub the review, edit segment in/out times in `Cut/SEGMENTS.json`.
+- **`--render`** (`render.py`) → per-segment ProRes 422 reels (B-cam audio on both, A-cam falls back to B-cam video where the hook lands before A's footage), H.264 angles, export to the deliverable + `_INFO.txt`. ProRes masters stay in `Cut/`.
+
+`select.py` is no longer the editorial decider — a human picks segments off the transcript (that's why the manual cut beat the old auto cut). Built 2026-06-21, 36 tests green.
+
+---
+
 ## Setup
 
 Copy `.env.example` to `.env` and fill in the path for your machine:
