@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EP2 Interview Sync</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; overflow: hidden; }
+        #canvas { display: block; width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const videoA = document.createElement('video');
+        const videoB = document.createElement('video');
+
+        videoA.src = 'A-cam_preview.mp4';
+        videoB.src = 'B-cam_preview.mp4';
+
+        videoA.loop = true;
+        videoB.loop = true;
+
+        let isPlaying = false;
+
+        function draw() {
+            // Clear
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const w = canvas.width / 2;
+            const h = canvas.height;
+
+            // Draw A-cam (left)
+            if (videoA.readyState === videoA.HAVE_FUTURE_DATA || videoA.readyState === videoA.HAVE_ENOUGH_DATA) {
+                ctx.drawImage(videoA, 0, 0, w, h);
+            }
+
+            // Draw B-cam (right)
+            if (videoB.readyState === videoB.HAVE_FUTURE_DATA || videoB.readyState === videoB.HAVE_ENOUGH_DATA) {
+                ctx.drawImage(videoB, w, 0, w, h);
+            }
+
+            // Labels
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, w, 40);
+            ctx.fillRect(w, 0, w, 40);
+
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 16px sans-serif';
+            ctx.fillText('A-CAM', 16, 28);
+            ctx.fillText('B-CAM', w + 16, 28);
+
+            requestAnimationFrame(draw);
+        }
+
+        videoA.oncanplay = () => {
+            videoA.play();
+            videoB.play();
+            isPlaying = true;
+        };
+
+        videoB.oncanplay = () => {
+            if (!isPlaying) {
+                videoB.play();
+            }
+        };
+
+        videoA.addEventListener('play', () => videoB.play());
+        videoB.addEventListener('play', () => videoA.play());
+        videoA.addEventListener('pause', () => videoB.pause());
+        videoB.addEventListener('pause', () => videoA.pause());
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (videoA.paused) {
+                    videoA.play();
+                    videoB.play();
+                } else {
+                    videoA.pause();
+                    videoB.pause();
+                }
+            }
+        });
+
+        draw();
+    </script>
+</body>
+</html>
