@@ -4146,5 +4146,780 @@
         "keyboard"
       ]
     }
+  },
+  "f174780832fa3274955fab6fc7666ad9": {
+    "filename": "C2724.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "talking",
+      "location": "office",
+      "objects": [
+        "microphone",
+        "whiteboard",
+        "monitor",
+        "airpods",
+        "water bottle"
+      ]
+    }
+  },
+  "254603f3171443022d3452f6b66e3c4e": {
+    "filename": "C2725.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "cooking",
+      "location": "kitchen",
+      "objects": [
+        "frying pan",
+        "scrambled eggs",
+        "stove",
+        "spatula",
+        "olive oil",
+        "utensils",
+        "microwave"
+      ]
+    }
+  },
+  "5ec558e2068e95287287cb9aab8b8a00": {
+    "filename": "C2726.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "kitchen",
+      "objects": [
+        "microwave",
+        "cabinets",
+        "blender",
+        "coffee maker",
+        "cereal boxes",
+        "refrigerator"
+      ]
+    }
+  },
+  "91b3943ce1ead9e871f8315a9c51174c": {
+    "filename": "C2727.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "drinking",
+      "location": "subway",
+      "objects": [
+        "drink cup",
+        "straw",
+        "bench",
+        "advertisement",
+        "watch"
+      ]
+    }
+  },
+  "55627d4e343eec589dcaa72dce504a2b": {
+    "filename": "C2728.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "on-phone",
+      "location": "subway",
+      "objects": [
+        "smartphone",
+        "backpack",
+        "iced coffee",
+        "bench",
+        "advertisement"
+      ]
+    }
+  },
+  "139ba926aefe37a2a6fd563953510cb2": {
+    "filename": "C2729.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "sitting",
+      "location": "subway",
+      "objects": [
+        "smartphone",
+        "backpack",
+        "bench",
+        "subway sign",
+        "drink cup"
+      ]
+    }
+  },
+  "f88912e3e05dceb9a676d6e168342a1d": {
+    "filename": "C2730.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "sitting",
+      "location": "subway",
+      "objects": [
+        "iced coffee",
+        "backpack",
+        "book"
+      ]
+    }
+  },
+  "9e6cb89d7c729d8668087b72985bd3f4": {
+    "filename": "C2731.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "drinking",
+      "location": "subway",
+      "objects": [
+        "iced coffee",
+        "backpack",
+        "watch",
+        "book",
+        "mural"
+      ]
+    }
+  },
+  "f12406d412bdd51d440def853eea7090": {
+    "filename": "C2732.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "subway",
+      "objects": [
+        "digital map display",
+        "train doors",
+        "route map",
+        "signage"
+      ]
+    }
+  },
+  "73a22a5636a229fe83ef138d35de3c88": {
+    "filename": "C2733.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "sitting",
+      "location": "subway",
+      "objects": [
+        "iced coffee",
+        "backpack",
+        "tripod",
+        "watch"
+      ]
+    }
+  },
+  "58086032e3b399a2d3f488ed0d30d520": {
+    "filename": "C2734.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "central park west",
+      "objects": [
+        "building",
+        "skyscraper",
+        "trees",
+        "dome",
+        "art deco tower"
+      ]
+    }
+  },
+  "7f2f6a756b9c1c791660deac590cf9a9": {
+    "filename": "C2735.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "walking",
+      "location": "park",
+      "objects": [
+        "backpack",
+        "drink cup",
+        "trees"
+      ]
+    }
+  },
+  "8cbf6fa7914a9a3e12e2529234022762": {
+    "filename": "C2736.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "pavement path",
+      "objects": [
+        "shoe",
+        "leg",
+        "leaves"
+      ]
+    }
+  },
+  "524445a9339583f0dd867b6ae955098c": {
+    "filename": "C2719.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "tired",
+      "action": "eating",
+      "location": "living room",
+      "objects": [
+        "laptop",
+        "bowl",
+        "blanket",
+        "couch",
+        "spoon"
+      ]
+    }
+  },
+  "496e67f8d4dd7f6ca12535c2f20b02da": {
+    "filename": "C2720.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "apartment hallway",
+      "objects": [
+        "backpack",
+        "door",
+        "t-shirt"
+      ]
+    }
+  },
+  "b5b44096aeddf6adc1545973a5ee2964": {
+    "filename": "C2721.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "talking",
+      "location": "outdoor cafe",
+      "objects": [
+        "coffee cup",
+        "pen",
+        "notebook",
+        "hoodie"
+      ]
+    }
+  },
+  "a1c425dda274c10a9dffddac6f71645b": {
+    "filename": "C2722.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "on-phone",
+      "location": "outdoor cafe",
+      "objects": [
+        "smartphone",
+        "laptop",
+        "coffee cup",
+        "notebook",
+        "backpack",
+        "banana",
+        "table"
+      ]
+    }
+  },
+  "dcff2cbacaf1af11bab3c4f52792eaa8": {
+    "filename": "C2723.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "on-phone",
+      "location": "outdoor cafe",
+      "objects": [
+        "smartphone",
+        "coffee cup",
+        "notebook",
+        "pen",
+        "laptop"
+      ]
+    }
+  },
+  "7b9da3f71dfbfcb0f2fe5911f91c36df": {
+    "filename": "C2687.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "home office",
+      "objects": [
+        "microphone",
+        "monitor",
+        "keyboard",
+        "whiteboard",
+        "water bottle",
+        "desk",
+        "office chair"
+      ]
+    }
+  },
+  "4bef1454d6dadd0b1e1db392b0da33b6": {
+    "filename": "C2688.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "home office",
+      "objects": [
+        "monitor",
+        "desk",
+        "office chair",
+        "water bottle",
+        "whiteboard",
+        "baseball cap",
+        "backpack",
+        "sticky notes",
+        "monitor light",
+        "window"
+      ]
+    }
+  },
+  "757d3abb12a01d5b40f0062dbd11f2b8": {
+    "filename": "C2689.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "talking",
+      "location": "office",
+      "objects": [
+        "whiteboard",
+        "microphone",
+        "cap",
+        "monitor"
+      ]
+    }
+  },
+  "36433522b2a5d87f61c10e184344167a": {
+    "filename": "C2690.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "sitting",
+      "location": "bedroom",
+      "objects": [
+        "cap",
+        "sneakers",
+        "socks",
+        "sandals",
+        "backpack"
+      ]
+    }
+  },
+  "b498c6b954a8e05817711b6ee6d5c574": {
+    "filename": "C2691.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "walking",
+      "location": "apartment hallway",
+      "objects": [
+        "backpack",
+        "baseball cap",
+        "door"
+      ]
+    }
+  },
+  "262df606df860cce3bc04ad1dd064202": {
+    "filename": "C2692.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "nyc street",
+      "objects": [
+        "backpack",
+        "sneakers",
+        "cap",
+        "water bottle",
+        "car",
+        "building"
+      ]
+    }
+  },
+  "3af99fac3bcc974756e03861ee36c9df": {
+    "filename": "C2693.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "nyc street",
+      "objects": [
+        "car",
+        "van",
+        "bus",
+        "soccer ball",
+        "building",
+        "tree",
+        "umbrella",
+        "restaurant sign",
+        "flags"
+      ]
+    }
+  },
+  "347a3230341014972dd8fc5daa64b8a5": {
+    "filename": "C2694.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "subway",
+      "objects": [
+        "stairs",
+        "handrail",
+        "brick wall",
+        "poster",
+        "backpack",
+        "phone"
+      ]
+    }
+  },
+  "e9a8f726d52ab57e22d83353e0688d60": {
+    "filename": "C2695.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "subway station",
+      "objects": [
+        "train",
+        "exit sign",
+        "trash can",
+        "brick pillar",
+        "platform"
+      ]
+    }
+  },
+  "199ee69505067dd1d94c08256f3e8120": {
+    "filename": "C2696.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "on-phone",
+      "location": "subway",
+      "objects": [
+        "smartphone",
+        "baseball cap",
+        "backpack",
+        "subway train"
+      ]
+    }
+  },
+  "1e35a33eb67f6dce0ae48ce9518ff748": {
+    "filename": "C2697.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "subway",
+      "objects": [
+        "backpack",
+        "cap",
+        "smartphone",
+        "brick wall"
+      ]
+    }
+  },
+  "ad1ba242cde75e6ffc8cdb35cd0c2ea7": {
+    "filename": "C2698.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "subway",
+      "objects": [
+        "subway map",
+        "subway door",
+        "window",
+        "seat",
+        "sign"
+      ]
+    }
+  },
+  "88e124634e3c382878007ed7dca035e6": {
+    "filename": "C2699.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "subway",
+      "objects": [
+        "subway doors",
+        "windows",
+        "seat",
+        "warning sign",
+        "poster"
+      ]
+    }
+  },
+  "b889064c3d77cf0c04354eebef015f49": {
+    "filename": "C2702.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "nyc street",
+      "objects": [
+        "baseball cap",
+        "backpack",
+        "umbrellas",
+        "buildings",
+        "truck",
+        "tables"
+      ]
+    }
+  },
+  "bdd1c5493a834759e33b795a89699423": {
+    "filename": "C2703.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "lobby",
+      "objects": [
+        "walkie-talkie",
+        "lanyard",
+        "tie",
+        "iced coffee",
+        "security camera"
+      ]
+    }
+  },
+  "3fa5541ebb89dcd833a2815a3e9b0c35": {
+    "filename": "C2704.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "talking",
+      "location": "library",
+      "objects": [
+        "baseball cap",
+        "hoodie",
+        "books",
+        "bookshelf",
+        "plant",
+        "pen",
+        "notebook"
+      ]
+    }
+  },
+  "f658e560c341abfcb43be4a047a39e36": {
+    "filename": "C2705.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "talking",
+      "location": "library",
+      "objects": [
+        "bookshelf",
+        "books",
+        "hoodie",
+        "cap",
+        "plant"
+      ]
+    }
+  },
+  "53e9fb679fd4f10cf0061b9f92808956": {
+    "filename": "C2706.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "library",
+      "objects": [
+        "laptop",
+        "baseball cap",
+        "airpods",
+        "water bottle",
+        "books",
+        "bookshelf",
+        "cup"
+      ]
+    }
+  },
+  "15de7561336ca2575458bfb566f375c3": {
+    "filename": "C2707.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "coworking space",
+      "objects": [
+        "laptop",
+        "bookshelf",
+        "water bottle",
+        "television",
+        "plant",
+        "exit sign",
+        "chair",
+        "cups"
+      ]
+    }
+  },
+  "bd4b41334e9e2b8dd8fe9953cf100032": {
+    "filename": "C2708.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "cafe",
+      "objects": [
+        "laptop",
+        "water bottle",
+        "cup",
+        "earbuds",
+        "cap",
+        "phone",
+        "notebook"
+      ]
+    }
+  },
+  "bf3e54a66481ef5b19d8fb3422661fc4": {
+    "filename": "C2709.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "cafe",
+      "objects": [
+        "laptop",
+        "baseball cap",
+        "airpods",
+        "water bottle",
+        "drink cup",
+        "hoodie"
+      ]
+    }
+  },
+  "34641667fd0f9700dc845d193ff05d5c": {
+    "filename": "C2710.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "art studio",
+      "objects": [
+        "paintings",
+        "canvas",
+        "exit sign",
+        "trash can",
+        "elevator",
+        "wooden frame"
+      ]
+    }
+  },
+  "a95ac6e4529d3741d950e0b6d29cd057": {
+    "filename": "C2711.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "art studio",
+      "objects": [
+        "cyanotype print",
+        "scissors",
+        "canvas",
+        "easel",
+        "painting"
+      ]
+    }
+  },
+  "959ed7d0b47505611be71f8ba3050fbc": {
+    "filename": "C2712.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "coworking space",
+      "objects": [
+        "laptop",
+        "chairs",
+        "tables",
+        "water bottle",
+        "whiteboard",
+        "books"
+      ]
+    }
+  },
+  "f8544cfdb323cabb00699331aa2e651f": {
+    "filename": "C2713.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "cafe",
+      "objects": [
+        "whiteboard",
+        "easel",
+        "plant",
+        "leather jacket",
+        "clothing rack",
+        "bookshelf"
+      ]
+    }
+  },
+  "f6e8de3b4fde45e45408d408b4a82a1a": {
+    "filename": "C2714.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "cafe",
+      "objects": [
+        "whiteboard",
+        "laptop",
+        "plants",
+        "chairs",
+        "table",
+        "coffee cup",
+        "handbag"
+      ]
+    }
+  },
+  "2002afd79b58da0d2296097c4325147a": {
+    "filename": "C2715.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "cafe",
+      "objects": [
+        "espresso machine",
+        "coffee grinder",
+        "syrup bottles",
+        "paper towels",
+        "tamper",
+        "milk pitcher",
+        "mug",
+        "utensils",
+        "countertop"
+      ]
+    }
+  },
+  "93948d9af31c1d2fb1f1f927dad05990": {
+    "filename": "C2716.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "nyc rooftops",
+      "objects": [
+        "water tower",
+        "building",
+        "window",
+        "clouds",
+        "air conditioner"
+      ]
+    }
+  },
+  "2a0c661f782b48d0c5cc31d296a4f15a": {
+    "filename": "C2717.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "industrial office",
+      "objects": [
+        "chandelier",
+        "light bulbs",
+        "red pipes",
+        "exit sign",
+        "ceiling",
+        "sprinkler"
+      ]
+    }
   }
 }
