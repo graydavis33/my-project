@@ -12,7 +12,7 @@ SEGMENTS = [
     ("bcam.mp4", 42.00, 45.64, "At the end of the day, everything that you build comes from you.", "", None, None),
     ("bcam.mp4", 47.68, 52.28, "And if you're fully aligned, then everything that you produce will also be aligned.", "", None, None),
     ("bcam.mp4", 82.50, 86.74, "And if you're just able to show up as the most aligned version of yourself every day to work,", "", None, None),
-    ("bcam.mp4", 92.00, 94.26, "every other lever will pull itself automatically.", "", None, None),
+    ("bcam.mp4", 92.00, 94.26, "every other lever will pull itself automatically.", "", None, 0.80),
     ("bcam.mp4", 102.86, 105.80, "So I think you should start asking questions like, why do I not feel good today?", "", None, None),
     ("bcam.mp4", 106.78, 109.02, "Why am I scared today? Why am I sad today?", "", None, None),
     ("bcam.mp4", 110.68, 114.38, "Instead of asking what course should I take, what book should I read.", "", None, None),
