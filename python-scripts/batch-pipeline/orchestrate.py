@@ -22,7 +22,8 @@ from scipy.io import wavfile
 sys.stdout.reconfigure(encoding="utf-8")
 sys.stderr.reconfigure(encoding="utf-8")
 
-import config, sync, audio_clean, transcribe, select, cut, captions, verify, package
+import config, sync, audio_clean, transcribe, select, cut, captions, verify, package, review
+import render as render_mod
 
 
 def _extract_audio(video_path: Path, out_wav: Path, sr: int = 48000) -> None:
@@ -78,6 +79,158 @@ def _detect_lav_cam(a_wav: Path, b_wav: Path) -> str:
     TODO: implement proper spectral analysis.
     """
     return "B"
+
+
+def _read_title(vid_folder: Path, vid_n: int) -> str:
+    """Read the title from the Vid folder's _INFO.txt first line, else 'Video {M}'."""
+    info = vid_folder / "_INFO.txt"
+    if info.exists():
+        for line in info.read_text(encoding="utf-8", errors="ignore").splitlines():
+            line = line.strip()
+            if line:
+                return line
+    return f"Video {vid_n}"
+
+
+def _words_for_range(words: list, seg_in: float, seg_out: float) -> str:
+    """Join the transcript words whose start falls within [seg_in, seg_out)."""
+    return " ".join(
+        w["word"] for w in words
+        if seg_in <= w["start"] < seg_out
+    ).strip()
+
+
+def _looks_like_question(text: str) -> bool:
+    return text.strip().endswith("?")
+
+
+def _build_segments_json(batch_n: int, vid_n: int, title: str, offset: float,
+                         dominance: float, a_rel: str, b_rel: str,
+                         seeded_ranges: list, words: list,
+                         transcript_segs: list) -> dict:
+    """Assemble the SEGMENTS.json dict from seeded ranges + B-cam words.
+
+    seeded_ranges: [(seg_in, seg_out, next_word_start, hard_cap), ...] from select.select
+    words:         flat B-cam word list [{"word","start","end"}, ...]
+    transcript_segs: [{"start","end","text"}, ...] full B-cam segment list for reference
+    Pure logic — no ffmpeg/whisper. Matches the shared schema exactly.
+    """
+    segments = []
+    for i, r in enumerate(seeded_ranges):
+        seg_in, seg_out = float(r[0]), float(r[1])
+        text = _words_for_range(words, seg_in, seg_out)
+        tag = ""
+        if i == 0 and _looks_like_question(text):
+            tag = "HOOK — your question"
+        segments.append({"in": seg_in, "out": seg_out, "text": text, "tag": tag, "tail": None})
+
+    return {
+        "batch_n": batch_n,
+        "vid_n": vid_n,
+        "title": title,
+        "offset": offset,
+        "offset_dominance": dominance,
+        "a_src": a_rel,
+        "b_src": b_rel,
+        "fps": "24000/1001",
+        "segments": segments,
+        "dropped": [],
+        "transcript": transcript_segs,
+    }
+
+
+def prep(batch_n: int, vid_n: int):
+    """PREP phase: sync + transcribe B-cam + seed segments + build trim-review.
+
+    Writes Cut/SEGMENTS.json (editable by Gray) and a HyperFrames trim-review comp.
+    Gray reviews/edits, then --render does the rest.
+    """
+    lib = config.library_root()
+    vid_folder = lib / f"01_ORGANIZED/Batch_{batch_n:02d}/Vid_{vid_n:02d}"
+    a_cam_folder = vid_folder / "A-cam"
+    b_cam_folder = vid_folder / "B-cam"
+
+    a_videos = list(a_cam_folder.glob("*.MP4"))
+    b_videos = list(b_cam_folder.glob("*.MP4"))
+    if not a_videos or not b_videos:
+        raise RuntimeError(f"No A-cam or B-cam video found in {vid_folder}")
+    a_video, b_video = a_videos[0], b_videos[0]
+
+    title = _read_title(vid_folder, vid_n)
+    print(f"\n{'='*60}")
+    print(f"PREP — BATCH {batch_n} VIDEO {vid_n} — {title}")
+    print(f"{'='*60}")
+
+    # --- Working dir + sync wavs ---
+    cut_dir = vid_folder / "Cut"
+    cut_dir.mkdir(exist_ok=True)
+    print(f"\n[1/6] CUT DIR: {cut_dir}")
+
+    print(f"\n[2/6] EXTRACT 8kHz SYNC AUDIO")
+    a_wav = cut_dir / "a_sync_8k.wav"
+    b_wav = cut_dir / "b_sync_8k.wav"
+    _extract_audio(a_video, a_wav, sr=8000)
+    _extract_audio(b_video, b_wav, sr=8000)
+
+    # --- Verify offset ---
+    print(f"\n[3/6] VERIFY OFFSET")
+    vo = sync.verify_offset(a_wav, b_wav)
+    offset, dominance = vo["offset"], vo["dominance"]
+    print(f"  offset (tB - tA): {offset:+.4f}s   dominance: {dominance:.2f}")
+    if dominance < 3:
+        print(f"  ⚠ LOW-CONFIDENCE SYNC (dominance {dominance:.2f} < 3) — verify by eye")
+
+    # --- Transcribe B-cam (carries the question hook + approved audio) ---
+    print(f"\n[4/6] TRANSCRIBE B-CAM (word-level)")
+    words_data = transcribe.transcribe(b_video)
+    (cut_dir / "Bcam_words.json").write_text(json.dumps(words_data, indent=2), encoding="utf-8")
+    all_words = [w for seg in words_data["segments"] for w in seg.get("words", [])]
+    transcript_segs = [
+        {"start": s["start"], "end": s["end"],
+         "text": " ".join(w["word"] for w in s.get("words", [])).strip()}
+        for s in words_data["segments"]
+    ]
+    print(f"  ✓ {len(all_words)} words, {len(transcript_segs)} segments")
+
+    # --- Seed proposed segments from select.py (B-cam words + B-cam audio) ---
+    print(f"\n[5/6] SEED PROPOSED SEGMENTS")
+    sr_audio, audio_data = wavfile.read(str(b_wav))
+    if audio_data.dtype == np.int16:
+        audio_norm = audio_data.astype(np.float32) / 32768.0
+    else:
+        audio_norm = audio_data.astype(np.float32)
+    seeded_ranges = select.select(all_words, audio_norm, sr_audio)
+    print(f"  ✓ seeded {len(seeded_ranges)} segments")
+
+    seg_json = _build_segments_json(
+        batch_n, vid_n, title, offset, dominance,
+        a_video.relative_to(lib).as_posix(),
+        b_video.relative_to(lib).as_posix(),
+        seeded_ranges, all_words, transcript_segs,
+    )
+    seg_path = cut_dir / "SEGMENTS.json"
+    seg_path.write_text(json.dumps(seg_json, indent=2), encoding="utf-8")
+    print(f"  ✓ wrote {seg_path}")
+
+    # --- Build 720p proxy + HyperFrames trim-review ---
+    print(f"\n[6/6] BUILD PROXY + TRIM-REVIEW")
+    repo_root = Path(config.__file__).resolve().parents[2]
+    proj = repo_root / "web-apps" / "hyperframes" / f"sai-b{batch_n}v{vid_n:02d}-trim-review"
+    proj.mkdir(parents=True, exist_ok=True)
+    review.make_proxy(b_video, proj / "bcam.mp4")
+    review.build_review(
+        [{"in": s["in"], "out": s["out"], "text": s["text"],
+          "tag": s["tag"], "tail": s["tail"]} for s in seg_json["segments"]],
+        "bcam.mp4", proj,
+    )
+
+    print(f"\n{'='*60}")
+    print(f"PREP DONE")
+    print(f"{'='*60}")
+    print(f"1. Review the trim:  cd \"{proj}\"  &&  npx hyperframes preview")
+    print(f"2. Edit segments:    {seg_path}")
+    print(f"3. Render:           python orchestrate.py --batch {batch_n} --video {vid_n} --render")
+    print(f"{'='*60}\n")
 
 
 def orchestrate(batch_n: int, vid_n: int):
@@ -241,9 +394,16 @@ def orchestrate(batch_n: int, vid_n: int):
 
 
 if __name__ == "__main__":
-    p = argparse.ArgumentParser("Orchestrate full batch video pipeline from raw footage")
+    p = argparse.ArgumentParser("Batch video pipeline: --prep, then (Gray edits), then --render")
     p.add_argument("--batch", type=int, required=True)
     p.add_argument("--video", type=int, required=True)
+    p.add_argument("--prep", action="store_true", help="PREP phase: sync, transcribe, seed segments, build trim-review")
+    p.add_argument("--render", action="store_true", help="RENDER phase (built by the render task)")
     args = p.parse_args()
 
-    orchestrate(args.batch, args.video)
+    if args.prep:
+        prep(args.batch, args.video)
+    elif args.render:
+        render_mod.render(args.batch, args.video)
+    else:
+        print("Human-in-the-loop pipeline. Run --prep first, edit Cut/SEGMENTS.json, then --render.")
