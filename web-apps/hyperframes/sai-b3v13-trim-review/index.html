@@ -1,188 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B3V13 Trim Review</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #0a0a0a;
-            color: #fff;
-            padding: 20px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header h1 { font-size: 28px; margin-bottom: 5px; }
-        .header p { color: #888; font-size: 14px; }
-        .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            max-width: 1800px;
-            margin: 0 auto;
-        }
-        .video-pane {
-            background: #1a1a1a;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #333;
-        }
-        .video-pane h2 {
-            font-size: 14px;
-            padding: 12px 16px;
-            background: #222;
-            border-bottom: 1px solid #333;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-        video {
-            width: 100%;
-            height: auto;
-            display: block;
-            background: #000;
-        }
-        .controls {
-            padding: 16px;
-            background: #1a1a1a;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .controls button {
-            padding: 8px 16px;
-            background: #F28129;
-            border: none;
-            border-radius: 4px;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .controls button:hover { background: #e57319; }
-        .controls button:active { opacity: 0.9; }
-        .sync-indicator {
-            padding: 16px;
-            text-align: center;
-            font-size: 13px;
-            color: #888;
-        }
-        .sync-indicator.locked {
-            background: #1a3a1a;
-            color: #4ade80;
-            font-weight: 600;
-        }
-        @media (max-width: 1200px) {
-            .container { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  #root { position: relative; width: 1280px; height: 720px; background: #000; overflow: hidden; font-family: 'Montserrat', sans-serif; }
+  #root video { position: absolute; top: 0; left: 0; width: 1280px; height: 720px; object-fit: cover; z-index: 1; }
+  #root .cap { position: absolute; left: 0; right: 0; bottom: 54px; text-align: center; padding: 0 90px; z-index: 5; }
+  #root .cap .txt { display: inline-block; color: #fff; font-size: 30px; font-weight: 600; line-height: 1.3;
+            text-shadow: 0 4px 14px rgba(0,0,0,.85); background: rgba(0,0,0,.34); padding: 10px 20px; border-radius: 10px; }
+  #root .cap .tag { display: block; color: #F28129; font-size: 18px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,.9); }
+  #root .cap .seg { position: absolute; top: -2px; right: 24px; color: rgba(255,255,255,.55); font-size: 16px; font-weight: 600; }
+</style>
 </head>
 <body>
-    <div class="header">
-        <h1>B3V13 Trim Review — "The Real Lover Is You"</h1>
-        <p>Preview trimmed A-cam and B-cam footage (41s, 14 segments)</p>
-    </div>
-
-    <div class="container">
-        <div class="video-pane">
-            <h2>A-Cam (Sony)</h2>
-            <video id="videoA" controls>
-                <source src="/video/PREVIEW_A-cam.mp4" type="video/mp4">
-                Browser does not support video playback
-            </video>
-        </div>
-
-        <div class="video-pane">
-            <h2>B-Cam (Canon)</h2>
-            <video id="videoB" controls>
-                <source src="/video/PREVIEW_B-cam.mp4" type="video/mp4">
-                Browser does not support video playback
-            </video>
-        </div>
-    </div>
-
-    <div style="max-width: 1800px; margin: 30px auto;">
-        <div class="controls">
-            <button onclick="syncVideos()">🔗 Sync Play</button>
-            <button onclick="document.getElementById('videoA').play(); document.getElementById('videoB').play()">▶ Play Both</button>
-            <button onclick="document.getElementById('videoA').pause(); document.getElementById('videoB').pause()">⏸ Pause Both</button>
-            <button onclick="resetVideos()">⟲ Reset</button>
-        </div>
-        <div class="sync-indicator" id="syncIndicator">
-            Use "Sync Play" to watch both angles locked together. Click either video to control playback.
-        </div>
-    </div>
-
-    <script>
-        const videoA = document.getElementById('videoA');
-        const videoB = document.getElementById('videoB');
-        const syncIndicator = document.getElementById('syncIndicator');
-        let isSynced = false;
-
-        function syncVideos() {
-            isSynced = !isSynced;
-            syncIndicator.textContent = isSynced ? '🔗 Playback synced (A↔B locked)' : 'Playback unsynchronized';
-            syncIndicator.classList.toggle('locked', isSynced);
-
-            if (isSynced) {
-                videoA.play();
-                videoB.play();
-                syncPlayback();
-            }
-        }
-
-        function syncPlayback() {
-            if (!isSynced) return;
-
-            const updateInterval = setInterval(() => {
-                if (!isSynced) {
-                    clearInterval(updateInterval);
-                    return;
-                }
-
-                const timeDiff = Math.abs(videoA.currentTime - videoB.currentTime);
-                if (timeDiff > 0.1) {
-                    videoB.currentTime = videoA.currentTime;
-                }
-
-                if (!videoA.paused && !videoB.paused) {
-                    if (videoA.ended || videoB.ended) {
-                        videoA.pause();
-                        videoB.pause();
-                    }
-                }
-            }, 100);
-
-            videoA.addEventListener('pause', () => {
-                if (isSynced) videoB.pause();
-            }, { once: true });
-            videoB.addEventListener('pause', () => {
-                if (isSynced) videoA.pause();
-            }, { once: true });
-        }
-
-        function resetVideos() {
-            videoA.currentTime = 0;
-            videoB.currentTime = 0;
-            videoA.pause();
-            videoB.pause();
-            isSynced = false;
-            syncIndicator.textContent = 'Reset. Ready to review.';
-            syncIndicator.classList.remove('locked');
-        }
-
-        // Allow independent playback control
-        videoA.addEventListener('play', () => {
-            if (isSynced && videoB.paused) videoB.play();
-        });
-        videoB.addEventListener('play', () => {
-            if (isSynced && videoA.paused) videoA.play();
-        });
-    </script>
+<div id="root" data-composition-id="root" data-width="1280" data-height="720" data-start="0" data-duration="41.150">
+  <video id="v0" src="bcam.mp4" muted playsinline data-start="0.000" data-duration="2.927" data-media-start="13.740" data-track-index="0"></video>
+  <audio id="a0" src="bcam.mp4" data-start="0.000" data-duration="2.927" data-media-start="13.740" data-volume="1" data-track-index="1"></audio>
+  <video id="v1" src="bcam.mp4" muted playsinline data-start="2.930" data-duration="4.307" data-media-start="27.120" data-track-index="0"></video>
+  <audio id="a1" src="bcam.mp4" data-start="2.930" data-duration="4.307" data-media-start="27.120" data-volume="1" data-track-index="1"></audio>
+  <video id="v2" src="bcam.mp4" muted playsinline data-start="7.240" data-duration="3.987" data-media-start="41.900" data-track-index="0"></video>
+  <audio id="a2" src="bcam.mp4" data-start="7.240" data-duration="3.987" data-media-start="41.900" data-volume="1" data-track-index="1"></audio>
+  <video id="v3" src="bcam.mp4" muted playsinline data-start="11.230" data-duration="4.947" data-media-start="47.580" data-track-index="0"></video>
+  <audio id="a3" src="bcam.mp4" data-start="11.230" data-duration="4.947" data-media-start="47.580" data-volume="1" data-track-index="1"></audio>
+  <video id="v4" src="bcam.mp4" muted playsinline data-start="16.180" data-duration="4.587" data-media-start="82.400" data-track-index="0"></video>
+  <audio id="a4" src="bcam.mp4" data-start="16.180" data-duration="4.587" data-media-start="82.400" data-volume="1" data-track-index="1"></audio>
+  <video id="v5" src="bcam.mp4" muted playsinline data-start="20.770" data-duration="2.607" data-media-start="91.900" data-track-index="0"></video>
+  <audio id="a5" src="bcam.mp4" data-start="20.770" data-duration="2.607" data-media-start="91.900" data-volume="1" data-track-index="1"></audio>
+  <video id="v6" src="bcam.mp4" muted playsinline data-start="23.380" data-duration="3.287" data-media-start="102.760" data-track-index="0"></video>
+  <audio id="a6" src="bcam.mp4" data-start="23.380" data-duration="3.287" data-media-start="102.760" data-volume="1" data-track-index="1"></audio>
+  <video id="v7" src="bcam.mp4" muted playsinline data-start="26.670" data-duration="2.587" data-media-start="106.680" data-track-index="0"></video>
+  <audio id="a7" src="bcam.mp4" data-start="26.670" data-duration="2.587" data-media-start="106.680" data-volume="1" data-track-index="1"></audio>
+  <video id="v8" src="bcam.mp4" muted playsinline data-start="29.260" data-duration="4.047" data-media-start="110.580" data-track-index="0"></video>
+  <audio id="a8" src="bcam.mp4" data-start="29.260" data-duration="4.047" data-media-start="110.580" data-volume="1" data-track-index="1"></audio>
+  <video id="v9" src="bcam.mp4" muted playsinline data-start="33.310" data-duration="7.837" data-media-start="115.560" data-track-index="0"></video>
+  <audio id="a9" src="bcam.mp4" data-start="33.310" data-duration="7.837" data-media-start="115.560" data-volume="1" data-track-index="1"></audio>
+  <div id="cap0" class="clip cap" data-start="0.000" data-duration="2.927" data-track-index="2"><span class="tag">HOOK — your question</span><span class="txt">What's the real lever everyone else is ignoring?</span><span class="seg">1 / 10</span></div>
+  <div id="cap1" class="clip cap" data-start="2.930" data-duration="4.307" data-track-index="2"><span class="txt">The real lever is you, and how you feel about yourself.</span><span class="seg">2 / 10</span></div>
+  <div id="cap2" class="clip cap" data-start="7.240" data-duration="3.987" data-track-index="2"><span class="txt">At the end of the day, everything that you build comes from you.</span><span class="seg">3 / 10</span></div>
+  <div id="cap3" class="clip cap" data-start="11.230" data-duration="4.947" data-track-index="2"><span class="txt">And if you're fully aligned, then everything that you produce will also be aligned.</span><span class="seg">4 / 10</span></div>
+  <div id="cap4" class="clip cap" data-start="16.180" data-duration="4.587" data-track-index="2"><span class="txt">And if you're just able to show up as the most aligned version of yourself every day to work,</span><span class="seg">5 / 10</span></div>
+  <div id="cap5" class="clip cap" data-start="20.770" data-duration="2.607" data-track-index="2"><span class="txt">every other lever will pull itself automatically.</span><span class="seg">6 / 10</span></div>
+  <div id="cap6" class="clip cap" data-start="23.380" data-duration="3.287" data-track-index="2"><span class="txt">So I think you should start asking questions like, why do I not feel good today?</span><span class="seg">7 / 10</span></div>
+  <div id="cap7" class="clip cap" data-start="26.670" data-duration="2.587" data-track-index="2"><span class="txt">Why am I scared today? Why am I sad today?</span><span class="seg">8 / 10</span></div>
+  <div id="cap8" class="clip cap" data-start="29.260" data-duration="4.047" data-track-index="2"><span class="txt">Instead of asking what course should I take, what book should I read.</span><span class="seg">9 / 10</span></div>
+  <div id="cap9" class="clip cap" data-start="33.310" data-duration="7.837" data-track-index="2"><span class="txt">Because once you solve the former, you'll realize that you don't need anything else.</span><span class="seg">10 / 10</span></div>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+  window.__timelines = window.__timelines || {};
+  window.__timelines["root"] = gsap.timeline({ paused: true });
+  </script>
+</div>
 </body>
 </html>
