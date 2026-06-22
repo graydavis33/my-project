@@ -137,7 +137,16 @@ python cli_index.py --client sai pull --orientation vertical --filmed-date 2026-
 
 # Pull every interview-solo clip from the past week
 python cli_index.py --client sai pull --category interview-solo --filmed-after 2026-04-20
+
+# CURATED pull (2026-06-22) — HORIZONTAL only, ~5 best per theme, each theme its own subfolder
+python cli_index.py --client sai pull --curate                       # group by emotion (default), 5/theme
+python cli_index.py --client sai pull --curate --curate-by action --per-theme 4
+#   -> 07_QUERY_PULLS/<slug>-curated/<theme>/clip.mp4   (this is Gray's locked b-roll rule, built into the tool)
 ```
+
+**Orientation is now trustworthy (2026-06-22).** `--orientation horizontal|vertical` filters on a real `orientation` column computed at index time (rotation-aware via `extractor.get_display_orientation`) — NOT the old width×height `format` guess that mislabeled rotated Sony clips. Re-index once after upgrading to backfill the column.
+
+**Vision tag model default: Sonnet 4.6** (was Opus 4.8). Tagging is bounded visual classification; Sonnet handles it at ~half the cost. `tag --model claude-haiku-4-5` for cheapest, `--model claude-opus-4-8` to force the strongest.
 
 ### Daily Sai loop
 

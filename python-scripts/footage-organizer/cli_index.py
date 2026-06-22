@@ -190,6 +190,7 @@ def _reindex(library: Path, db_path: Path) -> tuple[int, int, int]:
                 height=h,
                 codec="",  # codec is optional — leave empty unless needed
                 sha1=_sha1_head(clip),
+                orientation=orientation,
                 batch_num=batch_num,
                 vid_num=vid_num,
             )
@@ -291,6 +292,52 @@ def cmd_index(args):
     print(f"  DB: {db_path}\n")
 
 
+def _sanitize_theme(value: str) -> str:
+    """Theme tag value → filesystem-safe subfolder name. Lowercased, spaces→hyphen,
+    only [a-z0-9-_] kept. Empty/None → 'untagged'."""
+    if not value:
+        return "untagged"
+    s = value.strip().lower().replace(" ", "-")
+    s = re.sub(r"[^a-z0-9_-]", "", s)
+    return s or "untagged"
+
+
+def _curate_plan(db_path, library, *, curate_by="emotion", per_theme=5, **filters):
+    """Plan a curated pull: group matching clips by the `curate_by` tag axis, cap
+    each theme at `per_theme`, route each into its own theme subfolder. Returns
+    {records, per_theme_count, subfolder_fn}. The subfolder_fn is STATEFUL — it
+    counts per theme as pull walks the (sha1-deduped) records and returns
+    pull.SKIP once a theme is full, so the cap matches what's actually copied.
+
+    Grouping value comes from the record's tag attribute (emotion/action/location);
+    clips with no value for that axis land in an 'untagged' theme folder."""
+    records = index.query(db_path, **filters)
+
+    # Pre-compute the intended plan (post-sha1-dedup, mirroring pull's dedup) so the
+    # printed summary matches reality and tests can assert on it.
+    counts: dict[str, int] = {}
+    seen_sha1 = set()
+    for r in records:
+        if r.sha1 in seen_sha1:
+            continue
+        seen_sha1.add(r.sha1)
+        theme = _sanitize_theme(getattr(r, curate_by, None))
+        if counts.get(theme, 0) >= per_theme:
+            continue
+        counts[theme] = counts.get(theme, 0) + 1
+
+    live_counts: dict[str, int] = {}
+
+    def subfolder_fn(record):
+        theme = _sanitize_theme(getattr(record, curate_by, None))
+        if live_counts.get(theme, 0) >= per_theme:
+            return pull_mod.SKIP
+        live_counts[theme] = live_counts.get(theme, 0) + 1
+        return theme
+
+    return {"records": records, "per_theme_count": counts, "subfolder_fn": subfolder_fn}
+
+
 def cmd_pull(args):
     client = args.client
     library = _library(client)
@@ -303,20 +350,57 @@ def cmd_pull(args):
 
     _check_legacy_db(db_path)
 
+    curate = getattr(args, "curate", False)
+    # Curate mode is Gray's locked rule: clips only, HORIZONTAL only, ~N best per
+    # theme, each theme in its own labeled subfolder. Force horizontal regardless.
+    orientation = "horizontal" if curate else args.orientation
+
     _slugify = lambda s: s.strip().lower().replace(" ", "-")
     slug_parts = []
     if args.filmed_date: slug_parts.append(args.filmed_date)
     if args.category:    slug_parts.append(args.category)
-    if args.orientation: slug_parts.append(args.orientation)
+    if orientation:      slug_parts.append(orientation)
     if args.emotion:     slug_parts.append(_slugify(args.emotion))
     if args.action:      slug_parts.append(_slugify(args.action))
     if args.location:    slug_parts.append(_slugify(args.location))
     if args.object:      slug_parts.append(_slugify(args.object))
+    if curate:           slug_parts.append("curated")
     slug = "-".join(slug_parts) or "all"
     out = library / PULL_FOLDER_NAME / slug
 
-    fmt_map = {"vertical": FORMAT_SHORT_FORM, "horizontal": FORMAT_LONG_FORM}
-    fmt = fmt_map.get(args.orientation) if args.orientation else None
+    # Orientation now filters on the TRUE display-orientation column (rotation-aware),
+    # NOT the width×height-derived `format` (which lies for Sony 1920x1080 + 90° flag).
+    common_filters = dict(
+        category=args.category,
+        orientation=orientation,
+        filmed_date=args.filmed_date,
+        filmed_after=args.filmed_after,
+        filmed_before=args.filmed_before,
+        min_duration=args.min_duration,
+        max_duration=args.max_duration,
+        emotion=args.emotion,
+        action=args.action,
+        location=args.location,
+        object=args.object,
+    )
+
+    if curate:
+        plan = _curate_plan(db_path, library, **common_filters,
+                            curate_by=args.curate_by, per_theme=args.per_theme)
+        if not plan["records"]:
+            print(f"\n  Curate → {out}")
+            print(f"  No matching clips. Run 'index' first if this is unexpected.\n")
+            return
+        result = pull_mod.pull(
+            db_path, out, library_root=library, subfolder_fn=plan["subfolder_fn"],
+            **{k: v for k, v in common_filters.items()},
+        )
+        print(f"\n  Curate → {out}")
+        print(f"  Grouped by {args.curate_by}, ≤{args.per_theme} per theme, horizontal only:")
+        for theme in sorted(plan["per_theme_count"]):
+            print(f"    {theme}: {plan['per_theme_count'][theme]} clip(s)")
+        print(f"  Linked {result.count} clip(s) total; fallback copies: {result.fallback_copies}\n")
+        return
 
     subfolder_fn = None
     if args.by_week:
@@ -332,18 +416,8 @@ def cmd_pull(args):
     result = pull_mod.pull(
         db_path, out,
         library_root=library,
-        category=args.category,
-        format=fmt,
-        filmed_date=args.filmed_date,
-        filmed_after=args.filmed_after,
-        filmed_before=args.filmed_before,
-        min_duration=args.min_duration,
-        max_duration=args.max_duration,
-        emotion=args.emotion,
-        action=args.action,
-        location=args.location,
-        object=args.object,
         subfolder_fn=subfolder_fn,
+        **common_filters,
     )
 
     if result.count == 0:
@@ -1502,6 +1576,12 @@ def main():
     p.add_argument("--object", help="b-roll object tag (contains), e.g. \"coffee cup\"")
     p.add_argument("--by-week", action="store_true",
                    help="Group results into W##_MMM-DD-DD subfolders by filmed date")
+    p.add_argument("--curate", action="store_true",
+                   help="Curated pull: HORIZONTAL only, ~N best per theme, each theme in its own subfolder")
+    p.add_argument("--curate-by", choices=["emotion", "action", "location"], default="emotion",
+                   help="Theme axis to group curated pulls by (default emotion)")
+    p.add_argument("--per-theme", type=int, default=5,
+                   help="Max clips per theme in curate mode (default 5)")
     p.set_defaults(func=cmd_pull)
 
     b = sub.add_parser("batch", help="File a batch shoot into 01_ORGANIZED/Batch_NN/Vid_MM/ and re-index")

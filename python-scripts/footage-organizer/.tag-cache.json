@@ -4921,5 +4921,83 @@
         "sprinkler"
       ]
     }
+  },
+  "f91c9cc15e1a8a7408ad176dc35e0387": {
+    "filename": "C2737.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "walking",
+      "location": "central park",
+      "objects": [
+        "backpack",
+        "iron fence",
+        "reservoir",
+        "city skyline",
+        "trees"
+      ]
+    }
+  },
+  "97e38ef718aa4eb1a07817dd63911457": {
+    "filename": "C2746.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "walking",
+      "location": "central park",
+      "objects": [
+        "camera",
+        "backpack",
+        "tennis court"
+      ]
+    }
+  },
+  "aa1c061b99c72151e6f3c48878079926": {
+    "filename": "C2718.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "living room",
+      "objects": [
+        "laptop",
+        "bowl",
+        "couch",
+        "side table",
+        "glass"
+      ]
+    }
+  },
+  "44c9bf850ffe2d94fd338e40a825ea08": {
+    "filename": "C2700.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "indoor corridor",
+      "objects": [
+        "flashlight",
+        "dark floor",
+        "elevator doors",
+        "colored panels"
+      ]
+    }
+  },
+  "b32af09e4a7500a758bd61ea94a25018": {
+    "filename": "C2701.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "subway car",
+      "objects": [
+        "subway doors",
+        "door windows",
+        "do not lean on door signs",
+        "subway seat",
+        "station platform",
+        "tile mosaic"
+      ]
+    }
   }
 }

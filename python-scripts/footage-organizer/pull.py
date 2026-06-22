@@ -9,6 +9,9 @@ from pathlib import Path
 
 import index
 
+# subfolder_fn returns this to drop a clip from the pull entirely (curate cap).
+SKIP = object()
+
 
 @dataclass
 class PullResult:
@@ -31,6 +34,8 @@ def pull(
 
     subfolder_fn: optional callable(record) -> str. If provided, each clip lands
     inside out_folder/<subfolder>/. Used by --by-week to group clips by W## label.
+    If it returns SKIP, the clip is dropped entirely (used by --curate to cap each
+    theme at N clips).
     """
     library_root = Path(library_root)
     rows = index.query(db_path, **filters)
@@ -60,6 +65,8 @@ def pull(
         dest_dir = out_folder
         if subfolder_fn is not None:
             sub = subfolder_fn(r)
+            if sub is SKIP:
+                continue
             if sub:
                 dest_dir = out_folder / sub
                 dest_dir.mkdir(parents=True, exist_ok=True)
