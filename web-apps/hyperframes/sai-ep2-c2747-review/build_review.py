@@ -19,7 +19,7 @@ SEGMENTS=[
  ("bcam.mp4",103.50,105.40,"So I don't really care that we postpone marketing.","",None,None),
  ("bcam.mp4",105.58,106.78,"Like, who cares?","",None,None),
  ("bcam.mp4",122.14,131.94,"Instead, this week, I decided to focus on building a system for how we build systems.","",None,None),
- ("bcam.mp4",133.22,136.02,"Since we ship so many new systems every week,","",None,None),
+ ("bcam.mp4",133.22,136.02,"Since we ship so many new systems every week,","",None,0.85),
  ("bcam.mp4",139.46,142.36,"it's really important that we have a system for how we build and ship systems.","",None,None),
  ("bcam.mp4",145.24,149.04,"And so when we make product updates, I don't have to worry about everything being in my brain.","",None,None),
  ("bcam.mp4",149.16,152.98,"Instead, everyone knows what's going on because it's documented like an actual system.","",None,0.80),
