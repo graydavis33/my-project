@@ -206,9 +206,9 @@
   </div>
 
   <div class="info-box">
-    <strong>Sync Status:</strong> Offset computed via bandpassed cross-correlation (300–3000 Hz).
-    A-cam plays from t=0. B-cam is offset by –8.9876s (plays earlier) so audio aligns.
-    <strong>Use the timeline scrubber to review both angles in sync.</strong>
+    <strong>Sync Verification Mode:</strong> Offset computed via bandpassed cross-correlation (300–3000 Hz).
+    Both audios play <strong>simultaneously</strong> via the offset. Listen carefully — if you hear the same words spoken in sync, the offset is correct.
+    <strong>Use Play button below. Adjust offset slider if audio doesn't match.</strong>
   </div>
 
   <div class="video-grid">
@@ -265,7 +265,17 @@
   const displayA = document.getElementById('displayA');
   const displayB = document.getElementById('displayB');
 
-  const SYNC_OFFSET = 8.9876;
+  let SYNC_OFFSET = 8.9876; // Computed offset in seconds
+
+  // Mute videos (we'll use audio elements for sync verification)
+  videoA.muted = true;
+  videoB.muted = true;
+
+  // Create audio elements for sync verification
+  const audioA = new Audio('D:/Sai/01_ORGANIZED/Ep 2 Doc/A-cam ep 2 Int/C2747.MP4');
+  const audioB = new Audio('D:/Sai/01_ORGANIZED/Ep 2 Doc/B-Cam Ep 2 Int/MVI_5048.MP4');
+  audioA.crossOrigin = 'anonymous';
+  audioB.crossOrigin = 'anonymous';
 
   // Format time display
   function formatTime(seconds) {
@@ -277,18 +287,85 @@
     return `${m}:${String(s).padStart(2, '0')}.${String(ms).padStart(2, '0')}`;
   }
 
+  // Play both videos + audio synced
+  function playFromTime(startTime) {
+    const timeA_target = startTime;
+    const timeB_target = Math.max(0, startTime - SYNC_OFFSET);
+
+    videoA.currentTime = timeA_target;
+    videoB.currentTime = timeB_target;
+    audioA.currentTime = timeA_target;
+    audioB.currentTime = timeB_target;
+
+    videoA.play().catch(() => {});
+    videoB.play().catch(() => {});
+    audioA.play().catch(() => {});
+    audioB.play().catch(() => {});
+  }
+
+  function pauseAll() {
+    videoA.pause();
+    videoB.pause();
+    audioA.pause();
+    audioB.pause();
+  }
+
+  // Add play/pause controls
+  const controlsHTML = `
+    <div style="padding: 16px; background: #0a0a0a; border-top: 1px solid #333; display: flex; gap: 12px; align-items: center;">
+      <button id="playBtn">▶ Play</button>
+      <button id="pauseBtn">⏸ Pause</button>
+      <button id="stopBtn">⏹ Stop</button>
+      <label style="font-size: 12px; color: #aaa; margin-left: 20px;">Offset (s):</label>
+      <input type="number" id="offsetInput" value="8.9876" step="0.1" style="width: 80px; padding: 6px; background: #222; color: #fff; border: 1px solid #333; border-radius: 4px;">
+      <button id="updateOffsetBtn" style="background: #666; color: #fff;">Update</button>
+      <span style="font-size: 12px; color: #666; margin-left: auto;">Listen: If words match in sync, offset is correct.</span>
+    </div>
+  `;
+  document.querySelector('.instructions').insertAdjacentHTML('beforebegin', controlsHTML);
+
+  document.getElementById('playBtn').addEventListener('click', () => {
+    const percent = parseFloat(timeA.value);
+    const durationA = videoA.duration || 210;
+    const startTime = (percent / 100) * durationA;
+    playFromTime(startTime);
+  });
+
+  document.getElementById('pauseBtn').addEventListener('click', pauseAll);
+
+  document.getElementById('stopBtn').addEventListener('click', () => {
+    pauseAll();
+    videoA.currentTime = 0;
+    videoB.currentTime = 0;
+    audioA.currentTime = 0;
+    audioB.currentTime = 0;
+    timeA.value = 0;
+    timeB.value = 0;
+    displayA.textContent = '0:00';
+    displayB.textContent = '0:00';
+  });
+
+  document.getElementById('updateOffsetBtn').addEventListener('click', () => {
+    const newOffset = parseFloat(document.getElementById('offsetInput').value);
+    if (!isNaN(newOffset)) {
+      SYNC_OFFSET = newOffset;
+      console.log(`Offset updated to ${SYNC_OFFSET}s`);
+    }
+  });
+
   // When A-cam timeline changes, sync B-cam with offset
   timeA.addEventListener('input', (e) => {
     const percent = parseFloat(e.target.value);
-    const durationA = videoA.duration || 210; // fallback 210s
+    const durationA = videoA.duration || 210;
     const currentTimeA = (percent / 100) * durationA;
 
     videoA.currentTime = currentTimeA;
+    audioA.currentTime = currentTimeA;
 
-    // B-cam offset: when A is at time T, B should be at time T - SYNC_OFFSET
     const currentTimeB = currentTimeA - SYNC_OFFSET;
     if (currentTimeB >= 0) {
       videoB.currentTime = currentTimeB;
+      audioB.currentTime = currentTimeB;
       timeB.value = (currentTimeB / (videoB.duration || 188)) * 100;
     }
 
@@ -303,11 +380,12 @@
     const currentTimeB = (percent / 100) * durationB;
 
     videoB.currentTime = currentTimeB;
+    audioB.currentTime = currentTimeB;
 
-    // A-cam: when B is at time T, A should be at time T + SYNC_OFFSET
     const currentTimeA = currentTimeB + SYNC_OFFSET;
     if (currentTimeA >= 0) {
       videoA.currentTime = currentTimeA;
+      audioA.currentTime = currentTimeA;
       timeA.value = (currentTimeA / (videoA.duration || 210)) * 100;
     }
 
