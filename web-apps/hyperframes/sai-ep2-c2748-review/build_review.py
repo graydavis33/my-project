@@ -8,7 +8,7 @@ SEGMENTS=[
  ("bcam.mp4",29.22,35.32,"move things forward — whether it's business, content, or one day, I don't know, helping","",None,None),
  ("bcam.mp4",35.32,42.50,"change the world. And it almost makes you feel like, unless you're working or utilizing","",None,None),
  ("bcam.mp4",42.50,49.48,"the gift that the universe, God, gave you — you're not worth anything.","",None,0.70),
- ("bcam.mp4",51.78,58.26,"And so I'm trying to root my self-worth and identity in things beyond just my productivity.","",None,None),
+ ("bcam.mp4",51.78,58.26,"And so I'm trying to root my self-worth and identity in things beyond just my productivity.","",None,0.80),
  ("bcam.mp4",66.10,69.28,"Which is difficult, because I love working so much.","",None,0.70),
  ("bcam.mp4",109.12,112.02,"My bad day starts from when I don't get enough sleep.","",None,None),
  ("bcam.mp4",112.72,115.26,"If I don't get enough sleep, I have a terrible day.","",None,None),
