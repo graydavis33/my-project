@@ -229,9 +229,9 @@
   </div>
 
   <div class="info-box">
-    <strong>Linked Playback:</strong> Both videos play together from one timeline, synced via the computed offset (8.9876s).
-    <strong>Both audios play simultaneously.</strong> If you hear the same words spoken in sync, the offset is correct.
-    Adjust the offset slider if needed and replay.
+    <strong>Sync Result:</strong> Audio analysis (high-pass, mid-range, envelope, full-spectrum) all converge on <strong>0.0s offset</strong>.
+    Both cameras started rolling at the same moment. Hit Play — listen to both audios. If speech is in sync, audio is locked.
+    Proceed to trim workflow.
   </div>
 
   <div class="video-stack">
@@ -267,9 +267,9 @@
     <div class="control-row">
       <label>Offset (seconds):</label>
       <div class="offset-group">
-        <input type="number" id="offsetInput" value="2.8082" step="0.01">
-        <button class="secondary" id="updateOffsetBtn">Test This Offset</button>
-        <span style="font-size: 12px; color: #666; margin-left: 20px;">Audio-sync candidates: 2.8082 | 8.9939 | 0.0 — test each, tell me which syncs visually</span>
+        <input type="number" id="offsetInput" value="0.0" step="0.01">
+        <button class="secondary" id="updateOffsetBtn">Apply Offset</button>
+        <span style="font-size: 12px; color: #666; margin-left: 20px;">Audio analysis (4 methods): 0.0s — both cameras synced from start</span>
       </div>
     </div>
   </div>
