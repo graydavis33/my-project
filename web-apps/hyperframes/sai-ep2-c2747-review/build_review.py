@@ -25,9 +25,19 @@ SEGMENTS=[
  ("bcam.mp4",149.16,152.98,"Instead, everyone knows what's going on because it's documented like an actual system.","",None,0.80),
 ]
 def esc(s): return s.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;")
+MERGE_GAP=0.5  # merge adjacent segments with a tiny gap (continuous speech) -> no micro-cut, no overlap-stutter
+def _merge(segs):
+    out=[list(segs[0])]
+    for s in segs[1:]:
+        prev=out[-1]
+        if s[0]==prev[0] and (s[1]-prev[2])<MERGE_GAP:
+            prev[2]=s[2]; prev[3]=(prev[3]+" "+s[3]).strip(); prev[6]=s[6]
+        else:
+            out.append(list(s))
+    return [tuple(x) for x in out]
 def main():
     clips,caps,cum=[],[],0
-    for i,(src,sin,sout,text,tag,head,tail) in enumerate(SEGMENTS):
+    for i,(src,sin,sout,text,tag,head,tail) in enumerate(_merge(SEGMENTS)):
         head=HEAD if head is None else head; tail=TAIL if tail is None else tail
         mi=max(0.0,sin-head); dms=round(((sout+tail)-mi)*1000); start=cum/1000; dur=(dms-3)/1000
         clips.append(f'  <video id="v{i}" src="{src}" muted playsinline data-start="{start:.3f}" data-duration="{dur:.3f}" data-media-start="{mi:.3f}" data-track-index="0"></video>\n  <audio id="a{i}" src="{src}" data-start="{start:.3f}" data-duration="{dur:.3f}" data-media-start="{mi:.3f}" data-volume="1" data-track-index="1"></audio>')
