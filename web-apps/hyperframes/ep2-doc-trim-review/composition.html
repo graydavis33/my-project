@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EP2 Doc Trim Review</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #fff; padding: 20px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .header { margin-bottom: 20px; }
+    .header h1 { font-size: 24px; margin-bottom: 8px; }
+    .header p { font-size: 13px; color: #aaa; }
+    .info-box { background: #0a0a0a; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
+    .info-box strong { color: #F28129; }
+    .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .video-panel { background: #0a0a0a; border: 1px solid #333; border-radius: 8px; overflow: hidden; }
+    .video-panel h3 { padding: 12px; background: #222; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #333; }
+    .video-wrap { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; }
+    video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .controls { padding: 16px; background: #0a0a0a; border-top: 1px solid #333; }
+    .control-row { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+    .control-row:last-child { margin-bottom: 0; }
+    label { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #aaa; font-weight: 600; flex-shrink: 0; width: 80px; }
+    input[type="range"] { flex: 1; height: 6px; -webkit-appearance: none; appearance: none; background: #333; border-radius: 3px; outline: none; cursor: pointer; }
+    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; background: #F28129; border-radius: 50%; cursor: pointer; }
+    input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; background: #F28129; border-radius: 50%; cursor: pointer; border: none; }
+    .time-display { font-size: 12px; color: #666; font-weight: 500; width: 60px; text-align: right; }
+    button { padding: 8px 16px; background: #F28129; color: #000; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #e67219; }
+    .timeline { background: #0a0a0a; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+    .timeline h3 { margin-bottom: 12px; font-size: 14px; font-weight: 600; }
+    .timeline-bar { position: relative; width: 100%; height: 60px; background: #1a1a1a; border-radius: 4px; border: 1px solid #333; overflow: hidden; margin-bottom: 12px; }
+    .segment { position: absolute; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #fff; font-weight: 600; cursor: pointer; border-right: 1px solid #333; }
+    .segment.keep { background: rgba(34, 197, 94, 0.3); }
+    .segment.cut { background: rgba(239, 68, 68, 0.3); }
+    .segment:hover { opacity: 0.8; }
+    .legend { display: flex; gap: 20px; font-size: 12px; margin-top: 12px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-color { width: 20px; height: 20px; border-radius: 2px; }
+    .legend-keep { background: rgba(34, 197, 94, 0.5); }
+    .legend-cut { background: rgba(239, 68, 68, 0.5); }
+    .instructions { background: #0a0a0a; border: 1px solid #333; border-radius: 8px; padding: 16px; font-size: 13px; line-height: 1.6; }
+    .instructions h3 { margin-bottom: 12px; font-size: 14px; font-weight: 600; }
+    .instructions ol { margin-left: 20px; }
+    .instructions li { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>EP2 Doc — Trim Review</h1>
+    <p>Synced & analyzed. Review trim recommendations below. Green = KEEP, Red = CUT.</p>
+  </div>
+
+  <div class="info-box">
+    <strong>Trim Strategy:</strong> Cut dead air (1.96s gap at 116s), remove trailing interview chatter (183s+), keep all core Q&A.
+    Target final duration: ~175–180s (from current 207s). Scrub through the timeline, review segments, approve trim.
+  </div>
+
+  <div class="video-grid">
+    <div class="video-panel">
+      <h3>A-cam (Shotgun Audio)</h3>
+      <div class="video-wrap">
+        <video id="videoA" controls preload="auto">
+          <source src="D:/Sai/01_ORGANIZED/Ep 2 Doc/A-cam ep 2 Int/C2747.MP4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <div class="video-panel">
+      <h3>B-cam (Lav Audio) — Offset -25.8766s</h3>
+      <div class="video-wrap">
+        <video id="videoB" controls preload="auto">
+          <source src="D:/Sai/01_ORGANIZED/Ep 2 Doc/B-Cam Ep 2 Int/MVI_5048.MP4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="playBtn">▶ Play</button>
+    <button id="pauseBtn">⏸ Pause</button>
+    <button id="stopBtn">⏹ Stop</button>
+    <label style="margin-left: 20px;">Timeline:</label>
+    <input type="range" id="timeline" min="0" max="100" value="0" step="0.1">
+    <span class="time-display" id="timeDisplay">0:00</span>
+  </div>
+
+  <div class="timeline">
+    <h3>Trim Timeline (green = keep, red = cut)</h3>
+    <div class="timeline-bar" id="timelineBar"></div>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color legend-keep"></div>
+        <span>KEEP (core Q&A)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color legend-cut"></div>
+        <span>CUT (dead air / trailing chatter)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>Review Workflow</h3>
+    <ol>
+      <li><strong>Scrub the timeline</strong> — use Play or drag the timeline slider</li>
+      <li><strong>Listen to both audios</strong> — confirm cuts make sense</li>
+      <li><strong>Check the red segments</strong> — if any should be kept, tell me to adjust</li>
+      <li><strong>When ready,</strong> say "Approve trim" and I'll render the final cut</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+  const videoA = document.getElementById('videoA');
+  const videoB = document.getElementById('videoB');
+  const timeline = document.getElementById('timeline');
+  const timelineBar = document.getElementById('timelineBar');
+  const timeDisplay = document.getElementById('timeDisplay');
+  const playBtn = document.getElementById('playBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const stopBtn = document.getElementById('stopBtn');
+
+  const SYNC_OFFSET = -25.8766;
+  const TOTAL_DURATION = 206.98;
+
+  // Trim segments: [start, end, type] where type = 'keep' or 'cut'
+  const TRIM_PLAN = [
+    [0, 116, 'keep'],        // Q&A content
+    [116, 117.96, 'cut'],    // Dead air gap
+    [117.96, 183, 'keep'],   // More Q&A
+    [183, 206.98, 'cut']     // Trailing chatter
+  ];
+
+  // Build timeline visualization
+  TRIM_PLAN.forEach(([start, end, type]) => {
+    const pct_start = (start / TOTAL_DURATION) * 100;
+    const pct_width = ((end - start) / TOTAL_DURATION) * 100;
+    const div = document.createElement('div');
+    div.className = `segment ${type}`;
+    div.style.left = pct_start + '%';
+    div.style.width = pct_width + '%';
+    div.textContent = `${start.toFixed(0)}s`;
+    div.title = `${type.toUpperCase()}: ${start.toFixed(1)}s - ${end.toFixed(1)}s`;
+    timelineBar.appendChild(div);
+  });
+
+  function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    return `${m}:${String(s).padStart(2, '0')}`;
+  }
+
+  function syncVideos(timeA) {
+    videoA.currentTime = timeA;
+    const timeB = Math.max(0, timeA - 25.8766);
+    videoB.currentTime = timeB;
+  }
+
+  function updateDisplay() {
+    timeDisplay.textContent = formatTime(videoA.currentTime);
+  }
+
+  timeline.addEventListener('input', (e) => {
+    const pct = parseFloat(e.target.value);
+    const currentTime = (pct / 100) * TOTAL_DURATION;
+    syncVideos(currentTime);
+    updateDisplay();
+  });
+
+  playBtn.addEventListener('click', () => {
+    videoA.play();
+    videoB.play();
+    playBtn.disabled = true;
+    pauseBtn.disabled = false;
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    videoA.pause();
+    videoB.pause();
+    playBtn.disabled = false;
+    pauseBtn.disabled = true;
+  });
+  pauseBtn.disabled = true;
+
+  stopBtn.addEventListener('click', () => {
+    videoA.pause();
+    videoB.pause();
+    syncVideos(0);
+    timeline.value = 0;
+    updateDisplay();
+    playBtn.disabled = false;
+    pauseBtn.disabled = true;
+  });
+
+  // Update timeline slider during playback
+  const syncInterval = setInterval(() => {
+    if (!videoA.paused) {
+      const pct = (videoA.currentTime / TOTAL_DURATION) * 100;
+      timeline.value = pct;
+      updateDisplay();
+
+      // Keep B in sync
+      const timeB = Math.max(0, videoA.currentTime - 25.8766);
+      if (Math.abs(videoB.currentTime - timeB) > 0.1) {
+        videoB.currentTime = timeB;
+      }
+    }
+  }, 50);
+
+  // Spacebar play/pause
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (videoA.paused) {
+        videoA.play();
+        videoB.play();
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+      } else {
+        videoA.pause();
+        videoB.pause();
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
