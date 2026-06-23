@@ -37,12 +37,13 @@ def _merge(segs):
     return [tuple(x) for x in out]
 def main():
     clips,caps,cum=[],[],0
-    for i,(src,sin,sout,text,tag,head,tail) in enumerate(_merge(SEGMENTS)):
+    MERGED=_merge(SEGMENTS); NSEG=len(MERGED)
+    for i,(src,sin,sout,text,tag,head,tail) in enumerate(MERGED):
         head=HEAD if head is None else head; tail=TAIL if tail is None else tail
         mi=max(0.0,sin-head); dms=round(((sout+tail)-mi)*1000); start=cum/1000; dur=(dms-3)/1000
         clips.append(f'  <video id="v{i}" src="{src}" muted playsinline data-start="{start:.3f}" data-duration="{dur:.3f}" data-media-start="{mi:.3f}" data-track-index="0"></video>\n  <audio id="a{i}" src="{src}" data-start="{start:.3f}" data-duration="{dur:.3f}" data-media-start="{mi:.3f}" data-volume="1" data-track-index="1"></audio>')
         tl=f'<span class="tag">{esc(tag)}</span>' if tag else ""
-        caps.append(f'  <div id="cap{i}" class="clip cap" data-start="{start:.3f}" data-duration="{dur:.3f}" data-track-index="2">{tl}<span class="txt">{esc(text)}</span><span class="seg">{i+1} / {len(SEGMENTS)}</span></div>')
+        caps.append(f'  <div id="cap{i}" class="clip cap" data-start="{start:.3f}" data-duration="{dur:.3f}" data-track-index="2">{tl}<span class="txt">{esc(text)}</span><span class="seg">{i+1} / {NSEG}</span></div>')
         cum+=dms
     total=cum/1000
     html=f'''<!doctype html><html><head><meta charset="utf-8"><style>
@@ -61,5 +62,5 @@ def main():
 <script>window.__timelines=window.__timelines||{{}};window.__timelines["root"]=gsap.timeline({{paused:true}});</script>
 </div></body></html>'''
     (HERE/"index.html").write_text(html,encoding="utf-8")
-    print(f"wrote index.html | {len(SEGMENTS)} segments | total {total:.2f}s")
+    print(f"wrote index.html | {NSEG} segments (merged from {len(SEGMENTS)}) | total {total:.2f}s")
 main()
