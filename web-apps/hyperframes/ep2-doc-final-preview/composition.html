@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EP2 Doc — Final Trimmed Preview</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #000; color: #fff; padding: 0; }
+    .stage { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; background: #000; }
+    .video-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0; width: 100%; height: 100%; }
+    .video-panel { position: relative; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    .label { position: absolute; top: 20px; left: 20px; background: rgba(0, 0, 0, 0.8); color: #fff; padding: 12px 16px; font-size: 13px; font-weight: 600; border-radius: 4px; z-index: 10; text-transform: uppercase; letter-spacing: 1px; }
+    .controls { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.9); border: 1px solid #333; border-radius: 8px; padding: 16px; display: flex; gap: 12px; align-items: center; z-index: 20; }
+    button { padding: 8px 16px; background: #F28129; color: #000; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    button:hover { background: #e67219; }
+    .time-display { font-size: 12px; color: #aaa; font-weight: 500; min-width: 60px; }
+    .info { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.9); border: 1px solid #F28129; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #F28129; z-index: 20; text-align: center; max-width: 600px; }
+  </style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="video-container">
+    <div class="video-panel">
+      <div class="label">A-cam Trimmed — 181.12s</div>
+      <video id="videoA" preload="auto">
+        <source src="D:/Sai/01_ORGANIZED/Ep 2 Doc/Cut/trimmed/A_TRIMMED.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="video-panel">
+      <div class="label">B-cam Trimmed — 160.34s (clipped at file end)</div>
+      <video id="videoB" preload="auto">
+        <source src="D:/Sai/01_ORGANIZED/Ep 2 Doc/Cut/trimmed/B_TRIMMED.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</div>
+
+<div class="info">
+  FINAL TRIMMED: 181.12s (A) / 160.34s (B) — Red segments (dead air + trailing) removed. Original: 207s → Now: ~175-180s. Approve?
+</div>
+
+<div class="controls">
+  <button id="playBtn">▶ Play</button>
+  <button id="pauseBtn">⏸ Pause</button>
+  <button id="stopBtn">⏹ Stop</button>
+  <span class="time-display" id="timeDisplay">0:00</span>
+</div>
+
+<script>
+  const videoA = document.getElementById('videoA');
+  const videoB = document.getElementById('videoB');
+  const playBtn = document.getElementById('playBtn');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const stopBtn = document.getElementById('stopBtn');
+  const timeDisplay = document.getElementById('timeDisplay');
+
+  const SYNC_OFFSET = -25.8766;
+
+  function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    return `${m}:${String(s).padStart(2, '0')}`;
+  }
+
+  function syncVideos(timeA) {
+    videoA.currentTime = timeA;
+    const timeB = Math.max(0, timeA - 25.8766);
+    videoB.currentTime = Math.min(timeB, videoB.duration || 160);
+  }
+
+  playBtn.addEventListener('click', () => {
+    videoA.play();
+    videoB.play();
+    playBtn.disabled = true;
+    pauseBtn.disabled = false;
+  });
+
+  pauseBtn.addEventListener('click', () => {
+    videoA.pause();
+    videoB.pause();
+    playBtn.disabled = false;
+    pauseBtn.disabled = true;
+  });
+  pauseBtn.disabled = true;
+
+  stopBtn.addEventListener('click', () => {
+    videoA.pause();
+    videoB.pause();
+    syncVideos(0);
+    timeDisplay.textContent = '0:00';
+    playBtn.disabled = false;
+    pauseBtn.disabled = true;
+  });
+
+  const syncInterval = setInterval(() => {
+    if (!videoA.paused) {
+      const timeB = Math.max(0, videoA.currentTime - 25.8766);
+      if (Math.abs(videoB.currentTime - timeB) > 0.1) {
+        videoB.currentTime = Math.min(timeB, videoB.duration || 160);
+      }
+      timeDisplay.textContent = formatTime(videoA.currentTime);
+    }
+  }, 50);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (videoA.paused) {
+        videoA.play();
+        videoB.play();
+        playBtn.disabled = true;
+        pauseBtn.disabled = false;
+      } else {
+        videoA.pause();
+        videoB.pause();
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
