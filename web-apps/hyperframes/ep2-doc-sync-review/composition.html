@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EP2 Doc Sync Review — Trim Marks</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .video-panel {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .video-panel h3 {
+      padding: 12px;
+      background: #222;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid #333;
+    }
+
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: #000;
+    }
+
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .controls {
+      padding: 16px;
+      background: #0a0a0a;
+      border-top: 1px solid #333;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .control-row:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #aaa;
+      font-weight: 600;
+      flex-shrink: 0;
+      width: 80px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #333;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      background: #F28129;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      background: #F28129;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+
+    .time-display {
+      font-size: 12px;
+      color: #666;
+      font-weight: 500;
+      width: 60px;
+      text-align: right;
+    }
+
+    button {
+      padding: 8px 16px;
+      background: #F28129;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #e67219;
+    }
+
+    .info-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 30px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .info-box strong {
+      color: #F28129;
+    }
+
+    .instructions {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .instructions h3 {
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    .instructions li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>EP2 Doc — Sync & Trim Review</h1>
+    <p>A-cam (shotgun) synced to B-cam (lav) | Offset: 8.9876s | Scrub through, mark trim points, approve</p>
+  </div>
+
+  <div class="info-box">
+    <strong>Sync Status:</strong> Offset computed via bandpassed cross-correlation (300–3000 Hz).
+    A-cam plays from t=0. B-cam is offset by –8.9876s (plays earlier) so audio aligns.
+    <strong>Use the timeline scrubber to review both angles in sync.</strong>
+  </div>
+
+  <div class="video-grid">
+    <div class="video-panel">
+      <h3>A-cam (Shotgun Audio)</h3>
+      <div class="video-wrap">
+        <video id="videoA" controls>
+          <source src="D:/Sai/01_ORGANIZED/Ep 2 Doc/A-cam ep 2 Int/C2747.MP4" type="video/mp4">
+        </video>
+      </div>
+      <div class="controls">
+        <div class="control-row">
+          <label>Time:</label>
+          <input type="range" id="timeA" min="0" max="100" value="0" step="0.1">
+          <span class="time-display" id="displayA">0:00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-panel">
+      <h3>B-cam (Lav Audio) — Offset –8.9876s</h3>
+      <div class="video-wrap">
+        <video id="videoB" controls>
+          <source src="D:/Sai/01_ORGANIZED/Ep 2 Doc/B-Cam Ep 2 Int/MVI_5048.MP4" type="video/mp4">
+        </video>
+      </div>
+      <div class="controls">
+        <div class="control-row">
+          <label>Time:</label>
+          <input type="range" id="timeB" min="0" max="100" value="0" step="0.1">
+          <span class="time-display" id="displayB">0:00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>Trim Workflow</h3>
+    <ol>
+      <li><strong>Scrub through both angles in sync</strong> — use the timeline sliders (they move independently, but audio is synced)</li>
+      <li><strong>Look for:</strong> bad takes, false starts, mess-ups, dead air, trailing chatter</li>
+      <li><strong>Mark trim points mentally</strong> (note the timecode on A-cam when you find a bad section)</li>
+      <li><strong>When ready:</strong> tell Gray the timecode ranges to keep, and we'll apply the trim in step 4</li>
+      <li><strong>Gray approves the trim → we render final</strong></li>
+    </ol>
+  </div>
+</div>
+
+<script>
+  const videoA = document.getElementById('videoA');
+  const videoB = document.getElementById('videoB');
+  const timeA = document.getElementById('timeA');
+  const timeB = document.getElementById('timeB');
+  const displayA = document.getElementById('displayA');
+  const displayB = document.getElementById('displayB');
+
+  const SYNC_OFFSET = 8.9876;
+
+  // Format time display
+  function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    const ms = Math.floor((seconds % 1) * 100);
+    if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(ms).padStart(2, '0')}`;
+    return `${m}:${String(s).padStart(2, '0')}.${String(ms).padStart(2, '0')}`;
+  }
+
+  // When A-cam timeline changes, sync B-cam with offset
+  timeA.addEventListener('input', (e) => {
+    const percent = parseFloat(e.target.value);
+    const durationA = videoA.duration || 210; // fallback 210s
+    const currentTimeA = (percent / 100) * durationA;
+
+    videoA.currentTime = currentTimeA;
+
+    // B-cam offset: when A is at time T, B should be at time T - SYNC_OFFSET
+    const currentTimeB = currentTimeA - SYNC_OFFSET;
+    if (currentTimeB >= 0) {
+      videoB.currentTime = currentTimeB;
+      timeB.value = (currentTimeB / (videoB.duration || 188)) * 100;
+    }
+
+    displayA.textContent = formatTime(currentTimeA);
+    displayB.textContent = formatTime(Math.max(0, currentTimeB));
+  });
+
+  // When B-cam timeline changes, sync A-cam
+  timeB.addEventListener('input', (e) => {
+    const percent = parseFloat(e.target.value);
+    const durationB = videoB.duration || 188;
+    const currentTimeB = (percent / 100) * durationB;
+
+    videoB.currentTime = currentTimeB;
+
+    // A-cam: when B is at time T, A should be at time T + SYNC_OFFSET
+    const currentTimeA = currentTimeB + SYNC_OFFSET;
+    if (currentTimeA >= 0) {
+      videoA.currentTime = currentTimeA;
+      timeA.value = (currentTimeA / (videoA.duration || 210)) * 100;
+    }
+
+    displayB.textContent = formatTime(currentTimeB);
+    displayA.textContent = formatTime(currentTimeA);
+  });
+
+  // Sync when videos load
+  videoA.addEventListener('loadedmetadata', () => {
+    timeA.max = 100;
+  });
+
+  videoB.addEventListener('loadedmetadata', () => {
+    timeB.max = 100;
+  });
+</script>
+
+</body>
+</html>
