@@ -1,85 +1,120 @@
-# 📋 Sai Shorts — Batch Reference Doc TEMPLATE
+# Sai Shorts — Batch Reference Doc (TEMPLATE)
 
-> **Purpose:** the reusable skeleton for every Sai shorts batch doc. Copy this, fill it per batch. It is a **living template** — improve it every iteration (see the Iteration Changelog + Improvement Backlog at the bottom). Goal: faster, more efficient, more useful each version.
->
-> **First real fill:** `2026-06-24-AI-Batch-4.md` (v1 of the process).
+A reusable doc for every shorts batch. Copy it and fill one page per video.
 
----
+Who reads this:
+- Gray — everything needed to prep, film, and present.
+- Sai — reads the purpose and the hooks, approves each video, answers the questions at the end.
+- Editor — reads the Foundation once, then builds each video straight from its page.
 
-## 🧭 How to use this doc (3 audiences)
-- **Gray** — everything needed to prep, film, and present.
-- **Sai** — read the *creative "why"* + hooks to understand/approve each concept; answer the Open Questions.
-- **Editor** — read the **Foundation** once, then each video's **🎬 EDITOR BRIEF** (the build spec). The creative reasoning is context; the Editor Brief is the checklist.
+Rules for this doc: plain language, short lines, one video per page. Enough context to know exactly what each video looks like and why it exists — nothing more.
 
----
-
-## 🎯 FOUNDATION (carry forward every batch; update when it changes)
-
-**Viewer:** [aspiring/early founders who want the real journey, not guru advice]
-
-**3 pillars — every video hits at least one:**
-1. **Value** — leaves with real knowledge/clarity they can use.
-2. **Relatability** — aspirational + grounded ("I relate to where he started, I want to be like him").
-3. **Authority through experience, NOT instruction** — "here's what I've done / where I'm at," never "here's what you must do." **Sharing, not teaching.**
-
-**Production constants:**
-- **Horizontal** (universal footage / pattern interrupt / IG+TikTok fit). Exception: prop-only segment videos that won't be repurposed may be vertical.
-- Captions: Sai house style (Montserrat SemiBold, lowercase except I, no punctuation, gapless HARD CUT = no flicker).
-
-**Retention principles:**
-- **Physical > digital** — retention from props/actions/what he says beats digital graphic effects. One signature physical mechanic per format.
-- Number = finish line (promises a payoff).
-- Lead with the most surprising; save the strongest for last (triggers save + rewatch).
-- Visual hook **rhymes** with the verbal hook, never repeats it.
+(In the Google Doc / Notion version, each divider line below is a new page.)
 
 ---
 
-## 🎬 PER-VIDEO BLOCK (copy this for each video)
+## Foundation
 
-### VIDEO [#] — Format: "[name]"
-**Proven by:** [creator] *"[title]"* — [outlier]x
-- 🔗 Watch: [sandcastles link]
-- 🔗 Original: [platform link]
+Carry this forward every batch. Only update it when something actually changes.
 
-**What it is / why it worked:** [the mechanic + why it overperformed]
+Viewer: aspiring and early-stage founders who want the real journey, not guru advice.
 
-**Sai adaptation:** [how we make it his — experiential, not preachy; what topic/engine swap]
+Three pillars — every video hits at least one:
+- Value: they leave with something they can use.
+- Relatability: aspirational but grounded — "I want to be like him."
+- Authority through experience, not instruction: "here's what I did / where I'm at," never "here's what you must do."
 
-**Hook — verbal:** [the spoken line / question]
-**Hook — visual:** [first 1-2s on screen; must rhyme not repeat]
+Production constants:
+- Shot horizontal. Works for both shorts and long-form, and stands out in-feed. Exception: a prop-only video that won't be reused can be vertical.
+- Captions in Sai's house style: Montserrat SemiBold, lowercase except I, no punctuation, hard cuts with no flicker.
 
-**Physical mechanic (if any):** [the prop/action; aim for a recurring signature]
-
-**🎬 EDITOR BRIEF (edit-side only — Gray provides all footage/props):**
-- *Deliverable + aspect ratio:* [reel/carousel, horizontal/vertical]
-- *Graphics/animations to BUILD:* [HyperFrames style + specific effect]
-- *Post-constructions from provided assets:* [e.g. "from the old photo Gray provides, build the AGE-15 → now match-cut"]
-- *Transitions/effects:* [...]
-- *Captions:* [house style or none + title cards]
-- *Hook assembly:* [which hook is filmed vs built in post]
-- *Structure/pacing:* see reference video link above.
-
-**🚧 Open questions for Sai:** [what we need from him]
+Retention rules:
+- Physical beats digital. A real prop or action holds attention better than a graphic.
+- A number is a finish line. "5 things" promises a payoff, so they stay.
+- Lead with the most surprising point, save the strongest for last.
+- The visual hook rhymes with the verbal hook, it does not repeat it.
 
 ---
 
-## 🗂️ TOPIC POOL / TRACKED IDEAS
-[Running list of topics, comparison items, list-fodder — carried + grown each batch.]
+## Video 1 — [working title]
 
-## 🔖 BOOKMARKED FUTURE VIDEOS
-[Strong ideas surfaced but not used yet, with the angle.]
+Format: [the structure — e.g. numbered listicle, comparison, journey breakdown, reflective monologue]
 
-## ❓ OPEN QUESTIONS FOR SAI (consolidated)
-[One place that gathers every per-video open question, so Gray can route them to Sai in one pass.]
+Purpose: [why this video exists, which pillar it serves, what the viewer walks away with]
+
+Topics: [the subjects covered in this video]
+
+Verbal hook: [the spoken opening line]
+
+Visual hook: [what is on screen in the first 1-2 seconds — must rhyme with the verbal hook, not repeat it]
+
+Style: [the feel — fast and punchy, calm and reflective, raw and candid, etc.]
+
+Camera shots: [what to film and how it is framed — angles, b-roll, props in frame]
+
+Graphics and effects: [what the editor builds — house style plus the specific effect or animation]
+
+Physical mechanic: [any prop or action, aiming to become a recurring signature — or "none"]
+
+Reference: [creator] — "[title]" — [outlier]x
+- Watch: [sandcastles link]
+- Original: [platform link]
+
+From Sai: [what we still need him to confirm, provide, or decide]
 
 ---
 
-## 🔁 ITERATION CHANGELOG (the "gets better" engine — update every batch)
-- **v1 (Batch 4, 2026-06-24):** established the structure — Foundation + per-video blocks + Editor Brief + topic pool. Locked the format-template idea (one format → multiple videos, e.g. 1A/1B). Added physical-retention principle, people-over-AI rule.
+## Video 2 — [working title]
 
-## 🛠️ TEMPLATE IMPROVEMENT BACKLOG (add / remove / rearrange next time)
-- [ ] After Batch 4 ships: log which formats actually performed → add a "Results" field per video (retention %, views) to learn what works.
-- [ ] Consider a 1-line "thumbnail/cover concept" field per video.
-- [ ] Decide if the Editor Brief should be a separate exportable doc for the editor vs inline.
-- [ ] Trim anything Sai/editor found redundant when presented.
-- [ ] [add as we learn]
+(Repeat the same page for every video in the batch.)
+
+Format:
+
+Purpose:
+
+Topics:
+
+Verbal hook:
+
+Visual hook:
+
+Style:
+
+Camera shots:
+
+Graphics and effects:
+
+Physical mechanic:
+
+Reference:
+- Watch:
+- Original:
+
+From Sai:
+
+---
+
+## Topic Pool
+
+Running list of topics, comparison items, and list ideas. Carried forward and grown each batch.
+
+## Future Video Ideas
+
+Strong ideas we surfaced but have not used yet, with the angle for each.
+
+## Questions for Sai
+
+Every "From Sai" line gathered in one place, so Gray can route them all to Sai in a single pass.
+
+---
+
+Internal — Gray only. Not for Sai or the editor.
+
+Changelog:
+- v2 (2026-06-24): Rebuilt clean. One page per video, plain language, no emojis, minimal symbols. Locked the per-video fields: format, purpose, topics, verbal hook, visual hook, style, camera shots, graphics and effects, physical mechanic, reference, from Sai.
+- v1 (2026-06-24): First version. Foundation plus per-video blocks plus editor brief.
+
+Improvement backlog:
+- After a batch ships, add a Results line per video (views, retention) to learn what worked.
+- Consider a one-line thumbnail or cover concept per video.
+- Trim anything Sai or the editor finds redundant.
