@@ -108,7 +108,6 @@ def cmd_setup(args):
         "Props": {"rich_text": {}},
         "Assets": {"url": {}},
         "Reference": {"url": {}},
-        "Outlier": {"number": {"format": "number"}},
     }
     # notion-client 3.x (new multi-source API): schema lives under initial_data_source,
     # and pages attach to the data source, not the database.
@@ -139,11 +138,10 @@ def video_to_page(db_id, batch, v):
     }
     if v.get("assets") and v["assets"].startswith("http"):
         props["Assets"] = {"url": v["assets"]}
-    watch = v["reference"].get("watch", "")
-    if watch.startswith("http"):
-        props["Reference"] = {"url": watch}
-    if v.get("outlier") is not None:
-        props["Outlier"] = {"number": v["outlier"]}
+    # Reference column = the public Original link (recipients have no Sandcastles account).
+    original = v["reference"].get("original", "")
+    if original.startswith("http"):
+        props["Reference"] = {"url": original}
 
     body = []
     topics = v.get("topics", "")
