@@ -40,9 +40,8 @@ def client():
     if not token:
         sys.exit("NOTION_TOKEN not set. Copy content-researcher/.env's token into notion-batch/.env")
     from notion_client import Client
-    # Pin the stable API version: keeps databases single-source (properties live on
-    # the database itself, not a separate data_source) — matches this tool's model.
-    return Client(auth=token, notion_version="2022-06-28")
+    # notion-client 3.x speaks the multi-source API natively — use its default version.
+    return Client(auth=token)
 
 
 def page_id_from_url(url: str) -> str:
@@ -101,22 +100,26 @@ def bullet(text):
 def cmd_setup(args):
     notion = client()
     parent = page_id_from_url(args.parent)
+    schema = {
+        "Video": {"title": {}},
+        "Batch": {"select": {}},
+        "Status": {"select": {"options": [{"name": n, "color": c} for n, c in STATUS_OPTIONS]}},
+        "Format": {"rich_text": {}},
+        "Props": {"rich_text": {}},
+        "Assets": {"url": {}},
+        "Reference": {"url": {}},
+        "Outlier": {"number": {"format": "number"}},
+    }
+    # notion-client 3.x (new multi-source API): schema lives under initial_data_source,
+    # and pages attach to the data source, not the database.
     db = notion.databases.create(
         parent={"type": "page_id", "page_id": parent},
         title=rt(args.title),
-        properties={
-            "Video": {"title": {}},
-            "Batch": {"select": {}},
-            "Status": {"select": {"options": [{"name": n, "color": c} for n, c in STATUS_OPTIONS]}},
-            "Format": {"rich_text": {}},
-            "Props": {"rich_text": {}},
-            "Assets": {"url": {}},
-            "Reference": {"url": {}},
-            "Outlier": {"number": {"format": "number"}},
-        },
+        initial_data_source={"properties": schema},
     )
     url = db.get("url", "")
-    save_config({"database_id": db["id"], "url": url})
+    ds_id = db.get("data_sources", [{}])[0].get("id")
+    save_config({"database_id": db["id"], "data_source_id": ds_id, "url": url})
     print(f"Created database: {args.title}")
     print(f"URL: {url}")
     print("Saved database id to config.json. Now push a batch with:  python main.py push <batch.md> --batch \"Batch 4\"")
@@ -187,10 +190,13 @@ def cmd_push(args):
     if not videos:
         sys.exit("No videos found in that doc (placeholders are skipped). Fill real video pages first.")
 
+    ds_id = cfg.get("data_source_id")
+    if not ds_id:
+        sys.exit("config.json has no data_source_id — re-run setup.")
     for v in videos:
         props, body = video_to_page(cfg["database_id"], args.batch, v)
         page = notion.pages.create(
-            parent={"database_id": cfg["database_id"]},
+            parent={"type": "data_source_id", "data_source_id": ds_id},
             properties=props,
             children=body[:100],
         )
