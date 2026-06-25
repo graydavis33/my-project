@@ -2,10 +2,12 @@
 
 A reusable doc for every shorts batch. Copy it and fill one page per video.
 
+When you copy this for a real batch, title it: "Sai Shorts — Batch N Reference Doc".
+
 Who reads this:
 - Gray — everything needed to prep, film, and present.
 - Sai — reads the purpose and the hooks, approves each video, answers the questions at the end.
-- Editor — reads the Foundation once, then builds each video straight from its page.
+- Editor — reads the Foundation once, then builds each video straight from its Editor brief.
 
 Rules for this doc: plain language, short lines, one video per page. Enough context to know exactly what each video looks like and why it exists — nothing more.
 
@@ -56,6 +58,14 @@ Graphics and effects: [what the editor builds — house style plus the specific 
 
 Physical mechanic: [any prop or action, aiming to become a recurring signature — or "none"]
 
+Editor brief: [the build recipe — the only block the editor needs to assemble this video]
+- Structure: [the beat order to assemble — e.g. hook, then item 1-5, then close]
+- Keep / drop: [what to keep from the raw takes, what to cut — bad takes, dead air, restarts]
+- Graphics to build: [the exact list of cards, animations, or HyperFrames comps, in order]
+- Captions: [house style unless noted — Montserrat SemiBold, lowercase except I, no punctuation, hard cuts]
+- Length and pace: [target runtime and feel]
+- Deliverable: [aspect ratio, format, where it goes]
+
 Reference: [creator] — "[title]" — [outlier]x
 - Watch: [sandcastles link]
 - Original: [platform link]
@@ -86,6 +96,14 @@ Graphics and effects:
 
 Physical mechanic:
 
+Editor brief:
+- Structure:
+- Keep / drop:
+- Graphics to build:
+- Captions:
+- Length and pace:
+- Deliverable:
+
 Reference:
 - Watch:
 - Original:
@@ -111,6 +129,7 @@ Every "From Sai" line gathered in one place, so Gray can route them all to Sai i
 Internal — Gray only. Not for Sai or the editor.
 
 Changelog:
+- v3 (2026-06-24): Added a dedicated Editor brief block to every video page (structure, keep/drop, graphics to build, captions, length/pace, deliverable) — the editor now builds straight from one block instead of stitching camera-shots + graphics. Set the per-batch title convention: "Sai Shorts — Batch N Reference Doc".
 - v2 (2026-06-24): Rebuilt clean. One page per video, plain language, no emojis, minimal symbols. Locked the per-video fields: format, purpose, topics, verbal hook, visual hook, style, camera shots, graphics and effects, physical mechanic, reference, from Sai.
 - v1 (2026-06-24): First version. Foundation plus per-video blocks plus editor brief.
 
