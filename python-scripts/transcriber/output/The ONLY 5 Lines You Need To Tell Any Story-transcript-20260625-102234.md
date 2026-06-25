@@ -1,0 +1,66 @@
+# Transcript: The ONLY 5 Lines You Need To Tell Any Story
+
+*Transcribed: 2026-06-25 10:22*  
+*Duration: 9m 31s*  
+*Segments: 170*
+
+---
+
+I used to spend hours trying to plan a video and still have no idea what I was actually trying to say. I would make an outline, rewrite, scrap it and start all over again. Or I'd skip it all and just start filming, hoping I would figure it all out in the edit. But then I'd be staring at a messy timeline with no clue what the story was actually supposed to be. I was overthinking, totally getting lost in the details. Until I started doing something so stupidly simple, I couldn't believe it actually worked.
+
+Five lines, that's it. And suddenly, every story clicked. You know, most comments I get are about my storytelling. So today, I'll show you a little secret. Because when you've written down these five lines, you've got a blueprint to create a story and a script that actually makes people feel something. To create something with a heart.
+
+You know, before YouTube, I ran my own video agency together with a friend and we created all kinds of stuff. We did a lot of commercials. We made series, small documentaries. And you know, I always loved to do crazy stuff. Come up with crazy concepts, weird transitions in the scripts. And I think it really made the advertisements and the videos we made a lot more awesome.
+
+But what I kept bumping into over and over again, it doesn't matter if you're alone or working with a big crew or doing YouTube. Filmmaking is a lot of decision making. And what happens time after time, that in this chaos of decision making, you're losing. The core of the story. And this is a big issue because the core of your story is one of the most important things. Because if you don't know what the story is really about, no editing trick or no camera trick is going to save you from that.
+
+So then how do you get clear what your story is actually about? Well, that's where the five line story method comes in. So this is the method that I've been using to create almost all my story driven videos. The only thing you have to do is write five lines. So watch. This.
+
+So your first line will be about the situation. That's the starting point. Where are we and what's happening and how does the world look like where we're in? The second line will be about the desire. So what does the character want? What does she want to obtain or what does he want to reach?
+
+The third line is about the conflict. What gets in the way? Where's the tension or what is an obstacle that makes it hard to reach the desire? Then the fourth line is going to be about change. So what happens that shifts something? This could be a turning point.
+
+To. The. Story. Something big or something small or just a different way of seeing something. And then the fifth and last line is going to be the result. So how does it end?
+
+What's the new reality and how is the situation different now from when we started? Now, this might all sound very simple and easy, but believe me when I say that simple is good with filmmaking. Because these five lines will help you to see the whole story before you get distracted by everything else. By gear transitions, voiceovers, endless color grading, you name it. There are so many details. And so many choices to be made.
+
+So if you nail these five lines first, you've got the emotional core of your story. It's like the life threat. Now I'm going to explain why this works so well. But first I want to show you a little example of how even big Hollywood films use this structure for their movies. So let me show you with a story that you definitely know. The Lion King.
+
+Let's start with the situation. Simba is a young prince excited to one day rule the Pride Lands. The desire? He wants to prove he's. Brave and worthy of being a king. The conflict?
+
+After his father's death, Simba runs away, ashamed and afraid to face his past. Then the change? Simba grows up and with help from his friends and a vision from his father, Simba returns to confront Scar and take his place as a king. And the result? He restores balance to the Pride Lands and steps fully into who he was meant to be. So obviously there's missing quite some details to make the story a little bit.
+
+Richer. But it is the whole story. And the funny thing is, once I started using this method, I started seeing this in every movie that I saw. And probably you will too. Now, next time when you watch a movie, you will probably see the point where the conflict is introduced or where the desire is introduced. So I'm sorry if no movie will be the same anymore for you.
+
+But you know, it's not just the beginner's trick. It's just how almost every story works. So now let's break down each line to see why. It actually matters. The situation where we are is very important because it gives the viewer a clear starting point of where we are, what's happening and who's in the story. They will know the world that we're in and what we're actually talking about.
+
+The desire that really shows the goal or the needs that's driving the story. And this usually really sparks the curiosity of the audience. And this is the part where people will lean more into the story and they start to care about whether you're getting the thing or not. And the audience will start to feel invested in the story. And maybe? The thing.
+
+That the main character wants is something they want as well. So the third one, the conflict introduces tension or an obstacle. And this is really something that stories need, because if there's no tension, if there's no obstacle, if there's no challenge, there's not really a reason to keep watching for the audience. So the fourth one is change. And this really marks a turning point in the story. So it could be an insight or an action or anything that shifts everything.
+
+You know, it really shows growth and it gives the audience the feeling of movement forward. The fifth result. So this should really give your audience a satisfying takeaway, a feeling of closure and ending. And it should be something that ties everything of the whole story together. And it shows how the world or the situation or the character is different from the starting point. Together, these five lines are just how we naturally process every story.
+
+So I'm going to show you an example of how these five lines actually play out in one of my own YouTube videos. But first, I want you to know that these five lines are not just a story. These five lines aren't your whole video. They are some sort of launchpad. You can use them to kick off your story and start building from your five lines, or you can use them to come back at any time when your project is overwhelming you to take a look again at your five lines and to see the things that you are building in your story. If you can connect them back to one of your five lines.
+
+Okay. So now I'm going to show you how one of my own YouTube videos that's over eight minutes long can be downgraded to just five lines. Watch this. I'm a filmmaker from the Netherlands and I've loved making videos since I was a kid. My dream was to be a YouTuber and sharing stories from the heart, not just for clients. But every time I tried to start, self-doubt and overthinking pulled me back.
+
+When I let go of the YouTube dream, I finally realized I was focusing on the wrong reasons and I just wanted to create stories. So I finally sat down and started. And this video is the result. And that first step pushed me to go all in. I'm going to show you how I got my first YouTube video. I'm going to show you how I got my first YouTube video.
+
+And that's how I got my first YouTube video. So that was basically the whole story of my first YouTube video in five lines. And now the cool thing is when you can do it with five lines, you can do it with 10 as well. Watch this. I'm a filmmaker from the Netherlands and I've loved making videos since I was a kid. My dream was to be a YouTuber and sharing stories from the heart, not just for clients.
+
+Every time I tried to start, self-doubt and overthinking pulled me back. My mind. I kept yelling. You can't go from making ads for big companies to making YouTube videos. Those fears became excuses. I'm too late.
+
+I'm too old. I don't have enough skills, gear, security. So I let go of the big YouTube dream. And at first it felt good and I felt free. But then the same question kept coming back. Why did I actually want to do YouTube all the time?
+
+When I stripped away few subscribers and money, I realized it's about the joy of creating and sharing stories. That realization made me push through self-doubts, focus on the process. And the video you're watching right now is the result of that. It wasn't easy, but I already learned so much. And it even made me go all in on YouTube and share every lesson along the way. So going from five lines to 10 lines doesn't change the core of the story.
+
+It just adds more richness and more details. And I could show you the 20 line version now as well. But I think you get the point. I could continue showing you more lines. Until I show you the whole video. So if you can do five lines, you can expand and expand more and create a whole story.
+
+So you've seen now how these five lines can help you to guide an entire video. But if you find it still really hard to create your own story driven videos or to finish them. Or you just want to become a better storyteller by actually creating something. Instead of watching endless tutorials like this one. Then you could get my story starter kit. It will help you to turn your five lines into an action.
+
+It will help you to create your own story. It will help you to create your own visual shot list. It helps you to edit your story with my editing templates. And it guides you step by step with a video walkthrough with a lot of extra tips and inspiration. I just launched the kit last month. So it's still available for a launch price.
+
+I think it's very affordable. And if it might be something for you, just check out the link in the description. And if not, really not a problem. You can still use this method for your next project. So thanks for watching. And if you now want to know the nine only simple shots.
+
+Watch this video next. Cheers.
+

@@ -42,6 +42,8 @@ Always read `business/social-media/story-arc-playbook/playbook.md` (universal la
 
 The stable spine you already carry: the **11-step writing process** (lock inputs → fact bank → emotion → hook → structure → outline → write → audit → jagged-edge → friend test → deliver) and the **5 universal laws** (expectations-vs-reality; topic clarity in sentence one; open loops/curiosity gaps; speed-to-value; name your frameworks).
 
+**For documentary / long-form, do Step 0 first: the Five-Line Story Method (`frameworks.md` → `09-five-line-story-method`).** Before any hook or outline, write the five lines — Situation → Desire → Conflict → Change → Result — to lock the emotional core. Derive the cold open from line 1 + line 3, the Story Lens from line 2 vs line 3, then expand 5 → 10 → 20 lines into the beat sheet (the core never changes, only the richness). Every later beat must trace back to one of the five lines or it gets cut.
+
 ## Step 5 — Research + Shock-Score gate
 
 For topic/outlier modes, use `WebSearch` to build a fact bank. Rate each fact 1–100 ("how many in the audience already know this?"). **Keep only facts scoring 70+.** Skip research for pure voice-memo re-scripting where Sai's own words are the substance.

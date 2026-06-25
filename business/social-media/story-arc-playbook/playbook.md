@@ -1,6 +1,6 @@
 # Story Arc Playbook
 
-The single most-referenced doc for every script Gray writes — long-form documentary, sit-down talking head, or short. This is the opinionated synthesis of 8 elite-creator references (6 Kallaway, 2 Personal Brand Launch / Ava). Open this first. Pick the arc that fits your format. Then go.
+The single most-referenced doc for every script Gray writes — long-form documentary, sit-down talking head, or short. This is the opinionated synthesis of 9 elite-creator references (6 Kallaway, 2 Personal Brand Launch / Ava, 1 Tim Runia / story-driven documentary). Open this first. Pick the arc that fits your format. Then go.
 
 ---
 
@@ -13,7 +13,7 @@ The single most-referenced doc for every script Gray writes — long-form docume
 
 **How this connects to the rest of the folder:**
 - `playbook.md` (this doc) = the master. The "why" + the "when to use what."
-- `references/01-...md` through `references/08-...md` = the source breakdowns. Cite them in any future script doc as `from 04-irresistible-hooks`, etc. Go back to them when you want verbatim hook examples or deeper teaching from one specific creator.
+- `references/01-...md` through `references/09-...md` = the source breakdowns. Cite them in any future script doc as `from 04-irresistible-hooks`, etc. Go back to them when you want verbatim hook examples or deeper teaching from one specific creator. (`09-five-line-story-method` is the front-half / story-finding reference — the only story-driven-documentary source in the set.)
 - Future `templates/` folder = the fill-in-the-blank script templates for each format (documentary intro, talking-head outline, short script). Those templates are this playbook collapsed into checklists.
 - Future `frameworks.md` = the named frameworks (Hook Stack, Curiosity Loop, 5x Rule, etc.) defined in one place for quick lookup.
 
@@ -74,6 +74,8 @@ These are the things ALL 8 references agree on, regardless of creator or format.
 This is the format where most footage is captured live, with minimal edits except the first 30 seconds, plus talking-head inserts to fill gaps or add context.
 
 **Recommended arc (step-by-step):**
+
+0. **Write the Five Lines FIRST (from 09-five-line-story-method) — before the hook, before filming the A-roll.** This is the fix for "doc reads like a tutorial, not a story." Lock the emotional core in five sentences: **Situation → Desire → Conflict → Change → Result.** (e.g., for a week with the $40K wedding videographer: *Situation* — a videographer who looks like every other freelancer; *Desire* — he wants to charge premium and be booked solid; *Conflict* — everyone competes on gear and price, a race to the bottom; *Change* — he builds one boring Monday business habit; *Result* — $40K/wedding, fully booked, by doing the thing no one films.) Then derive the cold open from line 1 + line 3, declare the Story Lens from line 2 vs line 3, and **tape the five lines above your timeline as the cut-filter** — any clip that can't connect back to a line gets cut. Expand 5 → 10 → 20 lines for the full beat sheet; the core never changes, only the richness.
 
 1. **A-roll cold open hook (0:00–0:30) — heavily edited.** Run Kallaway's intro framework (from 01-killer-script):
    - Line 1 — **Immediate context** (click confirmation): name the topic in the first sentence. *"This is a week with a videographer who charges $40K per wedding."*

@@ -205,6 +205,24 @@ Parts 4 and 5 can swap order.
 
 ## Story / arc frameworks
 
+### The Five-Line Story Method (Tim Runia, from 09-five-line-story-method)
+**This is Step 0 for any story-driven video. Write it BEFORE the hook, before gear, before the edit.**
+
+**Definition:** Five sentences that capture the entire story's emotional core. Each answers one question:
+1. **Situation** — where are we, what's happening, what does the world look like? (the starting point)
+2. **Desire** — what does the character want to obtain or reach?
+3. **Conflict** — what gets in the way? where's the tension / obstacle?
+4. **Change** — what shifts? the turning point (an insight or an action, big or small).
+5. **Result** — how does it end? the new reality, and how it differs from line 1.
+
+**The Launchpad principle:** the five lines are NOT the script — they're (a) the thing you write first to find the core, and (b) the thing you return to whenever the project overwhelms you. The cut-filter: *if a clip / VO / transition can't connect back to one of the five lines, it's noise — cut it.*
+
+**Expansion:** the same core scales 5 → 10 → 20 → whole video. Adding lines only adds richness; it never changes the core. Draft the 5, confirm the arc holds, then expand only along lines that already exist.
+
+**When to use:** Every long-form (mandatory front step — locks the story before A-roll, per the long-form SOP). Also works as the skeleton for a 30–60s short (situation → desire → conflict → change → result in five tight beats). Pairs with **The Dance** (context↔conflict = lines 1/2 vs line 3), **But/Therefore** (the connective tissue between expanded beats), and **Expectations vs Reality** (make the Result beat what line 1 set up).
+
+---
+
 ### Hook → Body → Re-hook → Body → Outro (the master architecture, from 03-cant-stop-watching)
 **This is the structural skeleton for every video Gray makes. Memorize the shape.**
 
