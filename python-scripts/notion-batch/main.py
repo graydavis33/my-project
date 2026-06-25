@@ -40,7 +40,9 @@ def client():
     if not token:
         sys.exit("NOTION_TOKEN not set. Copy content-researcher/.env's token into notion-batch/.env")
     from notion_client import Client
-    return Client(auth=token)
+    # Pin the stable API version: keeps databases single-source (properties live on
+    # the database itself, not a separate data_source) — matches this tool's model.
+    return Client(auth=token, notion_version="2022-06-28")
 
 
 def page_id_from_url(url: str) -> str:
