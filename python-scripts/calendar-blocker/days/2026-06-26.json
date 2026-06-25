@@ -1,0 +1,18 @@
+{
+  "date": "2026-06-26",
+  "blocks": [
+    {"start": "08:00", "end": "08:30", "title": "Plan & Prime", "desc": "Set the day's 3 targets. Quick inbox scan only — no replying.", "color": 5},
+    {"start": "08:30", "end": "10:30", "title": "🔒 Deep Work 1 — Long-form", "desc": "Peak hours. Scripting, story design, editing. Phone away, no Slack.", "color": 9},
+    {"start": "10:30", "end": "10:45", "title": "Break", "desc": "Walk / reset.", "color": 8},
+    {"start": "10:45", "end": "12:00", "title": "🔒 Deep Work 2 — Production", "desc": "Batch docs, graphics, content creation.", "color": 9},
+    {"start": "12:00", "end": "12:15", "title": "📌 Daily Post", "desc": "Post the day's content (same time every day). PLACEHOLDER 12:00pm — change if needed.", "color": 6},
+    {"start": "12:15", "end": "13:00", "title": "Lunch", "desc": "Real break, off-screen.", "color": 8},
+    {"start": "13:00", "end": "14:30", "title": "Editor Team & Handoffs", "desc": "Review editor cuts, give feedback, prep batches.", "color": 7},
+    {"start": "14:30", "end": "14:45", "title": "Break", "desc": "Reset.", "color": 8},
+    {"start": "14:45", "end": "16:00", "title": "Research & Your Brand", "desc": "Sandcastles / format research, Graydient content.", "color": 3},
+    {"start": "16:00", "end": "16:45", "title": "Comms Batch", "desc": "Email, Sai messages, scheduling — all at once.", "color": 5},
+    {"start": "16:45", "end": "17:00", "title": "Shutdown", "desc": "Close loops, set up tomorrow. Clean stop.", "color": 8},
+    {"start": "17:00", "end": "18:30", "title": "🏋️ Gym", "desc": "", "color": 10},
+    {"start": "20:00", "end": "22:00", "title": "🔒 Deep Work — Flexible (TBD)", "desc": "Night deep-work block. Rename when you know what it is — move/resize freely.", "color": 9}
+  ]
+}
