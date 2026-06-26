@@ -34,6 +34,13 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+# Windows consoles default to cp1252, which can't print the emoji block titles.
+# Force UTF-8 so list/block work without a PYTHONUTF8 env flag.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, ValueError):
+    pass
+
 HOME = Path.home()
 TOKEN_PATH = HOME / ".calendar-mcp" / "credentials.json"          # MCP-saved OAuth token
 KEYS_PATH = HOME / ".calendar-mcp" / "gcp-oauth.keys.json"        # OAuth app (client id/secret)
@@ -150,7 +157,7 @@ def cmd_block(file_path):
         print("Run `python gcal.py setup` first.")
         return
 
-    data = json.loads(Path(file_path).read_text())
+    data = json.loads(Path(file_path).read_text(encoding="utf-8"))
     date = data["date"]
     made = 0
     for b in data["blocks"]:
@@ -181,8 +188,8 @@ def cmd_list(date):
     tmax = f"{date}T23:59:59Z"
     # widen window a bit for timezone offset safety
     events = svc.events().list(
-        calendarId=cal_id, timeMin=f"{date}T00:00:00-12:00",
-        timeMax=f"{date}T23:59:59+12:00", singleEvents=True, orderBy="startTime",
+        calendarId=cal_id, timeMin=f"{date}T00:00:00+14:00",
+        timeMax=f"{date}T23:59:59-12:00", singleEvents=True, orderBy="startTime",
     ).execute().get("items", [])
     if not events:
         print(f"No blocks on {date}.")
@@ -201,8 +208,8 @@ def cmd_clear(date):
         print("Run `python gcal.py setup` first.")
         return
     events = svc.events().list(
-        calendarId=cal_id, timeMin=f"{date}T00:00:00-12:00",
-        timeMax=f"{date}T23:59:59+12:00", singleEvents=True,
+        calendarId=cal_id, timeMin=f"{date}T00:00:00+14:00",
+        timeMax=f"{date}T23:59:59-12:00", singleEvents=True,
     ).execute().get("items", [])
     n = 0
     for e in events:

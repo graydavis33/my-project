@@ -1,18 +1,14 @@
 {
   "date": "2026-06-26",
   "blocks": [
-    {"start": "08:00", "end": "08:30", "title": "Plan & Prime", "desc": "Set the day's 3 targets. Quick inbox scan only — no replying.", "color": 5},
-    {"start": "08:30", "end": "10:30", "title": "🔒 Deep Work 1 — Long-form", "desc": "Peak hours. Scripting, story design, editing. Phone away, no Slack.", "color": 9},
-    {"start": "10:30", "end": "10:45", "title": "Break", "desc": "Walk / reset.", "color": 8},
-    {"start": "10:45", "end": "12:00", "title": "🔒 Deep Work 2 — Production", "desc": "Batch docs, graphics, content creation.", "color": 9},
-    {"start": "12:00", "end": "12:15", "title": "📌 Daily Post", "desc": "Post the day's content (same time every day). PLACEHOLDER 12:00pm — change if needed.", "color": 6},
-    {"start": "12:15", "end": "13:00", "title": "Lunch", "desc": "Real break, off-screen.", "color": 8},
-    {"start": "13:00", "end": "14:30", "title": "Editor Team & Handoffs", "desc": "Review editor cuts, give feedback, prep batches.", "color": 7},
-    {"start": "14:30", "end": "14:45", "title": "Break", "desc": "Reset.", "color": 8},
-    {"start": "14:45", "end": "16:00", "title": "Research & Your Brand", "desc": "Sandcastles / format research, Graydient content.", "color": 3},
-    {"start": "16:00", "end": "16:45", "title": "Comms Batch", "desc": "Email, Sai messages, scheduling — all at once.", "color": 5},
-    {"start": "16:45", "end": "17:00", "title": "Shutdown", "desc": "Close loops, set up tomorrow. Clean stop.", "color": 8},
-    {"start": "17:00", "end": "18:30", "title": "🏋️ Gym", "desc": "", "color": 10},
-    {"start": "20:00", "end": "22:00", "title": "🔒 Deep Work — Flexible (TBD)", "desc": "Night deep-work block. Rename when you know what it is — move/resize freely.", "color": 9}
+    {"start": "09:00", "end": "10:15", "title": "🔒 Deep Work 1 — Long-Form Pre-Production", "desc": "Peak hour, biggest lift. Props, locations, scene/shot list, script, edit + film direction. Push hard until you head out.", "color": 9},
+    {"start": "10:15", "end": "11:15", "title": "🚆 Out — Penn Station (sign lease, 11:00 AM)", "desc": "Head down, sign the lease, back by 11:15. Laundromat here if there's time.", "color": 11},
+    {"start": "11:15", "end": "11:45", "title": "🔒 Deep Work 2 — Shorts Batch Brief (Batch 4)", "desc": "Back at the desk. Build the Batch 4 brief — what to film + how it'll be edited.", "color": 9},
+    {"start": "11:45", "end": "12:00", "title": "📌 Daily Post", "desc": "LinkedIn must be live by end of this block.", "color": 6},
+    {"start": "12:00", "end": "12:45", "title": "🍽 Lunch", "desc": "Off-screen.", "color": 8},
+    {"start": "12:45", "end": "14:15", "title": "🔒 Deep Work 2 (cont.) — finish Batch 4 Brief", "desc": "Production before any handoff. If it's not done, carry it.", "color": 9},
+    {"start": "14:15", "end": "17:45", "title": "🔒 Deep Work 3 — Continuation", "desc": "Mop up everything unfinished from DW1 + DW2: today's short edit, Batch 4 spillover, then long-form. Take a short break as needed. Laundromat if not done earlier.", "color": 9},
+    {"start": "18:00", "end": "20:00", "title": "🏋️ Gym + Dinner", "desc": "Lift, then dinner. Eaten by 8:00.", "color": 10},
+    {"start": "20:30", "end": "22:30", "title": "🔒 Flexible Deep Work — Long-Form", "desc": "Won't finish long-form today, but push it forward.", "color": 9}
   ]
 }
