@@ -2,12 +2,12 @@
   "date": "2026-06-26",
   "blocks": [
     {"start": "09:00", "end": "10:15", "title": "🔒 Deep Work 1 — Shorts Batch Brief (Batch 4)", "desc": "Build the Batch 4 brief (plan, not edit).\n• List each video's concept + format\n• What to film for each: props, setup, physical mechanic\n• How each gets edited: structure, graphics, captions\n• Get as far as you can before heading out", "color": 9},
-    {"start": "10:15", "end": "11:15", "title": "🚆 Out — Penn Station (sign lease, 11:00 AM)", "desc": "• Head down to Penn Station\n• Sign the lease at 11:00 AM\n• Back at the desk by 11:15\n• Laundromat here if there's time", "color": 11},
+    {"start": "10:15", "end": "11:15", "title": "🚆 Out — Penn Station (sign lease, 11:00 AM)", "desc": "• Head down to Penn Station\n• Sign the lease at 11:00 AM\n• Back at the desk by 11:15", "color": 11},
     {"start": "11:15", "end": "11:45", "title": "🔒 Deep Work 2 — Long-Form Pre-Production", "desc": "Vault Vid 1 — pick up where it's paused.\n• Lock the rest of the intro + the 14-beat outline\n• Draft/refine script beats (narration + interview slots)", "color": 9},
     {"start": "11:45", "end": "12:00", "title": "📌 Daily Post", "desc": "LinkedIn post — must be live by 12:00.", "color": 6},
     {"start": "12:00", "end": "12:45", "title": "🍽 Lunch", "desc": "Real break, off-screen.", "color": 8},
     {"start": "12:45", "end": "14:15", "title": "🔒 Deep Work 2 (cont.) — Long-Form Pre-Production", "desc": "Vault Vid 1 — keep building.\n• Build the shot list: props, location, framing, shot length per scene\n• Note VFX / vault-reveal needs for the first 30–60s\n• Tighten logistics: locations, who's in each scene", "color": 9},
-    {"start": "14:15", "end": "17:45", "title": "🔒 Deep Work 3 — Continuation", "desc": "Mop up unfinished work.\n• Edit today's short to final\n• Finish any Batch 4 brief spillover\n• Back to long-form if the short is done\n• Short break as needed; laundromat if not done earlier", "color": 9},
+    {"start": "14:15", "end": "17:45", "title": "🔒 Deep Work 3 — Continuation", "desc": "Mop up unfinished work.\n• Edit today's short to final\n• Finish any Batch 4 brief spillover\n• Back to long-form if the short is done\n• Short break as needed", "color": 9},
     {"start": "18:00", "end": "20:00", "title": "🏋️ Gym + Dinner", "desc": "Lift, then dinner — eaten by 8:00.", "color": 10},
     {"start": "20:30", "end": "22:30", "title": "🔒 Flexible Deep Work — Long-Form", "desc": "Push Vault Vid 1 forward.\n• More script / beat detail\n• Tighten shot list + logistics (locations, scheduling)\n• Set tomorrow's first long-form target", "color": 9}
   ]
