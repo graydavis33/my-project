@@ -1,9 +1,10 @@
 """
 notion-batch — push Sai shorts batch docs into a Notion database.
 
-Each video becomes its own Notion page in the "Sai Shorts — Batches" database,
-with columns (Batch, Status, Format, Orientation, Hook pick, Props, Assets,
-Reference) and a rich body (Topics, Verbal/Visual hooks A-B-C, Editor brief).
+Each video becomes its own Notion page in the "Sai Shorts — Batches" database.
+The outside DB stays simple: Batch, Status, Format, Orientation, Sai notes,
+Assets, Reference. The page body holds the detail: Topics, Verbal/Visual hooks
+A-B-C, Hook pick, Props, Editor brief, Reference (Original link only).
 Each page also gets its own inline "Shot list" child database (one row per shot).
 
 Commands:
@@ -30,17 +31,26 @@ CONFIG = os.path.join(os.path.dirname(__file__), "config.json")
 STATUS_OPTIONS = [
     ("Draft", "default"),
     ("Needs Topics", "yellow"),
+    ("Sai Review", "orange"),
     ("Approved", "green"),
     ("Filmed", "blue"),
     ("Sent to Editor", "purple"),
+    ("Revisions", "red"),
     ("Posted", "pink"),
 ]
 
 ORIENTATION_OPTIONS = [("Horizontal", "blue"), ("Vertical", "orange")]
 
 # Per-video child shot-list database (mirrors Gray's Notion "Shot list" DB + editor columns).
-SECTION_OPTIONS = ["Intro", "Section 1", "Section 2", "Section 3", "Section 4", "Section 5", "Outro"]
-SHOT_TYPE_OPTIONS = ["EXTREME WIDE", "WIDE", "MEDIUM", "CLOSE UP", "EXTREME CLOSE UP", "SCREEN RECORD", "POV"]
+# Colorful selects — never leave them grayed out.
+SECTION_OPTIONS = [
+    ("Intro", "blue"), ("Section 1", "orange"), ("Section 2", "green"),
+    ("Section 3", "purple"), ("Section 4", "red"), ("Section 5", "yellow"), ("Outro", "pink"),
+]
+SHOT_TYPE_OPTIONS = [
+    ("EXTREME WIDE", "blue"), ("WIDE", "green"), ("MEDIUM", "purple"), ("CLOSE UP", "pink"),
+    ("EXTREME CLOSE UP", "red"), ("SCREEN RECORD", "gray"), ("POV", "orange"),
+]
 
 
 def client():
@@ -114,8 +124,7 @@ def cmd_setup(args):
         "Status": {"select": {"options": [{"name": n, "color": c} for n, c in STATUS_OPTIONS]}},
         "Format": {"rich_text": {}},
         "Orientation": {"select": {"options": [{"name": n, "color": c} for n, c in ORIENTATION_OPTIONS]}},
-        "Hook pick": {"rich_text": {}},
-        "Props": {"rich_text": {}},
+        "Sai notes": {"rich_text": {}},
         "Assets": {"url": {}},
         "Reference": {"url": {}},
     }
@@ -144,8 +153,6 @@ def video_to_page(db_id, batch, v):
         "Batch": {"select": {"name": batch}},
         "Status": {"select": {"name": status}},
         "Format": {"rich_text": rt(v.get("format", ""))},
-        "Hook pick": {"rich_text": rt(v.get("hook_pick", ""))},
-        "Props": {"rich_text": rt(v.get("props", ""))},
     }
     orientation = v.get("orientation", "")
     if orientation.startswith("Vertical"):
@@ -173,6 +180,12 @@ def video_to_page(db_id, batch, v):
             val = block.get(opt, "")
             body.append(bullet(f"{opt}: {val}".rstrip(": ")))
 
+    body.append(heading("Hook pick"))
+    body.append(para(v.get("hook_pick", "") or "Sai picks; blank = editor gets all options."))
+
+    body.append(heading("Props"))
+    body.append(para(v.get("props", "") or "none"))
+
     body.append(heading("Editor brief"))
     for k, val in v.get("editor", {}).items():
         body.append(bullet(f"{k}: {val}".rstrip(": ")))
@@ -183,13 +196,9 @@ def video_to_page(db_id, batch, v):
     body.append(heading("Reference"))
     if v["reference"].get("label"):
         body.append(para(v["reference"]["label"]))
-    links = []
-    if v["reference"].get("watch", "").startswith("http"):
-        links += link_rt("Watch", v["reference"]["watch"]) + rt("   ")
+    # Original link only — never the Sandcastles Watch link (recipients have no account).
     if v["reference"].get("original", "").startswith("http"):
-        links += link_rt("Original", v["reference"]["original"])
-    if links:
-        body.append(para_rich(links))
+        body.append(para_rich(link_rt("Original", v["reference"]["original"])))
 
     return props, body
 
@@ -211,8 +220,8 @@ def create_shot_list_db(notion, page_id, shots):
     """
     schema = {
         "Shot name": {"title": {}},
-        "Section": {"select": {"options": [{"name": n} for n in SECTION_OPTIONS]}},
-        "Shot type": {"select": {"options": [{"name": n} for n in SHOT_TYPE_OPTIONS]}},
+        "Section": {"select": {"options": [{"name": n, "color": c} for n, c in SECTION_OPTIONS]}},
+        "Shot type": {"select": {"options": [{"name": n, "color": c} for n, c in SHOT_TYPE_OPTIONS]}},
         "Duration": {"rich_text": {}},
         "Prop": {"rich_text": {}},
         "Graphics / effect": {"rich_text": {}},
@@ -277,7 +286,12 @@ def cmd_push(args):
 
 
 def cmd_migrate(args):
-    """Add the v5 columns (Orientation, Hook pick) to an existing Batches database."""
+    """Align an existing Batches database with the simple v5 schema.
+
+    Ensures Orientation + Sai notes columns exist. Hook pick and Props moved into
+    the page body, so their outside columns are no longer used — delete them by
+    hand in Notion (deleting here would drop any data already in them).
+    """
     notion = client()
     cfg = load_config()
     ds_id = cfg.get("data_source_id")
@@ -285,9 +299,11 @@ def cmd_migrate(args):
         sys.exit("config.json has no data_source_id — re-run setup.")
     notion.data_sources.update(data_source_id=ds_id, properties={
         "Orientation": {"select": {"options": [{"name": n, "color": c} for n, c in ORIENTATION_OPTIONS]}},
-        "Hook pick": {"rich_text": {}},
+        "Sai notes": {"rich_text": {}},
+        "Status": {"select": {"options": [{"name": n, "color": c} for n, c in STATUS_OPTIONS]}},
     })
-    print("Added Orientation + Hook pick columns to the existing Batches database.")
+    print("Ensured Orientation + Sai notes columns and refreshed Status options.")
+    print("Now delete the unused 'Hook pick' and 'Props' columns by hand (they moved into the page body).")
 
 
 def cmd_find(args):

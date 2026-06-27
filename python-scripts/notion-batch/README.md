@@ -12,17 +12,17 @@ A database **"Sai Shorts — Batches"** where each row = one video:
 |---|---|---|
 | Video | Title | "1A — 5 small things I did to grow my business" |
 | Batch | Select | "Batch 4" — filter to one batch |
-| Status | Select | Draft / Needs Topics / Approved / Filmed / Sent to Editor / Posted |
-| Format | Text | the one-line structure |
+| Status | Select | Draft / Needs Topics / Sai Review / Approved / Filmed / Sent to Editor / Revisions / Posted |
+| Format | Text | simple 3–5 word description of the video (10 max) |
 | Orientation | Select | Horizontal / Vertical (vertical = single-purpose Sandcastles replica) |
-| Hook pick | Text | which hook(s) to use; blank = editor gets all options |
-| Props | Text | physical product / prop / costume / signature action |
+| Sai notes | Text | Sai's notes, filled in Notion |
 | Assets | URL | Google Drive folder the editor downloads graphics + b-roll from |
-| Reference | URL | clickable link to the Sandcastles outlier |
+| Reference | URL | the public Original link (never the Sandcastles Watch link) |
 
-Each page body holds: Topics (Sai-to-fill callout), Verbal hook A/B/C, Visual hook A/B/C,
-Editor brief (Structure / Captions / Length / Deliverable + Keep-drop), and clickable
-Watch/Original links.
+The outside DB stays deliberately simple. Each page **body** holds the detail: Topics
+(Sai-to-fill callout), Verbal hook A/B/C, Visual hook A/B/C, **Hook pick**, **Props**,
+Editor brief (Structure / Captions / Length / Deliverable + Keep-drop), and the
+Reference **Original link only**.
 
 Each page also gets its **own inline "Shot list" child database** (one row per shot) mirroring
 Gray's Notion Shot list DB: Section, Shot name, Shot type, Complete?, Shot Notes, Time of Day,
