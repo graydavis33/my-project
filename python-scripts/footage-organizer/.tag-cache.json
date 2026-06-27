@@ -5811,5 +5811,665 @@
         "basketball hoop"
       ]
     }
+  },
+  "974a0397d1c347190880904cbe563afd": {
+    "filename": "C1403.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball hoop",
+        "scoreboard",
+        "hardwood floor"
+      ]
+    }
+  },
+  "789781901d491aa8e03e97f21b9af78f": {
+    "filename": "C1403.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball hoop",
+        "scoreboard",
+        "basketball court"
+      ]
+    }
+  },
+  "4207b8f34ed5b40fc27674945ae2ff3a": {
+    "filename": "C1405.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball",
+        "basketball hoop",
+        "scoreboard",
+        "hardwood floor"
+      ]
+    }
+  },
+  "5ab9668b847d41845de6405b4889d308": {
+    "filename": "C1405.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball hoop",
+        "scoreboard",
+        "basketball court"
+      ]
+    }
+  },
+  "fcc2504414f88f6562bc7cb4fbb1465e": {
+    "filename": "C1409.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball court",
+        "scoreboard",
+        "steel trusses",
+        "basketball hoop"
+      ]
+    }
+  },
+  "209ebd3a79d0ada03a8cdb93e3afe683": {
+    "filename": "C1409.mov",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "indoor arena",
+      "objects": [
+        "steel roof structure",
+        "marble floor",
+        "escalator",
+        "information board",
+        "ceiling lights"
+      ]
+    }
+  },
+  "768fe1c81b03f5e8b269a0830970beaf": {
+    "filename": "C1412.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor court",
+      "objects": [
+        "basketball",
+        "basketball hoop",
+        "court floor"
+      ]
+    }
+  },
+  "088e20eb7c204f3b0b089e6d0a16f053": {
+    "filename": "C1412.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor court",
+      "objects": [
+        "basketball",
+        "basketball hoop",
+        "steel truss"
+      ]
+    }
+  },
+  "940c3c12cad914d292ee120092dac2ce": {
+    "filename": "C1415.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor basketball court",
+      "objects": [
+        "basketball",
+        "basketball hoop",
+        "scoreboard",
+        "backboard"
+      ]
+    }
+  },
+  "bdabed0796790f3acc7a1cd6baa6f10e": {
+    "filename": "C1415.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball hoop",
+        "scoreboard",
+        "basketball court",
+        "bleachers"
+      ]
+    }
+  },
+  "5759b778c07ba941330d6bb83248f9e5": {
+    "filename": "C1418.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball",
+        "basketball hoop",
+        "hardwood floor"
+      ]
+    }
+  },
+  "496c8968b18d6c9cb1d35c439b4f2561": {
+    "filename": "C1418.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball court",
+        "sneakers",
+        "basketball"
+      ]
+    }
+  },
+  "2959a056d0f9dbf4c8039aebcb176fad": {
+    "filename": "C1420.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "talking",
+      "location": "park at night",
+      "objects": [
+        "park bench",
+        "laptop",
+        "street lamp",
+        "trees"
+      ]
+    }
+  },
+  "7a155da4a5da528229e76dbba561dd26": {
+    "filename": "C1420.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "stoic",
+      "action": "walking",
+      "location": "park path",
+      "objects": [
+        "street lamp",
+        "bench",
+        "fence",
+        "trees"
+      ]
+    }
+  },
+  "b0f1189714c5a1f79052f22605e0bab2": {
+    "filename": "C0485.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "talking",
+      "location": "podcast studio",
+      "objects": [
+        "microphone",
+        "acoustic guitar",
+        "headphones",
+        "keyboard",
+        "mic stand"
+      ]
+    }
+  },
+  "9d158324c22bda024f51a278b9b1ddb8": {
+    "filename": "C0495.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "nyc street",
+      "objects": [
+        "building",
+        "subway entrance",
+        "traffic cones",
+        "street signs",
+        "snow"
+      ]
+    }
+  },
+  "699b0073f566608934461a457bfd0112": {
+    "filename": "C0502.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "stoic",
+      "action": "walking",
+      "location": "nyc street",
+      "objects": [
+        "sneakers",
+        "pink shoes",
+        "concrete floor"
+      ]
+    }
+  },
+  "4fd6e9487fb96bb91bafcff5dd73474d": {
+    "filename": "C0505.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "browsing",
+      "location": "shoe store",
+      "objects": [
+        "nike sneakers",
+        "sneaker display",
+        "anthony edwards poster",
+        "backpack",
+        "shelves"
+      ]
+    }
+  },
+  "f69895cc2d149fd203b94e5d6305b2a6": {
+    "filename": "C0506.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "sitting",
+      "location": "sneaker store",
+      "objects": [
+        "white sneaker",
+        "sale tag",
+        "shoe shelves",
+        "backpack"
+      ]
+    }
+  },
+  "49fe1f7a574af096b6134b45532a6e16": {
+    "filename": "C0509.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "on-phone",
+      "location": "sneaker store",
+      "objects": [
+        "phone",
+        "sneakers",
+        "backpack",
+        "wooden box"
+      ]
+    }
+  },
+  "e6ec275d93ab08f0e81948da788128d0": {
+    "filename": "C0513.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "airport terminal",
+      "objects": [
+        "backpack",
+        "camera",
+        "monitor",
+        "luggage",
+        "rolling bag"
+      ]
+    }
+  },
+  "d091dbdf5b1fcf33fb79ae77968f2d52": {
+    "filename": "C0515.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "sitting",
+      "location": "shoe store",
+      "objects": [
+        "nike sneaker",
+        "shoe display",
+        "shopping bench"
+      ]
+    }
+  },
+  "afc4d93148f2a4377938b671debe07b9": {
+    "filename": "C0473.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "subway car",
+      "objects": [
+        "book",
+        "handrails",
+        "headphones",
+        "orange jacket",
+        "mta signs"
+      ]
+    }
+  },
+  "5728766ba10c143f9263c959498104e5": {
+    "filename": "C0474.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "sitting",
+      "location": "nyc subway",
+      "objects": [
+        "phone",
+        "laptop bag",
+        "subway map",
+        "subway poles",
+        "subway seats"
+      ]
+    }
+  },
+  "909e9103b10a59aed92f44d2420761bb": {
+    "filename": "C0475.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "subway",
+      "objects": [
+        "book",
+        "tie",
+        "handrail",
+        "subway seats",
+        "backpack"
+      ]
+    }
+  },
+  "1ce6f58dc5a697631840fa46c7727026": {
+    "filename": "C0476.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "walking",
+      "location": "nyc subway",
+      "objects": [
+        "turnstile",
+        "subway signs",
+        "railing",
+        "backpack"
+      ]
+    }
+  },
+  "e00f39b41571bb6888793564887799bc": {
+    "filename": "C0477.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "nyc subway",
+      "objects": [
+        "book",
+        "orange tie",
+        "subway seats",
+        "handrail",
+        "harry potter advertisement"
+      ]
+    }
+  },
+  "c6db4a002e117b7dd60e70ac04315c23": {
+    "filename": "C0424.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "apartment",
+      "objects": [
+        "clapperboard",
+        "guitar",
+        "baseball cap",
+        "christmas tree",
+        "window",
+        "marker"
+      ]
+    }
+  },
+  "dcfd1c986735dd06a7de849ec34fec85": {
+    "filename": "C0425.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "office window",
+      "objects": [
+        "window",
+        "writing",
+        "marker text",
+        "building",
+        "film clapperboard"
+      ]
+    }
+  },
+  "28eebfd9b7ecb3aa92d2b6770781ab52": {
+    "filename": "C0426.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "presenting",
+      "location": "home studio",
+      "objects": [
+        "phone",
+        "laptop",
+        "guitar",
+        "christmas tree",
+        "hexagon shelves",
+        "camera",
+        "office chair",
+        "trendify sign"
+      ]
+    }
+  },
+  "4148c781911b3e651aa4dd1adb427eda": {
+    "filename": "C0427.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "working",
+      "location": "bedroom",
+      "objects": [
+        "desk",
+        "monitor",
+        "laptop",
+        "guitar",
+        "bookshelf",
+        "floor lamp",
+        "office chair",
+        "fan",
+        "curtains",
+        "microphone"
+      ]
+    }
+  },
+  "54333950dfb5ecdb1bd96258b0f0490c": {
+    "filename": "C0428.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "apartment office",
+      "objects": [
+        "window",
+        "marker",
+        "bookshelf",
+        "monitor",
+        "desk",
+        "microphone"
+      ]
+    }
+  },
+  "5bfe74e08600ea00a3bff73d720c76ec": {
+    "filename": "C0429.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "apartment window",
+      "objects": [
+        "red marker",
+        "glass window",
+        "bookshelf",
+        "laptop",
+        "city buildings"
+      ]
+    }
+  },
+  "6ce5914d0b3821994222e2e7df57efda": {
+    "filename": "C0430.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "observation deck",
+      "objects": [
+        "red marker",
+        "glass floor",
+        "aerial view",
+        "toy cars",
+        "whiteboard"
+      ]
+    }
+  },
+  "ce3645ec0dcaaafedb60f25cc9bc1edd": {
+    "filename": "C0431.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "walking",
+      "location": "nyc subway",
+      "objects": [
+        "orange tie",
+        "winter jacket",
+        "subway platform",
+        "yellow safety strip"
+      ]
+    }
+  },
+  "c6a2bff7d96509197b6f9738079a838a": {
+    "filename": "C0432.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "subway station",
+      "objects": [
+        "platform",
+        "subway train",
+        "yellow safety line",
+        "support columns",
+        "fluorescent lights",
+        "white tiles",
+        "blue tiles",
+        "handrail",
+        "conduit pipes"
+      ]
+    }
+  },
+  "bbc80a1ade50b952a949d9af16d9c464": {
+    "filename": "C0433.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "walking",
+      "location": "nyc subway",
+      "objects": [
+        "subway train",
+        "platform",
+        "yellow safety strip",
+        "warning signs",
+        "subway pillar",
+        "glass barrier",
+        "railings",
+        "steps"
+      ]
+    }
+  },
+  "946814785811f62de83b5682b5144b9b": {
+    "filename": "C0434.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "nyc subway",
+      "objects": [
+        "handrail",
+        "backpack",
+        "orange tie",
+        "white shirt",
+        "phone",
+        "subway seats"
+      ]
+    }
+  },
+  "7640b98a85058ebe90981f736e6515e9": {
+    "filename": "C0435.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "subway car",
+      "objects": [
+        "orange tie",
+        "white shirt",
+        "subway pole",
+        "backpack",
+        "book"
+      ]
+    }
+  },
+  "26e18aaa58689c6ce4f4f25eaad46b30": {
+    "filename": "C0418.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "nyc subway",
+      "objects": [
+        "orange tie",
+        "subway pole",
+        "subway seats",
+        "mta display screen"
+      ]
+    }
+  },
+  "090bd1c5f9cc798829a558b7dd1cd13a": {
+    "filename": "C0421.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "nyc subway",
+      "objects": [
+        "subway pole",
+        "orange tie",
+        "phone",
+        "subway seats",
+        "subway ads"
+      ]
+    }
+  },
+  "2c2f37121878926c9afa6ba5c4499f5c": {
+    "filename": "C0422.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "nyc subway",
+      "objects": [
+        "pole",
+        "subway seats",
+        "orange tie",
+        "headphones"
+      ]
+    }
   }
 }
