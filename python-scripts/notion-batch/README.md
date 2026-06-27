@@ -26,7 +26,8 @@ Reference **Original link only**.
 
 Each page also gets its **own inline "Shot list" child database** (one row per shot) mirroring
 Gray's Notion Shot list DB: Section, Shot name, Shot type, Complete?, Shot Notes, Time of Day,
-Location, Shoot Day — plus editor columns Duration, Prop, Graphics / effect, Retention beat.
+Location, Shoot Day — plus editor columns Duration, Prop, Graphics / effect, Retention beat,
+Editor notes (clip-by-clip instruction for exactly what to do in that shot).
 The API can't create the Basic/Editor *views* — add those two views by hand once per database.
 
 ## Setup (once)

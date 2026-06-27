@@ -21,7 +21,7 @@ SINGLE = {
 }
 
 # Shot-list table columns, in order. Maps to the child shot-list database.
-SHOT_COLS = ["section", "shot_name", "shot_type", "duration", "prop", "graphics", "retention"]
+SHOT_COLS = ["section", "shot_name", "shot_type", "duration", "prop", "graphics", "retention", "editor_notes"]
 
 VIDEO_RE = re.compile(r"^##\s+Video\s+(.+?)\s+[—-]\s+(.+)$")
 SUBITEM_RE = re.compile(r"^-\s*([^:]+):\s*(.*)$")

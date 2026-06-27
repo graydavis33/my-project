@@ -79,18 +79,18 @@ Editor brief — full shot list. Build the video from this alone.
 
 Shot list: each video page embeds its OWN shot-list database (a linked sub-database, never shared between videos — keeps batches from mixing). The DB has two views off the same rows:
 - Basic (on-set): Section, Shot name, Shot type, Complete?, Time of Day, Location, Shoot Day.
-- Editor: Section, Shot name, Shot type, Duration, Prop, Graphics / effect, Retention beat, Shot Notes.
+- Editor: Section, Shot name, Shot type, Duration, Prop, Graphics / effect, Retention beat, Editor notes, Shot Notes.
 
 Shot type is a fixed select: EXTREME WIDE, WIDE, MEDIUM, CLOSE UP, EXTREME CLOSE UP, SCREEN RECORD, POV.
 Section is a fixed select: Intro, Section 1-5, Outro.
 
-Fill the planning columns here; the on-set columns (Time of Day, Location, Shoot Day, Complete?) get set in Notion.
+Fill the planning columns here; the on-set columns (Time of Day, Location, Shoot Day, Complete?) get set in Notion. The Editor brief above is the overview; the Editor notes column below is the clip-by-clip instruction — exactly what the editor does in that shot/duration.
 
-| Section | Shot name | Shot type | Duration | Prop | Graphics / effect | Retention beat |
-|---------|-----------|-----------|----------|------|-------------------|----------------|
-| [Intro] | [what Sai does/says] | [WIDE] | [0:00–0:02] | [prop or —] | [card/animation or —] | [the one reason they keep watching here] |
-| [Section 1] | | | | | | |
-| ... | | | | | | |
+| Section | Shot name | Shot type | Duration | Prop | Graphics / effect | Retention beat | Editor notes |
+|---------|-----------|-----------|----------|------|-------------------|----------------|--------------|
+| [Intro] | [what Sai does/says] | [WIDE] | [0:00–0:02] | [prop or —] | [card/animation or —] | [the one reason they keep watching here] | [exactly what to cut/build/sync in this shot] |
+| [Section 1] | | | | | | | |
+| ... | | | | | | | |
 
 Keep / drop from raw: [what to keep, what to cut — bad takes, dead air, restarts, off-camera direction]
 
@@ -137,10 +137,10 @@ Editor brief — full shot list. Build the video from this alone.
 
 Shot list: (own linked shot-list database per video; views + selects per the spec on Video 1)
 
-| Section | Shot name | Shot type | Duration | Prop | Graphics / effect | Retention beat |
-|---------|-----------|-----------|----------|------|-------------------|----------------|
-| | | | | | | |
-| | | | | | | |
+| Section | Shot name | Shot type | Duration | Prop | Graphics / effect | Retention beat | Editor notes |
+|---------|-----------|-----------|----------|------|-------------------|----------------|--------------|
+| | | | | | | | |
+| | | | | | | | |
 
 Keep / drop from raw:
 

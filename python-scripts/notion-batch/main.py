@@ -226,6 +226,7 @@ def create_shot_list_db(notion, page_id, shots):
         "Prop": {"rich_text": {}},
         "Graphics / effect": {"rich_text": {}},
         "Retention beat": {"rich_text": {}},
+        "Editor notes": {"rich_text": {}},
         "Complete?": {"checkbox": {}},
         "Shot Notes": {"rich_text": {}},
         "Time of Day": {"select": {}},
@@ -246,6 +247,7 @@ def create_shot_list_db(notion, page_id, shots):
             "Prop": {"rich_text": rt(_clean(s.get("prop")))},
             "Graphics / effect": {"rich_text": rt(_clean(s.get("graphics")))},
             "Retention beat": {"rich_text": rt(_clean(s.get("retention")))},
+            "Editor notes": {"rich_text": rt(_clean(s.get("editor_notes")))},
         }
         sec = _clean(s.get("section"))
         if sec:
