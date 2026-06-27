@@ -277,12 +277,9 @@ def cmd_push(args):
             properties=props,
             children=body[:100],
         )
-        shots = v.get("shots", [])
-        if shots:
-            n = create_shot_list_db(notion, page["id"], shots)
-            print(f"  + {v['title'][:60]}  ->  {page['url']}  ({n} shots)")
-        else:
-            print(f"  + {v['title'][:60]}  ->  {page['url']}")
+        # Always attach a shot-list database — empty rows are a fillable scaffold.
+        n = create_shot_list_db(notion, page["id"], v.get("shots", []))
+        print(f"  + {v['title'][:60]}  ->  {page['url']}  ({n} shots)")
     print(f"Pushed {len(videos)} videos into '{args.batch}'.")
     print(f"Database: {cfg.get('url', '')}")
 
