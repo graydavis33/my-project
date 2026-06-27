@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0E1016; }
+  .tn { position:relative; width:1280px; height:720px; overflow:hidden;
+        font-family:'Montserrat',sans-serif;
+        background:radial-gradient(70% 80% at 50% 58%, #20232e 0%, #14171f 55%, #0b0d13 100%); }
+
+  /* inner light from the vault */
+  .glow { position:absolute; left:50%; top:55%; width:880px; height:880px; transform:translate(-50%,-50%);
+          background:radial-gradient(circle, rgba(255,160,70,.72) 0%, rgba(242,129,41,.22) 38%, transparent 66%);
+          z-index:1; }
+  .rays { position:absolute; left:50%; top:54%; width:900px; height:900px; transform:translate(-50%,-50%);
+          background:conic-gradient(from 0deg,
+            transparent 0 6deg, rgba(255,170,90,.16) 6deg 9deg, transparent 9deg 30deg,
+            transparent 30deg 36deg, rgba(255,170,90,.14) 36deg 39deg, transparent 39deg 66deg,
+            transparent 66deg 72deg, rgba(255,170,90,.16) 72deg 75deg, transparent 75deg 96deg,
+            transparent 96deg 102deg, rgba(255,170,90,.14) 102deg 105deg, transparent 105deg 360deg);
+          z-index:1; mask:radial-gradient(circle, transparent 32%, #000 40%, #000 60%, transparent 70%); }
+
+  /* vault door */
+  .vault { position:absolute; left:50%; top:56%; width:580px; height:580px; transform:translate(-50%,-50%); z-index:2; }
+
+  /* big number */
+  .num { position:absolute; top:26px; left:50%; transform:translateX(-50%); z-index:6;
+         font-family:'Anton',sans-serif; font-size:215px; line-height:.86; color:#FF9F45;
+         text-shadow:0 0 36px rgba(242,129,41,.75), 0 8px 22px rgba(0,0,0,.55);
+         -webkit-text-stroke:3px #2a1404; }
+  .kick { position:absolute; top:248px; left:50%; transform:translateX(-50%); z-index:6;
+          font-family:'Montserrat'; font-weight:900; font-size:30px; letter-spacing:7px; color:#fff;
+          text-shadow:0 3px 10px rgba(0,0,0,.7); }
+
+  /* face plates */
+  .plate { position:absolute; bottom:-8px; z-index:5; width:430px; height:540px; }
+  .plate.bezos { left:-26px; }
+  .plate.sai { right:-26px; }
+  .plate svg { width:100%; height:100%; filter:drop-shadow(0 16px 26px rgba(0,0,0,.6)); }
+  .tag { position:absolute; bottom:26px; z-index:7; font-family:'Montserrat'; font-weight:900;
+         font-size:24px; letter-spacing:7px; color:#fff; background:rgba(14,16,22,.78);
+         padding:7px 20px; border-radius:28px; border:2px solid rgba(242,129,41,.9);
+         box-shadow:0 0 22px rgba(242,129,41,.45); }
+  .tag.bezos { left:54px; } .tag.sai { right:74px; }
+
+  /* arrow */
+  .arrow { position:absolute; left:50%; top:430px; transform:translateX(-50%); z-index:6;
+           font-family:'Anton'; font-size:56px; color:#fff; opacity:.92;
+           text-shadow:0 0 16px rgba(242,129,41,.9); }
+</style>
+</head>
+<body>
+<div class="tn">
+  <div class="rays"></div>
+  <div class="glow"></div>
+
+  <div class="num">$100B</div>
+  <div class="kick">LOCKED IN THE VAULT</div>
+
+  <svg class="vault" viewBox="0 0 200 200">
+    <defs>
+      <radialGradient id="steel" cx="42%" cy="38%" r="70%">
+        <stop offset="0" stop-color="#5a6275"/><stop offset="55%" stop-color="#39414f"/><stop offset="100" stop-color="#222834"/>
+      </radialGradient>
+      <linearGradient id="hub" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#6b7488"/><stop offset="1" stop-color="#2c3340"/>
+      </linearGradient>
+    </defs>
+    <circle cx="100" cy="100" r="94" fill="url(#steel)" stroke="#10141c" stroke-width="4"/>
+    <circle cx="100" cy="100" r="86" fill="none" stroke="#1c2230" stroke-width="3"/>
+    <circle cx="100" cy="100" r="70" fill="none" stroke="#525b6e" stroke-width="2"/>
+    <!-- bolts -->
+    <g fill="#11151d">
+      <circle cx="100" cy="18" r="4.5"/><circle cx="158" cy="42" r="4.5"/><circle cx="182" cy="100" r="4.5"/>
+      <circle cx="158" cy="158" r="4.5"/><circle cx="100" cy="182" r="4.5"/><circle cx="42" cy="158" r="4.5"/>
+      <circle cx="18" cy="100" r="4.5"/><circle cx="42" cy="42" r="4.5"/>
+    </g>
+    <!-- spoke handle -->
+    <g stroke="url(#hub)" stroke-width="11" stroke-linecap="round">
+      <line x1="100" y1="48" x2="100" y2="152"/><line x1="48" y1="100" x2="152" y2="100"/>
+      <line x1="63" y1="63" x2="137" y2="137"/><line x1="137" y1="63" x2="63" y2="137"/>
+    </g>
+    <circle cx="100" cy="100" r="22" fill="url(#hub)" stroke="#10141c" stroke-width="3"/>
+    <circle cx="100" cy="100" r="9" fill="#f28129"/>
+    <!-- door ajar light crack -->
+    <path d="M100 6 L100 194" stroke="#FFC988" stroke-width="3" opacity=".9" filter="blur(.4px)"/>
+  </svg>
+
+  <div class="arrow">▸ ▸ ▸</div>
+
+  <div class="plate bezos">
+    <svg viewBox="0 0 200 240"><defs>
+      <linearGradient id="pg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46506180"/><stop offset="1" stop-color="#161b24"/></linearGradient></defs>
+      <path d="M22 250 C22 172 56 150 100 150 C144 150 178 172 178 250 Z" fill="url(#pg1)" stroke="#9aa6bb" stroke-width="3"/>
+      <ellipse cx="100" cy="72" rx="47" ry="53" fill="url(#pg1)" stroke="#9aa6bb" stroke-width="3"/>
+    </svg>
+  </div>
+  <div class="plate sai">
+    <svg viewBox="0 0 200 240"><defs>
+      <linearGradient id="pg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a4a3380"/><stop offset="1" stop-color="#1c1812"/></linearGradient></defs>
+      <path d="M22 250 C22 172 56 150 100 150 C144 150 178 172 178 250 Z" fill="url(#pg2)" stroke="#f28129" stroke-width="3.5"/>
+      <ellipse cx="100" cy="72" rx="47" ry="53" fill="url(#pg2)" stroke="#f28129" stroke-width="3.5"/>
+    </svg>
+  </div>
+  <div class="tag bezos">BEZOS</div>
+  <div class="tag sai">SAI</div>
+</div>
+</body>
+</html>
