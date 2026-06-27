@@ -27,8 +27,9 @@ Three pillars — every video hits at least one:
 Most reference videos are teacher-mode. Our core job is to convert prescriptive into first-person experiential.
 
 Production constants:
-- Shot horizontal. Footage moves freely between shorts and long-form, and horizontal stands out in-feed. Exception: a prop-only video that won't be reused can be vertical.
-- Most references are shot vertical. We borrow the flow, graphics, captions, pacing, and value — not the framing. Re-stage each into 16:9.
+- Default horizontal. Footage moves freely between shorts and long-form, and horizontal stands out in-feed.
+- Two exceptions shoot vertical: a prop-only video that won't be reused, AND any video that closely replicates a specific Sandcastles reference (we match its framing instead of restaging into 16:9).
+- Most references are shot vertical. When we're borrowing only the flow, graphics, captions, pacing, and value, re-stage into 16:9. When we're replicating a specific pulled video, keep it vertical. Each video's Orientation line says which.
 - Captions in Sai's house style: Montserrat SemiBold, lowercase except I, no punctuation, hard cuts with no flicker.
 
 Retention rules:
@@ -44,6 +45,8 @@ Retention rules:
 Status: Draft
 
 Format: [one tight line — the structure only, e.g. "numbered listicle" / "this-vs-that comparison" / "growth-journey carousel"]
+
+Orientation: [Horizontal (default) | Vertical — reason: prop-only / Sandcastles replica]
 
 Topics (Sai to fill): [Sai adds the real subjects — he knows the business specifics. Gray may drop placeholder examples; otherwise leave this as a flag that we need Sai's input.]
 
@@ -86,6 +89,8 @@ Reference: [creator] — "[title]" — [outlier]x
 Status: Draft
 
 Format:
+
+Orientation:
 
 Topics (Sai to fill):
 
@@ -134,6 +139,7 @@ Strong ideas we surfaced but have not used yet, with the angle for each.
 Internal — Gray only. Not for Sai or the editor.
 
 Changelog:
+- v4.1 (2026-06-27): Added a per-video Orientation field. Vertical now also covers videos that closely replicate a specific Sandcastles reference (match its framing instead of restaging to 16:9), not just prop-only videos.
 - v4 (2026-06-25): Notion-database redesign. Per-video fields are now: Status, Format (one line), Topics (Sai to fill), Verbal hook A/B/C, Visual hook A/B/C, Camera shots, Graphics and effects, Props (now includes products/costumes/signature action), Assets (Drive folder link), Editor brief, Reference. Removed Purpose, Style, and From Sai (Topics already means "from Sai"). Each video is its own Notion page; pushed via the notion-batch tool.
 - v3 (2026-06-24): Added a dedicated Editor brief block to every video page. Set the per-batch title convention.
 - v2 (2026-06-24): Rebuilt clean. One page per video, plain language, no emojis.
