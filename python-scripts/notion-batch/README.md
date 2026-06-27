@@ -41,6 +41,14 @@ The API can't create the Basic/Editor *views* — add those two views by hand on
    ```
    This saves the database id to `config.json`.
 
+### Upgrading an existing database to v5
+
+If the database was created before v5, add the two new columns once:
+```bash
+python main.py migrate
+```
+This adds **Orientation** + **Hook pick** to the existing Batches DB so v5 pushes don't fail.
+
 ## Use it every batch
 
 1. Fill the batch markdown from `_BATCH-DOC-TEMPLATE.md` (v5).

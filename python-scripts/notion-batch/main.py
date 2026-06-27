@@ -7,8 +7,9 @@ Reference) and a rich body (Topics, Verbal/Visual hooks A-B-C, Editor brief).
 Each page also gets its own inline "Shot list" child database (one row per shot).
 
 Commands:
-  setup  --parent <page-url>            create the database under a parent page (run once)
-  push   <batch.md> --batch "Batch 4"   create a page per video from a filled batch doc
+  setup    --parent <page-url>          create the database under a parent page (run once)
+  migrate                               add v5 columns to an existing database (run once after upgrade)
+  push     <batch.md> --batch "Batch 4" create a page per video from a filled batch doc
   find                                  print the saved database id/url
 
 Reuses NOTION_TOKEN (same integration as content-researcher). The parent page must
