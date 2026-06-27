@@ -275,6 +275,20 @@ def cmd_push(args):
     print(f"Database: {cfg.get('url', '')}")
 
 
+def cmd_migrate(args):
+    """Add the v5 columns (Orientation, Hook pick) to an existing Batches database."""
+    notion = client()
+    cfg = load_config()
+    ds_id = cfg.get("data_source_id")
+    if not ds_id:
+        sys.exit("config.json has no data_source_id — re-run setup.")
+    notion.data_sources.update(data_source_id=ds_id, properties={
+        "Orientation": {"select": {"options": [{"name": n, "color": c} for n, c in ORIENTATION_OPTIONS]}},
+        "Hook pick": {"rich_text": {}},
+    })
+    print("Added Orientation + Hook pick columns to the existing Batches database.")
+
+
 def cmd_find(args):
     print(json.dumps(load_config(), indent=2))
 
@@ -292,6 +306,9 @@ def main():
     p.add_argument("file")
     p.add_argument("--batch", required=True, help='e.g. "Batch 4"')
     p.set_defaults(func=cmd_push)
+
+    m = sub.add_parser("migrate", help="add v5 columns (Orientation, Hook pick) to the existing database")
+    m.set_defaults(func=cmd_migrate)
 
     f = sub.add_parser("find", help="print the saved database id/url")
     f.set_defaults(func=cmd_find)
