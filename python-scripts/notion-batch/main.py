@@ -113,6 +113,11 @@ def bullet(text):
             "bulleted_list_item": {"rich_text": rt(text)}}
 
 
+def todo(text):
+    return {"object": "block", "type": "to_do",
+            "to_do": {"rich_text": rt(text), "checked": False}}
+
+
 # ---------- commands ----------
 
 def cmd_setup(args):
@@ -173,12 +178,13 @@ def video_to_page(db_id, batch, v):
                  "callout": {"rich_text": rt(topics or "Sai — add the real subjects here."),
                              "icon": {"emoji": "✍️"}, "color": "yellow_background"}})
 
+    # Verbal/Visual hooks are to-do checkboxes so Sai ticks the option he wants.
     for label, key in (("Verbal hook", "verbal"), ("Visual hook", "visual")):
         body.append(heading(label))
         block = v.get(key, {})
         for opt in ("A", "B", "C"):
             val = block.get(opt, "")
-            body.append(bullet(f"{opt}: {val}".rstrip(": ")))
+            body.append(todo(f"{opt}: {val}".rstrip(": ")))
 
     body.append(heading("Hook pick"))
     body.append(para(v.get("hook_pick", "") or "Sai picks; blank = editor gets all options."))
