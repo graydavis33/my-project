@@ -13,11 +13,11 @@
 | **Playbook hook refs** (Kallaway 710K-view masterclass; Ava "I studied 7,356 hooks") | Hook/title psychology + the "challenge" angle | ✅ **High** — vetted internal |
 | **Live niche research** (15-25 real video titles in the "I tried [billionaire] tactic" lane) | Real title formulas + keyword frequency | 🟡 **Medium** — titles/channels verified; **view counts NOT verified** |
 
-### ⚠️ The honest gaps (do NOT let me paper over these)
-1. **No verified view counts on the long-form examples.** YouTube renders views client-side; the researcher could confirm the *titles/channels exist* but not their exact views. True per-video numbers need the **YouTube Data API** (Gray's Google Cloud project could run this — a clean follow-up).
-2. **No verified thumbnail images** on those examples — thumbnail conventions below are from the CTR study + Sandcastles thumbnails we CAN see, not from inspecting each example.
-3. **No keyword search-volume tool** (no VidIQ/TubeBuddy/Ahrefs). Everything called a "keyword" below is **proven-by-recurrence** (how often it appears in real high-performing titles), NOT a search-volume number. Labeled honestly.
-4. **"Jeff Bezos" is RARE in real video titles** — "Elon Musk" dominates this lane. Real strategic implication in §5.
+### ⚠️ The honest gaps
+1. ✅ **RESOLVED — view counts now verified** via the YouTube Data API (2026-06-27). See §2.5 for the real ranked numbers. They **overturned** the title-frequency read (see below).
+2. **No verified thumbnail images** inspected per-example (thumbnail URLs were captured via the API and can be pulled on request); conventions below are from the CTR study + Sandcastles thumbnails we CAN see.
+3. **No keyword search-volume tool** (no VidIQ/TubeBuddy/Ahrefs). Everything called a "keyword" is **proven-by-recurrence + now cross-checked against real views**, NOT a search-volume number.
+4. **"Jeff Bezos" is RARE in real video titles** — and the real view data shows named-celebrity-routine videos mostly UNDERPERFORM. Strategic implication in §5.
 
 ---
 
@@ -51,6 +51,43 @@ From live niche research (real verified titles):
 - Outcome tail: **"| Here's What Happened"**
 - All-caps superlative: **"WORLD'S Most"**, **"BILLIONAIRE"**, **"RICH"**
 - 🤯 emoji (money-niche short-form; use cautiously on long-form YT)
+
+---
+
+## 2.5 REAL view data (YouTube Data API, 2026-06-27) — this OVERTURNED the title-frequency read
+
+Ranked actual views for the 19 researched titles:
+
+| Views | Likes | Video | Channel | Pattern |
+|---|---|---|---|---|
+| **2,561,208** | 100K | I Went From Broke To Rich In 30 Days | Jordan Welch | transformation + 30 days |
+| **1,394,467** | 62K | I Tried Dropshipping With $0 For 30 days | Tan Choudhury | constraint + 30 days |
+| **1,372,160** | 45K | I Took A Stranger From Broke To Rich In 30 Days | Jordan Welch | transformation + 30 days |
+| 512,421 | 14K | i tried the BILLIONARE morning routine | Erika Diane | generic billionaire |
+| 406,623 | 15K | I Tried The WORLD'S Most PRODUCTIVE Day | Nicolas Berndt | superlative |
+| 365,577 | 14K | WORLDS Most Productive Routine For 30 Days | Nicolas Berndt | superlative + 30 days |
+| 256,384 | 10K | How I Made $32,000 in 30 Days Dropshipping | Cam Vito | $ result + 30 days |
+| 187,517 | 5.5K | I Took A Trader From Broke To Rich In 30 Days | TJR | transformation + 30 days |
+| 105,042 | 2.6K | I Tried Elon Musk's Morning Routine For 7 Days | Andrew Kirby | named celebrity |
+| 63,153 | 2.6K | I Tried The 5AM "Billionaire Morning Routine" | The Financial Diet | generic billionaire |
+| 61,166 | 2.3K | morning routines of the most successful CEOs | Ciarán Carlin | generic CEO |
+| 34,214 | 1.6K | I Tried Jordan Welch's $197 Dropshipping Course | CeboEcom | named-creator reaction |
+| 15,726 | 729 | I Tried Launching an AI Business with $0 | AI Founders | constraint |
+| 9,860 | 617 | I Tried Rich People's Scientific Daily Routine | Kevin Harris | generic rich |
+| 7,890 | 0 | I Tried Elon Musk's Routine for 24 Hours as CS student | ramya | named celebrity |
+| 7,121 | 302 | Shopify Dropshipping for 1 Month With NO MONEY | Matt While | constraint |
+| 3,652 | 214 | I Tried A Billionaire's Morning Routine! | Emiley Baker | generic (tiny ch.) |
+| 1,071 | 74 | I tried Elon Musk's (insane) routine for 7 Days | Jakob Manthei | named celebrity |
+| 63 | 4 | I Tried a Billionaire's Morning Routine \| Here's What Happened | Tyler Dreger | generic (tiny ch.) |
+
+**What the REAL numbers say (vs. what title-frequency implied):**
+1. ❌ **"I tried [named celebrity]'s routine" is a TRAP** — every Elon Musk attempt landed 1K–105K. Crowded, weak. Title-frequency made it look dominant; views prove it isn't.
+2. ✅ **The real outliers (1.3M–2.5M) are ALL the "Broke to Rich in 30 Days" transformation DOCUMENTARIES** (Jordan Welch). That structure = a real person + real business + a 30-day clock + documentary = **exactly Sai's Vault structure.** Jordan Welch is the #1 comp.
+3. ✅ **"30 Days" appears in 6 of the top 8.** The load-bearing keyword is the timeframe, not the billionaire.
+4. ✅ **Constraint/result framing wins** ("$0", "$32,000 in 30 Days") — concrete stakes + number.
+5. ⚠️ Channel size matters: the 63-view and 3,652-view billionaire-routine videos are tiny channels — the format doesn't save a small channel, but Sai's *structure* (real business, real stakes) is the Jordan-Welch lane, not the routine-trope lane.
+
+**Refined strategy:** title the episode like a **transformation documentary with a 30-day clock and a real outcome**, with the billionaire as flavor — NOT like a "I copied a celebrity's routine" video.
 
 ---
 
@@ -100,15 +137,18 @@ The episode is locked on Bezos. But the data says **naming Bezos in the title is
 
 > All ≤50 chars per Gray's rule. Tag = which proven formula/source backs it.
 
-| Title | Chars | Backed by |
+> **Revised after the real view data:** lead with **transformation + "30 Days" + outcome** (the 1.3–2.5M Jordan-Welch lane), billionaire as flavor. "30 Days" is in 6 of the top 8 real performers.
+
+| Title | Chars | Backed by (with REAL evidence) |
 |---|---|---|
-| I Ran My Company Like Jeff Bezos for a Week | 43 | T1 (dominant formula) + named-person |
-| I Copied a Billionaire I Didn't Choose | 38 | T2 (generic) + wheel-mechanic differentiator |
-| A Wheel Made Me Copy a Billionaire | 34 | T2 + mechanic (white-space) |
-| I Stole Jeff Bezos's $100B Habit | 32 | T1 + big-number (T5 "$100B" decorator) |
-| I Ran My Team Like Bezos for 30 Days | 36 | T1 + "30 Days" (proven > "a week") |
-| A Billionaire Ran My Company for a Week | 39 | T2 + curiosity (note: keep honest, he copies it) |
-| I Did Bezos's $100B Habit for 30 Days | 37 | T1 + "30 Days" + "$100B" |
+| I Ran My Company Like Bezos for 30 Days | 39 | ✅ transformation + "30 Days" (Jordan Welch 2.5M/1.37M; 30-days in 6 of top 8) + named |
+| I Ran My Team Like Bezos for 30 Days | 36 | ✅ same, + the actual adaptation (customers→team) |
+| 30 Days Copying a Billionaire's Playbook | 40 | ✅ "30 Days" + generic billionaire (512K beat most named-Elon) |
+| I Let a Wheel Run My Company for 30 Days | 40 | ✅ "30 Days" + the wheel mechanic (white-space differentiator) |
+| I Did Bezos's $100B Habit for 30 Days | 37 | ✅ "30 Days" + "$100B" number (concrete-number wins) |
+| I Copied a Billionaire I Didn't Choose | 38 | 🟡 generic + wheel curiosity — no "30 Days" (curiosity play, weaker on data) |
+
+**Avoid (data-backed):** any "I Tried [named celebrity]'s routine" framing (1K–105K real views — the trap), and "A Billionaire Ran My Company" (misleading — he copies it, doesn't hand it over).
 
 ---
 
