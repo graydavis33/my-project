@@ -4999,5 +4999,409 @@
         "tile mosaic"
       ]
     }
+  },
+  "4d69f79a3bc9aecab1454a86cbbd88d2": {
+    "filename": "C2780.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "talking",
+      "location": "bedroom",
+      "objects": [
+        "microphone",
+        "monitor",
+        "closet",
+        "baseball caps",
+        "desk",
+        "phone"
+      ]
+    }
+  },
+  "c20cb4d28e6742d49a57cdff908de8bd": {
+    "filename": "C2781.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "bedroom closet",
+      "objects": [
+        "microphone",
+        "monitor",
+        "desk",
+        "clothes rack",
+        "baseball caps"
+      ]
+    }
+  },
+  "4542fb008835a2a115227f4dec4e67a7": {
+    "filename": "C2767.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "bedroom",
+      "objects": [
+        "whiteboard",
+        "floor lamp",
+        "wardrobe",
+        "marker"
+      ]
+    }
+  },
+  "8a382ce3608c3baa42a677ec31265ed7": {
+    "filename": "C2768.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "presenting",
+      "location": "bedroom",
+      "objects": [
+        "bookshelf",
+        "whiteboard",
+        "closet",
+        "marker",
+        "books",
+        "baseball caps"
+      ]
+    }
+  },
+  "adbbc148a7987f778db08b5209406fce": {
+    "filename": "C2769.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "apartment room",
+      "objects": [
+        "tv",
+        "desk",
+        "fan",
+        "baseball caps",
+        "wall art",
+        "lamp"
+      ]
+    }
+  },
+  "bf7eb925a4d8f9fbc2cc331ad40bfbd2": {
+    "filename": "C2770.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "home office",
+      "objects": [
+        "microphone",
+        "boom arm",
+        "foam windscreen",
+        "monitor",
+        "keyboard",
+        "desk",
+        "bowl",
+        "oatmeal",
+        "spoon",
+        "laptop",
+        "pen holder"
+      ]
+    }
+  },
+  "28152514872f69044722a0b5296e4592": {
+    "filename": "C2771.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "home office",
+      "objects": [
+        "whiteboard",
+        "floor lamp",
+        "marker",
+        "eraser",
+        "door"
+      ]
+    }
+  },
+  "1af6d2bc5bc00dfe2c2a7ef585118004": {
+    "filename": "C2772.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "desk surface",
+      "objects": [
+        "focusrite scarlett",
+        "audio interface",
+        "xlr cable",
+        "usb cable",
+        "microphone"
+      ]
+    }
+  },
+  "411cbe4eec6db7000ea440e64888a19a": {
+    "filename": "C2773.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "home studio",
+      "objects": [
+        "focusrite scarlett",
+        "audio interface",
+        "xlr cable",
+        "headphones",
+        "microphone",
+        "wooden shelf"
+      ]
+    }
+  },
+  "3d382d048a0db3eab56d0e635090ea07": {
+    "filename": "C2774.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "home office",
+      "objects": [
+        "monitor",
+        "microphone",
+        "camera",
+        "whiteboard"
+      ]
+    }
+  },
+  "319d92ce5b5e0323c60ff78e5aa53baa": {
+    "filename": "C2775.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "home office",
+      "objects": [
+        "monitor",
+        "microphone",
+        "desk",
+        "water bottle",
+        "mouse",
+        "screen light",
+        "standing desk"
+      ]
+    }
+  },
+  "1f123fec13760446e27a4ef7f72a7054": {
+    "filename": "C2776.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "walking",
+      "location": "bedroom",
+      "objects": [
+        "whiteboard",
+        "monitor",
+        "desk",
+        "chair",
+        "closet",
+        "shelves",
+        "microphone"
+      ]
+    }
+  },
+  "962faafbef117faa56a2d7dc80f18ba4": {
+    "filename": "C2777.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "sitting",
+      "location": "bedroom",
+      "objects": [
+        "monitor",
+        "desk",
+        "microphone",
+        "water bottle",
+        "closet",
+        "keyboard",
+        "mouse"
+      ]
+    }
+  },
+  "b6de34b2ab03db0fa6f111a8ba3426a0": {
+    "filename": "C2778.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "bedroom",
+      "objects": [
+        "monitor",
+        "microphone",
+        "desk",
+        "office chair",
+        "closet",
+        "shaker bottle",
+        "keyboard"
+      ]
+    }
+  },
+  "2853af11840b4a7b8d0c7229b1f2ae96": {
+    "filename": "C2779.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "talking",
+      "location": "home office",
+      "objects": [
+        "microphone",
+        "monitor",
+        "laptop",
+        "water bottle",
+        "keyboard",
+        "microphone arm",
+        "desk"
+      ]
+    }
+  },
+  "f9770668d7d8c47108f235e4fa736700": {
+    "filename": "C2753.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "talking",
+      "location": "nyc street",
+      "objects": [
+        "microphone",
+        "buildings",
+        "traffic light",
+        "bicycle",
+        "van",
+        "car"
+      ]
+    }
+  },
+  "407883ba88fafde9e82cc43ef894b525": {
+    "filename": "C2754.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "walking",
+      "location": "nyc street",
+      "objects": [
+        "skyscrapers",
+        "crowd",
+        "nba jersey",
+        "phone",
+        "flag"
+      ]
+    }
+  },
+  "3947b2e75c88434c83aa53df236fde9e": {
+    "filename": "C2755.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "watching",
+      "location": "nyc street",
+      "objects": [
+        "knicks hat",
+        "mets hat",
+        "buildings",
+        "trees",
+        "smartphones"
+      ]
+    }
+  },
+  "3642f37f9a2d94ed86fe2663ca171240": {
+    "filename": "C2756.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "sitting",
+      "location": "nyc street",
+      "objects": [
+        "green alien balloon",
+        "ny knicks jersey",
+        "baseball cap",
+        "smartphone",
+        "crowd"
+      ]
+    }
+  },
+  "b61ff58bd6b3c63eb583358733598fa3": {
+    "filename": "C2757.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "walking",
+      "location": "nyc street",
+      "objects": [
+        "crowd",
+        "buildings",
+        "traffic lights",
+        "nypd vehicle",
+        "parade float",
+        "street signs"
+      ]
+    }
+  },
+  "c821ada3cd3b483df0ae88c64b67ecc2": {
+    "filename": "C2758.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "filming",
+      "location": "nyc street",
+      "objects": [
+        "new york knicks hat",
+        "knicks jersey",
+        "green alien figure",
+        "skyscraper",
+        "crowd",
+        "street lamp",
+        "trees"
+      ]
+    }
+  },
+  "d336d0f1dc76b0694a7917eb3e9818bc": {
+    "filename": "C2759.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "filming",
+      "location": "city street",
+      "objects": [
+        "phone",
+        "crowd",
+        "building",
+        "trees"
+      ]
+    }
+  },
+  "47d9a7a5c9c1c286018870352f648bf3": {
+    "filename": "C2760.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "filming",
+      "location": "downtown street",
+      "objects": [
+        "skyscraper",
+        "glass building",
+        "baseball cap",
+        "antenna"
+      ]
+    }
+  },
+  "46ba405b65be9d354714610e93b8fb84": {
+    "filename": "C2761.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "nyc street",
+      "objects": [
+        "clothing",
+        "graphic tshirt",
+        "olive jacket",
+        "buildings",
+        "tree"
+      ]
+    }
   }
 }

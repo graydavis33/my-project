@@ -77,13 +77,20 @@ Editor brief — full shot list. Build the video from this alone.
 - Length and pace: [target runtime and feel]
 - Deliverable: [aspect ratio, format, where it goes]
 
-Shot list:
+Shot list: each video page embeds its OWN shot-list database (a linked sub-database, never shared between videos — keeps batches from mixing). The DB has two views off the same rows:
+- Basic (on-set): Section, Shot name, Shot type, Complete?, Time of Day, Location, Shoot Day.
+- Editor: Section, Shot name, Shot type, Duration, Prop, Graphics / effect, Retention beat, Shot Notes.
 
-| # | Duration | What's in frame | Prop | Graphics / effect | Retention beat |
-|---|----------|-----------------|------|-------------------|----------------|
-| 1 | [0:00–0:02] | [framing, angle, what Sai does/says] | [prop or —] | [card/animation/comp or —] | [the one reason they keep watching here] |
-| 2 | [0:02–...] | | | | |
-| ... | | | | | |
+Shot type is a fixed select: EXTREME WIDE, WIDE, MEDIUM, CLOSE UP, EXTREME CLOSE UP, SCREEN RECORD, POV.
+Section is a fixed select: Intro, Section 1-5, Outro.
+
+Fill the planning columns here; the on-set columns (Time of Day, Location, Shoot Day, Complete?) get set in Notion.
+
+| Section | Shot name | Shot type | Duration | Prop | Graphics / effect | Retention beat |
+|---------|-----------|-----------|----------|------|-------------------|----------------|
+| [Intro] | [what Sai does/says] | [WIDE] | [0:00–0:02] | [prop or —] | [card/animation or —] | [the one reason they keep watching here] |
+| [Section 1] | | | | | | |
+| ... | | | | | | |
 
 Keep / drop from raw: [what to keep, what to cut — bad takes, dead air, restarts, off-camera direction]
 
@@ -128,12 +135,12 @@ Editor brief — full shot list. Build the video from this alone.
 - Length and pace:
 - Deliverable:
 
-Shot list:
+Shot list: (own linked shot-list database per video; views + selects per the spec on Video 1)
 
-| # | Duration | What's in frame | Prop | Graphics / effect | Retention beat |
-|---|----------|-----------------|------|-------------------|----------------|
-| 1 | | | | | |
-| 2 | | | | | |
+| Section | Shot name | Shot type | Duration | Prop | Graphics / effect | Retention beat |
+|---------|-----------|-----------|----------|------|-------------------|----------------|
+| | | | | | | |
+| | | | | | | |
 
 Keep / drop from raw:
 
@@ -152,6 +159,7 @@ One running list, carried forward and grown each batch: topics, comparison items
 Internal — Gray only. Not for Sai or the editor.
 
 Changelog:
+- v5.1 (2026-06-27): Shot list now matches Gray's existing Notion "Shot list" database. Each video embeds its OWN linked shot-list sub-database (never shared — keeps batches separate). Schema: Section (select), Shot name (title), Shot type (select: EXTREME WIDE/WIDE/MEDIUM/CLOSE UP/EXTREME CLOSE UP/SCREEN RECORD/POV), Complete? (checkbox), Shot Notes, Time of Day, Location, Shoot Day — plus added columns Duration, Prop, Graphics/effect, Retention beat. Two views: Basic (on-set) + Editor.
 - v5 (2026-06-27): Major restructure. Kept all 3 verbal + 3 visual hook options (options drive creativity + trial reels need PAIRED verbal+visual variants). Added optional Hook pick (Sai usually chooses; blank = editor gets full context). Removed standalone Camera shots and Graphics and effects — folded into a far more specific Editor brief that is now a true shot list (per shot: duration, what's in frame, prop, graphics/effect, retention beat). Every shot names its retention beat. Results moved to a link at the top pointing at the existing Sai results Notion database. Merged Topic Pool + Future Video Ideas into one Backlog. Orientation rule rewritten around B-roll reuse: vertical = single-purpose Sandcastles replicas whose clips are never reused; horizontal = everything with reusable raw B-roll.
 - v4.1 (2026-06-27): Added a per-video Orientation field.
 - v4 (2026-06-25): Notion-database redesign. Per-video fields: Status, Format, Topics, Verbal hook A/B/C, Visual hook A/B/C, Camera shots, Graphics and effects, Props, Assets, Editor brief, Reference. Each video its own Notion page; pushed via the notion-batch tool.
