@@ -5403,5 +5403,313 @@
         "tree"
       ]
     }
+  },
+  "7ddf2900b44580648ff09adf2db2ebb1": {
+    "filename": "C2762.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "stoic",
+      "action": "walking",
+      "location": "outdoor path",
+      "objects": [
+        "white t-shirt",
+        "khaki pants",
+        "backpack"
+      ]
+    }
+  },
+  "be09c985f81d7537ab24227014729c28": {
+    "filename": "C2763.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "walking",
+      "location": "nyc street",
+      "objects": [
+        "skyscraper",
+        "crowd",
+        "knicks shirt",
+        "championship shirt"
+      ]
+    }
+  },
+  "67b9892cebddafd7cc532286b69aaf32": {
+    "filename": "C2764.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "excited",
+      "action": "talking",
+      "location": "living room",
+      "objects": [
+        "bowl",
+        "laptop",
+        "blanket",
+        "pillow",
+        "couch"
+      ]
+    }
+  },
+  "d72fa5a9384435b9b38f4903b7f13c7f": {
+    "filename": "C2765.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "working",
+      "location": "cafe",
+      "objects": [
+        "macbook",
+        "iced coffee",
+        "laptop",
+        "baseball cap"
+      ]
+    }
+  },
+  "cffbba40f141ccae55c1462cf68f0b0d": {
+    "filename": "C2766.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "working",
+      "location": "cafe",
+      "objects": [
+        "laptop",
+        "macbook",
+        "airpods",
+        "la cap",
+        "coffee cups"
+      ]
+    }
+  },
+  "a8e7fd83d017e4eca5cbcbd2008913f7": {
+    "filename": "C1340.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "ordering",
+      "location": "cafe counter",
+      "objects": [
+        "backpack",
+        "menu screen",
+        "paper cups",
+        "orange cups",
+        "blue cone"
+      ]
+    }
+  },
+  "f8cef9dd8b65acaa3bd6ac5a19870d3f": {
+    "filename": "C1340.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "ordering",
+      "location": "cafe counter",
+      "objects": [
+        "backpack",
+        "menu board",
+        "coffee cups",
+        "blue cup",
+        "counter"
+      ]
+    }
+  },
+  "eb42c8b8ab0340a839ddbf469a0173d6": {
+    "filename": "C1345.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "happy",
+      "action": "working",
+      "location": "kitchen counter",
+      "objects": [
+        "paint brush",
+        "wood trim",
+        "watch",
+        "plastic bag"
+      ]
+    }
+  },
+  "325f8bf6e29ff378ccad694673738717": {
+    "filename": "C1345.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "confident",
+      "action": "presenting",
+      "location": "kitchen counter",
+      "objects": [
+        "badminton shuttlecock",
+        "watch",
+        "bracelet",
+        "wood cabinet",
+        "countertop"
+      ]
+    }
+  },
+  "f1df94921ac5adcf0ac5dc639c3e19ce": {
+    "filename": "C1351.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "indoor studio",
+      "objects": [
+        "guitar",
+        "guitar strings",
+        "ring",
+        "watch",
+        "bracelet"
+      ]
+    }
+  },
+  "0107f236dba2962e395b56236ac5bfc1": {
+    "filename": "C1351.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "indoor studio",
+      "objects": [
+        "guitar strings",
+        "ring",
+        "speaker",
+        "hand"
+      ]
+    }
+  },
+  "32daf4893ecc7f2976e1a44f781b0aa5": {
+    "filename": "C1358.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "on-phone",
+      "location": "office desk",
+      "objects": [
+        "smartphone",
+        "laptop",
+        "scissors",
+        "water bottle",
+        "watch"
+      ]
+    }
+  },
+  "07cd65dec0f6478e903d8458d12dd5b5": {
+    "filename": "C1358.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "sitting",
+      "location": "minimalist room",
+      "objects": [
+        "desk",
+        "water bottle",
+        "laptop",
+        "watch"
+      ]
+    }
+  },
+  "1448eb1edec66bcd418df3ed95704e00": {
+    "filename": "C1363.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "studio",
+      "objects": [
+        "marker",
+        "whiteboard",
+        "ring",
+        "drawing tools"
+      ]
+    }
+  },
+  "6f5bd24ac19120e8bda5e1df39f8a2a8": {
+    "filename": "C1363.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "studio",
+      "objects": [
+        "marker",
+        "drafting board",
+        "ruler"
+      ]
+    }
+  },
+  "c41e56a67bb2467fc32ed38642fd046d": {
+    "filename": "C1371.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "desk workspace",
+      "objects": [
+        "notebook",
+        "pen",
+        "hourglass",
+        "tablet",
+        "watch"
+      ]
+    }
+  },
+  "79ac7190ede594f99f127b751fc06379": {
+    "filename": "C1371.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "working",
+      "location": "desk workspace",
+      "objects": [
+        "notebook",
+        "pen",
+        "glass",
+        "tablet",
+        "earbuds"
+      ]
+    }
+  },
+  "c380f313c2f2d9b60478444d814f1fca": {
+    "filename": "C1382.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "sitting",
+      "location": "outdoor bench",
+      "objects": [
+        "backpack",
+        "bench",
+        "brick wall",
+        "bare trees"
+      ]
+    }
+  },
+  "e457d67bb85cb70f370fb7d59a32a7d7": {
+    "filename": "C1382.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "reflective",
+      "action": "sitting",
+      "location": "outdoor park",
+      "objects": [
+        "bench",
+        "backpack",
+        "brick wall",
+        "trees"
+      ]
+    }
+  },
+  "6fb20704e9dcb8723116e6445e2b8f6f": {
+    "filename": "C1392.MP4",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "vehicle interior",
+      "objects": [
+        "iphone",
+        "phone mount",
+        "braided cable",
+        "camera body",
+        "clear phone case"
+      ]
+    }
   }
 }
