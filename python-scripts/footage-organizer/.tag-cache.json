@@ -5711,5 +5711,105 @@
         "clear phone case"
       ]
     }
+  },
+  "dff4f56ae7dcdb38dcace9e5deb49ad8": {
+    "filename": "C1392.mov",
+    "tags": {
+      "person_present": false,
+      "emotion": null,
+      "action": null,
+      "location": "vehicle interior",
+      "objects": [
+        "smartphone",
+        "phone mount",
+        "charging cable",
+        "clear phone case",
+        "radio equipment"
+      ]
+    }
+  },
+  "2347d1dc43867aeb2f3225170cfa4261": {
+    "filename": "C1394.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball",
+        "basketball hoop",
+        "scoreboard"
+      ]
+    }
+  },
+  "40addc2d716828480a4e8b660a2829ff": {
+    "filename": "C1394.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball hoop",
+        "scoreboard",
+        "basketball court"
+      ]
+    }
+  },
+  "9f30633df6428f43da1db666a1d7ca11": {
+    "filename": "C1395.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball",
+        "basketball hoop",
+        "scoreboard"
+      ]
+    }
+  },
+  "3a0111a0be4e0f0afa8822b820a70972": {
+    "filename": "C1395.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball",
+        "basketball hoop",
+        "scoreboard"
+      ]
+    }
+  },
+  "c2c778cd2c3b59c3c424bdc1bdeb03fc": {
+    "filename": "C1397.MP4",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball",
+        "scoreboard",
+        "basketball hoop"
+      ]
+    }
+  },
+  "3aa6e2535504176bd5f25e4d295106a8": {
+    "filename": "C1397.mov",
+    "tags": {
+      "person_present": true,
+      "emotion": "focused",
+      "action": "exercising",
+      "location": "indoor gym",
+      "objects": [
+        "basketball",
+        "scoreboard",
+        "basketball hoop"
+      ]
+    }
   }
 }
