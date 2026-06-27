@@ -1,15 +1,17 @@
 # Sai Shorts — Batch Reference Doc (TEMPLATE)
 
-The reusable spec for every shorts batch. Lives as a Notion database ("Sai Shorts — Batches"): each video is its own page, with columns for status, format, props, assets, and reference. This markdown is the master scaffold — fill it, then push it to Notion with the notion-batch tool.
+The reusable spec for every shorts batch. Lives as a Notion database ("Sai Shorts — Batches"): each video is its own page, with columns for status, format, orientation, props, assets, and reference. This markdown is the master scaffold — fill it, then push it to Notion with the notion-batch tool.
 
 When you copy this for a real batch, title it: "Sai Shorts — Batch N Reference Doc".
 
+Results tracking: [link to the Sai results Notion database] — pinned at the top of the database. Views, retention, and saves live there, not on these pages. Check it before planning a new batch.
+
 Who reads this:
 - Gray — everything needed to prep, film, and present.
-- Sai — fills the Topics on each video, approves it (Status), answers anything flagged.
-- Editor — reads the Foundation once, then builds each video from its Editor brief + Assets folder.
+- Sai — fills the Topics on each video, picks the hook, approves it (Status), answers anything flagged.
+- Editor — reads the Foundation once, then builds each video straight from its Editor brief (a full shot list) + Assets folder.
 
-Rules for this doc: plain language, short lines, one page per video. Enough to know exactly what each video is and why — nothing more.
+Rules for this doc: plain language, short lines, one page per video. The Editor brief is the exception — it is exhaustive on purpose.
 
 ---
 
@@ -27,9 +29,10 @@ Three pillars — every video hits at least one:
 Most reference videos are teacher-mode. Our core job is to convert prescriptive into first-person experiential.
 
 Production constants:
-- Default horizontal. Footage moves freely between shorts and long-form, and horizontal stands out in-feed.
-- Two exceptions shoot vertical: a prop-only video that won't be reused, AND any video that closely replicates a specific Sandcastles reference (we match its framing instead of restaging into 16:9).
-- Most references are shot vertical. When we're borrowing only the flow, graphics, captions, pacing, and value, re-stage into 16:9. When we're replicating a specific pulled video, keep it vertical. Each video's Orientation line says which.
+- The orientation rule is about B-roll reuse, not framing preference.
+- Horizontal (default): any video whose raw footage doubles as reusable B-roll — long-form, or short-form where natural clips can be cut into other videos. Horizontal also stands out in-feed and moves freely between shorts and long-form.
+- Vertical: fully-scripted, single-purpose videos whose clips exist only for that one video (typically a close replica of a specific Sandcastles reference — rolling dice, naming, a staged bit). That footage would never match another video as B-roll, so there is no reason to shoot it horizontal.
+- References are mostly shot vertical. When we borrow only the flow, graphics, captions, pacing, and value, restage into 16:9. When we replicate a specific pulled video, keep it vertical. The Orientation line on each video says which.
 - Captions in Sai's house style: Montserrat SemiBold, lowercase except I, no punctuation, hard cuts with no flicker.
 
 Retention rules:
@@ -37,6 +40,7 @@ Retention rules:
 - A number is a finish line. "5 things" promises a payoff, so they stay.
 - Lead with the most surprising point, save the strongest for last.
 - The visual hook rhymes with the verbal hook, it does not repeat it.
+- Every shot in the Editor brief names its retention beat — the one reason a viewer keeps watching through that shot.
 
 ---
 
@@ -46,7 +50,7 @@ Status: Draft
 
 Format: [one tight line — the structure only, e.g. "numbered listicle" / "this-vs-that comparison" / "growth-journey carousel"]
 
-Orientation: [Horizontal (default) | Vertical — reason: prop-only / Sandcastles replica]
+Orientation: [Horizontal (default) | Vertical — single-purpose Sandcastles replica]
 
 Topics (Sai to fill): [Sai adds the real subjects — he knows the business specifics. Gray may drop placeholder examples; otherwise leave this as a flag that we need Sai's input.]
 
@@ -60,21 +64,28 @@ Visual hook:
 - B: [alternate]
 - C: [alternate]
 
-Camera shots: [what to film and how it's framed — angles, b-roll, what's in frame]
+Hook pick: [optional. Sai usually picks; Gray sometimes. Leave blank to hand the editor all options with full context. For trial reels, name PAIRED sets — e.g. "Trial reels: V-A+Vis-A and V-C+Vis-C" — never mix a verbal from one option with a visual from another.]
 
-Graphics and effects: [what the editor builds — house style plus the specific effect or animation]
-
-Props: [any physical product, prop, or costume the video needs, including a recurring signature action — or "none"]
+Props: [every physical product, prop, or costume the video needs, including a recurring signature action — or "none". The Editor brief maps each prop to the exact shots it appears in.]
 
 Assets: [Google Drive folder link — graphics, b-roll, photos the editor downloads. Leave blank until the folder exists.]
 
-Editor brief:
-- Structure: [the beat order to assemble]
-- Keep / drop: [what to keep from raw, what to cut — bad takes, dead air, restarts]
-- Graphics to build: [exact list of cards/animations/comps, in order]
+Editor brief — full shot list. Build the video from this alone.
+
+- Structure: [the beat order at a glance — the spine the shot list below assembles]
 - Captions: [house style unless noted]
 - Length and pace: [target runtime and feel]
 - Deliverable: [aspect ratio, format, where it goes]
+
+Shot list:
+
+| # | Duration | What's in frame | Prop | Graphics / effect | Retention beat |
+|---|----------|-----------------|------|-------------------|----------------|
+| 1 | [0:00–0:02] | [framing, angle, what Sai does/says] | [prop or —] | [card/animation/comp or —] | [the one reason they keep watching here] |
+| 2 | [0:02–...] | | | | |
+| ... | | | | | |
+
+Keep / drop from raw: [what to keep, what to cut — bad takes, dead air, restarts, off-camera direction]
 
 Reference: [creator] — "[title]" — [outlier]x
 - Watch: [sandcastles link]
@@ -104,21 +115,27 @@ Visual hook:
 - B:
 - C:
 
-Camera shots:
-
-Graphics and effects:
+Hook pick:
 
 Props:
 
 Assets:
 
-Editor brief:
+Editor brief — full shot list. Build the video from this alone.
+
 - Structure:
-- Keep / drop:
-- Graphics to build:
 - Captions:
 - Length and pace:
 - Deliverable:
+
+Shot list:
+
+| # | Duration | What's in frame | Prop | Graphics / effect | Retention beat |
+|---|----------|-----------------|------|-------------------|----------------|
+| 1 | | | | | |
+| 2 | | | | | |
+
+Keep / drop from raw:
 
 Reference:
 - Watch:
@@ -126,25 +143,22 @@ Reference:
 
 ---
 
-## Topic Pool
+## Backlog
 
-Running list of topics, comparison items, and list ideas. Carried forward and grown each batch.
-
-## Future Video Ideas
-
-Strong ideas we surfaced but have not used yet, with the angle for each.
+One running list, carried forward and grown each batch: topics, comparison items, list ideas, and stronger video concepts we surfaced but have not used yet. For a full concept, note the angle.
 
 ---
 
 Internal — Gray only. Not for Sai or the editor.
 
 Changelog:
-- v4.1 (2026-06-27): Added a per-video Orientation field. Vertical now also covers videos that closely replicate a specific Sandcastles reference (match its framing instead of restaging to 16:9), not just prop-only videos.
-- v4 (2026-06-25): Notion-database redesign. Per-video fields are now: Status, Format (one line), Topics (Sai to fill), Verbal hook A/B/C, Visual hook A/B/C, Camera shots, Graphics and effects, Props (now includes products/costumes/signature action), Assets (Drive folder link), Editor brief, Reference. Removed Purpose, Style, and From Sai (Topics already means "from Sai"). Each video is its own Notion page; pushed via the notion-batch tool.
+- v5 (2026-06-27): Major restructure. Kept all 3 verbal + 3 visual hook options (options drive creativity + trial reels need PAIRED verbal+visual variants). Added optional Hook pick (Sai usually chooses; blank = editor gets full context). Removed standalone Camera shots and Graphics and effects — folded into a far more specific Editor brief that is now a true shot list (per shot: duration, what's in frame, prop, graphics/effect, retention beat). Every shot names its retention beat. Results moved to a link at the top pointing at the existing Sai results Notion database. Merged Topic Pool + Future Video Ideas into one Backlog. Orientation rule rewritten around B-roll reuse: vertical = single-purpose Sandcastles replicas whose clips are never reused; horizontal = everything with reusable raw B-roll.
+- v4.1 (2026-06-27): Added a per-video Orientation field.
+- v4 (2026-06-25): Notion-database redesign. Per-video fields: Status, Format, Topics, Verbal hook A/B/C, Visual hook A/B/C, Camera shots, Graphics and effects, Props, Assets, Editor brief, Reference. Each video its own Notion page; pushed via the notion-batch tool.
 - v3 (2026-06-24): Added a dedicated Editor brief block to every video page. Set the per-batch title convention.
 - v2 (2026-06-24): Rebuilt clean. One page per video, plain language, no emojis.
-- v1 (2026-06-24): First version. Foundation plus per-video blocks plus editor brief.
+- v1 (2026-06-24): First version.
 
 Improvement backlog:
-- After a batch ships, add a Results property per video (views, retention) to learn what worked.
 - Consider a one-line cover/thumbnail concept per video.
+- Once a few batches are tracked, fold the results DB learnings back into the Foundation retention rules.
