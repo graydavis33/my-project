@@ -2,8 +2,9 @@
 notion-batch — push Sai shorts batch docs into a Notion database.
 
 Each video becomes its own Notion page in the "Sai Shorts — Batches" database,
-with columns (Batch, Status, Format, Props, Assets, Reference, Outlier) and a
-rich body (Topics, Verbal/Visual hooks A-B-C, Camera, Graphics, Editor brief).
+with columns (Batch, Status, Format, Orientation, Hook pick, Props, Assets,
+Reference) and a rich body (Topics, Verbal/Visual hooks A-B-C, Editor brief).
+Each page also gets its own inline "Shot list" child database (one row per shot).
 
 Commands:
   setup  --parent <page-url>            create the database under a parent page (run once)
@@ -33,6 +34,12 @@ STATUS_OPTIONS = [
     ("Sent to Editor", "purple"),
     ("Posted", "pink"),
 ]
+
+ORIENTATION_OPTIONS = [("Horizontal", "blue"), ("Vertical", "orange")]
+
+# Per-video child shot-list database (mirrors Gray's Notion "Shot list" DB + editor columns).
+SECTION_OPTIONS = ["Intro", "Section 1", "Section 2", "Section 3", "Section 4", "Section 5", "Outro"]
+SHOT_TYPE_OPTIONS = ["EXTREME WIDE", "WIDE", "MEDIUM", "CLOSE UP", "EXTREME CLOSE UP", "SCREEN RECORD", "POV"]
 
 
 def client():
@@ -105,6 +112,8 @@ def cmd_setup(args):
         "Batch": {"select": {}},
         "Status": {"select": {"options": [{"name": n, "color": c} for n, c in STATUS_OPTIONS]}},
         "Format": {"rich_text": {}},
+        "Orientation": {"select": {"options": [{"name": n, "color": c} for n, c in ORIENTATION_OPTIONS]}},
+        "Hook pick": {"rich_text": {}},
         "Props": {"rich_text": {}},
         "Assets": {"url": {}},
         "Reference": {"url": {}},
@@ -134,8 +143,14 @@ def video_to_page(db_id, batch, v):
         "Batch": {"select": {"name": batch}},
         "Status": {"select": {"name": status}},
         "Format": {"rich_text": rt(v.get("format", ""))},
+        "Hook pick": {"rich_text": rt(v.get("hook_pick", ""))},
         "Props": {"rich_text": rt(v.get("props", ""))},
     }
+    orientation = v.get("orientation", "")
+    if orientation.startswith("Vertical"):
+        props["Orientation"] = {"select": {"name": "Vertical"}}
+    elif orientation.startswith("Horizontal"):
+        props["Orientation"] = {"select": {"name": "Horizontal"}}
     if v.get("assets") and v["assets"].startswith("http"):
         props["Assets"] = {"url": v["assets"]}
     # Reference column = the public Original link (recipients have no Sandcastles account).
@@ -157,14 +172,12 @@ def video_to_page(db_id, batch, v):
             val = block.get(opt, "")
             body.append(bullet(f"{opt}: {val}".rstrip(": ")))
 
-    body.append(heading("Camera shots"))
-    body.append(para(v.get("camera", "")))
-    body.append(heading("Graphics and effects"))
-    body.append(para(v.get("graphics", "")))
-
     body.append(heading("Editor brief"))
     for k, val in v.get("editor", {}).items():
         body.append(bullet(f"{k}: {val}".rstrip(": ")))
+    if v.get("keep_drop"):
+        body.append(bullet(f"Keep / drop from raw: {v['keep_drop']}"))
+    body.append(para("Shot list -> the linked database below."))
 
     body.append(heading("Reference"))
     if v["reference"].get("label"):
@@ -178,6 +191,60 @@ def video_to_page(db_id, batch, v):
         body.append(para_rich(links))
 
     return props, body
+
+
+def _clean(val):
+    """Treat the template's em-dash placeholder as empty."""
+    v = (val or "").strip()
+    return "" if v in ("—", "-", "...") else v
+
+
+def create_shot_list_db(notion, page_id, shots):
+    """Create a per-video child shot-list database and add a row per shot.
+
+    Mirrors Gray's Notion 'Shot list' DB (Section, Shot name, Shot type, Complete?,
+    Shot Notes, Time of Day, Location, Shoot Day) plus the editor columns
+    (Duration, Prop, Graphics / effect, Retention beat). On-set columns are left
+    empty to fill in Notion. API can't create the Basic/Editor *views* — add those
+    by hand once.
+    """
+    schema = {
+        "Shot name": {"title": {}},
+        "Section": {"select": {"options": [{"name": n} for n in SECTION_OPTIONS]}},
+        "Shot type": {"select": {"options": [{"name": n} for n in SHOT_TYPE_OPTIONS]}},
+        "Duration": {"rich_text": {}},
+        "Prop": {"rich_text": {}},
+        "Graphics / effect": {"rich_text": {}},
+        "Retention beat": {"rich_text": {}},
+        "Complete?": {"checkbox": {}},
+        "Shot Notes": {"rich_text": {}},
+        "Time of Day": {"select": {}},
+        "Location": {"select": {}},
+        "Shoot Day": {"date": {}},
+    }
+    db = notion.databases.create(
+        parent={"type": "page_id", "page_id": page_id},
+        title=rt("Shot list"),
+        is_inline=True,
+        initial_data_source={"properties": schema},
+    )
+    ds_id = db.get("data_sources", [{}])[0].get("id")
+    for s in shots:
+        row = {
+            "Shot name": {"title": rt(_clean(s.get("shot_name")) or "(unnamed shot)")},
+            "Duration": {"rich_text": rt(_clean(s.get("duration")))},
+            "Prop": {"rich_text": rt(_clean(s.get("prop")))},
+            "Graphics / effect": {"rich_text": rt(_clean(s.get("graphics")))},
+            "Retention beat": {"rich_text": rt(_clean(s.get("retention")))},
+        }
+        sec = _clean(s.get("section"))
+        if sec:
+            row["Section"] = {"select": {"name": sec}}
+        st = _clean(s.get("shot_type"))
+        if st:
+            row["Shot type"] = {"select": {"name": st}}
+        notion.pages.create(parent={"type": "data_source_id", "data_source_id": ds_id}, properties=row)
+    return len(shots)
 
 
 def cmd_push(args):
@@ -198,7 +265,12 @@ def cmd_push(args):
             properties=props,
             children=body[:100],
         )
-        print(f"  + {v['title'][:60]}  ->  {page['url']}")
+        shots = v.get("shots", [])
+        if shots:
+            n = create_shot_list_db(notion, page["id"], shots)
+            print(f"  + {v['title'][:60]}  ->  {page['url']}  ({n} shots)")
+        else:
+            print(f"  + {v['title'][:60]}  ->  {page['url']}")
     print(f"Pushed {len(videos)} videos into '{args.batch}'.")
     print(f"Database: {cfg.get('url', '')}")
 

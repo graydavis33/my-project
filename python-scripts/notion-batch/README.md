@@ -14,13 +14,20 @@ A database **"Sai Shorts — Batches"** where each row = one video:
 | Batch | Select | "Batch 4" — filter to one batch |
 | Status | Select | Draft / Needs Topics / Approved / Filmed / Sent to Editor / Posted |
 | Format | Text | the one-line structure |
+| Orientation | Select | Horizontal / Vertical (vertical = single-purpose Sandcastles replica) |
+| Hook pick | Text | which hook(s) to use; blank = editor gets all options |
 | Props | Text | physical product / prop / costume / signature action |
 | Assets | URL | Google Drive folder the editor downloads graphics + b-roll from |
 | Reference | URL | clickable link to the Sandcastles outlier |
-| Outlier | Number | the multiple (e.g. 124.9) |
 
 Each page body holds: Topics (Sai-to-fill callout), Verbal hook A/B/C, Visual hook A/B/C,
-Camera shots, Graphics and effects, Editor brief, and clickable Watch/Original links.
+Editor brief (Structure / Captions / Length / Deliverable + Keep-drop), and clickable
+Watch/Original links.
+
+Each page also gets its **own inline "Shot list" child database** (one row per shot) mirroring
+Gray's Notion Shot list DB: Section, Shot name, Shot type, Complete?, Shot Notes, Time of Day,
+Location, Shoot Day — plus editor columns Duration, Prop, Graphics / effect, Retention beat.
+The API can't create the Basic/Editor *views* — add those two views by hand once per database.
 
 ## Setup (once)
 
@@ -36,7 +43,7 @@ Camera shots, Graphics and effects, Editor brief, and clickable Watch/Original l
 
 ## Use it every batch
 
-1. Fill the batch markdown from `_BATCH-DOC-TEMPLATE.md` (v4).
+1. Fill the batch markdown from `_BATCH-DOC-TEMPLATE.md` (v5).
 2. Push it:
    ```bash
    python main.py push ../../business/social-media/sai/scripts/2026-06-24-AI-Batch-4.md --batch "Batch 4"

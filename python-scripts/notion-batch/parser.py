@@ -1,8 +1,10 @@
 """
-Parse a Sai shorts batch markdown doc (v4 template) into structured video dicts.
+Parse a Sai shorts batch markdown doc (v5 template) into structured video dicts.
 
 The template is plain "Label: value" lines, one page per "## Video N — title".
-Placeholder pages (title contains "[working title]") and the Foundation are skipped.
+The Editor brief holds a markdown shot-list table that becomes a per-video
+child database in Notion. Placeholder pages (title contains "[working title]")
+and the Foundation are skipped.
 """
 import re
 
@@ -10,22 +12,40 @@ import re
 SINGLE = {
     "Status": "status",
     "Format": "format",
+    "Orientation": "orientation",
     "Topics (Sai to fill)": "topics",
-    "Camera shots": "camera",
-    "Graphics and effects": "graphics",
+    "Hook pick": "hook_pick",
     "Props": "props",
     "Assets": "assets",
+    "Keep / drop from raw": "keep_drop",
 }
+
+# Shot-list table columns, in order. Maps to the child shot-list database.
+SHOT_COLS = ["section", "shot_name", "shot_type", "duration", "prop", "graphics", "retention"]
 
 VIDEO_RE = re.compile(r"^##\s+Video\s+(.+?)\s+[—-]\s+(.+)$")
 SUBITEM_RE = re.compile(r"^-\s*([^:]+):\s*(.*)$")
 OUTLIER_RE = re.compile(r"[—-]\s*([\d.]+)x")
 
 
+def _parse_table_row(stripped):
+    """Return a shot dict for a real data row, or None for header/separator/placeholder rows."""
+    cells = [c.strip() for c in stripped.strip("|").split("|")]
+    joined = "".join(cells)
+    if joined and set(joined) <= set("-: "):  # separator row like |---|---|
+        return None
+    if cells and cells[0].lower() == "section":  # header row
+        return None
+    sec = cells[0] if cells else ""
+    if not sec or sec.startswith("[") or sec == "...":  # empty or template placeholder
+        return None
+    return {k: (cells[i] if i < len(cells) else "") for i, k in enumerate(SHOT_COLS)}
+
+
 def parse(md: str) -> list[dict]:
     videos = []
     cur = None
-    mode = None  # which multi-line block we're collecting: verbal/visual/editor/reference
+    mode = None  # which block we're collecting: verbal/visual/editor/shots/reference
 
     def push():
         if cur and "[working title]" not in cur.get("title", ""):
@@ -41,7 +61,7 @@ def parse(md: str) -> list[dict]:
             cur = {
                 "id": m.group(1).strip(),
                 "title": f"{m.group(1).strip()} — {m.group(2).strip()}",
-                "verbal": {}, "visual": {}, "editor": {}, "reference": {},
+                "verbal": {}, "visual": {}, "editor": {}, "reference": {}, "shots": [],
             }
             mode = None
             continue
@@ -64,8 +84,10 @@ def parse(md: str) -> list[dict]:
             mode = "verbal"; continue
         if stripped == "Visual hook:":
             mode = "visual"; continue
-        if stripped == "Editor brief:":
+        if stripped.startswith("Editor brief"):
             mode = "editor"; continue
+        if stripped.startswith("Shot list"):
+            mode = "shots"; continue
         if stripped.startswith("Reference:"):
             mode = "reference"
             cur["reference"]["label"] = stripped[len("Reference:"):].strip()
@@ -74,8 +96,15 @@ def parse(md: str) -> list[dict]:
                 cur["outlier"] = float(mo.group(1))
             continue
 
+        # Shot-list table rows (only collected while in the shots block)
+        if mode == "shots" and stripped.startswith("|"):
+            row = _parse_table_row(stripped)
+            if row:
+                cur["shots"].append(row)
+            continue
+
         # Sub-items inside a block
-        if stripped.startswith("-") and mode:
+        if stripped.startswith("-") and mode in ("verbal", "visual", "editor", "reference"):
             sm = SUBITEM_RE.match(stripped)
             if sm:
                 key, val = sm.group(1).strip(), sm.group(2).strip()
