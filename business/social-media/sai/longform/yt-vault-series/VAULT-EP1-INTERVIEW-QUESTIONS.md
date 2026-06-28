@@ -68,7 +68,7 @@ Feeds slot 9. Film Sai's real reactions close to the moment — right after each
 - ★ Which conversation surprised you the most, and why?
 - What's something one of them said that you didn't expect?
 - Was there a moment you realized you'd been missing something obvious? What was it?
-- How did it feel to actually sit and *listen* for two hours instead of doing?
+- How did it feel to actually sit and *listen* to your team instead of assuming you already knew?
 
 ## Block G — Takeaways + Implementation
 Feeds slots 11–12. The turn from listening to doing — the whole point of the format.

@@ -10,10 +10,10 @@ There is **no source** anywhere for Bezos spending "~2 hours a week" (or any wee
 
 What's real is a **set of habits** that all do the same thing: keep the founder in *direct, unfiltered contact with the customer* and treat what the customer says as more true than the dashboard. That's the tactic. We imitate the *habits*, not a fake number.
 
-**The reframe for the wheel/file:** instead of "Talk to customers 2 hrs/week," word it as
-> **"Stay in direct contact with your customers — and trust what they tell you over your own metrics."**
+**LOCKED reframe (Episode 1 = Bezos tactic #8, "Anecdotes over the dashboard"):** instead of "Talk to customers 2 hrs/week," the wheel/file line is
+> **"When the data and the real stories disagree, the stories win — go to the source, listen, and act on what you hear, not on what your dashboard tells you."**
 
-Same spirit, fully defensible, and it actually maps better onto what Sai does with his team.
+Same spirit, fully defensible, and it maps better onto what Sai does with his team: state a belief about them → go check it directly. See HABIT 3 below for the cinematic version of this exact tactic.
 
 ---
 

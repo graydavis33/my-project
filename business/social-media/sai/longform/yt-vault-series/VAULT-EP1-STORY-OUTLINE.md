@@ -16,7 +16,9 @@ Built from Gray + Sai's 2026-06-26 refined concept, run through the playbook fra
 
 **What changed (2026-06-26):** the Vault video pivoted. The earlier draft in this folder (`VAULT-V1-STORY-OUTLINE.md` / `VAULT-V1-INTERVIEW-QUESTIONS.md`) was the *"pull a tactic = run ads → 30-day client bet"* concept. **This doc replaces that direction.** The old files are left intact as a reference draft — archive them when you're ready.
 
-**The new mechanic, in one breath:** a physical vault holds a file on each of the greatest entrepreneurs (photo, bio, their top 10 business tactics). Two wheels — one of faces, one of numbers 1–10. Spin both → you land on an entrepreneur **and** one specific tactic from their list. **Whatever it lands on, Sai has to actually implement it in Trendify.** Episode 1's draw: **Jeff Bezos → "spend ~2 hours a week talking directly to your customers"** → Sai adapts it to his **team**.
+**The new mechanic, in one breath:** a physical vault holds a file on each of the greatest entrepreneurs (photo, bio, their top 10 business tactics). Two wheels — one of faces, one of numbers 1–10. Spin both → you land on an entrepreneur **and** one specific tactic from their list. **Whatever it lands on, Sai has to actually implement it in Trendify.** Episode 1's draw: **Jeff Bezos → #8: "Anecdotes over the dashboard" — trust the real stories from your people over your own metrics** → Sai adapts it to his **team**.
+
+> **⚠️ Tactic changed (verified):** the old "~2 hours a week talking to customers" was an **unsourced internet myth** — no source backs any weekly time figure. We swapped it for Bezos's **documented** #8 tactic, *anecdotes over the dashboard* (the live 1-800 phone-call story). Full provenance + the verified habits are in `VAULT-EP1-BEZOS-BACKGROUND.md`. **No time figures anywhere in this episode.**
 
 **Locked production answers (Gray, 2026-06-26):**
 - **Physical props** — real vault, real printed files, two real wheels Sai spins on camera.
@@ -82,7 +84,7 @@ If a clip doesn't serve *want / but / until*, it's filler — cut it or move it.
 | **1. Situation** | Sai is a young founder who studies the greats obsessively — books, clips, tactics. He knows more business advice than he could ever use. |
 | **2. Desire** | He doesn't just want to *know* it — he wants to *be* it. To actually run his company the way the founders he admires ran theirs. |
 | **3. Conflict** | He never implements. Knowledge piles up, nothing changes. It's the quiet disease of every founder and creator — learning as a substitute for doing. |
-| **4. Change** | He builds the Vault and hands the decision to a wheel. It lands on **Bezos → talk to your customers ~2 hrs/week.** No backing out — he adapts it to his team and runs real 1-on-1s with 5 people. |
+| **4. Change** | He builds the Vault and hands the decision to a wheel. It lands on **Bezos → trust the people over the dashboard.** No backing out — he adapts it to his team: he states a belief he holds about them out loud, then goes and *checks* it through real 1-on-1s with 5 people. |
 | **5. Result** | He walks out with 3–5 tangible changes actually shipped into Trendify — and early proof that forcing the implementation is what finally made the advice real. |
 
 The 5-line core never changes. Every beat must trace back to one of these five.
@@ -103,7 +105,7 @@ It's a *knowing-vs-doing* story wearing a billionaire-tactic costume. The vault/
 3. *Every Founder Learns This — I Actually Did It*
 
 **Thumbnails:**
-1. Sai mid-spin at the physical wheel, Bezos's face locked in the window, bold **"2 HRS / WEEK."**
+1. Sai mid-spin at the physical wheel, Bezos's face locked in the window, bold **"THE DATA LIED."** (or **"I WAS WRONG."**)
 2. Split frame — Sai's face | Bezos's face — the open vault glowing between them.
 3. Sai at the org chart, **"5 PEOPLE / 1 WEEK"** + a stopwatch, the wheel in frame.
 
@@ -117,13 +119,13 @@ Legend — **[NARR]** scripted narration · **[INT]** interview answer · **[SCE
 |---|------|------|------|--------------------------|
 | 1 | **COLD OPEN — The Confession.** "I've watched a thousand hours of people smarter than me. I've actually used almost none of it." Reveal the vault. "So I built this — and I'm giving it the keys." | [NARR]+[INT]+[VFX] | `( MASTER` | Story Lens declared · Stakes · topic clarity in sentence one |
 | 2 | **The Rules of the Vault.** Files on the greatest founders — photo, bio, top 10 tactics. Two wheels: faces + numbers. Whatever it lands on, I implement. No re-spins. | [NARR]+[VFX] | `( draw` | Title-as-contract · the rule the audience trusts |
-| 3 | **THE DRAW (head fake #1).** Spin faces → **Bezos.** Spin numbers → his **#X → "~2 hours a week talking to your customers."** Real reaction. | [SCENE]+[INT] | `close draw` `( how` | **Prediction error / dopamine spike** (ref 10) |
-| 4 | **CONTEXT — how Bezos did it.** Tight graphics explainer: his obsession with direct customer contact (reading customer email, the empty chair, "customer-obsession"). | [NARR]+[VFX] | | Speed-to-value · makes the tactic credible |
-| 5 | **THE TWIST — customers → team (head fake #2).** "Here's the problem: my highest-leverage 'customers' right now are the 5 people who build this with me." Trendify context: it's all people / retention is the lever. | [INT] | `( why` | Five-Line **Desire** (the true why) · Story Lens · series thread |
+| 3 | **THE DRAW (head fake #1).** Spin faces → **Bezos.** Spin numbers → **#8 → "Anecdotes over the dashboard — trust the people over your metrics."** Real reaction. | [SCENE]+[INT] | `close draw` `( how` | **Prediction error / dopamine spike** (ref 10) |
+| 4 | **CONTEXT — how Bezos did it.** Lead with the **live 1-800 phone-call story** (the dashboard said <60 sec; 10 min of silence proved it lied), then stack the supporting habits (the `jeff@amazon` "?" email, the empty chair). Sai narrates — script in `VAULT-EP1-BEZOS-CONTEXT-SCRIPT.md`. | [NARR]+[VFX] | | Speed-to-value · teaches the tactic through one story |
+| 5 | **THE TWIST — customers → team + the test (head fake #2).** "Bezos did this for customers. My most important 'customers' are the 5 people who build this with me." Then Sai states a **belief he holds about his team out loud** — his own "dashboard" (e.g. "I assume everyone's aligned / onboarding is smooth / they're happy with how we run X") — and commits to going and *checking* if it's actually true. Trendify context: it's all people / retention is the lever. | [INT]+[SCENE] | `( why` `( test` | Five-Line **Desire** (the true why) · Story Lens · series thread · sets up the anecdotes-vs-assumption payoff |
 | 6 | **THE SUCCESS BAR (open the checklist).** For this to count: ① actually hold all 5 conversations this week ② pull a real list of tangible changes ③ ship at least 3 before this video ends. | [NARR]+[VFX] | `( S1 ( S2 ( S3` | **3 nested open loops** = the progress bar |
 | 7 | **FAIRNESS — the org chart + picking the 5.** Show the org chart, select the 5 people in a fun, engaging way (a draw of its own). | [SCENE]+[VFX] | | Transparency · engagement beat |
 | 8 | **THE PLAN — schedule + agenda.** When each happens, how long they get, and the questions — grounded in how Bezos actually listened. | [SCENE]+[INT] | | The setup / the grind (Block E) |
-| 9 | **THE CONVERSATIONS.** The five 1-on-1s. Timelapse + the best moment from each. The honest, human core of the episode. | [SCENE]+[INT] | `close S1` | Mid-doc payoff · "it's all people" engine (Block F) |
+| 9 | **THE CONVERSATIONS (the test pays off).** The five 1-on-1s. Timelapse + the best moment from each. **This is where the belief from Beat 5 gets checked** — the gap between what Sai *assumed* and what his team actually says (his version of the 10-minute phone silence). The honest, human core of the episode. | [SCENE]+[INT] | `close S1` `close test` | Mid-doc payoff · anecdotes-beat-assumption reveal · "it's all people" engine (Block F) |
 | 10 | **MID-DOC REHOOK.** "I could've heard all of that and still done nothing. That's the whole disease. So this time—" | [INT] | re-stake `MASTER` | Re-hook (ref 10) · long-loop maintenance |
 | 11 | **THE TAKEAWAYS.** By end of day, the concrete 3–5 things worth acting on. | [INT]+[VFX] | `close S2` | Five-Line **Change** begins (Block G) |
 | 12 | **IMPLEMENTATION (BTS).** What actually changes, who's involved, what success looks like for each — then show it shipping. | [SCENE]+[INT] | `close S3` | The unglamorous machine · But/Therefore sequencing (Block G) |
@@ -141,7 +143,7 @@ Legend — **[NARR]** scripted narration · **[INT]** interview answer · **[SCE
 > **[NARR]:** *"Inside this vault is a file on basically every founder I've ever looked up to. Their story. And their ten best moves."*
 > *(opens it — files, photos, the two wheels)*
 > **[NARR]:** *"Two wheels. One picks the person. One picks the tactic. And whatever it lands on — I don't get a say. I have to actually do it. In my real company."*
-> *(spin → Bezos. spin → a number → "TALK TO YOUR CUSTOMERS — 2 HRS / WEEK")*
+> *(spin → Bezos. spin → a number → "ANECDOTES OVER THE DASHBOARD — TRUST THE PEOPLE, NOT YOUR METRICS")*
 > **Sai:** *(small laugh)* *"Okay. Of course it's the one that's actually hard."*
 > *(title card: The Vault — Episode 1)*
 
@@ -160,7 +162,7 @@ That's Stakes + the thesis + the first head fake inside 40 seconds, master loop 
 
 ## B8. Live decisions only you + Sai can make
 1. **The vault roster** — Bezos is locked for Ep1, but the vault needs ~10–20 founders on the faces wheel (each with photo + bio + top 10) to sell the concept on camera. Who's in v1?
-2. **The exact Bezos tactic wording** — confirm the line on the file (e.g. "Spend ~2 hours every week in direct contact with customers") and that the **customers → team** adaptation is the move.
+2. **The exact Bezos tactic wording** — LOCKED to #8 "Anecdotes over the dashboard": *"When the data and the real stories disagree, the stories win — go to the source, listen, and act on what you hear, not on what your dashboard tells you."* Confirm this is the line on the file and that the **customers → team** adaptation (state a belief → check it) is the move.
 3. **How the wheel lands on a pre-locked pick** — gaffed/weighted wheel, a marked stop, or fix it in the edit. This is a small honesty/prop call worth making on purpose.
 4. **The 5 team members + the org chart** — who's in, real names on screen or not, and how you "pick the 5 in a fun way" (a third mini-spin? a separate draw?).
 5. **Runtime** — you said 5–20 min, no target. This skeleton holds at any length; more interview depth (Blocks A–H) = longer.

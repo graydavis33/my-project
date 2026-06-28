@@ -112,7 +112,7 @@ Across ~19 real titles in the exact lane, building blocks ranked by frequency:
 From the CTR study + the 7-pattern library + what we can see in Sandcastles thumbnails:
 
 - **Dual-face** (Sai | Bezos) — backed by "multiple faces beat single" + the billionaire-interview lane's face-forward convention.
-- **One anchor number, ≤10 chars** — "2 HRS", "30 DAYS", "5 PEOPLE". Dodges the −19% text penalty. (Pattern: `big-dollar-number` / `single-anchor-word`.)
+- **One anchor number, ≤10 chars** — "30 DAYS", "5 PEOPLE", "$100B". Dodges the −19% text penalty. (Pattern: `big-dollar-number` / `single-anchor-word`.)
 - **Orange `#F28129` as the accent / arrow** — Sai's brand IS one of the 4 winning colors; use it the way Brett/Jordan use red.
 - **Expression:** the **"I tried" lane uses an exhausted/shocked creator face**; the **mentor lane uses calm-authority**. For this episode, Sai's genuine *"of course it landed on the hard one"* reaction is the honest middle.
 - **Prop cue for "what I'm copying":** Bezos's face OR an Amazon/clock/"$100B" cue.
@@ -156,7 +156,7 @@ The actual thumbnails of the top performers (saved in `reference-thumbnails/`). 
 
 ### → Refined Sai thumbnail concepts (grounded in what actually won)
 - **① Transformation "DAY 1 | DAY 30"** (the 2.5M template, adapted): left = stressed/chaotic Sai or a messy team whiteboard (desaturated); right = calm Sai / shipped-changes board (saturated, orange). Corners: **"DAY 1" / "DAY 30."** Minimal text. *This is the proven #1 lane.*
-- **② Bezos → Sai dual-face + arrow** (Andrew Kirby template, premium-ized): Bezos left → Sai right, vault/orange arrow between, **"30 DAYS"** or **"2 HRS/WEEK."** Dual-face = +36% CTR. Make it cinematic, not lo-fi.
+- **② Bezos → Sai dual-face + arrow** (Andrew Kirby template, premium-ized): Bezos left → Sai right, vault/orange arrow between, **"30 DAYS"** or **"THE DATA LIED."** Dual-face = +36% CTR. Make it cinematic, not lo-fi.
 - **③ Receipts** (Cam Vito template): Sai pointing at a screen showing the real outcome (changes shipped / a result number) + **"30 DAYS."** Only if the outcome produces a clean number.
 
 ---
@@ -195,7 +195,7 @@ The episode is locked on Bezos. But the data says **naming Bezos in the title is
 
 ## 7. EP1 thumbnail candidates — grounded, each tagged to a proven pattern
 
-1. **Dual-face + anchor number** — Sai (left) | Bezos (right), open vault glowing between, bold orange **"2 HRS/WEEK"** (≤10 chars). → `multiple-faces` (+36%) + `single-anchor` + brand-orange.
+1. **Dual-face + anchor phrase** — Sai (left) | Bezos (right), open vault glowing between, bold orange **"THE DATA LIED"** (≤10 chars; alt **"I WAS WRONG"**). → `multiple-faces` (+36%) + `single-anchor` + brand-orange.
 2. **Sai mid-spin + locked face** — Sai spinning the physical wheel (motion), Bezos locked in the window, **"30 DAYS"** orange. → face + prop + anchor-number + the mechanic.
 3. **Transformation tease** — Sai at the org chart, **"5 PEOPLE / 1 WEEK"** + stopwatch, wheel in frame. → `big-number` + receipts/`screenshot-as-prop` coding.
 4. **Clean authority + giant number** — tight Sai face left 45%, huge orange **"$100B"** right on negative space. → 2026 clean-composition trend + brand orange + dodges text penalty.
