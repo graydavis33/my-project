@@ -1,4 +1,4 @@
-# The Vault — Episode 1: Full Story Outline
+0# The Vault — Episode 1: Full Story Outline
 ### "I Let a Wheel Decide Which Billionaire I Copy" (working title)
 
 Built from Gray + Sai's 2026-06-26 refined concept, run through the playbook frameworks — same method as the last longform doc:
