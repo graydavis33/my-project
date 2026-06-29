@@ -28,6 +28,10 @@ Three pillars — every video hits at least one:
 
 Most reference videos are teacher-mode. Our core job is to convert prescriptive into first-person experiential.
 
+Batch rhythm:
+- 7 videos per batch (A/B variants of one concept count as one).
+- The day before each shoot, do a review call with Sai — walk him through the batch in Notion, get topic feedback + hook picks + approvals. Record the call.
+
 Production constants:
 - The orientation rule is about B-roll reuse, not framing preference.
 - Horizontal (default): any video whose raw footage doubles as reusable B-roll — long-form, or short-form where natural clips can be cut into other videos. Horizontal also stands out in-feed and moves freely between shorts and long-form.
@@ -52,19 +56,27 @@ Format: [one tight line — the structure only, e.g. "numbered listicle" / "this
 
 Orientation: [Horizontal (default) | Vertical — single-purpose Sandcastles replica]
 
-Topics (Sai to fill): [Sai adds the real subjects — he knows the business specifics. Gray may drop placeholder examples; otherwise leave this as a flag that we need Sai's input.]
+Topics (Sai to fill): renders as a bold, bulleted box on the page so it can't be missed. Each video carries its OWN real subjects here — for comparison / gauntlet videos, list the side-by-side items for THIS video so it's obvious which topics go with which video.
+- [this video's real subjects — Sai knows the business specifics]
+- [comparison / gauntlet videos: the side-by-side items to run for THIS video]
+- [which point is strongest — save it for last]
 
 Verbal hook:
 - A: [spoken opening line]
 - B: [alternate]
 - C: [alternate]
 
-Visual hook:
-- A: [what's on screen in the first 1-2 seconds — must rhyme with the verbal hook, not repeat it]
+Caption hook:
+- A: [the on-screen TEXT hook in the first 1-2 seconds — the words burned on screen, not what he says aloud]
 - B: [alternate]
 - C: [alternate]
 
-Hook pick: [optional. Sai usually picks; Gray sometimes. Leave blank to hand the editor all options with full context. For trial reels, name PAIRED sets — e.g. "Trial reels: V-A+Vis-A and V-C+Vis-C" — never mix a verbal from one option with a visual from another.]
+Visual hook:
+- A: [what's on screen in the first 1-2 seconds — must rhyme with the verbal/caption hook, not repeat it]
+- B: [alternate]
+- C: [alternate]
+
+Hook pick: [optional. Verbal / Caption / Visual hooks are multi-select checkboxes — Sai ticks the option(s) he wants from each and notes how to pair them (e.g. "verbal A + caption A + visual B"). Leave blank to hand the editor all options with full context. For trial reels, name the PAIRED sets to test.]
 
 Props: [every physical product, prop, or costume the video needs, including a recurring signature action — or "none". The Editor brief maps each prop to the exact shots it appears in.]
 
@@ -94,6 +106,8 @@ Fill the planning columns here; the on-set columns (Time of Day, Location, Shoot
 
 Keep / drop from raw: [what to keep, what to cut — bad takes, dead air, restarts, off-camera direction]
 
+Editor questions: auto-created as an empty box on every page. The editor drops any question or missing-context request there; he adds a Notion comment and @mentions Gray, who gets notified natively (no custom build). Left empty in this doc on purpose.
+
 Reference: [creator] — "[title]" — [outlier]x
 - Watch: [sandcastles link]
 - Original: [platform link]
@@ -111,8 +125,16 @@ Format:
 Orientation:
 
 Topics (Sai to fill):
+- 
+- 
+- 
 
 Verbal hook:
+- A:
+- B:
+- C:
+
+Caption hook:
 - A:
 - B:
 - C:
@@ -144,6 +166,8 @@ Shot list: (own linked shot-list database per video; views + selects per the spe
 
 Keep / drop from raw:
 
+Editor questions: (auto-created empty on the page — left blank here)
+
 Reference:
 - Watch:
 - Original:
@@ -159,6 +183,7 @@ One running list, carried forward and grown each batch: topics, comparison items
 Internal — Gray only. Not for Sai or the editor.
 
 Changelog:
+- v6 (2026-06-29): Added a third hook type — **Caption hook** A/B/C (the on-screen TEXT hook, distinct from the spoken Verbal hook and the Visual action hook). All three hook types render as multi-select checkboxes so Sai ticks the options he wants and notes the pairings (no rigid "one set" lock). **Topics** rebuilt as a bold, bulleted per-video box (was a single easy-to-miss callout) — each video carries its own real subjects, and comparison/gauntlet videos list their side-by-side items right on the page so it's obvious which topics go with which video. Added a per-video **Editor questions** box (auto-created empty) — the editor asks for missing context there and @mentions Gray in a Notion comment for a native notification. Foundation gained the batch rhythm note (7 videos/batch + record the day-before review call). First fill in the new format: `2026-06-29-Batch-4-genz-test.md`.
 - v5.1 (2026-06-27): Shot list now matches Gray's existing Notion "Shot list" database. Each video embeds its OWN linked shot-list sub-database (never shared — keeps batches separate). Schema: Section (select), Shot name (title), Shot type (select: EXTREME WIDE/WIDE/MEDIUM/CLOSE UP/EXTREME CLOSE UP/SCREEN RECORD/POV), Complete? (checkbox), Shot Notes, Time of Day, Location, Shoot Day — plus added columns Duration, Prop, Graphics/effect, Retention beat. Two views: Basic (on-set) + Editor.
 - v5 (2026-06-27): Major restructure. Kept all 3 verbal + 3 visual hook options (options drive creativity + trial reels need PAIRED verbal+visual variants). Added optional Hook pick (Sai usually chooses; blank = editor gets full context). Removed standalone Camera shots and Graphics and effects — folded into a far more specific Editor brief that is now a true shot list (per shot: duration, what's in frame, prop, graphics/effect, retention beat). Every shot names its retention beat. Results moved to a link at the top pointing at the existing Sai results Notion database. Merged Topic Pool + Future Video Ideas into one Backlog. Orientation rule rewritten around B-roll reuse: vertical = single-purpose Sandcastles replicas whose clips are never reused; horizontal = everything with reusable raw B-roll.
 - v4.1 (2026-06-27): Added a per-video Orientation field.

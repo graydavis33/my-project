@@ -3,8 +3,9 @@ notion-batch — push Sai shorts batch docs into a Notion database.
 
 Each video becomes its own Notion page in the "Sai Shorts — Batches" database.
 The outside DB stays simple: Batch, Status, Format, Orientation, Sai notes,
-Assets, Reference. The page body holds the detail: Topics, Verbal/Visual hooks
-A-B-C, Hook pick, Props, Editor brief, Reference (Original link only).
+Assets, Reference. The page body holds the detail: Topics (bulleted, per-video),
+Verbal/Caption/Visual hooks A-B-C, Hook pick, Props, Editor brief, Editor
+questions box, Reference (Original link only).
 Each page also gets its own inline "Shot list" child database (one row per shot).
 
 Commands:
@@ -172,14 +173,19 @@ def video_to_page(db_id, batch, v):
         props["Reference"] = {"url": original}
 
     body = []
-    topics = v.get("topics", "")
-    body.append(heading("Topics (Sai to fill)"))
+    # Topics — bold, bulleted, impossible to miss. Each video carries its own real subjects.
+    topics_list = v.get("topics_list", [])
+    body.append(heading("Topics — Sai fill this in"))
     body.append({"object": "block", "type": "callout",
-                 "callout": {"rich_text": rt(topics or "Sai — add the real subjects here."),
+                 "callout": {"rich_text": rt("Sai — add the real subjects for this video:" if topics_list
+                                             else "Sai — add the real subjects here."),
                              "icon": {"emoji": "✍️"}, "color": "yellow_background"}})
+    for t in topics_list:
+        body.append(bullet(t))
 
-    # Verbal/Visual hooks are to-do checkboxes so Sai ticks the option he wants.
-    for label, key in (("Verbal hook", "verbal"), ("Visual hook", "visual")):
+    # Verbal/Caption/Visual hooks are to-do checkboxes — Sai multi-selects the
+    # options he wants and how to pair them.
+    for label, key in (("Verbal hook", "verbal"), ("Caption hook", "caption"), ("Visual hook", "visual")):
         body.append(heading(label))
         block = v.get(key, {})
         for opt in ("A", "B", "C"):
@@ -187,7 +193,7 @@ def video_to_page(db_id, batch, v):
             body.append(todo(f"{opt}: {val}".rstrip(": ")))
 
     body.append(heading("Hook pick"))
-    body.append(para(v.get("hook_pick", "") or "Sai picks; blank = editor gets all options."))
+    body.append(para(v.get("hook_pick", "") or "Sai picks; multi-select the options + pairings you want. Blank = editor gets all options."))
 
     body.append(heading("Props"))
     body.append(para(v.get("props", "") or "none"))
@@ -198,6 +204,14 @@ def video_to_page(db_id, batch, v):
     if v.get("keep_drop"):
         body.append(bullet(f"Keep / drop from raw: {v['keep_drop']}"))
     body.append(para("Shot list -> the linked database below."))
+
+    # Editor questions — the editor's "I'm stuck on this" box. Native Notion
+    # comments + an @Gray mention here send him a notification (no custom build).
+    body.append(heading("Editor questions"))
+    body.append({"object": "block", "type": "callout",
+                 "callout": {"rich_text": rt("Editor — drop any question or missing-context request here. "
+                                             "Add a Notion comment and @mention Gray so he gets notified."),
+                             "icon": {"emoji": "❓"}, "color": "blue_background"}})
 
     body.append(heading("Reference"))
     if v["reference"].get("label"):

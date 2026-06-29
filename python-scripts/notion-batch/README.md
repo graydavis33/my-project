@@ -20,9 +20,12 @@ A database **"Sai Shorts — Batches"** where each row = one video:
 | Reference | URL | the public Original link (never the Sandcastles Watch link) |
 
 The outside DB stays deliberately simple. Each page **body** holds the detail: Topics
-(Sai-to-fill callout), Verbal hook A/B/C, Visual hook A/B/C, **Hook pick**, **Props**,
-Editor brief (Structure / Captions / Length / Deliverable + Keep-drop), and the
-Reference **Original link only**.
+(bold, bulleted, per-video — comparison videos list their side-by-side items here),
+Verbal hook A/B/C, **Caption hook A/B/C** (on-screen text), Visual hook A/B/C,
+**Hook pick**, **Props**, Editor brief (Structure / Captions / Length / Deliverable +
+Keep-drop), an **Editor questions** box (editor asks for missing context; @mention Gray
+in a Notion comment for a native notification), and the Reference **Original link only**.
+The three hook types are multi-select checkboxes — Sai ticks the options + pairings he wants.
 
 Each page also gets its **own inline "Shot list" child database** (one row per shot) mirroring
 Gray's Notion Shot list DB: Section, Shot name, Shot type, Complete?, Shot Notes, Time of Day,

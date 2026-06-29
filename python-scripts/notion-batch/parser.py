@@ -1,10 +1,11 @@
 """
-Parse a Sai shorts batch markdown doc (v5 template) into structured video dicts.
+Parse a Sai shorts batch markdown doc (v6 template) into structured video dicts.
 
 The template is plain "Label: value" lines, one page per "## Video N — title".
-The Editor brief holds a markdown shot-list table that becomes a per-video
-child database in Notion. Placeholder pages (title contains "[working title]")
-and the Foundation are skipped.
+Hooks come in three flavors (Verbal / Caption / Visual), each A/B/C; Topics is a
+bulleted list of this video's real subjects. The Editor brief holds a markdown
+shot-list table that becomes a per-video child database in Notion. Placeholder
+pages (title contains "[working title]") and the Foundation are skipped.
 """
 import re
 
@@ -13,12 +14,13 @@ SINGLE = {
     "Status": "status",
     "Format": "format",
     "Orientation": "orientation",
-    "Topics (Sai to fill)": "topics",
     "Hook pick": "hook_pick",
     "Props": "props",
     "Assets": "assets",
     "Keep / drop from raw": "keep_drop",
 }
+
+TOPICS_LABEL = "Topics (Sai to fill):"
 
 # Shot-list table columns, in order. Maps to the child shot-list database.
 SHOT_COLS = ["section", "shot_name", "shot_type", "duration", "prop", "graphics", "retention", "editor_notes"]
@@ -61,7 +63,8 @@ def parse(md: str) -> list[dict]:
             cur = {
                 "id": m.group(1).strip(),
                 "title": f"{m.group(1).strip()} — {m.group(2).strip()}",
-                "verbal": {}, "visual": {}, "editor": {}, "reference": {}, "shots": [],
+                "verbal": {}, "caption": {}, "visual": {}, "editor": {}, "reference": {},
+                "shots": [], "topics_list": [],
             }
             mode = None
             continue
@@ -82,8 +85,16 @@ def parse(md: str) -> list[dict]:
         # Block headers
         if stripped == "Verbal hook:":
             mode = "verbal"; continue
+        if stripped == "Caption hook:":
+            mode = "caption"; continue
         if stripped == "Visual hook:":
             mode = "visual"; continue
+        if stripped.startswith(TOPICS_LABEL):
+            mode = "topics"
+            inline = stripped[len(TOPICS_LABEL):].strip()
+            if inline:
+                cur["topics_list"].append(inline)
+            continue
         if stripped.startswith("Editor brief"):
             mode = "editor"; continue
         if stripped.startswith("Shot list"):
@@ -103,12 +114,17 @@ def parse(md: str) -> list[dict]:
                 cur["shots"].append(row)
             continue
 
+        # Topic bullets (plain "- item", no key:value)
+        if mode == "topics" and stripped.startswith("-"):
+            cur["topics_list"].append(stripped.lstrip("-").strip())
+            continue
+
         # Sub-items inside a block
-        if stripped.startswith("-") and mode in ("verbal", "visual", "editor", "reference"):
+        if stripped.startswith("-") and mode in ("verbal", "caption", "visual", "editor", "reference"):
             sm = SUBITEM_RE.match(stripped)
             if sm:
                 key, val = sm.group(1).strip(), sm.group(2).strip()
-                if mode in ("verbal", "visual"):
+                if mode in ("verbal", "caption", "visual"):
                     cur[mode][key] = val
                 elif mode == "editor":
                     cur["editor"][key] = val
