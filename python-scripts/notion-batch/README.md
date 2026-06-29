@@ -30,7 +30,8 @@ The three hook types are multi-select checkboxes — Sai ticks the options + pai
 Each page also gets its **own inline "Shot list" child database** (one row per shot) mirroring
 Gray's Notion Shot list DB: Section, Shot name, Shot type, Complete?, Shot Notes, Time of Day,
 Location, Shoot Day — plus editor columns Duration, Prop, Graphics / effect, Retention beat,
-Editor notes (clip-by-clip instruction for exactly what to do in that shot).
+Editor notes (clip-by-clip instruction for exactly what to do in that shot), and **Shot reference**
+(Files & media — a reference photo/video/AI illustration of how Gray wants the shot set up, for film-day prep).
 The API can't create the Basic/Editor *views* — add those two views by hand once per database.
 
 ## Setup (once)

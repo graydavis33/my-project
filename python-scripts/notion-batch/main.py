@@ -247,6 +247,9 @@ def create_shot_list_db(notion, page_id, shots):
         "Graphics / effect": {"rich_text": {}},
         "Retention beat": {"rich_text": {}},
         "Editor notes": {"rich_text": {}},
+        # For the filmer: a reference photo / video / AI-generated illustration of how
+        # Gray wants this shot set up. Upload a file or paste a link in Notion on film-day prep.
+        "Shot reference": {"files": {}},
         "Complete?": {"checkbox": {}},
         "Shot Notes": {"rich_text": {}},
         "Time of Day": {"select": {}},
