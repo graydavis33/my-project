@@ -53,9 +53,12 @@ python main.py migrate
 ```
 This adds **Orientation** + **Hook pick** to the existing Batches DB so v5 pushes don't fail.
 
+**v6 needs no migration** — Caption hook, Editor questions, and the bulleted Topics all
+live in the page body, not as DB columns.
+
 ## Use it every batch
 
-1. Fill the batch markdown from `_BATCH-DOC-TEMPLATE.md` (v5).
+1. Fill the batch markdown from `_BATCH-DOC-TEMPLATE.md` (v6).
 2. Push it:
    ```bash
    python main.py push ../../business/social-media/sai/scripts/2026-06-24-AI-Batch-4.md --batch "Batch 4"
