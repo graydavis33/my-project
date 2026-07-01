@@ -2,6 +2,7 @@
 <html lang="en" data-composition-variables='[
   {"id":"num","type":"string","label":"Number","default":"01"},
   {"id":"label","type":"string","label":"Lesson label","default":"LEARNED FACEBOOK ADS"},
+  {"id":"labelSize","type":"number","label":"Label font size","default":92},
   {"id":"kicker","type":"string","label":"Kicker","default":"WHAT I LEARNED"}
 ]'>
   <head>
@@ -79,6 +80,7 @@
           ? window.__hyperframes.getVariables() : {};
         if (v.num) document.getElementById("num").textContent = v.num;
         if (v.label) document.getElementById("label").textContent = v.label;
+        if (v.labelSize) document.getElementById("label").style.fontSize = v.labelSize + "px";
 
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
