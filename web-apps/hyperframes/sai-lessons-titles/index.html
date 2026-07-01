@@ -13,19 +13,12 @@
       html, body {
         width: 1080px; height: 1920px; overflow: hidden;
         font-family: "Montserrat", system-ui, sans-serif;
-        background: #1C1916;
+        background: #00B140;
       }
-      /* dark stage — radial base + localized orange glow (no full-screen linear gradient) */
+      /* flat chroma-green stage for keying */
       .stage {
         position: absolute; inset: 0; overflow: hidden;
-        background:
-          radial-gradient(120% 90% at 50% 34%, #34302C 0%, #272320 46%, #1C1916 100%);
-      }
-      .glow {
-        position: absolute; left: 50%; top: 640px; width: 900px; height: 900px;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(circle, rgba(242,129,41,0.30) 0%, rgba(242,129,41,0.0) 62%);
-        will-change: opacity, transform;
+        background: #00B140;
       }
       /* world wrapper carries the slow camera push */
       .world {
@@ -72,9 +65,7 @@
     <div id="root" data-composition-id="main" data-start="0" data-duration="3.2" data-width="1080" data-height="1920">
       <div id="scene" class="clip" data-start="0" data-duration="3.2" data-track-index="1">
         <div class="stage">
-          <div id="glow" class="glow"></div>
           <div id="world" class="world" data-layout-allow-overflow>
-            <div id="kicker" class="kicker">WHAT I LEARNED</div>
             <div id="badge" class="badge"><span id="num">01</span></div>
             <div id="accent" class="accent"></div>
             <div id="label" class="label">LEARNED FACEBOOK ADS</div>
@@ -88,17 +79,12 @@
           ? window.__hyperframes.getVariables() : {};
         if (v.num) document.getElementById("num").textContent = v.num;
         if (v.label) document.getElementById("label").textContent = v.label;
-        if (v.kicker) document.getElementById("kicker").textContent = v.kicker;
 
         window.__timelines = window.__timelines || {};
         const tl = gsap.timeline({ paused: true });
 
         // slow camera push across the whole card (one synced ease)
         tl.fromTo("#world", { scale: 1.0 }, { scale: 1.045, duration: 3.2, ease: "power2.inOut" }, 0);
-        // stage glow breathes up
-        tl.fromTo("#glow", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out", immediateRender: false }, 0);
-        // kicker
-        tl.fromTo("#kicker", { opacity: 0, y: -16 }, { opacity: 1, y: 0, duration: 0.45, ease: "power2.out", immediateRender: false }, 0.15);
         // number plaque slams in
         tl.fromTo("#badge", { opacity: 0, scale: 0.5, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.6)", immediateRender: false }, 0.3);
         // accent line draws out from center
