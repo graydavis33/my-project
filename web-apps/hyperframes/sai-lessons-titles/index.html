@@ -34,6 +34,13 @@
         color: #F28129; opacity: 0; will-change: transform, opacity;
         text-shadow: 0 2px 10px rgba(0,0,0,0.4);
       }
+      /* number row: AGE tag sits next to the badge */
+      .numrow { display: flex; align-items: center; gap: 30px; }
+      .agetag {
+        font-weight: 800; font-size: 62px; letter-spacing: 0.06em; text-transform: uppercase;
+        color: #F28129; opacity: 0; will-change: transform, opacity;
+        text-shadow: 0 3px 12px rgba(0,0,0,0.45);
+      }
       /* orange-glass number plaque */
       .badge {
         width: 300px; height: 300px; border-radius: 56px;
@@ -67,7 +74,10 @@
       <div id="scene" class="clip" data-start="0" data-duration="3.2" data-track-index="1">
         <div class="stage">
           <div id="world" class="world" data-layout-allow-overflow>
-            <div id="badge" class="badge"><span id="num">01</span></div>
+            <div id="numrow" class="numrow">
+              <div id="agetag" class="agetag">AGE</div>
+              <div id="badge" class="badge"><span id="num">01</span></div>
+            </div>
             <div id="accent" class="accent"></div>
             <div id="label" class="label">LEARNED FACEBOOK ADS</div>
           </div>
@@ -87,6 +97,8 @@
 
         // slow camera push across the whole card (one synced ease)
         tl.fromTo("#world", { scale: 1.0 }, { scale: 1.045, duration: 3.2, ease: "power2.inOut" }, 0);
+        // AGE tag slides in next to the badge
+        tl.fromTo("#agetag", { opacity: 0, x: -24 }, { opacity: 1, x: 0, duration: 0.45, ease: "power2.out", immediateRender: false }, 0.34);
         // number plaque slams in
         tl.fromTo("#badge", { opacity: 0, scale: 0.5, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(1.6)", immediateRender: false }, 0.3);
         // accent line draws out from center
