@@ -51,7 +51,12 @@
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
         will-change: transform, opacity;
       }
-      .item-card svg { width: 68%; height: 68%; }
+      .item-card svg {
+        width: 68%;
+        height: 68%;
+        position: relative; /* stays above the glass highlight */
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+      }
 
       .item-title {
         position: absolute;
@@ -100,16 +105,17 @@
 
         // The 9 rankings — times from the raw-video transcript (design.md has the table).
         // Item 1's times come from Studio variables so Gray can nudge them live.
+        // g = the tile's gradient pair (app-icon look, one distinct color per concept)
         const ITEMS = [
-          { label: "Extend your time horizon", tier: "S", icon: "hourglass", intro: v.item1IntroTime, fly: v.item1FlyTime },
-          { label: "Obsess over customers",    tier: "S", icon: "heart",     intro: 3.25,  fly: 4.56 },
-          { label: "Raising money",            tier: "C", icon: "money",     intro: 10.25, fly: 10.9 },
-          { label: "Systems first",            tier: "A", icon: "gear",      intro: 17.45, fly: 18.26 },
-          { label: "Learn how to sell",        tier: "D", icon: "sell",      intro: 22.7,  fly: 23.46 },
-          { label: "Micromanagement",          tier: "F", icon: "magnifier", intro: 34.8,  fly: 35.22 },
-          { label: "Culture is king",          tier: "S", icon: "crown",     intro: 40.25, fly: 41.08 },
-          { label: "Personal brand",           tier: "B", icon: "star",      intro: 48.3,  fly: 48.92 },
-          { label: "AI tools",                 tier: "B", icon: "chip",      intro: 55.6,  fly: 56.24 },
+          { label: "Extend your time horizon", tier: "S", icon: "hourglass", g: ["#4F46E5", "#9333EA"], intro: v.item1IntroTime, fly: v.item1FlyTime },
+          { label: "Obsess over customers",    tier: "S", icon: "heart",     g: ["#EC4899", "#EF4444"], intro: 3.25,  fly: 4.56 },
+          { label: "Raising money",            tier: "C", icon: "money",     g: ["#059669", "#34D399"], intro: 10.25, fly: 10.9 },
+          { label: "Systems first",            tier: "A", icon: "gear",      g: ["#2563EB", "#38BDF8"], intro: 17.45, fly: 18.26 },
+          { label: "Learn how to sell",        tier: "D", icon: "sell",      g: ["#0D9488", "#2DD4BF"], intro: 22.7,  fly: 23.46 },
+          { label: "Micromanagement",          tier: "F", icon: "magnifier", g: ["#F97316", "#DC2626"], intro: 34.8,  fly: 35.22 },
+          { label: "Culture is king",          tier: "S", icon: "crown",     g: ["#F59E0B", "#FDE047"], intro: 40.25, fly: 41.08 },
+          { label: "Personal brand",           tier: "B", icon: "star",      g: ["#A855F7", "#F472B6"], intro: 48.3,  fly: 48.92 },
+          { label: "AI tools",                 tier: "B", icon: "chip",      g: ["#06B6D4", "#6366F1"], intro: 55.6,  fly: 56.24 },
         ];
 
         // === Build the board ===
@@ -166,10 +172,15 @@
           card.style.height = v.cardSize + "px";
           card.style.left = slotLeft + "px";
           card.style.top = slotTop + "px";
-          card.style.background = v.cardBg;
+          card.style.background = "linear-gradient(135deg, " + item.g[0] + ", " + item.g[1] + ")";
           card.style.borderRadius = v.cornerRadius + "px";
-          card.style.border = "2px solid rgba(255,255,255,0.85)";
-          card.innerHTML = ICONS[item.icon];
+          card.style.border = "2px solid rgba(255,255,255,0.9)";
+          card.style.overflow = "hidden";
+          // glass highlight over the gradient, icon on top
+          card.innerHTML =
+            '<div style="position:absolute;inset:0;border-radius:inherit;' +
+            'background:radial-gradient(circle at 30% 18%, rgba(255,255,255,0.4), rgba(255,255,255,0) 62%);"></div>' +
+            ICONS[item.icon];
           // Offset from the slot to the intro pop position (applied by the timeline)
           card.dataset.dx = v.introX - (slotLeft + v.cardSize / 2);
           card.dataset.dy = v.introY - (slotTop + v.cardSize / 2);

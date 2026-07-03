@@ -18,7 +18,9 @@ TierMaker grid, colored tier labels, dark rows, item pops in large then flies to
   ⚠ D and F are green-family — if the chroma key grabs them in Premiere, shift them via
   Studio variables (they're exposed).
 - Row background: `#191918` (solid dark, like the reference)
-- Item cards: `#26262B` dark card, white drawn SVG icons (NO emojis — locked Sai rule)
+- Item cards: per-concept vibrant gradient tiles (app-icon look, gradients in the ITEMS
+  array in index.html) + radial glass highlight, white drawn SVG icons on top
+  (NO emojis — locked Sai rule). Gray asked for "more colorful and visually engaging" 2026-07-03.
 - Text: white `#FFFFFF`, tier letters dark `#191918` on their color chip
 
 ## Typography
