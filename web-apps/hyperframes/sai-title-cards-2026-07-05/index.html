@@ -28,7 +28,7 @@
         padding: 52px 64px 46px;
         border-radius: 28px;
         background: linear-gradient(160deg, #34302C, #272320 55%, #1C1916);
-        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.30);
+        /* no drop shadow — soft black edges fringe when keying the green */
         text-align: center;
         will-change: transform, opacity;
       }
@@ -100,13 +100,16 @@
         tl.from("#card", { y: 44, opacity: 0, scale: 0.965, duration: 0.65, ease: "power3.out" }, 0.12);
 
         // 2) Words rise in one after another
-        tl.from(".title .w", { y: 30, opacity: 0, duration: 0.55, ease: "power2.out", stagger: 0.12 }, 0.34);
+        const wordsStart = 0.34, wordStagger = 0.12, wordDur = 0.55;
+        tl.from(".title .w", { y: 30, opacity: 0, duration: wordDur, ease: "power2.out", stagger: wordStagger }, wordsStart);
 
-        // 3) Orange underline sweeps left to right
-        tl.fromTo("#underline", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.inOut", immediateRender: false }, 0.8);
-
-        // 4) Gentle idle float on the hold (finite repeats)
-        tl.to("#card", { y: -6, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 }, 1.6);
+        // 3) Orange underline sweeps ONCE, exactly while the words fade on —
+        //    starts with the first word, lands as the last word finishes
+        const wordsEnd = wordsStart + (words.length - 1) * wordStagger + wordDur;
+        tl.fromTo("#underline", { scaleX: 0 },
+          { scaleX: 1, duration: wordsEnd - wordsStart, ease: "power1.inOut", immediateRender: false },
+          wordsStart);
+        // then everything holds still to the end
 
         window.__timelines["main"] = tl;
       })();

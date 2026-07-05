@@ -23,9 +23,9 @@ npx --yes hyperframes@0.6.51 render --fps 60 --format webm \
 ffmpeg -c:v libvpx-vp9 -i renders/x.webm -c:v prores_ks -profile:v 4444 \
   -pix_fmt yuva444p10le -vendor apl0 renders/x_ALPHA.mov
 ```
-ALPHA ProRes only (orange glow + soft shadows fringe on chroma green — locked rule).
+GREEN-SCREEN MP4s (Gray's call 2026-07-05, overrides the alpha default): card drop shadow removed so the key stays clean; underline glow is contained on the dark card. Line sweeps ONCE, synced to the word fade-in; no idle float.
 
 ## Delivered 2026-07-05
-3x `Sai-VFX-Title-*_ALPHA.mov` → `/Volumes/Footage/Sai/06_ASSETS/Visual Effects/Batch 4/`.
+3x `Sai-VFX-Title-*-GREEN.mp4` (alphas removed from SSD, kept in renders/) → `/Volumes/Footage/Sai/06_ASSETS/Visual Effects/Batch 4/`.
 Watchable preview: `renders/PREVIEW-all-3-cards.mp4` (all three back-to-back over dark gray).
 Variables: title, titleSize 76, cardY 880 (card center), maxCardWidth 940, canvasBg.
