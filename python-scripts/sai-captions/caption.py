@@ -56,7 +56,7 @@ PRESERVE_CASE = {
 PUNCTUATION_STRIP = ".,!?;:\"()[]{}—–-…"
 TEXT_COLOR = (255, 255, 255, 255)
 SHADOW_COLOR = (0, 0, 0, 160)   # soft black @ ~63% alpha
-SHADOW_OFFSET = (0, 6)       # x, y offset of shadow
+SHADOW_OFFSET = (5, 6)       # x, y offset of shadow (angled down-right, Gray 2026-07-05)
 SHADOW_BLUR = 6              # gaussian blur radius for shadow softness
 TOP_MARGIN = 320             # y of TOP of first text line (matches ref upper-third)
 SIDE_MARGIN = 60             # left/right safe area
@@ -76,16 +76,16 @@ def run(cmd, **kw):
 
 
 def probe_video(video_path: Path):
-    """Return (width, height, duration_sec) using ffprobe."""
+    """Return (width, height, duration_sec, fps_str) using ffprobe."""
     out = run([
         "ffprobe", "-v", "error",
         "-select_streams", "v:0",
-        "-show_entries", "stream=width,height:format=duration",
+        "-show_entries", "stream=width,height,r_frame_rate:format=duration",
         "-of", "default=noprint_wrappers=1:nokey=1",
         str(video_path),
     ]).stdout.strip().splitlines()
-    w, h, dur = int(out[0]), int(out[1]), float(out[2])
-    return w, h, dur
+    w, h, fps, dur = int(out[0]), int(out[1]), out[2], float(out[3])
+    return w, h, dur, fps
 
 
 def extract_audio(video_path: Path, wav_path: Path):
@@ -266,6 +266,37 @@ def burn_captions(video_path: Path, card_pngs, output_path: Path, video_duration
     run(cmd)
 
 
+def render_caption_layer(card_pngs, output_path: Path, video_duration: float, fps: str):
+    """Render the captions alone on a transparent base -> ProRes 4444 alpha .mov."""
+    cmd = [
+        "ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+        "-f", "lavfi",
+        "-i", f"color=c=black@0.0:s={VIDEO_W}x{VIDEO_H}:r={fps}:d={video_duration:.3f},format=rgba",
+    ]
+    for png_path, _, _ in card_pngs:
+        cmd += ["-loop", "1", "-i", str(png_path)]
+
+    parts = []
+    prev_label = "0:v"
+    for i, (_, start, end) in enumerate(card_pngs, start=1):
+        next_label = f"v{i}"
+        parts.append(
+            f"[{prev_label}][{i}:v]overlay=x=0:y=0:format=auto:"
+            f"enable='between(t,{start:.3f},{end:.3f})'[{next_label}]"
+        )
+        prev_label = next_label
+
+    cmd += [
+        "-filter_complex", ";".join(parts),
+        "-map", f"[{prev_label}]",
+        "-c:v", "prores_ks", "-profile:v", "4444",
+        "-pix_fmt", "yuva444p10le",
+        "-t", f"{video_duration:.3f}",
+        str(output_path),
+    ]
+    run(cmd)
+
+
 def default_output_path(input_path: Path) -> Path:
     """`batch 1 vid 6 no captions.mp4` -> `batch 1 vid 6 captioned.mp4`"""
     stem = input_path.stem
@@ -284,12 +315,17 @@ def main():
     parser.add_argument("--output", type=Path, default=None, help="Output MP4 path.")
     parser.add_argument("--model", default="small.en", help="Whisper model (tiny.en, base.en, small.en, medium.en).")
     parser.add_argument("--keep-temp", action="store_true", help="Keep the temp wav + PNGs for debugging.")
+    parser.add_argument("--layer", action="store_true",
+                        help="Output a captions-only transparent ProRes 4444 .mov (separate layer for Premiere) instead of burning into the video.")
     args = parser.parse_args()
 
     if not args.input.exists():
         sys.exit(f"Input file not found: {args.input}")
 
-    output_path = args.output or default_output_path(args.input)
+    if args.layer:
+        output_path = args.output or args.input.with_name(f"{args.input.stem} - captions layer.mov")
+    else:
+        output_path = args.output or default_output_path(args.input)
     print(f"INPUT : {args.input}")
     print(f"OUTPUT: {output_path}")
 
@@ -299,8 +335,8 @@ def main():
 
     try:
         print("[1/5] probing video ...")
-        w, h, dur = probe_video(args.input)
-        print(f"  {w}x{h}, {dur:.2f}s")
+        w, h, dur, fps = probe_video(args.input)
+        print(f"  {w}x{h}, {dur:.2f}s, {fps} fps")
 
         print("[2/5] extracting audio ...")
         extract_audio(args.input, wav_path)
@@ -316,8 +352,12 @@ def main():
         print(f"  {len(cards)} cards")
         card_pngs = render_all_cards(cards, work_dir)
 
-        print("[5/5] burning PNG overlays into video ...")
-        burn_captions(args.input, card_pngs, output_path, dur)
+        if args.layer:
+            print("[5/5] rendering transparent caption layer (ProRes 4444) ...")
+            render_caption_layer(card_pngs, output_path, dur, fps)
+        else:
+            print("[5/5] burning PNG overlays into video ...")
+            burn_captions(args.input, card_pngs, output_path, dur)
 
         print(f"\nDONE -> {output_path}")
     except subprocess.CalledProcessError as e:
