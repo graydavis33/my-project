@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[
+  {"id":"canvasBg","type":"string","label":"Canvas background (#00FF00 chroma green, or transparent)","default":"#00FF00"},
+  {"id":"cutoutHeight","type":"number","label":"Cutout height (px)","default":760},
+  {"id":"showCuban","type":"boolean","label":"Show Mark Cuban","default":true},
+  {"id":"showSharran","type":"boolean","label":"Show Sharran","default":true},
+  {"id":"showKan","type":"boolean","label":"Show Justin Kan","default":true},
+  {"id":"riseStart","type":"number","label":"When cutouts start rising in (s)","default":0.2},
+  {"id":"riseStagger","type":"number","label":"Delay between each person (s)","default":0.25}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; }
+      .scene { position: relative; width: 100%; height: 100%; }
+
+      /* Cutouts stand on the bottom edge of the frame */
+      .lineup {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-evenly;
+      }
+      .cutout { display: block; will-change: transform, opacity; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-width="1920" data-height="1080">
+      <div id="scene" class="scene clip" data-start="0" data-duration="8" data-track-index="1">
+        <div id="lineup" class="lineup" data-layout-allow-overflow></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const v = window.__hyperframes.getVariables();
+        document.body.style.background = v.canvasBg;
+
+        const PEOPLE = [
+          { id: "cuban", src: "assets/mark-cuban.png", show: v.showCuban },
+          { id: "sharran", src: "assets/sharran-srivatsaa.png", show: v.showSharran },
+          { id: "kan", src: "assets/justin-kan.png", show: v.showKan }
+        ];
+
+        const lineup = document.getElementById("lineup");
+        PEOPLE.filter(p => p.show).forEach(function (p) {
+          const img = document.createElement("img");
+          img.id = "cutout-" + p.id;
+          img.className = "cutout";
+          img.src = p.src;
+          img.style.height = v.cutoutHeight + "px";
+          lineup.appendChild(img);
+        });
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Each person rises from the bottom edge with a soft fade, staggered
+        tl.from(".cutout", {
+          y: 120,
+          opacity: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          stagger: v.riseStagger
+        }, v.riseStart);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
