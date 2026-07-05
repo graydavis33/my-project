@@ -18,6 +18,7 @@ Pipeline:
 """
 
 import argparse
+import re
 import shutil
 import subprocess
 import sys
@@ -125,14 +126,15 @@ def transcribe(wav_path: Path, model_size: str):
     return words
 
 
-def merge_domains(words):
-    """Whisper splits 'acquisition.com' into 'acquisition.' + 'com' — glue them back."""
+def merge_split_tokens(words):
+    """Glue back tokens Whisper splits: 'acquisition' + '.com' and '$50' + ',000'."""
     tlds = {"com", "net", "org", "ai", "io", "co"}
     merged = []
     for word, start, end in words:
         is_tld = word.strip(PUNCTUATION_STRIP).lower() in tlds
         joins_prev = word.startswith(".") or (merged and merged[-1][0].endswith("."))
-        if merged and is_tld and joins_prev:
+        is_number_group = re.fullmatch(r",\d{3},?", word) is not None
+        if merged and ((is_tld and joins_prev) or is_number_group):
             prev_word, prev_start, _ = merged.pop()
             merged.append((prev_word + word.strip(), prev_start, end))
         else:
@@ -372,7 +374,7 @@ def main():
 
         print("[4/5] grouping + rendering caption PNGs ...")
         font = load_font()
-        cards = group_words(merge_domains(words), font)
+        cards = group_words(merge_split_tokens(words), font)
         print(f"  {len(cards)} cards")
         card_pngs = render_all_cards(cards, work_dir, font)
 
