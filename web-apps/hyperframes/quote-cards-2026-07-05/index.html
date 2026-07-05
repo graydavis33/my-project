@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[
+  {"id":"quote","type":"string","label":"Quote text (words fade in left to right)","default":"“Goodwill is worth 100X more than followers or fame or money. Why? Because it is the intrinsic reward for changing someone’s life.”"},
+  {"id":"attribution","type":"string","label":"Attribution line","default":"– Sharran Srivatsaa"},
+  {"id":"bgColor","type":"color","label":"Background color","default":"#232B3B"},
+  {"id":"textColor","type":"color","label":"Text color","default":"#FFFFFF"},
+  {"id":"quoteSize","type":"number","label":"Quote font size (px)","default":68},
+  {"id":"attrSize","type":"number","label":"Attribution font size (px)","default":46},
+  {"id":"maxTextWidth","type":"number","label":"Quote max width (px)","default":1560},
+  {"id":"bgFade","type":"number","label":"Background fade-in duration (s)","default":0.9},
+  {"id":"wordsStart","type":"number","label":"When words start fading in (s)","default":0.8},
+  {"id":"wordStagger","type":"number","label":"Delay between each word (s)","default":0.07},
+  {"id":"wordDuration","type":"number","label":"Each word fade duration (s)","default":0.6}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #000000;
+        font-family: "Lato", "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+
+      /* Background card — fades in first (decorative, absolute is OK here) */
+      .bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+
+      /* Content laid out at its final (fully visible) position */
+      .scene-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 120px 160px;
+        gap: 74px;
+      }
+      .quote {
+        text-align: center;
+        font-weight: 800;
+        line-height: 1.42;
+        letter-spacing: 0.2px;
+      }
+      /* Each word is its own span so it can fade in individually, left to right */
+      .quote .w {
+        display: inline-block;
+        margin: 0 0.135em;
+        will-change: transform, opacity, filter;
+      }
+      .attr {
+        text-align: center;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-width="1920" data-height="1080">
+      <div id="scene" class="scene clip" data-start="0" data-duration="8" data-track-index="1">
+        <div id="bg" class="bg"></div>
+        <div class="scene-content">
+          <div id="quote" class="quote"></div>
+          <div id="attr" class="attr"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const v = window.__hyperframes.getVariables();
+
+        // Apply colors + sizes from variables
+        document.getElementById("bg").style.background = v.bgColor;
+        const quoteEl = document.getElementById("quote");
+        quoteEl.style.color = v.textColor;
+        quoteEl.style.fontSize = v.quoteSize + "px";
+        quoteEl.style.maxWidth = v.maxTextWidth + "px";
+        const attrEl = document.getElementById("attr");
+        attrEl.style.color = v.textColor;
+        attrEl.style.fontSize = v.attrSize + "px";
+        attrEl.textContent = v.attribution;
+
+        // Split the quote into word spans (DOM order = reading order = left to right)
+        const words = v.quote.split(/\s+/).filter(Boolean);
+        words.forEach(function (w) {
+          const s = document.createElement("span");
+          s.className = "w";
+          s.textContent = w;
+          quoteEl.appendChild(s);
+        });
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // 1) Background fades in
+        tl.from("#bg", { opacity: 0, duration: v.bgFade, ease: "power1.inOut" }, 0.1);
+
+        // 2) Words fade in one after another, left to right, with a soft slide + unblur
+        tl.from(".quote .w", {
+          opacity: 0,
+          x: -18,
+          filter: "blur(5px)",
+          duration: v.wordDuration,
+          ease: "power2.out",
+          stagger: v.wordStagger
+        }, v.wordsStart);
+
+        // 3) Attribution rises in once the quote has finished
+        const attrStart = v.wordsStart + words.length * v.wordStagger + v.wordDuration * 0.45;
+        tl.from("#attr", { opacity: 0, y: 18, duration: 0.6, ease: "power3.out" }, attrStart);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
