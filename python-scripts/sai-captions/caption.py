@@ -136,7 +136,9 @@ def merge_domains(words):
     tlds = {"com", "net", "org", "ai", "io", "co"}
     merged = []
     for word, start, end in words:
-        if merged and merged[-1][0].endswith(".") and word.strip(PUNCTUATION_STRIP).lower() in tlds:
+        is_tld = word.strip(PUNCTUATION_STRIP).lower() in tlds
+        joins_prev = word.startswith(".") or (merged and merged[-1][0].endswith("."))
+        if merged and is_tld and joins_prev:
             prev_word, prev_start, _ = merged.pop()
             merged.append((prev_word + word.strip(), prev_start, end))
         else:
