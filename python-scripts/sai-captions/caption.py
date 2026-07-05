@@ -131,6 +131,19 @@ def transcribe(wav_path: Path, model_size: str):
     return words
 
 
+def merge_domains(words):
+    """Whisper splits 'acquisition.com' into 'acquisition.' + 'com' — glue them back."""
+    tlds = {"com", "net", "org", "ai", "io", "co"}
+    merged = []
+    for word, start, end in words:
+        if merged and merged[-1][0].endswith(".") and word.strip(PUNCTUATION_STRIP).lower() in tlds:
+            prev_word, prev_start, _ = merged.pop()
+            merged.append((prev_word + word.strip(), prev_start, end))
+        else:
+            merged.append((word, start, end))
+    return merged
+
+
 def group_words(words):
     """Pack words into caption cards (2-3 words each)."""
     cards = []
@@ -358,7 +371,7 @@ def main():
         print(f"  {len(words)} words")
 
         print("[4/5] grouping + rendering caption PNGs ...")
-        cards = group_words(words)
+        cards = group_words(merge_domains(words))
         print(f"  {len(cards)} cards")
         card_pngs = render_all_cards(cards, work_dir)
 
