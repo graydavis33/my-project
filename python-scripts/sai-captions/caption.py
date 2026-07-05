@@ -52,6 +52,16 @@ PRESERVE_CASE = {
     "sai's": "Sai's",
     "waddell": "Waddell",
     "waddell's": "Waddell's",
+    "sharan": "Sharran",
+    "sharran": "Sharran",
+    "srivatsa": "Srivatsaa",
+    "srivatsaa": "Srivatsaa",
+    "justin": "Justin",
+    "kahn": "Kan",
+    "kan": "Kan",
+    "mark": "Mark",
+    "cuban": "Cuban",
+    "twitch": "Twitch",
 }
 PUNCTUATION_STRIP = ".,!?;:\"()[]{}—–-…"
 TEXT_COLOR = (255, 255, 255, 255)
