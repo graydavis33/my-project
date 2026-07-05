@@ -40,6 +40,23 @@ VIDEO_H = 1920
 FONT_SIZE = 60               # matched to the w12 Batch 4 finals (Gray 2026-07-05)
 LINE_SPACING = 14            # unused now (single-line only) but kept for future
 PUNCTUATION_STRIP = ".,!?;:\"()[]{}—–-…"
+# Proper names keep their capitalization (everything else is lowercase)
+NAMES = {
+    "sai": "Sai",
+    "sai's": "Sai's",
+    "waddell": "Waddell",
+    "waddell's": "Waddell's",
+    "sharan": "Sharran",
+    "sharran": "Sharran",
+    "srivatsa": "Srivatsaa",
+    "srivatsaa": "Srivatsaa",
+    "justin": "Justin",
+    "kahn": "Kan",
+    "kan": "Kan",
+    "mark": "Mark",
+    "cuban": "Cuban",
+    "twitch": "Twitch",
+}
 TEXT_COLOR = (255, 255, 255, 255)
 SHADOW_COLOR = (0, 0, 0, 160)   # soft black @ ~63% alpha
 SHADOW_OFFSET = (5, 6)       # x, y offset of shadow (angled down-right, Gray 2026-07-05)
@@ -164,8 +181,9 @@ def group_words(words, font):
 
 
 def clean_word(word: str) -> str:
-    """Strip punctuation and lowercase everything (w12 Batch 4 style: no caps at all)."""
-    return word.strip(PUNCTUATION_STRIP).lower()
+    """Strip punctuation and lowercase everything except proper names."""
+    cleaned = word.strip(PUNCTUATION_STRIP)
+    return NAMES.get(cleaned.lower(), cleaned.lower())
 
 
 def card_lines(card):
