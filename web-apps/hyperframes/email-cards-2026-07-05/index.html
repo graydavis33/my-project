@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[
+  {"id":"graphic","type":"enum","label":"Which email graphic","default":"g1","options":[
+    {"value":"g1","label":"Sharran — Wow Happy Holidays"},
+    {"value":"g2","label":"Sharran — Great job / catch up Nov"},
+    {"value":"g3","label":"Sharran — Pick one problem"},
+    {"value":"g4","label":"Sai + Mark Cuban — look forward"},
+    {"value":"g5","label":"Mark Cuban — Thanks for the tip"}
+  ]},
+  {"id":"canvasBg","type":"string","label":"Canvas behind the card (#00FF00 chroma green, or transparent)","default":"#00FF00"},
+  {"id":"bgFade","type":"number","label":"Card fade-in duration (s)","default":0.9},
+  {"id":"wordsStart","type":"number","label":"When words start fading in (s)","default":0.8},
+  {"id":"wordStagger","type":"number","label":"Delay between each word (s)","default":0.07},
+  {"id":"wordDuration","type":"number","label":"Each word fade duration (s)","default":0.6}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: transparent;
+        font-family: -apple-system, system-ui, "Helvetica Neue", sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+      .scene-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* The email card — original screenshot size, dark Mail background */
+      .card {
+        position: relative;
+        width: 1206px;
+        background: #131315;
+        will-change: opacity;
+      }
+      .card img { position: absolute; left: 0; display: block; }
+
+      .body-block {
+        position: absolute;
+        left: 48px;
+        right: 90px;
+        font-size: 45px;
+        line-height: 60px;
+        font-weight: 400;
+        color: #F2F2F3;
+        letter-spacing: 0.2px;
+      }
+      .body-block .w {
+        display: inline-block;
+        margin-right: 0.28em;
+        will-change: transform, opacity, filter;
+      }
+
+      .dots { position: absolute; left: 52px; display: flex; gap: 11px; }
+      .dots i { width: 15px; height: 15px; border-radius: 50%; background: #8E8E93; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-width="1920" data-height="1080">
+      <div id="scene" class="scene clip" data-start="0" data-duration="8" data-track-index="1">
+        <div class="scene-content">
+          <div id="card" class="card"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const v = window.__hyperframes.getVariables();
+        document.body.style.background = v.canvasBg;
+
+        // Per-graphic layout: header strips cropped from the real screenshots,
+        // body text retyped so each word can animate. y values match the originals.
+        // Paragraph entries: t = text, gap = extra blank-line space above (px).
+        const GRAPHICS = {
+          g1: { height: 579, blocks: [
+            { img: "assets/g1-header.png", y: 0, h: 200 },
+            { body: [{ t: "Wow. This is insane. So blown away. And THIS is the reason you are doing amazing things. Thank you again. Happy Holidays.", gap: 0 }], y: 252 },
+            { dots: 522 }
+          ]},
+          g2: { height: 892, blocks: [
+            { img: "assets/g2-header.png", y: 0, h: 205 },
+            { body: [
+              { t: "Great job. Excited for you guys.", gap: 0 },
+              { t: "I am happy to chat and be helpful.", gap: 60 },
+              { t: "I am going into 2 weeks of jammed events. Are you cool to catch up first week in Nov? If you have a calendar link, send to me and I will find a time.", gap: 60 },
+              { t: "Congrats.", gap: 60 }
+            ], y: 252 }
+          ]},
+          g3: { height: 1062, blocks: [
+            { img: "assets/g3-header.png", y: 0, h: 170 },
+            { body: [
+              { t: "Pick one problem to solve.", gap: 0 },
+              { t: "Make it as narrow as possible.", gap: 0 },
+              { t: "Tell the world about it.", gap: 0 },
+              { t: "Don't rest until you solve it.", gap: 0 },
+              { t: "Tell the world about it more.", gap: 0 },
+              { t: "Show the world your progress.", gap: 0 },
+              { t: "Tell the world about it more.", gap: 0 },
+              { t: "Don't shut up about it.", gap: 0 },
+              { t: "Don't rest until you solve it.", gap: 0 },
+              { t: "Because until you win effort always goes unnoticed.", gap: 0 }
+            ], y: 245 },
+            { dots: 998 }
+          ]},
+          g4: { height: 873, blocks: [
+            { body: [
+              { t: "Thank you again for being so incredible. It's really hard for me to put into words the impact you have had on my life. I hope my weekly emails bring you a bit of entertainment along the way :)", gap: 0 },
+              { t: "Best regards,", gap: 60 },
+              { t: "Sai Karra", gap: 0 }
+            ], y: 22 },
+            { img: "assets/g4-mid.png", y: 470, h: 230 },
+            { body: [{ t: "Cool.  I look forward to seeing it", gap: 0 }], y: 716 },
+            { dots: 800 }
+          ]},
+          g5: { height: 346, blocks: [
+            { img: "assets/g5-header.png", y: 0, h: 165 },
+            { body: [{ t: "Thanks for the tip.", gap: 0 }], y: 196 },
+            { dots: 286 }
+          ]}
+        };
+
+        const cfg = GRAPHICS[v.graphic];
+        const card = document.getElementById("card");
+        card.style.height = cfg.height + "px";
+
+        // Build the DOM. Word spans in reading order = left-to-right animation order.
+        cfg.blocks.forEach(function (b, bi) {
+          if (b.img) {
+            const im = document.createElement("img");
+            im.src = b.img;
+            im.style.top = b.y + "px";
+            im.style.width = "1206px";
+            im.style.height = b.h + "px";
+            card.appendChild(im);
+          } else if (b.body) {
+            const block = document.createElement("div");
+            block.className = "body-block";
+            block.style.top = b.y + "px";
+            b.body.forEach(function (p) {
+              const para = document.createElement("div");
+              para.style.marginTop = p.gap + "px";
+              p.t.split(/\s+/).filter(Boolean).forEach(function (w) {
+                const s = document.createElement("span");
+                s.className = "w";
+                s.textContent = w;
+                para.appendChild(s);
+              });
+              block.appendChild(para);
+            });
+            card.appendChild(block);
+          } else if (b.dots !== undefined) {
+            const d = document.createElement("div");
+            d.className = "dots";
+            d.style.top = b.dots + "px";
+            d.innerHTML = "<i></i><i></i><i></i>";
+            card.appendChild(d);
+          }
+        });
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // 1) Card + header strips fade in together (the "background")
+        tl.from("#card", { opacity: 0, duration: v.bgFade, ease: "power1.inOut" }, 0.1);
+
+        // 2) Message words fade in one after another, left to right
+        tl.from(".body-block .w", {
+          opacity: 0,
+          x: -18,
+          filter: "blur(5px)",
+          duration: v.wordDuration,
+          ease: "power2.out",
+          stagger: v.wordStagger
+        }, v.wordsStart);
+
+        // 3) The little "…" indicator fades in last
+        const wordCount = document.querySelectorAll(".body-block .w").length;
+        const dotsTime = v.wordsStart + wordCount * v.wordStagger + v.wordDuration * 0.6;
+        tl.from(".dots", { opacity: 0, duration: 0.5, ease: "power2.out" }, dotsTime);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
