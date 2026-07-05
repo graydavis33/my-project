@@ -37,45 +37,22 @@ FONT_VARIATION = "SemiBold"   # variable-font axis name (weight 600)
 
 VIDEO_W = 1080
 VIDEO_H = 1920
-FONT_SIZE = 72               # smaller than ref — Gray's v1.1 preference
+FONT_SIZE = 60               # matched to the w12 Batch 4 finals (Gray 2026-07-05)
 LINE_SPACING = 14            # unused now (single-line only) but kept for future
-# Words to keep capitalized — keyed by lowercase form, value is the canonical capitalization
-PRESERVE_CASE = {
-    "i": "I",
-    "i'm": "I'm",
-    "i've": "I've",
-    "i'll": "I'll",
-    "i'd": "I'd",
-    "i'mma": "I'mma",
-    "i'ma": "I'ma",
-    "sai": "Sai",
-    "sai's": "Sai's",
-    "waddell": "Waddell",
-    "waddell's": "Waddell's",
-    "sharan": "Sharran",
-    "sharran": "Sharran",
-    "srivatsa": "Srivatsaa",
-    "srivatsaa": "Srivatsaa",
-    "justin": "Justin",
-    "kahn": "Kan",
-    "kan": "Kan",
-    "mark": "Mark",
-    "cuban": "Cuban",
-    "twitch": "Twitch",
-}
 PUNCTUATION_STRIP = ".,!?;:\"()[]{}—–-…"
 TEXT_COLOR = (255, 255, 255, 255)
 SHADOW_COLOR = (0, 0, 0, 160)   # soft black @ ~63% alpha
 SHADOW_OFFSET = (5, 6)       # x, y offset of shadow (angled down-right, Gray 2026-07-05)
 SHADOW_BLUR = 6              # gaussian blur radius for shadow softness
-TOP_MARGIN = 320             # y of TOP of first text line (matches ref upper-third)
+TOP_MARGIN = 450             # y of TOP of first text line (matches w12 Batch 4 finals)
 SIDE_MARGIN = 60             # left/right safe area
 
 # ─────────────────────────────────────────────────────────────
-# Caption grouping rules
+# Caption grouping rules (w12 Batch 4 style: longer single-line cards)
 # ─────────────────────────────────────────────────────────────
-MAX_WORDS_PER_CARD = 3
-MAX_CARD_DURATION = 1.6      # seconds — don't hold a card longer than this
+MAX_WORDS_PER_CARD = 6
+MAX_LINE_WIDTH = VIDEO_W - 2 * SIDE_MARGIN   # card breaks before it would overflow
+MAX_CARD_DURATION = 2.4      # seconds — don't hold a card longer than this
 MIN_CARD_DURATION = 0.35     # don't flash a card shorter than this
 PAUSE_BREAK_THRESHOLD = 0.45 # if gap between words > this, force a new card
 
@@ -146,8 +123,8 @@ def merge_domains(words):
     return merged
 
 
-def group_words(words):
-    """Pack words into caption cards (2-3 words each)."""
+def group_words(words, font):
+    """Pack words into caption cards (up to MAX_WORDS_PER_CARD, single line, width-guarded)."""
     cards = []
     current = []
     for word, start, end in words:
@@ -157,10 +134,13 @@ def group_words(words):
         gap = start - current[-1][2]
         words_so_far = len(current)
         card_dur = end - current[0][1]
+        candidate = " ".join(clean_word(w) for w, _, _ in current + [(word, start, end)] if clean_word(w))
+        too_wide = font.getlength(candidate) > MAX_LINE_WIDTH
         if (
             words_so_far >= MAX_WORDS_PER_CARD
             or card_dur > MAX_CARD_DURATION
             or gap > PAUSE_BREAK_THRESHOLD
+            or too_wide
         ):
             cards.append(current)
             current = [(word, start, end)]
@@ -184,12 +164,8 @@ def group_words(words):
 
 
 def clean_word(word: str) -> str:
-    """Strip punctuation, lowercase everything except names / I-forms in PRESERVE_CASE."""
-    cleaned = word.strip(PUNCTUATION_STRIP)
-    canonical = PRESERVE_CASE.get(cleaned.lower())
-    if canonical:
-        return canonical
-    return cleaned.lower()
+    """Strip punctuation and lowercase everything (w12 Batch 4 style: no caps at all)."""
+    return word.strip(PUNCTUATION_STRIP).lower()
 
 
 def card_lines(card):
@@ -236,8 +212,7 @@ def render_card_png(lines, png_path: Path, font: ImageFont.FreeTypeFont):
     img.save(png_path, "PNG")
 
 
-def render_all_cards(cards, work_dir: Path):
-    """Render every card to a PNG. Returns list of (png_path, start, end)."""
+def load_font() -> ImageFont.FreeTypeFont:
     if not FONT_PATH.exists():
         sys.exit(f"Font not found: {FONT_PATH}")
     font = ImageFont.truetype(str(FONT_PATH), FONT_SIZE)
@@ -245,6 +220,11 @@ def render_all_cards(cards, work_dir: Path):
         font.set_variation_by_name(FONT_VARIATION)
     except (AttributeError, OSError):
         pass
+    return font
+
+
+def render_all_cards(cards, work_dir: Path, font: ImageFont.FreeTypeFont):
+    """Render every card to a PNG. Returns list of (png_path, start, end)."""
     out = []
     for i, (card, start, end) in enumerate(cards):
         lines = card_lines(card)
@@ -373,9 +353,10 @@ def main():
         print(f"  {len(words)} words")
 
         print("[4/5] grouping + rendering caption PNGs ...")
-        cards = group_words(merge_domains(words))
+        font = load_font()
+        cards = group_words(merge_domains(words), font)
         print(f"  {len(cards)} cards")
-        card_pngs = render_all_cards(cards, work_dir)
+        card_pngs = render_all_cards(cards, work_dir, font)
 
         if args.layer:
             print("[5/5] rendering transparent caption layer (ProRes 4444) ...")
