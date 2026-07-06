@@ -37,6 +37,7 @@ Last updated: 2026-07-06
 ## Post — after the week
 
 - [ ] Script the sit-down A-roll interview (Blocks A through H) once the outcome is known
+- [ ] Build the interview response system — put the questions into a system for selecting Sai's best responses, then organizing the picks into the script
 - [ ] Film the sit-down interview LAST (it is the narration spine)
 - [ ] Deliver 3 titles + 3 thumbnails for A/B/C testing (standing rule)
 - [ ] Pull 2 to 4 vertical shorts from the episode
