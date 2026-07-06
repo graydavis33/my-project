@@ -3,7 +3,7 @@
 ## What It Does
 - Scans Gmail for personal expense emails from the last 30 days (receipts, subscriptions, bills)
 - Extracts date, vendor, amount, and category using Claude Haiku (batches of 5)
-- Auto-categorizes into 9 buckets: Groceries, Dining Out, Software & Tools, Streaming, Utilities, Transport, Health & Wellness, Shopping, Misc
+- Auto-categorizes into 7 buckets: Groceries, Dining Out, Software & Tools, Utilities, Investments, BJJ & Kickboxing, Misc (matches the Payday Checklist categories — updated 2026-07-06; the web app maps any old-category receipt to Misc)
 - Filters to current month only, then writes `expenses.json` into the Payday Checklist web app
 - Caches scanned email IDs in `.scanned_ids.json` so reruns skip emails already processed
 

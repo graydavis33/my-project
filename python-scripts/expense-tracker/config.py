@@ -25,8 +25,9 @@ EXPENSES_OUTPUT_PATH = os.path.join(
     _DIR, "..", "..", "web-apps", "payday-checklist", "expenses.json"
 )
 
-# Must match the payday checklist's 5 expense categories exactly
-PERSONAL_CATEGORIES = ["Groceries", "Dining Out", "Software & Tools", "Streaming", "Utilities", "Transport", "Health & Wellness", "Shopping", "Misc"]
+# Must match the payday checklist's 7 expense categories exactly
+# (web-apps/payday-checklist/index.html CATEGORIES — updated 2026-07-06)
+PERSONAL_CATEGORIES = ["Groceries", "Dining Out", "Software & Tools", "Utilities", "Investments", "BJJ & Kickboxing", "Misc"]
 
 # Venmo/Zelle/PayPal P2P vendors to exclude from the expense budget.
 # These are handled separately in the payday checklist (e.g. rent step), so they

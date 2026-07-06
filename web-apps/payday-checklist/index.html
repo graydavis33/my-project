@@ -2,13 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Payday" />
+  <meta name="theme-color" content="#0a0a14" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="apple-touch-icon" href="./icons/icon-180.png" />
+  <link rel="icon" type="image/png" href="./icons/icon-192.png" />
   <title>Payday Checklist — Graydient Media</title>
   <link rel="stylesheet" href="../styles/brand.css" />
   <style>
-
     /* ── Base ── */
-    body { padding: 24px 16px 56px; }
+    body { padding: 24px 16px 96px; }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
@@ -18,24 +25,15 @@
       flex-direction: column;
       align-items: center;
       gap: 14px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
-    .topbar-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .topbar-brand { display: flex; align-items: center; gap: 10px; }
     .topbar-logo {
-      height: 36px;
-      width: 36px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: none; /* shown via JS once loaded */
+      height: 36px; width: 36px; border-radius: 50%;
+      object-fit: cover; display: none;
     }
     .topbar-wordmark {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 3px;
+      font-size: 11px; font-weight: 700; letter-spacing: 3px;
       text-transform: uppercase;
       background: var(--gradient-text);
       -webkit-background-clip: text;
@@ -43,40 +41,49 @@
       background-clip: text;
       opacity: 0.8;
     }
-    .topbar-paycheck {
-      display: none; /* desktop only */
-      text-align: right;
-      margin-left: auto;
-    }
+    .topbar-paycheck { display: none; text-align: right; margin-left: auto; }
     .topbar-paycheck span { font-size: 11px; color: var(--color-gray-light); display: block; letter-spacing: 0.5px; }
     .topbar-paycheck strong { font-size: 22px; font-weight: 800; color: var(--color-yellow); letter-spacing: -0.5px; }
 
     /* ── Mobile page header ── */
-    .mobile-header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
+    .mobile-header { text-align: center; margin-bottom: 18px; }
     .mobile-header h1 {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
       background: var(--gradient-text);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .mobile-header .date { color: var(--color-gray-light); font-size: 12px; margin-top: 4px; }
-    .paycheck-badge {
-      display: inline-block;
+
+    /* ── Income card (monthly context + editable inputs) ── */
+    .income-card {
       background: linear-gradient(160deg, rgba(26,45,90,0.5) 0%, rgba(10,10,15,0.7) 100%);
       border: var(--border-yellow);
       border-radius: var(--radius-lg);
-      padding: 10px 24px;
-      margin-top: 14px;
+      padding: 16px 18px;
+      margin: 0 auto 24px;
+      max-width: 560px;
       box-shadow: var(--glow-yellow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
     }
-    .paycheck-badge span { font-size: 11px; color: var(--color-gray-light); display: block; margin-bottom: 2px; }
-    .paycheck-amount { font-size: 28px; font-weight: 800; color: var(--color-yellow); letter-spacing: -1px; }
+    .income-main .label { font-size: 11px; color: var(--color-gray-light); letter-spacing: 0.5px; }
+    .income-main .amount { font-size: 30px; font-weight: 800; color: var(--color-yellow); letter-spacing: -1px; }
+    .income-main .sub { font-size: 11px; color: var(--color-gray-mid); margin-top: 2px; }
+    .income-edits { display: flex; gap: 14px; }
+    .income-edits .input-group { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+    .income-edits label { font-size: 9px; color: var(--color-gray-mid); text-transform: uppercase; letter-spacing: 0.8px; }
+    .income-edits input {
+      background: rgba(10,10,15,0.7); border: var(--border-input);
+      border-radius: var(--radius-sm); color: var(--color-white);
+      font-family: var(--font-base); font-size: 15px; font-weight: 700;
+      padding: 8px 10px; text-align: right; width: 92px;
+    }
+    .income-edits input:focus { outline: none; border-color: var(--color-yellow); }
 
     /* ── Section label reset btn ── */
     .section-reset-btn {
@@ -89,12 +96,8 @@
     }
     .section-reset-btn:hover { color: var(--color-red); }
 
-    /* ── Checklist layout (mobile: single col, desktop: 2-col) ── */
-    .checklist-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
+    /* ── Checklist layout ── */
+    .checklist-layout { display: flex; flex-direction: column; gap: 0; }
 
     /* ── Steps ── */
     .step {
@@ -112,7 +115,7 @@
     .step.done { opacity: 0.38; }
     .step.done .step-label { text-decoration: line-through; color: var(--color-gray-mid); }
     .checkbox {
-      width: 21px; height: 21px; border-radius: 6px;
+      width: 22px; height: 22px; border-radius: 6px;
       border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.15s, border-color 0.15s;
@@ -126,8 +129,17 @@
     .step-right { text-align: right; flex-shrink: 0; }
     .step-amount { font-size: 14px; font-weight: 700; color: var(--color-red); }
     .step-amount.positive { color: var(--color-green); }
-    .step-amount.neutral { color: var(--color-yellow); }
     .step-balance { font-size: 10px; color: var(--color-gray-mid); margin-top: 2px; }
+    .step-input-wrap { display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
+    .step-input-wrap .prefix { font-size: 12px; font-weight: 700; color: var(--color-red); }
+    .step-input {
+      background: rgba(10,10,15,0.7); border: 1px solid rgba(248,113,113,0.25);
+      border-radius: 6px; color: var(--color-red);
+      font-family: var(--font-base); font-size: 14px; font-weight: 700;
+      width: 74px; padding: 5px 6px; text-align: right;
+      min-height: 30px;
+    }
+    .step-input:focus { outline: none; border-color: var(--color-red); }
 
     /* ── Fund card internals ── */
     .fund-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
@@ -139,7 +151,7 @@
       background: rgba(10,10,15,0.7); border: var(--border-input);
       border-radius: var(--radius-sm); color: var(--color-white);
       font-family: var(--font-base); font-size: 16px; font-weight: 700;
-      width: 110px; padding: 6px 10px; text-align: right;
+      width: 110px; padding: 8px 10px; text-align: right;
     }
     .fund-input:focus { outline: none; border-color: var(--color-yellow); }
     .fund-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-gray-light); }
@@ -148,7 +160,7 @@
     /* ── Expense tracker ── */
     .expense-row {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .expense-row:last-child { border-bottom: none; }
     .expense-name { font-size: 13px; color: var(--color-white); }
@@ -156,22 +168,18 @@
     .expense-spent-input {
       background: rgba(10,10,15,0.7); border: var(--border-input);
       border-radius: var(--radius-sm); color: var(--color-white);
-      font-family: var(--font-base); font-size: 13px; width: 68px; padding: 5px 8px; text-align: right;
+      font-family: var(--font-base); font-size: 13px; width: 72px; padding: 7px 8px; text-align: right;
+      min-height: 32px;
     }
     .expense-spent-input:focus { outline: none; border-color: var(--color-yellow); }
-    /* Budget remaining display + inline budget editor */
+    .expense-spent-input.auto-filled { color: var(--color-yellow); }
     .budget-right-col { display: flex; flex-direction: column; align-items: flex-end; min-width: 62px; }
-    .budget-remaining {
-      font-size: 14px; font-weight: 700; min-width: 50px; text-align: right;
-    }
-    .budget-label-sub {
-      font-size: 8px; color: var(--color-gray-mid);
-      margin-top: 0; width: 100%; text-align: center;
-    }
+    .budget-remaining { font-size: 14px; font-weight: 700; min-width: 50px; text-align: right; }
+    .budget-label-sub { font-size: 9px; color: var(--color-gray-mid); margin-top: 0; width: 100%; text-align: center; }
     .budget-inline-input {
       background: transparent; border: none; border-bottom: 1px solid transparent;
-      color: var(--color-gray-mid); font-size: 8px;
-      width: 30px; text-align: right; font-family: var(--font-base); padding: 0; cursor: text;
+      color: var(--color-gray-mid); font-size: 9px;
+      width: 34px; text-align: right; font-family: var(--font-base); padding: 0; cursor: text;
     }
     .budget-inline-input:focus { outline: none; border-bottom-color: var(--color-yellow); }
     .goal-inline-input {
@@ -188,43 +196,41 @@
       display: flex; justify-content: space-between;
       padding: 11px 0 2px; font-size: 12px; font-weight: 600; color: var(--color-gray-light);
     }
-
-    /* ── Auto-sync badge ── */
-    .sync-badge {
-      font-size: 10px; color: var(--color-gray-mid);
-      margin-top: 8px; text-align: right;
+    .misc-overflow {
+      margin-top: 10px; padding: 9px 11px;
+      background: rgba(232,184,75,0.07);
+      border: 1px solid rgba(232,184,75,0.15);
+      border-radius: var(--radius-sm);
+      font-size: 11px; color: var(--color-gray-light); line-height: 1.5;
     }
+    .misc-overflow strong { color: var(--color-yellow); }
+
+    /* ── Sync badge ── */
+    .sync-badge { font-size: 10px; color: var(--color-gray-mid); margin-top: 10px; text-align: right; }
     .sync-badge a { color: var(--color-yellow); text-decoration: none; cursor: pointer; }
     .sync-badge a:hover { text-decoration: underline; }
 
-    /* ── Transaction list (expandable under each category row) ── */
-    .txn-list {
-      overflow: hidden; max-height: 0;
-      transition: max-height 0.2s ease;
-    }
-    .txn-list.open { max-height: 400px; }
+    /* ── Transaction list ── */
+    .txn-list { overflow: hidden; max-height: 0; transition: max-height 0.2s ease; }
+    .txn-list.open { max-height: 500px; }
     .txn-item {
-      display: flex; justify-content: space-between;
-      font-size: 10px; color: var(--color-gray-mid);
-      padding: 3px 0; border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--color-gray-mid);
+      padding: 5px 0; border-top: 1px solid rgba(255,255,255,0.04);
     }
-    .txn-item span:last-child { color: var(--color-gray-light); }
+    .txn-item .txn-amount { color: var(--color-gray-light); margin-left: auto; }
+    .txn-item .txn-src { font-size: 9px; padding: 1px 5px; border-radius: 6px; background: rgba(255,255,255,0.06); }
+    .txn-delete {
+      background: none; border: none; color: rgba(255,255,255,0.22);
+      font-size: 13px; cursor: pointer; padding: 2px 5px; line-height: 1;
+    }
+    .txn-delete:hover { color: var(--color-red); }
     .txn-toggle {
       font-size: 10px; color: var(--color-gray-mid);
       cursor: pointer; background: none; border: none;
       padding: 0 0 0 6px; font-family: var(--font-base);
     }
     .txn-toggle:hover { color: var(--color-yellow); }
-
-    /* ── Rent input ── */
-    .rent-input-wrap { display: flex; align-items: center; gap: 3px; justify-content: flex-end; }
-    .rent-input {
-      background: rgba(10,10,15,0.7); border: 1px solid rgba(248,113,113,0.25);
-      border-radius: 6px; color: var(--color-red);
-      font-family: var(--font-base); font-size: 14px; font-weight: 700;
-      width: 78px; padding: 4px 6px; text-align: right;
-    }
-    .rent-input:focus { outline: none; border-color: var(--color-red); }
 
     /* ── Notes ── */
     .notes-input {
@@ -239,11 +245,31 @@
 
     /* ── Buttons ── */
     .btn-row { display: flex; gap: 8px; margin-top: 24px; }
-    .btn-row .gm-btn-primary { flex: 1; }
-    .btn-row .gm-btn-ghost { flex: 1; }
+    .btn-row button { flex: 1; min-height: 44px; }
+    .btn-row.backup-row { margin-top: 10px; }
+
+    /* ── FAB ── */
+    .fab {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: var(--gradient-accent);
+      box-shadow: var(--glow-yellow), 0 4px 16px rgba(0,0,0,0.5);
+      border: none;
+      color: var(--color-black);
+      font-size: 28px; font-weight: 800;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.15s;
+      z-index: 60;
+      padding-bottom: 3px;
+    }
+    .fab:active { transform: scale(0.92); }
 
     /* ── History ── */
-    .history-container { /* wraps header label + list */ }
+    .history-container { }
     .history-empty { text-align: center; padding: 48px 0; color: var(--color-gray-mid); font-size: 13px; line-height: 1.6; }
     .history-card {
       background: linear-gradient(160deg, rgba(26,45,90,0.3) 0%, rgba(10,10,15,0.5) 100%);
@@ -251,7 +277,6 @@
     }
     .history-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 11px; }
     .history-date { font-size: 13px; font-weight: 600; color: var(--color-white); }
-    .history-paycheck { font-size: 11px; color: var(--color-yellow); font-weight: 600; margin-top: 2px; }
     .history-steps { display: flex; gap: 4px; margin-bottom: 11px; flex-wrap: wrap; }
     .history-step-pill { font-size: 10px; padding: 2px 7px; border-radius: var(--radius-full); font-weight: 500; }
     .history-step-pill.done { background: rgba(232,184,75,0.12); color: var(--color-yellow); border: 1px solid rgba(232,184,75,0.2); }
@@ -261,167 +286,166 @@
     .history-notes { margin-top: 9px; font-size: 11px; color: var(--color-gray-mid); font-style: italic; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 9px; }
     .history-delete { background: none; border: none; color: rgba(255,255,255,0.18); font-size: 15px; cursor: pointer; padding: 0 4px; transition: color 0.15s; }
     .history-delete:hover { color: var(--color-red); }
-    .history-edit { background: none; border: none; color: var(--color-gray-mid); font-size: 12px; font-weight: 600; cursor: pointer; padding: 0 6px; transition: color 0.15s; font-family: var(--font-base); }
-    .history-edit:hover { color: var(--color-yellow); }
 
-    /* ── Modal internals ── */
-    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--color-white); }
-    .modal-close { background: none; border: none; color: var(--color-gray-mid); font-size: 20px; cursor: pointer; }
-    .modal-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--color-gray-mid); margin: 16px 0 8px; }
-    .modal-step-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; user-select: none; }
-    .modal-step-row:last-child { border-bottom: none; }
-    .modal-step-check { width: 19px; height: 19px; border-radius: 5px; border: 2px solid rgba(255,255,255,0.15); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--color-black); transition: background 0.15s, border-color 0.15s; }
-    .modal-step-check.on { background: var(--gradient-accent); border-color: transparent; }
-    .modal-step-label { font-size: 13px; color: var(--color-gray-light); }
-    .modal-expense-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .modal-expense-row:last-child { border-bottom: none; }
-    .modal-expense-name { font-size: 13px; color: var(--color-gray-light); }
-    .modal-input { background: rgba(10,10,15,0.8); border: var(--border-input); border-radius: var(--radius-sm); color: var(--color-white); font-family: var(--font-base); font-size: 13px; width: 80px; padding: 6px 10px; text-align: right; }
-    .modal-input:focus { outline: none; border-color: var(--color-yellow); }
-    .modal-notes { width: 100%; background: rgba(10,10,15,0.8); border: var(--border-input); border-radius: var(--radius-sm); color: var(--color-gray-light); font-family: var(--font-base); font-size: 13px; padding: 10px 12px; resize: none; min-height: 70px; }
-    .modal-notes:focus { outline: none; border-color: rgba(255,255,255,0.2); }
+    /* ── Add-expense modal internals ── */
+    .gm-modal-overlay { align-items: flex-end; }
+    .add-modal {
+      background: linear-gradient(160deg, rgba(26,45,90,0.6) 0%, rgba(10,10,15,0.97) 100%);
+      border: var(--border-card); border-bottom: none;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+      width: 100%;
+      max-height: 92vh; overflow-y: auto;
+    }
+    .gm-modal-overlay.open .add-modal { animation: slideUp 0.25s ease-out; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .modal-title {
+      font-size: 16px; font-weight: 700; margin-bottom: 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--color-white);
+    }
+    .modal-close { background: none; border: none; color: var(--color-gray-mid); font-size: 20px; cursor: pointer; padding: 4px 8px; }
+    .modal-section {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--color-gray-mid); margin: 14px 0 6px;
+    }
+    .modal-input, .modal-select {
+      background: rgba(10,10,15,0.8); border: var(--border-input);
+      border-radius: var(--radius-sm); color: var(--color-white);
+      font-family: var(--font-base); font-size: 15px;
+      width: 100%; padding: 12px; min-height: 44px;
+    }
+    .modal-input:focus, .modal-select:focus { outline: none; border-color: var(--color-yellow); }
+    .modal-suggest {
+      margin-top: 8px; padding: 9px 11px;
+      background: rgba(232,184,75,0.1);
+      border: 1px solid rgba(232,184,75,0.2);
+      border-radius: var(--radius-sm);
+      font-size: 12px; color: var(--color-gray-light);
+    }
+    .modal-suggest button {
+      background: none; border: none; color: var(--color-yellow);
+      cursor: pointer; font-family: var(--font-base); font-size: 12px;
+      font-weight: 700; text-decoration: underline; padding: 0;
+    }
 
-    /* ══════════════════════════════════════════
-       DESKTOP LAYOUT (800px+)
-    ══════════════════════════════════════════ */
+    /* ══ DESKTOP (800px+) ══ */
     @media (min-width: 800px) {
-      body {
-        padding: 0;
-        overflow-x: hidden;
-        min-height: 100vh;
-      }
-
-      /* Sticky top bar */
+      body { padding: 0 0 40px; overflow-x: hidden; min-height: 100vh; }
       .topbar {
-        flex-direction: row;
-        align-items: center;
-        padding: 12px 36px;
-        margin-bottom: 0;
-        gap: 20px;
-        position: sticky;
-        top: 0;
-        z-index: 50;
+        flex-direction: row; align-items: center;
+        padding: 12px 36px; margin-bottom: 0; gap: 20px;
+        position: sticky; top: 0; z-index: 50;
         background: rgba(10, 10, 20, 0.92);
         backdrop-filter: blur(20px);
         border-bottom: 1px solid rgba(255,255,255,0.07);
       }
       .topbar-brand { gap: 12px; }
-      .topbar-logo { height: 38px; width: 38px; }
       .topbar .gm-tabs { margin-bottom: 0; width: auto; min-width: 220px; }
       .topbar-paycheck { display: block; }
-
-      /* Mobile header: hide on desktop */
       .mobile-header { display: none; }
-
-      /* Two-column checklist grid */
+      .income-card { margin-top: 28px; }
       .checklist-layout {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto;
         gap: 0 36px;
-        padding: 28px 36px 40px;
+        padding: 8px 36px 40px;
         max-width: 1280px;
         margin: 0 auto;
         align-items: start;
       }
       .col-left  { grid-column: 1; }
       .col-right { grid-column: 2; }
-
-      /* Desktop page title (left column top) */
-      .desktop-title {
-        display: block;
-        margin-bottom: 20px;
-      }
+      .desktop-title { display: block; margin-bottom: 20px; }
       .desktop-title h1 {
-        font-size: 22px;
-        font-weight: 800;
-        letter-spacing: -0.5px;
+        font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
         background: var(--gradient-text);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
       }
       .desktop-title .date { color: var(--color-gray-light); font-size: 12px; margin-top: 3px; }
-
-      /* History: 2-col card grid */
-      .history-container {
-        padding: 28px 36px 40px;
-        max-width: 1280px;
-        margin: 0 auto;
-      }
-      #history-list {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
+      .history-container { padding: 28px 36px 40px; max-width: 1280px; margin: 0 auto; }
+      #history-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
       #history-list .history-card { margin-bottom: 0; }
+      .gm-modal-overlay { align-items: center; justify-content: center; }
+      .add-modal {
+        max-width: 440px; border-radius: var(--radius-lg);
+        border-bottom: var(--border-card);
+        padding: 24px;
+      }
+      .fab { bottom: 32px; right: 32px; }
     }
-
-    /* Hide desktop-only elements on mobile */
     .desktop-title { display: none; }
   </style>
 </head>
 <body>
 <div class="container" style="max-width:100%">
 
-  <!-- ── TOP BAR (mobile: stacked / desktop: horizontal sticky) ── -->
+  <!-- ── TOP BAR ── -->
   <div class="topbar">
     <div class="topbar-brand">
-      <img
-        src="../styles/assets/graydient-media-logo.png"
-        class="topbar-logo"
-        alt="Graydient Media"
-        onload="this.style.display='block'"
-        onerror="this.style.display='none'"
-      />
+      <img src="./icons/icon-192.png" class="topbar-logo" alt="Payday Checklist"
+        onload="this.style.display='block'" onerror="this.style.display='none'" />
       <span class="topbar-wordmark">Graydient Media</span>
     </div>
-
     <div class="gm-tabs">
       <button class="gm-tab-btn active" onclick="switchTab('checklist')">Checklist</button>
       <button class="gm-tab-btn" onclick="switchTab('history')">History</button>
     </div>
-
-    <!-- Paycheck shown in topbar on desktop, hidden on mobile -->
     <div class="topbar-paycheck">
-      <span>Bi-weekly paycheck</span>
-      <strong>$3,250</strong>
+      <span>Monthly income</span>
+      <strong id="topbar-paycheck-amount">$6,500</strong>
     </div>
   </div>
 
   <!-- ── CHECKLIST TAB ── -->
   <div class="tab-pane active" id="tab-checklist">
 
-    <!-- Mobile header (date + paycheck badge) -->
     <div class="mobile-header">
       <h1>Payday Checklist</h1>
       <div class="date" id="today-date-mobile"></div>
-      <div class="paycheck-badge">
-        <span>Bi-weekly paycheck</span>
-        <div class="paycheck-amount">$3,250</div>
+    </div>
+
+    <!-- Income card: monthly context + editable paycheck/tax -->
+    <div class="income-card">
+      <div class="income-main">
+        <div class="label">Monthly income</div>
+        <div class="amount" id="context-paycheck">$6,500</div>
+        <div class="sub" id="context-aftertax">After 30% tax: $4,550</div>
+      </div>
+      <div class="income-edits">
+        <div class="input-group">
+          <label>Bi-weekly pay</label>
+          <input type="number" id="paycheck-amount" value="3250" inputmode="decimal" oninput="updateAllocations()" />
+        </div>
+        <div class="input-group">
+          <label>Tax %</label>
+          <input type="number" id="tax-percent" value="30" inputmode="decimal" oninput="updateAllocations()" />
+        </div>
       </div>
     </div>
 
     <div class="checklist-layout">
 
-      <!-- LEFT COLUMN: title (desktop) + steps + notes + buttons -->
+      <!-- LEFT COLUMN -->
       <div class="col-left">
         <div class="desktop-title">
           <h1>Payday Checklist</h1>
           <div class="date" id="today-date-desktop"></div>
         </div>
 
-        <div class="gm-label">Steps — do these in order <button class="section-reset-btn" onclick="resetSteps()">Reset</button></div>
+        <div class="gm-label">Monthly steps — do these in order <button class="section-reset-btn" onclick="resetSteps()">Reset</button></div>
 
         <div class="step" id="step-0" onclick="toggleStep(0)">
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
             <div class="step-label">Move taxes to PrimeSouth</div>
-            <div class="step-sub">30% set-aside — do NOT touch this money</div>
+            <div class="step-sub" id="step-0-sub">30% set-aside — do NOT touch this money</div>
           </div>
           <div class="step-right">
-            <div class="step-amount">-$975</div>
-            <div class="step-balance">Balance: $2,275</div>
+            <div class="step-amount" id="step-0-amount">-$1,950</div>
+            <div class="step-balance" id="balance-0">After tax: $4,550</div>
           </div>
         </div>
 
@@ -429,14 +453,14 @@
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
             <div class="step-label">Pay rent</div>
-            <div class="step-sub">Full month — adjust if you move</div>
+            <div class="step-sub">Full month</div>
           </div>
           <div class="step-right">
-            <div class="rent-input-wrap">
-              <span class="step-amount" style="font-size:12px">-$</span>
-              <input class="rent-input" type="number" id="rent-amount" value="1500" onclick="event.stopPropagation()" oninput="updateRent()" />
+            <div class="step-input-wrap">
+              <span class="prefix">-$</span>
+              <input class="step-input" type="number" id="alloc-rent" value="1900" inputmode="decimal" onclick="event.stopPropagation()" oninput="updateAllocations()" />
             </div>
-            <div class="step-balance" id="balance-1">Balance: $775</div>
+            <div class="step-balance" id="balance-1">Remaining: $2,650</div>
           </div>
         </div>
 
@@ -444,47 +468,61 @@
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
             <div class="step-label">Pay student loans</div>
-            <div class="step-sub">Full month — auto-pay or manual</div>
+            <div class="step-sub">Attack the 20% interest</div>
           </div>
           <div class="step-right">
-            <div class="step-amount">-$318</div>
-            <div class="step-balance" id="balance-2">Balance: $457</div>
+            <div class="step-input-wrap">
+              <span class="prefix">-$</span>
+              <input class="step-input" type="number" id="alloc-loans" value="1000" inputmode="decimal" onclick="event.stopPropagation()" oninput="updateAllocations()" />
+            </div>
+            <div class="step-balance" id="balance-2">Remaining: $1,650</div>
           </div>
         </div>
 
         <div class="step" id="step-3" onclick="toggleStep(3)">
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
-            <div class="step-label">Buy MetroCard</div>
-            <div class="step-sub">Unlimited monthly — buy at start of each month</div>
+            <div class="step-label">Transfer to emergency fund</div>
+            <div class="step-sub">NYC safety net</div>
           </div>
           <div class="step-right">
-            <div class="step-amount">-$132</div>
-            <div class="step-balance" id="balance-3">Balance: $325</div>
+            <div class="step-input-wrap">
+              <span class="prefix">-$</span>
+              <input class="step-input" type="number" id="alloc-ef" value="400" inputmode="decimal" onclick="event.stopPropagation()" oninput="updateAllocations()" />
+            </div>
+            <div class="step-balance" id="balance-3">Remaining: $1,250</div>
           </div>
         </div>
 
         <div class="step" id="step-4" onclick="toggleStep(4)">
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
-            <div class="step-label">Transfer to emergency fund</div>
+            <div class="step-label">Transfer to ring fund</div>
+            <div class="step-sub">Keep the goal alive</div>
           </div>
           <div class="step-right">
-            <div class="step-amount positive" id="step-fund-goal">$9,000</div>
-            <div class="step-balance">Savings goal</div>
+            <div class="step-input-wrap">
+              <span class="prefix">-$</span>
+              <input class="step-input" type="number" id="alloc-ring" value="200" inputmode="decimal" onclick="event.stopPropagation()" oninput="updateAllocations()" />
+            </div>
+            <div class="step-balance" id="balance-4">Budget pool: $1,050</div>
           </div>
         </div>
 
         <div class="gm-label" style="margin-top:24px">Notes <button class="section-reset-btn" onclick="resetNotes()">Reset</button></div>
-        <textarea class="notes-input" id="notes" placeholder="Anything to note this payday..." oninput="saveNotes()"></textarea>
+        <textarea class="notes-input" id="notes" placeholder="Anything to note this month..." oninput="saveNotes()"></textarea>
 
         <div class="btn-row">
-          <button class="gm-btn-primary" onclick="submitPayday()">Save to History</button>
+          <button class="gm-btn-primary" onclick="submitPayday()">Save Month to History</button>
           <button class="gm-btn-ghost" onclick="resetEverything()">Reset Everything</button>
+        </div>
+        <div class="btn-row backup-row">
+          <button class="gm-btn-ghost" onclick="exportCSV()">Export Backup</button>
+          <button class="gm-btn-ghost" onclick="importCSV()">Import Backup</button>
         </div>
       </div>
 
-      <!-- RIGHT COLUMN: emergency fund + expenses -->
+      <!-- RIGHT COLUMN -->
       <div class="col-right">
 
         <div class="gm-label">Emergency Fund <button class="section-reset-btn" onclick="resetFund()">Reset</button></div>
@@ -492,11 +530,11 @@
           <div class="fund-top">
             <div>
               <div class="fund-title">Savings Balance</div>
-              <div class="fund-goal">Goal: $<input class="goal-inline-input" type="number" id="fund-goal" value="9000" oninput="updateFund()" /></div>
+              <div class="fund-goal">Goal: $<input class="goal-inline-input" type="number" id="fund-goal" value="12000" inputmode="decimal" oninput="updateFund()" /></div>
             </div>
             <div class="fund-input-wrap">
               <span>$</span>
-              <input class="fund-input" type="number" id="fund-balance" placeholder="0" oninput="updateFund()" />
+              <input class="fund-input" type="number" id="fund-balance" placeholder="0" inputmode="decimal" oninput="updateFund()" />
             </div>
           </div>
           <div class="gm-progress-bg">
@@ -513,11 +551,11 @@
           <div class="fund-top">
             <div>
               <div class="fund-title">Ring Savings</div>
-              <div class="fund-goal">Goal: $<input class="goal-inline-input" type="number" id="ring-goal" value="10000" oninput="updateRing()" /></div>
+              <div class="fund-goal">Goal: $<input class="goal-inline-input" type="number" id="ring-goal" value="10000" inputmode="decimal" oninput="updateRing()" /></div>
             </div>
             <div class="fund-input-wrap">
               <span>$</span>
-              <input class="fund-input" type="number" id="ring-balance" placeholder="0" oninput="updateRing()" />
+              <input class="fund-input" type="number" id="ring-balance" placeholder="0" inputmode="decimal" oninput="updateRing()" />
             </div>
           </div>
           <div class="gm-progress-bg">
@@ -529,127 +567,21 @@
           </div>
         </div>
 
-        <div class="gm-label" style="margin-top:24px">Monthly Expense Budget — <span id="expense-budget-total">$975</span> <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
+        <div class="gm-label" style="margin-top:24px">Monthly Budgets — <span id="expense-budget-total">$950</span> <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
         <div class="gm-card">
-
-          <div class="expense-row">
-            <div class="expense-name">Groceries<button class="txn-toggle" id="txn-toggle-0" onclick="toggleTxns(0)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-0" type="number" placeholder="auto" oninput="onManualSpent(0)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-0">$200</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-0" value="200" onclick="event.stopPropagation()" oninput="updateBudgetAmount(0)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-0"></div>
-
-          <div class="expense-row">
-            <div class="expense-name">Dining Out<button class="txn-toggle" id="txn-toggle-1" onclick="toggleTxns(1)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-1" type="number" placeholder="auto" oninput="onManualSpent(1)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-1">$150</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-1" value="150" onclick="event.stopPropagation()" oninput="updateBudgetAmount(1)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-1"></div>
-
-          <div class="expense-row">
-            <div class="expense-name">Software &amp; Tools<button class="txn-toggle" id="txn-toggle-2" onclick="toggleTxns(2)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-2" type="number" placeholder="auto" oninput="onManualSpent(2)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-2">$100</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-2" value="100" onclick="event.stopPropagation()" oninput="updateBudgetAmount(2)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-2"></div>
-
-          <div class="expense-row">
-            <div class="expense-name">Streaming<button class="txn-toggle" id="txn-toggle-3" onclick="toggleTxns(3)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-3" type="number" placeholder="auto" oninput="onManualSpent(3)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-3">$40</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-3" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(3)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-3"></div>
-
-          <div class="expense-row">
-            <div class="expense-name">Utilities / Internet<button class="txn-toggle" id="txn-toggle-4" onclick="toggleTxns(4)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-4" type="number" placeholder="auto" oninput="onManualSpent(4)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-4">$60</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-4" value="60" onclick="event.stopPropagation()" oninput="updateBudgetAmount(4)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-4"></div>
-
-          <div class="expense-row">
-            <div class="expense-name">Transport<button class="txn-toggle" id="txn-toggle-5" onclick="toggleTxns(5)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-5" type="number" placeholder="auto" oninput="onManualSpent(5)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-5">$40</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-5" value="40" onclick="event.stopPropagation()" oninput="updateBudgetAmount(5)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-5"></div>
-
-          <div class="expense-row">
-            <div class="expense-name">Health &amp; Wellness<button class="txn-toggle" id="txn-toggle-6" onclick="toggleTxns(6)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-6" type="number" placeholder="auto" oninput="onManualSpent(6)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-6">$50</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-6" value="50" onclick="event.stopPropagation()" oninput="updateBudgetAmount(6)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-6"></div>
-
-          <div class="expense-row">
-            <div class="expense-name">Shopping<button class="txn-toggle" id="txn-toggle-7" onclick="toggleTxns(7)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-7" type="number" placeholder="auto" oninput="onManualSpent(7)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-7">$100</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-7" value="100" onclick="event.stopPropagation()" oninput="updateBudgetAmount(7)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-7"></div>
-
-          <div class="expense-row">
-            <div class="expense-name">Misc / Buffer<button class="txn-toggle" id="txn-toggle-8" onclick="toggleTxns(8)" style="display:none"></button></div>
-            <div class="expense-right">
-              <input class="expense-spent-input" id="spent-input-8" type="number" placeholder="auto" oninput="onManualSpent(8)" />
-              <div class="budget-right-col">
-                <div class="budget-remaining ok" id="rem-display-8">$235</div>
-                <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-8" value="235" onclick="event.stopPropagation()" oninput="updateBudgetAmount(8)" /></div>
-              </div>
-            </div>
-          </div>
-          <div class="txn-list" id="txn-list-8"></div>
+          <div id="expense-rows"></div>
 
           <div class="expense-total-row">
             <span>Total remaining</span>
-            <span id="expense-total-remaining" class="ok">$975</span>
+            <span id="expense-total-remaining" class="ok">$950</span>
           </div>
+
+          <div class="misc-overflow" id="misc-overflow" style="display:none"></div>
 
           <div class="sync-badge" id="sync-badge">
-            <span id="sync-status">Checking auto-sync&hellip;</span>
-            <span id="sync-actions" style="display:none"> &mdash; <a onclick="clearAutoExpenses()">refresh</a></span>
+            <span id="sync-status">Checking Gmail auto-sync&hellip;</span>
+            <span id="sync-actions" style="display:none"> &mdash; <a onclick="loadGmailExpenses(true)">refresh</a></span>
           </div>
-
         </div>
       </div>
     </div>
@@ -658,475 +590,902 @@
   <!-- ── HISTORY TAB ── -->
   <div class="tab-pane" id="tab-history">
     <div class="history-container">
-      <div class="gm-label" style="margin-top:0">Past Paychecks <button class="section-reset-btn" onclick="resetHistory()">Clear All</button></div>
+      <div class="gm-label" style="margin-top:0">Past Months <button class="section-reset-btn" onclick="resetHistory()">Clear All</button></div>
       <div id="history-list"></div>
     </div>
   </div>
 
 </div>
 
-<div class="gm-toast" id="toast"></div>
+<!-- ── FAB ── -->
+<button class="fab" onclick="openAddModal()" title="Add expense">+</button>
 
-<!-- Edit Modal -->
-<div class="gm-modal-overlay" id="edit-modal" onclick="handleOverlayClick(event)">
-  <div class="gm-modal">
+<!-- ── ADD EXPENSE MODAL ── -->
+<div class="gm-modal-overlay" id="add-modal" onclick="if(event.target===this)closeAddModal()">
+  <div class="add-modal">
     <div class="modal-title">
-      <span>Edit Entry</span>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <span>Add Expense</span>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
     </div>
-    <div class="modal-section">Steps Completed</div>
-    <div id="modal-steps"></div>
-    <div class="modal-section">Expenses Spent</div>
-    <div id="modal-expenses"></div>
-    <div class="modal-section">Emergency Fund Balance</div>
-    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-      <span style="color:var(--color-gray-light);font-size:13px">$</span>
-      <input class="modal-input" type="number" id="modal-fund" style="width:120px" placeholder="0" />
-    </div>
-    <div class="modal-section">Notes</div>
-    <textarea class="modal-notes" id="modal-notes" placeholder="Notes..."></textarea>
-    <button class="gm-btn-primary" style="width:100%;margin-top:20px" onclick="saveEdit()">Save Changes</button>
+
+    <div class="modal-section">Vendor</div>
+    <input class="modal-input" type="text" id="add-vendor" placeholder="e.g. Trader Joe's, Starbucks" oninput="suggestCategory()" />
+    <div id="add-suggest" class="modal-suggest" style="display:none"></div>
+
+    <div class="modal-section">Amount</div>
+    <input class="modal-input" type="number" id="add-amount" placeholder="0.00" step="0.01" inputmode="decimal" />
+
+    <div class="modal-section">Category</div>
+    <select class="modal-select" id="add-category">
+      <option value="">Pick a category…</option>
+    </select>
+
+    <div class="modal-section">Date</div>
+    <input class="modal-input" type="date" id="add-date" />
+
+    <div class="modal-section">Note (optional)</div>
+    <input class="modal-input" type="text" id="add-note" placeholder="Any details…" />
+
+    <button class="gm-btn-primary" style="width:100%;margin-top:20px;min-height:48px" onclick="submitAddExpense()">Add Expense</button>
   </div>
 </div>
 
+<div class="gm-toast" id="toast"></div>
+
 <script>
-  const STORAGE_KEY = 'payday_v2';
-  const HISTORY_KEY = 'payday_history_v1';
-  const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'MetroCard', 'Emergency Fund'];
-  const EXPENSE_NAMES = ['Groceries', 'Dining Out', 'Software & Tools', 'Streaming', 'Utilities', 'Transport', 'Health & Wellness', 'Shopping', 'Misc'];
-  const DEFAULT_BUDGETS = [200, 150, 100, 40, 60, 40, 50, 100, 235];
-  let EXPENSE_BUDGETS = [...DEFAULT_BUDGETS];
+'use strict';
 
-  function getTotalBudget() { return EXPENSE_BUDGETS.reduce((a, b) => a + b, 0); }
-  function save(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-  function load() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+// ═══════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════
 
-  // Set dates
+const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'Emergency Fund', 'Ring Fund'];
+const CATEGORIES = ['Groceries', 'Dining Out', 'Software & Tools', 'Utilities', 'Investments', 'BJJ & Kickboxing', 'Misc'];
+const DEFAULT_BUDGETS = [200, 150, 100, 60, 100, 200, 140];
+const MISC_INDEX = 6;
+
+// Old Gmail-scanner categories → new categories
+const GMAIL_CATEGORY_MAP = {
+  'Groceries': 'Groceries', 'Dining Out': 'Dining Out',
+  'Software & Tools': 'Software & Tools', 'Utilities': 'Utilities',
+  'Investments': 'Investments', 'BJJ & Kickboxing': 'BJJ & Kickboxing',
+  'Streaming': 'Misc', 'Transport': 'Misc',
+  'Health & Wellness': 'Misc', 'Shopping': 'Misc', 'Misc': 'Misc'
+};
+
+// Local keyword rules for auto-categorization (checked against lowercase vendor)
+const KEYWORD_RULES = [
+  ['Groceries', ['trader joe', 'whole foods', 'aldi', 'wegmans', 'grocery', 'market', 'bodega', 'costco', 'key food', 'gristedes', 'fairway', 'morton williams']],
+  ['Dining Out', ['starbucks', 'chipotle', 'sweetgreen', 'cafe', 'coffee', 'restaurant', 'pizza', 'doordash', 'grubhub', 'uber eats', 'ubereats', 'seamless', 'deli', 'bagel', 'diner', 'burger', 'taco', 'sushi', 'chick-fil-a', 'mcdonald', 'dunkin', 'shake shack']],
+  ['Software & Tools', ['adobe', 'notion', 'github', 'google', 'openai', 'anthropic', 'claude', 'sandcastles', 'figma', 'dropbox', 'canva', 'capcut', 'elevenlabs', 'frame.io', 'higgsfield', 'midjourney', 'envato', 'epidemic sound', 'artlist', 'musicbed', 'squarespace', 'hostinger', 'namecheap', 'domain']],
+  ['Utilities', ['con ed', 'coned', 'con edison', 'verizon', 'spectrum', 'xfinity', 'optimum', 'at&t', 't-mobile', 'tmobile', 'electric', 'internet', 'wifi', 'national grid']],
+  ['Investments', ['robinhood', 'fidelity', 'vanguard', 'schwab', 'coinbase', 'wealthfront', 'betterment', 'acorns', 'e*trade', 'etrade']],
+  ['BJJ & Kickboxing', ['bjj', 'jiu jitsu', 'jiu-jitsu', 'jiujitsu', 'kickbox', 'muay thai', 'mma', 'martial', 'dojo', 'grappling', 'renzo', 'gracie']]
+];
+
+// ═══════════════════════════════════════════════
+// INDEXEDDB LAYER
+// ═══════════════════════════════════════════════
+
+let db = null;
+
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('payday_checklist_v1', 1);
+    req.onerror = () => reject(req.error);
+    req.onsuccess = () => { db = req.result; resolve(db); };
+    req.onupgradeneeded = (e) => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('settings'))
+        d.createObjectStore('settings', { keyPath: 'key' });
+      if (!d.objectStoreNames.contains('transactions')) {
+        const t = d.createObjectStore('transactions', { keyPath: 'id', autoIncrement: true });
+        t.createIndex('month', 'month', { unique: false });
+        t.createIndex('email_id', 'email_id', { unique: false });
+      }
+      if (!d.objectStoreNames.contains('history'))
+        d.createObjectStore('history', { keyPath: 'id' });
+    };
+  });
+}
+
+function idbReq(request) {
+  return new Promise((resolve, reject) => {
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+  });
+}
+
+async function setSetting(key, value) {
+  const tx = db.transaction('settings', 'readwrite');
+  return idbReq(tx.objectStore('settings').put({ key, value }));
+}
+async function getSetting(key, fallback = null) {
+  const tx = db.transaction('settings', 'readonly');
+  const rec = await idbReq(tx.objectStore('settings').get(key));
+  return rec ? rec.value : fallback;
+}
+async function deleteSetting(key) {
+  const tx = db.transaction('settings', 'readwrite');
+  return idbReq(tx.objectStore('settings').delete(key));
+}
+async function addTransaction(txn) {
+  const tx = db.transaction('transactions', 'readwrite');
+  return idbReq(tx.objectStore('transactions').put(txn));
+}
+async function getAllTransactions() {
+  const tx = db.transaction('transactions', 'readonly');
+  return idbReq(tx.objectStore('transactions').getAll());
+}
+async function deleteTransaction(id) {
+  const tx = db.transaction('transactions', 'readwrite');
+  return idbReq(tx.objectStore('transactions').delete(id));
+}
+async function putHistory(entry) {
+  const tx = db.transaction('history', 'readwrite');
+  return idbReq(tx.objectStore('history').put(entry));
+}
+async function getAllHistory() {
+  const tx = db.transaction('history', 'readonly');
+  return idbReq(tx.objectStore('history').getAll());
+}
+async function deleteHistory(id) {
+  const tx = db.transaction('history', 'readwrite');
+  return idbReq(tx.objectStore('history').delete(id));
+}
+async function clearStore(name) {
+  const tx = db.transaction(name, 'readwrite');
+  return idbReq(tx.objectStore(name).clear());
+}
+
+// ═══════════════════════════════════════════════
+// STATE + HELPERS
+// ═══════════════════════════════════════════════
+
+let BUDGETS = [...DEFAULT_BUDGETS];
+let OVERRIDES = {};          // {'2026-07': {catIndex: amount}}
+let TXN_CACHE = [];          // all transactions (kept in sync with IDB)
+
+function currentMonth() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+function todayISO() {
+  const d = new Date();
+  return currentMonth() + '-' + String(d.getDate()).padStart(2, '0');
+}
+function fmt(n) {
+  const sign = n < 0 ? '-' : '';
+  return sign + '$' + Math.abs(n).toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+function fmt2(n) {
+  return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function num(id, fallback = 0) {
+  const v = parseFloat(document.getElementById(id).value);
+  return isNaN(v) ? fallback : v;
+}
+function autoSpentFor(catIndex) {
+  const month = currentMonth();
+  return TXN_CACHE
+    .filter(t => t.month === month && t.category === CATEGORIES[catIndex])
+    .reduce((s, t) => s + t.amount, 0);
+}
+function effectiveSpent(catIndex) {
+  const ov = OVERRIDES[currentMonth()];
+  if (ov && ov[catIndex] != null) return ov[catIndex];
+  return autoSpentFor(catIndex);
+}
+
+// ═══════════════════════════════════════════════
+// INCOME + ALLOCATION CHAIN
+// ═══════════════════════════════════════════════
+
+async function updateAllocations(persist = true) {
+  const biweekly = num('paycheck-amount', 3250);
+  const taxPct = num('tax-percent', 30);
+  const monthly = biweekly * 2;
+  const taxAmt = monthly * taxPct / 100;
+  const afterTax = monthly - taxAmt;
+
+  const rent = num('alloc-rent', 0);
+  const loans = num('alloc-loans', 0);
+  const ef = num('alloc-ef', 0);
+  const ring = num('alloc-ring', 0);
+
+  document.getElementById('context-paycheck').textContent = fmt(monthly);
+  document.getElementById('context-aftertax').textContent = 'After ' + taxPct + '% tax: ' + fmt(afterTax);
+  document.getElementById('topbar-paycheck-amount').textContent = fmt(monthly);
+  document.getElementById('step-0-amount').textContent = '-' + fmt(taxAmt);
+  document.getElementById('step-0-sub').textContent = taxPct + '% set-aside — do NOT touch this money';
+  document.getElementById('balance-0').textContent = 'After tax: ' + fmt(afterTax);
+
+  const afterRent = afterTax - rent;
+  const afterLoans = afterRent - loans;
+  const afterEF = afterLoans - ef;
+  const pool = afterEF - ring;
+
+  document.getElementById('balance-1').textContent = 'Remaining: ' + fmt(afterRent);
+  document.getElementById('balance-2').textContent = 'Remaining: ' + fmt(afterLoans);
+  document.getElementById('balance-3').textContent = 'Remaining: ' + fmt(afterEF);
+  document.getElementById('balance-4').textContent = 'Budget pool: ' + fmt(pool);
+
+  if (persist && db) {
+    await setSetting('income', { biweekly, taxPct });
+    await setSetting('allocations', { rent, loans, ef, ring });
+  }
+  updateFundPace();
+}
+
+// ═══════════════════════════════════════════════
+// FUNDS
+// ═══════════════════════════════════════════════
+
+async function updateFund(persist = true) {
+  const val = num('fund-balance', 0);
+  const goal = num('fund-goal', 12000) || 12000;
+  const pct = Math.min(100, (val / goal) * 100);
+  document.getElementById('fund-bar').style.width = pct.toFixed(1) + '%';
+  document.getElementById('fund-pct').textContent = pct.toFixed(0) + '% there';
+  updateFundPace();
+  if (persist && db) await setSetting('fund', { balance: val, goal });
+}
+
+async function updateRing(persist = true) {
+  const val = num('ring-balance', 0);
+  const goal = num('ring-goal', 10000) || 10000;
+  const pct = Math.min(100, (val / goal) * 100);
+  document.getElementById('ring-bar').style.width = pct.toFixed(1) + '%';
+  document.getElementById('ring-pct').textContent = pct.toFixed(0) + '% there';
+  updateFundPace();
+  if (persist && db) await setSetting('ring', { balance: val, goal });
+}
+
+function updateFundPace() {
+  const efMonthly = num('alloc-ef', 400) || 400;
+  const ringMonthly = num('alloc-ring', 200) || 200;
+  const fundVal = num('fund-balance', 0), fundGoal = num('fund-goal', 12000) || 12000;
+  const ringVal = num('ring-balance', 0), ringGoal = num('ring-goal', 10000) || 10000;
+  const fm = Math.ceil(Math.max(0, fundGoal - fundVal) / efMonthly);
+  const rm = Math.ceil(Math.max(0, ringGoal - ringVal) / ringMonthly);
+  document.getElementById('fund-months').textContent =
+    fundVal >= fundGoal ? 'Goal reached!' : fm + ' month' + (fm === 1 ? '' : 's') + ' to go';
+  document.getElementById('ring-months').textContent =
+    ringVal >= ringGoal ? 'Goal reached!' : rm + ' month' + (rm === 1 ? '' : 's') + ' to go';
+}
+
+// ═══════════════════════════════════════════════
+// EXPENSE ROWS (built dynamically from CATEGORIES)
+// ═══════════════════════════════════════════════
+
+function buildExpenseRows() {
+  const wrap = document.getElementById('expense-rows');
+  wrap.innerHTML = CATEGORIES.map((name, i) => `
+    <div class="expense-row">
+      <div class="expense-name">${name === 'Misc' ? 'Misc Buffer' : name}<button class="txn-toggle" id="txn-toggle-${i}" onclick="toggleTxns(${i})" style="display:none"></button></div>
+      <div class="expense-right">
+        <input class="expense-spent-input" id="spent-input-${i}" type="number" placeholder="0" inputmode="decimal" oninput="onManualSpent(${i})" />
+        <div class="budget-right-col">
+          <div class="budget-remaining ok" id="rem-display-${i}">$${DEFAULT_BUDGETS[i]}</div>
+          <div class="budget-label-sub">budget <input class="budget-inline-input" type="number" id="budget-${i}" value="${DEFAULT_BUDGETS[i]}" inputmode="decimal" oninput="updateBudgetAmount(${i})" /></div>
+        </div>
+      </div>
+    </div>
+    <div class="txn-list" id="txn-list-${i}"></div>
+  `).join('');
+
+  // Populate the modal's category select
+  const sel = document.getElementById('add-category');
+  CATEGORIES.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+}
+
+async function updateBudgetAmount(i) {
+  BUDGETS[i] = num('budget-' + i, 0);
+  if (db) await setSetting('budgets', [...BUDGETS]);
+  refreshExpenseDisplays();
+}
+
+async function onManualSpent(i) {
+  const raw = document.getElementById('spent-input-' + i).value;
+  const month = currentMonth();
+  if (!OVERRIDES[month]) OVERRIDES[month] = {};
+  if (raw === '') {
+    delete OVERRIDES[month][i];   // cleared → back to auto sum
+  } else {
+    OVERRIDES[month][i] = parseFloat(raw) || 0;
+  }
+  if (db) await setSetting('overrides', OVERRIDES);
+  refreshExpenseDisplays(false);  // don't overwrite the input being typed in
+}
+
+function refreshExpenseDisplays(setInputs = true) {
+  let totalSpent = 0;
+  CATEGORIES.forEach((_, i) => {
+    const spent = effectiveSpent(i);
+    totalSpent += spent;
+    if (setInputs) {
+      const input = document.getElementById('spent-input-' + i);
+      const isOverride = OVERRIDES[currentMonth()] && OVERRIDES[currentMonth()][i] != null;
+      input.value = spent > 0 ? (Math.round(spent * 100) / 100) : '';
+      input.classList.toggle('auto-filled', !isOverride && spent > 0);
+    }
+    const rem = BUDGETS[i] - spent;
+    const el = document.getElementById('rem-display-' + i);
+    el.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0);
+    el.className = 'budget-remaining ' + (rem < 0 ? 'over' : 'ok');
+  });
+
+  const total = BUDGETS.reduce((a, b) => a + b, 0);
+  const totalRem = total - totalSpent;
+  const totalEl = document.getElementById('expense-total-remaining');
+  totalEl.textContent = (totalRem < 0 ? '-$' : '$') + Math.abs(totalRem).toFixed(0);
+  totalEl.className = totalRem < 0 ? 'over' : 'ok';
+  document.getElementById('expense-budget-total').textContent = '$' + total.toLocaleString();
+
+  // Misc buffer overflow hint: leftover splits 50/50 ring + loans
+  const miscLeft = BUDGETS[MISC_INDEX] - effectiveSpent(MISC_INDEX);
+  const hint = document.getElementById('misc-overflow');
+  if (miscLeft > 0) {
+    const half = miscLeft / 2;
+    hint.style.display = 'block';
+    hint.innerHTML = `Misc buffer untouched: <strong>${fmt(miscLeft)}</strong> — at month end move <strong>${fmt2(half).replace('.00','')}</strong> to the Ring fund and <strong>${fmt2(half).replace('.00','')}</strong> to Student Loans.`;
+  } else {
+    hint.style.display = 'none';
+  }
+
+  CATEGORIES.forEach((_, i) => renderTxnList(i));
+}
+
+// ═══════════════════════════════════════════════
+// TRANSACTIONS
+// ═══════════════════════════════════════════════
+
+function renderTxnList(i) {
+  const list = document.getElementById('txn-list-' + i);
+  const toggle = document.getElementById('txn-toggle-' + i);
+  const month = currentMonth();
+  const txns = TXN_CACHE
+    .filter(t => t.month === month && t.category === CATEGORIES[i])
+    .sort((a, b) => b.date.localeCompare(a.date));
+
+  if (!txns.length) { toggle.style.display = 'none'; list.innerHTML = ''; list.classList.remove('open'); return; }
+
+  const wasOpen = list.classList.contains('open');
+  toggle.style.display = 'inline';
+  toggle.textContent = txns.length + ' transaction' + (txns.length > 1 ? 's' : '') + (wasOpen ? ' ▴' : ' ▾');
+  list.innerHTML = txns.map(t => {
+    const d = new Date(t.date + 'T12:00:00');
+    const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const src = t.source === 'gmail' ? '<span class="txn-src">gmail</span>' : '';
+    return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}</span>${src}<span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-delete" onclick="removeTxn(${t.id})" title="Delete">✕</button></div>`;
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function toggleTxns(i) {
+  const list = document.getElementById('txn-list-' + i);
+  const toggle = document.getElementById('txn-toggle-' + i);
+  const isOpen = list.classList.toggle('open');
+  toggle.textContent = toggle.textContent.replace(/[▾▴]/, isOpen ? '▴' : '▾');
+}
+
+async function removeTxn(id) {
+  const txn = TXN_CACHE.find(t => t.id === id);
+  if (!txn) return;
+  if (!confirm(`Delete ${txn.vendor} ${fmt2(txn.amount)}?`)) return;
+  await deleteTransaction(id);
+  if (txn.email_id) {
+    const dismissed = await getSetting('dismissed_gmail', []);
+    dismissed.push(txn.email_id);
+    await setSetting('dismissed_gmail', dismissed);
+  }
+  TXN_CACHE = TXN_CACHE.filter(t => t.id !== id);
+  refreshExpenseDisplays();
+}
+
+// ═══════════════════════════════════════════════
+// ADD-EXPENSE MODAL + AUTO-CATEGORIZE
+// ═══════════════════════════════════════════════
+
+function openAddModal() {
+  document.getElementById('add-date').value = todayISO();
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(() => document.getElementById('add-vendor').focus(), 150);
+}
+
+function closeAddModal() {
+  document.getElementById('add-modal').classList.remove('open');
+  ['add-vendor', 'add-amount', 'add-note'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('add-category').value = '';
+  document.getElementById('add-suggest').style.display = 'none';
+}
+
+function guessCategory(vendor) {
+  const v = vendor.toLowerCase().trim();
+  if (!v) return null;
+  // 1. Learned: most recent past transaction with same vendor
+  const past = TXN_CACHE
+    .filter(t => t.vendor.toLowerCase().trim() === v)
+    .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  if (past.length) return past[0].category;
+  // 2. Keyword rules
+  for (const [cat, words] of KEYWORD_RULES) {
+    if (words.some(w => v.includes(w))) return cat;
+  }
+  return null;
+}
+
+function suggestCategory() {
+  const vendor = document.getElementById('add-vendor').value;
+  const box = document.getElementById('add-suggest');
+  const guess = guessCategory(vendor);
+  if (guess && document.getElementById('add-category').value === '') {
+    box.style.display = 'block';
+    box.innerHTML = `Looks like <button onclick="applySuggestion('${guess.replace(/'/g, "\\'")}')">${guess}</button>`;
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+function applySuggestion(cat) {
+  document.getElementById('add-category').value = cat;
+  document.getElementById('add-suggest').style.display = 'none';
+}
+
+async function submitAddExpense() {
+  const vendor = document.getElementById('add-vendor').value.trim();
+  const amount = parseFloat(document.getElementById('add-amount').value);
+  let category = document.getElementById('add-category').value;
+  const date = document.getElementById('add-date').value || todayISO();
+  const note = document.getElementById('add-note').value.trim();
+
+  if (!vendor) { showToast('Enter a vendor name'); return; }
+  if (!amount || amount <= 0) { showToast('Enter an amount'); return; }
+  if (!category) category = guessCategory(vendor) || 'Misc';
+
+  const txn = {
+    vendor, amount, category, date,
+    month: date.slice(0, 7),
+    note,
+    source: 'manual',
+    createdAt: new Date().toISOString()
+  };
+  const id = await addTransaction(txn);
+  txn.id = id;
+  TXN_CACHE.push(txn);
+
+  // A new transaction should show through: clear any manual override for that category this month
+  const ov = OVERRIDES[currentMonth()];
+  const ci = CATEGORIES.indexOf(category);
+  if (ov && ov[ci] != null) { delete ov[ci]; await setSetting('overrides', OVERRIDES); }
+
+  closeAddModal();
+  refreshExpenseDisplays();
+  showToast('✓ ' + vendor + ' ' + fmt2(amount) + ' → ' + category);
+}
+
+// ═══════════════════════════════════════════════
+// GMAIL AUTO-SYNC (expenses.json from GitHub Action)
+// ═══════════════════════════════════════════════
+
+function fmtSyncTime(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    + ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+}
+
+function setSyncStatus(text, showActions) {
+  document.getElementById('sync-status').innerHTML = text;
+  document.getElementById('sync-actions').style.display = showActions ? 'inline' : 'none';
+}
+
+async function loadGmailExpenses(manual = false) {
+  try {
+    const res = await fetch('./expenses.json', { cache: 'no-store' });
+    if (!res.ok) { setSyncStatus('&#9888; Gmail sync unavailable (HTTP ' + res.status + ')', false); return; }
+    const data = await res.json();
+    const syncedAt = data.generated_at ? fmtSyncTime(data.generated_at) : 'unknown';
+    const dismissed = await getSetting('dismissed_gmail', []);
+    const existingIds = new Set(TXN_CACHE.filter(t => t.email_id).map(t => t.email_id));
+
+    let imported = 0;
+    for (const exp of (data.expenses || [])) {
+      if (!exp.email_id || existingIds.has(exp.email_id) || dismissed.includes(exp.email_id)) continue;
+      const category = GMAIL_CATEGORY_MAP[exp.category] || 'Misc';
+      const txn = {
+        vendor: exp.vendor, amount: exp.amount, category,
+        date: exp.date, month: (exp.date || '').slice(0, 7),
+        note: '', source: 'gmail', email_id: exp.email_id,
+        createdAt: new Date().toISOString()
+      };
+      const id = await addTransaction(txn);
+      txn.id = id;
+      TXN_CACHE.push(txn);
+      imported++;
+    }
+
+    const monthCount = TXN_CACHE.filter(t => t.month === currentMonth() && t.source === 'gmail').length;
+    setSyncStatus('&#10003; Gmail sync: ' + syncedAt + ' &middot; ' + monthCount + ' receipt' + (monthCount === 1 ? '' : 's') + ' this month', true);
+    if (imported > 0) {
+      refreshExpenseDisplays();
+      if (manual) showToast('✓ ' + imported + ' new receipt' + (imported === 1 ? '' : 's') + ' imported');
+    } else if (manual) {
+      showToast('No new receipts');
+    }
+  } catch (err) {
+    setSyncStatus('&#9888; Gmail sync offline (manual entry still works)', false);
+  }
+}
+
+// ═══════════════════════════════════════════════
+// STEPS + NOTES
+// ═══════════════════════════════════════════════
+
+async function toggleStep(i) {
+  const el = document.getElementById('step-' + i);
+  el.classList.toggle('done');
+  const steps = await getSetting('steps', {});
+  steps[i] = el.classList.contains('done');
+  await setSetting('steps', steps);
+}
+
+async function saveNotes() {
+  await setSetting('notes', document.getElementById('notes').value);
+}
+
+// ═══════════════════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════════════════
+
+async function submitPayday() {
+  const steps = await getSetting('steps', {});
+  const expenses = CATEGORIES.map((name, i) => ({
+    name, budget: BUDGETS[i], spent: Math.round(effectiveSpent(i) * 100) / 100
+  }));
+  const entry = {
+    id: Date.now(),
+    date: new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }),
+    month: currentMonth(),
+    monthlyIncome: num('paycheck-amount', 3250) * 2,
+    steps,
+    fundBalance: num('fund-balance', 0),
+    ringBalance: num('ring-balance', 0),
+    expenses,
+    notes: document.getElementById('notes').value || ''
+  };
+  await putHistory(entry);
+  showToast('✓ Saved to history');
+}
+
+async function renderHistory() {
+  const history = (await getAllHistory()).sort((a, b) => b.id - a.id);
+  const el = document.getElementById('history-list');
+  if (!history.length) {
+    el.innerHTML = '<div class="history-empty">No history yet.<br>Complete a month and tap "Save Month to History".</div>';
+    return;
+  }
+  el.innerHTML = history.map(entry => {
+    const stepsHtml = STEP_NAMES.map((name, i) =>
+      `<span class="history-step-pill ${entry.steps && entry.steps[i] ? 'done' : 'skip'}">${name}</span>`).join('');
+    const expensesHtml = (entry.expenses || []).map(e =>
+      `<div class="history-row"><span>${e.name}</span><span>$${e.spent} / $${e.budget}</span></div>`).join('');
+    const totalSpent = (entry.expenses || []).reduce((s, e) => s + e.spent, 0);
+    const totalBudget = (entry.expenses || []).reduce((s, e) => s + e.budget, 0);
+    const income = entry.monthlyIncome ? `<div class="history-paycheck" style="font-size:11px;color:var(--color-yellow);font-weight:600;margin-top:2px">${fmt(entry.monthlyIncome)} month</div>` : '';
+    return `<div class="history-card">
+      <div class="history-header">
+        <div><div class="history-date">${entry.date}</div>${income}</div>
+        <button class="history-delete" onclick="removeHistoryEntry(${entry.id})" title="Delete">✕</button>
+      </div>
+      <div class="history-steps">${stepsHtml}</div>
+      ${expensesHtml}
+      <div class="history-row" style="margin-top:6px;font-weight:600"><span>Total spent</span><span>$${Math.round(totalSpent)} / $${totalBudget}</span></div>
+      <div class="history-row"><span>Emergency fund</span><span>${fmt(entry.fundBalance || 0)}</span></div>
+      ${entry.ringBalance ? `<div class="history-row"><span>Ring fund</span><span>${fmt(entry.ringBalance)}</span></div>` : ''}
+      ${entry.notes ? `<div class="history-notes">"${escapeHtml(entry.notes)}"</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+async function removeHistoryEntry(id) {
+  if (!confirm('Delete this entry?')) return;
+  await deleteHistory(id);
+  renderHistory();
+}
+
+// ═══════════════════════════════════════════════
+// CSV EXPORT / IMPORT
+// ═══════════════════════════════════════════════
+
+function csvEscape(s) {
+  s = String(s == null ? '' : s);
+  return (s.includes(',') || s.includes('"') || s.includes('\n')) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
+async function exportCSV() {
+  const txns = await getAllTransactions();
+  const history = await getAllHistory();
+  const settingsKeys = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail'];
+  const settings = {};
+  for (const k of settingsKeys) settings[k] = await getSetting(k);
+
+  let csv = '# Payday Checklist backup v2 — ' + new Date().toISOString() + '\n';
+  csv += '[TRANSACTIONS]\n';
+  csv += 'date,vendor,category,amount,source,email_id,note\n';
+  for (const t of txns) {
+    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || '')].join(',') + '\n';
+  }
+  csv += '[SETTINGS]\n';
+  csv += csvEscape(JSON.stringify(settings)) + '\n';
+  csv += '[HISTORY]\n';
+  csv += csvEscape(JSON.stringify(history)) + '\n';
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'payday-backup-' + todayISO() + '.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  showToast('✓ Backup exported');
+}
+
+function parseCsvLine(line) {
+  const out = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (inQ) {
+      if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+      else if (c === '"') inQ = false;
+      else cur += c;
+    } else {
+      if (c === '"') inQ = true;
+      else if (c === ',') { out.push(cur); cur = ''; }
+      else cur += c;
+    }
+  }
+  out.push(cur);
+  return out;
+}
+
+function unquoteCell(s) {
+  s = s.trim();
+  if (s.startsWith('"') && s.endsWith('"')) return s.slice(1, -1).replace(/""/g, '"');
+  return s;
+}
+
+async function importCSV() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.csv,text/csv';
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      if (!text.includes('[TRANSACTIONS]')) { showToast('Not a Payday backup file'); return; }
+      if (!confirm('Import will REPLACE all current data with the backup. Continue?')) return;
+
+      const lines = text.split(/\r?\n/);
+      let section = null;
+      const txns = [];
+      let settingsJson = null, historyJson = null;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.startsWith('#') || line.trim() === '') continue;
+        if (line.trim() === '[TRANSACTIONS]') { section = 'txn'; i++; continue; } // skip header row
+        if (line.trim() === '[SETTINGS]') { section = 'settings'; continue; }
+        if (line.trim() === '[HISTORY]') { section = 'history'; continue; }
+        if (section === 'txn') {
+          const c = parseCsvLine(line);
+          if (c.length < 4) continue;
+          txns.push({
+            date: c[0], vendor: c[1], category: c[2], amount: parseFloat(c[3]) || 0,
+            source: c[4] || 'manual', email_id: c[5] || undefined, note: c[6] || '',
+            month: (c[0] || '').slice(0, 7), createdAt: new Date().toISOString()
+          });
+        } else if (section === 'settings') {
+          settingsJson = unquoteCell(line);
+        } else if (section === 'history') {
+          historyJson = unquoteCell(line);
+        }
+      }
+
+      // Wipe + restore
+      await clearStore('transactions');
+      await clearStore('history');
+      await clearStore('settings');
+      for (const t of txns) { if (!t.email_id) delete t.email_id; await addTransaction(t); }
+      if (settingsJson) {
+        const settings = JSON.parse(settingsJson);
+        for (const [k, v] of Object.entries(settings)) {
+          if (v != null) await setSetting(k, v);
+        }
+      }
+      if (historyJson) {
+        const history = JSON.parse(historyJson);
+        for (const h of history) await putHistory(h);
+      }
+      showToast('✓ Backup restored');
+      setTimeout(() => location.reload(), 900);
+    } catch (err) {
+      showToast('Import failed: ' + err.message);
+    }
+  };
+  input.click();
+}
+
+// ═══════════════════════════════════════════════
+// RESETS
+// ═══════════════════════════════════════════════
+
+async function resetSteps() {
+  if (!confirm('Uncheck all steps?')) return;
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
+  await deleteSetting('steps');
+}
+async function resetNotes() {
+  if (!confirm('Clear notes?')) return;
+  document.getElementById('notes').value = '';
+  await deleteSetting('notes');
+}
+async function resetFund() {
+  if (!confirm('Clear emergency fund balance?')) return;
+  document.getElementById('fund-balance').value = '';
+  updateFund();
+}
+async function resetRing() {
+  if (!confirm('Clear ring balance?')) return;
+  document.getElementById('ring-balance').value = '';
+  updateRing();
+}
+async function resetExpenses() {
+  if (!confirm('Clear this month’s transactions and spent amounts? (History is kept)')) return;
+  const month = currentMonth();
+  const monthTxns = TXN_CACHE.filter(t => t.month === month);
+  for (const t of monthTxns) {
+    await deleteTransaction(t.id);
+    if (t.email_id) {
+      const dismissed = await getSetting('dismissed_gmail', []);
+      dismissed.push(t.email_id);
+      await setSetting('dismissed_gmail', dismissed);
+    }
+  }
+  TXN_CACHE = TXN_CACHE.filter(t => t.month !== month);
+  delete OVERRIDES[month];
+  await setSetting('overrides', OVERRIDES);
+  refreshExpenseDisplays();
+}
+async function resetHistory() {
+  if (!confirm('Delete ALL history entries? This cannot be undone.')) return;
+  await clearStore('history');
+  renderHistory();
+}
+async function resetEverything() {
+  if (!confirm('Reset everything? This clears all data: transactions, history, settings.')) return;
+  if (!confirm('Are you sure? This cannot be undone. (Tip: Export a backup first.)')) return;
+  await clearStore('transactions');
+  await clearStore('history');
+  await clearStore('settings');
+  location.reload();
+}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.gm-tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.gm-tab-btn').forEach(b => {
+    if (b.textContent.toLowerCase().startsWith(name.substring(0, 4))) b.classList.add('active');
+  });
+  if (name === 'history') renderHistory();
+}
+
+// ═══════════════════════════════════════════════
+// LEGACY MIGRATION (old localStorage app → IndexedDB)
+// ═══════════════════════════════════════════════
+
+async function migrateLegacy() {
+  const already = await getSetting('migrated_v1', false);
+  if (already) return;
+  try {
+    const old = JSON.parse(localStorage.getItem('payday_v2') || 'null');
+    const oldHist = JSON.parse(localStorage.getItem('payday_history_v1') || 'null');
+    if (old) {
+      if (old.fundBalance != null) await setSetting('fund', { balance: old.fundBalance, goal: 12000 });
+      if (old.ringBalance != null) await setSetting('ring', { balance: old.ringBalance, goal: old.ringGoal || 10000 });
+      if (old.notes) await setSetting('notes', old.notes);
+    }
+    if (Array.isArray(oldHist)) {
+      for (const h of oldHist) await putHistory(h);
+    }
+  } catch (e) { /* legacy data unreadable — start fresh */ }
+  await setSetting('migrated_v1', true);
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+
+async function init() {
+  buildExpenseRows();
+
   const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   document.getElementById('today-date-mobile').textContent = dateStr;
   document.getElementById('today-date-desktop').textContent = dateStr;
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
+  await initDB();
+  await migrateLegacy();
+
+  // Load settings
+  const income = await getSetting('income', { biweekly: 3250, taxPct: 30 });
+  const allocs = await getSetting('allocations', { rent: 1900, loans: 1000, ef: 400, ring: 200 });
+  const budgets = await getSetting('budgets', null);
+  const fund = await getSetting('fund', { balance: '', goal: 12000 });
+  const ring = await getSetting('ring', { balance: '', goal: 10000 });
+  const steps = await getSetting('steps', {});
+  const notes = await getSetting('notes', '');
+  OVERRIDES = await getSetting('overrides', {});
+
+  document.getElementById('paycheck-amount').value = income.biweekly;
+  document.getElementById('tax-percent').value = income.taxPct;
+  document.getElementById('alloc-rent').value = allocs.rent;
+  document.getElementById('alloc-loans').value = allocs.loans;
+  document.getElementById('alloc-ef').value = allocs.ef;
+  document.getElementById('alloc-ring').value = allocs.ring;
+  document.getElementById('fund-balance').value = fund.balance;
+  document.getElementById('fund-goal').value = fund.goal;
+  document.getElementById('ring-balance').value = ring.balance;
+  document.getElementById('ring-goal').value = ring.goal;
+  document.getElementById('notes').value = notes;
+
+  if (budgets && budgets.length === CATEGORIES.length) {
+    BUDGETS = [...budgets];
+    BUDGETS.forEach((b, i) => document.getElementById('budget-' + i).value = b);
   }
 
-  function updateRent() {
-    const rent = parseFloat(document.getElementById('rent-amount').value) || 0;
-    const afterTax = 3250 - 975, afterRent = afterTax - rent;
-    const afterLoans = afterRent - 318, afterMetro = afterLoans - 132;
-    const fmt = n => (n < 0 ? '-$' : '$') + Math.abs(n).toLocaleString();
-    document.getElementById('balance-1').textContent = 'Balance: ' + fmt(afterRent);
-    document.getElementById('balance-2').textContent = 'Balance: ' + fmt(afterLoans);
-    document.getElementById('balance-3').textContent = 'Balance: ' + fmt(afterMetro);
-    const data = load(); data.rent = rent; save(data);
+  for (let i = 0; i < STEP_NAMES.length; i++) {
+    if (steps[i]) document.getElementById('step-' + i).classList.add('done');
   }
 
-  function loadRent() {
-    const data = load();
-    if (data.rent != null) document.getElementById('rent-amount').value = data.rent;
-    updateRent();
+  // Load transactions
+  TXN_CACHE = await getAllTransactions();
+
+  await updateAllocations(false);
+  await updateFund(false);
+  await updateRing(false);
+  refreshExpenseDisplays();
+
+  // Gmail sync (network — fails silently offline)
+  loadGmailExpenses();
+
+  // Service worker for offline
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 
-  function saveHistory(h) { localStorage.setItem(HISTORY_KEY, JSON.stringify(h)); }
-  function loadHistory() {
-    try {
-      let h = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
-      let migrated = false;
-      h = h.map(e => {
-        if (e.steps && e.steps[5] !== undefined) {
-          migrated = true;
-          const steps = {...e.steps};
-          steps[4] = steps[5];
-          delete steps[5];
-          return {...e, steps};
-        }
-        return e;
-      });
-      if (migrated) localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
-      return h;
-    } catch { return []; }
-  }
+  document.body.dataset.ready = '1';   // test hook
+}
 
-  function switchTab(name) {
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.gm-tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-' + name).classList.add('active');
-    document.querySelectorAll('.gm-tab-btn').forEach(b => {
-      if (b.textContent.toLowerCase().startsWith(name.substring(0, 4))) b.classList.add('active');
-    });
-    if (name === 'history') renderHistory();
-  }
-
-  function toggleStep(i) {
-    const el = document.getElementById('step-' + i);
-    el.classList.toggle('done');
-    const data = load();
-    if (!data.steps) data.steps = {};
-    data.steps[i] = el.classList.contains('done');
-    save(data);
-  }
-
-  function loadSteps() {
-    const data = load();
-    if (!data.steps) return;
-    for (let i = 0; i < 6; i++) {
-      if (data.steps[i]) document.getElementById('step-' + i).classList.add('done');
-    }
-  }
-
-  function updateFund() {
-    const val = parseFloat(document.getElementById('fund-balance').value) || 0;
-    const goal = parseFloat(document.getElementById('fund-goal').value) || 9000;
-    const pct = Math.min(100, (val / goal) * 100);
-    document.getElementById('fund-bar').style.width = pct.toFixed(1) + '%';
-    document.getElementById('fund-pct').textContent = pct.toFixed(0) + '% there';
-    const monthsLeft = Math.ceil((goal - val) / 1500);
-    document.getElementById('fund-months').textContent = val >= goal ? 'Goal reached!' : monthsLeft + ' month' + (monthsLeft === 1 ? '' : 's') + ' to go';
-    const stepEl = document.getElementById('step-fund-goal');
-    if (stepEl) stepEl.textContent = '$' + goal.toLocaleString();
-    const data = load(); data.fundBalance = val; data.fundGoal = goal; save(data);
-  }
-
-  function updateRing() {
-    const val = parseFloat(document.getElementById('ring-balance').value) || 0;
-    const goal = parseFloat(document.getElementById('ring-goal').value) || 10000;
-    const pct = Math.min(100, (val / goal) * 100);
-    document.getElementById('ring-bar').style.width = pct.toFixed(1) + '%';
-    document.getElementById('ring-pct').textContent = pct.toFixed(0) + '% there';
-    const monthsLeft = Math.ceil((goal - val) / 300);
-    document.getElementById('ring-months').textContent = val >= goal ? 'Goal reached!' : monthsLeft + ' month' + (monthsLeft === 1 ? '' : 's') + ' to go';
-    const data = load(); data.ringBalance = val; data.ringGoal = goal; save(data);
-  }
-
-  function loadFund() {
-    const data = load();
-    if (data.fundGoal != null) document.getElementById('fund-goal').value = data.fundGoal;
-    if (data.fundBalance != null) document.getElementById('fund-balance').value = data.fundBalance;
-    updateFund();
-    if (data.ringGoal != null) document.getElementById('ring-goal').value = data.ringGoal;
-    if (data.ringBalance != null) document.getElementById('ring-balance').value = data.ringBalance;
-    updateRing();
-  }
-
-  function updateBudgetAmount(i) {
-    const val = parseFloat(document.getElementById('budget-' + i).value) || 0;
-    EXPENSE_BUDGETS[i] = val;
-    const data = load(); data.budgets = [...EXPENSE_BUDGETS]; save(data);
-    updateExpenses();
-  }
-
-  function loadBudgets() {
-    const data = load();
-    if (data.budgets && data.budgets.length === EXPENSE_BUDGETS.length) {
-      data.budgets.forEach((b, i) => {
-        EXPENSE_BUDGETS[i] = b;
-        const el = document.getElementById('budget-' + i);
-        if (el) el.value = b;
-      });
-    }
-  }
-
-  function updateExpenses() {
-    const inputs = document.querySelectorAll('.expense-spent-input');
-    let totalSpent = 0;
-    inputs.forEach((input, i) => {
-      const budget = EXPENSE_BUDGETS[i], spent = parseFloat(input.value) || 0;
-      totalSpent += spent;
-      const rem = budget - spent;
-      // Update remaining display — counts down from budget to 0, goes red when over
-      const remDisplayEl = document.getElementById('rem-display-' + i);
-      if (remDisplayEl) {
-        remDisplayEl.textContent = (rem < 0 ? '-$' : '$') + Math.abs(rem).toFixed(0);
-        remDisplayEl.className = 'budget-remaining ' + (rem < 0 ? 'over' : 'ok');
-      }
-    });
-    const total = getTotalBudget(), totalRem = total - totalSpent;
-    const totalEl = document.getElementById('expense-total-remaining');
-    totalEl.textContent = (totalRem < 0 ? '-$' : '$') + Math.abs(totalRem).toFixed(0);
-    totalEl.className = totalRem < 0 ? 'over' : 'ok';
-    document.getElementById('expense-budget-total').textContent = '$' + total.toLocaleString();
-    const data = load(); data.expenses = Array.from(inputs).map(i => i.value); save(data);
-  }
-
-  function loadExpenses() {
-    const data = load();
-    if (!data.expenses) { updateExpenses(); return; }
-    const inputs = document.querySelectorAll('.expense-spent-input');
-    inputs.forEach((input, i) => { if (data.expenses[i] != null) input.value = data.expenses[i]; });
-    updateExpenses();
-  }
-
-  function saveNotes() { const data = load(); data.notes = document.getElementById('notes').value; save(data); }
-  function loadNotes() { const data = load(); if (data.notes) document.getElementById('notes').value = data.notes; }
-
-  function submitPayday() {
-    const data = load();
-    const inputs = document.querySelectorAll('.expense-spent-input');
-    const expenseSpent = Array.from(inputs).map((inp, i) => ({ name: EXPENSE_NAMES[i], budget: EXPENSE_BUDGETS[i], spent: parseFloat(inp.value) || 0 }));
-    const entry = { id: Date.now(), date: new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }), steps: data.steps || {}, fundBalance: data.fundBalance || 0, expenses: expenseSpent, notes: data.notes || '' };
-    const history = loadHistory(); history.unshift(entry); saveHistory(history);
-    showToast('✓ Saved to history');
-  }
-
-  function resetSteps() {
-    if (!confirm('Uncheck all steps?')) return;
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
-    const data = load(); delete data.steps; save(data);
-  }
-  function resetFund() {
-    if (!confirm('Clear emergency fund balance?')) return;
-    document.getElementById('fund-balance').value = '';
-    document.getElementById('fund-bar').style.width = '0%';
-    document.getElementById('fund-pct').textContent = '0% there';
-    document.getElementById('fund-months').textContent = '';
-    const data = load(); delete data.fundBalance; save(data);
-  }
-  function resetRing() {
-    if (!confirm('Clear engagement ring balance?')) return;
-    document.getElementById('ring-balance').value = '';
-    document.getElementById('ring-bar').style.width = '0%';
-    document.getElementById('ring-pct').textContent = '0% there';
-    document.getElementById('ring-months').textContent = '';
-    const data = load(); delete data.ringBalance; save(data);
-  }
-  function resetExpenses() {
-    if (!confirm('Clear all expense inputs?')) return;
-    document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
-    updateExpenses(); const data = load(); delete data.expenses; save(data);
-  }
-  function resetNotes() {
-    if (!confirm('Clear notes?')) return;
-    document.getElementById('notes').value = '';
-    const data = load(); delete data.notes; save(data);
-  }
-  function resetHistory() {
-    if (!confirm('Delete all history entries? This cannot be undone.')) return;
-    localStorage.removeItem(HISTORY_KEY); renderHistory();
-  }
-  function resetEverything() {
-    if (!confirm('Reset everything? This will clear all sections.')) return;
-    if (!confirm('Are you sure? This cannot be undone.')) return;
-    localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(HISTORY_KEY);
-    EXPENSE_BUDGETS = [...DEFAULT_BUDGETS];
-    DEFAULT_BUDGETS.forEach((b, i) => { const el = document.getElementById('budget-' + i); if (el) el.value = b; });
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
-    document.querySelectorAll('.expense-spent-input').forEach(i => i.value = '');
-    document.getElementById('notes').value = '';
-    document.getElementById('fund-balance').value = '';
-    document.getElementById('fund-bar').style.width = '0%';
-    document.getElementById('fund-pct').textContent = '0% there';
-    document.getElementById('fund-months').textContent = '';
-    document.getElementById('ring-balance').value = '';
-    document.getElementById('ring-bar').style.width = '0%';
-    document.getElementById('ring-pct').textContent = '0% there';
-    document.getElementById('ring-months').textContent = '';
-    updateExpenses();
-  }
-
-  function renderHistory() {
-    const history = loadHistory();
-    const el = document.getElementById('history-list');
-    if (!history.length) { el.innerHTML = '<div class="history-empty">No history yet.<br>Complete a payday and tap "Save to History".</div>'; return; }
-    el.innerHTML = history.map(entry => {
-      const stepsHtml = STEP_NAMES.map((name, i) => `<span class="history-step-pill ${entry.steps[i] ? 'done' : 'skip'}">${name}</span>`).join('');
-      const expensesHtml = entry.expenses.map(e => `<div class="history-row"><span>${e.name}</span><span>$${e.spent} / $${e.budget}</span></div>`).join('');
-      const totalSpent = entry.expenses.reduce((s, e) => s + e.spent, 0);
-      const totalBudget = entry.expenses.reduce((s, e) => s + e.budget, 0);
-      return `<div class="history-card">
-        <div class="history-header">
-          <div><div class="history-date">${entry.date}</div><div class="history-paycheck">$3,250 paycheck</div></div>
-          <div style="display:flex;gap:4px">
-            <button class="history-edit" onclick="openEditModal(${entry.id})">Edit</button>
-            <button class="history-delete" onclick="deleteEntry(${entry.id})" title="Delete">✕</button>
-          </div>
-        </div>
-        <div class="history-steps">${stepsHtml}</div>
-        ${expensesHtml}
-        <div class="history-row" style="margin-top:6px;font-weight:600"><span>Total spent</span><span>$${totalSpent} / $${totalBudget}</span></div>
-        <div class="history-row"><span>Emergency fund at time</span><span>$${entry.fundBalance.toLocaleString()}</span></div>
-        ${entry.notes ? `<div class="history-notes">"${entry.notes}"</div>` : ''}
-      </div>`;
-    }).join('');
-  }
-
-  function deleteEntry(id) {
-    if (!confirm('Delete this entry?')) return;
-    saveHistory(loadHistory().filter(e => e.id !== id)); renderHistory();
-  }
-
-  let editingId = null;
-  function openEditModal(id) {
-    editingId = id;
-    const entry = loadHistory().find(e => e.id === id);
-    if (!entry) return;
-    document.getElementById('modal-steps').innerHTML = STEP_NAMES.map((name, i) => `
-      <div class="modal-step-row" onclick="toggleModalStep(${i})">
-        <div class="modal-step-check ${entry.steps[i] ? 'on' : ''}" id="mstep-${i}">${entry.steps[i] ? '✓' : ''}</div>
-        <div class="modal-step-label">${name}</div>
-      </div>`).join('');
-    document.getElementById('modal-expenses').innerHTML = entry.expenses.map((e, i) => `
-      <div class="modal-expense-row">
-        <div class="modal-expense-name">${e.name} <span style="color:var(--color-gray-mid);font-size:10px">/ $${e.budget}</span></div>
-        <input class="modal-input" type="number" id="mexp-${i}" value="${e.spent}" placeholder="0" />
-      </div>`).join('');
-    document.getElementById('modal-fund').value = entry.fundBalance || '';
-    document.getElementById('modal-notes').value = entry.notes || '';
-    document.getElementById('edit-modal').classList.add('open');
-  }
-  function toggleModalStep(i) { const el = document.getElementById('mstep-' + i); const on = el.classList.toggle('on'); el.textContent = on ? '✓' : ''; }
-  function closeModal() { document.getElementById('edit-modal').classList.remove('open'); editingId = null; }
-  function handleOverlayClick(e) { if (e.target === document.getElementById('edit-modal')) closeModal(); }
-  function saveEdit() {
-    const history = loadHistory();
-    const idx = history.findIndex(e => e.id === editingId);
-    if (idx === -1) return;
-    const steps = {};
-    STEP_NAMES.forEach((_, i) => { steps[i] = document.getElementById('mstep-' + i).classList.contains('on'); });
-    const expenses = history[idx].expenses.map((e, i) => ({ ...e, spent: parseFloat(document.getElementById('mexp-' + i).value) || 0 }));
-    history[idx] = { ...history[idx], steps, expenses, fundBalance: parseFloat(document.getElementById('modal-fund').value) || 0, notes: document.getElementById('modal-notes').value };
-    saveHistory(history); closeModal(); renderHistory();
-  }
-
-  // Init
-  loadBudgets(); loadRent(); loadSteps(); loadFund(); loadExpenses(); loadNotes();
-
-  // ── Auto-expense sync from expenses.json ──────────────────────────────
-
-  const EXPENSES_JSON_URL = './expenses.json';
-  const CATEGORY_INDEX = {
-    'Groceries': 0, 'Dining Out': 1, 'Software & Tools': 2,
-    'Streaming': 3, 'Utilities': 4, 'Transport': 5,
-    'Health & Wellness': 6, 'Shopping': 7, 'Misc': 8
-  };
-  const NUM_CATEGORIES = 9;
-
-  let autoTotals = Array(NUM_CATEGORIES).fill(0);
-  let autoTransactions = Array.from({length: NUM_CATEGORIES}, () => []);
-
-  function setSyncStatus(text, showActions) {
-    const status = document.getElementById('sync-status');
-    const actions = document.getElementById('sync-actions');
-    if (status) status.innerHTML = text;
-    if (actions) actions.style.display = showActions ? 'inline' : 'none';
-  }
-
-  function fmtSyncTime(iso) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      + ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  }
-
-  async function loadAutoExpenses() {
-    try {
-      const res = await fetch(EXPENSES_JSON_URL, { cache: 'no-store' });
-      if (!res.ok) {
-        setSyncStatus('&#9888; Auto-sync unavailable (HTTP ' + res.status + ')', false);
-        return;
-      }
-      const data = await res.json();
-
-      const today = new Date();
-      const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
-      const monthName = today.toLocaleDateString('en-US', { month: 'long' });
-      const syncedAt = data.generated_at ? fmtSyncTime(data.generated_at) : 'unknown';
-
-      // Reset autoTotals/autoTransactions every load so old values don't linger
-      autoTotals = Array(NUM_CATEGORIES).fill(0);
-      autoTransactions = Array.from({length: NUM_CATEGORIES}, () => []);
-
-      // Stale-data case: JSON is for a previous month (workflow hasn't run yet today).
-      // Don't apply expenses, but tell the user clearly that auto-sync is alive.
-      if (data.month !== currentMonth) {
-        setSyncStatus(
-          `&#9203; Last sync: ${syncedAt} (for ${data.month}). Waiting for ${monthName} ${today.getFullYear()} sync &mdash; runs daily at 7am ET.`,
-          false
-        );
-        for (let i = 0; i < NUM_CATEGORIES; i++) {
-          const input = document.getElementById('spent-input-' + i);
-          if (input) input.value = '';
-          renderTxnList(i);
-        }
-        updateExpenses();
-        return;
-      }
-
-      // Current month — sum by category
-      for (const exp of (data.expenses || [])) {
-        const idx = CATEGORY_INDEX[exp.category];
-        if (idx === undefined) continue;
-        autoTotals[idx] += exp.amount;
-        autoTransactions[idx].push(exp);
-      }
-
-      // Auto-fill inputs from JSON
-      for (let i = 0; i < NUM_CATEGORIES; i++) {
-        const input = document.getElementById('spent-input-' + i);
-        if (!input) continue;
-        input.value = autoTotals[i] > 0 ? autoTotals[i].toFixed(2) : '';
-        renderTxnList(i);
-      }
-
-      // Status line — populated month vs empty month
-      const totalCount = (data.expenses || []).length;
-      if (totalCount === 0) {
-        setSyncStatus(
-          `&#10003; Synced ${syncedAt} &middot; No expenses for ${monthName} yet (auto-syncs daily at 7am ET).`,
-          true
-        );
-      } else {
-        setSyncStatus(
-          `&#10003; Last synced: ${syncedAt} &middot; ${totalCount} expense${totalCount === 1 ? '' : 's'} this month.`,
-          true
-        );
-      }
-
-      updateExpenses();
-    } catch (err) {
-      console.log('Expense sync unavailable:', err.message);
-      setSyncStatus('&#9888; Auto-sync unavailable: ' + err.message, false);
-    }
-  }
-
-  function onManualSpent(i) {
-    updateExpenses();
-  }
-
-  function renderTxnList(i) {
-    const list = document.getElementById('txn-list-' + i);
-    const toggle = document.getElementById('txn-toggle-' + i);
-    const txns = autoTransactions[i];
-    if (!list || !toggle) return;
-    if (txns.length === 0) { toggle.style.display = 'none'; list.innerHTML = ''; return; }
-    toggle.style.display = 'inline';
-    const n = txns.length;
-    toggle.textContent = n + ' transaction' + (n > 1 ? 's' : '') + ' \u25be';
-    list.innerHTML = txns
-      .slice()
-      .sort((a, b) => b.date.localeCompare(a.date))
-      .map(t => {
-        const d = new Date(t.date + 'T12:00:00');
-        const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        return `<div class="txn-item"><span>${dateStr} \u2014 ${t.vendor}</span><span>$${t.amount.toFixed(2)}</span></div>`;
-      })
-      .join('');
-  }
-
-  function toggleTxns(i) {
-    const list = document.getElementById('txn-list-' + i);
-    const toggle = document.getElementById('txn-toggle-' + i);
-    if (!list) return;
-    const isOpen = list.classList.toggle('open');
-    toggle.textContent = toggle.textContent.replace(isOpen ? '\u25be' : '\u25b4', isOpen ? '\u25b4' : '\u25be');
-  }
-
-  function clearAutoExpenses() {
-    loadAutoExpenses();
-  }
-
-  // Run after all constants and functions are defined
-  loadAutoExpenses();
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
