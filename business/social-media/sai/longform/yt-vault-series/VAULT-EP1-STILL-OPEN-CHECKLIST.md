@@ -12,6 +12,7 @@ Last updated: 2026-07-06
 - [ ] Lock the belief Sai states out loud in Beat 5 (his own "dashboard" assumption)
 - [ ] Decide the vault roster — which 10 to 20 founders are on the faces wheel for v1
 - [ ] Decide how the 5 team members get picked on camera (fun mini-draw or straight pick)
+- [ ] Final review of the 5 team 1-on-1 questions + standing closer (merged draft in VAULT-EP1-TEAM-QUESTIONS.md)
 - [ ] Decide if Ep 1 is a single video or a 2-parter (if results land after the week)
 - [ ] Pick the final title from the 3 options (or run all 3 as the A/B/C test)
 - [ ] Pick the final thumbnail direction from the 3 mockups (and decide on rebuilding A photo-real with a pulled Sai frame)
