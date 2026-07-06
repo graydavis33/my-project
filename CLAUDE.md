@@ -29,7 +29,7 @@ You are Gray Davis's AI operator and executive assistant. Read context files to 
 - `.claude/commands/` — slash commands: /prime, /create-plan, /implement, /save
 - `.claude/rules/` — behavior rules loaded every session (communication, code, habits, build-discipline)
 - `.claude/skills/` — custom skills (3 active — see below)
-- `.claude/agents/` — custom subagents. `scriptwriter` (writes viral scripts in Gray's OR Sai's voice, all formats, grounded in the story-arc-playbook; runs in its own context to save tokens). Implements `docs/superpowers/specs/2026-06-02-scriptwriter-subagent-design.md`. `footage-puller` (searches Gray's Sai footage library at `D:/Sai/` and pulls matching clips into `07_QUERY_PULLS/`; holds the SQLite schema, the rotation/display-vertical gotcha, category map, and ffprobe + contact-sheet recipes in its own context so the main session stays lean).
+- `.claude/agents/` — custom subagents. `scriptwriter` (writes viral scripts in Gray's OR Sai's voice, all formats, grounded in the story-arc-playbook; runs in its own context to save tokens). Implements `docs/superpowers/specs/2026-06-02-scriptwriter-subagent-design.md`. `footage-puller` (searches Gray's Sai footage library at `D:/Sai/` and pulls matching clips into `07_QUERY_PULLS/`; holds the SQLite schema, the rotation/display-vertical gotcha, category map, and ffprobe + contact-sheet recipes in its own context so the main session stays lean). `interview-question-designer` (designs screen-gluing on-camera interview questions for the long-form docs — Vault team 1-on-1s, sit-down A-rolls; holds the screen-glue rubric + addiction-loop frameworks in its own context).
 - `audits/` — periodic workspace audit reports. Baseline: `2026-04-20-workspace-audit.html`
 
 **Root files:**
