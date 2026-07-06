@@ -96,7 +96,7 @@ VPS deployment files live in `deploy/`. Re-deploy from scratch: `bash deploy/vps
 
 ## MCP Servers
 
-Eight MCP servers configured in `~/.claude.json` (VS Code extension uses `--strict-mcp-config` and reads this file, not `settings.json`):
+Nine MCP servers configured in `~/.claude.json` (VS Code extension uses `--strict-mcp-config` and reads this file, not `settings.json`):
 
 | Server | Purpose |
 |---|---|
@@ -108,6 +108,7 @@ Eight MCP servers configured in `~/.claude.json` (VS Code extension uses `--stri
 | sequential-thinking | Structured multi-step reasoning |
 | higgsfield | Higgsfield AI image/video gen (hosted HTTP MCP, OAuth) |
 | sandcastles | Sandcastles short-form research — outliers/hooks/formats/topics across IG/TikTok/YT Shorts (hosted HTTP MCP at `https://mcp.sandcastles.ai/`, OAuth). Slash commands in `.claude/commands/sandcastles/`; SOP at `workflows/sandcastles.md` |
+| claude-video-vision | Claude watches/analyzes videos — frame extraction + local GPU Whisper transcription (community plugin; skills via plugin, MCP server registered directly because of `--strict-mcp-config`). SOP at `workflows/video-vision-setup.md` |
 
 ---
 

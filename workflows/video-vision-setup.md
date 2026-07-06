@@ -40,6 +40,21 @@ No API keys. No uploads. Transcription runs fully offline.
 - Whisper large-v3 model already cached (transcriber uses it), so no first-use download
 - Note: `whisper --help` crashes with a cp1252 UnicodeEncodeError on this machine — cosmetic (help text contains a CJK char); actual transcription runs fine. If the plugin ever chokes parsing whisper output, set `PYTHONIOENCODING=utf-8` as a user env var.
 
+### Windows-only extra steps (the Mac instructions weren't enough)
+
+Two gotchas surfaced; both fixed, documented for reinstalls:
+
+1. **`--strict-mcp-config` ignores plugin-bundled MCP servers** (same issue as the Sandcastles install, 2026-06-02). The plugin's skills + agent load fine, but its MCP tools (`video_info`, `video_watch`, …) never appear because the VS Code extension only reads `~/.claude.json`. Fix: register the server directly in `~/.claude.json` → `mcpServers` (backup taken first: `~/.claude.json.bak-2026-07-06`).
+2. **`npx -y claude-video-vision@latest` was broken on this machine** — corrupted npx cache (`ajv-formats` installed without its `ajv` peer dep → `Cannot find module 'ajv'`). Fix: cleared the bad `_npx` cache entry and installed globally instead: `npm install -g claude-video-vision` (v1.3.2). MCP entry uses the global install directly:
+   ```json
+   "claude-video-vision": {
+     "command": "node",
+     "args": ["C:/Users/Gray Davis/AppData/Roaming/npm/node_modules/claude-video-vision/dist/index.js"]
+   }
+   ```
+   MCP initialize handshake verified working by hand. Upgrades are now deliberate: `npm update -g claude-video-vision` (Windows does NOT auto-track `@latest` like the Mac's npx does).
+- After the config change: reload the VS Code window again so the MCP server connects. `/mcp` should show **9** servers on Windows now.
+
 ## Windows setup steps (for reference / reinstall)
 
 Run these in a terminal on the Windows machine:
