@@ -32,7 +32,15 @@ No API keys. No uploads. Transcription runs fully offline.
 
 ---
 
-## Windows setup (do this on the PC)
+## Windows status: DONE (2026-07-06)
+
+- Plugin v1.2.0 installed at user scope (`claude plugin list` shows it enabled)
+- Config written to `C:\Users\Gray Davis\.claude-video-vision\config.json` (python engine, large-v3 — GPU)
+- Prereqs verified: node v24.14.0, ffmpeg 8.1, python whisper 20250625
+- Whisper large-v3 model already cached (transcriber uses it), so no first-use download
+- Note: `whisper --help` crashes with a cp1252 UnicodeEncodeError on this machine — cosmetic (help text contains a CJK char); actual transcription runs fine. If the plugin ever chokes parsing whisper output, set `PYTHONIOENCODING=utf-8` as a user env var.
+
+## Windows setup steps (for reference / reinstall)
 
 Run these in a terminal on the Windows machine:
 
