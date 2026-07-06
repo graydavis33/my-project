@@ -15,6 +15,7 @@ Last updated: 2026-07-06
 - [ ] Decide if Ep 1 is a single video or a 2-parter (if results land after the week)
 - [ ] Pick the final title from the 3 options (or run all 3 as the A/B/C test)
 - [ ] Pick the final thumbnail direction from the 3 mockups (and decide on rebuilding A photo-real with a pulled Sai frame)
+- [ ] Loop check — go beat by beat and point to the open loop (curiosity or engagement) in every single beat; if any beat has no loop you can name, the script is not done — keep working it until every beat has one
 
 ## Props — build before filming
 
