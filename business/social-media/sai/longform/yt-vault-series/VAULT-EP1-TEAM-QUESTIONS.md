@@ -9,9 +9,9 @@ Production note that multiplies all of these: before the 1-on-1s, film Sai predi
 
 ## The 5 questions (in ask order)
 
-1. Be honest — would this be easier if I wasn't in the room?
-   - Follow-up: What would make it easier to tell me things straight?
-   - Why it glues: sets the honesty frame; a yes is an instant on-camera crack in the belief.
+1. When's the last time you bit your tongue in a meeting here?
+   - Follow-up: What was it?
+   - Why it glues: everyone has one, and the viewer wonders if they'll actually say it. Proves the filter exists through a real story instead of asking about honesty in the abstract. (Replaced the "easier if I wasn't in the room" opener — Gray cut it 2026-07-06.)
 
 2. If you ran Trendify tomorrow, what's the first thing you'd change?
    - Follow-up: Could we fix that by Friday if I just said yes?
