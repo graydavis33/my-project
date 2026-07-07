@@ -3,6 +3,10 @@
 **Version:** 2026-07-06  
 **Status:** ✅ BUILT + TESTED (46/46 Playwright end-to-end tests green, incl. offline + backup round-trip)
 
+> **Phase 2 (2026-07-07): cross-device Firebase sync + full expense automation is BUILT** — see
+> `docs/superpowers/specs/2026-07-07-payday-sync-and-expense-automation-design.md` (design) and
+> `PHASE2-HANDOFF.md` (Gray's remaining console steps). The e2e suites now live in `tests/`.
+
 **Implementation notes (what shipped vs this spec):**
 - Auto-categorization is LOCAL (keyword rules + learns from your past vendors), NOT Haiku — a client-side API call on a public GitHub Pages site would expose the API key. The Gmail scanner still uses Haiku server-side in the daily Action.
 - Gmail receipts merge into the same transaction store (dedup by email_id; deleting one keeps it dismissed).
