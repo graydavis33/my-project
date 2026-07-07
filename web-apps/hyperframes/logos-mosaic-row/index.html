@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: transparent;
+      }
+      /* full-frame chroma key green — the ONLY background */
+      .scene {
+        position: relative; width: 100%; height: 100%; overflow: hidden;
+        background: #00B140;
+      }
+      /* centered horizontal row of the three logos */
+      .row {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        gap: 170px;
+      }
+      .logo {
+        width: 320px; height: 320px;
+        /* mosaic: 16px source upscaled with hard pixel edges (no smoothing) */
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        will-change: transform, opacity;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-mvyi" id="root" data-composition-id="main" data-start="0" data-duration="3.5" data-width="1920" data-height="1080">
+      <div data-hf-id="hf-ig6n" id="scene" class="scene clip" data-start="0" data-duration="3.5" data-track-index="1">
+        <div data-hf-id="hf-thy4" class="row">
+          <img data-hf-id="hf-xsu5" class="logo" id="logo1" src="slack.png" alt="">
+          <img data-hf-id="hf-410v" class="logo" id="logo2" src="notion.png" alt="">
+          <img data-hf-id="hf-tzj9" class="logo" id="logo3" src="scribe.png" alt="">
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      (function () {
+        const tl = gsap.timeline({ paused: true });
+
+        // Each logo eases in from below (down -> up), one by one, smooth.
+        // y:150 -> 0 with opacity 0 -> 1; power3.out for a smooth settle;
+        // stagger 0.35s gives the left-to-right, one-at-a-time entrance.
+        tl.from(".logo", {
+          y: 150,
+          opacity: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          stagger: 0.35
+        }, 0.2);
+
+        // No exit — hold the completed row (loopable B-roll).
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
