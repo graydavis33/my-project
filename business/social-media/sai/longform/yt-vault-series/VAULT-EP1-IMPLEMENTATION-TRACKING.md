@@ -48,6 +48,45 @@ GROUP 3 — recapturable, flexible, self-capture friendly:
 9. ARTIFACTS — screenshots, Slack threads, docs, calendar before/after, dashboard screens ("the dashboard says fine — let's go ask"). These become the VFX/insert layer.
 10. THE BOARD MOVES — every card state change on camera.
 
+## THE SHOTS — what each must-capture looks like in frame
+
+Numbering matches the 10 must-captures above. This is what the camera is actually pointed at.
+
+1. THE ORIGIN
+- [ ] Covered by the 1-on-1 two-cam setup (shot list in `VAULT-EP1-TEAM-QUESTIONS.md`) — the job here is the timestamp log, not a new shot
+
+2. THE ANNOUNCE
+- [ ] Reaction singles — the team's faces hearing it for the first time (shoot the listeners more than the speaker)
+- [ ] Wide — the room, Sai delivering
+- [ ] Sai single — the delivery itself
+
+3. THE SHIP MOMENT
+- [ ] The observable act in frame — the first new meeting starting, the doc going live on a screen, the send being clicked
+- [ ] Insert — the card sliding OPEN → SHIPPED; hold on the board
+
+4. THE CHECK-BACK
+- [ ] Locked two-shot, uncut — both faces in frame; the pause before the answer IS the content, don't cover-cut it
+- [ ] Insert after — card to PROVEN; hold
+
+5. THE BEFORE-STATE
+- [ ] Wide — the old way actually happening (the old meeting, the old process, the old routine)
+- [ ] Detail / screen — the Slack channel, the doc, the calendar exactly as it looks today
+
+6. THE PREDICTION
+- [ ] Sai medium, direct-to-camera — same framing and same spot every time, so all the predictions cut as a series
+
+7. THE FRICTION
+- [ ] Whatever form it takes — the pushback two-shot, the revision happening on screen, or the same-day confessional retell (see 8)
+
+8. DIARY CONFESSIONALS
+- [ ] Sai medium/close, to camera or phone (horizontal) — 60 seconds, consistent spot if possible
+
+9. ARTIFACTS
+- [ ] Screen recordings + screenshots — Slack threads, docs, calendar before/after, the dashboard screen ("the dashboard says fine — let's go ask")
+
+10. THE BOARD MOVES
+- [ ] Hand moves the card, HOLD on the new column — every single state change, no exceptions
+
 ## The three disciplines
 
 - SHOOT THE THING THAT'S ABOUT TO DISAPPEAR — before-state first, always, same day the tactic is chosen.

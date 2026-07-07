@@ -51,6 +51,8 @@ def write_expenses(expenses, client=None):
             "createdAt": now_ms,
             "updated_at": now_ms,
         }
+        if e.get("kind"):
+            doc["kind"] = e["kind"]
         try:
             client.document(f"{ROOT}/transactions/{e['email_id']}").create(doc)
             created += 1

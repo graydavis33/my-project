@@ -9,6 +9,7 @@ import json
 import os
 import anthropic
 from config import ANTHROPIC_API_KEY, PERSONAL_CATEGORIES
+from ej_transfers import parse_ej_transfer
 
 _SCANNED_IDS_FILE = os.path.join(os.path.dirname(__file__), ".scanned_ids.json")
 _EXPENSE_CACHE_FILE = os.path.join(os.path.dirname(__file__), ".expense_cache.json")
@@ -37,6 +38,10 @@ Bank transaction alert rules (sender is the bank, e.g. PrimeSouth):
 - "NAME was added to your list of contacts" → SKIP (return null) — no money moved.
 - Deposit alerts, payment received, direct deposit, balance alerts, low-balance warnings → SKIP (return null).
 - ATM withdrawal alerts → category "Misc", vendor "ATM Withdrawal".
+
+Transfers to Gray's own accounts are NOT expenses:
+- Any transfer to Edward Jones / a brokerage / investment account (from the bank, from Rocket Money, or anywhere else) → SKIP (return null). These are tracked separately by a dedicated parser.
+- Bank withdrawal alerts describing an electronic transfer to Edward Jones or "EDWARD JONES" → SKIP (return null).
 
 Money-app alert rules (sender is Rocket Money):
 - "Large transaction detected" / "Uncategorized transaction detected" → extract the merchant, amount, and date from the body. Body dates like "June 20" have no year — infer it from the email's received date. vendor = the merchant/payee shown (e.g. "Edward Jones Inve..." → "Edward Jones"), never "Rocket Money".
@@ -239,6 +244,19 @@ def scan_expenses(emails):
     if skipped:
         print(f"  Skipping {skipped} already-scanned email(s).")
 
+    # Edward Jones transfer confirmations parse deterministically — no Haiku call
+    still_unscanned = []
+    for email in unscanned:
+        transfer = parse_ej_transfer(email)
+        if transfer:
+            newly_scanned.add(email["id"])
+            expense_cache[email["id"]] = transfer
+            new_expenses.append(transfer)
+            print(f"    + [transfer] {transfer['vendor']} ${transfer['amount']} ({transfer['kind']}) - {transfer['date']}")
+        else:
+            still_unscanned.append(email)
+    unscanned = still_unscanned
+
     if unscanned:
         for batch_start in range(0, len(unscanned), _BATCH_SIZE):
             batch = unscanned[batch_start : batch_start + _BATCH_SIZE]
@@ -265,6 +283,7 @@ def scan_expenses(emails):
                     subj = email['subject'][:60].encode('ascii', errors='replace').decode()
                     print(f"    - {subj}")
 
+    if newly_scanned:
         _save_scanned_ids(scanned_ids | newly_scanned)
         _save_expense_cache(expense_cache)
 

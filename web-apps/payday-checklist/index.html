@@ -424,11 +424,11 @@
       <div class="income-edits">
         <div class="input-group">
           <label>Bi-weekly pay</label>
-          <input type="number" id="paycheck-amount" value="3250" inputmode="decimal" oninput="updateAllocations()" />
+          <input type="number" id="paycheck-amount" value="3250" inputmode="decimal" oninput="recomputeTax()" />
         </div>
         <div class="input-group">
           <label>Tax %</label>
-          <input type="number" id="tax-percent" value="30" inputmode="decimal" oninput="updateAllocations()" />
+          <input type="number" id="tax-percent" value="30" inputmode="decimal" oninput="recomputeTax()" />
         </div>
       </div>
     </div>
@@ -447,11 +447,14 @@
         <div class="step" id="step-0" onclick="toggleStep(0)">
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
-            <div class="step-label">Move taxes to PrimeSouth</div>
-            <div class="step-sub" id="step-0-sub">30% set-aside — do NOT touch this money</div>
+            <div class="step-label">Move taxes to Edward Jones</div>
+            <div class="step-sub" id="step-0-sub">Sole Proprietor account — do NOT touch this money</div>
           </div>
           <div class="step-right">
-            <div class="step-amount" id="step-0-amount">-$1,950</div>
+            <div class="step-input-wrap">
+              <span class="prefix">-$</span>
+              <input class="step-input" type="number" id="alloc-tax" value="1950" inputmode="decimal" onclick="event.stopPropagation()" oninput="updateAllocations()" />
+            </div>
             <div class="step-balance" id="balance-0">After tax: $4,550</div>
           </div>
         </div>
@@ -574,6 +577,13 @@
           </div>
         </div>
 
+        <div class="gm-label" style="margin-top:24px">Edward Jones — This Year</div>
+        <div class="gm-card" id="ej-card">
+          <div class="history-row" style="font-size:12px;padding:4px 0"><span>Taxes set aside (Sole Proprietor)</span><span id="ej-tax-total" style="font-weight:700">$0</span></div>
+          <div class="history-row" style="font-size:12px;padding:4px 0"><span>Investing (Single)</span><span id="ej-invest-total" style="font-weight:700">$0</span></div>
+          <div class="sync-badge" id="ej-note" style="display:none;text-align:left;color:var(--color-green)"></div>
+        </div>
+
         <div class="gm-label" style="margin-top:24px">Monthly Budgets — <span id="expense-budget-total">$950</span> <button class="section-reset-btn" onclick="resetExpenses()">Reset</button></div>
         <div class="gm-card">
           <div id="expense-rows"></div>
@@ -650,7 +660,7 @@
 // CONSTANTS
 // ═══════════════════════════════════════════════
 
-const STEP_NAMES = ['Taxes → PrimeSouth', 'Rent', 'Student Loans', 'Emergency Fund', 'Ring Fund'];
+const STEP_NAMES = ['Taxes → Edward Jones', 'Rent', 'Student Loans', 'Emergency Fund', 'Ring Fund'];
 const CATEGORIES = ['Groceries', 'Dining Out', 'Software & Tools', 'Utilities', 'Investments', 'BJJ & Kickboxing', 'Misc'];
 const DEFAULT_BUDGETS = [200, 150, 100, 60, 100, 200, 140];
 const MISC_INDEX = 6;
@@ -801,11 +811,20 @@ function effectiveSpent(catIndex) {
 // INCOME + ALLOCATION CHAIN
 // ═══════════════════════════════════════════════
 
+function recomputeTax() {
+  // Paycheck or tax-% edited → refresh the suggested tax amount (direct edits
+  // to the tax field itself always win until % or paycheck changes again)
+  const monthly = num('paycheck-amount', 3250) * 2;
+  const taxPct = num('tax-percent', 30);
+  document.getElementById('alloc-tax').value = Math.round(monthly * taxPct / 100);
+  updateAllocations();
+}
+
 async function updateAllocations(persist = true) {
   const biweekly = num('paycheck-amount', 3250);
   const taxPct = num('tax-percent', 30);
   const monthly = biweekly * 2;
-  const taxAmt = monthly * taxPct / 100;
+  const taxAmt = num('alloc-tax', Math.round(monthly * taxPct / 100));
   const afterTax = monthly - taxAmt;
 
   const rent = num('alloc-rent', 0);
@@ -814,10 +833,8 @@ async function updateAllocations(persist = true) {
   const ring = num('alloc-ring', 0);
 
   document.getElementById('context-paycheck').textContent = fmt(monthly);
-  document.getElementById('context-aftertax').textContent = 'After ' + taxPct + '% tax: ' + fmt(afterTax);
+  document.getElementById('context-aftertax').textContent = 'After ' + fmt(taxAmt) + ' tax: ' + fmt(afterTax);
   document.getElementById('topbar-paycheck-amount').textContent = fmt(monthly);
-  document.getElementById('step-0-amount').textContent = '-' + fmt(taxAmt);
-  document.getElementById('step-0-sub').textContent = taxPct + '% set-aside — do NOT touch this money';
   document.getElementById('balance-0').textContent = 'After tax: ' + fmt(afterTax);
 
   const afterRent = afterTax - rent;
@@ -832,7 +849,7 @@ async function updateAllocations(persist = true) {
 
   if (persist && db) {
     await setSetting('income', { biweekly, taxPct });
-    await setSetting('allocations', { rent, loans, ef, ring });
+    await setSetting('allocations', { tax: taxAmt, rent, loans, ef, ring });
   }
   updateFundPace();
 }
@@ -958,6 +975,35 @@ function refreshExpenseDisplays(setInputs = true) {
   }
 
   CATEGORIES.forEach((_, i) => renderTxnList(i));
+  updateEJCard();
+}
+
+// ═══════════════════════════════════════════════
+// EDWARD JONES TRANSFERS (taxes + investing — allocations, not budget spend)
+// ═══════════════════════════════════════════════
+
+function updateEJCard() {
+  const year = String(new Date().getFullYear());
+  const sum = kind => TXN_CACHE
+    .filter(t => t.kind === kind && (t.date || '').startsWith(year))
+    .reduce((s, t) => s + t.amount, 0);
+  document.getElementById('ej-tax-total').textContent = fmt(sum('tax_transfer'));
+  document.getElementById('ej-invest-total').textContent = fmt(sum('invest_transfer'));
+
+  // A sole-prop transfer this month = taxes moved → auto-check step 1
+  const monthTax = TXN_CACHE.find(t => t.kind === 'tax_transfer' && t.month === currentMonth());
+  const note = document.getElementById('ej-note');
+  if (monthTax) {
+    note.style.display = 'block';
+    note.textContent = '✓ ' + fmt2(monthTax.amount) + ' sent to taxes on ' + monthTax.date.slice(5).replace('-', '/');
+    const el = document.getElementById('step-0');
+    if (!el.classList.contains('done')) {
+      el.classList.add('done');
+      getSetting('steps', {}).then(s => { s[0] = true; return setSetting('steps', s); });
+    }
+  } else {
+    note.style.display = 'none';
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -1149,6 +1195,24 @@ async function loadGmailExpenses(manual = false) {
         Sync.onLocalTxn(txn);
         imported++;
       }
+
+      // Edward Jones transfers (taxes/investing) — tracked in the EJ card, never budgets
+      for (const exp of (data.transfers || [])) {
+        if (!exp.email_id || existingIds.has(exp.email_id) || dismissed.includes(exp.email_id)) continue;
+        const txn = {
+          vendor: exp.vendor, amount: exp.amount, category: exp.category, kind: exp.kind,
+          date: exp.date, month: (exp.date || '').slice(0, 7),
+          note: '', source: 'gmail', email_id: exp.email_id,
+          createdAt: new Date().toISOString(),
+          sid: exp.email_id,
+          updatedAt: Date.now()
+        };
+        const id = await addTransaction(txn);
+        txn.id = id;
+        TXN_CACHE.push(txn);
+        Sync.onLocalTxn(txn);
+        imported++;
+      }
     });
 
     const monthCount = TXN_CACHE.filter(t => t.month === currentMonth() && t.source === 'gmail').length;
@@ -1260,9 +1324,9 @@ async function exportCSV() {
 
   let csv = '# Payday Checklist backup v2 — ' + new Date().toISOString() + '\n';
   csv += '[TRANSACTIONS]\n';
-  csv += 'date,vendor,category,amount,source,email_id,note\n';
+  csv += 'date,vendor,category,amount,source,email_id,note,kind\n';
   for (const t of txns) {
-    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || '')].join(',') + '\n';
+    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || ''), t.kind || ''].join(',') + '\n';
   }
   csv += '[SETTINGS]\n';
   csv += csvEscape(JSON.stringify(settings)) + '\n';
@@ -1333,6 +1397,7 @@ async function importCSV() {
           txns.push({
             date: c[0], vendor: c[1], category: c[2], amount: parseFloat(c[3]) || 0,
             source: c[4] || 'manual', email_id: c[5] || undefined, note: c[6] || '',
+            kind: c[7] || undefined,
             month: (c[0] || '').slice(0, 7), createdAt: new Date().toISOString()
           });
         } else if (section === 'settings') {
@@ -1346,7 +1411,7 @@ async function importCSV() {
       await clearStore('transactions');
       await clearStore('history');
       await clearStore('settings');
-      for (const t of txns) { if (!t.email_id) delete t.email_id; await addTransaction(t); }
+      for (const t of txns) { if (!t.email_id) delete t.email_id; if (!t.kind) delete t.kind; await addTransaction(t); }
       if (settingsJson) {
         const settings = JSON.parse(settingsJson);
         for (const [k, v] of Object.entries(settings)) {
@@ -1487,6 +1552,8 @@ async function init() {
 
   document.getElementById('paycheck-amount').value = income.biweekly;
   document.getElementById('tax-percent').value = income.taxPct;
+  document.getElementById('alloc-tax').value = allocs.tax != null
+    ? allocs.tax : Math.round(income.biweekly * 2 * income.taxPct / 100);
   document.getElementById('alloc-rent').value = allocs.rent;
   document.getElementById('alloc-loans').value = allocs.loans;
   document.getElementById('alloc-ef').value = allocs.ef;

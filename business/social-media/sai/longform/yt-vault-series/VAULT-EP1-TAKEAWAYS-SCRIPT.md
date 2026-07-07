@@ -1,6 +1,6 @@
 # The Vault — Ep 1: Takeaways Session Script (Beat 11)
 
-How we choose the 3 tactics after the five 1-on-1s, and how Sai introduces them on camera. This is a SCRIPT — the flow of the beat and Sai's lines with fill-in slots — not a shot list (camera coverage lives in `VAULT-EP1-IMPLEMENTATION-TRACKING.md`). We can't know what the team will say, so we script the funnel, not the content: anything in [BRACKETS] gets filled after the interviews. For Google Docs, paste from `VAULT-EP1-TAKEAWAYS-SCRIPT.txt`.
+How we choose the 3 tactics after the five 1-on-1s, and how Sai introduces them on camera. The flow of the beat, Sai's lines with fill-in slots, and THE SHOTS — the checkbox shot list for the filming day. The two-week camera coverage lives in `VAULT-EP1-IMPLEMENTATION-TRACKING.md`. We can't know what the team will say, so we script the funnel, not the content: anything in [BRACKETS] gets filled after the interviews. For Google Docs, paste from `VAULT-EP1-TAKEAWAYS-SCRIPT.txt`.
 
 **Lean rule (Gray, 2026-07-07): the audience only ever meets the three.** Ideas that don't make the cut are never named, shown, or alluded to on camera — no runners-up, no honorable mentions. Every second spent on something that won't ship is a second the viewer feels. All selection happens off camera.
 
@@ -79,7 +79,35 @@ Closer line — three options (pick one on the day):
 2. "I've watched a hundred videos end with a list like this. This is the first time the list gets to end me."
 3. "Three cards. If even one of them dies on that board, you'll watch it happen. That's the deal."
 
-## What Gray preps before the camera rolls (table stakes, not a shot list)
+## THE SHOTS — what's on camera (tick these off on the filming day)
+
+### Movement 1 — The Bridge
+
+- [ ] Wide — Sai at the board, three blank cards in hand, OPEN / SHIPPED / PROVEN empty behind him (the establishing frame the episode keeps returning to)
+- [ ] Medium, direct-to-camera — the rule-of-three contract lines
+- [ ] Insert — the three blank cards in his hand
+- [ ] Insert — the empty board: hold on SHIPPED and PROVEN with nothing in them (that emptiness is the episode's remaining runtime)
+
+### Movement 2 — The Three Cards (repeat the full set per card, × 3)
+
+- [ ] Medium — "Card one. [NAME] said—" (the handoff line into the playback)
+- [ ] PLAYBACK — the 1-on-1 origin clip (edit insert from the logged timestamp — nothing to film here, but it must exist)
+- [ ] Tight insert or overhead — Sai's hand writing the card field by field (handwriting legible on camera)
+- [ ] Medium — the proof line to camera ("and the proof is [NAME]...")
+- [ ] The pin — the card goes up under OPEN; HOLD on the pinned card (board moves are act punctuation — never cut early)
+
+### Movement 3 — The Promise
+
+- [ ] Wide — the dressed board: three cards under OPEN, SHIPPED and PROVEN still empty
+- [ ] Medium, direct-to-camera — the bet lines + the per-card predictions (expectation / fear / failure)
+- [ ] Closing frame — slow push-in on the board, or a long hold (the last image of the beat)
+
+### Same day, right after (tracking doc rules)
+
+- [ ] Every before-state — the old way, filmed before anything ships
+- [ ] Any prediction not already captured in Movement 3
+
+## What Gray preps before the camera rolls (table stakes)
 
 - **The off-camera triage IS the selection.** Run everything raised through the three filters with Sai and lock the three (plus one backup) before rolling. On camera, the decision is already made.
 - Pull the three origin timestamps from the 1-on-1 footage and queue those clips for the Movement 2 playback callbacks.

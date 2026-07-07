@@ -12,7 +12,9 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-from config import GMAIL_CREDENTIALS_PATH, GMAIL_TOKEN_PATH, GMAIL_SCOPES, ALERT_SENDERS
+import re
+
+from config import GMAIL_CREDENTIALS_PATH, GMAIL_TOKEN_PATH, GMAIL_SCOPES, ALERT_SENDERS, TRANSFER_SENDERS
 
 
 def get_gmail_service():
@@ -38,7 +40,7 @@ def get_gmail_service():
 
 def build_query(days):
     """Gmail search query: receipt subjects + known vendors + bank alert senders."""
-    alert_from = " ".join(f"OR from:{s}" for s in ALERT_SENDERS)
+    alert_from = " ".join(f"OR from:{s}" for s in ALERT_SENDERS + TRANSFER_SENDERS)
     return (
         f"newer_than:{days}d "
         "(subject:receipt OR subject:\"order confirmation\" OR subject:\"payment confirmation\" "
@@ -117,16 +119,30 @@ def _parse_email(raw_message):
 
 
 def _extract_body(payload):
-    """Pull plain text body from a Gmail message payload."""
-    if payload.get("mimeType") == "text/plain":
+    """Pull a text body from a Gmail message payload — plain text preferred, HTML fallback.
+
+    Many senders (Edward Jones, some banks) send HTML-only emails; without the
+    fallback their bodies extract empty and nothing can be parsed from them.
+    """
+    text = _find_part(payload, "text/plain")
+    if text:
+        return text
+    html = _find_part(payload, "text/html")
+    if html:
+        html = re.sub(r"<(style|script).*?</\1>", " ", html, flags=re.S | re.I)
+        html = re.sub(r"<[^>]+>", " ", html)
+        html = html.replace("&nbsp;", " ").replace("&amp;", "&").replace("&#39;", "'").replace("&quot;", '"')
+        return " ".join(html.split())
+    return ""
+
+
+def _find_part(payload, mime):
+    if payload.get("mimeType") == mime:
         data = payload.get("body", {}).get("data", "")
         if data:
             return base64.urlsafe_b64decode(data).decode("utf-8", errors="ignore")
-
-    if "parts" in payload:
-        for part in payload["parts"]:
-            result = _extract_body(part)
-            if result:
-                return result
-
+    for part in payload.get("parts", []):
+        result = _find_part(part, mime)
+        if result:
+            return result
     return ""

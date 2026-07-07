@@ -94,6 +94,7 @@ const Sync = (() => {
             updatedAt: data.updated_at || 0
           };
           if (data.email_id) rec.email_id = data.email_id;
+          if (data.kind) rec.kind = data.kind;
           const newId = await addTransaction(rec);
           if (rec.id == null) rec.id = newId;
           allBySid[id] = rec;
@@ -132,6 +133,8 @@ const Sync = (() => {
     const steps = await getSetting('steps', {});
     document.getElementById('paycheck-amount').value = income.biweekly;
     document.getElementById('tax-percent').value = income.taxPct;
+    document.getElementById('alloc-tax').value = allocs.tax != null
+      ? allocs.tax : Math.round(income.biweekly * 2 * income.taxPct / 100);
     document.getElementById('alloc-rent').value = allocs.rent;
     document.getElementById('alloc-loans').value = allocs.loans;
     document.getElementById('alloc-ef').value = allocs.ef;
@@ -160,6 +163,7 @@ const Sync = (() => {
       vendor: t.vendor, amount: t.amount, category: t.category, date: t.date,
       month: t.month, note: t.note || '', source: t.source || 'manual',
       ...(t.email_id ? { email_id: t.email_id } : {}),
+      ...(t.kind ? { kind: t.kind } : {}),
       deleted: !!t.deleted,
       createdAt: Date.parse(t.createdAt || '') || Date.now(),
       updated_at: t.updatedAt || Date.now()

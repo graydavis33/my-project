@@ -36,6 +36,32 @@ Last one. Name one thing slowing you down that we could fix by Friday — if I s
 
 - Five conversations = five yes-moments. The "ship 3 changes before the video ends" checklist fills itself on camera.
 
+## THE SHOTS — the 1-on-1 setup (repeat for each of the 5 conversations)
+
+THE ROOM (before they walk in)
+
+- [ ] Wide establishing — the room, two chairs, empty
+- [ ] The walk-in — employee entering + sitting down (transition tissue; the nerves live here)
+
+THE CONVERSATION (two cams, both rolling continuously — sync clap at the top, per the multicam workflow)
+
+- [ ] A-cam — single on the EMPLOYEE: the answer cam, the money frame; loose enough to keep hands in frame
+- [ ] B-cam — single on SAI: the listener cam (his face hearing the Q3/Q4 answers is half the beat)
+- [ ] Inserts — hands, fidgets, the water glass, the notepad (grab during natural resets, never mid-answer)
+- [ ] The pauses — when someone goes quiet, KEEP ROLLING; the silence before a Q3/Q4 answer is content
+
+Q5 — THE BELIEF ECHO (the must-get of the whole episode)
+
+- [ ] The playback device in frame — laptop/phone playing the Beat 5 clip of Sai stating his belief
+- [ ] TIGHT single on THEIR face while the clip plays — the most watchable moment in the episode; protect this above everything
+- [ ] Hold through the silence after "how true is that?" — no cuts, no re-asks
+
+BETWEEN CONVERSATIONS
+
+- [ ] The walk-out
+- [ ] Sai reset — 20–30 seconds to camera between interviews: what just landed (feeds the rehook + confessional material)
+- [ ] Timestamp log — the second anything sounds like a future change, write down the clip + time (this is must-capture #1, and it feeds the takeaways triage)
+
 ## Parked for the implementation beat (NOT interview questions)
 
 Gray's feedback-channel questions belong in Beat 11/12 (takeaways + implementation) — the system Sai builds after hearing the answers is itself the payoff, and the "?" forward is the Bezos habit:

@@ -55,12 +55,13 @@ def dedupe_bank_alerts(expenses):
 
 
 
-def write_expenses_json(expenses, current_month):
-    """Write expenses to the payday checklist's expenses.json file."""
+def write_expenses_json(expenses, current_month, transfers=None):
+    """Write expenses + EJ transfers to the payday checklist's expenses.json file."""
     output = {
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "month": current_month,
         "expenses": expenses,
+        "transfers": transfers or [],
     }
 
     output_path = os.path.normpath(EXPENSES_OUTPUT_PATH)
@@ -89,6 +90,14 @@ def main():
 
     print("\nExtracting expenses with Claude Haiku...")
     all_expenses = scan_expenses(emails)
+
+    # Edward Jones transfers (taxes/investing) are allocations, not budget expenses —
+    # split them out; the app shows them in the year-to-date Edward Jones card
+    current_year = str(today.year)
+    transfers = [e for e in all_expenses if e.get("kind") and e["date"].startswith(current_year)]
+    all_expenses = [e for e in all_expenses if not e.get("kind")]
+    if transfers:
+        print(f"  {len(transfers)} Edward Jones transfer(s) this year (tracked separately).")
 
     # Filter to current month only — Gmail returns 30 days which may include last month
     expenses = [e for e in all_expenses if e["date"].startswith(current_month)]
@@ -129,13 +138,13 @@ def main():
         print("\nDRY RUN — nothing written.")
         return
 
-    write_expenses_json(expenses, current_month)
+    write_expenses_json(expenses, current_month, transfers)
 
     import firestore_writer
     fs_client = firestore_writer.get_client()
     if fs_client:
-        created = firestore_writer.write_expenses(expenses, client=fs_client)
-        print(f"Firestore: {created} new expense(s) written to {firestore_writer.ROOT}.")
+        created = firestore_writer.write_expenses(expenses + transfers, client=fs_client)
+        print(f"Firestore: {created} new record(s) written to {firestore_writer.ROOT}.")
     else:
         print("Firestore: skipped (FIREBASE_SERVICE_ACCOUNT not set).")
 

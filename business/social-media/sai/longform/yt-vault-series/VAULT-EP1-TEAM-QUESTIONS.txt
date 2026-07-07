@@ -52,6 +52,33 @@ Last one. Name one thing slowing you down that we could fix by Friday, if I said
 Five conversations means five yes moments, and the ship three changes checklist fills itself on camera.
 
 
+The shots, the one-on-one setup (repeat for each of the 5 conversations)
+
+The room, before they walk in:
+
+[ ] Wide establishing. The room, two chairs, empty.
+[ ] The walk-in. Employee entering and sitting down. Transition tissue, and the nerves live here.
+
+The conversation. Two cams, both rolling continuously, sync clap at the top:
+
+[ ] A-cam, single on the employee. The answer cam, the money frame. Loose enough to keep hands in frame.
+[ ] B-cam, single on Sai. The listener cam. His face hearing the question 3 and 4 answers is half the beat.
+[ ] Inserts. Hands, fidgets, the water glass, the notepad. Grab during natural resets, never mid-answer.
+[ ] The pauses. When someone goes quiet, keep rolling. The silence before a question 3 or 4 answer is content.
+
+Question 5, the belief echo. The must-get of the whole episode:
+
+[ ] The playback device in frame. Laptop or phone playing the clip of Sai stating his belief.
+[ ] Tight single on their face while the clip plays. The most watchable moment in the episode. Protect this above everything.
+[ ] Hold through the silence after "how true is that?" No cuts, no re-asks.
+
+Between conversations:
+
+[ ] The walk-out.
+[ ] Sai reset. 20 to 30 seconds to camera between interviews, what just landed. Feeds the rehook and confessional material.
+[ ] Timestamp log. The second anything sounds like a future change, write down the clip and time. This feeds the takeaways triage.
+
+
 Parked for the implementation beat (not interview questions)
 These belong in the takeaways session, where the feedback system Sai builds is itself the payoff:
 

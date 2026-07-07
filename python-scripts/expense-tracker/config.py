@@ -58,3 +58,10 @@ ALERT_SENDERS = [
     "primesouth.com",
     "email.rocketmoney.com",
 ]
+
+# Edward Jones transfer confirmations ("Funds Transfer Request Has Been Scheduled").
+# Parsed deterministically by ej_transfers.py into tax/investing allocations —
+# never budget expenses. Sole Proprietor-* = taxes, Single-* = investing.
+TRANSFER_SENDERS = [
+    "online-notifications@edwardjones.com",
+]

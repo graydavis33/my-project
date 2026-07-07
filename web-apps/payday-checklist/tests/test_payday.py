@@ -50,7 +50,7 @@ with sync_playwright() as p:
     check("monthly income shows $6,500", page.text_content("#context-paycheck").strip() == "$6,500",
           page.text_content("#context-paycheck"))
     check("after-tax shows $4,550", "4,550" in page.text_content("#context-aftertax"))
-    check("tax step shows -$1,950", "1,950" in page.text_content("#step-0-amount"))
+    check("tax step defaults to 1950", page.input_value("#alloc-tax") == "1950", page.input_value("#alloc-tax"))
     check("balance chain: after rent $2,650", "2,650" in page.text_content("#balance-1"))
     check("balance chain: after loans $1,650", "1,650" in page.text_content("#balance-2"))
     check("balance chain: after EF $1,250", "1,250" in page.text_content("#balance-3"))
@@ -106,11 +106,23 @@ with sync_playwright() as p:
     page.fill("#paycheck-amount", "3500")
     page.wait_for_timeout(200)
     check("monthly updates to $7,000", page.text_content("#context-paycheck").strip() == "$7,000")
-    check("tax updates to -$2,100", "2,100" in page.text_content("#step-0-amount"))
+    check("tax recomputes to 2100", page.input_value("#alloc-tax") == "2100", page.input_value("#alloc-tax"))
     page.fill("#alloc-rent", "2000")
     page.wait_for_timeout(200)
     check("rent change updates chain", "2,900" in page.text_content("#balance-1"),
           page.text_content("#balance-1"))
+    # manual tax override: free-form dollar amount wins over the % suggestion
+    page.fill("#alloc-tax", "2000")
+    page.wait_for_timeout(200)
+    check("manual tax edit updates after-tax", "5,000" in page.text_content("#balance-0"),
+          page.text_content("#balance-0"))
+    page.reload(); wait_ready(page); page.wait_for_timeout(800)
+    check("manual tax 2000 persists", page.input_value("#alloc-tax") == "2000", page.input_value("#alloc-tax"))
+    page.fill("#tax-percent", "30")   # editing % recomputes from scratch
+    page.wait_for_timeout(200)
+    check("tax %% edit recomputes amount", page.input_value("#alloc-tax") == "2100", page.input_value("#alloc-tax"))
+    page.fill("#alloc-tax", "2000")   # restore the manual value for later sections
+    page.wait_for_timeout(200)
 
     # ══ 5. Misc overflow hint ══
     print("\n[5] Misc buffer overflow hint")
@@ -232,8 +244,38 @@ with sync_playwright() as p:
         check("app loads offline via service worker", False, str(e)[:120])
     ctx.set_offline(False)
 
-    # ══ 13. Screenshots ══
-    print("\n[13] Screenshots")
+    # ══ 13. Edward Jones transfers → EJ card + tax step auto-check ══
+    print("\n[13] Edward Jones card")
+    import time as _time
+    month = _time.strftime("%Y-%m")
+    # reset steps so we can observe the auto-check transition
+    page.click(".gm-label .section-reset-btn")   # first reset btn = steps
+    page.wait_for_timeout(300)
+    check("step 0 unchecked after reset", "done" not in page.get_attribute("#step-0", "class"))
+    page.evaluate("""async (month) => {
+      const mk = (kind, vendor, amount, eid) => ({
+        vendor, amount, kind,
+        category: kind === 'tax_transfer' ? 'Tax Set-Aside' : 'EJ Investing',
+        date: month + '-07', month, note: '', source: 'gmail',
+        email_id: eid, sid: eid,
+        createdAt: new Date().toISOString(), updatedAt: Date.now()
+      });
+      await addTransaction(mk('tax_transfer', 'Edward Jones (Sole Proprietor-1)', 3000, 'ejtest-tax'));
+      await addTransaction(mk('invest_transfer', 'Edward Jones (Single-1)', 100, 'ejtest-inv'));
+    }""", month)
+    page.reload(); wait_ready(page); page.wait_for_timeout(1000)
+    check("EJ tax total $3,000", page.text_content("#ej-tax-total").strip() == "$3,000",
+          page.text_content("#ej-tax-total"))
+    check("EJ invest total $100", page.text_content("#ej-invest-total").strip() == "$100",
+          page.text_content("#ej-invest-total"))
+    check("tax step auto-checked by sole-prop transfer", "done" in page.get_attribute("#step-0", "class"))
+    note = page.text_content("#ej-note") or ""
+    check("EJ note shows sent amount", "3,000" in note, note)
+    # transfers must NOT touch budget rows (Investments spent stays empty)
+    check("transfers don't pollute budgets", spent_value(page, 4) == "", spent_value(page, 4))
+
+    # ══ 14. Screenshots ══
+    print("\n[14] Screenshots")
     page.reload(); wait_ready(page); page.wait_for_timeout(1000)
     page.screenshot(path=os.path.join(SCRATCH, "payday-mobile.png"), full_page=True)
     desktop = browser.new_context(viewport={"width": 1280, "height": 900}).new_page()
