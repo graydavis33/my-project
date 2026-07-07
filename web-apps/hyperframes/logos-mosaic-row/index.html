@@ -10,10 +10,13 @@
         width: 1920px; height: 1080px; overflow: hidden;
         background: transparent;
       }
-      /* full-frame chroma key green — the ONLY background */
+      /* TRANSPARENT background — deliverable is alpha ProRes (.mov).
+         No chroma color: Slack contains green AND blue, Notion/Scribe
+         contain black/white, so no keyable color is safe. Alpha needs
+         no keying at all. */
       .scene {
         position: relative; width: 100%; height: 100%; overflow: hidden;
-        background: #00B140;
+        background: transparent;
       }
       /* centered horizontal row of the three logos */
       .row {
