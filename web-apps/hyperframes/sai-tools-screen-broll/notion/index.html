@@ -5,54 +5,316 @@
     <meta name="viewport" content="width=1920, height=1080" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1920px; height: 1080px; overflow: hidden;
+        background: #ffffff;
+        font-family: "Inter", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
       }
-      html,
-      body {
-        margin: 0;
-        width: 1920px;
-        height: 1080px;
-        overflow: hidden;
-        background: #000;
+
+      /* ---------- app shell ---------- */
+      #app { display: flex; width: 1920px; height: 1080px; }
+
+      /* ---------- sidebar ---------- */
+      #sidebar {
+        width: 300px; height: 100%;
+        background: #f7f6f3;
+        border-right: 1px solid #e9e9e7;
+        padding: 14px 8px;
+        color: #5f5e5b;
+        font-size: 15px;
+        display: flex; flex-direction: column;
       }
-      body {
-        font-family: "Inter", sans-serif;
+      .ws-head {
+        display: flex; align-items: center; gap: 9px;
+        padding: 6px 8px 6px 6px; border-radius: 6px; margin-bottom: 8px;
       }
-      code,
-      pre,
-      .monospace {
-        font-family: "JetBrains Mono", monospace;
+      .ws-avatar {
+        width: 22px; height: 22px; border-radius: 5px;
+        background: #d9730d; color: #fff; font-weight: 700; font-size: 13px;
+        display: flex; align-items: center; justify-content: center;
       }
+      .ws-name { font-weight: 600; color: #37352f; font-size: 15px; }
+      .chev { margin-left: auto; opacity: .5; }
+
+      .side-row {
+        display: flex; align-items: center; gap: 10px;
+        padding: 6px 8px; border-radius: 6px; margin: 1px 0;
+        color: #5f5e5b; white-space: nowrap;
+      }
+      .side-row svg { flex: none; opacity: .75; }
+      .side-label {
+        font-size: 11px; font-weight: 600; letter-spacing: .5px;
+        color: #9b9a97; padding: 14px 8px 4px; text-transform: uppercase;
+      }
+      #row-training { background: #eceae7; color: #37352f; }
+      #row-training svg { opacity: 1; }
+
+      /* ---------- main pane ---------- */
+      #main { position: relative; flex: 1; height: 100%; background: #ffffff; }
+      .view { position: absolute; inset: 0; padding: 60px 120px; }
+
+      /* doc view */
+      #doc-view .doc-icon {
+        width: 62px; height: 62px; border-radius: 12px; background: #f1f0ee;
+        display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
+      }
+      #doc-view h1 { font-size: 46px; font-weight: 700; color: #37352f; margin-bottom: 10px; }
+      #doc-view .crumb { font-size: 15px; color: #9b9a97; margin-bottom: 26px; }
+      #doc-view p { font-size: 19px; line-height: 1.55; color: #4a4844; max-width: 900px; margin-bottom: 26px; }
+      .check-row {
+        display: flex; align-items: center; gap: 14px;
+        font-size: 20px; color: #37352f; padding: 9px 0;
+      }
+      .cbox {
+        width: 22px; height: 22px; border-radius: 5px; flex: none;
+        border: 2px solid #c9c8c5; display: flex; align-items: center; justify-content: center;
+      }
+      .cbox.done { background: #2383e2; border-color: #2383e2; }
+      .callout {
+        margin-top: 26px; background: #f7f6f3; border-radius: 8px;
+        padding: 18px 22px; font-size: 18px; color: #4a4844; max-width: 900px;
+        display: flex; gap: 14px; align-items: center;
+      }
+
+      /* calendar / table view */
+      #cal-view { opacity: 0; }
+      #cal-view .cal-head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+      #cal-view h1 { font-size: 44px; font-weight: 700; color: #37352f; }
+      #cal-view .crumb { font-size: 15px; color: #9b9a97; margin-bottom: 30px; }
+
+      .tbl { width: 100%; border-top: 1px solid #e9e9e7; }
+      .trow {
+        display: grid; grid-template-columns: 1fr 190px 260px;
+        align-items: center; border-bottom: 1px solid #e9e9e7;
+        padding: 16px 6px; font-size: 20px; color: #37352f;
+      }
+      .thead {
+        display: grid; grid-template-columns: 1fr 190px 260px;
+        font-size: 14px; color: #9b9a97; font-weight: 600;
+        padding: 0 6px 10px; text-transform: uppercase; letter-spacing: .4px;
+      }
+      .title-cell { display: flex; align-items: center; gap: 12px; }
+      .doc-mini { opacity: .55; }
+      .pill {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 20px; width: fit-content;
+      }
+      .pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+      .p-edit { background: #e7f0fb; color: #2383e2; }
+      .p-edit .dot { background: #2383e2; }
+      .p-film { background: #fbecdd; color: #d9730d; }
+      .p-film .dot { background: #d9730d; }
+      .p-ready { background: #ddf0e4; color: #0f7b40; }
+      .p-ready .dot { background: #0f7b40; }
+      .p-draft { background: #edecea; color: #787774; }
+      .p-draft .dot { background: #9b9a97; }
+
+      .assignee { display: flex; align-items: center; gap: 10px; }
+      .av {
+        width: 26px; height: 26px; border-radius: 50%; flex: none;
+        color: #fff; font-size: 12px; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .unassigned { color: #9b9a97; font-size: 18px; }
+
+      #a1-cell { position: relative; }
+      #a1-assigned { position: absolute; inset: 0; display: flex; align-items: center; gap: 10px; opacity: 0; }
+
+      /* assignee dropdown */
+      #dropdown {
+        position: absolute; width: 250px;
+        background: #ffffff; border: 1px solid #e3e2e0; border-radius: 9px;
+        box-shadow: 0 10px 30px rgba(15,15,15,.16); padding: 6px; opacity: 0;
+        z-index: 50;
+      }
+      #dropdown .dd-label { font-size: 12px; color: #9b9a97; padding: 6px 8px 4px; font-weight: 600; }
+      .dd-opt { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 6px; font-size: 17px; color: #37352f; }
+      #dd-pick { background: transparent; }
+
+      /* ---------- cursor ---------- */
+      #cursor { position: absolute; top: 0; left: 0; z-index: 9999; will-change: transform; }
     </style>
   </head>
   <body>
-    <div
-      id="root"
-      data-composition-id="main"
-      data-start="0"
-      data-duration="10"
-      data-width="1920"
-      data-height="1080"
-    >
-      
-      
+    <div id="app-root" data-composition-id="main" data-start="0" data-duration="7"
+         data-width="1920" data-height="1080">
+      <div id="app">
+        <!-- SIDEBAR -->
+        <div id="sidebar">
+          <div class="ws-head">
+            <div class="ws-avatar">T</div>
+            <div class="ws-name">Trendify HQ</div>
+            <svg class="chev" width="14" height="14" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="#9b9a97" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+          </div>
 
-      <!--
-        Add your clips here. Example:
-        <div id="title" class="clip" data-start="0" data-duration="5" data-track-index="1"
-             style="font-size: 64px; color: #fff; padding: 40px">
-          Hello World
+          <div class="side-row">
+            <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="#5f5e5b" stroke-width="2" fill="none"/><path d="M16 16l5 5" stroke="#5f5e5b" stroke-width="2" stroke-linecap="round"/></svg>
+            <span>Search</span>
+          </div>
+          <div class="side-row">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1z" stroke="#5f5e5b" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg>
+            <span>Home</span>
+          </div>
+
+          <div class="side-label">Workspace</div>
+
+          <div class="side-row" id="row-training">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.7" fill="none" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#37352f" stroke-width="1.7" fill="none" stroke-linejoin="round"/></svg>
+            <span>Training Docs</span>
+          </div>
+          <div class="side-row">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linejoin="round"/></svg>
+            <span>SOP Library</span>
+          </div>
+          <div class="side-row" id="row-cal">
+            <svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><path d="M3 9h18M8 3v4M16 3v4" stroke="#5f5e5b" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <span>Content Calendar</span>
+          </div>
+          <div class="side-row">
+            <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><circle cx="16.5" cy="9" r="2.6" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><path d="M4 19c0-3 2.4-5 5-5s5 2 5 5M15 18c0-2 1-3.5 3-3.5s3 1.5 3 3.5" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
+            <span>Team Directory</span>
+          </div>
+          <div class="side-row">
+            <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><circle cx="16.5" cy="9" r="2.6" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><path d="M4 19c0-3 2.4-5 5-5s5 2 5 5M15 18c0-2 1-3.5 3-3.5s3 1.5 3 3.5" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
+            <span>Creators</span>
+          </div>
+          <div class="side-row">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linejoin="round"/></svg>
+            <span>Client Projects</span>
+          </div>
         </div>
-      -->
+
+        <!-- MAIN -->
+        <div id="main">
+          <!-- DOC VIEW -->
+          <div class="view" id="doc-view">
+            <div class="doc-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#787774" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M14 3v5h5M8 13h8M8 17h6" stroke="#787774" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <div class="crumb">Training Docs / Onboarding</div>
+            <h1>Creator Onboarding SOP</h1>
+            <p>Everything a new creator needs in their first week. Every process on the team lives here so nothing depends on one person's memory.</p>
+            <div class="check-row"><span class="cbox done"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read the brand style guide</div>
+            <div class="check-row"><span class="cbox done"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Set up Frame.io + Drive access</div>
+            <div class="check-row"><span class="cbox"></span>Complete first practice edit</div>
+            <div class="check-row"><span class="cbox"></span>Shadow a live shoot day</div>
+            <div class="callout">
+              <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#d9730d" stroke-width="1.8" fill="none"/><path d="M12 8v5M12 16h.01" stroke="#d9730d" stroke-width="2" stroke-linecap="round"/></svg>
+              <span>Tip: assign yourself in the Content Calendar so the team can see what you're working on.</span>
+            </div>
+          </div>
+
+          <!-- CALENDAR / TABLE VIEW -->
+          <div class="view" id="cal-view">
+            <div class="cal-head">
+              <svg width="40" height="40" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#37352f" stroke-width="1.6" fill="none"/><path d="M3 9h18M8 3v4M16 3v4" stroke="#37352f" stroke-width="1.6" stroke-linecap="round"/></svg>
+              <h1>Content Calendar</h1>
+            </div>
+            <div class="crumb">Workspace / Content Calendar &nbsp;·&nbsp; 5 assigned this week</div>
+
+            <div class="thead"><span>Content</span><span>Status</span><span>Assignee</span></div>
+            <div class="tbl" data-layout-allow-overflow>
+              <div class="trow" id="trow1">
+                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>3 Tools My Business Runs On</span>
+                <span><span class="pill p-edit"><span class="dot"></span>In edit</span></span>
+                <span class="assignee" id="a1-cell">
+                  <span id="a1-unassigned" class="unassigned">＋ Assign</span>
+                  <span id="a1-assigned"><span class="av" style="background:#0b6e99">JM</span>Jordan M.</span>
+                </span>
+              </div>
+              <div class="trow">
+                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>How I Manage My Money</span>
+                <span><span class="pill p-film"><span class="dot"></span>Filming</span></span>
+                <span class="assignee"><span class="av" style="background:#ad1a72">MR</span>Maya R.</span>
+              </div>
+              <div class="trow">
+                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>Onboarding SOP Walkthrough</span>
+                <span><span class="pill p-ready"><span class="dot"></span>Ready</span></span>
+                <span class="assignee"><span class="av" style="background:#0f7b40">DK</span>Devin K.</span>
+              </div>
+              <div class="trow">
+                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>Client Case Study: Fortune 500</span>
+                <span><span class="pill p-draft"><span class="dot"></span>Draft</span></span>
+                <span class="assignee"><span class="av" style="background:#6940a5">PS</span>Priya S.</span>
+              </div>
+              <div class="trow">
+                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>Penpalooza Recap</span>
+                <span><span class="pill p-edit"><span class="dot"></span>In edit</span></span>
+                <span class="assignee"><span class="av" style="background:#c17d00">LT</span>Leo T.</span>
+              </div>
+            </div>
+
+            <!-- assignee dropdown -->
+            <div id="dropdown">
+              <div class="dd-label">Assign to</div>
+              <div class="dd-opt" id="dd-pick"><span class="av" style="background:#0b6e99">JM</span>Jordan M.</div>
+              <div class="dd-opt"><span class="av" style="background:#1a7a8c">SC</span>Sara C.</div>
+              <div class="dd-opt"><span class="av" style="background:#9b3f8f">TN</span>Tomas N.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CURSOR -->
+      <div id="cursor">
+        <svg width="24" height="30" viewBox="0 0 24 30" fill="none">
+          <path d="M3 2.5L3 22.5L8.3 17.6L11.8 25.2L15 23.7L11.6 16.3L18.6 16.1L3 2.5Z"
+                fill="#111" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>
+        </svg>
+      </div>
     </div>
 
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      // Example: tl.from("#title", { opacity: 0, y: -50, duration: 1 }, 0);
+
+      // cursor helpers -------------------------------------------------------
+      gsap.set("#cursor", { x: 1180, y: 470 });
+      const move = (x, y, t, dur = 0.8) =>
+        tl.to("#cursor", { x, y, duration: dur, ease: "power2.inOut" }, t);
+      const click = (t) =>
+        tl.to("#cursor", { scale: 0.86, duration: 0.07, ease: "power2.in", yoyo: true, repeat: 1, transformOrigin: "0 0" }, t);
+
+      // 0.0–1.3  idle over the training doc
+      move(1060, 520, 0.3, 0.9);
+
+      // 1.3  travel to "Content Calendar" in the sidebar, click
+      move(150, 296, 1.3, 0.85);
+      click(2.2);
+      // sidebar selection swap
+      tl.to("#row-training", { backgroundColor: "#f7f6f3", color: "#5f5e5b", duration: 0.2 }, 2.3);
+      tl.to("#row-cal", { backgroundColor: "#eceae7", color: "#37352f", duration: 0.2 }, 2.3);
+      // main page crossfade: doc -> calendar
+      tl.to("#doc-view", { opacity: 0, duration: 0.3, ease: "power1.inOut" }, 2.35);
+      tl.to("#cal-view", { opacity: 1, duration: 0.35, ease: "power1.inOut" }, 2.45);
+      tl.from("#cal-view .trow", { opacity: 0, y: 14, duration: 0.4, stagger: 0.05, ease: "power2.out" }, 2.55);
+
+      // 2.9  travel to row 1 assignee cell, click -> dropdown opens
+      move(1470, 322, 2.95, 0.8);
+      click(3.85);
+      tl.fromTo("#dropdown",
+        { opacity: 0, scale: 0.96, transformOrigin: "20px 0px" },
+        { opacity: 1, scale: 1, duration: 0.22, ease: "power2.out" }, 3.95);
+
+      // 4.3  travel down to "Jordan M." option, click -> assign
+      move(1470, 452, 4.3, 0.5);
+      click(4.9);
+      tl.to("#dd-pick", { backgroundColor: "#eef3fb", duration: 0.12 }, 4.9);
+      tl.to("#dropdown", { opacity: 0, duration: 0.2, ease: "power1.in" }, 5.05);
+      tl.to("#a1-unassigned", { opacity: 0, duration: 0.2 }, 5.1);
+      tl.fromTo("#a1-assigned",
+        { opacity: 0, x: -6 },
+        { opacity: 1, x: 0, duration: 0.35, ease: "power2.out" }, 5.2);
+      // brief row highlight to confirm the change
+      tl.fromTo("#trow1",
+        { backgroundColor: "rgba(35,131,226,0.10)" },
+        { backgroundColor: "rgba(35,131,226,0.0)", duration: 0.9, ease: "power1.out" }, 5.2);
+
+      // 5.7–7.0  settle
+      move(1250, 470, 5.9, 0.9);
+
       window.__timelines["main"] = tl;
     </script>
   </body>

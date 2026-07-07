@@ -65,19 +65,18 @@
         // Floating sway — starts as each logo settles. Animates the .float
         // wrapper (never the img, so it can't fight the entrance tween).
         // Per-logo amplitudes/durations all differ (deterministic, no RNG),
-        // and x/y/rotation cycle at different speeds so the drift never
-        // repeats in sync — reads as a gentle randomized hover.
+        // and x/y cycle at different speeds so the drift never repeats in
+        // sync — reads as a gentle randomized hover. No rotation.
         const sway = [
-          { el: "#float1", start: 1.15, y: 10, yd: 2.2, x: 6,  xd: 2.9, r: 1.2,  rd: 3.1 },
-          { el: "#float2", start: 1.50, y: 12, yd: 2.6, x: -7, xd: 2.1, r: -1.4, rd: 2.7 },
-          { el: "#float3", start: 1.85, y: 9,  yd: 1.9, x: 8,  xd: 2.5, r: 1.0,  rd: 3.3 }
+          { el: "#float1", start: 1.15, y: 10, yd: 1.3, x: 6,  xd: 1.7 },
+          { el: "#float2", start: 1.50, y: 12, yd: 1.5, x: -7, xd: 1.2 },
+          { el: "#float3", start: 1.85, y: 9,  yd: 1.1, x: 8,  xd: 1.45 }
         ];
         sway.forEach(s => {
           const remain = DUR - s.start;
           const reps = d => Math.max(1, Math.ceil(remain / d) - 1);
           tl.to(s.el, { y: -s.y, duration: s.yd, ease: "sine.inOut", yoyo: true, repeat: reps(s.yd) }, s.start);
           tl.to(s.el, { x: s.x, duration: s.xd, ease: "sine.inOut", yoyo: true, repeat: reps(s.xd) }, s.start);
-          tl.to(s.el, { rotation: s.r, duration: s.rd, ease: "sine.inOut", yoyo: true, repeat: reps(s.rd), transformOrigin: "50% 50%" }, s.start);
         });
 
         // No exit — hold the floating row (B-roll).
