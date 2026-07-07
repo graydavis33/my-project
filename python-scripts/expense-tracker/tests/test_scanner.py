@@ -42,3 +42,10 @@ def test_dedupe_keeps_alert_outside_window():
     receipt = {"email_id": "a", "date": "2026-07-01", "vendor": "DoorDash", "amount": 24.50, "category": "Dining Out"}
     alert = {"email_id": "b", "date": "2026-07-07", "vendor": "DOORDASH", "amount": 24.50, "category": "Misc", "is_alert": True}
     assert len(dedupe_bank_alerts([receipt, alert])) == 2
+
+def test_dedupe_collapses_alert_vs_alert():
+    # Real case 2026-06-20: same $30 Zelle payment reported by BOTH PrimeSouth and Rocket Money
+    ps = {"email_id": "a", "date": "2026-06-20", "vendor": "Barbershop", "amount": 30.00, "category": "Misc", "is_alert": True}
+    rm = {"email_id": "b", "date": "2026-06-22", "vendor": "Zelle Money Payme", "amount": 30.00, "category": "Misc", "is_alert": True}
+    out = dedupe_bank_alerts([ps, rm])
+    assert out == [ps]  # first alert kept, duplicate dropped

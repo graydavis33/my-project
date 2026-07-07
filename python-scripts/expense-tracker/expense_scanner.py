@@ -33,8 +33,15 @@ Given an email, extract:
 
 Bank transaction alert rules (sender is the bank, e.g. PrimeSouth):
 - "Your card was charged $X at MERCHANT" / "A transaction of $X was made at MERCHANT" / debit card purchase alerts → IT IS AN EXPENSE. Extract it. vendor = the cleaned-up merchant name ("DOORDASH*NYC 123" → "DoorDash"), NEVER the bank name. Pick the category from the merchant.
+- PrimeSouth Zelle sends: "You've successfully sent $X to NAME" → IT IS AN EXPENSE, vendor = NAME.
+- "NAME was added to your list of contacts" → SKIP (return null) — no money moved.
 - Deposit alerts, payment received, direct deposit, balance alerts, low-balance warnings → SKIP (return null).
 - ATM withdrawal alerts → category "Misc", vendor "ATM Withdrawal".
+
+Money-app alert rules (sender is Rocket Money):
+- "Large transaction detected" / "Uncategorized transaction detected" → extract the merchant, amount, and date from the body. Body dates like "June 20" have no year — infer it from the email's received date. vendor = the merchant/payee shown (e.g. "Edward Jones Inve..." → "Edward Jones"), never "Rocket Money".
+- Investment/brokerage transactions (Edward Jones, Fidelity...) → category "Investments".
+- Marketing, spending reports, budget summaries from money apps → SKIP (return null).
 
 Venmo / Zelle / PayPal P2P rules:
 - "You paid [person] $X" or "You sent [person] $X" → IT IS AN EXPENSE. Extract it. Use the person's name as vendor. Use the Venmo note/memo to pick category if possible; otherwise "Misc".

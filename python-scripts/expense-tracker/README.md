@@ -4,7 +4,8 @@
 - Scans Gmail for personal expense emails from the last 30 days (receipts, subscriptions, bills, bank card alerts)
 - Extracts date, vendor, amount, and category using Claude Haiku (batches of 5)
 - Auto-categorizes into 7 buckets: Groceries, Dining Out, Software & Tools, Utilities, Investments, BJJ & Kickboxing, Misc (matches the Payday Checklist categories; the Haiku prompt uses these 7 directly as of 2026-07-07)
-- Parses PrimeSouth per-transaction card alerts ("Your card was charged $X at MERCHANT") so swipes with no receipt email get captured — senders in `config.ALERT_SENDERS`; alerts that duplicate a vendor receipt (same amount within 2 days) are dropped by `main.dedupe_bank_alerts`
+- Parses bank/money-app alert emails so spend with no receipt email gets captured — verified senders (2026-07-07): PrimeSouth Zelle sends (`alerts.primesouth.com`) + Rocket Money large/uncategorized alerts (`email.rocketmoney.com`); card-swipe alerts pending Gray enabling them in the PrimeSouth app. Senders in `config.ALERT_SENDERS`; the same purchase reported by multiple sources (receipt/PrimeSouth/Rocket, same amount within 2 days) collapses to one via `main.dedupe_bank_alerts`
+- Optionally mirrors expenses into Firestore (`firestore_writer.py`, `households/gray/transactions/{email_id}`, create-only so app-side edits/deletes never get overwritten) — active only when `FIREBASE_SERVICE_ACCOUNT` env holds the service-account JSON
 - Filters to current month only, then writes `expenses.json` into the Payday Checklist web app
 - Caches scanned email IDs in `.scanned_ids.json` so reruns skip emails already processed
 

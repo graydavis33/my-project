@@ -30,25 +30,28 @@ def _apply_category_override(expense):
 
 
 def dedupe_bank_alerts(expenses):
-    """Drop bank-alert expenses that duplicate a vendor receipt (same amount, within 2 days).
+    """Drop alert expenses that duplicate a vendor receipt OR an already-kept alert
+    (same amount, dates within 2 days).
 
-    A DoorDash order produces BOTH a DoorDash receipt email and a PrimeSouth card
-    alert — without this pass it would count twice. Merchant strings differ between
-    the two ("DOORDASH*NYC" vs "DoorDash"), so matching is amount + date proximity.
+    One purchase can surface three ways: vendor receipt + PrimeSouth Zelle/card
+    alert + Rocket Money alert. Merchant strings differ between sources
+    ("DOORDASH*NYC" vs "DoorDash" vs "Zelle Money Payme..."), so matching is
+    amount + date proximity. Known risk (documented): two genuinely distinct
+    same-amount purchases within 2 days that BOTH only exist as alerts collapse
+    to one — rare, and Gray can add the missing one manually.
     """
     def _d(s):
         y, m, dd = s.split("-")
         return date(int(y), int(m), int(dd))
-    receipts = [e for e in expenses if not e.get("is_alert")]
-    out = list(receipts)
+    kept = [e for e in expenses if not e.get("is_alert")]
     for a in (e for e in expenses if e.get("is_alert")):
         dup = any(
-            r["amount"] == a["amount"] and abs((_d(r["date"]) - _d(a["date"])).days) <= 2
-            for r in receipts
+            k["amount"] == a["amount"] and abs((_d(k["date"]) - _d(a["date"])).days) <= 2
+            for k in kept
         )
         if not dup:
-            out.append(a)
-    return out
+            kept.append(a)
+    return kept
 
 
 
@@ -127,6 +130,14 @@ def main():
         return
 
     write_expenses_json(expenses, current_month)
+
+    import firestore_writer
+    fs_client = firestore_writer.get_client()
+    if fs_client:
+        created = firestore_writer.write_expenses(expenses, client=fs_client)
+        print(f"Firestore: {created} new expense(s) written to {firestore_writer.ROOT}.")
+    else:
+        print("Firestore: skipped (FIREBASE_SERVICE_ACCOUNT not set).")
 
 
 if __name__ == "__main__":

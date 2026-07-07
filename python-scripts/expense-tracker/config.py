@@ -45,11 +45,16 @@ CATEGORY_OVERRIDES = {
     "Garrett ODell": "Dining Out",
 }
 
-# Bank per-transaction alert emails (card swipes with no vendor receipt email).
-# PrimeSouth sender domain is a best guess until Gray forwards a real alert —
-# update this list when the first alert lands. Alerts are deduped against
-# vendor receipts in main.dedupe_bank_alerts.
+# Bank/money-app transaction alert emails (spend with no vendor receipt email).
+# Senders verified against real inbox emails 2026-07-07:
+#   alerts.primesouth.com — PrimeSouth Zelle send notifications ("Your $30.00 to
+#     Barbershop was sent") + future card alerts once Gray enables them in-app
+#   email.rocketmoney.com — Rocket Money watches the PrimeSouth account and mails
+#     "Large transaction detected" / "Uncategorized transaction detected"
+# The same purchase often appears in BOTH (and sometimes also as a vendor
+# receipt) — main.dedupe_bank_alerts collapses them.
 ALERT_SENDERS = [
+    "alerts.primesouth.com",
     "primesouth.com",
-    "secure.primesouth.com",
+    "email.rocketmoney.com",
 ]
