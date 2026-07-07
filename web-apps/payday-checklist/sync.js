@@ -15,6 +15,16 @@ const Sync = (() => {
   let active = false;         // signed in + subscribed
   let applyingRemote = false; // guard: remote application must not re-mirror
 
+  // Write mutex — serializes the two bulk writers (applyRemote + the app's
+  // loadGmailExpenses) so a snapshot arriving mid-merge can't double-insert
+  // the same transaction.
+  let _lock = Promise.resolve();
+  function withLock(fn) {
+    const run = _lock.then(fn, fn);
+    _lock = run.catch(() => {});
+    return run;
+  }
+
   // ── status UI ──
   function setStatus(text) {
     const el = document.getElementById('cloud-sync-status');
@@ -57,7 +67,11 @@ const Sync = (() => {
   }
 
   // ── local application of remote docs ──
-  async function applyRemote(docs) {
+  function applyRemote(docs) {
+    return withLock(() => applyRemoteLocked(docs));
+  }
+
+  async function applyRemoteLocked(docs) {
     applyingRemote = true;
     try {
       let txnChanged = false, settingsChanged = false;
@@ -236,7 +250,7 @@ const Sync = (() => {
   }
 
   return {
-    init, onLocalTxn, onLocalTxnDelete, onLocalSetting, onLocalHistory, onLocalHistoryDelete,
+    init, onLocalTxn, onLocalTxnDelete, onLocalSetting, onLocalHistory, onLocalHistoryDelete, withLock,
     signIn: () => backend && backend.signIn(),
     signOut: () => backend && backend.signOut(),
     toggle: () => (active ? Sync.signOut() : Sync.signIn())

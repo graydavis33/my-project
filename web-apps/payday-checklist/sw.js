@@ -37,6 +37,12 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
+  // Only handle the app's own assets. Everything else (Firestore/auth RPCs,
+  // test backends, other origins) must pass straight to the network —
+  // cache-first on live sync traffic would freeze it.
+  if (url.origin !== self.location.origin) return;
+  if (!url.pathname.includes('/payday-checklist/') && !url.pathname.includes('/styles/')) return;
+
   // expenses.json + page navigations: network first, cache fallback (fresh data when online)
   const networkFirst = request.mode === 'navigate' || url.pathname.endsWith('expenses.json');
 

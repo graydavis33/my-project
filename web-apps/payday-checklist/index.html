@@ -1122,27 +1122,32 @@ async function loadGmailExpenses(manual = false) {
     if (!res.ok) { setSyncStatus('&#9888; Gmail sync unavailable (HTTP ' + res.status + ')', false); return; }
     const data = await res.json();
     const syncedAt = data.generated_at ? fmtSyncTime(data.generated_at) : 'unknown';
-    const dismissed = await getSetting('dismissed_gmail', []);
-    const existingIds = new Set(TXN_CACHE.filter(t => t.email_id).map(t => t.email_id));
 
     let imported = 0;
-    for (const exp of (data.expenses || [])) {
-      if (!exp.email_id || existingIds.has(exp.email_id) || dismissed.includes(exp.email_id)) continue;
-      const category = GMAIL_CATEGORY_MAP[exp.category] || 'Misc';
-      const txn = {
-        vendor: exp.vendor, amount: exp.amount, category,
-        date: exp.date, month: (exp.date || '').slice(0, 7),
-        note: '', source: 'gmail', email_id: exp.email_id,
-        createdAt: new Date().toISOString(),
-        sid: exp.email_id,
-        updatedAt: Date.now()
-      };
-      const id = await addTransaction(txn);
-      txn.id = id;
-      TXN_CACHE.push(txn);
-      Sync.onLocalTxn(txn);
-      imported++;
-    }
+    await Sync.withLock(async () => {
+      const dismissed = await getSetting('dismissed_gmail', []);
+      // Dedup against IDB truth (incl. tombstones), not the in-memory cache —
+      // a sync snapshot may have inserted the same receipt mid-flight
+      const existingIds = new Set((await getAllTransactions()).filter(t => t.email_id).map(t => t.email_id));
+
+      for (const exp of (data.expenses || [])) {
+        if (!exp.email_id || existingIds.has(exp.email_id) || dismissed.includes(exp.email_id)) continue;
+        const category = GMAIL_CATEGORY_MAP[exp.category] || 'Misc';
+        const txn = {
+          vendor: exp.vendor, amount: exp.amount, category,
+          date: exp.date, month: (exp.date || '').slice(0, 7),
+          note: '', source: 'gmail', email_id: exp.email_id,
+          createdAt: new Date().toISOString(),
+          sid: exp.email_id,
+          updatedAt: Date.now()
+        };
+        const id = await addTransaction(txn);
+        txn.id = id;
+        TXN_CACHE.push(txn);
+        Sync.onLocalTxn(txn);
+        imported++;
+      }
+    });
 
     const monthCount = TXN_CACHE.filter(t => t.month === currentMonth() && t.source === 'gmail').length;
     setSyncStatus('&#10003; Gmail sync: ' + syncedAt + ' &middot; ' + monthCount + ' receipt' + (monthCount === 1 ? '' : 's') + ' this month', true);
