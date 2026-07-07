@@ -230,7 +230,7 @@ const Sync = (() => {
     } else {
       active = false;
       if (unsubscribe) { unsubscribe(); unsubscribe = null; }
-      setStatus(backend ? 'sync off — sign in' : '');
+      setStatus(backend ? 'cloud sync off —' : '');
     }
   }
 
