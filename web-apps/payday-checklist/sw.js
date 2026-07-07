@@ -7,6 +7,7 @@ const PRECACHE = [
   './icons/icon-512.png',
   '../styles/brand.css',
   './firebase-config.js',
+  './sync.js',
   './lib/firebase-app-compat.js',
   './lib/firebase-auth-compat.js',
   './lib/firebase-firestore-compat.js'

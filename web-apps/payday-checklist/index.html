@@ -16,6 +16,7 @@
   <script src="./lib/firebase-auth-compat.js" defer></script>
   <script src="./lib/firebase-firestore-compat.js" defer></script>
   <script src="./firebase-config.js" defer></script>
+  <script src="./sync.js" defer></script>
   <link rel="stylesheet" href="../styles/brand.css" />
   <style>
     /* ── Base ── */
@@ -586,6 +587,10 @@
             <span id="sync-status">Checking Gmail auto-sync&hellip;</span>
             <span id="sync-actions" style="display:none"> &mdash; <a onclick="loadGmailExpenses(true)">refresh</a></span>
           </div>
+          <div class="sync-badge" id="cloud-sync-row">
+            <span id="cloud-sync-status"></span>
+            <a id="cloud-sync-btn" onclick="Sync.toggle()">sign in</a>
+          </div>
         </div>
       </div>
     </div>
@@ -702,7 +707,10 @@ function idbReq(request) {
 
 async function setSetting(key, value) {
   const tx = db.transaction('settings', 'readwrite');
-  return idbReq(tx.objectStore('settings').put({ key, value }));
+  const result = await idbReq(tx.objectStore('settings').put({ key, value }));
+  if (!key.startsWith('_syncmeta_') && key !== 'sync_migrated' && key !== 'migrated_v1')
+    Sync.onLocalSetting(key, value);
+  return result;
 }
 async function getSetting(key, fallback = null) {
   const tx = db.transaction('settings', 'readonly');
@@ -979,6 +987,10 @@ function escapeHtml(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function uuidSid() {
+  return crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2);
+}
+
 function toggleTxns(i) {
   const list = document.getElementById('txn-list-' + i);
   const toggle = document.getElementById('txn-toggle-' + i);
@@ -990,7 +1002,12 @@ async function removeTxn(id) {
   const txn = TXN_CACHE.find(t => t.id === id);
   if (!txn) return;
   if (!confirm(`Delete ${txn.vendor} ${fmt2(txn.amount)}?`)) return;
-  await deleteTransaction(id);
+  // Tombstone, don't remove — sync needs the deletion to propagate
+  txn.deleted = true;
+  txn.updatedAt = Date.now();
+  if (!txn.sid) txn.sid = txn.email_id || uuidSid();
+  await addTransaction(txn);
+  Sync.onLocalTxnDelete(txn);
   if (txn.email_id) {
     const dismissed = await getSetting('dismissed_gmail', []);
     dismissed.push(txn.email_id);
@@ -1065,11 +1082,14 @@ async function submitAddExpense() {
     month: date.slice(0, 7),
     note,
     source: 'manual',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    sid: uuidSid(),
+    updatedAt: Date.now()
   };
   const id = await addTransaction(txn);
   txn.id = id;
   TXN_CACHE.push(txn);
+  Sync.onLocalTxn(txn);
 
   // A new transaction should show through: clear any manual override for that category this month
   const ov = OVERRIDES[currentMonth()];
@@ -1113,11 +1133,14 @@ async function loadGmailExpenses(manual = false) {
         vendor: exp.vendor, amount: exp.amount, category,
         date: exp.date, month: (exp.date || '').slice(0, 7),
         note: '', source: 'gmail', email_id: exp.email_id,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        sid: exp.email_id,
+        updatedAt: Date.now()
       };
       const id = await addTransaction(txn);
       txn.id = id;
       TXN_CACHE.push(txn);
+      Sync.onLocalTxn(txn);
       imported++;
     }
 
@@ -1171,6 +1194,7 @@ async function submitPayday() {
     notes: document.getElementById('notes').value || ''
   };
   await putHistory(entry);
+  Sync.onLocalHistory(entry);
   showToast('✓ Saved to history');
 }
 
@@ -1207,6 +1231,7 @@ async function renderHistory() {
 async function removeHistoryEntry(id) {
   if (!confirm('Delete this entry?')) return;
   await deleteHistory(id);
+  Sync.onLocalHistoryDelete(id);
   renderHistory();
 }
 
@@ -1220,7 +1245,7 @@ function csvEscape(s) {
 }
 
 async function exportCSV() {
-  const txns = await getAllTransactions();
+  const txns = (await getAllTransactions()).filter(t => !t.deleted);
   const history = await getAllHistory();
   const settingsKeys = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail'];
   const settings = {};
@@ -1363,7 +1388,11 @@ async function resetExpenses() {
   const month = currentMonth();
   const monthTxns = TXN_CACHE.filter(t => t.month === month);
   for (const t of monthTxns) {
-    await deleteTransaction(t.id);
+    t.deleted = true;
+    t.updatedAt = Date.now();
+    if (!t.sid) t.sid = t.email_id || uuidSid();
+    await addTransaction(t);
+    Sync.onLocalTxnDelete(t);
     if (t.email_id) {
       const dismissed = await getSetting('dismissed_gmail', []);
       dismissed.push(t.email_id);
@@ -1470,8 +1499,8 @@ async function init() {
     if (steps[i]) document.getElementById('step-' + i).classList.add('done');
   }
 
-  // Load transactions
-  TXN_CACHE = await getAllTransactions();
+  // Load transactions (tombstoned rows stay in IDB for sync, hidden from UI)
+  TXN_CACHE = (await getAllTransactions()).filter(t => !t.deleted);
 
   await updateAllocations(false);
   await updateFund(false);
@@ -1480,6 +1509,9 @@ async function init() {
 
   // Gmail sync (network — fails silently offline)
   loadGmailExpenses();
+
+  // Cross-device sync (inert when firebase-config.js holds null)
+  Sync.init();
 
   // Service worker for offline
   if ('serviceWorker' in navigator) {
