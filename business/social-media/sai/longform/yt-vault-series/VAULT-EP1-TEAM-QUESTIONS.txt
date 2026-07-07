@@ -52,31 +52,59 @@ Last one. Name one thing slowing you down that we could fix by Friday, if I said
 Five conversations means five yes moments, and the ship three changes checklist fills itself on camera.
 
 
-The shots, the one-on-one setup (repeat for each of the 5 conversations)
+The setup, these are remote (Zoom), not in person
 
-The room, before they walk in:
+The 5 conversations happen over Zoom. That's not a compromise to hide. The "founder interrogating his team over a video call" look is the texture, so lean into it. Two realities shape every shot:
 
-[ ] Wide establishing. The room, two chairs, empty.
-[ ] The walk-in. Employee entering and sitting down. Transition tissue, and the nerves live here.
+Sai's side is ours to control: real camera, real mic, real light, in the room. Broadcast quality.
+The employee's side is theirs: a webcam feed we can only partly influence. Treat it as documentary footage, not a controlled shot. The gap between Sai's clean image and their raw webcam is the intimacy.
 
-The conversation. Two cams, both rolling continuously, sync clap at the top:
 
-[ ] A-cam, single on the employee. The answer cam, the money frame. Loose enough to keep hands in frame.
-[ ] B-cam, single on Sai. The listener cam. His face hearing the question 3 and 4 answers is half the beat.
-[ ] Inserts. Hands, fidgets, the water glass, the notepad. Grab during natural resets, never mid-answer.
-[ ] The pauses. When someone goes quiet, keep rolling. The silence before a question 3 or 4 answer is content.
+The shots, the Zoom one-on-one setup (repeat for each of the 5 conversations)
+
+The capture, every source rolling at once so the edit has options:
+
+[ ] Zoom recording. Turn on "record a separate audio and video file for each participant" (cloud recording) so the employee's face and Sai's face are separate clean layers, not baked into one gallery grid. This is the spine of the beat.
+[ ] Sai's real camera. A proper cam on Sai at his setup, framed like his A-roll. This is the listener cam. His face hearing the question 3 and 4 answers is half the beat, and it's the only broadcast-quality face in the call.
+[ ] Sai's clean mic. Lav or shotgun on Sai, recorded locally, not through Zoom, so his side is crisp. Zoom audio is the employee's-side backup.
+[ ] The over-the-shoulder. A wide of Sai in the room with the employee live on his monitor. The shot that sells "this is a real remote call," and the go-to reset frame between questions.
+[ ] Screen record of Sai's monitor. The actual Zoom window. Lets you punch to full-screen employee, show the "two faces on a call" framing, or use the interface itself as a visual.
+
+The employee's side, a 20-second ask before the call (send it ahead):
+
+[ ] Good light and face the window, headphones or earbuds for clean audio, strongest wifi, laptop propped at eye level. A one-line message. Their webcam is what it is, but lit and stable beats dark and floaty.
 
 Question 5, the belief echo. The must-get of the whole episode:
 
-[ ] The playback device in frame. Laptop or phone playing the clip of Sai stating his belief.
-[ ] Tight single on their face while the clip plays. The most watchable moment in the episode. Protect this above everything.
+[ ] Sai screen-shares the belief clip into the Zoom. The employee watches it inside the call.
+[ ] Their reaction lands on the separate-participant recording. This is the frame you protect above everything. The whole episode points at it.
+[ ] Hold Sai's listener cam too, him watching them watch it.
 [ ] Hold through the silence after "how true is that?" No cuts, no re-asks.
 
-Between conversations:
+Around each call (filmed on Sai's real camera, in the room):
 
-[ ] The walk-out.
-[ ] Sai reset. 20 to 30 seconds to camera between interviews, what just landed. Feeds the rehook and confessional material.
+[ ] Sai reset. 20 to 30 seconds to camera right after hanging up, what just landed. Feeds the rehook and confessional material.
+[ ] The dial-in or the hang-up. Sai starting or ending the call. Transition tissue, and the nerves live here.
 [ ] Timestamp log. The second anything sounds like a future change, write down the clip and time. This feeds the takeaways triage.
+
+
+The editing style, fluid, emotion sets the pace
+
+No fixed cutting rhythm for this section. The pace floats with the room's temperature and is allowed to swing hard, intense, serious, funny, sad, back to light, inside the same beat. Let the moment dictate. Don't impose a grid.
+
+Heavy, serious, sad: let it breathe. Long uncut holds, single face, no cover cuts. Punch in slow on the raw webcam. The low-fi image reads more intimate the tighter you go. Silence is a cut you don't make.
+
+Light, funny, banter: snap it up. Quick back-and-forth between Sai's cam and the employee's feed, jump cuts fine, ride the energy.
+
+The whiplash is the point: a laugh cut hard into a gut-punch answer hits harder than either alone. Build at least a couple of those turns on purpose.
+
+The two textures are a tool: cut to Sai's clean broadcast face for weight and composure, stay on the raw webcam for honesty and nerves. Bounce between them to steer how a moment feels.
+
+The reset frame: the over-the-shoulder "two people on a call" wide is your exhale between emotional swings and your re-establish after a long punch-in.
+
+Score floats with it, and sometimes drops out: kill the music entirely under the heaviest answers. The silence and webcam hiss is the sound of the truth landing. Bring it back for the lighter runs.
+
+Prediction vs reality: Sai's pre-filmed prediction cuts in against the real answer wherever the gap is sharp. It's the recurring device, not a one-time gag.
 
 
 Parked for the implementation beat (not interview questions)
