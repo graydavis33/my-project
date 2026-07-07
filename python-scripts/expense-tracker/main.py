@@ -12,7 +12,7 @@ import sys
 from datetime import date, timezone, datetime
 
 from config import EXPENSES_OUTPUT_PATH, EXCLUDED_VENDORS, CATEGORY_OVERRIDES
-from gmail_client import get_gmail_service, fetch_personal_expense_emails
+from gmail_client import get_gmail_service, fetch_personal_expense_emails, fetch_ej_transfer_emails
 from expense_scanner import scan_expenses
 
 
@@ -87,6 +87,12 @@ def main():
     print("Searching for expense emails (last 30 days)...")
     emails = fetch_personal_expense_emails(service, days=30)
     print(f"Found {len(emails)} candidate email(s).")
+
+    print("Searching for Edward Jones transfers (last year)...")
+    seen_ids = {e["id"] for e in emails}
+    ej_emails = [e for e in fetch_ej_transfer_emails(service) if e["id"] not in seen_ids]
+    print(f"Found {len(ej_emails)} additional transfer email(s).")
+    emails += ej_emails
 
     print("\nExtracting expenses with Claude Haiku...")
     all_expenses = scan_expenses(emails)

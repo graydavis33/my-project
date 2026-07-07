@@ -44,4 +44,4 @@ Next session after C works, say "payday smoke test passed" and Claude will do th
 - **Restoring a CSV backup while synced**: transactions you'd previously deleted stay deleted (the cloud remembers tombstones). Everything else restores normally.
 - The `firebase-config.js` values are **safe to commit** — Firebase web configs are public by design; the Firestore rules (email-locked) are the security boundary.
 - Scanner runs every 30 min now (was daily 7am). GitHub delays crons under load, so effective cadence is ~30–90 min.
-- Large Rocket Money alerts (e.g. an $8,400 Edward Jones transfer) will land in Investments/Misc and can swamp a budget row — just delete/dismiss them in the app; they won't come back.
+- Edward Jones transfers (added 2026-07-07 at Gray's request): the tax step is now a free-form editable dollar amount pointed at the EJ **Sole Proprietor** account; the "Edward Jones — This Year" card tracks taxes + investing running totals from EJ confirmation emails; a sole-prop transfer this month auto-checks the tax step. EJ transfers never count against budgets, and bank/Rocket alerts about the same transfer are suppressed.

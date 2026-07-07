@@ -100,6 +100,21 @@ def fetch_personal_expense_emails(service, days=30):
     return emails
 
 
+def fetch_ej_transfer_emails(service):
+    """Edward Jones transfer confirmations for the last year — the main scan only
+    looks back 30 days, but the app's year-to-date transfer totals need the full
+    year. Cheap: parsed deterministically, no Claude calls."""
+    query = 'from:online-notifications@edwardjones.com subject:"Funds Transfer" newer_than:365d'
+    result = service.users().messages().list(userId="me", q=query, maxResults=100).execute()
+    emails = []
+    for msg in result.get("messages", []):
+        detail = service.users().messages().get(userId="me", id=msg["id"], format="full").execute()
+        parsed = _parse_email(detail)
+        if parsed:
+            emails.append(parsed)
+    return emails
+
+
 def _parse_email(raw_message):
     """Extract fields we need from a raw Gmail API message."""
     try:
