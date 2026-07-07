@@ -984,14 +984,18 @@ function refreshExpenseDisplays(setInputs = true) {
 
 function updateEJCard() {
   const year = String(new Date().getFullYear());
-  const sum = kind => TXN_CACHE
-    .filter(t => t.kind === kind && (t.date || '').startsWith(year))
+  // Match by kind, with a category fallback so records that lost their `kind`
+  // (e.g. imported by an older cached build) still count correctly.
+  const isTax = t => t.kind === 'tax_transfer' || t.category === 'Tax Set-Aside';
+  const isInvest = t => t.kind === 'invest_transfer' || t.category === 'EJ Investing';
+  const sum = pred => TXN_CACHE
+    .filter(t => pred(t) && (t.date || '').startsWith(year))
     .reduce((s, t) => s + t.amount, 0);
-  document.getElementById('ej-tax-total').textContent = fmt(sum('tax_transfer'));
-  document.getElementById('ej-invest-total').textContent = fmt(sum('invest_transfer'));
+  document.getElementById('ej-tax-total').textContent = fmt(sum(isTax));
+  document.getElementById('ej-invest-total').textContent = fmt(sum(isInvest));
 
   // A sole-prop transfer this month = taxes moved → auto-check step 1
-  const monthTax = TXN_CACHE.find(t => t.kind === 'tax_transfer' && t.month === currentMonth());
+  const monthTax = TXN_CACHE.find(t => isTax(t) && t.month === currentMonth());
   const note = document.getElementById('ej-note');
   if (monthTax) {
     note.style.display = 'block';
@@ -1215,7 +1219,7 @@ async function loadGmailExpenses(manual = false) {
       }
     });
 
-    const monthCount = TXN_CACHE.filter(t => t.month === currentMonth() && t.source === 'gmail').length;
+    const monthCount = TXN_CACHE.filter(t => t.month === currentMonth() && t.source === 'gmail' && !t.kind).length;
     setSyncStatus('&#10003; Gmail sync: ' + syncedAt + ' &middot; ' + monthCount + ' receipt' + (monthCount === 1 ? '' : 's') + ' this month', true);
     if (imported > 0) {
       refreshExpenseDisplays();

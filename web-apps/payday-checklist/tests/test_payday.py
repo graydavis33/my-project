@@ -131,7 +131,8 @@ with sync_playwright() as p:
 
     # ══ 6. Steps + fund balances ══
     print("\n[6] Steps + funds")
-    page.click("#step-0")
+    if "done" not in page.get_attribute("#step-0", "class"):  # may already be auto-checked by a real tax transfer
+        page.click("#step-0")
     check("step 0 marked done", "done" in page.get_attribute("#step-0", "class"))
     page.fill("#fund-balance", "3000")
     page.wait_for_timeout(200)
@@ -264,9 +265,17 @@ with sync_playwright() as p:
       await addTransaction(mk('invest_transfer', 'Edward Jones (Single-1)', 100, 'ejtest-inv'));
     }""", month)
     page.reload(); wait_ready(page); page.wait_for_timeout(1000)
-    check("EJ tax total $3,000", page.text_content("#ej-tax-total").strip() == "$3,000",
+    # Totals = whatever's in TXN_CACHE (expenses.json may carry real transfers too),
+    # so compute expected from app state rather than hardcoding.
+    exp_tax = page.evaluate("() => TXN_CACHE.filter(t => (t.kind==='tax_transfer'||t.category==='Tax Set-Aside') && (t.date||'').startsWith(String(new Date().getFullYear()))).reduce((s,t)=>s+t.amount,0)")
+    exp_inv = page.evaluate("() => TXN_CACHE.filter(t => (t.kind==='invest_transfer'||t.category==='EJ Investing') && (t.date||'').startsWith(String(new Date().getFullYear()))).reduce((s,t)=>s+t.amount,0)")
+    check("EJ tax total includes injected $3,000", exp_tax >= 3000,
+          f"cache tax total {exp_tax}")
+    check("EJ tax card matches cache", page.text_content("#ej-tax-total").strip() == "$" + f"{exp_tax:,.0f}",
           page.text_content("#ej-tax-total"))
-    check("EJ invest total $100", page.text_content("#ej-invest-total").strip() == "$100",
+    check("EJ invest total includes injected $100", exp_inv >= 100,
+          f"cache invest total {exp_inv}")
+    check("EJ invest card matches cache", page.text_content("#ej-invest-total").strip() == "$" + f"{exp_inv:,.0f}",
           page.text_content("#ej-invest-total"))
     check("tax step auto-checked by sole-prop transfer", "done" in page.get_attribute("#step-0", "class"))
     note = page.text_content("#ej-note") or ""
