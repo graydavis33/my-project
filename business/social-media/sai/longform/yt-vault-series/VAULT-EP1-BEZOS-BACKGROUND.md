@@ -12,6 +12,8 @@ What's real is a **set of habits** that all do the same thing: keep the founder 
 
 **LOCKED reframe (Episode 1 = Bezos tactic #8, "Anecdotes over the dashboard"):** instead of "Talk to customers 2 hrs/week," the wheel/file line is
 > **"When the data and the real stories disagree, the stories win — go to the source, listen, and act on what you hear, not on what your dashboard tells you."**
+>
+> **Printed vault-file line (Gray confirmed 2026-07-06 — short version, this is what Sai reads on camera):** *"#8 — ANECDOTES OVER THE DASHBOARD: When the data and the real stories disagree, the stories win."*
 
 Same spirit, fully defensible, and it maps better onto what Sai does with his team: state a belief about them → go check it directly. See HABIT 3 below for the cinematic version of this exact tactic.
 

@@ -6,17 +6,17 @@ Last updated: 2026-07-06
 
 ## Script — decisions still open
 
-- [ ] Pick the twist line (3 options in VAULT-EP1-TWIST-LINE.txt) and fold it into the narration + outline
-- [ ] Confirm the exact Bezos tactic wording on the vault file ("Anecdotes over the dashboard" line)
-- [ ] Confirm the customers-to-team adaptation is the move (state a belief about the team, then go check it)
-- [ ] Lock the belief Sai states out loud in Beat 5 (his own "dashboard" assumption)
+- [x] Pick the twist line (3 options in VAULT-EP1-TWIST-LINE.txt) and fold it into the narration + outline — LOCKED: the recommended full-mirror version (2026-07-06)
+- [x] Confirm the exact Bezos tactic wording on the vault file — LOCKED to the short version: "#8 — ANECDOTES OVER THE DASHBOARD: When the data and the real stories disagree, the stories win." (2026-07-06)
+- [x] Confirm the customers-to-team adaptation is the move (state a belief about the team, then go check it) — confirmed via the twist-line pick, which is built on it (2026-07-06)
+- [x] Lock the belief Sai states out loud in Beat 5 (his own "dashboard" assumption) — LOCKED inside the twist line: "everyone here loves this company exactly as much as I do — same vision, same energy, all on the same page" (2026-07-06)
 - [ ] Decide the vault roster — which 10 to 20 founders are on the faces wheel for v1
 - [ ] Decide how the 5 team members get picked on camera (fun mini-draw or straight pick)
 - [ ] Final review of the 5 team 1-on-1 questions + standing closer (merged draft in VAULT-EP1-TEAM-QUESTIONS.md)
 - [ ] Decide if Ep 1 is a single video or a 2-parter (if results land after the week)
 - [ ] Pick the final title from the 3 options (or run all 3 as the A/B/C test)
 - [ ] Pick the final thumbnail direction from the 3 mockups (and decide on rebuilding A photo-real with a pulled Sai frame)
-- [ ] Loop check — go beat by beat and point to the open loop (curiosity or engagement) in every single beat; if any beat has no loop you can name, the script is not done — keep working it until every beat has one
+- [x] Loop check — go beat by beat and point to the open loop (curiosity or engagement) in every single beat; if any beat has no loop you can name, the script is not done — keep working it until every beat has one — PASS RUN 2026-07-06: 12/15 beats already had named loops; patched Beat 4 (`close how` + in-beat dialed-call cliffhanger), Beat 7 (in-beat mini-draw "who gets picked"), Beat 8 (NEW `( honest` loop — "will anyone tell the boss the truth?", closes in Beat 9). Every beat now has a nameable loop.
 
 ## Props — build before filming
 
