@@ -25,6 +25,7 @@ Last updated: 2026-07-06
 - [ ] Build the vault files for the rest of the roster (enough to sell the concept on camera)
 - [ ] Build or source the two wheels (faces + numbers 1-10)
 - [ ] Build or source the vault itself (cabinet or box)
+- [ ] Build the implementation board (3 columns: OPEN / SHIPPED / PROVEN) + blank commit cards styled like the vault files (system: VAULT-EP1-IMPLEMENTATION-TRACKING.md)
 
 ## Filming — schedule and capture
 
@@ -33,7 +34,7 @@ Last updated: 2026-07-06
 - [ ] Show the org chart and pick the 5 team members on camera
 - [ ] Film all 5 one-on-one conversations across the week (timelapse + best moment each)
 - [ ] Film the takeaways session (the 3 to 5 concrete changes)
-- [ ] Film the implementation shipping (B-roll, horizontal only)
+- [ ] Film the implementation shipping (B-roll, horizontal only) — run the 10-capture coverage list per tactic (VAULT-EP1-IMPLEMENTATION-TRACKING.md); tick coverage boxes at end of each filming day
 - [ ] Capture the real result, even if it lands after the week
 
 ## Post — after the week
