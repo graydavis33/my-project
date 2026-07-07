@@ -1,21 +1,24 @@
-# The Vault — Ep 1: Implementation Tracking System
+THE VAULT — EP 1: IMPLEMENTATION TRACKING SYSTEM
 
-How we film, track, and prove the changes Sai implements from the team 1-on-1s — even though we can't know what those changes are until the conversations happen. Paste this whole doc into Notion (checkboxes convert automatically). For Google Docs, paste from `VAULT-EP1-IMPLEMENTATION-TRACKING.txt` (same content, plain text — no formatting carries over). Once the tactics are chosen, duplicate the PER-TACTIC TRACKER block at the bottom, one copy per tactic.
+How we film, track, and prove the changes Sai implements from the team 1-on-1s — even though we can't know what those changes are until the conversations happen. Once the tactics are chosen, duplicate the PER-TACTIC TRACKER block at the bottom, one copy per tactic.
 
 Last updated: 2026-07-07
 
-## The idea in one paragraph
+
+THE IDEA IN ONE PARAGRAPH
 
 We can't script the tactics, but we can script the shape every tactic must fit. The sit-down A-roll interview films LAST, after outcomes are known — that interview is the narration spine. So the footage from the implementation weeks doesn't need to tell a story by itself; it needs to PROVE whatever Sai ends up saying. We're not shooting scenes in order — we're stocking an evidence locker. If the 10 ingredients below exist for every tactic, any structure can be built in post.
 
-## The props
 
-- A small 3-column board on Sai's office wall for the two weeks: OPEN → SHIPPED → PROVEN
+THE PROPS
+
+- A small 3-column board on Sai's office wall for the two weeks: OPEN, SHIPPED, PROVEN
 - One printed card per chosen change, styled like the vault files (same fonts + orange, smaller format) — a change graduates out of a conversation and into the vault's world
 - Sai moves cards on camera. The camera holds on every card move. Board moves are act punctuation in the edit.
 - Works identically with 3 small changes or 1 major one
 
-## The commit card (filled by hand, on camera, at the takeaways session)
+
+THE COMMIT CARD (filled by hand, on camera, at the takeaways session)
 
 Every chosen change gets one card with exactly these 5 fields:
 
@@ -27,7 +30,8 @@ Every chosen change gets one card with exactly these 5 fields:
 
 Filling the cards IS the takeaways beat (Beat 11). Pinning them to OPEN closes the success-bar loop S2.
 
-## The 10 must-captures per tactic
+
+THE 10 MUST-CAPTURES PER TACTIC
 
 GROUP 1 — one-take-only live moments. These can never be re-shot. Schedule them onto Gray's filming days, period:
 
@@ -44,40 +48,44 @@ GROUP 3 — recapturable, flexible, self-capture friendly:
 
 6. THE PREDICTION — right after committing, Sai to camera: what he expects, what he's afraid of, what failure would look like. Stakes generator — triumph material if he's right, honest gold if he's wrong.
 7. THE FRICTION — at least one moment per tactic where it's harder than expected: pushback, a revision, "this isn't working." A smooth-sailing montage is dead footage. If friction happens off-camera, recover it via a confessional.
-8. DIARY CONFESSIONALS — 60 seconds of Sai to camera (or phone, horizontal) every 2–3 days: where things stand, what surprised him. The highest-leverage habit in the system — confessionals timestamp emotion, create the re-hooks, and patch any hole where an event wasn't filmed.
+8. DIARY CONFESSIONALS — 60 seconds of Sai to camera (or phone, horizontal) every 2-3 days: where things stand, what surprised him. The highest-leverage habit in the system — confessionals timestamp emotion, create the re-hooks, and patch any hole where an event wasn't filmed.
 9. ARTIFACTS — screenshots, Slack threads, docs, calendar before/after, dashboard screens ("the dashboard says fine — let's go ask"). These become the VFX/insert layer.
 10. THE BOARD MOVES — every card state change on camera.
 
-## The three disciplines
+
+THE THREE DISCIPLINES
 
 - SHOOT THE THING THAT'S ABOUT TO DISAPPEAR — before-state first, always, same day the tactic is chosen.
 - IF YOU MISSED IT, CONFESS IT — any moment that happens uncaptured, Sai retells it to camera the same day while it's hot. The fresh retell often cuts better than the event itself.
 - END-OF-DAY COVERAGE TICK — after each filming day, tick the coverage boxes below. The empty boxes ARE the next shot list. That's how "we don't know what we're shooting" becomes "we always know what's missing."
 
-## Self-capture rule (for anything that happens off Gray's filming days)
 
-- Sai grabs 30–60 seconds on his phone, HORIZONTAL, and drops it into one shared Drive folder per card
+SELF-CAPTURE RULE (for anything that happens off Gray's filming days)
+
+- Sai grabs 30-60 seconds on his phone, HORIZONTAL, and drops it into one shared Drive folder per card
 - Screen recordings, Slack screenshots, and docs count as artifacts
 - When in doubt, capture it — a bad angle beats a missing moment
 
-## The two-week calendar
+
+THE TWO-WEEK CALENDAR
 
 - DAY 0 — Takeaways session: pick the changes, fill the cards on camera, pin to OPEN. Same day: shoot every before-state and every prediction.
-- DAYS 1–3 — The announces (scheduled on a filming day). Confessional #1.
-- DAYS 3–9 — The doing. BTS + self-capture + artifacts. Confessionals every 2–3 days. Watch for friction.
-- DAYS 7–10 — Ship-by window. Each ship moment filmed, card to SHIPPED.
-- DAYS 10–14 — Check-backs with whoever raised each change, card to PROVEN.
+- DAYS 1-3 — The announces (scheduled on a filming day). Confessional #1.
+- DAYS 3-9 — The doing. BTS + self-capture + artifacts. Confessionals every 2-3 days. Watch for friction.
+- DAYS 7-10 — Ship-by window. Each ship moment filmed, card to SHIPPED.
+- DAYS 10-14 — Check-backs with whoever raised each change, card to PROVEN.
 - AFTER — Script and film the sit-down A-roll interview once outcomes are known. It narrates; the locker proves.
 
 Notes:
 - Beat 6's success-bar narration stays UNRECORDED until after the takeaways session, so the on-record promise matches what Sai actually commits to (3 changes vs 1 big one). Narration films last anyway.
 - If a proof lands after edit lock, that card's payoff becomes the Ep 2 cold-open tease — the board carries over.
 
----
 
-## PER-TACTIC TRACKER — duplicate this block for each chosen tactic
+==================================================================
 
-### Tactic: (name it here)
+PER-TACTIC TRACKER — duplicate this block for each chosen tactic
+
+TACTIC: (name it here)
 
 THE CARD
 
@@ -89,23 +97,23 @@ THE CARD
 
 COVERAGE — tick as captured; empty boxes = the next shot list
 
-- [ ] 1. Origin — timestamp in the 1-on-1 footage:
-- [ ] 2. Before-state — the old way, filmed BEFORE anything changes
-- [ ] 3. Commit — card filled on camera at the takeaways session
-- [ ] 4. Prediction — Sai to camera: expectation + fear
-- [ ] 5. Announce — team hears it for the first time (one take only)
-- [ ] 6. The doing — BTS of the work (Gray or self-capture)
-- [ ] 7. Friction — at least one harder-than-expected moment
-- [ ] 8. Ship moment — the ship action happening + card to SHIPPED
-- [ ] 9. Check-back — "real talk, better?" + card to PROVEN
-- [ ] 10. Artifacts — screenshots / Slack / docs / before-after
+[ ] 1. Origin — timestamp in the 1-on-1 footage:
+[ ] 2. Before-state — the old way, filmed BEFORE anything changes
+[ ] 3. Commit — card filled on camera at the takeaways session
+[ ] 4. Prediction — Sai to camera: expectation + fear
+[ ] 5. Announce — team hears it for the first time (one take only)
+[ ] 6. The doing — BTS of the work (Gray or self-capture)
+[ ] 7. Friction — at least one harder-than-expected moment
+[ ] 8. Ship moment — the ship action happening + card to SHIPPED
+[ ] 9. Check-back — "real talk, better?" + card to PROVEN
+[ ] 10. Artifacts — screenshots / Slack / docs / before-after
 
 CONFESSIONAL LOG
 
-- [ ] Confessional 1 (day 1–3):
-- [ ] Confessional 2 (day 4–6):
-- [ ] Confessional 3 (day 7–9):
-- [ ] Confessional 4 (day 10–14):
+[ ] Confessional 1 (day 1-3):
+[ ] Confessional 2 (day 4-6):
+[ ] Confessional 3 (day 7-9):
+[ ] Confessional 4 (day 10-14):
 
 CAPTURE LOG — what exists and where (camera / phone / screenshot + folder)
 
