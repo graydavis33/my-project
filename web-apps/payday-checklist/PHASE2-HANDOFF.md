@@ -1,22 +1,18 @@
 # Payday Checklist Phase 2 — Gray's Handoff Checklist
 
-Everything is built, tested (46 Phase 1 + 9 sync + 11 scanner tests green), and deployed **inert** — the app behaves exactly like before until you finish these steps. They take about 15 minutes total, all clicking, no code.
+Everything is built and tested (46 Phase 1 + 9 sync + 11 scanner tests green).
 
 Spec: `docs/superpowers/specs/2026-07-07-payday-sync-and-expense-automation-design.md`
 
 ---
 
-## A. Create the Firebase project (~10 min, one time)
+## A. Firebase project — ✅ DONE 2026-07-07
 
-1. Go to https://console.firebase.google.com — sign in as **graydavis33@gmail.com** → **Create a project** → name it `payday-checklist` → turn **Analytics OFF** → create.
-2. **Build → Authentication → Get started** → *Sign-in method* tab → **Google** → Enable → save (pick graydavis33@gmail.com as support email).
-3. **Authentication → Settings → Authorized domains** → **Add domain** → `graydavis33.github.io`.
-4. **Build → Firestore Database → Create database** → Production mode → location `nam5 (United States)` → create.
-5. Firestore → **Rules** tab → replace everything with the contents of `web-apps/payday-checklist/firestore.rules` → **Publish**.
-6. Project settings (gear icon) → **Your apps** → Web (`</>` icon) → nickname `payday` → register (no hosting) → copy the `const firebaseConfig = {...}` object it shows you.
-7. Open `web-apps/payday-checklist/firebase-config.js` and replace `null` with that object (or just paste the object into a Claude session and say "wire in the payday firebase config"). Commit + push.
-8. Project settings → **Service accounts** → **Generate new private key** → downloads a JSON file.
-9. GitHub → `graydavis33/my-project` → **Settings → Secrets and variables → Actions → New repository secret** → name `FIREBASE_SERVICE_ACCOUNT` → paste the ENTIRE contents of that JSON file → save. Then delete the downloaded JSON file.
+Completed live with Gray (one `firebase login` + two console clicks; everything else automated via CLI/REST):
+project **payday-checklist-gray-6677f** (Spark/free), web app registered, Firestore created (`nam5`),
+`firestore.rules` deployed, Google sign-in enabled, `graydavis33.github.io` authorized,
+service-account key installed as the `FIREBASE_SERVICE_ACCOUNT` GitHub secret,
+real config committed to `firebase-config.js` — **sync is LIVE in the deployed app**.
 
 ## B. PrimeSouth card alerts (~2 min)
 
