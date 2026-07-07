@@ -108,6 +108,8 @@ Difference vs Mac: Windows uses `"whisper_engine": "python"` + `"whisper_model":
 ## Troubleshooting
 
 - Plugin tools missing in a session → reload the VS Code window (plugins load at session start).
+- **MCP tools still missing after a reload → start a NEW conversation.** A resumed conversation keeps the MCP server set it started with; window reloads refresh skills but NOT MCP servers. (Cost us two reloads on install day before figuring this out. End-to-end verified working via a fresh headless session: `video_info` returned real metadata.)
+- CLI sessions show the server twice (`plugin:claude-video-vision:...` npx + user-scope `claude-video-vision` node) — harmless duplicate; the VS Code extension only loads the user-scope one because of `--strict-mcp-config`.
 - Slow first transcription → it's downloading the Whisper model; one-time only.
 - Very long videos → it analyzes structure first and samples frames, so it won't flood the session; drill in with follow-up questions instead of asking for everything at once.
 - Config changes → edit `~/.claude-video-vision/config.json` (Mac) or the path in step 3 (Windows), or just ask Claude to change a setting (it has a `video_configure` tool).
