@@ -1,11 +1,15 @@
-const CACHE_NAME = 'payday-checklist-v2';
+const CACHE_NAME = 'payday-checklist-v3';
 const PRECACHE = [
   './',
   './index.html',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  '../styles/brand.css'
+  '../styles/brand.css',
+  './firebase-config.js',
+  './lib/firebase-app-compat.js',
+  './lib/firebase-auth-compat.js',
+  './lib/firebase-firestore-compat.js'
 ];
 
 self.addEventListener('install', (event) => {
