@@ -22,16 +22,19 @@ Given an email, extract:
 - date: the transaction date in YYYY-MM-DD format
 - vendor: the store, service, or person paid (e.g. "Netflix", "Adobe", "DoorDash", "Jack Perkins" for Venmo P2P)
 - amount: the total charged as a number only (e.g. 12.99) — no $ sign
-- category: one of EXACTLY these nine options:
-    Groceries         — grocery stores, Instacart, Whole Foods, food labeled as grocery
+- category: one of EXACTLY these seven options:
+    Groceries         — grocery stores, Instacart, Whole Foods, bodegas, food labeled as grocery
     Dining Out        — restaurants, DoorDash, UberEats, Grubhub, coffee shops
-    Software & Tools  — Adobe, Spotify, software subscriptions, SaaS tools, productivity apps, Anthropic/AI tools
-    Streaming         — Netflix, Hulu, Disney+, Apple TV+, YouTube Premium, HBO Max
+    Software & Tools  — Adobe, software subscriptions, SaaS tools, productivity apps, Anthropic/AI tools, streaming services (Netflix, Spotify, Hulu)
     Utilities         — electricity, gas, internet, phone bill, Con Edison
-    Transport         — parking, ParkMobile, Citi Bike, Uber/Lyft (non-food), tolls, MTA
-    Health & Wellness — gym, pharmacy, supplements, doctor, dental
-    Shopping          — Amazon, clothing, electronics, home goods, gear, barber/salon
-    Misc              — anything that doesn't clearly fit above, including Venmo P2P payments with unclear purpose
+    Investments       — Robinhood, Fidelity, Vanguard, brokerage transfers, crypto purchases
+    BJJ & Kickboxing  — gym, martial arts, BJJ, kickboxing, Muay Thai, training memberships
+    Misc              — anything that doesn't clearly fit above: transport, parking, MTA, pharmacy, Amazon, clothing, ATM withdrawals, Venmo P2P payments with unclear purpose
+
+Bank transaction alert rules (sender is the bank, e.g. PrimeSouth):
+- "Your card was charged $X at MERCHANT" / "A transaction of $X was made at MERCHANT" / debit card purchase alerts → IT IS AN EXPENSE. Extract it. vendor = the cleaned-up merchant name ("DOORDASH*NYC 123" → "DoorDash"), NEVER the bank name. Pick the category from the merchant.
+- Deposit alerts, payment received, direct deposit, balance alerts, low-balance warnings → SKIP (return null).
+- ATM withdrawal alerts → category "Misc", vendor "ATM Withdrawal".
 
 Venmo / Zelle / PayPal P2P rules:
 - "You paid [person] $X" or "You sent [person] $X" → IT IS AN EXPENSE. Extract it. Use the person's name as vendor. Use the Venmo note/memo to pick category if possible; otherwise "Misc".
@@ -246,6 +249,8 @@ def scan_expenses(emails):
                         "amount": result["amount"],
                         "category": result["category"],
                     }
+                    if email.get("is_alert"):
+                        expense["is_alert"] = True
                     new_expenses.append(expense)
                     expense_cache[email["id"]] = expense
                     print(f"    + {result['vendor']} ${result['amount']} ({result['category']}) - {result['date']}")

@@ -44,3 +44,12 @@ EXCLUDED_VENDORS = [
 CATEGORY_OVERRIDES = {
     "Garrett ODell": "Dining Out",
 }
+
+# Bank per-transaction alert emails (card swipes with no vendor receipt email).
+# PrimeSouth sender domain is a best guess until Gray forwards a real alert —
+# update this list when the first alert lands. Alerts are deduped against
+# vendor receipts in main.dedupe_bank_alerts.
+ALERT_SENDERS = [
+    "primesouth.com",
+    "secure.primesouth.com",
+]

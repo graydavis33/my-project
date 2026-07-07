@@ -12,7 +12,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
-from config import GMAIL_CREDENTIALS_PATH, GMAIL_TOKEN_PATH, GMAIL_SCOPES
+from config import GMAIL_CREDENTIALS_PATH, GMAIL_TOKEN_PATH, GMAIL_SCOPES, ALERT_SENDERS
 
 
 def get_gmail_service():
@@ -36,12 +36,10 @@ def get_gmail_service():
     return build("gmail", "v1", credentials=creds)
 
 
-def fetch_personal_expense_emails(service, days=30):
-    """
-    Search Gmail for personal expense emails from the last N days.
-    Returns a list of parsed email dicts: {id, from, subject, date, body}.
-    """
-    query = (
+def build_query(days):
+    """Gmail search query: receipt subjects + known vendors + bank alert senders."""
+    alert_from = " ".join(f"OR from:{s}" for s in ALERT_SENDERS)
+    return (
         f"newer_than:{days}d "
         "(subject:receipt OR subject:\"order confirmation\" OR subject:\"payment confirmation\" "
         "OR subject:subscription OR subject:renewal OR subject:charge OR subject:billing "
@@ -64,9 +62,18 @@ def fetch_personal_expense_emails(service, days=30):
         "OR from:equinox.com OR from:planetfitness.com OR from:classpass.com "
         "OR from:adobe.com OR from:anthropic.com OR from:openai.com OR from:notion.so "
         "OR from:figma.com OR from:github.com OR from:google.com OR from:googleplay.com "
-        "OR from:shopify.com OR from:etsy.com OR from:ebay.com OR from:bestbuy.com) "
+        "OR from:shopify.com OR from:etsy.com OR from:ebay.com OR from:bestbuy.com "
+        f"{alert_from}) "
         "-from:me"
     )
+
+
+def fetch_personal_expense_emails(service, days=30):
+    """
+    Search Gmail for personal expense emails from the last N days.
+    Returns a list of parsed email dicts: {id, from, subject, date, body, is_alert}.
+    """
+    query = build_query(days)
 
     result = (
         service.users()
@@ -96,12 +103,14 @@ def _parse_email(raw_message):
     try:
         headers = {h["name"]: h["value"] for h in raw_message["payload"]["headers"]}
         body = _extract_body(raw_message["payload"])
+        sender = headers.get("From", "").lower()
         return {
             "id": raw_message["id"],
             "from": headers.get("From", ""),
             "subject": headers.get("Subject", "(no subject)"),
             "date": headers.get("Date", ""),
             "body": body,
+            "is_alert": any(s in sender for s in ALERT_SENDERS),
         }
     except Exception:
         return None

@@ -8,6 +8,7 @@ Run: python main.py
 
 import json
 import os
+import sys
 from datetime import date, timezone, datetime
 
 from config import EXPENSES_OUTPUT_PATH, EXCLUDED_VENDORS, CATEGORY_OVERRIDES
@@ -26,6 +27,28 @@ def _apply_category_override(expense):
         if match.lower() in vendor:
             expense["category"] = category
             return
+
+
+def dedupe_bank_alerts(expenses):
+    """Drop bank-alert expenses that duplicate a vendor receipt (same amount, within 2 days).
+
+    A DoorDash order produces BOTH a DoorDash receipt email and a PrimeSouth card
+    alert — without this pass it would count twice. Merchant strings differ between
+    the two ("DOORDASH*NYC" vs "DoorDash"), so matching is amount + date proximity.
+    """
+    def _d(s):
+        y, m, dd = s.split("-")
+        return date(int(y), int(m), int(dd))
+    receipts = [e for e in expenses if not e.get("is_alert")]
+    out = list(receipts)
+    for a in (e for e in expenses if e.get("is_alert")):
+        dup = any(
+            r["amount"] == a["amount"] and abs((_d(r["date"]) - _d(a["date"])).days) <= 2
+            for r in receipts
+        )
+        if not dup:
+            out.append(a)
+    return out
 
 
 
@@ -47,6 +70,7 @@ def write_expenses_json(expenses, current_month):
 
 
 def main():
+    dry_run = "--dry-run" in sys.argv
     today = date.today()
     current_month = f"{today.year}-{today.month:02d}"
 
@@ -82,6 +106,12 @@ def main():
     for e in expenses:
         _apply_category_override(e)
 
+    # Drop bank alerts that duplicate a vendor receipt
+    before_dedup = len(expenses)
+    expenses = dedupe_bank_alerts(expenses)
+    if before_dedup - len(expenses):
+        print(f"  Dropped {before_dedup - len(expenses)} bank alert(s) duplicating a receipt.")
+
     print(f"\nTotal for {today.strftime('%B')}: {len(expenses)} expense(s)")
 
     # Print summary by category
@@ -91,6 +121,10 @@ def main():
         totals[e["category"]] += e["amount"]
     for cat, total in sorted(totals.items()):
         print(f"  {cat}: ${total:.2f}")
+
+    if dry_run:
+        print("\nDRY RUN — nothing written.")
+        return
 
     write_expenses_json(expenses, current_month)
 
