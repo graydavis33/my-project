@@ -15,7 +15,7 @@ THE PROPS
 - A small 3-column board on Sai's office wall for the two weeks: OPEN, SHIPPED, PROVEN
 - One printed card per chosen change, styled like the vault files (same fonts + orange, smaller format) — a change graduates out of a conversation and into the vault's world
 - Sai moves cards on camera. The camera holds on every card move. Board moves are act punctuation in the edit.
-- Works identically with 3 small changes or 1 major one
+- Exactly 3 cards — the count is locked (Gray, 2026-07-07)
 
 
 THE COMMIT CARD (filled by hand, on camera, at the takeaways session)
@@ -77,7 +77,7 @@ THE TWO-WEEK CALENDAR
 - AFTER — Script and film the sit-down A-roll interview once outcomes are known. It narrates; the locker proves.
 
 Notes:
-- Beat 6's success-bar narration stays UNRECORDED until after the takeaways session, so the on-record promise matches what Sai actually commits to (3 changes vs 1 big one). Narration films last anyway.
+- Beat 6's success-bar narration stays UNRECORDED until after the takeaways session, so the on-record promise matches the final cards word for word. The count is locked: exactly 3. Narration films last anyway.
 - If a proof lands after edit lock, that card's payoff becomes the Ep 2 cold-open tease — the board carries over.
 
 
