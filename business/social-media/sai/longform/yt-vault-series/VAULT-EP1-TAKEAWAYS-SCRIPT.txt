@@ -1,0 +1,138 @@
+THE VAULT — EP 1: TAKEAWAYS SESSION SCRIPT (BEAT 11)
+
+How we choose the 3 tactics after the five 1-on-1s, and how Sai introduces them on camera. This is a SCRIPT — the flow of the beat and Sai's lines with fill-in slots — not a shot list (camera coverage lives in the Implementation Tracking doc). Same philosophy as the tracking doc: we can't know what the team will say, so we script the funnel, not the content. Anything in [BRACKETS] gets filled after the interviews.
+
+Last updated: 2026-07-07
+
+
+WHERE THIS SITS
+
+- Beat 9: the five conversations. Beat 10: the mid-doc rehook ("I could've heard all of that and still done nothing—"). THIS is Beat 11 — and it's Day 0 on the tracking calendar.
+- Filling the commit cards on camera IS this beat. Pinning them to OPEN closes success-bar loop S2 and arms S3.
+- Same filming day, right after: shoot every before-state and every prediction (tracking doc rules — the before-state dies the moment a change ships).
+
+
+THE IDEA IN ONE PARAGRAPH
+
+The team just handed Sai more honesty than he can act on. If he walks away with a list of ten, the episode dies — that's the exact disease the cold open confessed: learning, collecting, never doing. So the beat is a funnel performed on camera: EVERYTHING they said goes up on the wall, the filter gets stated out loud, the cuts happen fast and with respect, exactly THREE survive, and each survivor becomes a commit card — filled by hand, pinned to OPEN. The drama isn't what got picked. The drama is watching him kill good ideas to protect three real ones.
+
+
+THE THREE FILTERS (HOW WE CHOOSE)
+
+A change only gets a card if it passes ALL three:
+
+1. IT HAS A FACE — it came from a real person telling a real story in the 1-on-1, not a vibe, and not something Sai already wanted to do wearing an employee's name. (This auto-fills the card: who raised it + the anecdote — and gives the check-back a person to walk back to.)
+
+2. IT FITS THE WINDOW — there's one observable ship action that can genuinely happen inside the two weeks, and it can be PROVEN inside the window by asking the person. "We started a conversation about it" is not shipped.
+
+3. IT HAS VOLTAGE — the most engaging, most interesting one available: a visible before/after, real tension, something that costs Sai comfort. This is the production filter — off camera it means "would a viewer feel this change happen?" On camera Sai says it as: "the ones that sting."
+
+Rules of the pick:
+
+- Exactly three. Three cards or the board reads like a to-do list instead of a bet.
+- If more than three pass, voltage breaks the tie — take the ones that scare him most / read most visibly on camera.
+- Nothing gets trashed on camera. Cuts move to a visible SOMEDAY column on the wall — the team will watch this video, and nobody's idea gets binned in front of them. (The someday wall is also free Ep 2+ material.)
+- One of the three should probably be THE FEEDBACK SYSTEM — the parked questions from the team-questions doc (weekly 1-on-1s vs open-door hour vs the "?" forward) get decided HERE, using what the 5 actually said. It's the most Bezos-shaped change on the board — his version was a question mark in an email.
+
+
+THE FLOW — FIVE MOVEMENTS
+
+
+MOVEMENT 1 — THE SPREAD
+
+What's happening: every single thing the team raised is on the wall as printed quote cards — one line each, the person's name on it. The full mess in one wide look. This image is the proof he listened.
+
+SAI: "Five conversations. This is everything they gave me — every single thing anyone said could be better. [COUNT] of them."
+
+(beat — looking at the wall)
+
+"You know what the old me does with a wall like this? Takes a photo of it. Feels incredibly productive. Never looks at it again."
+
+"Not this time. This time there are rules."
+
+
+MOVEMENT 2 — THE RULE OF THREE
+
+What's happening: Sai states the filter out loud, to camera, before touching a single card. This is the contract for the whole back half of the episode.
+
+SAI: "Three changes. Not ten. Three. Ten is how you do nothing while feeling busy."
+
+"And a change only comes off this wall if it passes three tests."
+
+"One — it has a face. Someone in those chairs actually said it, with a real story behind it. Not my idea wearing their name."
+
+"Two — it fits the window. I can ship it in two weeks. Shipped — as in it happened. Not 'we're aligning on next steps.'"
+
+"Three — it stings. If the change costs me nothing, it changes nothing. I'm picking the ones I'd honestly rather not do."
+
+"And when one's done, the proof isn't a dashboard. The proof is walking back to the person who said it and asking: real talk — is it better? That's the whole tactic. That's why we're here."
+
+
+MOVEMENT 3 — THE CUTS
+
+What's happening: the fast run — rejected items come off one at a time, each with a one-line reason, and land on the SOMEDAY column. Quick rhythm in the edit; this is a montage of discipline, not deliberation.
+
+Per-cut template:
+
+SAI: "[THING THEY RAISED]. Real — [HALF-LINE OF RESPECT]. But [WHICH TEST IT FAILS: can't ship it in two weeks / there's no one to prove it with / it doesn't cost me anything]. Someday wall."
+
+And one honest moment mid-cuts (this is a friction capture — keep it):
+
+SAI: "This one hurts to move, because [NAME]'s right. But 'right' and 'provable in two weeks' aren't the same thing."
+
+
+MOVEMENT 4 — THE THREE CARDS
+
+What's happening: one mini-reveal per pick. For each: cut to the 1-on-1 moment where it was raised (the origin timestamp), then back to Sai filling the commit card field by field, on camera, in his handwriting. Then the pin to OPEN. Three times. The card fields are the 5 from the tracking doc.
+
+Per-pick template:
+
+SAI: "Card one. [NAME] said—"
+
+(CUT TO: the 1-on-1 clip — the anecdote, their words)
+
+(back on Sai, writing) "The change: [THE CHANGE — ONE LINE]."
+
+"It counts as shipped when [SHIP ACTION] — by [DATE]."
+
+"And the proof is [NAME]. Two weeks from now I go back and ask — better, or not. And whatever the answer is, it stays in the video."
+
+(pins the card to OPEN)
+
+If one of the three is the feedback system, its reveal flips the template:
+
+SAI: "The last one isn't one thing they said. It's how I keep hearing all of it after the cameras leave. [THE CHOSEN CHANNEL — from the parked questions]. This one's stolen straight from Bezos — his was a question mark."
+
+
+MOVEMENT 5 — THE PROMISE
+
+What's happening: wide on the board — three cards under OPEN, SHIPPED and PROVEN standing empty. That empty space is the rest of the episode's runtime. Then the predictions, per card (tracking doc must-capture #6: expectation, fear, what failure looks like).
+
+SAI: "That's the bet. Three cards, two weeks. Every one of them has to cross this board — shipped, then proven. And not proven by me — proven by the people who put them up here."
+
+(per card, to camera: "[CARD]. What I think happens: [EXPECTATION]. What I'm afraid of: [FEAR]. What failure looks like: [FAILURE].")
+
+Closer line — three options (pick one on the day):
+
+1. "The vault picked the tactic. The team picked the changes. The only thing left that can screw this up is the guy who usually does."
+
+2. "I've watched a hundred videos end with a list like this. This is the first time the list gets to end me."
+
+3. "Three cards. If even one of them dies on that board, you'll watch it happen. That's the deal."
+
+
+WHAT GRAY PREPS BEFORE THE CAMERA ROLLS (table stakes, not a shot list)
+
+- Pull the origin timestamps from the 1-on-1 footage and print one quote card per raised item (name + one line). The wall is built from their real words, not summaries.
+- Blank commit cards (vault-styled), the OPEN / SHIPPED / PROVEN board mounted, a SOMEDAY column ready, a marker that reads on camera.
+- Queue the three origin clips for the Movement 4 playback callbacks.
+- Pre-triage off camera: run the wall through the three filters with Sai and know the likely three (plus one backup) BEFORE rolling. The on-camera funnel is the performance of a decision that's about 80% made — same honesty policy as the staged wheel spin.
+- Same day, straight after: every before-state, every prediction.
+
+
+LOOP BOOKKEEPING (FOR THE EDIT)
+
+- The third pin closes S2 (the tangible list exists).
+- Each card opens its own mini-loop the viewer tracks on the board; each closes at its PROVEN move (Beats 12-13).
+- S3 now reads "all three cards reach SHIPPED" — record Beat 6's success-bar narration AFTER this session with exactly that wording (three, not 3-5). The story outline's "3-5 changes" language predates this doc; three is the locked number.
+- Beat 10's rehook is the runway INTO this beat — cut them as one continuous escalation: "...so this time—" (cut) — the wall.
