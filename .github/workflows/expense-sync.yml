@@ -2,11 +2,15 @@ name: Expense Sync
 
 on:
   schedule:
-    - cron: "0 11 * * *"   # 7am EDT (UTC-4). Change to "0 12 * * *" in winter (EST)
+    - cron: "*/30 * * * *"  # every 30 min (GitHub delays cron under load; effective cadence ~30-90 min)
   workflow_dispatch:        # manual trigger from GitHub Actions UI
 
 permissions:
   contents: write           # needed to commit expenses.json back to repo
+
+concurrency:
+  group: expense-sync
+  cancel-in-progress: false
 
 jobs:
   sync-expenses:
@@ -26,6 +30,18 @@ jobs:
       - name: Install dependencies
         run: pip install -r python-scripts/expense-tracker/requirements.txt
 
+      # Persist scanned-IDs + extraction cache between runs — without this every
+      # 30-min run would re-pay Haiku to re-scan the same ~100 emails.
+      - name: Restore scanner cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            python-scripts/expense-tracker/.scanned_ids.json
+            python-scripts/expense-tracker/.expense_cache.json
+          key: expense-scanner-cache-${{ github.run_id }}
+          restore-keys: |
+            expense-scanner-cache-
+
       - name: Write Gmail credentials
         env:
           GMAIL_TOKEN_JSON: ${{ secrets.GMAIL_TOKEN_JSON }}
@@ -37,7 +53,17 @@ jobs:
       - name: Run expense scanner
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: cd python-scripts/expense-tracker && python main.py
+
+      - name: Save scanner cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            python-scripts/expense-tracker/.scanned_ids.json
+            python-scripts/expense-tracker/.expense_cache.json
+          key: expense-scanner-cache-${{ github.run_id }}
 
       - name: Commit updated expenses.json
         run: |
