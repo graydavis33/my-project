@@ -3,7 +3,7 @@
 _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole 2026-07-07; v2 rebuilt same night; v3 = Gray's video-by-video pass. Status: **NEAR-LOCKED** — open: #2 adapt-vs-replace, #4 creator-repeat confirm, merge Gray's 7–8 manual finds → v6 batch doc → Notion._
 
 ## The method (locked — every future batch)
-1. Grep all `sai/scripts/*.md` for used URLs/handles — no repeat videos OR creators, including rejected ones — AND check the posted-video burn list (a format Sai already POSTED is burned even if never a batch ref). **Apply the grep output to EVERY pick — the v2 omarontape miss happened with the answer already in hand.**
+1. Grep all `sai/scripts/*.md` for used URLs — no repeat of the EXACT video already used (the SAME creator is fine, only the specific video/URL is burned), including rejected ones — AND check the posted-video burn list (a format Sai already POSTED is burned even if never a batch ref). **Apply the grep output to EVERY pick — the v2 omarontape miss happened with the answer already in hand.**
 2. `search_my_videos`, 90d, **min outlier ≥10x**, min views ~3K, paginate to the end. Outlier-first, never view-sorted top-N. Extend with `search_all_videos` founder queries when the watchlist bench runs dry; flag non-watchlist creators.
 3. **Niche gate:** founder / business / build-in-public creators only.
 4. **Format-fit gate:** Sai filmable as himself (young agency CEO), talking-head ± simple physical prop. Auto-reject: podcast clips, hype reels, craft tutorials, relationship/lifestyle, cinematic builds.

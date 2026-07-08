@@ -36,3 +36,11 @@ Caption hook:
 Voice note: experiential, not guru — "words I had to learn," never "words you're too dumb to know." Never make the viewer feel stupid.
 
 ---
+
+## Video 11 — neilpatel voice-AI (pain→AI fix→receipts)  ❌ TRASHED (Gray, 2026-07-08)
+
+Cut. Reference: https://www.instagram.com/reel/DZfr-KhFfFX/ — kept here so the no-repeats grep catches the exact URL forever.
+
+Rule correction (Gray, 2026-07-08): the no-repeats rule bans reusing the EXACT same video only — the SAME creator is fine on a different video. (neilpatel being Video 6 does not block another neilpatel video; Gray just didn't want this one.)
+
+---
