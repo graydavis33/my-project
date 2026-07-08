@@ -77,3 +77,9 @@ Caption hook:
 - C: THE BUZZWORDS I HAD TO LEARN FAST
 
 ---
+
+## CUT — backstagewithmillionaires (₹2.5-lakh mattress, value explainer)  ❌ TRASHED (Gray, 2026-07-08)
+
+Cut. Reference: https://www.youtube.com/shorts/RHgwL5_3BUQ — kept for the no-repeats grep.
+
+---
