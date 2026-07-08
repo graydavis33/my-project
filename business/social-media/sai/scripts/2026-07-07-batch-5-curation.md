@@ -83,6 +83,23 @@ v2 cuts: jayhoovy https://www.instagram.com/reel/DZ0ZsxyviKC/ (15.6x — format 
 
 v3 cuts: omarontape https://www.instagram.com/reel/DW9SObUgZIE/ + https://www.instagram.com/reel/DZtOOUnhUMG/ (21.9x/14.4x — **Batch 4 repeat, caught by Gray**; the grep had flagged DW9SObUgZIE and it wasn't applied — apply the grep to every pick) · jakemuxlow https://www.instagram.com/reel/DYNakZxtsKg/ (22.4x — counter/DIL overlap with #1)
 
+## Gray's manual finds (10) — pulled from his Sandcastles project "Batch 5" 2026-07-08
+Merged pool = the 7 above + these (his neilpatel "Google update" pick = same video as #5, deduped). Target: cut to ~7 total in the one-by-one hook pass.
+- codiesanchez AI sales-prep · 9.8x · 1.8M · https://www.instagram.com/reel/DZ-Dxy2NT2B/ (contrarian claim → AI workflow → comment gate)
+- neilpatel voice-AI "stop answering every business call" · 76.2x · 751K · https://www.instagram.com/reel/DZfr-KhFfFX/ (pain-frame → AI relief → receipts)
+- personalbrandlaunch "Sound Effects 101" · 42.6x · 3.2M · https://www.instagram.com/reel/DZXUbeGPBWp/ (101 live-demo listicle; ⚠️ watch for mechanic)
+- hormozi "13 years of business advice in 60 seconds" · 4x · 1.4M · https://www.instagram.com/reel/DZL3PYSuGT1/ (rapid-fire compression; ⚠️ burned creator — Gray's call)
+- codiesanchez "I stopped writing AI prompts" · 14x · 2.8M · https://www.instagram.com/reel/DZLKuRpgHw7/ (⚠️ was a v1 alternate cut; same Perplexity campaign as the sales-prep pick — one format, two videos)
+- buildwithcody AI starter pack · 7.2x · 211K · https://www.instagram.com/reel/DZHT-l8Oqoj/ (⚠️ watch — caption uninformative)
+- backstagewithmillionaires ₹2.5-lakh mattress · 12.2x · 162K · https://www.youtube.com/shorts/RHgwL5_3BUQ (premium-product business explainer; ⚠️ watch for mechanic)
+- howibuiltthis "The Story of Justin's" · 4.6x · 41K · https://www.instagram.com/reel/DYwfi1ER6rp/ (narrated brand-origin arc; caption = full script)
+- jayhoovy "How we run a $40M AI-first company" · 11.5x · 143K · https://www.instagram.com/reel/DYlFt0hRLCr/ (founder operating-rules listicle; ⚠️ creator of the already-posted books video)
+Pattern: Gray's picks cluster on AI-for-business — Sai's authority lane; the cluster (both codiesanchez, neilpatel voice-AI, buildwithcody, jayhoovy) likely merges into 2–3 slots.
+
+## v3 additions from Gray's pass (2026-07-08)
+- **#3 marziaprince adaptation LOCKED:** Sai gives a presentation WRONG vs RIGHT (confidence, dress, camera eye contact) — the A/B demo mechanic with Sai himself as the object. He's presented to big rooms before; native credibility.
+- **Next step:** one-by-one pass over the merged 16 → each survivor gets 3 verbal + 3 visual + 3 caption hooks → v6 batch doc → Notion push (Reference = original link per video for the editor; Gray fills the rest in Notion).
+
 ## Notion build note (Gray, 2026-07-08)
 Every KEPT pick's original video link goes into the Notion batch as the **Reference** for the editor (v5+ convention: Reference column = original platform link only, never the Sandcastles link). Links above are the canonical set. #1 (NYC office countdown) is Gray's own format — no external reference (omarontape's counter video is the closest match but was already a Batch 4 reference; left empty unless Gray says otherwise).
 
