@@ -12,6 +12,7 @@ Read the following files in order:
 - `context/work.md`
 - `context/priorities.md`
 - `context/goals.md`
+- `business/monetization/PIPELINE.md`
 
 ---
 
@@ -43,6 +44,13 @@ Which of the Q2 goals from `context/goals.md` are most relevant to today's sessi
 
 **My suggestion for today:**
 Based on priorities and momentum, recommend the single best thing to work on this session and why.
+
+**Monetization Watch:**
+From `business/monetization/PIPELINE.md` — read-only, no subagent, no analysis. 3–6 lines:
+- The NOW candidate + its next action and your recommended course of action (or "quiet — still watching")
+- Anything added to WATCHLIST/RADAR since the previous session (use the entries' added-dates)
+- Any ideas KILLED since the previous session — named, with the reason (Gray can pull any back up)
+If the pipeline is empty and backfill is pending, say so in one line.
 
 **Top 3 MCP servers to add:**
 Based on what's being worked on this session and Gray's current toolset, recommend the 3 most useful MCP servers he doesn't already have connected. For each: server name, what it does, and why it's relevant right now.
