@@ -83,3 +83,32 @@ Caption hook:
 Cut. Reference: https://www.youtube.com/shorts/RHgwL5_3BUQ — kept for the no-repeats grep.
 
 ---
+
+## Video 12 — The Rules Our Agency Runs On  ✅ LOCKED
+
+Status: Sai Review
+
+Format: operating-rules listicle — each rule = an on-screen card (rule # + the rule), number counts up in the corner = finish line. Horizontal (office b-roll reuses).
+
+Reference: jayhoovy "How we run a $40M AI-first company" — 11.5x · 143K — https://www.instagram.com/reel/DYlFt0hRLCr/
+
+Guardrails baked in: NO borrowed revenue number (Sai's agency isn't $40M — run on his real scale/experience or drop the number). Experiential voice — rules he LEARNED, not commandments (not-the-expert rule).
+
+Topics (Sai to fill): his real operating rules / principles.
+
+Verbal hook:
+- A: These are the rules our agency actually runs on — the ones I wish someone told me two years ago.
+- B: I run a growing agency in New York. Here are the rules that keep it from falling apart.
+- C: Everything we do at the agency comes down to a few rules. Here they are.
+
+Visual hook:
+- A: The rulebook — Sai flips open a physical notebook/binder labeled "OPERATING RULES" and reads each off the page.
+- B: Office walkthrough — Sai narrating through the actual Trendify workspace/team; the real environment = the credibility (replaces the fake "$40M" flex).
+- C: Wall of rules — rules posted on the office wall (sticky notes / framed cards); Sai taps or adds each one live.
+
+Caption hook:
+- A: THE RULES OUR AGENCY RUNS ON
+- B: [#] RULES THAT KEEP MY AGENCY ALIVE
+- C: OPERATING RULES I LEARNED THE HARD WAY
+
+---
