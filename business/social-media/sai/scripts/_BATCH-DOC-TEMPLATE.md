@@ -33,10 +33,8 @@ Batch rhythm:
 - The day before each shoot, do a review call with Sai — walk him through the batch in Notion, get topic feedback + hook picks + approvals. Record the call.
 
 Production constants:
-- The orientation rule is about B-roll reuse, not framing preference.
-- Horizontal (default): any video whose raw footage doubles as reusable B-roll — long-form, or short-form where natural clips can be cut into other videos. Horizontal also stands out in-feed and moves freely between shorts and long-form.
-- Vertical: fully-scripted, single-purpose videos whose clips exist only for that one video (typically a close replica of a specific Sandcastles reference — rolling dice, naming, a staged bit). That footage would never match another video as B-roll, so there is no reason to shoot it horizontal.
-- References are mostly shot vertical. When we borrow only the flow, graphics, captions, pacing, and value, restage into 16:9. When we replicate a specific pulled video, keep it vertical. The Orientation line on each video says which.
+- Orientation: batch shorts are Vertical (9:16) by default — that is the publish format. Only mark a video Horizontal if its raw footage is specifically meant to double as reusable B-roll for long-form.
+- Each database is one batch — there is no Batch column.
 - Captions in Sai's house style: Montserrat SemiBold, lowercase except I, no punctuation, hard cuts with no flicker.
 
 Retention rules:
@@ -54,7 +52,7 @@ Status: Draft
 
 Format: [one tight line — the structure only, e.g. "numbered listicle" / "this-vs-that comparison" / "growth-journey carousel"]
 
-Orientation: [Horizontal (default) | Vertical — single-purpose Sandcastles replica]
+Orientation: Vertical (9:16, default) — mark Horizontal only if the footage is meant to reuse as long-form B-roll
 
 Topics (Sai to fill): renders as a bold, bulleted box on the page so it can't be missed. Each video carries its OWN real subjects here — for comparison / gauntlet videos, list the side-by-side items for THIS video so it's obvious which topics go with which video.
 - [this video's real subjects — Sai knows the business specifics]
@@ -76,8 +74,6 @@ Visual hook:
 - B: [alternate]
 - C: [alternate]
 
-Hook pick: [optional. Verbal / Caption / Visual hooks are multi-select checkboxes — Sai ticks the option(s) he wants from each and notes how to pair them (e.g. "verbal A + caption A + visual B"). Leave blank to hand the editor all options with full context. For trial reels, name the PAIRED sets to test.]
-
 Props: [every physical product, prop, or costume the video needs, including a recurring signature action — or "none". The Editor brief maps each prop to the exact shots it appears in.]
 
 Assets: [Google Drive folder link — graphics, b-roll, photos the editor downloads. Leave blank until the folder exists.]
@@ -87,7 +83,7 @@ Editor brief — full shot list. Build the video from this alone.
 - Structure: [the beat order at a glance — the spine the shot list below assembles]
 - Captions: [house style unless noted]
 - Length and pace: [target runtime and feel]
-- Deliverable: [aspect ratio, format, where it goes]
+- Deliverable: [9:16 vertical by default; format, where it goes]
 
 Shot list: each video page embeds its OWN shot-list database (a linked sub-database, never shared between videos — keeps batches from mixing). The DB has two views off the same rows:
 - Basic (on-set): Section, Shot name, Shot type, Shot reference, Complete?, Time of Day, Location, Shoot Day.
@@ -146,8 +142,6 @@ Visual hook:
 - B:
 - C:
 
-Hook pick:
-
 Props:
 
 Assets:
@@ -185,6 +179,7 @@ One running list, carried forward and grown each batch: topics, comparison items
 Internal — Gray only. Not for Sai or the editor.
 
 Changelog:
+- v7 (2026-07-08): Each Notion database is now its own batch — removed the **Batch** column (no more filtering one shared DB). Batch shorts default to **Vertical (9:16)** — dropped the horizontal-default / B-roll-reuse orientation rule for batch shorts (horizontal is now an explicit opt-in only when the footage is meant to reuse as long-form B-roll). Removed the **Hook pick** section entirely (unused — Sai just ticks the hook checkboxes he wants). Tool: `main.py` schema + push drop the Batch column and Hook pick body block, `push` no longer takes `--batch`; `parser.py` drops the Hook pick field.
 - v6 (2026-06-29): Added a third hook type — **Caption hook** A/B/C (the on-screen TEXT hook, distinct from the spoken Verbal hook and the Visual action hook). All three hook types render as multi-select checkboxes so Sai ticks the options he wants and notes the pairings (no rigid "one set" lock). **Topics** rebuilt as a bold, bulleted per-video box (was a single easy-to-miss callout) — each video carries its own real subjects, and comparison/gauntlet videos list their side-by-side items right on the page so it's obvious which topics go with which video. Added a per-video **Editor questions** box (auto-created empty) — the editor asks for missing context there and @mentions Gray in a Notion comment for a native notification. Foundation gained the batch rhythm note (7 videos/batch + record the day-before review call). Added a per-shot **Shot reference** column (Files & media) to the shot-list DB — a reference photo/video/AI illustration of how Gray wants the shot set up, filled in Notion on film-day prep (mainly for the filmer). First fill in the new format: `2026-06-29-Batch-4-genz-test.md` (note: the Shot reference column is in the tool going forward; the Gen Z test batch was NOT retrofitted — it lands on the next verified batch).
 - v5.1 (2026-06-27): Shot list now matches Gray's existing Notion "Shot list" database. Each video embeds its OWN linked shot-list sub-database (never shared — keeps batches separate). Schema: Section (select), Shot name (title), Shot type (select: EXTREME WIDE/WIDE/MEDIUM/CLOSE UP/EXTREME CLOSE UP/SCREEN RECORD/POV), Complete? (checkbox), Shot Notes, Time of Day, Location, Shoot Day — plus added columns Duration, Prop, Graphics/effect, Retention beat. Two views: Basic (on-set) + Editor.
 - v5 (2026-06-27): Major restructure. Kept all 3 verbal + 3 visual hook options (options drive creativity + trial reels need PAIRED verbal+visual variants). Added optional Hook pick (Sai usually chooses; blank = editor gets full context). Removed standalone Camera shots and Graphics and effects — folded into a far more specific Editor brief that is now a true shot list (per shot: duration, what's in frame, prop, graphics/effect, retention beat). Every shot names its retention beat. Results moved to a link at the top pointing at the existing Sai results Notion database. Merged Topic Pool + Future Video Ideas into one Backlog. Orientation rule rewritten around B-roll reuse: vertical = single-purpose Sandcastles replicas whose clips are never reused; horizontal = everything with reusable raw B-roll.

@@ -1,17 +1,17 @@
 """
-notion-batch — push Sai shorts batch docs into a Notion database.
+notion-batch — push a Sai shorts batch doc into its own Notion database.
 
-Each video becomes its own Notion page in the "Sai Shorts — Batches" database.
-The outside DB stays simple: Batch, Status, Format, Orientation, Sai notes,
-Assets, Reference. The page body holds the detail: Topics (bulleted, per-video),
-Verbal/Caption/Visual hooks A-B-C, Hook pick, Props, Editor brief, Editor
-questions box, Reference (Original link only).
+Each database IS one batch (no Batch column). Each video becomes its own page.
+The outside DB stays simple: Status, Format, Orientation, Sai notes, Assets,
+Reference. The page body holds the detail: Topics (bulleted, per-video),
+Verbal/Caption/Visual hooks A-B-C, Props, Editor brief, Editor questions box,
+Reference (Original link only). Shorts default to vertical (9:16).
 Each page also gets its own inline "Shot list" child database (one row per shot).
 
 Commands:
-  setup    --parent <page-url>          create the database under a parent page (run once)
-  migrate                               add v5 columns to an existing database (run once after upgrade)
-  push     <batch.md> --batch "Batch 4" create a page per video from a filled batch doc
+  setup    --parent <page-url>          create the database under a parent page (run once per batch)
+  migrate                               refresh columns on an existing database
+  push     <batch.md>                   create a page per video from a filled batch doc
   find                                  print the saved database id/url
 
 Reuses NOTION_TOKEN (same integration as content-researcher). The parent page must
@@ -126,7 +126,6 @@ def cmd_setup(args):
     parent = page_id_from_url(args.parent)
     schema = {
         "Video": {"title": {}},
-        "Batch": {"select": {}},
         "Status": {"select": {"options": [{"name": n, "color": c} for n, c in STATUS_OPTIONS]}},
         "Format": {"rich_text": {}},
         "Orientation": {"select": {"options": [{"name": n, "color": c} for n, c in ORIENTATION_OPTIONS]}},
@@ -146,25 +145,25 @@ def cmd_setup(args):
     save_config({"database_id": db["id"], "data_source_id": ds_id, "url": url})
     print(f"Created database: {args.title}")
     print(f"URL: {url}")
-    print("Saved database id to config.json. Now push a batch with:  python main.py push <batch.md> --batch \"Batch 4\"")
+    print("Saved database id to config.json. Now push a batch with:  python main.py push <batch.md>")
 
 
-def video_to_page(db_id, batch, v):
+def video_to_page(db_id, v):
     status = v.get("status", "Draft")
     if status not in [n for n, _ in STATUS_OPTIONS]:
         status = "Draft"
 
     props = {
         "Video": {"title": rt(v["title"])},
-        "Batch": {"select": {"name": batch}},
         "Status": {"select": {"name": status}},
         "Format": {"rich_text": rt(v.get("format", ""))},
     }
-    orientation = v.get("orientation", "")
-    if orientation.startswith("Vertical"):
-        props["Orientation"] = {"select": {"name": "Vertical"}}
-    elif orientation.startswith("Horizontal"):
+    # Batch shorts are vertical (9:16) by default; horizontal only when explicitly stated.
+    orientation = v.get("orientation", "") or "Vertical"
+    if orientation.startswith("Horizontal"):
         props["Orientation"] = {"select": {"name": "Horizontal"}}
+    else:
+        props["Orientation"] = {"select": {"name": "Vertical"}}
     if v.get("assets") and v["assets"].startswith("http"):
         props["Assets"] = {"url": v["assets"]}
     # Reference column = the public Original link (recipients have no Sandcastles account).
@@ -191,9 +190,6 @@ def video_to_page(db_id, batch, v):
         for opt in ("A", "B", "C"):
             val = block.get(opt, "")
             body.append(todo(f"{opt}: {val}".rstrip(": ")))
-
-    body.append(heading("Hook pick"))
-    body.append(para(v.get("hook_pick", "") or "Sai picks; multi-select the options + pairings you want. Blank = editor gets all options."))
 
     body.append(heading("Props"))
     body.append(para(v.get("props", "") or "none"))
@@ -294,7 +290,7 @@ def cmd_push(args):
     if not ds_id:
         sys.exit("config.json has no data_source_id — re-run setup.")
     for v in videos:
-        props, body = video_to_page(cfg["database_id"], args.batch, v)
+        props, body = video_to_page(cfg["database_id"], v)
         page = notion.pages.create(
             parent={"type": "data_source_id", "data_source_id": ds_id},
             properties=props,
@@ -303,7 +299,7 @@ def cmd_push(args):
         # Always attach a shot-list database — empty rows are a fillable scaffold.
         n = create_shot_list_db(notion, page["id"], v.get("shots", []))
         print(f"  + {v['title'][:60]}  ->  {page['url']}  ({n} shots)")
-    print(f"Pushed {len(videos)} videos into '{args.batch}'.")
+    print(f"Pushed {len(videos)} videos.")
     print(f"Database: {cfg.get('url', '')}")
 
 
@@ -343,7 +339,6 @@ def main():
 
     p = sub.add_parser("push", help="push a filled batch doc into the database")
     p.add_argument("file")
-    p.add_argument("--batch", required=True, help='e.g. "Batch 4"')
     p.set_defaults(func=cmd_push)
 
     m = sub.add_parser("migrate", help="add v5 columns (Orientation, Hook pick) to the existing database")

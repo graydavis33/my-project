@@ -14,7 +14,6 @@ SINGLE = {
     "Status": "status",
     "Format": "format",
     "Orientation": "orientation",
-    "Hook pick": "hook_pick",
     "Props": "props",
     "Assets": "assets",
     "Keep / drop from raw": "keep_drop",
