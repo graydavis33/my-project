@@ -29,7 +29,17 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
   - Serial-led (ep 2+): "NYC office update 3: we just hit a problem." · "30 days ago this office was a number on a whiteboard. Here's where it is now."
   - Doubt-led: "Everyone says my agency doesn't need an office. I'm opening one in Manhattan anyway — here's why." · "My accountant told me not to do this."
   - Note: number-led = strongest ep-1 opener (specific dollar figure, re-hooks as it shrinks); "every client = 4% closer" doubles as the series mechanic (progress tied to revenue).
-- Pillars: relatability + authority. Sai has stated this goal for real.
+- **Visual hook bench (pick A/B/C):**
+  - V-A **Pin slam:** Sai slams a pin into a Manhattan wall map / fills the next segment of a printed progress card with a marker — the signature series prop, same action opens every episode, fills up over the season.
+  - V-B **Empty space:** Sai in a raw empty office mid-tour, arms out, slow spin — "this could be it." Real tour footage.
+  - V-C **Number rewrite:** whiteboard, old distance number crossed out, new smaller number written live.
+  - Alt: street shot, Sai looks up at an office building and points — "that one."
+- **Caption hook bench (on-screen TEXT, pick A/B/C):**
+  - C-A: "$47,000 FROM MY NYC OFFICE" (number updates every episode)
+  - C-B: "EVERY CLIENT = 4% CLOSER" (the mechanic as text)
+  - C-C: "OFFICE UPDATE #3: WE HIT A PROBLEM" (ep-1 variant: "MANHATTAN. 90 DAYS.")
+  - Suggested ep-1 pairing: verbal number-led + V-A pin slam + C-B — spoken number, read mechanic, seen prop = three different signals in the first 2s.
+- Pillars: relatability + authority. Sai has stated this goal for real. (Dollar figures are placeholders — swap in Sai's real numbers.)
 
 ### 2. buildercult — numbers-receipt → named principle · 36x · 905K — ⏳ ADAPT OR REPLACE (Gray deciding)
 - **Ref:** https://www.instagram.com/reel/DYPvEUrS2H1/
