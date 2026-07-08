@@ -55,6 +55,32 @@ def dedupe_bank_alerts(expenses):
 
 
 
+def dedupe_vs_manual(expenses, manual_txns):
+    """Drop scanned expenses that duplicate a transaction Gray entered by hand
+    in the app (same amount, dates within 2 days).
+
+    Covers the late-alert case: Gray taps his card, the bank alert email only
+    arrives when the purchase POSTS 1-2 days later — by then he may have typed
+    it in manually. Without this, the scanner would insert a second copy (it
+    only dedupes email-vs-email). Manual tombstones count too: if Gray deleted
+    his manual entry, he doesn't want the purchase counted at all.
+    Requires Firestore access — local runs without it keep all expenses.
+    """
+    def _d(s):
+        y, m, dd = s.split("-")
+        return date(int(y), int(m), int(dd))
+    kept, dropped = [], []
+    for e in expenses:
+        dup = any(
+            abs(m.get("amount", 0) - e["amount"]) < 0.005
+            and abs((_d(m["date"]) - _d(e["date"])).days) <= 2
+            for m in manual_txns
+            if m.get("date")
+        )
+        (dropped if dup else kept).append(e)
+    return kept, dropped
+
+
 def write_expenses_json(expenses, current_month, transfers=None):
     """Write expenses + EJ transfers to the payday checklist's expenses.json file."""
     output = {
@@ -130,6 +156,15 @@ def main():
     if before_dedup - len(expenses):
         print(f"  Dropped {before_dedup - len(expenses)} bank alert(s) duplicating a receipt.")
 
+    # Drop expenses Gray already entered manually in the app (needs Firestore)
+    import firestore_writer
+    fs_client = firestore_writer.get_client()
+    if fs_client:
+        manual = firestore_writer.fetch_manual_transactions(current_month, client=fs_client)
+        expenses, dropped = dedupe_vs_manual(expenses, manual)
+        for e in dropped:
+            print(f"  Skipped (already entered manually in app): {e['vendor']} ${e['amount']:.2f} ({e['date']})")
+
     print(f"\nTotal for {today.strftime('%B')}: {len(expenses)} expense(s)")
 
     # Print summary by category
@@ -146,8 +181,6 @@ def main():
 
     write_expenses_json(expenses, current_month, transfers)
 
-    import firestore_writer
-    fs_client = firestore_writer.get_client()
     if fs_client:
         created = firestore_writer.write_expenses(expenses + transfers, client=fs_client)
         print(f"Firestore: {created} new record(s) written to {firestore_writer.ROOT}.")

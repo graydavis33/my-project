@@ -30,6 +30,21 @@ def get_client():
     return firestore.client()
 
 
+def fetch_manual_transactions(month, client=None):
+    """Return this month's NON-gmail transactions (manual app entries, incl.
+    tombstones) so the scanner can skip email expenses Gray already typed in.
+    Returns [] when Firestore isn't configured (local runs)."""
+    if client is None:
+        client = get_client()
+    if client is None:
+        return []
+    docs = client.collection(f"{ROOT}/transactions").where("month", "==", month).stream()
+    return [
+        d.to_dict() for d in docs
+        if (d.to_dict() or {}).get("source") != "gmail"
+    ]
+
+
 def write_expenses(expenses, client=None):
     if client is None:
         client = get_client()

@@ -49,3 +49,38 @@ def test_dedupe_collapses_alert_vs_alert():
     rm = {"email_id": "b", "date": "2026-06-22", "vendor": "Zelle Money Payme", "amount": 30.00, "category": "Misc", "is_alert": True}
     out = dedupe_bank_alerts([ps, rm])
     assert out == [ps]  # first alert kept, duplicate dropped
+
+
+# --- dedupe_vs_manual: skip email expenses Gray already typed into the app ---
+from main import dedupe_vs_manual
+
+def test_manual_dedupe_drops_late_bank_alert():
+    # Real case 2026-07-08: banana tap purchase entered manually, alert posts 1-2 days later
+    alert = {"email_id": "a", "date": "2026-07-09", "vendor": "GROCERY NYC", "amount": 4.50, "category": "Groceries", "is_alert": True}
+    manual = [{"date": "2026-07-08", "vendor": "Bananas", "amount": 4.50, "source": "manual", "deleted": False}]
+    kept, dropped = dedupe_vs_manual([alert], manual)
+    assert kept == [] and dropped == [alert]
+
+def test_manual_dedupe_keeps_unmatched_expense():
+    receipt = {"email_id": "a", "date": "2026-07-09", "vendor": "Sandcastles", "amount": 49.00, "category": "Software & Tools"}
+    manual = [{"date": "2026-07-08", "vendor": "Bananas", "amount": 4.50, "source": "manual", "deleted": False}]
+    kept, dropped = dedupe_vs_manual([receipt], manual)
+    assert kept == [receipt] and dropped == []
+
+def test_manual_dedupe_respects_window():
+    alert = {"email_id": "a", "date": "2026-07-15", "vendor": "GROCERY", "amount": 4.50, "category": "Misc", "is_alert": True}
+    manual = [{"date": "2026-07-08", "vendor": "Bananas", "amount": 4.50, "source": "manual", "deleted": False}]
+    kept, dropped = dedupe_vs_manual([alert], manual)
+    assert kept == [alert] and dropped == []
+
+def test_manual_dedupe_tombstone_still_suppresses():
+    # Gray deleted his manual entry = he doesn't want the purchase counted
+    alert = {"email_id": "a", "date": "2026-07-09", "vendor": "GROCERY", "amount": 4.50, "category": "Misc", "is_alert": True}
+    manual = [{"date": "2026-07-08", "vendor": "Bananas", "amount": 4.50, "source": "manual", "deleted": True}]
+    kept, dropped = dedupe_vs_manual([alert], manual)
+    assert kept == []
+
+def test_manual_dedupe_empty_manual_is_noop():
+    alert = {"email_id": "a", "date": "2026-07-09", "vendor": "GROCERY", "amount": 4.50, "category": "Misc", "is_alert": True}
+    kept, dropped = dedupe_vs_manual([alert], [])
+    assert kept == [alert] and dropped == []
