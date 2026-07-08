@@ -72,7 +72,26 @@ Keep it tight — this note is for quick recall at the start of the next session
 
 ---
 
-## Step 5: Push to GitHub
+## Step 5: Run the Monetization Strategist
+
+Spawn the `monetization-strategist` subagent (Agent tool). If that subagent type isn't available in this session (fresh registry), spawn `general-purpose` instead with this prefix: `You are the monetization-strategist. Read ".claude/agents/monetization-strategist.md" and follow it exactly as your instructions for this input:`
+
+Prompt (fill the placeholders):
+
+```
+Daily run. Session date: <YYYY-MM-DD>.
+SESSION SUMMARY:
+<the session-note content you just wrote in Step 4>
+FILES CHANGED THIS SESSION:
+<file paths changed this session — from the session's commits (git log) or git status; write "none" if none>
+DISCUSSION-ONLY SIGNALS: <1-3 bullets of monetization-relevant things that were TALKED about but left no file trace, or "none">
+```
+
+It updates `business/monetization/PIPELINE.md` + `state.json` and returns a short report — include that report in the Step 7 confirmation. **Never let this step block the save:** if the strategist errors or hangs, note it and continue to Step 6 — the cursor didn't move, so the missed delta is analyzed automatically next session.
+
+---
+
+## Step 6: Push to GitHub
 
 The Stop hook in `~/.claude/settings.json` auto-commits + pushes when Claude stops responding. So normally this step is automatic.
 
@@ -84,11 +103,12 @@ cd "C:/Users/Gray Davis/my-project" && git add . && git commit -m "Session updat
 
 ---
 
-## Step 6: Confirm
+## Step 7: Confirm
 
 Respond with a short summary:
 - What was done this session (2-3 bullets max)
 - Whether priorities.md was updated and what changed
 - Whether any decisions were logged
 - The path of the Obsidian session note
+- The monetization-strategist's report (or "strategist skipped/errored" if it didn't run)
 - Confirm GitHub state (auto-pushed or manual)

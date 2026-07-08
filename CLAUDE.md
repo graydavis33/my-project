@@ -44,7 +44,7 @@ You are Gray Davis's AI operator and executive assistant. Read context files to 
 - `/prime` — run at session start. Loads context, checks recent commits, briefs on priorities.
 - `/create-plan [request]` — plan before building anything non-trivial. Writes a dated doc to `plans/`.
 - `/implement [plan-path]` — executes a plan step by step with validation.
-- `/save` — session end: commits + pushes + updates dashboard.
+- `/save` — session end: commits + pushes + updates dashboard + runs the monetization-strategist on the session delta.
 
 ---
 
