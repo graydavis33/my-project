@@ -57,10 +57,22 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
 - **Caption hook bench:** "250 → 12 → 1" · "THE NUMBER NOBODY CALCULATES" · E: "WHY WE HIRED HIM" (applicant marketing) / D: "WHY THIS BUILT AN EMPIRE"
 - **Open (→ Notion topics box):** which team member + their REAL numbers — 250/12/1 is a placeholder shape; source the actual origin story from Sai.
 
-### 3. 🆕 marziaprince — physical A/B demo · 1837x · 4.3M (replaces jakemuxlow stakes-DIL — too close to #1's serial/counter DNA)
+### 3. 🆕 marziaprince — WRONG-vs-RIGHT demo · 1837x · 4.3M (replaces jakemuxlow stakes-DIL)
 - **Ref:** https://www.instagram.com/reel/DaSx1hLuV_l/ ("The product didn't change. The packaging did.")
-- **Mechanic:** ONE physical object shown two ways; the object transformation IS the argument for an abstract business claim. Biggest outlier in the entire pool; pure physical-retention.
-- **Sai adapt:** two identical pitch decks dressed differently ("same agency, same price — this one closes") · same ad script plain vs branded · the packaging metaphor straight ("clients don't buy the work, they buy how it's wrapped").
+- **Mechanic (Sai version, structure locked by Gray 2026-07-08):** cold-open on the WRONG version acted by Sai (no setup — the cringe is the visual hook) → narration over it (verbal) → the RIGHT version WITHHELD until later in the video (the delayed fix = the retention loop). Caption hook is topic-dependent — it names the topic's PAIN, never the format.
+- **Topic menu (Sai picks; caption hook per topic):**
+  1. Talking on camera (⭐ Gray's pick — Sai's UGC years = native credibility) — caption: "WHY YOUR VIDEOS FEEL OFF"
+  2. Giving a presentation (confidence, dress, eye contact; same script both halves) — caption: "THE FIRST 10 SECONDS OF YOUR PITCH"
+  3. Opening a sales call (feature dump vs question-led) — caption: "WHY CLIENTS GHOST YOU"
+  4. The cold DM (typed on screen, wrong vs right) — caption: "YOUR DMs GET IGNORED BECAUSE OF THIS"
+  5. "Tell me about yourself" interview edition (pairs w/ #2 recruiting angle) — caption: "HOW TO ACTUALLY GET HIRED"
+  6. Giving feedback to a team member — caption: "WHY YOUR TEAM STOPS LISTENING"
+  7. Raising prices with a client (apologizing vs anchored) — caption: "RAISE YOUR PRICES WITHOUT LOSING THE CLIENT"
+- **Verbal narration bench (topic-agnostic, over the wrong take):**
+  - ⭐ "Everything in this first clip is a mistake. Count them." (turns the wrong take into a game — rewatches + comment guesses)
+  - "I did this wrong for three years. Watch."
+  - "This is exactly why nobody [watches your videos / trusts your pitch / listens in your meetings]."
+- **Caption template for new topics:** name the viewer's pain as accusation/question ("WHY YOUR ___ ISN'T WORKING" / "YOUR ___ GETS IGNORED BECAUSE OF THIS"); never caption the format.
 - Not on watchlist (global find). Pillars: value + authority.
 
 ### 4. sharransrivatsaa — story → hidden test → framework · 25.8x · 426K — KEEP ⚠️ creator-repeat, Gray to confirm
