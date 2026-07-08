@@ -77,14 +77,16 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
 
 ### 4 & 5. sharransrivatsaa — SPLIT INTO TWO VIDEOS (Gray, 2026-07-08; creator-repeat accepted by doubling down; all later numbers bumped down)
 
-**4. Hidden-test story · 25.8x · 426K**
+**4. Hidden-test story → PERSONAL VOLATILE STORY (Gray pivot, 2026-07-08) · 25.8x · 426K**
 - **Ref:** https://www.instagram.com/reel/DXwbo65lM5-/ (Goldman coachability test)
-- **Shape:** cold-open story → twist (what was REALLY being tested) → rules payoff, reveal in the back half.
-- **Topic bench (Gray honing, then to Sai):**
-  1. ⭐ The client blow-up (Gray's pick) — twist: not the missed work, the silence before it; real test = deliver bad news early → Trendify's 3 rules now.
-  2. The interview test candidates don't know about — deliberate vague brief/delayed reply; real test = do they ask questions or fake it (recruiting tie-in w/ #2).
-  3. The test every prospect takes without knowing — why Trendify turns down clients; the real test was whether we'd fold on the discount/deadline.
-- Hooks (3 verbal / 3 visual / 3 caption): AFTER topics honed.
+- **Direction:** high-volatility, polarizing, emotion-evoking PERSONAL story — prototype: the client who yelled at Sai for not delivering the service (told in one of his long-form videos). Topic comes from Sai (→ Notion topics box).
+- **Verbal hook bench:**
+  - A (Gray): "In 45 seconds, I had to close down my business." (softer variant: "…I thought I was closing down my business.")
+  - B: "The worst phone call of my life lasted 45 seconds — and I deserved every second of it."
+  - C: "A client screamed at me until I couldn't speak. He was right."
+  - Why B/C work: Sai takes the blame on camera — polarizing the right way; founders admitting fault reads as earned authority + starts comment wars.
+- **Caption hook bench (paired 1:1 with verbals, same meaning / different words):**
+  - A′: "45 SECONDS FROM LOSING EVERYTHING" · B′: "THE CALL I HAD COMING" · C′: "HE HAD EVERY RIGHT TO YELL"
 
 **5. Famous-person lesson → framework · 13.6x**
 - **Ref:** https://www.instagram.com/reel/DX7INuSDZkq/ (Branson tennis → 4-step decision framework)
@@ -105,9 +107,13 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
 - Suggested stack: verbal A + V-A timer + C-B.
 - **Open (→ Notion topics box, both videos):** which stories are real + which names Sai can say on camera.
 
-### 6. neilpatel — contrarian industry-shift take · 57.5x · 567K — KEEP
+### 6. neilpatel — contrarian industry-shift take · 57.5x · 567K — ✅ STRUCTURE LOCKED, topic to Sai (Gray, 2026-07-08)
 - **Refs:** https://www.instagram.com/reel/DZaiYUsDWum/ (57.5x) · https://www.instagram.com/reel/DY-NoHhDuVX/ (45.3x)
-- **Claim bench (one per video; serializable):**
+- **Topic (→ Notion topics box, placeholder from Gray):** "What AI features, products, or services are being used right now that will be irrelevant very soon?" — shape: something widely used in an industry/market TODAY that gets eradicated (replaced by an emerging thing, or dies of irrelevance — not worth energy/money). Sai fills the specific.
+- **Layer structure (Gray):** verbal hook = the claim itself · visual hook = the talking head (dead-eye direct address IS the visual) · caption hook = topic-dependent.
+- **Verbal shells (snap in once Sai names [X]):** "If your business still runs on [X], you have about 12 months left." · "[X] is already dead — the people using it just haven't noticed." · "Everyone in [industry] uses [X] every day. Almost none of them know it's already obsolete."
+- **Caption shells:** "[X] IS ALREADY DEAD" · "STOP PAYING FOR [X]" · "YOU'RE THE LAST TO KNOW"
+- **Claim bench (Claude's earlier candidates, one per video; serializable):**
   - STOP: the boost button ("you're paying Meta to skip strategy")
   - STOP: polished templated brand content ("your $5K produced ad loses to a $0 iPhone video — I run the numbers")
   - STOP: follower count as the creator-hiring metric (outlier scores are the currency)
