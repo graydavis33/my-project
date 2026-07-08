@@ -118,3 +118,9 @@ Caption hook:
 Cut — timeline too short (Sai is young, can't claim 13 years) and the rapid-fire "my business advice" voice isn't his (not-the-expert). Reference: https://www.instagram.com/reel/DZL3PYSuGT1/ — kept for the no-repeats grep.
 
 ---
+
+## CUT — howibuiltthis (brand-origin arc)  ❌ REPLACED (Gray, 2026-07-08)
+
+Replaced by two of Gray's own video ideas (Videos 13 + 14 below). Reference: https://www.instagram.com/reel/DYwfi1ER6rp/ — kept for the no-repeats grep.
+
+---
