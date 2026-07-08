@@ -145,6 +145,7 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
   2. LESSON: "we didn't lose the client when the ad flopped" → "we lost them when we went quiet for four days". B-roll: busy screens/dashboards/hands-typing → the turn lands on STILLNESS (phone face-down, empty chair, Sai staring). Motion→static cut IS the silence.
   3. BELIEF: "at 15 i was running ads that failed" → "at 21 those failures run the agency". B-roll: journey-transition shots (subway walking, NYC transitions) → beat drop → office wides w/ team, Sai walking into Trendify.
   - Reusable pattern: beat-1 footage sells the surface; the turn's footage contradicts it on the same music hit. Music = trending audio at edit time.
+  - **Carousel twin (Gray, 2026-07-08):** every vignette also ships as an IG carousel — slide 1 = setup line, slide 2 = turn, slide 3 = land (+ optional CTA slide); backgrounds = frame-grabs from the same b-roll pulls. Carousels = most-saved format (feeds Sai's saveable-content directive) + IG re-serves slide 2 to scrollers, giving the turn line a second audition. All 3 spec'd vignettes convert 1:1.
   - Film-prep: run footage-puller per vignette theme into labeled pull folders when greenlit.
 - Not on watchlist — MCP-add on Gray's word.
 
