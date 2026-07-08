@@ -124,3 +124,34 @@ Cut — timeline too short (Sai is young, can't claim 13 years) and the rapid-fi
 Replaced by two of Gray's own video ideas (Videos 13 + 14 below). Reference: https://www.instagram.com/reel/DYwfi1ER6rp/ — kept for the no-repeats grep.
 
 ---
+
+## Video 13 — The 1% Entrepreneur  ✅ LOCKED
+
+Status: Sai Review
+
+No external reference — Gray's own concept.
+
+Format: myth-buster "real scoreboard" reveal. Redefine what top-1% means — not revenue/vanity metrics but grind numbers (hours worked/day/week/year, product versions scrapped, no's from investors/clients). Each real metric replaces a vanity metric. Horizontal.
+
+Flow: challenge the assumption (0–2s) → reveal the real metrics one at a time, each with a number, each replacing a vanity metric (REVENUE→HOURS, FOLLOWERS→NO'S, LIKES→FAILED VERSIONS) → land: "the 1% isn't the richest — it's the ones who outlasted these numbers." ~30–45s, talking head + scoreboard/whiteboard.
+
+Guardrail: numbers must be REAL — Sai's own lived numbers best ("how many no's I got"), sourced stats otherwise. No invented averages (verified-facts rule; the Bezos "2 hrs/week" myth incident).
+
+Topics (Sai to fill): the real grind metrics + his own numbers.
+
+Verbal hook:
+- A: You think the top 1% of founders are measured by revenue. They're not — here's the real scoreboard.
+- B: Nobody in the top 1% got there on talent. Here are the numbers they actually hit.
+- C: Forget followers and revenue. This is what actually separates the 1% of entrepreneurs.
+
+Visual hook:
+- A: Scoreboard swap — vanity metrics (REVENUE, FOLLOWERS, LIKES) crossed out, replaced live with grind metrics + numbers (HOURS, NO'S, FAILED VERSIONS).
+- B: Card flip — Sai flips cards from a "what you think" pile to a "reality" pile, each reality card showing the real number.
+- C: Whiteboard wipe — Sai wipes away the vanity metrics and writes the real ones with numbers as he talks.
+
+Caption hook:
+- A: THE 1% AREN'T MEASURED BY REVENUE
+- B: THE REAL SCOREBOARD OF THE TOP 1%
+- C: WHAT IT ACTUALLY TAKES TO BE TOP 1%
+
+---
