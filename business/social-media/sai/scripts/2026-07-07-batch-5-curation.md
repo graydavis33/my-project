@@ -161,11 +161,27 @@ v3 cuts: omarontape https://www.instagram.com/reel/DW9SObUgZIE/ + https://www.in
 
 ## Gray's manual finds (10) — pulled from his Sandcastles project "Batch 5" 2026-07-08
 Merged pool = the 7 above + these (his neilpatel "Google update" pick = same video as #5, deduped). Target: cut to ~7 total in the one-by-one hook pass.
-- codiesanchez AI sales-prep · 9.8x · 1.8M · https://www.instagram.com/reel/DZ-Dxy2NT2B/ (contrarian claim → AI workflow → comment gate)
+- codiesanchez AI sales-prep · 9.8x · 1.8M · https://www.instagram.com/reel/DZ-Dxy2NT2B/ (contrarian claim → AI workflow → comment gate) → **✅ MERGED w/ the other codiesanchez pick into ONE SLOT (#9), see below**
+
+### 9. codiesanchez — "give me X time, I'll show you Y" (BOTH codiesanchez picks merged) — ✅ hooks locked (Gray, 2026-07-08)
+- **Refs (both, editor sees the shared mechanic):** https://www.instagram.com/reel/DZ-Dxy2NT2B/ (9.8x · 1.8M) + https://www.instagram.com/reel/DZLKuRpgHw7/ (14x · 2.8M) — same Perplexity campaign, same format.
+- **Mechanic:** time-for-value trade — "give me [X seconds], I'll show you [Y result]." Sai keys it on time-in → concrete business result-out.
+- **Seed topic (Gray):** "Give me 60 seconds and I'll show you the one change I made to my product that got me 6 recurring monthly clients." Sai adds more topics off this shape (→ Notion topics box).
+- **Verbal hook bench:**
+  - A: "Give me 60 seconds and I'll show you the one change that got me six recurring clients."
+  - B: "In the next 45 seconds I'll show you how I fixed my product — and the exact number it added to my revenue."
+  - C: "You have 60 seconds. I have the change that took Trendify from [X] to [Y] clients. Deal?"
+- **Caption hook bench:** "60 SECONDS → 6 CLIENTS" · "THE CHANGE THAT PAID FOR ITSELF" · "1 FIX. 6 RECURRING CLIENTS."
+- **Visual hook bench:**
+  - V-A ⭐ live 60s countdown timer in the opening frame — "watch me do this before it hits zero."
+  - V-B before/after split screen of the actual change (old left / new right), dropped in frame 1.
+  - V-C the receipt — Sai holds up a dashboard / signed number / whiteboard "6 RECURRING", taps it, rewinds to how.
+- Suggested stack: verbal A + V-A timer + C-A.
+- **⚠️ Timer overlap:** V-A live timer is also #5's signature (45s mentor lesson). Fine if spaced in the calendar; don't post two timer-opens back-to-back. #5 has the stronger claim on the timer (time asymmetry = its thesis) — if kept exclusive, #9 leans V-B/V-C.
 - neilpatel voice-AI "stop answering every business call" · 76.2x · 751K · https://www.instagram.com/reel/DZfr-KhFfFX/ (pain-frame → AI relief → receipts)
 - personalbrandlaunch "Sound Effects 101" · 42.6x · 3.2M · https://www.instagram.com/reel/DZXUbeGPBWp/ (101 live-demo listicle; ⚠️ watch for mechanic)
 - hormozi "13 years of business advice in 60 seconds" · 4x · 1.4M · https://www.instagram.com/reel/DZL3PYSuGT1/ (rapid-fire compression; ⚠️ burned creator — Gray's call)
-- codiesanchez "I stopped writing AI prompts" · 14x · 2.8M · https://www.instagram.com/reel/DZLKuRpgHw7/ (⚠️ was a v1 alternate cut; same Perplexity campaign as the sales-prep pick — one format, two videos)
+- codiesanchez "I stopped writing AI prompts" · 14x · 2.8M · https://www.instagram.com/reel/DZLKuRpgHw7/ → **✅ MERGED into #9 above**
 - buildwithcody AI starter pack · 7.2x · 211K · https://www.instagram.com/reel/DZHT-l8Oqoj/ (⚠️ watch — caption uninformative)
 - backstagewithmillionaires ₹2.5-lakh mattress · 12.2x · 162K · https://www.youtube.com/shorts/RHgwL5_3BUQ (premium-product business explainer; ⚠️ watch for mechanic)
 - howibuiltthis "The Story of Justin's" · 4.6x · 41K · https://www.instagram.com/reel/DYwfi1ER6rp/ (narrated brand-origin arc; caption = full script)
