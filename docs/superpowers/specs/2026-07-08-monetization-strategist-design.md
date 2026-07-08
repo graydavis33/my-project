@@ -137,7 +137,7 @@ When Gray says "develop [idea]": one larger strategist run with web research ena
 
 ## Privacy note
 
-Gray wants the repo private. The flip is being handled as a separate task (GitHub Pages and the every-30-min expense-sync Actions cron depend on this repo, so plan/quota facts get verified before anything changes). Until the repo is confirmed private, keep dollar amounts and sensitive terms out of pipeline files.
+Repo stays public for now (Gray's call, 2026-07-08): going private on the Free plan would kill GitHub Pages (payday PWA, dashboard, TikTok OAuth callback) and meter Actions past the free quota. The GitHub Pro upgrade path ($4/mo + hourly cron) is documented in `decisions/log.md` if he changes his mind. Consequence for this system: **no dollar amounts, revenue figures, client terms, or anything sensitive in pipeline files** — pitches and scores only.
 
 ## Testing
 
