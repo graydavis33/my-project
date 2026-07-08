@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sai B5 Carousel — Orange Stroke Preview</title>
+<style>
+  :root { --orange:#F28129; --bg:#141414; --panel:#1e1e1e; --text:#eaeaea; --muted:#9a9a9a; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; padding:32px 20px 60px; }
+  h1 { font-size:20px; font-weight:600; text-align:center; }
+  h1 .o { color:var(--orange); }
+  .sub { text-align:center; color:var(--muted); font-size:13px; margin-top:6px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:22px; max-width:900px; margin:30px auto 0; }
+  .card { background:var(--panel); border-radius:14px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.35); }
+  .card img { width:100%; display:block; }
+  .cap { padding:12px 14px; font-size:13px; display:flex; justify-content:space-between; align-items:center; }
+  .cap b { font-weight:600; }
+  .tag { font-size:11px; color:var(--muted); }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--orange); margin-right:7px; vertical-align:middle; }
+  .note { max-width:760px; margin:34px auto 0; color:var(--muted); font-size:13px; line-height:1.6; text-align:center; }
+  code { background:#000; padding:2px 6px; border-radius:5px; color:var(--orange); font-size:12px; }
+</style>
+</head>
+<body>
+  <h1>Sai Batch 5 Carousel — <span class="o">Orange Stroke</span> Preview</h1>
+  <div class="sub">Slide 6 · Trendify orange <code>#F28129</code> · stroke width ~4px</div>
+
+  <div class="grid">
+    <div class="card">
+      <img src="assets/original.png" alt="Original, white text only" />
+      <div class="cap"><b>Before</b><span class="tag">original — white text</span></div>
+    </div>
+    <div class="card">
+      <img src="assets/stroked-orange.png" alt="With Trendify orange stroke" />
+      <div class="cap"><b><span class="dot"></span>After</b><span class="tag">Trendify orange stroke</span></div>
+    </div>
+  </div>
+
+  <p class="note">
+    Stroke applied directly around the existing white text so the exact font (Montserrat SemiBold),
+    size and layout are untouched. Original file is preserved — the stroked version is saved as
+    <code>Untitled-6_orange-stroke.png</code>. Say the word to go thicker/thinner or roll it out to the other slides.
+  </p>
+</body>
+</html>
