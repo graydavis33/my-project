@@ -80,6 +80,7 @@ Prompt (fill the placeholders):
 
 ```
 Daily run. Session date: <YYYY-MM-DD>.
+HEAD: <output of git rev-parse HEAD>
 SESSION SUMMARY:
 <the session-note content you just wrote in Step 4>
 FILES CHANGED THIS SESSION:

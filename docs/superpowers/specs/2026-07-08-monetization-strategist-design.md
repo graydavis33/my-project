@@ -85,8 +85,8 @@ session work
 Each candidate scored 0–3 on five dimensions:
 
 1. **Demand evidence** — has anyone actually shown they'd pay? Verified against the real market (Reddit, competitor products and pricing, news, social signals), not just intuition.
-2. **Hours to ship** — Gray-hours to a sellable v1 (lower = higher score)
-3. **Hours per month to maintain** — support/updates burden (lower = higher score)
+2. **Effort to ship** — Gray-effort to a sellable v1 (lower complexity = higher score)
+3. **Maintenance burden** — support/updates burden (lower complexity = higher score)
 4. **Distribution fit** — can Gray's existing channels (@graydient_media audience, content brand, network) reach the buyer?
 5. **Price potential** — revenue shape: one-time template vs. recurring vs. service
 
@@ -121,7 +121,7 @@ Seeds the pipeline by walking everything produced since Claude Code + Obsidian a
 - Obsidian vault (`Graydient Media`, via MCP)
 - Every `python-scripts/*/README.md`, `web-apps/*`, `workflows/*`
 
-Run with parallel scout subagents to keep the main context lean. Output: seeded PIPELINE.md (initial WATCHLIST/RADAR/KILLED + a NOW pick if one clears the bar) and `state.json` cursor set to the backfill commit. **This is the one deliberately token-heavy run** — it happens once, only when Gray says go, and is never repeated (if state.json is ever lost, re-seed the cursor to today; do NOT auto-re-backfill).
+Run with parallel scout subagents to keep the main context lean. Output: seeded PIPELINE.md (initial WATCHLIST/RADAR/KILLED + a NOW pick if one clears the bar) and `state.json` cursor set to the backfill commit. **This is the one deliberately token-heavy run** — it happens once, only when Gray says go, and is never repeated (if state.json is ever lost, re-seed the cursor to today; do NOT auto-re-backfill). The backfill session must flip both completion markers — `state.json`'s `backfill_complete` and PIPELINE.md's `_Backfill:` header line — so a stale marker in one file can't be mistaken for a complete backfill.
 
 ### Deep-dive mode (on demand)
 
