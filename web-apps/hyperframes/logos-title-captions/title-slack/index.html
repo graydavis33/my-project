@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Anton";
+        src: url("anton.woff2") format("woff2");
+        font-weight: 400; font-style: normal;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+      /* alpha overlay — no background anywhere */
+      .scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .scene-content {
+        width: 100%; height: 100%;
+        display: flex; align-items: center; justify-content: center;
+      }
+      /* card = word + underline; floats as a unit */
+      .card { display: flex; flex-direction: column; align-items: center; gap: 22px;
+              will-change: transform; }
+      /* soft dark shadow on the composite (outside the letter masks so it
+         never clips) — this is why the deliverable is alpha ProRes */
+      .word {
+        display: flex;
+        font-family: "Anton", sans-serif;
+        font-size: 210px; line-height: 1.04; color: #FFFFFF;
+        letter-spacing: 0.02em;
+        filter: drop-shadow(0 10px 28px rgba(0,0,0,0.5));
+        will-change: transform;
+      }
+      /* each letter rises out of its own overflow mask */
+      .mask { display: inline-block; overflow: hidden; padding: 0 0.01em; }
+      .mask.gap { margin-right: 0.32em; }
+      .ltr  { display: inline-block; will-change: transform, opacity, filter; }
+      .underline {
+        width: 100%; height: 12px; border-radius: 6px;
+        background: linear-gradient(90deg, #36C5F0 0 25%, #2EB67D 25% 50%, #ECB22E 50% 75%, #E01E5A 75% 100%);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+        will-change: transform;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-x3dq" id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1920" data-height="1080">
+      <div data-hf-id="hf-5f6b" id="scene" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+        <div data-hf-id="hf-cn5c" class="scene-content">
+          <div data-hf-id="hf-4zky" class="card" id="card">
+            <div data-hf-id="hf-mtnn" class="word" id="word" data-layout-allow-overflow=""><span data-hf-id="hf-4jdt" class="mask"><span data-hf-id="hf-6mkt" class="ltr">2</span></span><span data-hf-id="hf-4869" class="mask gap"><span data-hf-id="hf-hr5l" class="ltr">.</span></span><span data-hf-id="hf-vdsp" class="mask"><span data-hf-id="hf-4vh6" class="ltr">S</span></span><span data-hf-id="hf-2y5p" class="mask"><span data-hf-id="hf-gecz" class="ltr">L</span></span><span data-hf-id="hf-452s" class="mask"><span data-hf-id="hf-c0zo" class="ltr">A</span></span><span data-hf-id="hf-3qrr" class="mask"><span data-hf-id="hf-b8dm" class="ltr">C</span></span><span data-hf-id="hf-4xou" class="mask"><span data-hf-id="hf-eetu" class="ltr">K</span></span></div>
+            <div data-hf-id="hf-rl4u" class="underline" id="underline"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      (function () {
+        const tl = gsap.timeline({ paused: true });
+        const DUR = 4;
+
+        // letters rise from below their masks — down -> up, easy ease
+        tl.from(".ltr", { yPercent: 118, duration: 0.85, ease: "back.out(1.35)", stagger: 0.065 }, 0.2);
+        tl.from(".ltr", { opacity: 0, duration: 0.35, ease: "power2.out", stagger: 0.065 }, 0.2);
+        // blur clears as each letter lands
+        tl.fromTo(".ltr", { filter: "blur(9px)" },
+          { filter: "blur(0px)", duration: 0.6, ease: "power2.out", stagger: 0.065 }, 0.25);
+
+        // whole word settles from a slight oversize
+        tl.from("#word", { scale: 1.06, duration: 1.0, ease: "power3.out", transformOrigin: "50% 50%" }, 0.2);
+
+        // brand underline sweeps in once the letters have landed
+        tl.from("#underline", { scaleX: 0, duration: 0.55, ease: "power3.inOut", transformOrigin: "0% 50%" }, 1.05);
+
+        // gentle idle float (matches the hovering logos in the B-roll)
+        const fStart = 1.7, fDur = 1.15;
+        const fReps = Math.max(1, Math.ceil((DUR - fStart) / fDur) - 1);
+        tl.to("#card", { y: -6, duration: fDur, ease: "sine.inOut", yoyo: true, repeat: fReps }, fStart);
+
+        // no exit — Gray cuts the overlay in Premiere
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>

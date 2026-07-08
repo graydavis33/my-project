@@ -1,319 +1,276 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
         width: 1920px; height: 1080px; overflow: hidden;
-        background: #ffffff;
+        background: #191919;
         font-family: "Inter", system-ui, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
-
-      /* ---------- app shell ---------- */
       #app { display: flex; width: 1920px; height: 1080px; }
 
       /* ---------- sidebar ---------- */
       #sidebar {
         width: 300px; height: 100%;
-        background: #f7f6f3;
-        border-right: 1px solid #e9e9e7;
-        padding: 14px 8px;
-        color: #5f5e5b;
-        font-size: 15px;
+        background: #202020; border-right: 1px solid #2f2f2f;
+        padding: 14px 8px; color: #9b9b98; font-size: 15px;
         display: flex; flex-direction: column;
       }
-      .ws-head {
-        display: flex; align-items: center; gap: 9px;
-        padding: 6px 8px 6px 6px; border-radius: 6px; margin-bottom: 8px;
-      }
-      .ws-avatar {
-        width: 22px; height: 22px; border-radius: 5px;
-        background: #d9730d; color: #fff; font-weight: 700; font-size: 13px;
-        display: flex; align-items: center; justify-content: center;
-      }
-      .ws-name { font-weight: 600; color: #37352f; font-size: 15px; }
+      .ws-head { display: flex; align-items: center; gap: 9px; padding: 6px 8px 6px 6px; margin-bottom: 8px; }
+      .ws-avatar { width: 22px; height: 22px; border-radius: 5px; background: #d9730d; color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+      .ws-name { font-weight: 600; color: #e6e6e4; font-size: 15px; }
       .chev { margin-left: auto; opacity: .5; }
-
-      .side-row {
-        display: flex; align-items: center; gap: 10px;
-        padding: 6px 8px; border-radius: 6px; margin: 1px 0;
-        color: #5f5e5b; white-space: nowrap;
-      }
-      .side-row svg { flex: none; opacity: .75; }
-      .side-label {
-        font-size: 11px; font-weight: 600; letter-spacing: .5px;
-        color: #9b9a97; padding: 14px 8px 4px; text-transform: uppercase;
-      }
-      #row-training { background: #eceae7; color: #37352f; }
+      .side-row { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 6px; margin: 1px 0; color: #9b9b98; white-space: nowrap; }
+      .side-row svg { flex: none; opacity: .85; }
+      .side-label { font-size: 11px; font-weight: 600; letter-spacing: .5px; color: #949490; padding: 14px 8px 4px; text-transform: uppercase; }
+      #row-training { background: #2e2e2e; color: #e6e6e4; }
       #row-training svg { opacity: 1; }
 
       /* ---------- main pane ---------- */
-      #main { position: relative; flex: 1; height: 100%; background: #ffffff; }
-      .view { position: absolute; inset: 0; padding: 60px 120px; }
+      #main { position: relative; flex: 1; height: 100%; background: #191919; }
+      .view { position: absolute; inset: 0; }
 
       /* doc view */
-      #doc-view .doc-icon {
-        width: 62px; height: 62px; border-radius: 12px; background: #f1f0ee;
-        display: flex; align-items: center; justify-content: center; margin-bottom: 18px;
-      }
-      #doc-view h1 { font-size: 46px; font-weight: 700; color: #37352f; margin-bottom: 10px; }
-      #doc-view .crumb { font-size: 15px; color: #9b9a97; margin-bottom: 26px; }
-      #doc-view p { font-size: 19px; line-height: 1.55; color: #4a4844; max-width: 900px; margin-bottom: 26px; }
-      .check-row {
-        display: flex; align-items: center; gap: 14px;
-        font-size: 20px; color: #37352f; padding: 9px 0;
-      }
-      .cbox {
-        width: 22px; height: 22px; border-radius: 5px; flex: none;
-        border: 2px solid #c9c8c5; display: flex; align-items: center; justify-content: center;
-      }
+      #doc-view { padding: 60px 120px; }
+      #doc-view .doc-icon { width: 62px; height: 62px; border-radius: 12px; background: #2a2a2a; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+      #doc-view h1 { font-size: 46px; font-weight: 700; color: #e9e9e7; margin-bottom: 10px; }
+      #doc-view .crumb { font-size: 15px; color: #949490; margin-bottom: 26px; }
+      #doc-view p { font-size: 19px; line-height: 1.55; color: #b8b8b4; max-width: 900px; margin-bottom: 26px; }
+      .check-row { display: flex; align-items: center; gap: 14px; font-size: 20px; color: #d4d4d2; padding: 9px 0; }
+      .cbox { width: 22px; height: 22px; border-radius: 5px; flex: none; border: 2px solid #4a4a48; display: flex; align-items: center; justify-content: center; }
       .cbox.done { background: #2383e2; border-color: #2383e2; }
-      .callout {
-        margin-top: 26px; background: #f7f6f3; border-radius: 8px;
-        padding: 18px 22px; font-size: 18px; color: #4a4844; max-width: 900px;
-        display: flex; gap: 14px; align-items: center;
-      }
+      .callout { margin-top: 26px; background: #252525; border-radius: 8px; padding: 18px 22px; font-size: 18px; color: #b8b8b4; max-width: 900px; display: flex; gap: 14px; align-items: center; }
 
-      /* calendar / table view */
-      #cal-view { opacity: 0; }
-      #cal-view .cal-head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
-      #cal-view h1 { font-size: 44px; font-weight: 700; color: #37352f; }
-      #cal-view .crumb { font-size: 15px; color: #9b9a97; margin-bottom: 30px; }
+      /* board view */
+      #board-view { opacity: 0; padding: 46px 50px; display: flex; flex-direction: column; }
+      .board-head { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+      .board-head h1 { font-size: 40px; font-weight: 700; color: #e9e9e7; }
+      .db-tabs { display: flex; gap: 4px; border-bottom: 1px solid #2f2f2f; margin: 16px 0 26px; }
+      .db-tab { display: flex; align-items: center; gap: 7px; padding: 9px 12px; font-size: 16px; color: #949490; border-bottom: 2px solid transparent; }
+      .db-tab.active { color: #e9e9e7; border-bottom-color: #e9e9e7; font-weight: 600; }
 
-      .tbl { width: 100%; border-top: 1px solid #e9e9e7; }
-      .trow {
-        display: grid; grid-template-columns: 1fr 190px 260px;
-        align-items: center; border-bottom: 1px solid #e9e9e7;
-        padding: 16px 6px; font-size: 20px; color: #37352f;
-      }
-      .thead {
-        display: grid; grid-template-columns: 1fr 190px 260px;
-        font-size: 14px; color: #9b9a97; font-weight: 600;
-        padding: 0 6px 10px; text-transform: uppercase; letter-spacing: .4px;
-      }
-      .title-cell { display: flex; align-items: center; gap: 12px; }
-      .doc-mini { opacity: .55; }
-      .pill {
-        display: inline-flex; align-items: center; gap: 7px;
-        font-size: 15px; font-weight: 600; padding: 4px 12px; border-radius: 20px; width: fit-content;
-      }
-      .pill .dot { width: 7px; height: 7px; border-radius: 50%; }
-      .p-edit { background: #e7f0fb; color: #2383e2; }
-      .p-edit .dot { background: #2383e2; }
-      .p-film { background: #fbecdd; color: #d9730d; }
-      .p-film .dot { background: #d9730d; }
-      .p-ready { background: #ddf0e4; color: #0f7b40; }
-      .p-ready .dot { background: #0f7b40; }
-      .p-draft { background: #edecea; color: #787774; }
-      .p-draft .dot { background: #9b9a97; }
+      .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; flex: 1; align-content: start; }
+      .col { display: flex; flex-direction: column; gap: 12px; }
+      .col-head { display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 600; color: #9b9b98; padding: 2px 4px; }
+      .col-head .cdot { width: 9px; height: 9px; border-radius: 50%; }
+      .col-head .num { color: #949490; font-weight: 500; }
+      .kcard { background: #252525; border: 1px solid #333333; border-radius: 10px; padding: 14px 15px; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
+      .ktitle { font-size: 18px; font-weight: 600; color: #e6e6e4; line-height: 1.3; margin-bottom: 12px; }
+      .ktag { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 6px; margin-bottom: 14px; }
+      .ktag .dot { width: 6px; height: 6px; border-radius: 50%; }
+      .t-idea { background: #37373b; color: #b3b3af; } .t-idea .dot { background: #8a8a86; }
+      .t-film { background: #3a2a17; color: #e2914e; } .t-film .dot { background: #d9730d; }
+      .t-edit { background: #17273a; color: #6cb0f0; } .t-edit .dot { background: #4a9eeb; }
+      .t-ready { background: #14301f; color: #57b377; } .t-ready .dot { background: #2ea866; }
+      .kfoot { display: flex; align-items: center; }
+      .av { width: 26px; height: 26px; border-radius: 50%; flex: none; color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+      .person { display: flex; align-items: center; gap: 8px; font-size: 15px; color: #b3b3af; }
 
-      .assignee { display: flex; align-items: center; gap: 10px; }
-      .av {
-        width: 26px; height: 26px; border-radius: 50%; flex: none;
-        color: #fff; font-size: 12px; font-weight: 700;
-        display: flex; align-items: center; justify-content: center;
-      }
-      .unassigned { color: #9b9a97; font-size: 18px; }
+      /* the assignable card */
+      #card-assign { position: relative; }
+      .assign-empty { display: inline-flex; align-items: center; gap: 7px; font-size: 15px; color: #9b9b98; border: 1px dashed #4a4a48; border-radius: 20px; padding: 4px 12px; }
+      #ca-filled { position: absolute; left: 0; top: 0; opacity: 0; white-space: nowrap; }
 
-      #a1-cell { position: relative; }
-      #a1-assigned { position: absolute; inset: 0; display: flex; align-items: center; gap: 10px; opacity: 0; }
+      /* member picker popover */
+      #picker { position: absolute; width: 234px; background: #2a2a2a; border: 1px solid #3a3a3a; border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,.55); padding: 6px; opacity: 0; z-index: 60; }
+      #picker .pk-label { font-size: 12px; color: #9a9a97; font-weight: 600; padding: 6px 8px 4px; }
+      .pk-opt { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 6px; font-size: 16px; color: #e6e6e4; }
+      #pick-jm { background: transparent; }
 
-      /* assignee dropdown */
-      #dropdown {
-        position: absolute; width: 250px;
-        background: #ffffff; border: 1px solid #e3e2e0; border-radius: 9px;
-        box-shadow: 0 10px 30px rgba(15,15,15,.16); padding: 6px; opacity: 0;
-        z-index: 50;
-      }
-      #dropdown .dd-label { font-size: 12px; color: #9b9a97; padding: 6px 8px 4px; font-weight: 600; }
-      .dd-opt { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 6px; font-size: 17px; color: #37352f; }
-      #dd-pick { background: transparent; }
-
-      /* ---------- cursor ---------- */
-      #cursor { position: absolute; top: 0; left: 0; z-index: 9999; will-change: transform; }
+      /* overlay layer (cursor + popovers at root 0,0 coords) */
+      #overlay { position: absolute; inset: 0; pointer-events: none; z-index: 100; }
+      #cursor { position: absolute; top: 0; left: 0; z-index: 200; will-change: transform; }
     </style>
   </head>
   <body>
-    <div id="app-root" data-composition-id="main" data-start="0" data-duration="7"
-         data-width="1920" data-height="1080">
-      <div id="app">
+    <div data-hf-id="hf-hs10" id="app-root" data-composition-id="main" data-start="0" data-duration="10.5" data-width="1920" data-height="1080">
+      <div data-hf-id="hf-9gvy" id="app">
         <!-- SIDEBAR -->
-        <div id="sidebar">
-          <div class="ws-head">
-            <div class="ws-avatar">T</div>
-            <div class="ws-name">Trendify HQ</div>
-            <svg class="chev" width="14" height="14" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="#9b9a97" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <div data-hf-id="hf-50a4" id="sidebar" data-layout-allow-overflow="">
+          <div data-hf-id="hf-wykp" class="ws-head">
+            <div data-hf-id="hf-lkxc" class="ws-avatar">T</div>
+            <div data-hf-id="hf-lgb8" class="ws-name">Trendify HQ</div>
+            <svg data-hf-id="hf-8lpn" class="chev" width="14" height="14" viewBox="0 0 24 24"><path data-hf-id="hf-0jku" d="M6 9l6 6 6-6" stroke="#949490" stroke-width="2" fill="none" stroke-linecap="round" /></svg>
           </div>
-
-          <div class="side-row">
-            <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="#5f5e5b" stroke-width="2" fill="none"/><path d="M16 16l5 5" stroke="#5f5e5b" stroke-width="2" stroke-linecap="round"/></svg>
-            <span>Search</span>
+          <div data-hf-id="hf-yl4a" class="side-row">
+            <svg data-hf-id="hf-je9g" width="18" height="18" viewBox="0 0 24 24"><circle data-hf-id="hf-xvim" cx="11" cy="11" r="7" stroke="#8f8f8c" stroke-width="2" fill="none" /><path data-hf-id="hf-p03c" d="M16 16l5 5" stroke="#8f8f8c" stroke-width="2" stroke-linecap="round" /></svg>
+            <span data-hf-id="hf-p1z1">Search</span>
           </div>
-          <div class="side-row">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1z" stroke="#5f5e5b" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg>
-            <span>Home</span>
+          <div data-hf-id="hf-31gu" class="side-row">
+            <svg data-hf-id="hf-ttl8" width="18" height="18" viewBox="0 0 24 24"><path data-hf-id="hf-9qqs" d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1z" stroke="#8f8f8c" stroke-width="1.8" fill="none" stroke-linejoin="round" /></svg>
+            <span data-hf-id="hf-e1du">Home</span>
           </div>
-
-          <div class="side-label">Workspace</div>
-
-          <div class="side-row" id="row-training">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.7" fill="none" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#37352f" stroke-width="1.7" fill="none" stroke-linejoin="round"/></svg>
-            <span>Training Docs</span>
+          <div data-hf-id="hf-3yud" class="side-label">Workspace</div>
+          <div data-hf-id="hf-2cgf" class="side-row" id="row-training">
+            <svg data-hf-id="hf-smo5" width="18" height="18" viewBox="0 0 24 24"><path data-hf-id="hf-1ng4" d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#d4d4d2" stroke-width="1.7" fill="none" stroke-linejoin="round" /><path data-hf-id="hf-rojv" d="M14 3v5h5" stroke="#d4d4d2" stroke-width="1.7" fill="none" stroke-linejoin="round" /></svg>
+            <span data-hf-id="hf-atva">Training Docs</span>
           </div>
-          <div class="side-row">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linejoin="round"/></svg>
-            <span>SOP Library</span>
+          <div data-hf-id="hf-3frv" class="side-row">
+            <svg data-hf-id="hf-t0z6" width="18" height="18" viewBox="0 0 24 24"><path data-hf-id="hf-3eyn" d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#8f8f8c" stroke-width="1.7" fill="none" stroke-linejoin="round" /><path data-hf-id="hf-ofeg" d="M14 3v5h5" stroke="#8f8f8c" stroke-width="1.7" fill="none" stroke-linejoin="round" /></svg>
+            <span data-hf-id="hf-vo6u">SOP Library</span>
           </div>
-          <div class="side-row" id="row-cal">
-            <svg width="18" height="18" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><path d="M3 9h18M8 3v4M16 3v4" stroke="#5f5e5b" stroke-width="1.7" stroke-linecap="round"/></svg>
-            <span>Content Calendar</span>
+          <div data-hf-id="hf-4qaf" class="side-row" id="row-cal">
+            <svg data-hf-id="hf-v0ib" width="18" height="18" viewBox="0 0 24 24"><rect data-hf-id="hf-xw9m" x="3" y="5" width="18" height="16" rx="2" stroke="#8f8f8c" stroke-width="1.7" fill="none" /><path data-hf-id="hf-g1ks" d="M3 9h18M8 3v4M16 3v4" stroke="#8f8f8c" stroke-width="1.7" stroke-linecap="round" /></svg>
+            <span data-hf-id="hf-yk38">Content Calendar</span>
           </div>
-          <div class="side-row">
-            <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><circle cx="16.5" cy="9" r="2.6" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><path d="M4 19c0-3 2.4-5 5-5s5 2 5 5M15 18c0-2 1-3.5 3-3.5s3 1.5 3 3.5" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
-            <span>Team Directory</span>
+          <div data-hf-id="hf-3u2w" class="side-row">
+            <svg data-hf-id="hf-vetc" width="18" height="18" viewBox="0 0 24 24"><circle data-hf-id="hf-fc5x" cx="9" cy="8" r="3.2" stroke="#8f8f8c" stroke-width="1.7" fill="none" /><circle data-hf-id="hf-7zks" cx="16.5" cy="9" r="2.6" stroke="#8f8f8c" stroke-width="1.7" fill="none" /><path data-hf-id="hf-xjiz" d="M4 19c0-3 2.4-5 5-5s5 2 5 5M15 18c0-2 1-3.5 3-3.5s3 1.5 3 3.5" stroke="#8f8f8c" stroke-width="1.7" fill="none" stroke-linecap="round" /></svg>
+            <span data-hf-id="hf-njc3">Team Directory</span>
           </div>
-          <div class="side-row">
-            <svg width="18" height="18" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><circle cx="16.5" cy="9" r="2.6" stroke="#5f5e5b" stroke-width="1.7" fill="none"/><path d="M4 19c0-3 2.4-5 5-5s5 2 5 5M15 18c0-2 1-3.5 3-3.5s3 1.5 3 3.5" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
-            <span>Creators</span>
-          </div>
-          <div class="side-row">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="#5f5e5b" stroke-width="1.7" fill="none" stroke-linejoin="round"/></svg>
-            <span>Client Projects</span>
+          <div data-hf-id="hf-11xp" class="side-row">
+            <svg data-hf-id="hf-u7w9" width="18" height="18" viewBox="0 0 24 24"><circle data-hf-id="hf-zngp" cx="9" cy="8" r="3.2" stroke="#8f8f8c" stroke-width="1.7" fill="none" /><circle data-hf-id="hf-zlqs" cx="16.5" cy="9" r="2.6" stroke="#8f8f8c" stroke-width="1.7" fill="none" /><path data-hf-id="hf-8yfv" d="M4 19c0-3 2.4-5 5-5s5 2 5 5M15 18c0-2 1-3.5 3-3.5s3 1.5 3 3.5" stroke="#8f8f8c" stroke-width="1.7" fill="none" stroke-linecap="round" /></svg>
+            <span data-hf-id="hf-b98g">Creators</span>
           </div>
         </div>
 
         <!-- MAIN -->
-        <div id="main">
+        <div data-hf-id="hf-j156" id="main">
           <!-- DOC VIEW -->
-          <div class="view" id="doc-view">
-            <div class="doc-icon">
-              <svg width="34" height="34" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#787774" stroke-width="1.6" fill="none" stroke-linejoin="round"/><path d="M14 3v5h5M8 13h8M8 17h6" stroke="#787774" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+          <div data-hf-id="hf-0nax" class="view" id="doc-view">
+            <div data-hf-id="hf-mhv0" class="doc-icon">
+              <svg data-hf-id="hf-eq7o" width="34" height="34" viewBox="0 0 24 24"><path data-hf-id="hf-524a" d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#9b9b98" stroke-width="1.6" fill="none" stroke-linejoin="round" /><path data-hf-id="hf-lvkt" d="M14 3v5h5M8 13h8M8 17h6" stroke="#9b9b98" stroke-width="1.6" fill="none" stroke-linecap="round" /></svg>
             </div>
-            <div class="crumb">Training Docs / Onboarding</div>
-            <h1>Creator Onboarding SOP</h1>
-            <p>Everything a new creator needs in their first week. Every process on the team lives here so nothing depends on one person's memory.</p>
-            <div class="check-row"><span class="cbox done"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Read the brand style guide</div>
-            <div class="check-row"><span class="cbox done"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Set up Frame.io + Drive access</div>
-            <div class="check-row"><span class="cbox"></span>Complete first practice edit</div>
-            <div class="check-row"><span class="cbox"></span>Shadow a live shoot day</div>
-            <div class="callout">
-              <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="#d9730d" stroke-width="1.8" fill="none"/><path d="M12 8v5M12 16h.01" stroke="#d9730d" stroke-width="2" stroke-linecap="round"/></svg>
-              <span>Tip: assign yourself in the Content Calendar so the team can see what you're working on.</span>
+            <div data-hf-id="hf-n7yw" class="crumb">Training Docs / Onboarding</div>
+            <h1 data-hf-id="hf-yin9">Creator Onboarding SOP</h1>
+            <p data-hf-id="hf-6yly">Everything a new creator needs in their first week. Every process on the team lives here so nothing depends on one person's memory.</p>
+            <div data-hf-id="hf-9y80" class="check-row"><span data-hf-id="hf-7srt" class="cbox done"><svg data-hf-id="hf-liqs" width="14" height="14" viewBox="0 0 24 24"><path data-hf-id="hf-w1yw" d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Read the brand style guide</div>
+            <div data-hf-id="hf-tvgc" class="check-row"><span data-hf-id="hf-owgt" class="cbox done"><svg data-hf-id="hf-hecc" width="14" height="14" viewBox="0 0 24 24"><path data-hf-id="hf-vyz4" d="M5 13l4 4L19 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg></span>Set up Frame.io + Drive access</div>
+            <div data-hf-id="hf-3va5" class="check-row"><span data-hf-id="hf-d313" class="cbox"></span>Complete first practice edit</div>
+            <div data-hf-id="hf-7xzj" class="check-row"><span data-hf-id="hf-oj9z" class="cbox"></span>Shadow a live shoot day</div>
+            <div data-hf-id="hf-qkzo" class="callout">
+              <svg data-hf-id="hf-rvxa" width="22" height="22" viewBox="0 0 24 24"><circle data-hf-id="hf-a2hl" cx="12" cy="12" r="9" stroke="#d9730d" stroke-width="1.8" fill="none" /><path data-hf-id="hf-j9ek" d="M12 8v5M12 16h.01" stroke="#d9730d" stroke-width="2" stroke-linecap="round" /></svg>
+              <span data-hf-id="hf-tn3i">Tip: find your assignments in the Content Calendar so the whole team can see what you're working on.</span>
             </div>
           </div>
 
-          <!-- CALENDAR / TABLE VIEW -->
-          <div class="view" id="cal-view">
-            <div class="cal-head">
-              <svg width="40" height="40" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" stroke="#37352f" stroke-width="1.6" fill="none"/><path d="M3 9h18M8 3v4M16 3v4" stroke="#37352f" stroke-width="1.6" stroke-linecap="round"/></svg>
-              <h1>Content Calendar</h1>
+          <!-- BOARD VIEW -->
+          <div data-hf-id="hf-2nmj" class="view" id="board-view">
+            <div data-hf-id="hf-2fxj" class="board-head">
+              <svg data-hf-id="hf-u630" width="34" height="34" viewBox="0 0 24 24"><rect data-hf-id="hf-0bs6" x="3" y="5" width="18" height="16" rx="2" stroke="#e9e9e7" stroke-width="1.6" fill="none" /><path data-hf-id="hf-p0dy" d="M3 9h18M8 3v4M16 3v4" stroke="#e9e9e7" stroke-width="1.6" stroke-linecap="round" /></svg>
+              <h1 data-hf-id="hf-wowb">Content Calendar</h1>
             </div>
-            <div class="crumb">Workspace / Content Calendar &nbsp;·&nbsp; 5 assigned this week</div>
-
-            <div class="thead"><span>Content</span><span>Status</span><span>Assignee</span></div>
-            <div class="tbl" data-layout-allow-overflow>
-              <div class="trow" id="trow1">
-                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>3 Tools My Business Runs On</span>
-                <span><span class="pill p-edit"><span class="dot"></span>In edit</span></span>
-                <span class="assignee" id="a1-cell">
-                  <span id="a1-unassigned" class="unassigned">＋ Assign</span>
-                  <span id="a1-assigned"><span class="av" style="background:#0b6e99">JM</span>Jordan M.</span>
-                </span>
-              </div>
-              <div class="trow">
-                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>How I Manage My Money</span>
-                <span><span class="pill p-film"><span class="dot"></span>Filming</span></span>
-                <span class="assignee"><span class="av" style="background:#ad1a72">MR</span>Maya R.</span>
-              </div>
-              <div class="trow">
-                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>Onboarding SOP Walkthrough</span>
-                <span><span class="pill p-ready"><span class="dot"></span>Ready</span></span>
-                <span class="assignee"><span class="av" style="background:#0f7b40">DK</span>Devin K.</span>
-              </div>
-              <div class="trow">
-                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>Client Case Study: Fortune 500</span>
-                <span><span class="pill p-draft"><span class="dot"></span>Draft</span></span>
-                <span class="assignee"><span class="av" style="background:#6940a5">PS</span>Priya S.</span>
-              </div>
-              <div class="trow">
-                <span class="title-cell"><svg class="doc-mini" width="18" height="18" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#37352f" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>Penpalooza Recap</span>
-                <span><span class="pill p-edit"><span class="dot"></span>In edit</span></span>
-                <span class="assignee"><span class="av" style="background:#c17d00">LT</span>Leo T.</span>
-              </div>
+            <div data-hf-id="hf-8yjz" class="db-tabs">
+              <div data-hf-id="hf-alew" class="db-tab"><svg data-hf-id="hf-e6oa" width="15" height="15" viewBox="0 0 24 24"><rect data-hf-id="hf-f08y" x="3" y="4" width="18" height="16" rx="2" stroke="#949490" stroke-width="1.8" fill="none" /><path data-hf-id="hf-ib71" d="M3 9h18M9 4v16" stroke="#949490" stroke-width="1.8" /></svg>Table</div>
+              <div data-hf-id="hf-wusi" class="db-tab active"><svg data-hf-id="hf-9moe" width="15" height="15" viewBox="0 0 24 24"><rect data-hf-id="hf-rrbz" x="3" y="4" width="5" height="16" rx="1.5" stroke="#e9e9e7" stroke-width="1.8" fill="none" /><rect data-hf-id="hf-4300" x="10" y="4" width="5" height="11" rx="1.5" stroke="#e9e9e7" stroke-width="1.8" fill="none" /><rect data-hf-id="hf-mrku" x="17" y="4" width="4" height="8" rx="1.5" stroke="#e9e9e7" stroke-width="1.8" fill="none" /></svg>Board</div>
+              <div data-hf-id="hf-sp2i" class="db-tab"><svg data-hf-id="hf-a0zf" width="15" height="15" viewBox="0 0 24 24"><rect data-hf-id="hf-iycz" x="3" y="5" width="18" height="16" rx="2" stroke="#949490" stroke-width="1.8" fill="none" /><path data-hf-id="hf-t07j" d="M3 9h18M8 3v4M16 3v4" stroke="#949490" stroke-width="1.8" /></svg>Calendar</div>
             </div>
 
-            <!-- assignee dropdown -->
-            <div id="dropdown">
-              <div class="dd-label">Assign to</div>
-              <div class="dd-opt" id="dd-pick"><span class="av" style="background:#0b6e99">JM</span>Jordan M.</div>
-              <div class="dd-opt"><span class="av" style="background:#1a7a8c">SC</span>Sara C.</div>
-              <div class="dd-opt"><span class="av" style="background:#9b3f8f">TN</span>Tomas N.</div>
+            <div data-hf-id="hf-6ra9" class="cols">
+              <!-- Ideas -->
+              <div data-hf-id="hf-7s1i" class="col">
+                <div data-hf-id="hf-5w5b" class="col-head"><span data-hf-id="hf-5pl8" class="cdot" style="background:#8a8a86"></span>Ideas<span data-hf-id="hf-l8o7" class="num">2</span></div>
+                <div data-hf-id="hf-6px5" class="kcard"><div data-hf-id="hf-yo7b" class="ktitle">Client Case Study: Fortune 500</div><span data-hf-id="hf-k8kf" class="ktag t-idea"><span data-hf-id="hf-9gry" class="dot"></span>Idea</span><div data-hf-id="hf-oavz" class="kfoot"><div data-hf-id="hf-37gr" class="person"><span data-hf-id="hf-bleb" class="av" style="background:#8a5cd6">PS</span>Priya S.</div></div></div>
+                <div data-hf-id="hf-g2vh" class="kcard"><div data-hf-id="hf-w4m8" class="ktitle">Behind the Scenes: Shoot Day</div><span data-hf-id="hf-5dy7" class="ktag t-idea"><span data-hf-id="hf-zcc2" class="dot"></span>Idea</span><div data-hf-id="hf-i6xr" class="kfoot"><div data-hf-id="hf-17ll" class="person"><span data-hf-id="hf-xbm5" class="av" style="background:#c93d8f">MR</span>Maya R.</div></div></div>
+              </div>
+              <!-- Filming -->
+              <div data-hf-id="hf-vmze" class="col">
+                <div data-hf-id="hf-91sp" class="col-head"><span data-hf-id="hf-owrt" class="cdot" style="background:#d9730d"></span>Filming<span data-hf-id="hf-d7lz" class="num">2</span></div>
+                <div data-hf-id="hf-h9sk" class="kcard"><div data-hf-id="hf-h2gz" class="ktitle">How I Manage My Money</div><span data-hf-id="hf-8ln7" class="ktag t-film"><span data-hf-id="hf-zqn3" class="dot"></span>Filming</span><div data-hf-id="hf-hsmq" class="kfoot"><div data-hf-id="hf-d025" class="person"><span data-hf-id="hf-ajwh" class="av" style="background:#c93d8f">MR</span>Maya R.</div></div></div>
+                <div data-hf-id="hf-gvhj" class="kcard"><div data-hf-id="hf-cayp" class="ktitle">Office Tour Walkthrough</div><span data-hf-id="hf-ixo3" class="ktag t-film"><span data-hf-id="hf-04y4" class="dot"></span>Filming</span><div data-hf-id="hf-hebp" class="kfoot"><div data-hf-id="hf-y4iq" class="person"><span data-hf-id="hf-94i0" class="av" style="background:#1f9a54">DK</span>Devin K.</div></div></div>
+              </div>
+              <!-- In Edit -->
+              <div data-hf-id="hf-w1af" class="col">
+                <div data-hf-id="hf-v5uy" class="col-head"><span data-hf-id="hf-eoc0" class="cdot" style="background:#4a9eeb"></span>In Edit<span data-hf-id="hf-ctay" class="num">2</span></div>
+                <div data-hf-id="hf-taj5" class="kcard" id="card-target"><div data-hf-id="hf-fzv8" class="ktitle">3 Tools My Business Runs On</div><span data-hf-id="hf-p6fm" class="ktag t-edit"><span data-hf-id="hf-0j95" class="dot"></span>In edit</span>
+                  <div data-hf-id="hf-k6gw" class="kfoot">
+                    <div data-hf-id="hf-vrjz" id="card-assign">
+                      <span data-hf-id="hf-qmvl" class="assign-empty" id="ca-empty">
+                        <svg data-hf-id="hf-afag" width="15" height="15" viewBox="0 0 24 24"><circle data-hf-id="hf-cx0k" cx="12" cy="8" r="3.4" stroke="#9b9b98" stroke-width="1.8" fill="none" /><path data-hf-id="hf-uh66" d="M5 20c0-3.4 3-6 7-6s7 2.6 7 6" stroke="#9b9b98" stroke-width="1.8" fill="none" /></svg>Assign
+                      </span>
+                      <span data-hf-id="hf-6c3q" id="ca-filled" class="person"><span data-hf-id="hf-ni7r" class="av" style="background:#2d8fe0">JM</span>Jordan M.</span>
+                    </div>
+                  </div>
+                </div>
+                <div data-hf-id="hf-i2em" class="kcard"><div data-hf-id="hf-srpb" class="ktitle">Penpalooza Recap</div><span data-hf-id="hf-3nyu" class="ktag t-edit"><span data-hf-id="hf-0xk6" class="dot"></span>In edit</span><div data-hf-id="hf-js5v" class="kfoot"><div data-hf-id="hf-wqo1" class="person"><span data-hf-id="hf-msur" class="av" style="background:#d99400">LT</span>Leo T.</div></div></div>
+              </div>
+              <!-- Ready -->
+              <div data-hf-id="hf-wflg" class="col">
+                <div data-hf-id="hf-65ko" class="col-head"><span data-hf-id="hf-heo2" class="cdot" style="background:#2ea866"></span>Ready<span data-hf-id="hf-kud6" class="num">1</span></div>
+                <div data-hf-id="hf-ho3l" class="kcard"><div data-hf-id="hf-udru" class="ktitle">Onboarding SOP Walkthrough</div><span data-hf-id="hf-glrd" class="ktag t-ready"><span data-hf-id="hf-1bv7" class="dot"></span>Ready</span><div data-hf-id="hf-jduu" class="kfoot"><div data-hf-id="hf-hohy" class="person"><span data-hf-id="hf-bc00" class="av" style="background:#1f9a54">DK</span>Devin K.</div></div></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- CURSOR -->
-      <div id="cursor">
-        <svg width="24" height="30" viewBox="0 0 24 30" fill="none">
-          <path d="M3 2.5L3 22.5L8.3 17.6L11.8 25.2L15 23.7L11.6 16.3L18.6 16.1L3 2.5Z"
-                fill="#111" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/>
-        </svg>
+      <!-- OVERLAY: picker + cursor at root coords -->
+      <div data-hf-id="hf-6h00" id="overlay" data-layout-ignore="">
+        <div data-hf-id="hf-dxk7" id="picker">
+          <div data-hf-id="hf-uozz" class="pk-label">Assign creator</div>
+          <div data-hf-id="hf-frvp" class="pk-opt" id="pick-jm"><span data-hf-id="hf-x3av" class="av" style="background:#2d8fe0">JM</span>Jordan M.</div>
+          <div data-hf-id="hf-ppoj" class="pk-opt"><span data-hf-id="hf-jbly" class="av" style="background:#2aa39a">SC</span>Sara C.</div>
+          <div data-hf-id="hf-xdnj" class="pk-opt"><span data-hf-id="hf-xwva" class="av" style="background:#b3559e">TN</span>Tomas N.</div>
+        </div>
+        <div data-hf-id="hf-8gdj" id="cursor">
+          <svg data-hf-id="hf-5bsm" width="24" height="30" viewBox="0 0 24 30" fill="none">
+            <path data-hf-id="hf-eomf" d="M3 2.5L3 22.5L8.3 17.6L11.8 25.2L15 23.7L11.6 16.3L18.6 16.1L3 2.5Z" fill="#f5f5f5" stroke="#000" stroke-width="1.4" stroke-linejoin="round" />
+          </svg>
+        </div>
       </div>
     </div>
 
     <script>
       window.__timelines = window.__timelines || {};
-      const tl = gsap.timeline({ paused: true });
+      const tl  = gsap.timeline({ paused: true });   // master: 3s intro + recording
+      const rec = gsap.timeline();                    // the screen recording (nested at t=3)
 
-      // cursor helpers -------------------------------------------------------
-      gsap.set("#cursor", { x: 1180, y: 470 });
-      const move = (x, y, t, dur = 0.8) =>
-        tl.to("#cursor", { x, y, duration: dur, ease: "power2.inOut" }, t);
-      const click = (t) =>
-        tl.to("#cursor", { scale: 0.86, duration: 0.07, ease: "power2.in", yoyo: true, repeat: 1, transformOrigin: "0 0" }, t);
+      // ---- element-accurate cursor targeting (targets bake NATURAL positions) ----
+      const TIPX = 3, TIPY = 2.5;                 // cursor tip offset inside the SVG
+      const rectOf = (sel) => document.querySelector(sel).getBoundingClientRect();
+      function moveTo(sel, t, dur = 0.8, fx = 0.5, fy = 0.5) {
+        const r = rectOf(sel);
+        return rec.to("#cursor", { x: r.left + r.width * fx - TIPX, y: r.top + r.height * fy - TIPY,
+                                   duration: dur, ease: "power2.inOut" }, t);
+      }
+      const click = (t) => rec.to("#cursor", { scale: 0.86, duration: 0.07, ease: "power2.in",
+                                               yoyo: true, repeat: 1, transformOrigin: "0 0" }, t);
 
-      // 0.0–1.3  idle over the training doc
-      move(1060, 520, 0.3, 0.9);
+      // initial state — read NATURAL rects before any intro transform is constructed
+      (function(){ const r = rectOf("#doc-view"); gsap.set("#cursor", { opacity: 0, x: r.left + 620, y: r.top + 300 }); })();
+      (function(){ const r = rectOf("#card-assign"); gsap.set("#picker", { left: r.left - 4, top: r.bottom + 8 }); })();
 
-      // 1.3  travel to "Content Calendar" in the sidebar, click
-      move(150, 296, 1.3, 0.85);
-      click(2.2);
-      // sidebar selection swap
-      tl.to("#row-training", { backgroundColor: "#f7f6f3", color: "#5f5e5b", duration: 0.2 }, 2.3);
-      tl.to("#row-cal", { backgroundColor: "#eceae7", color: "#37352f", duration: 0.2 }, 2.3);
-      // main page crossfade: doc -> calendar
-      tl.to("#doc-view", { opacity: 0, duration: 0.3, ease: "power1.inOut" }, 2.35);
-      tl.to("#cal-view", { opacity: 1, duration: 0.35, ease: "power1.inOut" }, 2.45);
-      tl.from("#cal-view .trow", { opacity: 0, y: 14, duration: 0.4, stagger: 0.05, ease: "power2.out" }, 2.55);
+      /* ===== SCREEN RECORDING — built first so cursor targets bake natural positions ===== */
+      rec.to("#cursor", { x: rectOf("#doc-view").left + 480, y: rectOf("#doc-view").top + 380, duration: 0.9, ease: "power1.inOut" }, 0.3);
+      moveTo("#row-cal", 1.6, 0.85, 0.18, 0.5);
+      click(2.45);
+      rec.to("#row-training", { backgroundColor: "#202020", color: "#9b9b98", duration: 0.2 }, 2.55);
+      rec.to("#row-cal", { backgroundColor: "#2e2e2e", color: "#e6e6e4", duration: 0.2 }, 2.55);
+      rec.to("#doc-view", { opacity: 0, duration: 0.28, ease: "power1.inOut" }, 2.6);
+      rec.to("#board-view", { opacity: 1, duration: 0.34, ease: "power1.inOut" }, 2.7);
+      rec.from(".cols .col", { opacity: 0, y: 16, duration: 0.4, stagger: 0.05, ease: "power2.out" }, 2.8);
+      moveTo("#ca-empty", 3.25, 0.8, 0.5, 0.5);
+      click(4.1);
+      rec.fromTo("#picker", { opacity: 0, scale: 0.96, transformOrigin: "30px 0px" },
+        { opacity: 1, scale: 1, duration: 0.22, ease: "power2.out" }, 4.2);
+      moveTo("#pick-jm", 4.55, 0.55, 0.5, 0.5);
+      click(5.2);
+      rec.to("#pick-jm", { backgroundColor: "#243447", duration: 0.12 }, 5.2);
+      rec.to("#picker", { opacity: 0, duration: 0.2, ease: "power1.in" }, 5.35);
+      rec.to("#ca-empty", { opacity: 0, duration: 0.18 }, 5.4);
+      rec.fromTo("#ca-filled", { opacity: 0, x: -6 }, { opacity: 1, x: 0, duration: 0.35, ease: "power2.out" }, 5.5);
+      rec.fromTo("#card-target", { boxShadow: "0 0 0 3px rgba(74,158,235,0.55)" },
+        { boxShadow: "0 1px 2px rgba(0,0,0,.25)", duration: 1.0, ease: "power1.out", immediateRender: false }, 5.5);
+      rec.to("#cursor", { x: rectOf("#card-target").left + 260, y: rectOf("#card-target").top + 190, duration: 0.9, ease: "power2.inOut" }, 6.1);
 
-      // 2.9  travel to row 1 assignee cell, click -> dropdown opens
-      move(1470, 322, 2.95, 0.8);
-      click(3.85);
-      tl.fromTo("#dropdown",
-        { opacity: 0, scale: 0.96, transformOrigin: "20px 0px" },
-        { opacity: 1, scale: 1, duration: 0.22, ease: "power2.out" }, 3.95);
+      /* ===== 3s INTRO — UI assembles piece-by-piece into the recording's first frame ===== */
+      tl.from("#sidebar", { x: -320, duration: 0.7, ease: "power3.out" }, 0.2);
+      tl.from("#sidebar .ws-head, #sidebar .side-row, #sidebar .side-label",
+        { opacity: 0, x: -12, duration: 0.4, stagger: 0.045, ease: "power2.out" }, 0.55);
+      tl.from("#doc-view .doc-icon", { opacity: 0, scale: 0.6, duration: 0.45, ease: "back.out(1.7)" }, 1.05);
+      tl.from("#doc-view .crumb", { opacity: 0, y: 12, duration: 0.4, ease: "power2.out" }, 1.2);
+      tl.from("#doc-view h1", { opacity: 0, y: 26, duration: 0.5, ease: "power3.out" }, 1.3);
+      tl.from("#doc-view p", { opacity: 0, y: 16, duration: 0.45, ease: "power2.out" }, 1.55);
+      tl.from("#doc-view .check-row", { opacity: 0, y: 14, duration: 0.4, stagger: 0.08, ease: "power2.out" }, 1.8);
+      tl.from("#doc-view .callout", { opacity: 0, y: 18, scale: 0.98, duration: 0.5, ease: "power2.out" }, 2.35);
+      tl.to("#cursor", { opacity: 1, duration: 0.4, ease: "power1.out" }, 2.55);
 
-      // 4.3  travel down to "Jordan M." option, click -> assign
-      move(1470, 452, 4.3, 0.5);
-      click(4.9);
-      tl.to("#dd-pick", { backgroundColor: "#eef3fb", duration: 0.12 }, 4.9);
-      tl.to("#dropdown", { opacity: 0, duration: 0.2, ease: "power1.in" }, 5.05);
-      tl.to("#a1-unassigned", { opacity: 0, duration: 0.2 }, 5.1);
-      tl.fromTo("#a1-assigned",
-        { opacity: 0, x: -6 },
-        { opacity: 1, x: 0, duration: 0.35, ease: "power2.out" }, 5.2);
-      // brief row highlight to confirm the change
-      tl.fromTo("#trow1",
-        { backgroundColor: "rgba(35,131,226,0.10)" },
-        { backgroundColor: "rgba(35,131,226,0.0)", duration: 0.9, ease: "power1.out" }, 5.2);
-
-      // 5.7–7.0  settle
-      move(1250, 470, 5.9, 0.9);
+      // recording starts at t=3, once the first frame is assembled
+      tl.add(rec, 3);
 
       window.__timelines["main"] = tl;
     </script>

@@ -33,7 +33,20 @@
       }
       /* float wrappers — sway animates these so it never conflicts
          with the entrance tween on the img itself */
-      .float { will-change: transform; }
+      .float { position: relative; will-change: transform; }
+      .float .logo { position: relative; z-index: 1; }
+
+      /* green pulse aura behind the Scribe logo — pulsing radial glow.
+         Sits inside the float wrapper so it floats AND scales with it. */
+      .aura {
+        position: absolute; inset: -70px; z-index: 0;
+        border-radius: 50%; opacity: 0;
+        background: radial-gradient(circle,
+          rgba(34, 226, 93, 0.98) 0%,
+          rgba(34, 226, 93, 0.55) 46%,
+          rgba(34, 226, 93, 0) 72%);
+        will-change: transform, opacity;
+      }
     </style>
   </head>
   <body>
@@ -42,7 +55,7 @@
         <div data-hf-id="hf-thy4" class="row">
           <div data-hf-id="hf-6te7" class="float" id="float1"><img data-hf-id="hf-xsu5" class="logo" id="logo1" src="slack.png" alt=""></div>
           <div data-hf-id="hf-vxwk" class="float" id="float2"><img data-hf-id="hf-410v" class="logo" id="logo2" src="notion.png" alt=""></div>
-          <div data-hf-id="hf-yx65" class="float" id="float3"><img data-hf-id="hf-tzj9" class="logo" id="logo3" src="scribe.png" alt=""></div>
+          <div data-hf-id="hf-yx65" class="float" id="float3"><div data-hf-id="hf-pvk9" class="aura" id="aura3"></div><img data-hf-id="hf-tzj9" class="logo" id="logo3" src="scribe.png" alt=""></div>
         </div>
       </div>
     </div>
@@ -81,6 +94,38 @@
           tl.to(s.el, { y: -s.y, duration: s.yd, ease: "sine.inOut", yoyo: true, repeat: reps(s.yd) }, s.start);
           tl.to(s.el, { x: s.x, duration: s.xd, ease: "sine.inOut", yoyo: true, repeat: reps(s.xd) }, s.start);
         });
+
+        // ---- Scribe highlight: after a beat of floating, scale up in
+        // place + pulsing green glow. Scale rides the img (entrance tween
+        // is long done and never touched scale); the sway keeps moving
+        // the wrapper, so it floats while highlighted.
+        const HL = 3.2; // highlight start
+        tl.to("#logo3", {
+          scale: 1.22,
+          duration: 0.7,
+          ease: "back.out(1.3)",
+          transformOrigin: "50% 50%"
+        }, HL);
+
+        // aura fades in with the scale-up...
+        tl.to("#aura3", { opacity: 0.95, duration: 0.45, ease: "power2.out" }, HL);
+        // ...then breathes: opacity + scale pulse in sync (sine yoyo).
+        // 0.55s half-cycle = a clear "blink" that still feels smooth.
+        const P = 0.55, pStart = HL + 0.5;
+        const pReps = Math.max(1, Math.ceil((DUR - pStart) / P) - 1);
+        tl.to("#aura3", {
+          opacity: 0.45, scale: 0.92,
+          duration: P, ease: "sine.inOut", yoyo: true, repeat: pReps,
+          transformOrigin: "50% 50%"
+        }, pStart);
+        // matching green rim glow pulses on the logo itself
+        // (double drop-shadow: tight hot rim + wide soft bloom)
+        tl.fromTo("#logo3",
+          { filter: "drop-shadow(0 0 6px rgba(34,226,93,0.5)) drop-shadow(0 0 18px rgba(34,226,93,0.4))" },
+          { filter: "drop-shadow(0 0 16px rgba(34,226,93,1)) drop-shadow(0 0 52px rgba(34,226,93,0.95))",
+            duration: P, ease: "sine.inOut", yoyo: true, repeat: pReps,
+            immediateRender: false
+          }, pStart);
 
         // No exit — hold the floating row (B-roll).
 
