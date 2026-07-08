@@ -9,12 +9,16 @@ Gray, verbatim intent: "Either the format isn't anything you can adapt with Sai,
 Root cause: the Sandcastles watchlist is ONE shared list (single workspace, verified) holding Gray-brand editing/AI creators AND Sai founder creators. v1 pulled watchlist-wide sorted by views → surfaced Gray-brand creators and mega-channel routine posts.
 
 **The method now (every future batch):**
-1. Grep all `sai/scripts/*.md` for used URLs/handles — no repeat videos OR creators, including rejected ones.
-2. `search_my_videos`, 90d, **min outlier ≥10x**, min views ~3K, paginate to the end. Outlier-first, never view-sorted top-N.
+1. Grep all `sai/scripts/*.md` for used URLs/handles — no repeat videos OR creators, including rejected ones — AND check the posted-video burn list below (a format Sai already POSTED is burned even if it was never a batch ref).
+2. `search_my_videos`, 90d, **min outlier ≥10x**, min views ~3K, paginate to the end. Outlier-first, never view-sorted top-N. If the watchlist bench is thin, extend with `search_all_videos` on founder-niche queries and flag non-watchlist creators for Gray to add.
 3. **Niche gate:** founder / business / build-in-public creators only.
 4. **Format-fit gate:** Sai must be able to film it as himself (young agency CEO), talking-head ± simple physical prop. Auto-reject: podcast clips, hype reels / crowd-footage motivational, editing- or speaking-craft tutorials, relationship/lifestyle, cinematic builds.
-5. Per-pick adaptation note tied to Sai's 3 pillars (value / relatability / authority-through-experience).
-6. Save the curation doc same session.
+5. **FORMATS, NOT TOPICS (Gray, 2026-07-07):** every pick must be a repeatable structural MECHANIC (a series counter, a live challenge, a hidden-test story shape, a numbers-receipt spine) that Sai-brand topics get poured into. A talking head saying something smart is a topic, not a find — reject it no matter the multiplier.
+6. Per-pick adaptation note tied to Sai's 3 pillars (value / relatability / authority-through-experience).
+7. Save the curation doc same session.
+
+## Posted-video burn list (formats Sai has already SHOT/POSTED — never re-suggest)
+- **"3 books beat my Stanford MBA" credential-flip book stack** (jayhoovy shape) — Gray posted Sai's version **2026-07-07**.
 
 ---
 
@@ -45,15 +49,16 @@ Root cause: the Sandcastles watchlist is ONE shared list (single workspace, veri
 - Direct-address authority take declaring the viewer's current playbook dead: "you'll notice the drop before you understand why."
 - **Sai adapt:** this is literally Sai's lane — marketing agency CEO on what's dying in ads/marketing as AI eats it. "The version of marketing you're running is over." Talking-head, one take. Authority.
 
-### 6. jayhoovy — Physical credential-flip stack · 15.6x · 171K ⚠️ overlap flag
-- **Ref:** https://www.instagram.com/reel/DZ0ZsxyviKC/
-- "These 3 books beat my Stanford MBA. Each one made me more money than two years of business school." Recommendation stack reframed as credential subversion.
-- **⚠️ Adjacent to Batch 4 Video 5A** (courses/gurus → 3 free teachers). Differentiators: physical BOOKS in hand (hold, verdict, toss — physical-retention rule) + the credential-flip frame (Sai dropped out of college). Gray's call whether it's distinct enough.
+### 6. eatgetup — Real-time field mission (live ask, outcome unknown) · 48.2x · 1.6M · NOT on watchlist
+- **Ref:** https://www.instagram.com/reel/DXNYIHoCegS/
+- NYC food-startup founders: "Today we walked into a multi-million dollar startup to try to stock our energy bites in their office. No plan, just spontaneous." Camera rolls on a REAL ask with a genuinely unknown outcome — the will-they-say-yes tension is the whole retention engine. Built-in comment CTA ("drop your company below").
+- **Sai adapt:** "Today I'm trying to [close X / cold-pitch Y / get a meeting with Z] on camera, no plan." Real stakes, real people (people-over-AI), physical and NYC-native. The mechanic serializes: a new mission per episode.
+- **Flag:** creator not on the watchlist (global find — the watchlist founder bench above 10x is exhausted). Niche-fit is exact; say the word and I'll add them via MCP.
 
-### 7. angus.sewell — Founder resource list + comment-gate · 18.8x · 1.38M ⚠️ overlap flag
-- **Ref:** https://www.instagram.com/reel/DZNyEF1Nts8/
-- "I can send you the whole list of courses btw, just comment 'training'" — the DM comment-gate mechanic drives comments hard on IG (Sai's priority platform).
-- **⚠️ Strongest 5A/5B overlap** — included mainly for the comment-gate mechanic, which no prior batch has used. Could be grafted onto any other pick instead of standing alone.
+### 7. taisa.mukha — Founder-POV vignette (3-time repeat outlier) · 189x / 131x / 90x · NOT on watchlist ⚠️ watch before locking
+- **Refs:** https://www.instagram.com/reel/DYdoaUGRqxO/ ("Rules of the game", 189x, 4.3M) · https://www.instagram.com/reel/DYtLzoLtigX/ ("Lesson should be learned", 131x) · https://www.instagram.com/reel/DXMbv0ejYe9/ ("day job as your runway", 90x)
+- SF startup-founder account landing 90–189x outliers repeatedly with the same shape — that consistency is the signal; one-hit outliers can be luck, three is a format.
+- **⚠️ Metadata doesn't reveal the mechanic** (likely founder-life footage + on-screen text vignette, which Sai could replicate from existing DIL b-roll for near zero filming cost) — **watch one before locking.** Optional: burn a Sandcastles `analyze_video` credit on the 189x one for the full breakdown — your call since it costs credits.
 
 ---
 
@@ -67,13 +72,17 @@ Gray to remove in the Sandcastles webapp: **julssolomon, malova.flex, khan.ayan9
 
 ---
 
-## v1 REJECTED refs — kept here so the no-repeats grep catches them forever
+## REJECTED refs — kept here so the no-repeats grep catches them forever
 
-julssolomon https://www.instagram.com/reel/DXpq08qDVpq/ (776x) · khan.ayan9 https://www.instagram.com/reel/DX9egnbhwZJ/ (265x) · malova.flex https://www.instagram.com/reel/DXcjsmJAdgv/ (103x) · garyvee https://www.instagram.com/reel/DXx1tKzss2O/ (57x) · jun_yuh https://www.instagram.com/reel/DXqH7PkkTPe/ (34x) + https://www.instagram.com/reel/DXvde0sNZES/ (11.6x) · brendenbuilds https://tiktok.com/@brendenbuilds/video/7649893619293277454 (34x — "Continuous causal optimization", the morning pull's unresolved link, now identified) · leilahormozi https://www.instagram.com/reel/DaJgz8kvEbS/ (7.9x) · codiesanchez https://www.instagram.com/reel/DZLKuRpgHw7/ (14x)
+v1 (whole pass rejected): julssolomon https://www.instagram.com/reel/DXpq08qDVpq/ (776x) · khan.ayan9 https://www.instagram.com/reel/DX9egnbhwZJ/ (265x) · malova.flex https://www.instagram.com/reel/DXcjsmJAdgv/ (103x) · garyvee https://www.instagram.com/reel/DXx1tKzss2O/ (57x) · jun_yuh https://www.instagram.com/reel/DXqH7PkkTPe/ (34x) + https://www.instagram.com/reel/DXvde0sNZES/ (11.6x) · brendenbuilds https://tiktok.com/@brendenbuilds/video/7649893619293277454 (34x — "Continuous causal optimization", the morning pull's unresolved link, now identified) · leilahormozi https://www.instagram.com/reel/DaJgz8kvEbS/ (7.9x) · codiesanchez https://www.instagram.com/reel/DZLKuRpgHw7/ (14x)
+
+v2 cuts: jayhoovy https://www.instagram.com/reel/DZ0ZsxyviKC/ (15.6x — format already POSTED by Sai 2026-07-07, see burn list) · angus.sewell https://www.instagram.com/reel/DZNyEF1Nts8/ (18.8x — Gray: "just talking-head topics", fails the formats-not-topics test)
 
 ## Pending
 - [ ] Gray inputs his 7–8 manually-researched videos
 - [ ] Cross-reference + merge → lock Batch 5
+- [ ] Gray: watch a taisa.mukha ref to confirm the mechanic (or OK an analyze_video credit)
+- [ ] Gray: add eatgetup (+ taisa.mukha?) to the watchlist — I can do it via MCP on his word
 - [ ] Draft v6 batch doc (`_BATCH-DOC-TEMPLATE.md`) → push to Notion
-- [ ] Gray: webapp watchlist prune (3 channels above)
+- [ ] Gray: webapp watchlist prune (julssolomon, malova.flex, khan.ayan9)
 - [ ] Optional: discover_channels pass to deepen the founder nano/mid bench
