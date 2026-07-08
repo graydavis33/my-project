@@ -71,4 +71,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add web-apps/payday-checklist/expenses.json
           git diff --staged --quiet || git commit -m "chore: update expenses.json [skip ci]"
+          # main can move mid-run (session auto-push hooks); rebase, keeping the
+          # runner's expenses.json on conflict — it's always the freshest scan
+          git pull --rebase -X theirs origin main
           git push
