@@ -83,10 +83,13 @@ v2 cuts: jayhoovy https://www.instagram.com/reel/DZ0ZsxyviKC/ (15.6x — format 
 
 v3 cuts: omarontape https://www.instagram.com/reel/DW9SObUgZIE/ + https://www.instagram.com/reel/DZtOOUnhUMG/ (21.9x/14.4x — **Batch 4 repeat, caught by Gray**; the grep had flagged DW9SObUgZIE and it wasn't applied — apply the grep to every pick) · jakemuxlow https://www.instagram.com/reel/DYNakZxtsKg/ (22.4x — counter/DIL overlap with #1)
 
+## Notion build note (Gray, 2026-07-08)
+Every KEPT pick's original video link goes into the Notion batch as the **Reference** for the editor (v5+ convention: Reference column = original platform link only, never the Sandcastles link). Links above are the canonical set. #1 (NYC office countdown) is Gray's own format — no external reference (omarontape's counter video is the closest match but was already a Batch 4 reference; left empty unless Gray says otherwise).
+
 ## Pending
 - [ ] Gray: #2 call — adapt route (a/b/c) or replace
 - [ ] Gray: #4 confirm despite sharransrivatsaa being a Batch 4 creator
 - [ ] Gray inputs his 7–8 manually-researched videos → cross-reference → merge → LOCK
-- [ ] Draft v6 batch doc (`_BATCH-DOC-TEMPLATE.md`) → push to Notion DB (add Basic/Editor views by hand; push is not idempotent — don't re-push)
+- [ ] Draft v6 batch doc (`_BATCH-DOC-TEMPLATE.md`) → push to Notion DB with per-video Reference links (add Basic/Editor views by hand; push is not idempotent — don't re-push)
 - [ ] Gray: watchlist webapp prune (julssolomon, malova.flex, khan.ayan9) · optional MCP-add: eatgetup, taisa.mukha, marziaprince
 - [ ] Optional: discover_channels pass to deepen the founder nano/mid bench
