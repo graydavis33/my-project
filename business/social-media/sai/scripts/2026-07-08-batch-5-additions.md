@@ -155,3 +155,35 @@ Caption hook:
 - C: WHAT IT ACTUALLY TAKES TO BE TOP 1%
 
 ---
+
+## Video 14 — Business Trivia  ✅ LOCKED
+
+Status: Sai Review
+
+No external reference — Gray's own format. The reusable trivia engine.
+
+Format: trivia quiz — question opens a curiosity loop that only the answer closes. Ask (verbal + caption = same question) → show A/B/C/D options (beat to guess) → reveal answer + quick "why it matters" → repeat; number of questions = finish line. Horizontal. Reusable engine — runs on endless topics once it works.
+
+Guardrail: answers must be REAL / sourced — no invented stats. Sai's own data where he has it.
+
+Topics (Sai to fill): business / marketing / entrepreneurship trivia questions + the real answers. Example shapes: "% of watch time decided in the first 3 seconds," "the #1 reason clients actually leave an agency."
+
+Verbal hook (= caption, per Gray's combo):
+- A: Can you actually answer this about marketing? (into the question)
+- B: 90% of business owners get this wrong — can you? (into the question)
+- C: Cold open straight into the question, no preamble.
+
+Visual hook (the A/B/C/D reveal):
+- A: Quiz card — four game-show tiles pop in, beat to guess, wrong ones dim, right one lights up.
+- B: Physical — Sai points to four spots on a whiteboard (A/B/C/D), lets you guess, circles the answer live.
+- C: Poll style — four tappable buttons + a countdown tick, then the reveal animates in.
+
+Caption hook: same as the verbal question (combo).
+
+---
+
+## Batch 5 additions summary (2026-07-08)
+- LOCKED (5 new): Video 10 Business Terms Decoded · Video 11 Industry Buzzwords · Video 12 The Rules Our Agency Runs On · Video 13 The 1% Entrepreneur · Video 14 Business Trivia
+- TRASHED: neilpatel voice-AI · backstagewithmillionaires · hormozi · howibuiltthis (replaced)
+- Video 11 is pending Sai's yes on the format (twin of Video 10).
+
