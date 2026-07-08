@@ -121,15 +121,17 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
   - EXPLODE: comment-gate DM automation
   - EXPLODE: brands hiring in-house creators/videographers ("every CEO will have one in 2 years")
 
-### 7. eatgetup — real-time mission, outcome unknown · 48.2x · 1.6M — KEEP (non-street versions)
+### 7. eatgetup — real-time mission, outcome unknown · 48.2x · 1.6M — ⏸ PLACEHOLDER, present to Sai (Gray, 2026-07-08)
 - **Ref:** https://www.instagram.com/reel/DXNYIHoCegS/
-- Gray wants the rawness without the NYC-street cold approach. Mission bench:
-  - **Live pitch send:** write + send a DM/email to a dream client on camera; part 2 = the reply (built-in two-parter).
-  - **The ask call:** on a real Zoom, ask a client something uncomfortable (referral / testimonial / price increase); camera present when the answer lands.
-  - **24-hour ship:** one real deliverable brief→delivered in a day, clock running, client's real reaction as the ending.
-  - **Team mission:** 9am challenge ("book 3 discovery calls by 5pm"), check-ins, 5pm reveal — people-over-AI.
+- **⚠️ NEW CONSTRAINT (Gray): Sai does NOT want clients in his content.** Kills the client-facing missions (live pitch send, Zoom ask). Keep only if Sai picks a client-free mission he's comfortable with; otherwise clean cut.
+- **Client-free mission menu (present to Sai):**
+  - **The hiring day:** "We're hiring one editor today. 50 applications, one day. Live." (compounds #2's applicant-marketing angle)
+  - **The team stake:** $500 + 24 hours, best ad for a fake product wins; reveal at the end (people-over-AI, office energy).
+  - **Undercover founder:** Sai does a team member's job for a day — "8 hours to edit this video myself." Can he still hang?
+  - **Beat our average:** film/edit/post in 3 hours; if it doesn't beat channel average, [stake]. The video's own analytics = the unknown outcome; part 2 = numbers reveal.
+  - **DM a hero:** one question to a founder Sai admires, sent on camera; part 2 = the reply (feeds #5's verified-access theme).
 - DNA to preserve: real ask, real people, unknown outcome, no script.
-- Not on watchlist — MCP-add on Gray's word.
+- Not on watchlist — MCP-add only if kept.
 
 ### 8. taisa.mukha — intentional text-over-b-roll vignette · 189x/131x/90x repeat outlier — KEEP (Sai spec written)
 - **Refs:** https://www.instagram.com/reel/DYdoaUGRqxO/ (189x) · https://www.instagram.com/reel/DYtLzoLtigX/ (131x) · https://www.instagram.com/reel/DXMbv0ejYe9/ (90x)
