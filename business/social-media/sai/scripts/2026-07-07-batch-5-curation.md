@@ -140,6 +140,12 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
   - **One scene, not montage soup**, matched to the line's emotional temperature (raw line = 5am office / red-light journaling / subway alone; win line = quiet aftermath, never celebration).
   - Three rotating lanes: **cost** ("everyone wants the office in New York / nobody wants the 5am alone in it") · **lesson** ("we didn't lose the client when the ad flopped / we lost them when we went quiet for four days") · **belief** ("at 15 my ads failed / at 21 those failures run the agency").
   - Runs entirely off the horizontal b-roll library — editor-light, batchable 5 at a time.
+- **✅ LOCKED (Gray, 2026-07-08): b-roll + trending music + beat cuts + intentional text. Three vignettes spec'd with specific b-roll:**
+  1. COST: "everyone wants the office in new york" → beat drop → "nobody wants the 5am alone in it". B-roll: NYC street/skyline establishing (beat 1) → red-light bed-journaling C2415–C2419 + dark solo-desk (the turn). Echoes the #1 office-countdown universe.
+  2. LESSON: "we didn't lose the client when the ad flopped" → "we lost them when we went quiet for four days". B-roll: busy screens/dashboards/hands-typing → the turn lands on STILLNESS (phone face-down, empty chair, Sai staring). Motion→static cut IS the silence.
+  3. BELIEF: "at 15 i was running ads that failed" → "at 21 those failures run the agency". B-roll: journey-transition shots (subway walking, NYC transitions) → beat drop → office wides w/ team, Sai walking into Trendify.
+  - Reusable pattern: beat-1 footage sells the surface; the turn's footage contradicts it on the same music hit. Music = trending audio at edit time.
+  - Film-prep: run footage-puller per vignette theme into labeled pull folders when greenlit.
 - Not on watchlist — MCP-add on Gray's word.
 
 ---
