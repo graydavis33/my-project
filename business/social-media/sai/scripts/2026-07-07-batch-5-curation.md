@@ -75,10 +75,26 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
 - **Caption template for new topics:** name the viewer's pain as accusation/question ("WHY YOUR ___ ISN'T WORKING" / "YOUR ___ GETS IGNORED BECAUSE OF THIS"); never caption the format.
 - Not on watchlist (global find). Pillars: value + authority.
 
-### 4. sharransrivatsaa — story → hidden test → framework · 25.8x · 426K — KEEP ⚠️ creator-repeat, Gray to confirm
-- **Ref:** https://www.instagram.com/reel/DXwbo65lM5-/ (Goldman coachability test) · 2nd shape data point https://www.instagram.com/reel/DX7INuSDZkq/ (13.6x)
-- **⚠️ Creator repeat:** sharransrivatsaa already appears in Batch 4 docs (different video, the "leverage compounds" reel DX3PcrVR0Ps). Video is fresh; creator is not. Gray likes the pick — his call, flagged per the no-repeats rule.
-- **Topic slotted (Gray):** the client blow-up story. Structure: cold-open at the blow-up (one real line) → rewind to why → **twist: it wasn't about the missed work, it was the silence before it — the real test was whether Trendify delivers bad news early** → payoff: the 3 rules Trendify runs now (bad news travels first / every deliverable has a named owner / client never discovers a problem before we tell them). Reveal stays in the back half.
+### 4. sharransrivatsaa — SPLIT INTO TWO VIDEOS (Gray, 2026-07-08; creator-repeat accepted by doubling down)
+
+**4a. Hidden-test story · 25.8x · 426K**
+- **Ref:** https://www.instagram.com/reel/DXwbo65lM5-/ (Goldman coachability test)
+- **Shape:** cold-open story → twist (what was REALLY being tested) → rules payoff, reveal in the back half.
+- **Topic bench (Gray honing, then to Sai):**
+  1. ⭐ The client blow-up (Gray's pick) — twist: not the missed work, the silence before it; real test = deliver bad news early → Trendify's 3 rules now.
+  2. The interview test candidates don't know about — deliberate vague brief/delayed reply; real test = do they ask questions or fake it (recruiting tie-in w/ #2).
+  3. The test every prospect takes without knowing — why Trendify turns down clients; the real test was whether we'd fold on the discount/deadline.
+- Hooks (3 verbal / 3 visual / 3 caption): AFTER topics honed.
+
+**4b. Famous-person lesson → framework · 13.6x**
+- **Ref:** https://www.instagram.com/reel/DX7INuSDZkq/ (Branson tennis → 4-step decision framework)
+- **Shape:** access story → ONE rehearsed question / observed moment → named framework Sai still runs.
+- **Topic bench:**
+  1. The $100M mentor's tactic — Neil & Mike (proven on-camera material); one dinner, one question → the framework Trendify runs on.
+  2. "The one question I ask everyone ahead of me" — direct Branson mirror; needs Sai to name the person/moment.
+  3. The client who schooled him — a big exec's move in a meeting (feedback/negotiation/opening) Sai stole into a Trendify process.
+- Hooks: AFTER topics honed.
+- **Open (→ Notion topics box, both videos):** which stories are real + which names Sai can say on camera.
 
 ### 5. neilpatel — contrarian industry-shift take · 57.5x · 567K — KEEP
 - **Refs:** https://www.instagram.com/reel/DZaiYUsDWum/ (57.5x) · https://www.instagram.com/reel/DY-NoHhDuVX/ (45.3x)
