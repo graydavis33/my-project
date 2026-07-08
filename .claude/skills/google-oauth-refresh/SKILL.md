@@ -10,7 +10,11 @@ Three projects use Google OAuth with `token.json`:
 - `python-scripts/social-media-analytics/` — YouTube Data API + Sheets (project `social-media-analytics-488803`)
 - `python-scripts/expense-tracker/` — Gmail readonly (project `email-agent-489114`, same credentials.json as invoice-system; verified identical 2026-07-08)
 
-The OAuth consent screens for both Google Cloud projects are in **testing mode**, so refresh tokens expire every 7 days by design. When anything 401s or throws `RefreshError`, the fix is almost always re-auth.
+**Project status (updated 2026-07-08):**
+- `email-agent-489114` — **PUBLISHED to production** by Gray 2026-07-08. Tokens minted after that date never expire on a timer. expense-tracker's token was re-minted post-publish (the GitHub `GMAIL_TOKEN_JSON` secret holds it). **Gotcha that forced the re-mint: tokens minted while in testing mode keep their 7-day expiry even after publishing — publish alone doesn't fix an existing token; you must re-consent once.** invoice-system's token predates the publish — if it 401s once more, re-auth once and it's permanent too.
+- `social-media-analytics-488803` — still **testing mode**: refresh tokens expire every 7 days by design.
+
+When anything 401s or throws `RefreshError`, the fix is almost always re-auth.
 
 **expense-tracker extra step:** its token also lives in GitHub Actions as the `GMAIL_TOKEN_JSON` secret (the Expense Sync workflow runs every 30 min in the cloud). After re-authing locally, update the secret or the Action keeps failing:
 
