@@ -37,10 +37,43 @@ Voice note: experiential, not guru — "words I had to learn," never "words you'
 
 ---
 
-## Video 11 — neilpatel voice-AI (pain→AI fix→receipts)  ❌ TRASHED (Gray, 2026-07-08)
+## CUT — neilpatel voice-AI (pain→AI fix→receipts)  ❌ TRASHED (Gray, 2026-07-08)
 
 Cut. Reference: https://www.instagram.com/reel/DZfr-KhFfFX/ — kept here so the no-repeats grep catches the exact URL forever.
 
 Rule correction (Gray, 2026-07-08): the no-repeats rule bans reusing the EXACT same video only — the SAME creator is fine on a different video. (neilpatel being Video 6 does not block another neilpatel video; Gray just didn't want this one.)
+
+---
+
+## Video 11 — Industry Buzzwords  ✅ LOCKED (pending Sai's yes on the format — twin of Video 10)
+
+Status: Sai Review
+
+Format: rapid listicle, Video 10's twin — but LIGHTER (a fast one-liner per buzzword, not the full decode). Number counts up in the corner = finish line. Horizontal.
+
+Reference (structure inspiration; topic changed): buildwithcody "AI starter pack" — 7.2x · 211K — https://www.instagram.com/reel/DZHT-l8Oqoj/
+
+Positioning vs Video 10: Video 10 = technical acronyms decoded (CTR/ROAS/SOP), Video 11 = trendy buzzwords everyone's throwing around. Pitch both to Sai as distinct; if he only wants one "vocab" video, choose between the pair.
+
+Brand rule: DECODE / relatable, never mock. A fun rundown of the words flying around the industry — not "cringe buzzwords marketers overuse." No punching down.
+
+Visual system: same as Video 10 — open with a hook, body = per-item card (buzzword name + a fast one-liner), number counts up.
+
+Topics (Sai to fill): his buzzword list.
+
+Verbal hook:
+- A: Here are the buzzwords you'll hear nonstop in this industry — starting now. (cold rip into the list)
+- B: Every meeting, every pitch, these words come up. Here's the whole list.
+- C: I used to nod along to half of these. Here are the buzzwords running the industry right now.
+
+Visual hook: same three as Video 10
+- A: Cowboy shot, apple + knife trick-catch, then into the words.
+- B: Whiteboard + colorful pointer stick.
+- C: Flashcard deck — one card per buzzword.
+
+Caption hook:
+- A: INDUSTRY BUZZWORDS, DECODED
+- B: THE BUZZWORDS EVERYONE USES RIGHT NOW
+- C: THE BUZZWORDS I HAD TO LEARN FAST
 
 ---
