@@ -18,11 +18,17 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
 
 ## v3 Batch (7)
 
-### 1. 🆕 NYC OFFICE COUNTDOWN — Gray's format (replaces omarontape day-counter, which was a Batch 4 repeat)
+### 1. 🆕 NYC OFFICE COUNTDOWN — Gray's format
+- **Reference (Gray, 2026-07-08 — for the editor in Notion):** omarontape "day 106 of building Vlogit" https://www.instagram.com/reel/DW9SObUgZIE/ — the inspo video. Burned as a PICK (Batch 4 repeat) but attached as the Notion Reference so the editor sees the serialized-update style. (If Gray meant a different inspo video, swap it.)
 - **Mechanic:** serialized GOAL-progress tracker (not a day counter): goal restated in one line → **how close he actually is** (real number: cash vs buildout, spaces toured, the client that funds it) → what moved since last update → what's next / the blocker. ~30–45s per episode.
 - **Retention:** the open loop is "does he get the office" — every episode re-opens it; the lease/keys episode is a guaranteed payoff + long-form crossover.
 - **Physical anchor option:** printed progress card or NYC map + pin, marked on camera each update.
-- **Hooks:** "I'm opening an office in New York City. Here's how close I actually am." / "NYC office update 3: we hit a problem."
+- **Verbal hook bench (pick A/B/C):**
+  - Number-led: "I'm exactly $47,000 away from opening my company's office in New York City." · "Every client we sign gets us 4% closer to our New York office. This week we signed two." · "I can't afford my NYC office yet. Here's the exact number I'm missing."
+  - Stakes-led: "I'm signing a lease in Manhattan in 90 days — or I'm not, and you'll watch that too." · "I'm opening an office in New York City before I turn 22. Here's how close I actually am."
+  - Serial-led (ep 2+): "NYC office update 3: we just hit a problem." · "30 days ago this office was a number on a whiteboard. Here's where it is now."
+  - Doubt-led: "Everyone says my agency doesn't need an office. I'm opening one in Manhattan anyway — here's why." · "My accountant told me not to do this."
+  - Note: number-led = strongest ep-1 opener (specific dollar figure, re-hooks as it shrinks); "every client = 4% closer" doubles as the series mechanic (progress tied to revenue).
 - Pillars: relatability + authority. Sai has stated this goal for real.
 
 ### 2. buildercult — numbers-receipt → named principle · 36x · 905K — ⏳ ADAPT OR REPLACE (Gray deciding)
