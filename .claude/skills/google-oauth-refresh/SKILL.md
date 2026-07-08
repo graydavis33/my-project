@@ -1,15 +1,24 @@
 ---
 name: google-oauth-refresh
-description: Re-authenticate Google OAuth when token.json expires. Trigger whenever anything breaks with a 401 from Google APIs, a RefreshError, invalid_grant, "token expired", "auth broken", "re-auth google", "auth.py", or when YouTube fetch / Sheets write silently fails. Applies to python-scripts/invoice-system/ and python-scripts/social-media-analytics/ — both use Google OAuth in testing mode where refresh tokens expire every 7 days. Use this skill proactively the moment a Google-auth-shaped error shows up instead of guessing at the cause.
+description: Re-authenticate Google OAuth when token.json expires. Trigger whenever anything breaks with a 401 from Google APIs, a RefreshError, invalid_grant, "token expired", "auth broken", "re-auth google", "auth.py", or when YouTube fetch / Sheets write silently fails, or when the Expense Sync GitHub Action starts failing. Applies to python-scripts/invoice-system/, python-scripts/social-media-analytics/, and python-scripts/expense-tracker/ — all use Google OAuth in testing mode where refresh tokens expire every 7 days. Use this skill proactively the moment a Google-auth-shaped error shows up instead of guessing at the cause.
 ---
 
 # Google OAuth Refresh
 
-Two projects use Google OAuth with `token.json`:
-- `python-scripts/invoice-system/` — Gmail + Sheets
-- `python-scripts/social-media-analytics/` — YouTube Data API + Sheets
+Three projects use Google OAuth with `token.json`:
+- `python-scripts/invoice-system/` — Gmail + Sheets (project `email-agent-489114`)
+- `python-scripts/social-media-analytics/` — YouTube Data API + Sheets (project `social-media-analytics-488803`)
+- `python-scripts/expense-tracker/` — Gmail readonly (project `email-agent-489114`, same credentials.json as invoice-system; verified identical 2026-07-08)
 
-The OAuth consent screen for Google Cloud project `social-media-analytics-488803` is in **testing mode**, so refresh tokens expire every 7 days by design. When anything 401s or throws `RefreshError`, the fix is almost always re-auth.
+The OAuth consent screens for both Google Cloud projects are in **testing mode**, so refresh tokens expire every 7 days by design. When anything 401s or throws `RefreshError`, the fix is almost always re-auth.
+
+**expense-tracker extra step:** its token also lives in GitHub Actions as the `GMAIL_TOKEN_JSON` secret (the Expense Sync workflow runs every 30 min in the cloud). After re-authing locally, update the secret or the Action keeps failing:
+
+```bash
+cd "c:/Users/Gray Davis/my-project" && python -c "print(open('python-scripts/expense-tracker/token.json').read())" | gh secret set GMAIL_TOKEN_JSON
+```
+
+(no `gh` on this machine → set it at github.com → my-project → Settings → Secrets → Actions, paste token.json contents into `GMAIL_TOKEN_JSON`)
 
 ## When to use
 

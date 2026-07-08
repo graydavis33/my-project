@@ -40,6 +40,15 @@ Next session after C works, say "payday smoke test passed" and Claude will do th
 
 ## Notes / known behaviors
 
+- **Manual-entry dedup (added 2026-07-08):** if you type a purchase into the app before its
+  bank alert email arrives (tap now → alert posts 1-2 days later), the scanner now sees your
+  manual entry in Firestore and skips the email version — no more double-counting. Matching
+  is amount + dates within 2 days, same rule as the existing alert dedup.
+- **PrimeSouth debit-card alerts still not emailing (as of 2026-07-08):** alerts were enabled
+  in-app but a same-day tap purchase produced ZERO emails from any PrimeSouth domain (verified
+  against the live inbox). Suspects, in order: delivery channel set to push instead of EMAIL,
+  alert fires only when the transaction POSTS (wait 1-2 days), threshold not $0. See section B.
+
 - **"Reset Everything" while synced** only clears the device — cloud data re-syncs back. To truly wipe, delete the docs in Firebase console (or ask Claude to add a cloud-wipe button if you want one).
 - **Restoring a CSV backup while synced**: transactions you'd previously deleted stay deleted (the cloud remembers tombstones). Everything else restores normally.
 - The `firebase-config.js` values are **safe to commit** — Firebase web configs are public by design; the Firestore rules (email-locked) are the security boundary.
