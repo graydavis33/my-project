@@ -41,13 +41,21 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
   - Suggested ep-1 pairing: verbal number-led + V-A pin slam + C-B — spoken number, read mechanic, seen prop = three different signals in the first 2s.
 - Pillars: relatability + authority. Sai has stated this goal for real. (Dollar figures are placeholders — swap in Sai's real numbers.)
 
-### 2. buildercult — numbers-receipt → named principle · 36x · 905K — ⏳ ADAPT OR REPLACE (Gray deciding)
+### 2. buildercult — numbers-receipt → named principle · 36x · 905K — ✅ RESOLVED: Route E primary, Route D fallback (Gray, 2026-07-08)
 - **Ref:** https://www.instagram.com/reel/DYPvEUrS2H1/
-- Gray's issue: the ref is third-person (about someone else's app), hard to map. Adaptation routes offered:
-  - (a) **First-person receipts:** "I had $1M liquid at 17. 83 days later: zero. One number would have saved me." → name the principle.
-  - (b) **Client case study (owned third-person):** "A client came to us spending $30K/month on ads with one number missing…" → named principle. Anonymized agency war story = native authority.
-  - (c) **Mentor receipts:** retell a mentor's story, numbers first, principle named.
+- **Route E (primary) — TEAM-MEMBER SPOTLIGHT:** the numbers-receipt story is about someone on Sai's team, told with the person in frame for the payoff. Heavily business-correlated + doubles as recruiting marketing for applicants. (Routes a/b/c superseded.)
+- **Route D (fallback) — famous-founder Vault-teaser:** known founder's story as a numbers chain → named principle → "we run it at Trendify now." Risk per Gray: echoes the retired Founder Series (did well but didn't relate to Sai's business enough) — only if Sai declines E.
 - Keep-mechanic: numbers as the spine + NAMING the principle (the name is the save/share trigger).
+- **Verbal hook bench (interchangeable E/D):**
+  - A numbers-chain first: "250 DMs. 12 replies. One yes." → E: "…and that one yes runs every ad we ship now." / D: "…and that one yes became a $100 billion company."
+  - B person reveal: E: "This is Marco. Two years ago nobody would answer his DMs. Today I can't run my company without him." / D: "This is the 10-minute phone call that caught Jeff Bezos's own dashboard lying."
+  - C principle tease (both): "There's one number that predicts who makes it — and nobody calculates it before they quit."
+- **Visual hook bench:**
+  - V-A reveal: E: Sai spins the team member's chair to camera, hand on shoulder. / D: Sai holds a printed founder photo/file (vault-file style — cross-brands the long-form series).
+  - V-B physical numbers: 250 printed cards dropped on the desk → pull 12 → hold up 1 (identical both routes; the physical-retention play).
+  - V-C live chain: "250 → 12 → 1" written on whiteboard/glass in the first 2s, no context.
+- **Caption hook bench:** "250 → 12 → 1" · "THE NUMBER NOBODY CALCULATES" · E: "WHY WE HIRED HIM" (applicant marketing) / D: "WHY THIS BUILT AN EMPIRE"
+- **Open (→ Notion topics box):** which team member + their REAL numbers — 250/12/1 is a placeholder shape; source the actual origin story from Sai.
 
 ### 3. 🆕 marziaprince — physical A/B demo · 1837x · 4.3M (replaces jakemuxlow stakes-DIL — too close to #1's serial/counter DNA)
 - **Ref:** https://www.instagram.com/reel/DaSx1hLuV_l/ ("The product didn't change. The packaging did.")
