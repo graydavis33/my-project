@@ -112,3 +112,9 @@ Caption hook:
 - C: OPERATING RULES I LEARNED THE HARD WAY
 
 ---
+
+## CUT — hormozi (13 years of advice in 60s)  ❌ TRASHED (Gray, 2026-07-08)
+
+Cut — timeline too short (Sai is young, can't claim 13 years) and the rapid-fire "my business advice" voice isn't his (not-the-expert). Reference: https://www.instagram.com/reel/DZL3PYSuGT1/ — kept for the no-repeats grep.
+
+---
