@@ -75,9 +75,9 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
 - **Caption template for new topics:** name the viewer's pain as accusation/question ("WHY YOUR ___ ISN'T WORKING" / "YOUR ___ GETS IGNORED BECAUSE OF THIS"); never caption the format.
 - Not on watchlist (global find). Pillars: value + authority.
 
-### 4. sharransrivatsaa — SPLIT INTO TWO VIDEOS (Gray, 2026-07-08; creator-repeat accepted by doubling down)
+### 4 & 5. sharransrivatsaa — SPLIT INTO TWO VIDEOS (Gray, 2026-07-08; creator-repeat accepted by doubling down; all later numbers bumped down)
 
-**4a. Hidden-test story · 25.8x · 426K**
+**4. Hidden-test story · 25.8x · 426K**
 - **Ref:** https://www.instagram.com/reel/DXwbo65lM5-/ (Goldman coachability test)
 - **Shape:** cold-open story → twist (what was REALLY being tested) → rules payoff, reveal in the back half.
 - **Topic bench (Gray honing, then to Sai):**
@@ -86,17 +86,26 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
   3. The test every prospect takes without knowing — why Trendify turns down clients; the real test was whether we'd fold on the discount/deadline.
 - Hooks (3 verbal / 3 visual / 3 caption): AFTER topics honed.
 
-**4b. Famous-person lesson → framework · 13.6x**
+**5. Famous-person lesson → framework · 13.6x**
 - **Ref:** https://www.instagram.com/reel/DX7INuSDZkq/ (Branson tennis → 4-step decision framework)
-- **Shape:** access story → ONE rehearsed question / observed moment → named framework Sai still runs.
+- **Shape (Gray, 2026-07-08 — merged with the Goldman numbers/time framing):** access story → ONE rehearsed question / observed moment → named framework. Hook levers: **TIME ASPECT** (tiny time-cost, huge payoff — "45 seconds") + **VERIFIED SOURCE** (who said it = the proof; if the name can't be said, the credential carries: "$100M founder").
 - **Topic bench:**
   1. The $100M mentor's tactic — Neil & Mike (proven on-camera material); one dinner, one question → the framework Trendify runs on.
   2. "The one question I ask everyone ahead of me" — direct Branson mirror; needs Sai to name the person/moment.
-  3. The client who schooled him — a big exec's move in a meeting (feedback/negotiation/opening) Sai stole into a Trendify process.
-- Hooks: AFTER topics honed.
+  3. The client who schooled him — a big exec's move in a meeting Sai stole into a Trendify process.
+- **Verbal hook bench:**
+  - A time asymmetry: "It took him 20 years to learn this. He gave it to me in 45 seconds."
+  - B access + no waste: "I got 45 seconds with a $100M founder. I didn't waste a single one of them."
+  - C priced outcome: "This 45-second lesson has made us more money than anything I learned in four years of business."
+- **Visual hook bench:**
+  - V-A ⭐ live countdown: Sai sets a visible 45s timer (phone up / sand timer flip) — "you'll have it before this hits zero." Physical prop + built-in watch-to-zero retention.
+  - V-B proof photo: printed photo of Sai WITH the person, tapped — silent verification (vault-file energy).
+  - V-C watch tap: two taps, dead-eye to camera, before the first word.
+- **Caption hook bench:** "20 YEARS → 45 SECONDS" · "HE CHARGES $50K/HR. THIS WAS FREE." · "THE 45-SECOND MBA"
+- Suggested stack: verbal A + V-A timer + C-B.
 - **Open (→ Notion topics box, both videos):** which stories are real + which names Sai can say on camera.
 
-### 5. neilpatel — contrarian industry-shift take · 57.5x · 567K — KEEP
+### 6. neilpatel — contrarian industry-shift take · 57.5x · 567K — KEEP
 - **Refs:** https://www.instagram.com/reel/DZaiYUsDWum/ (57.5x) · https://www.instagram.com/reel/DY-NoHhDuVX/ (45.3x)
 - **Claim bench (one per video; serializable):**
   - STOP: the boost button ("you're paying Meta to skip strategy")
@@ -106,7 +115,7 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
   - EXPLODE: comment-gate DM automation
   - EXPLODE: brands hiring in-house creators/videographers ("every CEO will have one in 2 years")
 
-### 6. eatgetup — real-time mission, outcome unknown · 48.2x · 1.6M — KEEP (non-street versions)
+### 7. eatgetup — real-time mission, outcome unknown · 48.2x · 1.6M — KEEP (non-street versions)
 - **Ref:** https://www.instagram.com/reel/DXNYIHoCegS/
 - Gray wants the rawness without the NYC-street cold approach. Mission bench:
   - **Live pitch send:** write + send a DM/email to a dream client on camera; part 2 = the reply (built-in two-parter).
@@ -116,7 +125,7 @@ _Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole
 - DNA to preserve: real ask, real people, unknown outcome, no script.
 - Not on watchlist — MCP-add on Gray's word.
 
-### 7. taisa.mukha — intentional text-over-b-roll vignette · 189x/131x/90x repeat outlier — KEEP (Sai spec written)
+### 8. taisa.mukha — intentional text-over-b-roll vignette · 189x/131x/90x repeat outlier — KEEP (Sai spec written)
 - **Refs:** https://www.instagram.com/reel/DYdoaUGRqxO/ (189x) · https://www.instagram.com/reel/DYtLzoLtigX/ (131x) · https://www.instagram.com/reel/DXMbv0ejYe9/ (90x)
 - **Sai spec (Gray-approved direction: motivational / inspirational / educational / raw, and INTENTIONAL):**
   - One idea per video. Text in **2–3 beats: setup → turn → land** — the turn is mandatory; flat quotes die.
