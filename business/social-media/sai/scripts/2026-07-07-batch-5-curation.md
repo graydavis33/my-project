@@ -1,88 +1,92 @@
-# Batch 5 — Sandcastles Curation v2
+# Batch 5 — Sandcastles Curation v3
 
-_Date: 2026-07-07 (v2, evening — first pass REJECTED by Gray same day). Status: **CURATION ONLY.** Next: Gray adds his 7–8 manually-researched videos → merge best → v6 batch doc → Notion._
+_Date: 2026-07-08 (v3 — per-video iteration pass with Gray). v1 rejected whole 2026-07-07; v2 rebuilt same night; v3 = Gray's video-by-video pass. Status: **NEAR-LOCKED** — open: #2 adapt-vs-replace, #4 creator-repeat confirm, merge Gray's 7–8 manual finds → v6 batch doc → Notion._
 
-## Why v1 was rejected (and the method that replaced it)
-
-Gray, verbatim intent: "Either the format isn't anything you can adapt with Sai, or the creator is not even in the watchlist."
-
-Root cause: the Sandcastles watchlist is ONE shared list (single workspace, verified) holding Gray-brand editing/AI creators AND Sai founder creators. v1 pulled watchlist-wide sorted by views → surfaced Gray-brand creators and mega-channel routine posts.
-
-**The method now (every future batch):**
-1. Grep all `sai/scripts/*.md` for used URLs/handles — no repeat videos OR creators, including rejected ones — AND check the posted-video burn list below (a format Sai already POSTED is burned even if it was never a batch ref).
-2. `search_my_videos`, 90d, **min outlier ≥10x**, min views ~3K, paginate to the end. Outlier-first, never view-sorted top-N. If the watchlist bench is thin, extend with `search_all_videos` on founder-niche queries and flag non-watchlist creators for Gray to add.
+## The method (locked — every future batch)
+1. Grep all `sai/scripts/*.md` for used URLs/handles — no repeat videos OR creators, including rejected ones — AND check the posted-video burn list (a format Sai already POSTED is burned even if never a batch ref). **Apply the grep output to EVERY pick — the v2 omarontape miss happened with the answer already in hand.**
+2. `search_my_videos`, 90d, **min outlier ≥10x**, min views ~3K, paginate to the end. Outlier-first, never view-sorted top-N. Extend with `search_all_videos` founder queries when the watchlist bench runs dry; flag non-watchlist creators.
 3. **Niche gate:** founder / business / build-in-public creators only.
-4. **Format-fit gate:** Sai must be able to film it as himself (young agency CEO), talking-head ± simple physical prop. Auto-reject: podcast clips, hype reels / crowd-footage motivational, editing- or speaking-craft tutorials, relationship/lifestyle, cinematic builds.
-5. **FORMATS, NOT TOPICS (Gray, 2026-07-07):** every pick must be a repeatable structural MECHANIC (a series counter, a live challenge, a hidden-test story shape, a numbers-receipt spine) that Sai-brand topics get poured into. A talking head saying something smart is a topic, not a find — reject it no matter the multiplier.
-6. Per-pick adaptation note tied to Sai's 3 pillars (value / relatability / authority-through-experience).
+4. **Format-fit gate:** Sai filmable as himself (young agency CEO), talking-head ± simple physical prop. Auto-reject: podcast clips, hype reels, craft tutorials, relationship/lifestyle, cinematic builds.
+5. **FORMATS, NOT TOPICS:** every pick = a repeatable structural MECHANIC to pour Sai topics into. 3 repeat outliers from one account > one monster outlier.
+6. Per-pick adaptation note tied to the 3 pillars (value / relatability / authority-through-experience).
 7. Save the curation doc same session.
 
-## Posted-video burn list (formats Sai has already SHOT/POSTED — never re-suggest)
-- **"3 books beat my Stanford MBA" credential-flip book stack** (jayhoovy shape) — Gray posted Sai's version **2026-07-07**.
+## Posted-video burn list (formats Sai already SHOT/POSTED — never re-suggest)
+- **"3 books beat my Stanford MBA" credential-flip book stack** (jayhoovy shape) — posted **2026-07-07**.
 
 ---
 
-## v2 Candidates (7)
+## v3 Batch (7)
 
-### 1. omarontape — Serialized "Day N of building" · 21.9x · 918K (and 14.4x second episode)
-- **Refs:** https://www.instagram.com/reel/DW9SObUgZIE/ (day 106, 21.9x) · https://www.instagram.com/reel/DZtOOUnhUMG/ (day 128, 14.4x)
-- Numbered build-in-public series: "today is day 106 of building [app]" + ONE micro-topic per episode + comment-gate. Two outlier data points = the format sustains, not a one-off.
-- **Sai adapt:** "Day N of scaling Trendify" — one real decision per episode (a pricing call, a hire, a client fire). The day counter IS the retention loop and it serializes forever. Relatability + authority.
+### 1. 🆕 NYC OFFICE COUNTDOWN — Gray's format (replaces omarontape day-counter, which was a Batch 4 repeat)
+- **Mechanic:** serialized GOAL-progress tracker (not a day counter): goal restated in one line → **how close he actually is** (real number: cash vs buildout, spaces toured, the client that funds it) → what moved since last update → what's next / the blocker. ~30–45s per episode.
+- **Retention:** the open loop is "does he get the office" — every episode re-opens it; the lease/keys episode is a guaranteed payoff + long-form crossover.
+- **Physical anchor option:** printed progress card or NYC map + pin, marked on camera each update.
+- **Hooks:** "I'm opening an office in New York City. Here's how close I actually am." / "NYC office update 3: we hit a problem."
+- Pillars: relatability + authority. Sai has stated this goal for real.
 
-### 2. buildercult — Numbers-receipt case study → named principle · 36x · 905K
+### 2. buildercult — numbers-receipt → named principle · 36x · 905K — ⏳ ADAPT OR REPLACE (Gray deciding)
 - **Ref:** https://www.instagram.com/reel/DYPvEUrS2H1/
-- "He DMed 250 strangers before writing a single line of code. 12 said yes. $20K/month in 83 days." Story told in hard numbers, then the principle gets a NAME ("the commitment metric").
-- **Sai adapt:** first-person Trendify version — numbers first, twist, then name the principle. Physical option: a stack of 250 printed cards, keep 12, toss the rest (bucket-toss DNA, fresh frame). Value + authority.
+- Gray's issue: the ref is third-person (about someone else's app), hard to map. Adaptation routes offered:
+  - (a) **First-person receipts:** "I had $1M liquid at 17. 83 days later: zero. One number would have saved me." → name the principle.
+  - (b) **Client case study (owned third-person):** "A client came to us spending $30K/month on ads with one number missing…" → named principle. Anonymized agency war story = native authority.
+  - (c) **Mentor receipts:** retell a mentor's story, numbers first, principle named.
+- Keep-mechanic: numbers as the spine + NAMING the principle (the name is the save/share trigger).
 
-### 3. jakemuxlow — Stakes-framed day-in-life · 22.4x · 689K
-- **Ref:** https://www.instagram.com/reel/DYNakZxtsKg/
-- "Day in the life of a 19 year old trying to build a seven figure business in just 365 days" — DIL footage reframed by age + goal + deadline in line one.
-- **Sai adapt:** Gray already shoots Sai DIL constantly; this is a packaging format — put a quantified challenge banner on it and it becomes a series. Near-zero new filming cost. Relatability.
+### 3. 🆕 marziaprince — physical A/B demo · 1837x · 4.3M (replaces jakemuxlow stakes-DIL — too close to #1's serial/counter DNA)
+- **Ref:** https://www.instagram.com/reel/DaSx1hLuV_l/ ("The product didn't change. The packaging did.")
+- **Mechanic:** ONE physical object shown two ways; the object transformation IS the argument for an abstract business claim. Biggest outlier in the entire pool; pure physical-retention.
+- **Sai adapt:** two identical pitch decks dressed differently ("same agency, same price — this one closes") · same ad script plain vs branded · the packaging metaphor straight ("clients don't buy the work, they buy how it's wrapped").
+- Not on watchlist (global find). Pillars: value + authority.
 
-### 4. sharransrivatsaa — Story → hidden test → framework · 25.8x · 426K
-- **Ref:** https://www.instagram.com/reel/DXwbo65lM5- /  (fix trailing space when opening) — "39 interviews. 3 cities. One job at Goldman Sachs." Twist: the interviewer was testing coachability, not initiative; "only two people ever passed."
-- Second data point same creator, same shape: Branson tennis story → 4-step framework (13.6x, https://www.instagram.com/reel/DX7INuSDZkq/).
-- **Sai adapt:** "the test I run in every Trendify interview that candidates don't know is happening" or a test a mentor ran on Sai. Story carries the retention, framework carries the save. Authority-through-experience.
+### 4. sharransrivatsaa — story → hidden test → framework · 25.8x · 426K — KEEP ⚠️ creator-repeat, Gray to confirm
+- **Ref:** https://www.instagram.com/reel/DXwbo65lM5-/ (Goldman coachability test) · 2nd shape data point https://www.instagram.com/reel/DX7INuSDZkq/ (13.6x)
+- **⚠️ Creator repeat:** sharransrivatsaa already appears in Batch 4 docs (different video, the "leverage compounds" reel DX3PcrVR0Ps). Video is fresh; creator is not. Gray likes the pick — his call, flagged per the no-repeats rule.
+- **Topic slotted (Gray):** the client blow-up story. Structure: cold-open at the blow-up (one real line) → rewind to why → **twist: it wasn't about the missed work, it was the silence before it — the real test was whether Trendify delivers bad news early** → payoff: the 3 rules Trendify runs now (bad news travels first / every deliverable has a named owner / client never discovers a problem before we tell them). Reveal stays in the back half.
 
-### 5. neilpatel — Contrarian industry-shift take · 57.5x · 567K
-- **Ref:** https://www.instagram.com/reel/DZaiYUsDWum/ ("Get cited or get invisible") · second data point 45.3x https://www.instagram.com/reel/DY-NoHhDuVX/
-- Direct-address authority take declaring the viewer's current playbook dead: "you'll notice the drop before you understand why."
-- **Sai adapt:** this is literally Sai's lane — marketing agency CEO on what's dying in ads/marketing as AI eats it. "The version of marketing you're running is over." Talking-head, one take. Authority.
+### 5. neilpatel — contrarian industry-shift take · 57.5x · 567K — KEEP
+- **Refs:** https://www.instagram.com/reel/DZaiYUsDWum/ (57.5x) · https://www.instagram.com/reel/DY-NoHhDuVX/ (45.3x)
+- **Claim bench (one per video; serializable):**
+  - STOP: the boost button ("you're paying Meta to skip strategy")
+  - STOP: polished templated brand content ("your $5K produced ad loses to a $0 iPhone video — I run the numbers")
+  - STOP: follower count as the creator-hiring metric (outlier scores are the currency)
+  - STOP: posting for website clicks (AI answers killed the click — get cited or get invisible, localized to his clients)
+  - EXPLODE: comment-gate DM automation
+  - EXPLODE: brands hiring in-house creators/videographers ("every CEO will have one in 2 years")
 
-### 6. eatgetup — Real-time field mission (live ask, outcome unknown) · 48.2x · 1.6M · NOT on watchlist
+### 6. eatgetup — real-time mission, outcome unknown · 48.2x · 1.6M — KEEP (non-street versions)
 - **Ref:** https://www.instagram.com/reel/DXNYIHoCegS/
-- NYC food-startup founders: "Today we walked into a multi-million dollar startup to try to stock our energy bites in their office. No plan, just spontaneous." Camera rolls on a REAL ask with a genuinely unknown outcome — the will-they-say-yes tension is the whole retention engine. Built-in comment CTA ("drop your company below").
-- **Sai adapt:** "Today I'm trying to [close X / cold-pitch Y / get a meeting with Z] on camera, no plan." Real stakes, real people (people-over-AI), physical and NYC-native. The mechanic serializes: a new mission per episode.
-- **Flag:** creator not on the watchlist (global find — the watchlist founder bench above 10x is exhausted). Niche-fit is exact; say the word and I'll add them via MCP.
+- Gray wants the rawness without the NYC-street cold approach. Mission bench:
+  - **Live pitch send:** write + send a DM/email to a dream client on camera; part 2 = the reply (built-in two-parter).
+  - **The ask call:** on a real Zoom, ask a client something uncomfortable (referral / testimonial / price increase); camera present when the answer lands.
+  - **24-hour ship:** one real deliverable brief→delivered in a day, clock running, client's real reaction as the ending.
+  - **Team mission:** 9am challenge ("book 3 discovery calls by 5pm"), check-ins, 5pm reveal — people-over-AI.
+- DNA to preserve: real ask, real people, unknown outcome, no script.
+- Not on watchlist — MCP-add on Gray's word.
 
-### 7. taisa.mukha — Founder-POV vignette (3-time repeat outlier) · 189x / 131x / 90x · NOT on watchlist ⚠️ watch before locking
-- **Refs:** https://www.instagram.com/reel/DYdoaUGRqxO/ ("Rules of the game", 189x, 4.3M) · https://www.instagram.com/reel/DYtLzoLtigX/ ("Lesson should be learned", 131x) · https://www.instagram.com/reel/DXMbv0ejYe9/ ("day job as your runway", 90x)
-- SF startup-founder account landing 90–189x outliers repeatedly with the same shape — that consistency is the signal; one-hit outliers can be luck, three is a format.
-- **⚠️ Metadata doesn't reveal the mechanic** (likely founder-life footage + on-screen text vignette, which Sai could replicate from existing DIL b-roll for near zero filming cost) — **watch one before locking.** Optional: burn a Sandcastles `analyze_video` credit on the 189x one for the full breakdown — your call since it costs credits.
-
----
-
-## Honest read on the bench
-
-After the niche + format + no-repeat filters, the shared watchlist's founder-niche bench above 10x over 90 days is essentially exhausted by this list. The watchlist needs more founder/build-in-public nano-mid channels for future batches to stay fresh — a `discover_channels` pass is the fix (Gray to green-light).
-
-## Watchlist actions (webapp only — MCP has no remove tool)
-
-Gray to remove in the Sandcastles webapp: **julssolomon, malova.flex, khan.ayan9**. Note: khan.ayan9/dope.motions/ai.withphil also feed Gray's OWN Graydient research on this shared list — removing khan.ayan9 removes it from that side too. The curation-side fix (niche filtering) is already in place regardless.
+### 7. taisa.mukha — intentional text-over-b-roll vignette · 189x/131x/90x repeat outlier — KEEP (Sai spec written)
+- **Refs:** https://www.instagram.com/reel/DYdoaUGRqxO/ (189x) · https://www.instagram.com/reel/DYtLzoLtigX/ (131x) · https://www.instagram.com/reel/DXMbv0ejYe9/ (90x)
+- **Sai spec (Gray-approved direction: motivational / inspirational / educational / raw, and INTENTIONAL):**
+  - One idea per video. Text in **2–3 beats: setup → turn → land** — the turn is mandatory; flat quotes die.
+  - **One scene, not montage soup**, matched to the line's emotional temperature (raw line = 5am office / red-light journaling / subway alone; win line = quiet aftermath, never celebration).
+  - Three rotating lanes: **cost** ("everyone wants the office in New York / nobody wants the 5am alone in it") · **lesson** ("we didn't lose the client when the ad flopped / we lost them when we went quiet for four days") · **belief** ("at 15 my ads failed / at 21 those failures run the agency").
+  - Runs entirely off the horizontal b-roll library — editor-light, batchable 5 at a time.
+- Not on watchlist — MCP-add on Gray's word.
 
 ---
 
 ## REJECTED refs — kept here so the no-repeats grep catches them forever
 
-v1 (whole pass rejected): julssolomon https://www.instagram.com/reel/DXpq08qDVpq/ (776x) · khan.ayan9 https://www.instagram.com/reel/DX9egnbhwZJ/ (265x) · malova.flex https://www.instagram.com/reel/DXcjsmJAdgv/ (103x) · garyvee https://www.instagram.com/reel/DXx1tKzss2O/ (57x) · jun_yuh https://www.instagram.com/reel/DXqH7PkkTPe/ (34x) + https://www.instagram.com/reel/DXvde0sNZES/ (11.6x) · brendenbuilds https://tiktok.com/@brendenbuilds/video/7649893619293277454 (34x — "Continuous causal optimization", the morning pull's unresolved link, now identified) · leilahormozi https://www.instagram.com/reel/DaJgz8kvEbS/ (7.9x) · codiesanchez https://www.instagram.com/reel/DZLKuRpgHw7/ (14x)
+v1 (whole pass rejected): julssolomon https://www.instagram.com/reel/DXpq08qDVpq/ (776x) · khan.ayan9 https://www.instagram.com/reel/DX9egnbhwZJ/ (265x) · malova.flex https://www.instagram.com/reel/DXcjsmJAdgv/ (103x) · garyvee https://www.instagram.com/reel/DXx1tKzss2O/ (57x) · jun_yuh https://www.instagram.com/reel/DXqH7PkkTPe/ (34x) + https://www.instagram.com/reel/DXvde0sNZES/ (11.6x) · brendenbuilds https://tiktok.com/@brendenbuilds/video/7649893619293277454 (34x "Continuous causal optimization") · leilahormozi https://www.instagram.com/reel/DaJgz8kvEbS/ (7.9x) · codiesanchez https://www.instagram.com/reel/DZLKuRpgHw7/ (14x)
 
-v2 cuts: jayhoovy https://www.instagram.com/reel/DZ0ZsxyviKC/ (15.6x — format already POSTED by Sai 2026-07-07, see burn list) · angus.sewell https://www.instagram.com/reel/DZNyEF1Nts8/ (18.8x — Gray: "just talking-head topics", fails the formats-not-topics test)
+v2 cuts: jayhoovy https://www.instagram.com/reel/DZ0ZsxyviKC/ (15.6x — format already POSTED by Sai 2026-07-07) · angus.sewell https://www.instagram.com/reel/DZNyEF1Nts8/ (18.8x — topics, not formats)
+
+v3 cuts: omarontape https://www.instagram.com/reel/DW9SObUgZIE/ + https://www.instagram.com/reel/DZtOOUnhUMG/ (21.9x/14.4x — **Batch 4 repeat, caught by Gray**; the grep had flagged DW9SObUgZIE and it wasn't applied — apply the grep to every pick) · jakemuxlow https://www.instagram.com/reel/DYNakZxtsKg/ (22.4x — counter/DIL overlap with #1)
 
 ## Pending
-- [ ] Gray inputs his 7–8 manually-researched videos
-- [ ] Cross-reference + merge → lock Batch 5
-- [ ] Gray: watch a taisa.mukha ref to confirm the mechanic (or OK an analyze_video credit)
-- [ ] Gray: add eatgetup (+ taisa.mukha?) to the watchlist — I can do it via MCP on his word
-- [ ] Draft v6 batch doc (`_BATCH-DOC-TEMPLATE.md`) → push to Notion
-- [ ] Gray: webapp watchlist prune (julssolomon, malova.flex, khan.ayan9)
+- [ ] Gray: #2 call — adapt route (a/b/c) or replace
+- [ ] Gray: #4 confirm despite sharransrivatsaa being a Batch 4 creator
+- [ ] Gray inputs his 7–8 manually-researched videos → cross-reference → merge → LOCK
+- [ ] Draft v6 batch doc (`_BATCH-DOC-TEMPLATE.md`) → push to Notion DB (add Basic/Editor views by hand; push is not idempotent — don't re-push)
+- [ ] Gray: watchlist webapp prune (julssolomon, malova.flex, khan.ayan9) · optional MCP-add: eatgetup, taisa.mukha, marziaprince
 - [ ] Optional: discover_channels pass to deepen the founder nano/mid bench
