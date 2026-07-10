@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" data-composition-variables='[{"id":"itemsToShow","type":"number","label":"How many logos animate (1 for review, 10 for full)","default":10},{"id":"sideMargin","type":"number","label":"Chart side margin (px)","default":60},{"id":"headerTop","type":"number","label":"Header top (px)","default":190},{"id":"headerFont","type":"number","label":"GOES/GROWS header font (px)","default":66},{"id":"rowStartY","type":"number","label":"First row top (px)","default":372},{"id":"rowHeight","type":"number","label":"Row height (px)","default":150},{"id":"tileSize","type":"number","label":"Logo tile size (px)","default":94},{"id":"cornerRadius","type":"number","label":"Tile corner radius (px)","default":22},{"id":"labelFont","type":"number","label":"Item label font (px)","default":31},{"id":"lineWidth","type":"number","label":"Chart line thickness (px)","default":5},{"id":"white","type":"color","label":"White (chart + text)","default":"#FFFFFF"},{"id":"goesAccent","type":"color","label":"GOES accent underline","default":"#FF5A5F"},{"id":"growsAccent","type":"color","label":"GROWS accent underline","default":"#2FD98A"},{"id":"popDuration","type":"number","label":"Logo pop duration (s)","default":0.5},{"id":"item1Time","type":"number","label":"Item 1 (Running Ads) pop time (s)","default":2.5}]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #00FF00; /* chroma key green — Gray keys this out in Premiere */
+        font-family: "Montserrat", system-ui, sans-serif;
+      }
+      .scene { position: relative; width: 100%; height: 100%; }
+
+      /* === Clean white T-chart frame === */
+      .chart { position: absolute; z-index: 1; }
+      .col-header {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-weight: 700; /* Montserrat Bold headers */
+        color: var(--white);
+        letter-spacing: 2px;
+        text-shadow: 0 3px 12px rgba(0,0,0,0.45);
+      }
+      .header-accent { height: 5px; border-radius: 3px; margin-top: 14px; }
+      .chart-line {
+        position: absolute;
+        background: var(--white);
+        border-radius: 3px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+        transform-origin: center center;
+      }
+
+      /* === Item rows: rounded logo tile + label === */
+      .rows-layer {
+        position: absolute; top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 2; pointer-events: none;
+      }
+      .item {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+      .tile {
+        flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        border: 2px solid rgba(255,255,255,0.92);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        overflow: hidden;
+        position: relative;
+      }
+      .tile svg {
+        width: 60%; height: 60%; position: relative;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      }
+      .tile .glass {
+        position: absolute; inset: 0; border-radius: inherit;
+        background: radial-gradient(circle at 30% 18%, rgba(255,255,255,0.42), rgba(255,255,255,0) 62%);
+      }
+      .label {
+        font-weight: 600; /* Montserrat SemiBold */
+        color: var(--white);
+        line-height: 1.12;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="33" data-width="1080" data-height="1920">
+      <div id="scene" class="scene clip" data-start="0" data-duration="33" data-track-index="1">
+        <div id="chart" class="chart"></div>
+        <div id="rows" class="rows-layer" data-layout-allow-overflow></div>
+      </div>
+      <!-- audio for preview sync only (render is a visual overlay) -->
+      <audio id="voice" src="assets/audio.aac" data-start="0" data-duration="33" data-track-index="9"></audio>
+    </div>
+
+    <script>
+      (function () {
+        const v = window.__hyperframes.getVariables();
+        document.documentElement.style.setProperty("--white", v.white);
+
+        // Drawn white line icons (NO emojis — Sai brand rule)
+        const IC = 'fill="none" stroke="' + v.white + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"';
+        const ICONS = {
+          megaphone: '<svg viewBox="0 0 48 48" ' + IC + '><path d="M6 20 v8 h8 l18 10 V10 L14 20 Z"/><path d="M32 18 q6 6 0 12"/><path d="M37 14 q11 10 0 20"/><line x1="11" y1="28" x2="14" y2="42"/></svg>',
+          box: '<svg viewBox="0 0 48 48" ' + IC + '><path d="M24 5 L42 14 V34 L24 43 L6 34 V14 Z"/><path d="M6 14 L24 23 L42 14"/><line x1="24" y1="23" x2="24" y2="43"/></svg>',
+          chip: '<svg viewBox="0 0 48 48" ' + IC + '><rect x="11" y="11" width="26" height="26" rx="5"/><line x1="18" y1="11" x2="18" y2="5"/><line x1="30" y1="11" x2="30" y2="5"/><line x1="18" y1="43" x2="18" y2="37"/><line x1="30" y1="43" x2="30" y2="37"/><line x1="11" y1="18" x2="5" y2="18"/><line x1="11" y1="30" x2="5" y2="30"/><line x1="43" y1="18" x2="37" y2="18"/><line x1="43" y1="30" x2="37" y2="30"/><text x="24" y="30" text-anchor="middle" font-family="Montserrat, sans-serif" font-size="13" font-weight="700" fill="' + v.white + '" stroke="none">AI</text></svg>',
+          people: '<svg viewBox="0 0 48 48" ' + IC + '><circle cx="17" cy="16" r="6.5"/><circle cx="33" cy="18" r="5.5"/><path d="M6 40 v-3 c0-6 5-10 11-10 s11 4 11 10 v3"/><path d="M30 40 v-2 c0-5 4-9 9-9 3 0 6 1.5 8 4"/></svg>',
+          calculator: '<svg viewBox="0 0 48 48" ' + IC + '><rect x="11" y="5" width="26" height="38" rx="4"/><rect x="16" y="10" width="16" height="7" rx="1.5"/><line x1="17" y1="24" x2="17" y2="24.5"/><line x1="24" y1="24" x2="24" y2="24.5"/><line x1="31" y1="24" x2="31" y2="24.5"/><line x1="17" y1="31" x2="17" y2="31.5"/><line x1="24" y1="31" x2="24" y2="31.5"/><line x1="31" y1="31" x2="31" y2="31.5"/><line x1="17" y1="38" x2="24" y2="38"/><line x1="31" y1="37" x2="31" y2="39"/></svg>',
+          chartup: '<svg viewBox="0 0 48 48" ' + IC + '><line x1="8" y1="6" x2="8" y2="40"/><line x1="8" y1="40" x2="42" y2="40"/><rect x="14" y="28" width="6" height="12"/><rect x="24" y="20" width="6" height="20"/><rect x="34" y="11" width="6" height="29"/></svg>',
+          personplus: '<svg viewBox="0 0 48 48" ' + IC + '><circle cx="20" cy="15" r="7"/><path d="M7 41 v-3 c0-7 6-12 13-12 s13 5 13 12 v3"/><line x1="38" y1="12" x2="38" y2="26"/><line x1="31" y1="19" x2="45" y2="19"/></svg>',
+          upsell: '<svg viewBox="0 0 48 48" ' + IC + '><path d="M8 34 L20 22 L28 30 L42 12"/><polyline points="32,12 42,12 42,22"/><line x1="8" y1="42" x2="42" y2="42"/></svg>',
+          door: '<svg viewBox="0 0 48 48" ' + IC + '><path d="M12 6 h24 v36 h-24 Z"/><path d="M12 6 L28 10 V38 L12 42"/><circle cx="24" cy="24" r="1.6" fill="' + v.white + '"/></svg>',
+          checklist: '<svg viewBox="0 0 48 48" ' + IC + '><rect x="9" y="7" width="30" height="36" rx="4"/><rect x="18" y="4" width="12" height="7" rx="2"/><polyline points="15,19 18,22 23,16"/><polyline points="15,31 18,34 23,28"/><line x1="27" y1="19" x2="34" y2="19"/><line x1="27" y1="31" x2="34" y2="31"/></svg>',
+        };
+
+        // The 5 pairs. side: "goes" (left) or "grows" (right). slot: row index 0-4.
+        // Times from the whisper transcript (transcript.json). Item 1 time is a Studio
+        // variable so Gray can nudge the whole sequence's anchor live.
+        const ITEMS = [
+          { side: "goes",  slot: 0, label: "Running Ads",          icon: "megaphone",  g: ["#F97316", "#DC2626"], t: v.item1Time },
+          { side: "grows", slot: 0, label: "Great Product",        icon: "box",        g: ["#059669", "#34D399"], t: 4.6 },
+          { side: "goes",  slot: 1, label: "AI Agents",            icon: "chip",       g: ["#F43F5E", "#B91C1C"], t: 6.6 },
+          { side: "grows", slot: 1, label: "Great People",         icon: "people",     g: ["#0D9488", "#2DD4BF"], t: 9.2 },
+          { side: "goes",  slot: 2, label: "Hire a CPA",           icon: "calculator", g: ["#FB7185", "#E11D48"], t: 10.9 },
+          { side: "grows", slot: 2, label: "Master the Numbers",   icon: "chartup",    g: ["#2563EB", "#38BDF8"], t: 15.6 },
+          { side: "goes",  slot: 3, label: "New Clients",          icon: "personplus", g: ["#F59E0B", "#EF4444"], t: 20.0 },
+          { side: "grows", slot: 3, label: "Upsell Clients",       icon: "upsell",     g: ["#16A34A", "#4ADE80"], t: 23.0 },
+          { side: "goes",  slot: 4, label: "DIY Onboarding",       icon: "door",       g: ["#FB923C", "#C026D3"], t: 25.2 },
+          { side: "grows", slot: 4, label: "Systems & Checklists", icon: "checklist",  g: ["#0891B2", "#22D3EE"], t: 28.7 },
+        ];
+
+        // === Geometry ===
+        const chartLeft = v.sideMargin;
+        const chartRight = 1080 - v.sideMargin;
+        const chartWidth = chartRight - chartLeft;
+        const centerX = 1080 / 2;
+        const headerLineY = v.headerTop + v.headerFont + 42; // horizontal rule under headers
+        const chartBottom = v.rowStartY + 5 * v.rowHeight;
+
+        const chart = document.getElementById("chart");
+
+        // Two column headers
+        function makeHeader(text, cx, accent) {
+          const h = document.createElement("div");
+          h.className = "col-header";
+          h.style.top = v.headerTop + "px";
+          h.style.left = (cx - 200) + "px";
+          h.style.width = "400px";
+          h.style.fontSize = v.headerFont + "px";
+          h.innerHTML = text + '<div class="header-accent" style="width:' + Math.round(v.headerFont * 1.6) + 'px;background:' + accent + ';"></div>';
+          chart.appendChild(h);
+          return h;
+        }
+        const hGoes = makeHeader("GOES", (chartLeft + centerX) / 2, v.goesAccent);
+        const hGrows = makeHeader("GROWS", (centerX + chartRight) / 2, v.growsAccent);
+
+        // Horizontal rule under headers (full chart width)
+        const hLine = document.createElement("div");
+        hLine.className = "chart-line";
+        hLine.id = "h-line";
+        hLine.style.left = chartLeft + "px";
+        hLine.style.top = headerLineY + "px";
+        hLine.style.width = chartWidth + "px";
+        hLine.style.height = v.lineWidth + "px";
+        chart.appendChild(hLine);
+
+        // Vertical divider (from the rule down through the rows)
+        const vLine = document.createElement("div");
+        vLine.className = "chart-line";
+        vLine.id = "v-line";
+        vLine.style.left = (centerX - v.lineWidth / 2) + "px";
+        vLine.style.top = headerLineY + "px";
+        vLine.style.width = v.lineWidth + "px";
+        vLine.style.height = (chartBottom - headerLineY) + "px";
+        chart.appendChild(vLine);
+
+        // === Build item rows ===
+        const rows = document.getElementById("rows");
+        const active = ITEMS.slice().sort(function(a,b){return a.t-b.t;})
+                            .slice(0, Math.max(1, Math.min(10, Math.round(v.itemsToShow))));
+
+        active.forEach(function (item, i) {
+          const colLeft = item.side === "goes" ? chartLeft + 26 : centerX + 26;
+          const rowTop = v.rowStartY + item.slot * v.rowHeight;
+          const rowMidY = rowTop + v.rowHeight / 2;
+
+          const wrap = document.createElement("div");
+          wrap.className = "item";
+          wrap.id = "item-" + i;
+          wrap.style.left = colLeft + "px";
+          wrap.style.top = (rowMidY - v.tileSize / 2) + "px";
+          wrap.style.height = v.tileSize + "px";
+          wrap.style.width = ((item.side === "goes" ? centerX : chartRight) - colLeft - 20) + "px";
+
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          tile.style.width = v.tileSize + "px";
+          tile.style.height = v.tileSize + "px";
+          tile.style.borderRadius = v.cornerRadius + "px";
+          tile.style.background = "linear-gradient(135deg, " + item.g[0] + ", " + item.g[1] + ")";
+          tile.innerHTML = '<div class="glass"></div>' + ICONS[item.icon];
+
+          const label = document.createElement("div");
+          label.className = "label";
+          label.style.marginLeft = "22px";
+          label.style.fontSize = v.labelFont + "px";
+          label.textContent = item.label;
+
+          wrap.appendChild(tile);
+          wrap.appendChild(label);
+          rows.appendChild(wrap);
+        });
+
+        // === Timeline ===
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Chart frame entrance (headers + lines draw in first)
+        tl.from("#h-line", { scaleX: 0, duration: 0.55, ease: "power3.out" }, 0.15);
+        tl.from("#v-line", { scaleY: 0, transformOrigin: "top center", duration: 0.6, ease: "power3.out" }, 0.35);
+        tl.from(".col-header", { y: -26, opacity: 0, duration: 0.5, ease: "power3.out", stagger: 0.12 }, 0.1);
+
+        // Each logo pops into its side, then settles (cumulative — all stay on screen)
+        active.forEach(function (item, i) {
+          const sel = "#item-" + i;
+          tl.set(sel, { scale: 0, transformOrigin: "0% 50%" }, 0);
+          tl.set(sel + " .label", { opacity: 0, x: -14 }, 0);
+
+          tl.to(sel, { opacity: 1, duration: 0.1, ease: "none" }, item.t);
+          // pop with overshoot
+          tl.to(sel, { scale: 1.12, duration: v.popDuration * 0.62, ease: "back.out(2.4)" }, item.t);
+          tl.to(sel, { scale: 1, duration: v.popDuration * 0.5, ease: "power2.out" }, item.t + v.popDuration * 0.55);
+          // label slides in just after the tile lands
+          tl.to(sel + " .label", { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, item.t + 0.14);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
