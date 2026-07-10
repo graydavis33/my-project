@@ -123,6 +123,41 @@ This tool is in active iteration. The reliability bar: Gray never has to manuall
 - After editing + publishing a video: `python cli_index.py --client sai pull-cleanup` deletes the pull folder used for that edit
 - Week numbering: W01 = ISO week of Apr 15, 2026 (Sai project Day 1). W01 label uses Apr 15-19 (partial week starting at project day 1)
 
+**v5 — Batch pull + incremental index (2026-07-10):**
+- `pull --batch N [--vid M]` serves a filed batch (the feature that gated Batch 3
+  auto-editing). Whole-batch pulls group into `Vid_MM/` subfolders automatically.
+  `list-batches` shows what's servable. Batch clips leave the index at `ship`
+  (they move to index-skipped `_BATCHES`) — pull before shipping.
+- **Incremental indexing:** each row stores a (size_bytes, mtime) fingerprint; a
+  rescan skips fingerprint-matched files with zero ffprobe work. New/changed files
+  get ONE combined ffprobe call (`probe_media` in extractor.py — width/height/
+  rotation/duration/creation_time in a single spawn, was 4 spawns), probed 8-wide
+  in a thread pool, written via `index.upsert_many` in one transaction. No-change
+  rescan of ~900 clips ≈ 0.1s (was ~5 min).
+- **Auto-refresh:** `pull`, `tag`, and `list-batches` run the incremental reindex
+  first (`_autorefresh_index`) — the stale-index problem is gone. `--no-index`
+  skips it; a machine without ffprobe falls back to the index as-is. No daemon,
+  no scheduler.
+- **Legacy-path wipe bug FIXED:** `has_legacy_paths` used to treat ANY path
+  containing ":" as a legacy Windows absolute — but Mac folder names legally
+  contain colons (`01_ORGANIZED/06:22-06:23/`), so once one was indexed, EVERY
+  command wiped + rebuilt the whole table, silently discarding index tags and
+  forcing the full re-probe that made indexing feel 5-minutes-slow. Now only a
+  real absolute (leading `/`, `X:/`, or a backslash) counts as legacy. Wiped tags
+  were restored for free from `.tag-cache.json` (filename+size keyed — that
+  design saved ~$6 of Opus re-tagging; 411 clips tagged post-restore).
+- `.tag-cache.json` + `.cache.json` stay **tracked in git on purpose** — they are
+  the durable copies of paid Vision results and git is what syncs them to the
+  Windows machine (untracking them would make Windows re-pay for tags Mac already
+  bought). The stray tool-folder `.footage-index.sqlite` + `.tmp_libhoriz_results.txt`
+  are untracked/gitignored; one-time `migrate_*.py` scripts moved to
+  `python-scripts/_archive/footage-organizer-migrations/`.
+- Walker now also prunes dot-folders (`.tmp/` sync pads were being probed and
+  logged as [skip] noise every run).
+- **Colon folder names are a Windows hazard:** `06:22-06:23`-style names are
+  illegal on Windows — those folders/files will misbehave when the SSD is on the
+  PC. Flagged to Gray 2026-07-10; rename pending his call.
+
 **Cross-platform:**
 - All paths use `pathlib.Path`, no drive-letter assumptions. Drive root is read from `<CLIENT>_LIBRARY_ROOT` env var (`.env` differs per machine: `/Volumes/Footage/Sai` on Mac, `D:/Sai` on Windows).
 - All scripts force UTF-8 stdout/stderr (Windows defaults to cp1252).

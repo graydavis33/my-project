@@ -119,3 +119,9 @@ _memory/github.md
 **/.query-sweep.log
 
 web-apps/payday-checklist/tests/.artifacts/
+
+# Footage organizer — the real index lives at the library root on the SSD;
+# a copy inside the tool folder is always a stray. Temp scratch files too.
+python-scripts/footage-organizer/.footage-index.sqlite
+python-scripts/footage-organizer/.tmp_libhoriz_results.txt
+python-scripts/footage-organizer/.tmp/

@@ -9,10 +9,13 @@ when an absolute path is needed (e.g. existence checks, hardlink source).
 This makes the DB portable across Mac (`/Volumes/Footage/Sai`) and Windows
 (`D:/Sai`) — same physical drive, different mount paths.
 """
+import re
 import sqlite3
 from dataclasses import dataclass, asdict
 from pathlib import Path, PurePosixPath
 from typing import Optional
+
+_WIN_DRIVE_RE = re.compile(r"^[A-Za-z]:[/\\]")
 
 
 @dataclass
@@ -347,9 +350,12 @@ def has_legacy_paths(db_path: Path) -> bool:
         rows = conn.execute("SELECT path FROM clips").fetchall()
     for (p,) in rows:
         # PurePosixPath("/Volumes/...").is_absolute() -> True
-        # PurePosixPath("D:/Sai/...").is_absolute() -> False, but contains ":"
-        # PurePosixPath("C:\\...").is_absolute() -> False, but contains ":"
-        if PurePosixPath(p).is_absolute() or ":" in p or "\\" in p:
+        # PurePosixPath("D:/Sai/...")  -> not absolute, caught by the drive-letter regex
+        # A colon ANYWHERE ELSE is NOT legacy — Mac folder names legally contain
+        # colons (e.g. "01_ORGANIZED/06:22-06:23/"). The old blanket `":" in p`
+        # check false-positived on those and silently wiped + rebuilt the whole
+        # table (Vision tags included) on every command.
+        if PurePosixPath(p).is_absolute() or _WIN_DRIVE_RE.match(p) or "\\" in p:
             return True
     return False
 

@@ -128,6 +128,15 @@ Both sweeps (query-pulls + drafts) run together daily via one scheduled job — 
 
 v2 adds a SQLite index of every clip in your library + a `pull` command that builds Premiere-ready folders via hardlinks. Folders stay the source of truth; the index makes them queryable.
 
+**v5 (2026-07-10): indexing is incremental + auto-runs before every `pull`/`tag`/`list-batches`.**
+Each clip's (size, mtime) fingerprint is stored in the index; a rescan skips every
+unchanged file with zero ffprobe work, probes only new/changed files (one combined
+ffprobe call per clip, 8 in parallel), and writes in one transaction. A no-change
+rescan of the ~900-clip library takes **~0.1s** (was ~5 min), so `pull` and `tag`
+refresh the index automatically first — the index can no longer go stale. Pass
+`--no-index` to skip the auto-refresh. First run after upgrading re-probes everything
+once (~10s) to fill fingerprints.
+
 ```bash
 # Refresh the index (run after every organize)
 python cli_index.py --client sai index
@@ -182,6 +191,27 @@ What it does, in order:
 - Sony sidecars (e.g. `C2493M01.XML`) move with their clip.
 - Re-running is safe — clips already in a Vid folder are left as-is (idempotent).
 - **No Vision/AI on batch footage** — it's mapped, not classified, so $0 API spend. The `batch_num`/`vid_num` tags are derived from the folder path, so a plain `index` re-run keeps them correct.
+
+### Pull a batch (v5, 2026-07-10)
+
+Serve a filed batch straight to editing — the missing piece that gated Batch 3 auto-editing:
+
+```bash
+# What batches are in the index?
+python cli_index.py --client sai list-batches
+
+# Pull one video's takes
+python cli_index.py --client sai pull --batch 3 --vid 9
+#   -> 07_QUERY_PULLS/batch-03-vid-09/
+
+# Pull the whole batch, grouped per video
+python cli_index.py --client sai pull --batch 3
+#   -> 07_QUERY_PULLS/batch-03/Vid_01/ … Vid_13/
+```
+
+`--batch`/`--vid` combine with every other pull filter. Batch clips are only in the
+index while they live under `01_ORGANIZED/Batch_NN/` — after `ship` they move to the
+index-skipped `_BATCHES` archive, so pull batches **before** shipping.
 
 ## v4 — Consolidate into a single b-roll library (`consolidate-broll`)
 

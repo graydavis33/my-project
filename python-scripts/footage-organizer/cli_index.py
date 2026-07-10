@@ -98,6 +98,8 @@ def _walk_videos(root: Path):
             if not d.startswith(_PREMIERE_DIR_PREFIXES)
             and not d.endswith(".PRV")
             and not d.startswith("_")
+            # Hidden working dirs (e.g. Ep-2 .tmp/ sync pads) are not footage.
+            and not d.startswith(".")
         ]
         for name in filenames:
             # Mac on exFAT sprinkles `._<name>` AppleDouble sidecars + `.DS_Store`.

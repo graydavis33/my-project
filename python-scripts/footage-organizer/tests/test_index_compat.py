@@ -105,3 +105,30 @@ def test_wipe_clips_then_reindex_produces_relative_paths(tmp_path):
         duration_s=1.0, width=1920, height=1080, codec="h264", sha1="abc",
     ))
     assert index.has_legacy_paths(db) is False
+
+
+def test_colon_in_folder_name_is_not_legacy(tmp_path):
+    """Mac folder names legally contain colons ("06:22-06:23"). These are
+    RELATIVE paths, not legacy Windows absolutes — the old blanket ':' check
+    wiped the whole table (tags included) on every command once one existed."""
+    db = tmp_path / "idx.sqlite"; index.init(db)
+    index.upsert(db, index.ClipRecord(
+        path="01_ORGANIZED/06:22-06:23/C2767.MP4",
+        category="06:22-06:23", format="long-form",
+        filmed_date="2026-06-22", upload_date="2026-06-22",
+        duration_s=1.0, width=1920, height=1080, codec="", sha1="abc",
+    ))
+    assert index.has_legacy_paths(db) is False
+
+
+def test_windows_drive_letter_still_detected_as_legacy(tmp_path):
+    db = tmp_path / "idx.sqlite"; index.init(db)
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "INSERT INTO clips (path, category, format, filmed_date, upload_date, "
+            "duration_s, width, height, codec, sha1) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            ("D:/Sai/05_FOOTAGE_LIBRARY/misc/x.mp4",
+             "misc", "long-form", "2026-04-16", "2026-04-16",
+             1.0, 1920, 1080, "h264", "abc"),
+        )
+    assert index.has_legacy_paths(db) is True

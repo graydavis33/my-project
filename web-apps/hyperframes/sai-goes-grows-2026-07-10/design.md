@@ -23,7 +23,7 @@ Timings live in the `ITEMS` array in `index.html`. Item 1 (Running Ads) pop time
 Studio variable (`item1Time`) for a quick live nudge. `itemsToShow` = 1 for review, 10 for full.
 
 ## Deliverables
-Rendered 60fps → `/Volumes/Footage/Sai/06_ASSETS/Visual Effects/Batch 4/`
+Rendered 60fps → `/Volumes/Footage/Sai/06_ASSETS/Visual Effects/Shorts/Batch 4/`
 - `Sai-VFX-GoesVsGrows-GREEN.mp4` — chroma green, key it in Premiere
 - `Sai-VFX-GoesVsGrows-ALPHA.mov` — ProRes 4444 transparent, drop straight over Sai
 

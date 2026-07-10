@@ -219,13 +219,27 @@ whichever machine reads it (Mac mounted at `/Volumes/Footage/Sai/`, Windows
 mounted at `D:/Sai/`) joins the relative path with its own library root at
 read time.
 
+**v5 (2026-07-10) — incremental + auto-fresh.** The index stores a (size, mtime)
+fingerprint per clip; rescans skip unchanged files entirely (no ffprobe), probe only
+new/changed clips (one combined ffprobe call, 8 in parallel), and write in one
+transaction. A no-change rescan ≈ 0.1s, so `pull` / `tag` / `list-batches` auto-refresh
+the index before running — a stale index is no longer possible. `--no-index` skips the
+refresh. Also fixed: paths with colons in folder names (`06:22-06:23`) no longer
+false-positive the legacy-path check, which had been silently wiping + rebuilding the
+whole table (tags included) on every command.
+
 ### Commands
 
-- `python cli_index.py --client sai index` — refresh SQLite index from library
+- `python cli_index.py --client sai index` — refresh SQLite index from library (incremental; only new/changed clips probed)
+- `python cli_index.py --client sai list-batches` — show batch/vid combos in the index with clip counts
+- `python cli_index.py --client sai pull --batch 3 --vid 9` — one video's takes → `07_QUERY_PULLS/batch-03-vid-09/`
+- `python cli_index.py --client sai pull --batch 3` — whole batch, grouped into `Vid_MM/` subfolders
 - `python cli_index.py --client sai pull --orientation vertical --filmed-date YYYY-MM-DD` — Premiere-ready folder of vertical clips from that day
 - `python cli_index.py --client sai pull --category interview-solo --filmed-after YYYY-MM-DD` — all solo interviews since that date
 
-All `pull` filters: `--category`, `--orientation`, `--filmed-date`, `--filmed-after`, `--filmed-before`, `--min-duration`, `--max-duration`
+All `pull` filters: `--category`, `--orientation`, `--filmed-date`, `--filmed-after`, `--filmed-before`, `--min-duration`, `--max-duration`, `--emotion`, `--action`, `--location`, `--object`, `--batch`, `--vid` (+ `--no-index` to skip the auto-refresh)
+
+Batch clips are indexed only while under `01_ORGANIZED/Batch_NN/` — `ship` moves them to the index-skipped `_BATCHES` archive, so **pull batches before shipping**.
 
 ### v3: Batch command (file a shoot by Vid)
 
