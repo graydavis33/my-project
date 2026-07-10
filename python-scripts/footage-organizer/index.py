@@ -43,6 +43,11 @@ class ClipRecord:
     action: Optional[str] = None
     location: Optional[str] = None
     objects: Optional[str] = None
+    # Incremental-scan fingerprint: file size + mtime at last probe. A walked file
+    # whose (size, mtime) matches its row is skipped without any ffprobe/hash work.
+    # NULL on rows from older code — they re-probe once, then fill in.
+    size_bytes: Optional[int] = None
+    mtime: Optional[float] = None
 
 
 _SCHEMA = """
@@ -63,7 +68,9 @@ CREATE TABLE IF NOT EXISTS clips (
     emotion      TEXT,
     action       TEXT,
     location     TEXT,
-    objects      TEXT
+    objects      TEXT,
+    size_bytes   INTEGER,
+    mtime        REAL
 );
 CREATE INDEX IF NOT EXISTS idx_filmed_date ON clips(filmed_date);
 CREATE INDEX IF NOT EXISTS idx_category    ON clips(category);
@@ -114,6 +121,11 @@ def _migrate(conn) -> None:
     for tag_col in ("emotion", "action", "location", "objects"):
         if tag_col not in cols:
             conn.execute(f"ALTER TABLE clips ADD COLUMN {tag_col} TEXT")
+    # v5 incremental-scan fingerprint columns.
+    if "size_bytes" not in cols:
+        conn.execute("ALTER TABLE clips ADD COLUMN size_bytes INTEGER")
+    if "mtime" not in cols:
+        conn.execute("ALTER TABLE clips ADD COLUMN mtime REAL")
     # Created here (not in _SCHEMA) so they run AFTER the columns exist on an
     # older DB being migrated in place.
     conn.execute("CREATE INDEX IF NOT EXISTS idx_batch ON clips(batch_num, vid_num)")
@@ -121,42 +133,74 @@ def _migrate(conn) -> None:
     conn.execute("CREATE INDEX IF NOT EXISTS idx_tags ON clips(emotion, action, location)")
 
 
+_UPSERT_SQL = """
+    INSERT INTO clips (path, category, format, filmed_date, upload_date,
+                       duration_s, width, height, codec, sha1, orientation,
+                       batch_num, vid_num,
+                       emotion, action, location, objects,
+                       size_bytes, mtime)
+    VALUES (:path, :category, :format, :filmed_date, :upload_date,
+            :duration_s, :width, :height, :codec, :sha1, :orientation,
+            :batch_num, :vid_num,
+            :emotion, :action, :location, :objects,
+            :size_bytes, :mtime)
+    ON CONFLICT(path) DO UPDATE SET
+        category    = excluded.category,
+        format      = excluded.format,
+        filmed_date = excluded.filmed_date,
+        upload_date = excluded.upload_date,
+        duration_s  = excluded.duration_s,
+        width       = excluded.width,
+        height      = excluded.height,
+        codec       = excluded.codec,
+        sha1        = excluded.sha1,
+        -- ffprobe-derived, plain overwrite (NOT COALESCE — it's not a tag).
+        orientation = excluded.orientation,
+        batch_num   = excluded.batch_num,
+        vid_num     = excluded.vid_num,
+        -- Tags are set by Vision/the dashboard, never by the ffprobe scan.
+        -- COALESCE(excluded, existing) keeps the tag when a rescan passes
+        -- NULL; an explicit write (value or "" to clear) still updates it.
+        emotion     = COALESCE(excluded.emotion,  clips.emotion),
+        action      = COALESCE(excluded.action,   clips.action),
+        location    = COALESCE(excluded.location, clips.location),
+        objects     = COALESCE(excluded.objects,  clips.objects),
+        size_bytes  = excluded.size_bytes,
+        mtime       = excluded.mtime
+"""
+
+
 def upsert(db_path: Path, rec: ClipRecord) -> None:
     with sqlite3.connect(db_path) as conn:
-        conn.execute(
-            """
-            INSERT INTO clips (path, category, format, filmed_date, upload_date,
-                               duration_s, width, height, codec, sha1, orientation,
-                               batch_num, vid_num,
-                               emotion, action, location, objects)
-            VALUES (:path, :category, :format, :filmed_date, :upload_date,
-                    :duration_s, :width, :height, :codec, :sha1, :orientation,
-                    :batch_num, :vid_num,
-                    :emotion, :action, :location, :objects)
-            ON CONFLICT(path) DO UPDATE SET
-                category    = excluded.category,
-                format      = excluded.format,
-                filmed_date = excluded.filmed_date,
-                upload_date = excluded.upload_date,
-                duration_s  = excluded.duration_s,
-                width       = excluded.width,
-                height      = excluded.height,
-                codec       = excluded.codec,
-                sha1        = excluded.sha1,
-                -- ffprobe-derived, plain overwrite (NOT COALESCE — it's not a tag).
-                orientation = excluded.orientation,
-                batch_num   = excluded.batch_num,
-                vid_num     = excluded.vid_num,
-                -- Tags are set by Vision/the dashboard, never by the ffprobe scan.
-                -- COALESCE(excluded, existing) keeps the tag when a rescan passes
-                -- NULL; an explicit write (value or "" to clear) still updates it.
-                emotion     = COALESCE(excluded.emotion,  clips.emotion),
-                action      = COALESCE(excluded.action,   clips.action),
-                location    = COALESCE(excluded.location, clips.location),
-                objects     = COALESCE(excluded.objects,  clips.objects)
-            """,
-            asdict(rec),
-        )
+        conn.execute(_UPSERT_SQL, asdict(rec))
+
+
+def upsert_many(db_path: Path, recs: list) -> None:
+    """Upsert a batch of ClipRecords over ONE connection in ONE transaction —
+    connect-per-clip was the indexer's write bottleneck at library scale."""
+    if not recs:
+        return
+    with sqlite3.connect(db_path) as conn:
+        conn.executemany(_UPSERT_SQL, [asdict(r) for r in recs])
+
+
+def scan_states(db_path: Path) -> dict:
+    """{path: (size_bytes, mtime)} for every indexed clip — the incremental
+    scan's skip table. Rows from pre-v5 code have (None, None) and re-probe once."""
+    with sqlite3.connect(db_path) as conn:
+        return {p: (s, m) for p, s, m in
+                conn.execute("SELECT path, size_bytes, mtime FROM clips")}
+
+
+def batch_summary(db_path: Path) -> list:
+    """Batch/vid combos in the index → [(batch_num, vid_num, clip_count,
+    filmed_date, total_duration_s)]. Feeds the `list-batches` command."""
+    with sqlite3.connect(db_path) as conn:
+        return conn.execute(
+            "SELECT batch_num, vid_num, COUNT(*), MIN(filmed_date), SUM(duration_s) "
+            "FROM clips WHERE batch_num IS NOT NULL "
+            "GROUP BY batch_num, vid_num ORDER BY batch_num, vid_num"
+        ).fetchall()
 
 
 def query(
@@ -213,7 +257,7 @@ def query(
         where.append("objects LIKE :object_pat")
         params["object_pat"] = f"%{OBJ_DELIM}{object}{OBJ_DELIM}%"
 
-    sql = "SELECT path, category, format, filmed_date, upload_date, duration_s, width, height, codec, sha1, orientation, batch_num, vid_num, emotion, action, location, objects FROM clips"
+    sql = f"SELECT {_SELECT_COLS} FROM clips"
     if where:
         sql += " WHERE " + " AND ".join(where)
     sql += " ORDER BY filmed_date DESC, path"
@@ -226,7 +270,7 @@ def query(
 
 _SELECT_COLS = ("path, category, format, filmed_date, upload_date, duration_s, "
                 "width, height, codec, sha1, orientation, batch_num, vid_num, "
-                "emotion, action, location, objects")
+                "emotion, action, location, objects, size_bytes, mtime")
 
 
 def get(db_path: Path, path: str):
