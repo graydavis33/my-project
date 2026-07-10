@@ -17,6 +17,7 @@ import os
 import re
 import shutil
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -39,7 +40,8 @@ from config import (
 
 PROJECT_FORMAT_BUCKETS = ["longform", "linkedin", "shorts"]
 from extractor import (get_resolution, get_duration, get_shoot_date,
-                       extract_frames, get_display_orientation)
+                       extract_frames, get_display_orientation, probe_media,
+                       ffmpeg_available)
 from week_utils import week_label_for, current_week_label
 import index
 import pull as pull_mod
@@ -152,50 +154,80 @@ def _sha1_head(filepath: Path, n_bytes: int = 1_048_576) -> str:
     return h.hexdigest()
 
 
+def _probe_clip(clip: Path, rel_path: str, st, library: Path) -> index.ClipRecord:
+    """One clip → ClipRecord via a single ffprobe launch + a 1MB head hash.
+    Pure (no DB writes), so _reindex can run it across a thread pool."""
+    info = probe_media(str(clip))
+    batch_num, vid_num = _batch_vid_from_path(clip, library)
+    return index.ClipRecord(
+        path=rel_path,
+        category=_category_from_path(clip, library),
+        format=_format_from_resolution(info["width"], info["height"]),
+        filmed_date=info["filmed_date"],
+        upload_date=datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d"),
+        duration_s=info["duration_s"],
+        width=info["width"],
+        height=info["height"],
+        codec="",  # codec is optional — leave empty unless needed
+        sha1=_sha1_head(clip),
+        orientation=info["orientation"],
+        batch_num=batch_num,
+        vid_num=vid_num,
+        size_bytes=st.st_size,
+        mtime=st.st_mtime,
+    )
+
+
 def _reindex(library: Path, db_path: Path) -> tuple[int, int, int]:
     """Scan the library into the SQLite index, then prune rows whose files are
     gone. Returns (added, skipped, removed). Shared by `index` and `batch` (which
-    re-indexes after moving clips so the new Batch_NN/Vid_MM clips get tagged)."""
+    re-indexes after moving clips so the new Batch_NN/Vid_MM clips get tagged).
+
+    Incremental: a walked file whose (size, mtime) matches its index row is
+    skipped with zero ffprobe/hash work — footage never changes in place, and a
+    moved file has a new path (= new row), so a fingerprint match means the row
+    is already correct. Only new/changed files pay the probe, in parallel
+    (ffprobe is subprocess-bound, so threads are safe), written in one
+    transaction. A no-change rescan of the whole library takes seconds."""
     index.init(db_path)
     _check_legacy_db(db_path)
 
-    added = 0
-    skipped = 0
+    known = index.scan_states(db_path)
+    to_probe = []
+    unchanged = 0
     for sub in INDEX_SCAN_ROOTS:
         root = library / sub
         if not root.exists():
             continue
         for clip in _walk_videos(root):
-            try:
-                w, h = get_resolution(str(clip))
-                duration = get_duration(str(clip))
-                filmed = get_shoot_date(str(clip))
-                orientation = get_display_orientation(str(clip))[0]
-            except Exception as e:
-                print(f"  [skip] {clip.name}: {e}")
-                skipped += 1
-                continue
-
-            upload = datetime.fromtimestamp(clip.stat().st_mtime).strftime("%Y-%m-%d")
+            st = clip.stat()
             rel_path = clip.relative_to(library).as_posix()
-            batch_num, vid_num = _batch_vid_from_path(clip, library)
-            rec = index.ClipRecord(
-                path=rel_path,
-                category=_category_from_path(clip, library),
-                format=_format_from_resolution(w, h),
-                filmed_date=filmed,
-                upload_date=upload,
-                duration_s=duration,
-                width=w,
-                height=h,
-                codec="",  # codec is optional — leave empty unless needed
-                sha1=_sha1_head(clip),
-                orientation=orientation,
-                batch_num=batch_num,
-                vid_num=vid_num,
-            )
-            index.upsert(db_path, rec)
-            added += 1
+            if known.get(rel_path) == (st.st_size, st.st_mtime):
+                unchanged += 1
+                continue
+            to_probe.append((clip, rel_path, st))
+
+    added = 0
+    skipped = 0
+    records = []
+    if to_probe:
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            futures = {pool.submit(_probe_clip, clip, rel, st, library): clip
+                       for clip, rel, st in to_probe}
+            done = 0
+            for fut in as_completed(futures):
+                done += 1
+                try:
+                    records.append(fut.result())
+                    added += 1
+                except Exception as e:
+                    print(f"  [skip] {futures[fut].name}: {e}")
+                    skipped += 1
+                if done % 50 == 0:
+                    print(f"  ...probed {done}/{len(to_probe)}")
+        index.upsert_many(db_path, records)
+    if unchanged:
+        print(f"  {unchanged} unchanged clip(s) skipped (fingerprint match, no re-probe)")
 
     removed = index.remove_missing(db_path, library_root=library)
     return added, skipped, removed
@@ -338,17 +370,36 @@ def _curate_plan(db_path, library, *, curate_by="emotion", per_theme=5, **filter
     return {"records": records, "per_theme_count": counts, "subfolder_fn": subfolder_fn}
 
 
+def _autorefresh_index(library: Path, db_path: Path, no_index: bool, client: str) -> None:
+    """Incremental index refresh before a read command — kills the stale-index
+    problem without a daemon (unchanged clips cost nothing to rescan).
+    --no-index skips it; a missing ffprobe falls back to the index as-is."""
+    if no_index:
+        if not db_path.exists():
+            print(f"Error: index not built yet. Run: python cli_index.py --client {client} index")
+            sys.exit(1)
+        return
+    if not ffmpeg_available():
+        if not db_path.exists():
+            print("Error: no index yet and ffprobe is not installed — cannot build one.")
+            sys.exit(1)
+        print("  ! ffprobe not found — skipping index refresh, using the existing index as-is")
+        return
+    added, skipped, removed = _reindex(library, db_path)
+    if added or removed:
+        print(f"  index refreshed: +{added} new/changed, -{removed} removed"
+              + (f", {skipped} unreadable" if skipped else ""))
+
+
 def cmd_pull(args):
     client = args.client
     library = _library(client)
     _guard_structure(library)
     _autocreate_week(library)
     db_path = _db(client)
-    if not db_path.exists():
-        print(f"Error: index not built yet. Run: python cli_index.py --client {client} index")
-        sys.exit(1)
-
-    _check_legacy_db(db_path)
+    if db_path.exists():
+        _check_legacy_db(db_path)
+    _autorefresh_index(library, db_path, args.no_index, client)
 
     curate = getattr(args, "curate", False)
     # Curate mode is Gray's locked rule: clips only, HORIZONTAL only, ~N best per
@@ -357,6 +408,8 @@ def cmd_pull(args):
 
     _slugify = lambda s: s.strip().lower().replace(" ", "-")
     slug_parts = []
+    if args.batch is not None: slug_parts.append(f"batch-{args.batch:02d}")
+    if args.vid is not None:   slug_parts.append(f"vid-{args.vid:02d}")
     if args.filmed_date: slug_parts.append(args.filmed_date)
     if args.category:    slug_parts.append(args.category)
     if orientation:      slug_parts.append(orientation)
@@ -382,6 +435,8 @@ def cmd_pull(args):
         action=args.action,
         location=args.location,
         object=args.object,
+        batch_num=args.batch,
+        vid_num=args.vid,
     )
 
     if curate:
@@ -412,6 +467,12 @@ def cmd_pull(args):
             except (ValueError, TypeError):
                 return "unknown-week"
         subfolder_fn = by_week
+    elif args.batch is not None and args.vid is None:
+        # Whole-batch pull: group into Vid_MM subfolders so the result drops
+        # straight onto a per-video Premiere workflow.
+        def by_vid(record):
+            return f"Vid_{record.vid_num:02d}" if record.vid_num else "unassigned"
+        subfolder_fn = by_vid
 
     result = pull_mod.pull(
         db_path, out,
@@ -426,6 +487,29 @@ def cmd_pull(args):
     else:
         print(f"\n  Pull → {result.folder}")
         print(f"  Linked {result.count} clip(s); fallback copies: {result.fallback_copies}\n")
+
+
+def cmd_list_batches(args):
+    """Show every Batch_NN/Vid_MM combo in the index — what `pull --batch` can serve."""
+    client = args.client
+    library = _library(client)
+    db_path = _db(client)
+    if db_path.exists():
+        _check_legacy_db(db_path)
+    _autorefresh_index(library, db_path, getattr(args, "no_index", False), client)
+
+    rows = index.batch_summary(db_path)
+    if not rows:
+        print("\n  No batch clips in the index. Batch footage lives under "
+              "01_ORGANIZED/Batch_NN/Vid_MM/ until it ships.\n")
+        return
+    print(f"\n  Batches in the index ({client.upper()}):")
+    print(f"  {'BATCH':>5}  {'VID':>4}  {'CLIPS':>5}  {'FILMED':<12} {'TOTAL':>8}")
+    for batch_num, vid_num, count, filmed, total_s in rows:
+        vid = f"{vid_num:02d}" if vid_num else "—"
+        mins, secs = divmod(int(total_s or 0), 60)
+        print(f"  {batch_num:>5}  {vid:>4}  {count:>5}  {filmed or '?':<12} {mins:>4}m{secs:02d}s")
+    print(f"\n  Pull one: python cli_index.py --client {client} pull --batch N [--vid M]\n")
 
 
 def ensure_week(library: Path, target: date) -> tuple[int, int]:
@@ -1174,17 +1258,12 @@ def cmd_tag(args):
     library = _library(client_name)
     _guard_structure(library)
     db_path = _db(client_name)
-    if not db_path.exists():
-        print(f"Error: index not built yet. Run: python cli_index.py --client {client_name} index")
-        sys.exit(1)
-    _check_legacy_db(db_path)
+    if db_path.exists():
+        _check_legacy_db(db_path)
+    # freshly-organized footage may not be indexed yet — cheap incremental refresh
+    _autorefresh_index(library, db_path, args.no_index, client_name)
 
-    if args.episode:
-        # freshly-organized episode footage may not be indexed yet — refresh first
-        _reindex(library, db_path)
-        target_category = args.episode
-    else:
-        target_category = FOLDER_BROLL
+    target_category = args.episode if args.episode else FOLDER_BROLL
     clips = index.query(db_path, category=target_category)
     todo = clips if args.retag else [c for c in clips if _is_untagged(c)]
     if args.limit:
@@ -1574,6 +1653,10 @@ def main():
     p.add_argument("--action", help="b-roll tag (exact), e.g. walking")
     p.add_argument("--location", help="b-roll tag (exact), e.g. \"times square\"")
     p.add_argument("--object", help="b-roll object tag (contains), e.g. \"coffee cup\"")
+    p.add_argument("--batch", type=int, help="Batch number, e.g. 3 — clips filed under Batch_NN/ (whole batch groups into Vid_MM subfolders)")
+    p.add_argument("--vid", type=int, help="Vid number within --batch, e.g. 9")
+    p.add_argument("--no-index", action="store_true",
+                   help="Skip the automatic incremental index refresh before pulling")
     p.add_argument("--by-week", action="store_true",
                    help="Group results into W##_MMM-DD-DD subfolders by filmed date")
     p.add_argument("--curate", action="store_true",
@@ -1583,6 +1666,9 @@ def main():
     p.add_argument("--per-theme", type=int, default=5,
                    help="Max clips per theme in curate mode (default 5)")
     p.set_defaults(func=cmd_pull)
+
+    lb = sub.add_parser("list-batches", help="Show batch/vid combos in the index with clip counts")
+    lb.set_defaults(func=cmd_list_batches)
 
     b = sub.add_parser("batch", help="File a batch shoot into 01_ORGANIZED/Batch_NN/Vid_MM/ and re-index")
     b.add_argument("--num", type=int, required=True, help="Batch number, e.g. 2")
@@ -1652,6 +1738,8 @@ def main():
     tg.add_argument("--retag", action="store_true", help="Re-tag even already-tagged clips")
     tg.add_argument("--yes", "-y", action="store_true", help="Skip the cost-confirmation prompt")
     tg.add_argument("--episode", help="Tag a documentary episode's footage in place (01_ORGANIZED/<episode>/) so it's pull-able as b-roll before the episode ships. Default tags the b-roll library.")
+    tg.add_argument("--no-index", action="store_true",
+                    help="Skip the automatic incremental index refresh before tagging")
     tg.set_defaults(func=cmd_tag)
 
     cs = sub.add_parser("check-structure", help="Verify the top-level library folders are where they belong; --repair moves any misnested ones back")
