@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MQB Badge — Draft</title>
+<style>
+  /* Badge designed at 2.125in x 3.375in (CR80 portrait) @ 300dpi = 638 x 1013 px */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #555; display: flex; justify-content: center; padding: 40px; font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  .badge {
+    /* pouch is 3.31 x 4.96in; badge trim 3.19 x 4.78in @ 200px/in = 638 x 956 (aspect-matched) */
+    width: 638px; height: 956px;
+    background: #fff;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 44px 30px;
+  }
+  /* blue side rails like the reference */
+  .badge::before, .badge::after {
+    content: ''; position: absolute; top: 210px; bottom: 96px; width: 16px; background: #1e3f8f;
+  }
+  .badge::before { left: 16px; }
+  .badge::after { right: 16px; }
+
+  .org {
+    font-size: 178px; font-weight: 900; color: #1e3f8f;
+    letter-spacing: 2px; line-height: 0.95; font-stretch: condensed;
+  }
+  .dept {
+    font-size: 27px; font-weight: 800; color: #111; letter-spacing: 1.5px; margin-top: 2px;
+  }
+
+  .midrow {
+    display: flex; align-items: center; justify-content: center;
+    gap: 26px; margin-top: 40px;
+  }
+  .seal { width: 190px; height: 190px; }
+  .photo {
+    width: 200px; height: 240px; object-fit: cover;
+    background: #cfd6de; border: 1px solid #999;
+  }
+
+  .title { font-size: 34px; font-weight: 900; color: #111; letter-spacing: 2px; margin-top: 34px; }
+
+  .sig { font-family: 'Snell Roundhand', 'Brush Script MT', cursive; font-size: 58px; color: #111; margin-top: 14px; }
+  .sigline { width: 340px; border-top: 2.5px solid #111; margin-top: -4px; text-align: center; }
+  .sigline span { font-size: 13px; font-weight: 700; letter-spacing: 2px; }
+
+  .cert { font-size: 14.5px; font-weight: 700; color: #111; text-align: center; margin-top: 26px; line-height: 1.5; }
+
+  .barcode { margin-top: 22px; display: flex; height: 46px; align-items: stretch; }
+  .barcode div { background: #111; }
+</style>
+</head>
+<body>
+  <div class="badge">
+    <div class="org">MQB</div>
+    <div class="dept">DEPARTMENT OF MENTORS</div>
+
+    <div class="midrow">
+      <!-- parody seal -->
+      <svg class="seal" viewBox="0 0 200 200">
+        <defs><path id="arcTop" d="M 30 100 A 70 70 0 0 1 170 100"/><path id="arcBot" d="M 32 108 A 68 68 0 0 0 168 108"/></defs>
+        <circle cx="100" cy="100" r="98" fill="#1e3f8f"/>
+        <circle cx="100" cy="100" r="88" fill="#f5c542"/>
+        <circle cx="100" cy="100" r="70" fill="#1e3f8f"/>
+        <text font-size="15" font-weight="700" fill="#1e3f8f"><textPath href="#arcTop" startOffset="50%" text-anchor="middle">DEPARTMENT OF MENTORS</textPath></text>
+        <text font-size="14" font-weight="700" fill="#1e3f8f"><textPath href="#arcBot" startOffset="50%" text-anchor="middle">QUARTERLY COUNCIL</textPath></text>
+        <!-- shield -->
+        <path d="M100 52 L138 66 V100 C138 128 122 144 100 154 C78 144 62 128 62 100 V66 Z" fill="#fff" stroke="#f5c542" stroke-width="3"/>
+        <rect x="70" y="74" width="60" height="10" fill="#b3261e"/>
+        <rect x="70" y="94" width="60" height="10" fill="#b3261e"/>
+        <rect x="70" y="114" width="60" height="10" fill="#b3261e"/>
+        <text x="100" y="68" font-size="12" font-weight="900" text-anchor="middle" fill="#1e3f8f">MQB</text>
+      </svg>
+      <img class="photo" src="assets/sai-face.png" alt="photo">
+    </div>
+
+    <div class="title">SPECIAL AGENT</div>
+
+    <div class="sig">Tie</div>
+    <div class="sigline"><span>SIGNATURE</span></div>
+
+    <div class="cert">THIS CERTIFIES THE SIGNATURE AND PHOTOGRAPH<br>MENTOR QUALIFICATION BUREAU, UNITED STATES</div>
+
+    <div class="barcode" id="barcode"></div>
+  </div>
+  <script>
+    // deterministic pseudo-barcode
+    const bc = document.getElementById('barcode');
+    let seed = 42;
+    for (let i = 0; i < 52; i++) {
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      const w = 2 + (seed % 5);
+      const bar = document.createElement('div');
+      bar.style.width = w + 'px';
+      bar.style.marginRight = (2 + (seed % 3)) + 'px';
+      bc.appendChild(bar);
+    }
+  </script>
+</body>
+</html>
