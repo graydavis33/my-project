@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mentor Headshots — MCU crops</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#444; font-family:'Helvetica Neue',Arial,sans-serif; padding:24px; }
+  .grid { display:grid; grid-template-columns:repeat(4,300px); gap:20px; justify-content:center; }
+  .card { background:#fff; padding:10px 10px 6px; }
+  .frame { width:280px; height:350px; overflow:hidden; background:#dfe4ea; }
+  .frame img { width:100%; height:100%; object-fit:cover; }
+  .name { text-align:center; font-weight:800; font-size:16px; letter-spacing:1px; padding:8px 0 4px; text-transform:uppercase; }
+  /* per-person framing: object-position x% y%, zoom via scale */
+  .hormozi img  { object-position:50% 20%; }
+  .kan img      { object-position:60% 26%; transform:scale(1.45); transform-origin:60% 24%; }
+  .cuban img    { object-position:50% 22%; }
+  .bloom img    { object-position:50% 10%; transform:scale(2.6); transform-origin:52% 12%; }
+  .sharran img  { object-position:50% 20%; }
+  .puri img     { object-position:50% 25%; }
+  .parr img     { object-position:50% 25%; }
+  .kamo img     { object-position:50% 30%; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="card"><div class="frame hormozi"><img src="alex-hormozi.png"></div><div class="name">Alex Hormozi</div></div>
+  <div class="card"><div class="frame kan"><img src="justin-kan.jpg"></div><div class="name">Justin Kan</div></div>
+  <div class="card"><div class="frame cuban"><img src="mark-cuban.jpg"></div><div class="name">Mark Cuban</div></div>
+  <div class="card"><div class="frame bloom"><img src="sahil-bloom.jpg"></div><div class="name">Sahil Bloom</div></div>
+  <div class="card"><div class="frame sharran"><img src="sharran-srivatsaa.jpg"></div><div class="name">Sharran Srivatsaa</div></div>
+  <div class="card"><div class="frame puri"><img src="shaan-puri.png"></div><div class="name">Shaan Puri</div></div>
+  <div class="card"><div class="frame parr"><img src="sam-parr.jpg"></div><div class="name">Sam Parr</div></div>
+  <div class="card"><div class="frame kamo"><img src="mike-kamo.jpg"></div><div class="name">Mike Kamo</div></div>
+</div>
+</body>
+</html>
