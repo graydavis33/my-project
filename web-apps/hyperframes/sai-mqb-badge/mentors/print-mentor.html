@@ -7,14 +7,14 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   /* Letter @300dpi */
   body { width:2550px; height:3300px; background:#fff; font-family:'Helvetica Neue',Arial,sans-serif; display:flex; flex-direction:column; align-items:center; }
-  .frame { margin-top:220px; width:2100px; height:2625px; overflow:hidden; background:#dfe4ea; }
+  .frame { margin-top:200px; width:2320px; height:2900px; overflow:hidden; background:#dfe4ea; }
   .frame img { width:100%; height:100%; object-fit:cover; }
-  .name { font-weight:900; font-size:150px; letter-spacing:6px; text-transform:uppercase; margin-top:60px; }
+  .name { display:none; }
   /* same per-person framing as sheet.html (percent-based, scales cleanly) */
   .hormozi img  { object-position:50% 20%; }
   .kan img      { object-position:67% 42%; transform:scale(1.42); transform-origin:67% 44%; }
   .cuban img    { object-position:50% 22%; }
-  .bloom img    { object-position:50% 10%; transform:scale(2.6); transform-origin:47% 13%; }
+  .bloom img    { object-position:50% 14%; transform:scale(1.5); transform-origin:50% 16%; }
   .sharran img  { object-position:50% 20%; }
   .puri img     { object-position:50% 25%; }
   .parr img     { object-position:50% 25%; }
@@ -29,7 +29,7 @@ const people = {
   'alex-hormozi':      {cls:'hormozi', file:'alex-hormozi.png',      name:'Alex Hormozi'},
   'justin-kan':        {cls:'kan',     file:'justin-kan.jpg',        name:'Justin Kan'},
   'mark-cuban':        {cls:'cuban',   file:'mark-cuban.jpg',        name:'Mark Cuban'},
-  'sahil-bloom':       {cls:'bloom',   file:'sahil-bloom.jpg',       name:'Sahil Bloom'},
+  'sahil-bloom':       {cls:'bloom',   file:'sahil-clean.png',       name:'Sahil Bloom'},
   'sharran-srivatsaa': {cls:'sharran', file:'sharran-srivatsaa.jpg', name:'Sharran Srivatsaa'},
   'shaan-puri':        {cls:'puri',    file:'shaan-puri-clean.png',  name:'Shaan Puri'},
   'sam-parr':          {cls:'parr',    file:'sam-parr.jpg',          name:'Sam Parr'},
