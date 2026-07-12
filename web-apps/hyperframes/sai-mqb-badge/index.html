@@ -45,6 +45,7 @@
 
   .title { font-size: 34px; font-weight: 900; color: #111; letter-spacing: 2px; margin-top: 34px; }
 
+  .agent-name { font-size: 26px; font-weight: 800; color: #111; letter-spacing: 6px; margin-top: 8px; }
   .sig { font-family: 'Snell Roundhand', 'Brush Script MT', cursive; font-size: 58px; color: #111; margin-top: 14px; }
   .sigline { width: 340px; border-top: 2.5px solid #111; margin-top: -4px; text-align: center; }
   .sigline span { font-size: 13px; font-weight: 700; letter-spacing: 2px; }
@@ -61,11 +62,12 @@
     <div class="dept">DEPARTMENT OF MENTORS</div>
 
     <div class="midrow">
-      <img class="seal" src="assets/seal.png" alt="seal">
+      <img class="seal" src="assets/seal-orange-stripes.png" alt="seal">
       <img class="photo" src="assets/id-photo-a.png" alt="photo">
     </div>
 
     <div class="title">SPECIAL AGENT</div>
+    <div class="agent-name">TIE</div>
 
     <div class="sig">Tie</div>
     <div class="sigline"><span>SIGNATURE</span></div>
@@ -75,6 +77,10 @@
     <div class="barcode" id="barcode"></div>
   </div>
   <script>
+    if (location.search.includes('print')) {
+      document.body.style.padding = '0';
+      document.body.style.background = '#fff';
+    }
     // deterministic pseudo-barcode
     const bc = document.getElementById('barcode');
     let seed = 42;

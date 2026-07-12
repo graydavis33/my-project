@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MQB Badge — Print Sheet (Letter 300dpi)</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  /* Letter @300dpi */
+  body { width:2550px; height:3300px; background:#fff; position:relative; font-family:'Helvetica Neue',Arial,sans-serif; }
+  .row { position:absolute; top:400px; left:0; width:2550px; display:flex; justify-content:center; gap:160px; }
+  .cutbox { position:relative; }
+  /* badge trim 3.19 x 4.78in @300dpi = 957 x 1434. Inner design is 638x956 @200 -> zoom 1.5 */
+  .badge-wrap { width:957px; height:1434px; outline:1px dashed #bbb; }
+  .badge-wrap iframe { width:638px; height:956px; border:0; transform:scale(1.5); transform-origin:0 0; pointer-events:none; }
+  .lbl { text-align:center; font-size:28px; color:#888; padding-top:18px; letter-spacing:1px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="cutbox"><div class="badge-wrap"><iframe src="index.html?print=1"></iframe></div><div class="lbl">CUT ON DASHED LINE — FITS 3.31 × 4.96 IN POUCH</div></div>
+    <div class="cutbox"><div class="badge-wrap"><iframe src="index.html?print=1"></iframe></div><div class="lbl">SPARE COPY</div></div>
+  </div>
+</body>
+</html>
