@@ -81,6 +81,20 @@
       document.body.style.padding = '0';
       document.body.style.background = '#fff';
     }
+    const q = new URLSearchParams(location.search);
+    if (q.get('sig') === 'print') {
+      // print-only badge: block-letter signature, no cursive anywhere
+      const s = document.querySelector('.sig');
+      s.style.fontFamily = "'Helvetica Neue', Arial, sans-serif";
+      s.style.fontWeight = '700';
+      s.style.fontSize = '44px';
+      s.style.letterSpacing = '3px';
+      s.textContent = 'TIE';
+      document.querySelector('.agent-name').style.display = 'none';
+    } else if (q.get('sig') === 'cursive') {
+      // cursive-only badge: hide the printed name line
+      document.querySelector('.agent-name').style.display = 'none';
+    }
     // deterministic pseudo-barcode
     const bc = document.getElementById('barcode');
     let seed = 42;
