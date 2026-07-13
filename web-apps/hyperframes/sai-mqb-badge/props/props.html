@@ -8,28 +8,55 @@
   body { width:2550px; height:3300px; background:#fff; display:flex; align-items:center; justify-content:center; gap:120px; }
   img.big { width:2000px; height:2000px; object-fit:contain; }
   img.med { width:1050px; height:1050px; object-fit:contain; }
+  img.med3 { width:760px; height:760px; object-fit:contain; }
+  img.sm3 { width:480px; height:480px; object-fit:contain; }
+  img.sm  { width:700px;  height:700px;  object-fit:contain; }
   img.logo { width:1900px; object-fit:contain; }
+  img.photo { width:2300px; height:2900px; object-fit:contain; }
   .col { display:flex; flex-direction:column; align-items:center; gap:220px; }
-  .vs { font-family:'Helvetica Neue',Arial,sans-serif; font-weight:900; font-size:260px; color:#111; }
+  .row2 { display:flex; align-items:center; gap:120px; }
+  .xwrap { position:relative; width:760px; height:760px; }
+  .xwrap img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
 </style>
 </head>
 <body>
 <script>
 const pages = {
-  'people':       [{t:'img',c:'big',s:'1f465.svg'}],
-  'platforms':    [{t:'col',items:[{t:'img',c:'logo',s:'meta-logo.svg'},{t:'img',c:'logo',s:'tiktok-logo.svg'}]}],
-  'organic-paid': [{t:'img',c:'med',s:'1f331.svg'},{t:'vs'},{t:'img',c:'med',s:'1f4b5.svg'}],
-  'dollar':       [{t:'img',c:'big',s:'1f4b2.svg'}],
-  'organic':      [{t:'img',c:'big',s:'1f331.svg'}],
-  'fuel-fire':    [{t:'img',c:'med',s:'26fd.svg'},{t:'img',c:'med',s:'1f525.svg'}],
-  'video':        [{t:'img',c:'big',s:'1f3a5.svg'}],
-  'video-money':  [{t:'img',c:'med',s:'1f3a5.svg'},{t:'img',c:'med',s:'27a1.svg'},{t:'img',c:'med',s:'1f4b0.svg'}],
-  'phineas':      [{t:'img',c:'big',s:'phineas-final.png'}],
+  'people':          [{t:'img',c:'big',s:'1f465.svg'}],
+  'meta':            [{t:'img',c:'logo',s:'meta-logo.svg'}],
+  'tiktok':          [{t:'img',c:'logo',s:'tiktok-logo.svg'}],
+  'picking':         [{t:'img',c:'big',s:'1f3af.svg'}],
+  'organic':         [{t:'img',c:'big',s:'1f331.svg'}],
+  'paid':            [{t:'img',c:'big',s:'1f4b5.svg'}],
+  'paid-dollar':     [{t:'img',c:'med3',s:'1f4b5.svg'},{t:'img',c:'sm3',s:'27a1.svg'},{t:'img',c:'med3',s:'1f4b2.svg'}],
+  'organic-nodollar':[{t:'img',c:'med3',s:'1f331.svg'},{t:'img',c:'sm3',s:'27a1.svg'},{t:'x'}],
+  'dollar':          [{t:'img',c:'big',s:'1f4b2.svg'}],
+  'views':           [{t:'img',c:'big',s:'1f440.svg'}],
+  'video-pitch':     [{t:'img',c:'med',s:'1f3a5.svg'},{t:'img',c:'med',s:'1f4e3.svg'}],
+  'competing':       [{t:'img',c:'big',s:'1f94a.svg'}],
+  'no-guarantee':    [{t:'img',c:'big',s:'1f937.svg'}],
+  'engaging':        [{t:'img',c:'med3',s:'1f44d.svg'},{t:'img',c:'med3',s:'2764.svg'},{t:'img',c:'med3',s:'1f4ac.svg'}],
+  'creative':        [{t:'img',c:'med',s:'1f3a8.svg'},{t:'img',c:'med',s:'1f4a1.svg'}],
+  'crack-algo':      [{t:'img',c:'med',s:'1f916.svg'},{t:'img',c:'med',s:'1f513.svg'}],
+  'fuel-fire':       [{t:'img',c:'med',s:'26fd.svg'},{t:'img',c:'med',s:'1f525.svg'}],
+  'filming':         [{t:'img',c:'big',s:'1f3ac.svg'}],
+  'video':           [{t:'img',c:'big',s:'1f3a5.svg'}],
+  'sales':           [{t:'img',c:'big',s:'1f911.svg'}],
+  'organic-paid-convert': [{t:'img',c:'med3',s:'1f331.svg'},{t:'img',c:'sm3',s:'27a1.svg'},{t:'img',c:'med3',s:'1f4b5.svg'}],
+  'video-money':     [{t:'img',c:'med3',s:'1f3a5.svg'},{t:'img',c:'sm3',s:'27a1.svg'},{t:'img',c:'med3',s:'1f4b0.svg'}],
+  'phineas':         [{t:'img',c:'photo',s:'phineas-final.png'}],
+  'phineas-thumbsup':[{t:'img',c:'photo',s:'phineas-thumbsup-crop.png'}],
+  'phineas-money':   [{t:'img',c:'photo',s:'phineas-money.png'}],
+  'phineas-coaster': [{t:'img',c:'photo',s:'coaster-a.png'}],
 };
 const key = new URLSearchParams(location.search).get('p') || 'people';
 function make(item) {
-  if (item.t === 'vs') { const d = document.createElement('div'); d.className='vs'; d.textContent='VS'; return d; }
-  if (item.t === 'col') { const d = document.createElement('div'); d.className='col'; item.items.forEach(i=>d.appendChild(make(i))); return d; }
+  if (item.t === 'x') {
+    const d = document.createElement('div'); d.className='xwrap';
+    const a = document.createElement('img'); a.src='1f4b2.svg';
+    const b = document.createElement('img'); b.src='274c.svg';
+    d.appendChild(a); d.appendChild(b); return d;
+  }
   const im = document.createElement('img'); im.className=item.c; im.src=item.s; return im;
 }
 (pages[key]||[]).forEach(i=>document.body.appendChild(make(i)));
