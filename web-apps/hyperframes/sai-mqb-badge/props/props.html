@@ -16,6 +16,8 @@
   .col { display:flex; flex-direction:column; align-items:center; gap:220px; }
   .row2 { display:flex; align-items:center; gap:120px; }
   .xwrap { position:relative; width:760px; height:760px; }
+  .grid { display:grid; grid-template-columns:repeat(3, 640px); gap:150px; justify-items:center; align-items:center; }
+  .grid img { width:600px; height:600px; object-fit:contain; }
   .xwrap img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
 </style>
 </head>
@@ -44,6 +46,7 @@ const pages = {
   'sales':           [{t:'img',c:'big',s:'1f911.svg'}],
   'organic-paid-convert': [{t:'img',c:'med3',s:'1f331.svg'},{t:'img',c:'sm3',s:'27a1.svg'},{t:'img',c:'med3',s:'1f4b5.svg'}],
   'video-money':     [{t:'img',c:'med3',s:'1f3a5.svg'},{t:'img',c:'sm3',s:'27a1.svg'},{t:'img',c:'med3',s:'1f4b0.svg'}],
+  'platforms-wall':  [{t:'grid',items:['instagram.svg','tiktok-icon.svg','youtube.svg','facebook.svg','x-logo.svg','snapchat.svg','linkedin.svg','whatsapp.svg','pinterest.png']}],
   'phineas':         [{t:'img',c:'photo',s:'phineas-final.png'}],
   'phineas-thumbsup':[{t:'img',c:'photo',s:'phineas-thumbsup-crop.png'}],
   'phineas-money':   [{t:'img',c:'photo',s:'phineas-money.png'}],
@@ -51,6 +54,11 @@ const pages = {
 };
 const key = new URLSearchParams(location.search).get('p') || 'people';
 function make(item) {
+  if (item.t === 'grid') {
+    const d = document.createElement('div'); d.className='grid';
+    item.items.forEach(s=>{ const im=document.createElement('img'); im.src=s; d.appendChild(im); });
+    return d;
+  }
   if (item.t === 'x') {
     const d = document.createElement('div'); d.className='xwrap';
     const a = document.createElement('img'); a.src='1f4b2.svg';
