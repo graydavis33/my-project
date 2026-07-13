@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Reel Props — Print Pages</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:2550px; height:3300px; background:#fff; display:flex; align-items:center; justify-content:center; gap:120px; }
+  img.big { width:2000px; height:2000px; object-fit:contain; }
+  img.med { width:1050px; height:1050px; object-fit:contain; }
+  img.logo { width:1900px; object-fit:contain; }
+  .col { display:flex; flex-direction:column; align-items:center; gap:220px; }
+  .vs { font-family:'Helvetica Neue',Arial,sans-serif; font-weight:900; font-size:260px; color:#111; }
+</style>
+</head>
+<body>
+<script>
+const pages = {
+  'people':       [{t:'img',c:'big',s:'1f465.svg'}],
+  'platforms':    [{t:'col',items:[{t:'img',c:'logo',s:'meta-logo.svg'},{t:'img',c:'logo',s:'tiktok-logo.svg'}]}],
+  'organic-paid': [{t:'img',c:'med',s:'1f331.svg'},{t:'vs'},{t:'img',c:'med',s:'1f4b5.svg'}],
+  'dollar':       [{t:'img',c:'big',s:'1f4b2.svg'}],
+  'organic':      [{t:'img',c:'big',s:'1f331.svg'}],
+  'fuel-fire':    [{t:'img',c:'med',s:'26fd.svg'},{t:'img',c:'med',s:'1f525.svg'}],
+  'video':        [{t:'img',c:'big',s:'1f3a5.svg'}],
+  'video-money':  [{t:'img',c:'med',s:'1f3a5.svg'},{t:'img',c:'med',s:'27a1.svg'},{t:'img',c:'med',s:'1f4b0.svg'}],
+  'phineas':      [{t:'img',c:'big',s:'phineas-final.png'}],
+};
+const key = new URLSearchParams(location.search).get('p') || 'people';
+function make(item) {
+  if (item.t === 'vs') { const d = document.createElement('div'); d.className='vs'; d.textContent='VS'; return d; }
+  if (item.t === 'col') { const d = document.createElement('div'); d.className='col'; item.items.forEach(i=>d.appendChild(make(i))); return d; }
+  const im = document.createElement('img'); im.className=item.c; im.src=item.s; return im;
+}
+(pages[key]||[]).forEach(i=>document.body.appendChild(make(i)));
+</script>
+</body>
+</html>
