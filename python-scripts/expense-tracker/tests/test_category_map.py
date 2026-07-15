@@ -30,3 +30,14 @@ def test_unknown_primary_falls_to_misc():
 
 def test_general_merchandise_is_misc():
     assert map_category("GENERAL_MERCHANDISE", "GENERAL_MERCHANDISE_OTHER", "Target") == "Misc"
+
+def test_all_mapped_categories_are_valid_app_categories():
+    # Guard: a future rename of PERSONAL_CATEGORIES must fail here, not silently desync
+    from category_map import _PRIMARY, _DETAILED
+    from config import PERSONAL_CATEGORIES
+    used = {c for c in list(_PRIMARY.values()) + list(_DETAILED.values()) if c is not None}
+    assert used <= set(PERSONAL_CATEGORIES)
+
+def test_none_vendor_is_safe():
+    from category_map import map_category
+    assert map_category("GENERAL_MERCHANDISE", None, None) == "Misc"
