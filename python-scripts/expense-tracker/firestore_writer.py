@@ -17,6 +17,7 @@ except ImportError:  # firebase-admin not installed (local runs without the extr
         pass
 
 ROOT = "households/gray"
+STATE = "households/gray/plaid_state/cursor"
 
 
 def get_client():
@@ -30,19 +31,30 @@ def get_client():
     return firestore.client()
 
 
-def fetch_manual_transactions(month, client=None):
-    """Return this month's NON-gmail transactions (manual app entries, incl.
-    tombstones) so the scanner can skip email expenses Gray already typed in.
-    Returns [] when Firestore isn't configured (local runs)."""
+def _stream_month(month, client):
+    return client.collection(f"{ROOT}/transactions").where("month", "==", month).stream()
+
+
+def fetch_non_gmail_transactions(month, client=None):
+    """This month's records NOT sourced from gmail (manual app entries + Plaid).
+    Used to dedup incoming GMAIL expenses. [] when Firestore isn't configured."""
     if client is None:
         client = get_client()
     if client is None:
         return []
-    docs = client.collection(f"{ROOT}/transactions").where("month", "==", month).stream()
-    return [
-        d.to_dict() for d in docs
-        if (d.to_dict() or {}).get("source") != "gmail"
-    ]
+    return [d.to_dict() for d in _stream_month(month, client)
+            if (d.to_dict() or {}).get("source") != "gmail"]
+
+
+def fetch_manual_only_transactions(month, client=None):
+    """This month's truly user-typed records (source not gmail/plaid). Used to
+    dedup incoming PLAID expenses so a purchase Gray already typed isn't doubled."""
+    if client is None:
+        client = get_client()
+    if client is None:
+        return []
+    return [d.to_dict() for d in _stream_month(month, client)
+            if (d.to_dict() or {}).get("source") not in ("gmail", "plaid")]
 
 
 def write_expenses(expenses, client=None):
@@ -60,7 +72,7 @@ def write_expenses(expenses, client=None):
             "date": e["date"],
             "month": e["date"][:7],
             "note": "",
-            "source": "gmail",
+            "source": e.get("source", "gmail"),
             "email_id": e["email_id"],
             "deleted": False,
             "createdAt": now_ms,
