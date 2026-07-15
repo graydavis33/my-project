@@ -4,7 +4,7 @@ _Maintained by the `monetization-strategist` subagent (spec: `docs/superpowers/s
 
 **Rules for this file:** no dollar figures, revenue numbers, or client terms (public repo) — pitches and scores only. KILLED is append-only. One candidate max in NOW.
 
-_Last strategist run: 2026-07-08_
+_Last strategist run: 2026-07-15_
 _Backfill: pending (runs on Gray's explicit go — see spec)_
 
 ---
