@@ -65,3 +65,13 @@ ALERT_SENDERS = [
 TRANSFER_SENDERS = [
     "online-notifications@edwardjones.com",
 ]
+
+# Plaid buckets most SaaS subscriptions as GENERAL_SERVICES/GENERAL_MERCHANDISE.
+# These known brands are Software & Tools. Extend as new vendors appear (or just
+# recategorize once in the app — create-only writes make the fix stick).
+SOFTWARE_VENDORS = [
+    "adobe", "github", "google", "anthropic", "openai", "notion",
+    "sandcastles", "epidemic sound", "wispr", "figma", "vercel", "cursor",
+]
+for _v in SOFTWARE_VENDORS:
+    CATEGORY_OVERRIDES.setdefault(_v, "Software & Tools")
