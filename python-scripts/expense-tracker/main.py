@@ -160,7 +160,7 @@ def main():
     import firestore_writer
     fs_client = firestore_writer.get_client()
     if fs_client:
-        manual = firestore_writer.fetch_manual_transactions(current_month, client=fs_client)
+        manual = firestore_writer.fetch_non_gmail_transactions(current_month, client=fs_client)
         print(f"  {len(manual)} manual app entr(ies) this month to dedupe against.")
         expenses, dropped = dedupe_vs_manual(expenses, manual)
         for e in dropped:

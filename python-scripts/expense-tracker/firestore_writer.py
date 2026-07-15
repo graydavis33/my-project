@@ -86,3 +86,40 @@ def write_expenses(expenses, client=None):
         except AlreadyExists:
             pass
     return created
+
+
+def read_cursor(client=None):
+    if client is None:
+        client = get_client()
+    if client is None:
+        return ""
+    snap = client.document(STATE).get()
+    return (snap.to_dict() or {}).get("cursor", "") if snap.exists else ""
+
+
+def write_cursor(cursor, client=None):
+    if client is None:
+        client = get_client()
+    if client is None:
+        return
+    client.document(STATE).set({"cursor": cursor, "updated_at": int(time.time() * 1000)})
+
+
+def tombstone_removed(removed_ids, client=None):
+    """Plaid reports a pending transaction was dropped -> mark its doc deleted so
+    pending+posted never double-count. Returns count actually tombstoned."""
+    if client is None:
+        client = get_client()
+    if client is None:
+        return 0
+    n = 0
+    for tid in removed_ids:
+        ref = client.document(f"{ROOT}/transactions/plaid_{tid}")
+        snap = ref.get()
+        if snap.exists:
+            data = snap.to_dict()
+            data["deleted"] = True
+            data["updated_at"] = int(time.time() * 1000)
+            ref.set(data)
+            n += 1
+    return n
