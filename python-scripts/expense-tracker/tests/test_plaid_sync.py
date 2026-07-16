@@ -45,3 +45,9 @@ def test_date_object_is_stringified():
     import datetime
     e = to_expense(_txn(authorized_date=datetime.date(2026, 7, 14), date=datetime.date(2026, 7, 13)))
     assert e["date"] == "2026-07-14"  # authorized_date preferred
+
+def test_plaid_client_imports():
+    import plaid_client
+    assert hasattr(plaid_client, "sync_transactions")
+    assert hasattr(plaid_client, "create_link_token")
+    assert hasattr(plaid_client, "exchange_public_token")

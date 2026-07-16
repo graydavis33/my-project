@@ -75,3 +75,9 @@ SOFTWARE_VENDORS = [
 ]
 for _v in SOFTWARE_VENDORS:
     CATEGORY_OVERRIDES.setdefault(_v, "Software & Tools")
+
+# Plaid (read-only Transactions). Secrets live in .env locally / Actions secrets in CI.
+PLAID_CLIENT_ID = os.getenv("PLAID_CLIENT_ID")
+PLAID_SECRET = os.getenv("PLAID_SECRET")
+PLAID_ENV = os.getenv("PLAID_ENV", "production")
+PLAID_ACCESS_TOKEN = os.getenv("PLAID_ACCESS_TOKEN")
