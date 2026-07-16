@@ -6,7 +6,7 @@ on:
   workflow_dispatch:        # manual trigger from GitHub Actions UI
 
 permissions:
-  contents: write           # needed to commit expenses.json back to repo
+  contents: read            # nothing is committed — all data goes to private Firestore
 
 concurrency:
   group: expense-sync
@@ -54,6 +54,10 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PLAID_CLIENT_ID: ${{ secrets.PLAID_CLIENT_ID }}
+          PLAID_SECRET: ${{ secrets.PLAID_SECRET }}
+          PLAID_ACCESS_TOKEN: ${{ secrets.PLAID_ACCESS_TOKEN }}
+          PLAID_ENV: production
         run: cd python-scripts/expense-tracker && python main.py
 
       - name: Save scanner cache
@@ -64,14 +68,3 @@ jobs:
             python-scripts/expense-tracker/.scanned_ids.json
             python-scripts/expense-tracker/.expense_cache.json
           key: expense-scanner-cache-${{ github.run_id }}
-
-      - name: Commit updated expenses.json
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add web-apps/payday-checklist/expenses.json
-          git diff --staged --quiet || git commit -m "chore: update expenses.json [skip ci]"
-          # main can move mid-run (session auto-push hooks); rebase, keeping the
-          # runner's expenses.json on conflict — it's always the freshest scan
-          git pull --rebase -X theirs origin main
-          git push
