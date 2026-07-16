@@ -27,13 +27,16 @@ def to_expense(txn):
     }
 
 
-def run_plaid_sync(current_month, client, quiet=False, sync_fn=None):
+def run_plaid_sync(current_month, client, quiet=False, sync_fn=None, dedupe_fn=None):
     """Pull Plaid transactions from the stored cursor, keep this-month purchases,
     dedup against manual entries, write to Firestore, tombstone removed pendings,
     advance the cursor. Returns the number of new records written."""
     import firestore_writer
-    from main import dedupe_vs_manual
 
+    if dedupe_fn is None:
+        # main.py passes its own dedupe_vs_manual — importing main here would
+        # re-execute its module body when the scanner runs as a script
+        from main import dedupe_vs_manual as dedupe_fn
     if sync_fn is None:
         import plaid_client
         sync_fn = plaid_client.sync_transactions
@@ -47,7 +50,7 @@ def run_plaid_sync(current_month, client, quiet=False, sync_fn=None):
     expenses = [e for e in expenses if e["date"].startswith(current_month)]
 
     manual = firestore_writer.fetch_manual_only_transactions(current_month, client=client)
-    expenses, dropped = dedupe_vs_manual(expenses, manual)
+    expenses, dropped = dedupe_fn(expenses, manual)
 
     written = firestore_writer.write_expenses(expenses, client=client)
     tombstoned = firestore_writer.tombstone_removed(removed_ids, client=client)

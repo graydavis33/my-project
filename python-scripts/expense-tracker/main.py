@@ -105,7 +105,12 @@ def main():
     # --- Plaid: primary purchase feed (writes to Firestore, never expenses.json) ---
     if fs_client and os.getenv("PLAID_ACCESS_TOKEN"):
         import plaid_sync
-        plaid_sync.run_plaid_sync(current_month, fs_client, quiet=QUIET)
+        try:
+            plaid_sync.run_plaid_sync(current_month, fs_client, quiet=QUIET,
+                                      dedupe_fn=dedupe_vs_manual)
+        except Exception as e:
+            # A Plaid outage must not take down the Gmail backstop in the same run
+            print(f"Plaid: FAILED ({type(e).__name__}) — continuing with Gmail scan.")
     else:
         print("Plaid: skipped (PLAID_ACCESS_TOKEN or Firestore not set).")
 
