@@ -74,9 +74,14 @@ def main():
                 print(f"gh secret set FAILED ({type(e).__name__}) — no secret was set. "
                       "Check `gh auth status`, then re-run (the bank login must be redone).")
                 return
+            # Also store in the local gitignored .env — local dry-runs need it,
+            # and GitHub secrets are write-only (can't be read back out)
+            env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+            with open(env_path, "a") as f:
+                f.write(f"\nPLAID_ACCESS_TOKEN={access_token}\n")
             self.send_response(200); self.end_headers()
             done["stop"] = True
-            print("PLAID_ACCESS_TOKEN secret set. PrimeSouth connected.")
+            print("PLAID_ACCESS_TOKEN secret set (GitHub + local .env). PrimeSouth connected.")
 
     srv = http.server.HTTPServer(("127.0.0.1", PORT), H)
     webbrowser.open(f"http://127.0.0.1:{PORT}/")
