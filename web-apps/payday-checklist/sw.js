@@ -1,4 +1,4 @@
-const CACHE_NAME = 'payday-checklist-v4';
+const CACHE_NAME = 'payday-checklist-v5';
 const PRECACHE = [
   './',
   './index.html',
@@ -43,8 +43,8 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
   if (!url.pathname.includes('/payday-checklist/') && !url.pathname.includes('/styles/')) return;
 
-  // expenses.json + page navigations: network first, cache fallback (fresh data when online)
-  const networkFirst = request.mode === 'navigate' || url.pathname.endsWith('expenses.json');
+  // Page navigations: network first, cache fallback (fresh app shell when online)
+  const networkFirst = request.mode === 'navigate';
 
   if (networkFirst) {
     event.respondWith(

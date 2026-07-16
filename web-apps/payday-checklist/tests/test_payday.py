@@ -57,17 +57,12 @@ with sync_playwright() as p:
     check("balance chain: budget pool $1,050", "1,050" in page.text_content("#balance-4"))
     check("budget total $950", page.text_content("#expense-budget-total").strip() == "$950")
 
-    # ══ 2. Gmail expenses.json merge (Sandcastles $49 → Software & Tools, July 2026) ══
-    print("\n[2] Gmail sync merge")
-    sw_spent = spent_value(page, 2)
-    check("Sandcastles $49 imported into Software & Tools", sw_spent == "49", f"got '{sw_spent}'")
-    sync_txt = page.text_content("#sync-status")
-    check("sync badge shows 1 receipt", "1 receipt" in sync_txt, sync_txt)
-
-    # reload → dedup (must stay 49, not double to 98)
-    page.reload(); wait_ready(page); page.wait_for_timeout(800)
-    sw_spent = spent_value(page, 2)
-    check("no double-import after reload (still 49)", sw_spent == "49", f"got '{sw_spent}'")
+    # ══ 2. expenses.json retired (2026-07-15) — app must NOT fetch it ══
+    # Expenses now arrive only via Firestore sync (Plaid + gmail written server-side).
+    print("\n[2] no expenses.json fetch")
+    fetched = page.evaluate("""() =>
+      performance.getEntriesByType('resource').some(r => r.name.includes('expenses.json'))""")
+    check("app never requests expenses.json", not fetched)
 
     # ══ 3. Manual expense + auto-categorization ══
     print("\n[3] Manual entry + auto-categorize")
@@ -171,13 +166,24 @@ with sync_playwright() as p:
     page.wait_for_timeout(300)
     check("after delete groceries empty", spent_value(page, 0) == "", spent_value(page, 0))
 
-    # gmail txn delete → dismissed (no re-import on reload)
+    # synced-source txn delete → tombstone survives reload (no resurrection path)
+    page.evaluate("""async () => {
+      await addTransaction({
+        vendor: 'Sandcastles', amount: 49, category: 'Software & Tools',
+        date: new Date().toISOString().slice(0,10), month: new Date().toISOString().slice(0,7),
+        note: '', source: 'gmail', email_id: 'e2e-gmail-del', sid: 'e2e-gmail-del',
+        createdAt: new Date().toISOString(), updatedAt: Date.now()
+      });
+    }""")
+    page.reload(); wait_ready(page); page.wait_for_timeout(800)
+    check("injected synced receipt shows in Software & Tools", spent_value(page, 2) == "49",
+          spent_value(page, 2))
     page.click("#txn-toggle-2")
     page.wait_for_timeout(200)
     page.click("#txn-list-2 .txn-delete")
     page.wait_for_timeout(300)
     page.reload(); wait_ready(page); page.wait_for_timeout(1000)
-    check("deleted gmail receipt stays dismissed after reload", spent_value(page, 2) == "",
+    check("deleted synced receipt stays deleted after reload", spent_value(page, 2) == "",
           spent_value(page, 2))
 
     # ══ 10. History save + render ══
@@ -209,7 +215,6 @@ with sync_playwright() as p:
     page.wait_for_timeout(1500)
     wait_ready(page); page.wait_for_timeout(800)
     check("after reset paycheck back to default", page.input_value("#paycheck-amount") == "3250")
-    # NOTE: gmail receipt re-imports after reset (dismissed list wiped) — expected; clear it again
     # import the backup
     with page.expect_file_chooser() as fc:
         page.click("text=Import Backup")
@@ -231,9 +236,6 @@ with sync_playwright() as p:
         page.wait_for_timeout(500)
         check("app loads offline via service worker", True)
         check("offline: data still present", page.input_value("#paycheck-amount") == "3500")
-        sync_txt = page.text_content("#sync-status") or ""
-        # offline fetch of expenses.json → cached copy OR graceful failure message; both fine
-        check("offline: sync badge doesn't crash", sync_txt != "", sync_txt)
         # manual entry works offline
         page.click(".fab")
         page.fill("#add-vendor", "Offline Deli")
@@ -265,7 +267,7 @@ with sync_playwright() as p:
       await addTransaction(mk('invest_transfer', 'Edward Jones (Single-1)', 100, 'ejtest-inv'));
     }""", month)
     page.reload(); wait_ready(page); page.wait_for_timeout(1000)
-    # Totals = whatever's in TXN_CACHE (expenses.json may carry real transfers too),
+    # Totals = whatever's in TXN_CACHE (Firestore sync may carry real transfers too),
     # so compute expected from app state rather than hardcoding.
     exp_tax = page.evaluate("() => TXN_CACHE.filter(t => (t.kind==='tax_transfer'||t.category==='Tax Set-Aside') && (t.date||'').startsWith(String(new Date().getFullYear()))).reduce((s,t)=>s+t.amount,0)")
     exp_inv = page.evaluate("() => TXN_CACHE.filter(t => (t.kind==='invest_transfer'||t.category==='EJ Investing') && (t.date||'').startsWith(String(new Date().getFullYear()))).reduce((s,t)=>s+t.amount,0)")
