@@ -9,9 +9,12 @@ Prereqs: PLAID_CLIENT_ID + PLAID_SECRET in .env, PLAID_ENV=production, and the
 
 import http.server
 import json
+import os
 import subprocess
-import urllib.parse
 import webbrowser
+
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 import plaid_client
 
@@ -25,9 +28,14 @@ const handler = Plaid.create({
   token: "%s",
   onSuccess: (public_token) => {
     fetch("/exchange", {method:"POST", body: JSON.stringify({public_token})})
-      .then(() => document.body.innerHTML = "<h2>Connected. You can close this tab.</h2>");
+      .then(r => document.body.innerHTML = r.ok
+        ? "<h2>Connected. You can close this tab.</h2>"
+        : "<h2>Secret upload failed — check the terminal.</h2>");
   },
-  onExit: () => document.body.innerHTML = "<h2>Cancelled.</h2>",
+  onExit: () => {
+    fetch("/exit", {method:"POST", body: "{}"});
+    document.body.innerHTML = "<h2>Cancelled.</h2>";
+  },
 });
 handler.open();
 </script>
@@ -37,28 +45,45 @@ Opening Plaid...
 
 def main():
     link_token = plaid_client.create_link_token()
-    done = {"ok": False}
+    done = {"stop": False}
 
     class H(http.server.BaseHTTPRequestHandler):
         def log_message(self, *a): pass
         def do_GET(self):
+            if self.path != "/":
+                self.send_response(404); self.end_headers(); return
             self.send_response(200); self.send_header("Content-Type", "text/html"); self.end_headers()
             self.wfile.write((PAGE % link_token).encode())
         def do_POST(self):
+            if self.path != "/exchange":
+                # Link cancelled/abandoned — stop the server instead of hanging forever
+                self.send_response(200); self.end_headers()
+                done["stop"] = True
+                print("Cancelled — no secret was set. Re-run to try again.")
+                return
             body = self.rfile.read(int(self.headers["Content-Length"]))
             public_token = json.loads(body)["public_token"]
             access_token = plaid_client.exchange_public_token(public_token)
-            subprocess.run(["gh", "secret", "set", "PLAID_ACCESS_TOKEN", "--repo", REPO],
-                           input=access_token, text=True, check=True)
+            try:
+                subprocess.run(["gh", "secret", "set", "PLAID_ACCESS_TOKEN", "--repo", REPO],
+                               input=access_token, text=True, check=True)
+            except (subprocess.CalledProcessError, FileNotFoundError) as e:
+                # Token stays in memory only; gh never echoes stdin, so nothing leaked.
+                self.send_response(500); self.end_headers()
+                done["stop"] = True
+                print(f"gh secret set FAILED ({type(e).__name__}) — no secret was set. "
+                      "Check `gh auth status`, then re-run (the bank login must be redone).")
+                return
             self.send_response(200); self.end_headers()
-            done["ok"] = True
+            done["stop"] = True
             print("PLAID_ACCESS_TOKEN secret set. PrimeSouth connected.")
 
     srv = http.server.HTTPServer(("127.0.0.1", PORT), H)
     webbrowser.open(f"http://127.0.0.1:{PORT}/")
     print(f"Complete the bank login in your browser ({srv.server_address[0]}:{PORT})...")
-    while not done["ok"]:
+    while not done["stop"]:
         srv.handle_request()
+    srv.server_close()
 
 
 if __name__ == "__main__":
