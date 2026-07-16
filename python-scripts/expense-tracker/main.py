@@ -1,19 +1,26 @@
 """
 main.py
-Personal expense tracker — scans Gmail, extracts expenses via Claude Haiku,
-writes expenses.json for the payday checklist to consume.
+Personal expense tracker — syncs Plaid transactions (primary purchase feed) and
+scans Gmail (receipts + Edward Jones transfers, extracted via Claude Haiku) as a
+deduped backstop, writing everything to Firestore for the payday checklist to read.
 
 Run: python main.py
 """
 
-import json
 import os
 import sys
-from datetime import date, timezone, datetime
+from datetime import date
 
-from config import EXPENSES_OUTPUT_PATH, EXCLUDED_VENDORS, CATEGORY_OVERRIDES
+from config import EXCLUDED_VENDORS, CATEGORY_OVERRIDES
 from gmail_client import get_gmail_service, fetch_personal_expense_emails, fetch_ej_transfer_emails
 from expense_scanner import scan_expenses
+
+QUIET = os.getenv("GITHUB_ACTIONS") == "true"  # Actions logs are public — no $ in CI
+
+
+def money_log(msg):
+    if not QUIET:
+        print(msg)
 
 
 def _is_excluded(expense):
@@ -81,24 +88,6 @@ def dedupe_vs_manual(expenses, manual_txns):
     return kept, dropped
 
 
-def write_expenses_json(expenses, current_month, transfers=None):
-    """Write expenses + EJ transfers to the payday checklist's expenses.json file."""
-    output = {
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "month": current_month,
-        "expenses": expenses,
-        "transfers": transfers or [],
-    }
-
-    output_path = os.path.normpath(EXPENSES_OUTPUT_PATH)
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-
-    with open(output_path, "w") as f:
-        json.dump(output, f, indent=2)
-
-    print(f"\nWrote {len(expenses)} expense(s) to: {output_path}")
-
-
 def main():
     dry_run = "--dry-run" in sys.argv
     today = date.today()
@@ -109,6 +98,16 @@ def main():
 
     print("\nConnecting to Gmail...")
     service = get_gmail_service()
+
+    import firestore_writer
+    fs_client = firestore_writer.get_client()
+
+    # --- Plaid: primary purchase feed (writes to Firestore, never expenses.json) ---
+    if fs_client and os.getenv("PLAID_ACCESS_TOKEN"):
+        import plaid_sync
+        plaid_sync.run_plaid_sync(current_month, fs_client, quiet=QUIET)
+    else:
+        print("Plaid: skipped (PLAID_ACCESS_TOKEN or Firestore not set).")
 
     print("Searching for expense emails (last 30 days)...")
     emails = fetch_personal_expense_emails(service, days=30)
@@ -144,7 +143,7 @@ def main():
     if excluded:
         print(f"  Excluded {before - len(expenses)} rent/non-budget expense(s):")
         for e in excluded:
-            print(f"    - {e['vendor']} ${e['amount']:.2f} ({e['date']})")
+            money_log(f"    - {e['vendor']} ${e['amount']:.2f} ({e['date']})")
 
     # Apply vendor-specific category overrides
     for e in expenses:
@@ -157,14 +156,12 @@ def main():
         print(f"  Dropped {before_dedup - len(expenses)} bank alert(s) duplicating a receipt.")
 
     # Drop expenses Gray already entered manually in the app (needs Firestore)
-    import firestore_writer
-    fs_client = firestore_writer.get_client()
     if fs_client:
         manual = firestore_writer.fetch_non_gmail_transactions(current_month, client=fs_client)
         print(f"  {len(manual)} manual app entr(ies) this month to dedupe against.")
         expenses, dropped = dedupe_vs_manual(expenses, manual)
         for e in dropped:
-            print(f"  Skipped (already entered manually in app): {e['vendor']} ${e['amount']:.2f} ({e['date']})")
+            money_log(f"  Skipped (already entered manually in app): {e['vendor']} ${e['amount']:.2f} ({e['date']})")
 
     print(f"\nTotal for {today.strftime('%B')}: {len(expenses)} expense(s)")
 
@@ -174,13 +171,11 @@ def main():
     for e in expenses:
         totals[e["category"]] += e["amount"]
     for cat, total in sorted(totals.items()):
-        print(f"  {cat}: ${total:.2f}")
+        money_log(f"  {cat}: ${total:.2f}")
 
     if dry_run:
         print("\nDRY RUN — nothing written.")
         return
-
-    write_expenses_json(expenses, current_month, transfers)
 
     if fs_client:
         created = firestore_writer.write_expenses(expenses + transfers, client=fs_client)
