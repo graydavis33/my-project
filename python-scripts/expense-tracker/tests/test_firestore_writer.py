@@ -47,7 +47,7 @@ class FakeSnap:
     def __init__(self, data): self._d = data
     @property
     def exists(self): return self._d is not None
-    def to_dict(self): return self._d or {}
+    def to_dict(self): return dict(self._d) if self._d else {}
 
 class FakeDoc2:
     def __init__(self, store, path): self.store, self.path = store, path

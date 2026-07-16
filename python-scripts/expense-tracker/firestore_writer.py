@@ -3,6 +3,8 @@ firestore_writer.py
 Writes scanned expenses into Firestore (households/gray/transactions/{email_id})
 using create-only semantics — an existing doc is NEVER overwritten, so user edits
 and tombstone deletions in the app can't be resurrected by the scanner.
+One deliberate exception: tombstone_removed() sets deleted=True on plaid_* docs
+when Plaid reports a pending transaction was dropped.
 Inert unless the FIREBASE_SERVICE_ACCOUNT env var (service-account JSON) is set.
 """
 
