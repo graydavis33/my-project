@@ -89,12 +89,13 @@ def test_fetch_non_gmail_includes_plaid_and_manual():
     sources = sorted(r["source"] for r in out)
     assert sources == ["manual", "plaid"]
 
-def test_fetch_manual_only_excludes_plaid():
+def test_fetch_non_plaid_includes_gmail_and_manual():
     c = FakeClient2()
+    c.store["households/gray/transactions/g1"] = _rec("g1", "gmail")
     c.store["households/gray/transactions/plaid_p1"] = _rec("plaid_p1", "plaid")
     c.store["households/gray/transactions/m1"] = _rec("m1", "manual")
-    out = firestore_writer.fetch_manual_only_transactions("2026-07", client=c)
-    assert [r["source"] for r in out] == ["manual"]
+    out = firestore_writer.fetch_non_plaid_transactions("2026-07", client=c)
+    assert sorted(r["source"] for r in out) == ["gmail", "manual"]
 
 def test_cursor_roundtrip():
     c = FakeClient2()

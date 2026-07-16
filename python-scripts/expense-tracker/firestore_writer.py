@@ -48,15 +48,17 @@ def fetch_non_gmail_transactions(month, client=None):
             if (d.to_dict() or {}).get("source") != "gmail"]
 
 
-def fetch_manual_only_transactions(month, client=None):
-    """This month's truly user-typed records (source not gmail/plaid). Used to
-    dedup incoming PLAID expenses so a purchase Gray already typed isn't doubled."""
+def fetch_non_plaid_transactions(month, client=None):
+    """This month's records NOT sourced from Plaid (manual entries + gmail).
+    Used to dedup incoming PLAID expenses: receipt emails usually land HOURS
+    before Plaid surfaces the transaction, so a gmail row written by an earlier
+    run must suppress the Plaid copy or every receipted purchase double-counts."""
     if client is None:
         client = get_client()
     if client is None:
         return []
     return [d.to_dict() for d in _stream_month(month, client)
-            if (d.to_dict() or {}).get("source") not in ("gmail", "plaid")]
+            if (d.to_dict() or {}).get("source") != "plaid"]
 
 
 def write_expenses(expenses, client=None):

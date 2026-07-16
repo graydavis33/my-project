@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false   # read-only job — no git credential needed after checkout
 
       - name: Set up Python
         uses: actions/setup-python@v5

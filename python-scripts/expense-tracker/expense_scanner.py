@@ -11,6 +11,13 @@ import anthropic
 from config import ANTHROPIC_API_KEY, PERSONAL_CATEGORIES
 from ej_transfers import parse_ej_transfer
 
+QUIET = os.getenv("GITHUB_ACTIONS") == "true"  # Actions logs are public — no $ in CI
+
+
+def money_log(msg):
+    if not QUIET:
+        print(msg)
+
 _SCANNED_IDS_FILE = os.path.join(os.path.dirname(__file__), ".scanned_ids.json")
 _EXPENSE_CACHE_FILE = os.path.join(os.path.dirname(__file__), ".expense_cache.json")
 _BATCH_SIZE = 5
@@ -252,7 +259,7 @@ def scan_expenses(emails):
             newly_scanned.add(email["id"])
             expense_cache[email["id"]] = transfer
             new_expenses.append(transfer)
-            print(f"    + [transfer] {transfer['vendor']} ${transfer['amount']} ({transfer['kind']}) - {transfer['date']}")
+            money_log(f"    + [transfer] {transfer['vendor']} ${transfer['amount']} ({transfer['kind']}) - {transfer['date']}")
         else:
             still_unscanned.append(email)
     unscanned = still_unscanned
@@ -278,10 +285,10 @@ def scan_expenses(emails):
                         expense["is_alert"] = True
                     new_expenses.append(expense)
                     expense_cache[email["id"]] = expense
-                    print(f"    + {result['vendor']} ${result['amount']} ({result['category']}) - {result['date']}")
+                    money_log(f"    + {result['vendor']} ${result['amount']} ({result['category']}) - {result['date']}")
                 else:
                     subj = email['subject'][:60].encode('ascii', errors='replace').decode()
-                    print(f"    - {subj}")
+                    money_log(f"    - {subj}")  # subjects carry amounts/names in bank alerts
 
     if newly_scanned:
         _save_scanned_ids(scanned_ids | newly_scanned)
