@@ -64,24 +64,23 @@ def main():
             body = self.rfile.read(int(self.headers["Content-Length"]))
             public_token = json.loads(body)["public_token"]
             access_token = plaid_client.exchange_public_token(public_token)
-            try:
-                subprocess.run(["gh", "secret", "set", "PLAID_ACCESS_TOKEN", "--repo", REPO],
-                               input=access_token, text=True, check=True)
-            except (subprocess.CalledProcessError, FileNotFoundError) as e:
-                # Token stays in memory only; gh never echoes stdin, so nothing leaked.
-                self.send_response(500); self.end_headers()
-                done["stop"] = True
-                print(f"gh secret set FAILED ({type(e).__name__}) — no secret was set. "
-                      "Check `gh auth status`, then re-run (the bank login must be redone).")
-                return
-            # Also store in the local gitignored .env — local dry-runs need it,
-            # and GitHub secrets are write-only (can't be read back out)
+            # Secure the token in the local gitignored .env FIRST — the exchange
+            # is one-shot, so if the GitHub push fails the bank login isn't wasted
+            # (and GitHub secrets are write-only, we can't read it back later).
             env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
             with open(env_path, "a") as f:
                 f.write(f"\nPLAID_ACCESS_TOKEN={access_token}\n")
+            try:
+                subprocess.run(["gh", "secret", "set", "PLAID_ACCESS_TOKEN", "--repo", REPO],
+                               input=access_token, text=True, check=True)
+                gh_msg = "GitHub secret set"
+            except (subprocess.CalledProcessError, FileNotFoundError) as e:
+                # gh never echoes stdin, so nothing leaked; token is safe in .env
+                gh_msg = (f"GitHub secret NOT set ({type(e).__name__}) — token saved to local "
+                          ".env; push it to GitHub later (no bank re-login needed)")
             self.send_response(200); self.end_headers()
             done["stop"] = True
-            print("PLAID_ACCESS_TOKEN secret set (GitHub + local .env). PrimeSouth connected.")
+            print(f"PrimeSouth connected. Token: local .env OK; {gh_msg}.")
 
     srv = http.server.HTTPServer(("127.0.0.1", PORT), H)
     webbrowser.open(f"http://127.0.0.1:{PORT}/")
