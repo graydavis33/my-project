@@ -595,10 +595,6 @@
 
           <div class="misc-overflow" id="misc-overflow" style="display:none"></div>
 
-          <div class="sync-badge" id="sync-badge">
-            <span id="sync-status">Checking Gmail auto-sync&hellip;</span>
-            <span id="sync-actions" style="display:none"> &mdash; <a onclick="loadGmailExpenses(true)">refresh</a></span>
-          </div>
           <div class="sync-badge" id="cloud-sync-row">
             <span id="cloud-sync-status"></span>
             <a id="cloud-sync-btn" onclick="Sync.toggle()">sign in</a>
@@ -664,15 +660,6 @@ const STEP_NAMES = ['Taxes → Edward Jones', 'Rent', 'Student Loans', 'Emergenc
 const CATEGORIES = ['Groceries', 'Dining Out', 'Software & Tools', 'Utilities', 'Investments', 'BJJ & Kickboxing', 'Misc'];
 const DEFAULT_BUDGETS = [200, 150, 100, 60, 100, 200, 140];
 const MISC_INDEX = 6;
-
-// Old Gmail-scanner categories → new categories
-const GMAIL_CATEGORY_MAP = {
-  'Groceries': 'Groceries', 'Dining Out': 'Dining Out',
-  'Software & Tools': 'Software & Tools', 'Utilities': 'Utilities',
-  'Investments': 'Investments', 'BJJ & Kickboxing': 'BJJ & Kickboxing',
-  'Streaming': 'Misc', 'Transport': 'Misc',
-  'Health & Wellness': 'Misc', 'Shopping': 'Misc', 'Misc': 'Misc'
-};
 
 // Local keyword rules for auto-categorization (checked against lowercase vendor)
 const KEYWORD_RULES = [
