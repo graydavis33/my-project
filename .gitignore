@@ -125,3 +125,6 @@ web-apps/payday-checklist/tests/.artifacts/
 python-scripts/footage-organizer/.footage-index.sqlite
 python-scripts/footage-organizer/.tmp_libhoriz_results.txt
 python-scripts/footage-organizer/.tmp/
+
+# Financial data lives in Firestore only — never commit it
+web-apps/payday-checklist/expenses.json
