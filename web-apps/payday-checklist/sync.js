@@ -97,6 +97,7 @@ const Sync = (() => {
           if (data.kind) rec.kind = data.kind;
           if (data.business != null) rec.business = data.business;
           if (data.reimburse) rec.reimburse = data.reimburse; else delete rec.reimburse;
+          if (data.reimburse_amount != null) rec.reimburse_amount = data.reimburse_amount; else delete rec.reimburse_amount;
           const newId = await addTransaction(rec);
           if (rec.id == null) rec.id = newId;
           allBySid[id] = rec;
@@ -171,6 +172,7 @@ const Sync = (() => {
       ...(t.kind ? { kind: t.kind } : {}),
       ...(t.business != null ? { business: t.business } : {}),
       ...(t.reimburse ? { reimburse: t.reimburse } : {}),
+      ...(t.reimburse_amount != null ? { reimburse_amount: t.reimburse_amount } : {}),
       deleted: !!t.deleted,
       createdAt: Date.parse(t.createdAt || '') || Date.now(),
       updated_at: t.updatedAt || Date.now()

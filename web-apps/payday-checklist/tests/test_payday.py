@@ -269,11 +269,27 @@ with sync_playwright() as p:
     check("unmark beats the vendor rule", page.evaluate("() => TXN_CACHE.filter(t => reimbStatus(t) === 'open').length") == 0)
     page.evaluate("() => removeReimburseVendor('home depot')")
     page.wait_for_timeout(200)
+    # partial reimbursement: $60 tickets, $40 comes back — $20 stays personal
+    page.click(".fab")
+    page.fill("#add-vendor", "Ticketmaster")
+    page.fill("#add-amount", "60")
+    page.select_option("#add-category", "Misc")
+    page.click(".add-modal .gm-btn-primary")
+    page.wait_for_timeout(300)
+    base = page.evaluate("() => autoSpentFor(MISC_INDEX)")
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'Ticketmaster'); return setReimb(t.id, false, 40); }")
+    page.wait_for_timeout(300)
+    check("partial reimb keeps remainder in budget", abs(page.evaluate("() => autoSpentFor(MISC_INDEX)") - (base - 40)) < 0.01,
+          f"base {base} now {page.evaluate('() => autoSpentFor(MISC_INDEX)')}")
+    check("awaiting shows the partial amount", "40.00" in (page.text_content("#reimb-owed") or ""), page.text_content("#reimb-owed"))
+    check("category list tags it partial", "partial" in (page.evaluate("() => document.getElementById('txn-list-' + MISC_INDEX).innerHTML") or ""))
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'Ticketmaster'); return unmarkReimbursable(t.id); }")
+    page.wait_for_timeout(200)
     page.click(".gm-tabs .gm-tab-btn:nth-child(1)")
     page.wait_for_timeout(300)
     # clean up the test txns so later sections' math is unaffected
-    page.evaluate("() => Promise.all(TXN_CACHE.filter(t => ['B&H Photo','Home Depot'].includes(t.vendor)).map(t => { t.deleted = true; t.updatedAt = Date.now(); if (!t.sid) t.sid = uuidSid(); return addTransaction(t); }))")
-    page.evaluate("() => { TXN_CACHE = TXN_CACHE.filter(t => !['B&H Photo','Home Depot'].includes(t.vendor)); refreshExpenseDisplays(); }")
+    page.evaluate("() => Promise.all(TXN_CACHE.filter(t => ['B&H Photo','Home Depot','Ticketmaster'].includes(t.vendor)).map(t => { t.deleted = true; t.updatedAt = Date.now(); if (!t.sid) t.sid = uuidSid(); return addTransaction(t); }))")
+    page.evaluate("() => { TXN_CACHE = TXN_CACHE.filter(t => !['B&H Photo','Home Depot','Ticketmaster'].includes(t.vendor)); refreshExpenseDisplays(); }")
     page.wait_for_timeout(200)
 
     # ══ 11. CSV export → wipe → import round-trip ══

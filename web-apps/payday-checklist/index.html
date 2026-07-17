@@ -708,6 +708,8 @@
       <span id="mark-title"></span>
       <button class="modal-close" onclick="closeMarkSheet()">✕</button>
     </div>
+    <div class="modal-section" id="mark-amt-section" style="display:none">How much comes back to you?</div>
+    <input class="modal-input" type="number" id="mark-amt" step="0.01" inputmode="decimal" style="display:none" />
     <button class="gm-btn-primary" style="width:100%;margin-top:16px;min-height:48px" onclick="confirmMark(false)">Just this purchase</button>
     <button class="gm-btn-primary" style="width:100%;margin-top:10px;min-height:48px" onclick="confirmMark(true)"><span id="mark-always-label"></span></button>
   </div>
@@ -862,6 +864,11 @@ function reimbStatus(t) {
   return null;
 }
 function isReimbursable(t) { return reimbStatus(t) !== null; }
+// How much of this purchase comes back (partial reimbursements) — defaults to all of it
+function reimbAmt(t) {
+  const a = t.reimburse_amount;
+  return (a != null && a >= 0) ? Math.min(a, t.amount) : t.amount;
+}
 // Business write-off: reimbursables are never write-offs (the money comes back, so
 // it's not an expense). Then the explicit per-txn flag wins; otherwise the vendor rule.
 function isBusiness(t) {
@@ -877,8 +884,8 @@ function catOf(t) {
 function autoSpentFor(catIndex) {
   const month = currentMonth();
   return TXN_CACHE
-    .filter(t => t.month === month && catOf(t) === CATEGORIES[catIndex] && !t.kind && !isBusiness(t) && !isReimbursable(t))
-    .reduce((s, t) => s + t.amount, 0);
+    .filter(t => t.month === month && catOf(t) === CATEGORIES[catIndex] && !t.kind && !isBusiness(t))
+    .reduce((s, t) => s + (isReimbursable(t) ? Math.max(0, t.amount - reimbAmt(t)) : t.amount), 0);
 }
 function effectiveSpent(catIndex) {
   const ov = OVERRIDES[currentMonth()];
@@ -1099,7 +1106,7 @@ function renderTxnList(i) {
   const toggle = document.getElementById('txn-toggle-' + i);
   const month = currentMonth();
   const txns = TXN_CACHE
-    .filter(t => t.month === month && catOf(t) === CATEGORIES[i] && !t.kind && !isBusiness(t) && !isReimbursable(t))
+    .filter(t => t.month === month && catOf(t) === CATEGORIES[i] && !t.kind && !isBusiness(t) && !(isReimbursable(t) && reimbAmt(t) >= t.amount))
     .sort((a, b) => b.date.localeCompare(a.date));
 
   if (!txns.length) { toggle.style.display = 'none'; list.innerHTML = ''; list.classList.remove('open'); return; }
@@ -1110,8 +1117,11 @@ function renderTxnList(i) {
   list.innerHTML = txns.map(t => {
     const d = new Date(t.date + 'T12:00:00');
     const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    const src = t.source === 'gmail' ? '<span class="txn-src">gmail</span>' : '';
-    return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}</span>${src}<span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-biz" onclick="openMarkSheet(${t.id}, 'biz')" title="Business write-off">💼</button><button class="txn-reimb" onclick="openMarkSheet(${t.id}, 'reimb')" title="Sai reimburses this">🤝</button><button class="txn-delete" onclick="removeTxn(${t.id})" title="Delete">✕</button></div>`;
+    const partial = isReimbursable(t) && reimbAmt(t) < t.amount;
+    const src = (t.source === 'gmail' ? '<span class="txn-src">gmail</span>' : '') +
+                (partial ? '<span class="txn-src">partial</span>' : '');
+    const shown = partial ? t.amount - reimbAmt(t) : t.amount;
+    return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}</span>${src}<span class="txn-amount">${fmt2(shown)}</span><button class="txn-biz" onclick="openMarkSheet(${t.id}, 'biz')" title="Business write-off">💼</button><button class="txn-reimb" onclick="openMarkSheet(${t.id}, 'reimb')" title="Sai reimburses this">🤝</button><button class="txn-delete" onclick="removeTxn(${t.id})" title="Delete">✕</button></div>`;
   }).join('');
 }
 
@@ -1177,6 +1187,12 @@ function openMarkSheet(id, mode) {
   document.getElementById('mark-title').textContent =
     (mode === 'biz' ? '💼 Write-off — ' : '🤝 Reimbursed by Sai — ') + txn.vendor + ' ' + fmt2(txn.amount);
   document.getElementById('mark-always-label').textContent = 'Every purchase from ' + txn.vendor;
+  const amtSection = document.getElementById('mark-amt-section');
+  const amtInput = document.getElementById('mark-amt');
+  const showAmt = mode === 'reimb';
+  amtSection.style.display = showAmt ? 'block' : 'none';
+  amtInput.style.display = showAmt ? 'block' : 'none';
+  if (showAmt) amtInput.value = txn.amount;
   document.getElementById('mark-modal').classList.add('open');
 }
 function closeMarkSheet() {
@@ -1185,10 +1201,11 @@ function closeMarkSheet() {
 }
 async function confirmMark(always) {
   const { id, mode } = MARK_SHEET;
+  const amt = parseFloat(document.getElementById('mark-amt').value);
   closeMarkSheet();
   if (id == null) return;
   if (mode === 'biz') await setWriteOff(id, always);
-  else await setReimb(id, always);
+  else await setReimb(id, always, amt);
 }
 
 async function setWriteOff(id, always) {
@@ -1227,10 +1244,12 @@ async function removeBusinessVendor(vendor) {
   refreshExpenseDisplays();
 }
 
-async function setReimb(id, always) {
+async function setReimb(id, always, amt) {
   const txn = TXN_CACHE.find(t => t.id === id);
   if (!txn) return;
   txn.reimburse = 'open';
+  // Partial: only this much comes back; the rest stays in the personal budget
+  txn.reimburse_amount = (amt > 0 && amt < txn.amount) ? Math.round(amt * 100) / 100 : txn.amount;
   if (txn.business === true) txn.business = false;   // can't be both — the money comes back
   await persistTxnFlag(txn);
   const v = normVendor(txn.vendor);
@@ -1259,6 +1278,7 @@ async function unmarkReimbursable(id) {
   // 'none' survives the vendor rule — this one stays personal
   if (REIMBURSE_VENDORS.includes(normVendor(txn.vendor))) txn.reimburse = 'none';
   else delete txn.reimburse;
+  delete txn.reimburse_amount;
   await persistTxnFlag(txn);
   showToast('Back to personal budget');
   refreshExpenseDisplays();
@@ -1309,7 +1329,7 @@ function renderBusiness() {
 
   // ── Reimburse page (open items span months — visible until repaid) ──
   const open = TXN_CACHE.filter(t => reimbStatus(t) === 'open').sort((a, b) => b.date.localeCompare(a.date));
-  const owed = open.reduce((s, t) => s + t.amount, 0);
+  const owed = open.reduce((s, t) => s + reimbAmt(t), 0);
   document.getElementById('reimb-owed').textContent = fmt2(owed);
   const rl = document.getElementById('reimb-txn-list');
   if (!open.length) {
@@ -1320,12 +1340,13 @@ function renderBusiness() {
       const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       const days = Math.floor((Date.now() - d.getTime()) / 86400000);
       const age = days >= 30 ? ` <span style="color:var(--color-red);font-size:9px">${days}d</span>` : '';
-      return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}${age}</span><span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-delete" onclick="markRepaid(${t.id})" title="Sai paid this back" style="color:var(--color-green)">✓</button><button class="txn-delete" onclick="unmarkReimbursable(${t.id})" title="Back to personal budget">↩</button></div>`;
+      const part = reimbAmt(t) < t.amount ? ` <span style="font-size:9px;opacity:0.6">of ${fmt2(t.amount)}</span>` : '';
+      return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}${age}</span><span class="txn-amount">${fmt2(reimbAmt(t))}${part}</span><button class="txn-delete" onclick="markRepaid(${t.id})" title="Sai paid this back" style="color:var(--color-green)">✓</button><button class="txn-delete" onclick="unmarkReimbursable(${t.id})" title="Back to personal budget">↩</button></div>`;
     }).join('');
   }
   const repaidYtd = TXN_CACHE
     .filter(t => reimbStatus(t) === 'repaid' && (t.date || '').startsWith(String(new Date().getFullYear())))
-    .reduce((s, t) => s + t.amount, 0);
+    .reduce((s, t) => s + reimbAmt(t), 0);
   const rr = document.getElementById('reimb-repaid-row');
   if (repaidYtd > 0) { rr.style.display = 'block'; rr.textContent = 'Repaid this year: ' + fmt2(repaidYtd); }
   else rr.style.display = 'none';
@@ -1534,9 +1555,9 @@ async function exportCSV() {
 
   let csv = '# Payday Checklist backup v2 — ' + new Date().toISOString() + '\n';
   csv += '[TRANSACTIONS]\n';
-  csv += 'date,vendor,category,amount,source,email_id,note,kind,business,reimburse\n';
+  csv += 'date,vendor,category,amount,source,email_id,note,kind,business,reimburse,reimburse_amount\n';
   for (const t of txns) {
-    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || ''), t.kind || '', t.business === true ? '1' : t.business === false ? '0' : '', t.reimburse || ''].join(',') + '\n';
+    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || ''), t.kind || '', t.business === true ? '1' : t.business === false ? '0' : '', t.reimburse || '', t.reimburse_amount != null ? t.reimburse_amount : ''].join(',') + '\n';
   }
   csv += '[SETTINGS]\n';
   csv += csvEscape(JSON.stringify(settings)) + '\n';
@@ -1610,6 +1631,7 @@ async function importCSV() {
             kind: c[7] || undefined,
             business: c[8] === '1' ? true : c[8] === '0' ? false : undefined,
             reimburse: c[9] || undefined,
+            reimburse_amount: c[10] !== '' && c[10] != null ? parseFloat(c[10]) : undefined,
             month: (c[0] || '').slice(0, 7), createdAt: new Date().toISOString()
           });
         } else if (section === 'settings') {
@@ -1623,7 +1645,7 @@ async function importCSV() {
       await clearStore('transactions');
       await clearStore('history');
       await clearStore('settings');
-      for (const t of txns) { if (!t.email_id) delete t.email_id; if (!t.kind) delete t.kind; if (t.business === undefined) delete t.business; if (!t.reimburse) delete t.reimburse; await addTransaction(t); }
+      for (const t of txns) { if (!t.email_id) delete t.email_id; if (!t.kind) delete t.kind; if (t.business === undefined) delete t.business; if (!t.reimburse) delete t.reimburse; if (t.reimburse_amount == null || isNaN(t.reimburse_amount)) delete t.reimburse_amount; await addTransaction(t); }
       if (settingsJson) {
         const settings = JSON.parse(settingsJson);
         for (const [k, v] of Object.entries(settings)) {
