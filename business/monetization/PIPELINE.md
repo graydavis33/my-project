@@ -4,7 +4,7 @@ _Maintained by the `monetization-strategist` subagent (spec: `docs/superpowers/s
 
 **Rules for this file:** no dollar figures, revenue numbers, or client terms (public repo) — pitches and scores only. KILLED is append-only. One candidate max in NOW.
 
-_Last strategist run: 2026-07-16_
+_Last strategist run: 2026-07-17_
 _Backfill: pending (runs on Gray's explicit go — see spec)_
 
 ---
@@ -22,9 +22,8 @@ _(empty)_
 - **Footage Organizer as a sellable structure/template** — Gray's own candidate (2026-07-08): package the footage-organizer folder scheme + SQLite index/batch/promote/ship tooling for other videographers/editors. Unscored, no research yet.
 - **Social Media Analytics as a sellable product** — Gray's own candidate (2026-07-08): package the analytics tool (already Beta, already Gray's stated Q2 pick for "which tool to monetize first") for other creators. Unscored, no research yet.
 - **"Improving content creation" as a service/product direction** — Gray floated this (2026-07-08) as a broader offer shape, not yet a specific product. Needs Gray to narrow scope (what exactly gets sold — audit? templates? done-for-you?) before it's scoreable.
-- **Payday Checklist as freelancer PWA starter kit** — accumulating real capability (Plaid bank sync, Firebase cross-device sync, auto-categorization, Gmail scanning); possible packaged template for creators/freelancers once personal data fully scrubbed; saturated personal-finance space, high buyer onboarding friction (Firebase + Plaid + Actions setup), no demand signal yet. (2026-07-15)
 - **Founder photo harvest script kit** — DDGS image search + Playwright scraping + OpenCV face-detection + auto 9:16 crop + contact-sheet identity verification; built in scratchpad for Vault EP1; identity-verification step (impostor problem is real) is the genuine differentiator vs manual search; target buyer = short-form video editors doing entrepreneur/founder content; technical bar (Playwright + OpenCV) is high for non-coders. No research yet. (2026-07-16)
 
 ## KILLED
 
-_(none)_
+**Payday Checklist / Personal Finance PWA Starter Kit** (killed 2026-07-17) — Market check hit three simultaneous blockers: (1) multiple free open-source repos already cover the exact stack (Plaid + Firebase + PWA) with no paid demand signal anywhere; (2) buyer onboarding friction is prohibitive — three separate service setups required (Firebase, Plaid, GitHub Actions) before a buyer sees value; (3) Plaid's own free Quickstart docs already solve the "hard parts" Gray documented. Free alternatives: [zenmo-client](https://github.com/tgrander/zenmo-client), [personal-finance-app](https://github.com/jagodin/personal-finance-app), [money-manager PWA](https://github.com/chbandeira/money-manager). Plaid Quickstart: [plaid.com/docs/quickstart](https://plaid.com/docs/quickstart/).
