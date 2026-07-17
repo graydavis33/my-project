@@ -9,7 +9,7 @@
 const Sync = (() => {
   const ROOT = 'households/gray';
   const ALLOWED_EMAIL = 'graydavis33@gmail.com';
-  const SETTING_KEYS = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors'];
+  const SETTING_KEYS = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors', 'reimburse_vendors'];
 
   let backend = null;
   let active = false;         // signed in + subscribed
@@ -96,6 +96,7 @@ const Sync = (() => {
           if (data.email_id) rec.email_id = data.email_id;
           if (data.kind) rec.kind = data.kind;
           if (data.business != null) rec.business = data.business;
+          if (data.reimburse) rec.reimburse = data.reimburse; else delete rec.reimburse;
           const newId = await addTransaction(rec);
           if (rec.id == null) rec.id = newId;
           allBySid[id] = rec;
@@ -151,6 +152,7 @@ const Sync = (() => {
     }
     OVERRIDES = await getSetting('overrides', {});
     BUSINESS_VENDORS = await getSetting('business_vendors', []);
+    REIMBURSE_VENDORS = await getSetting('reimburse_vendors', []);
     if (typeof renderBusiness === 'function') renderBusiness();
     for (let i = 0; i < STEP_NAMES.length; i++)
       document.getElementById('step-' + i).classList.toggle('done', !!steps[i]);
@@ -168,6 +170,7 @@ const Sync = (() => {
       ...(t.email_id ? { email_id: t.email_id } : {}),
       ...(t.kind ? { kind: t.kind } : {}),
       ...(t.business != null ? { business: t.business } : {}),
+      ...(t.reimburse ? { reimburse: t.reimburse } : {}),
       deleted: !!t.deleted,
       createdAt: Date.parse(t.createdAt || '') || Date.now(),
       updated_at: t.updatedAt || Date.now()

@@ -231,12 +231,16 @@
       background: none; border: none; color: rgba(255,255,255,0.22);
       font-size: 13px; cursor: pointer; padding: 2px 5px; line-height: 1;
     }
-    .txn-delete:hover { color: var(--color-red); }
-    .txn-biz {
+    .txn-biz, .txn-reimb {
       background: none; border: none; cursor: pointer; padding: 2px 5px;
       font-size: 12px; line-height: 1; opacity: 0.45; filter: grayscale(1);
     }
-    .txn-biz:hover { opacity: 1; filter: none; }
+    /* hover styling only where a real cursor exists — on touch, "hover" sticks to
+       whatever lands under the finger after the list re-renders */
+    @media (hover: hover) {
+      .txn-delete:hover { color: var(--color-red); }
+      .txn-biz:hover, .txn-reimb:hover { opacity: 1; filter: none; }
+    }
     .txn-toggle {
       font-size: 10px; color: var(--color-gray-mid);
       cursor: pointer; background: none; border: none;
@@ -403,7 +407,8 @@
     </div>
     <div class="gm-tabs">
       <button class="gm-tab-btn active" onclick="switchTab('checklist')">Checklist</button>
-      <button class="gm-tab-btn" onclick="switchTab('business')">Business</button>
+      <button class="gm-tab-btn" onclick="switchTab('writeoffs')">Write-Offs</button>
+      <button class="gm-tab-btn" onclick="switchTab('reimburse')">Reimburse</button>
       <button class="gm-tab-btn" onclick="switchTab('history')">History</button>
     </div>
     <div class="topbar-paycheck">
@@ -610,14 +615,14 @@
     </div>
   </div>
 
-  <!-- ── BUSINESS TAB (write-offs live outside the personal budget) ── -->
-  <div class="tab-pane" id="tab-business">
+  <!-- ── WRITE-OFFS TAB ── -->
+  <div class="tab-pane" id="tab-writeoffs">
     <div class="history-container">
       <div class="gm-label" style="margin-top:0">Business Write-Offs</div>
       <div class="gm-card">
         <div class="history-row" style="font-size:13px;padding:6px 0"><span>This month</span><span id="biz-month-total" style="font-weight:700">$0</span></div>
         <div class="history-row" style="font-size:13px;padding:6px 0"><span id="biz-ytd-label">This year</span><span id="biz-ytd-total" style="font-weight:700">$0</span></div>
-        <div class="sync-badge" style="text-align:left">Tap the 💼 on any purchase in the Checklist tab to mark it as a write-off. It stops counting against your personal budget, and future purchases from that vendor mark themselves automatically.</div>
+        <div class="sync-badge" style="text-align:left">Tap 💼 on any purchase in the Checklist tab — you'll choose "just this one" or "every purchase from this vendor". Write-offs stop counting against your personal budget.</div>
       </div>
 
       <div class="gm-label" style="margin-top:24px">This Month's Write-Offs</div>
@@ -625,13 +630,31 @@
         <div id="biz-txn-list"><div class="history-empty">No write-offs yet this month.</div></div>
       </div>
 
-      <div class="gm-label" style="margin-top:24px">Auto Write-Off Vendors</div>
+      <div class="gm-label" style="margin-top:24px">Recurring Write-Off Vendors</div>
       <div class="gm-card">
-        <div class="sync-badge" style="text-align:left;margin-bottom:8px">Every purchase from these vendors is auto-marked as a write-off. Remove one to stop.</div>
+        <div class="sync-badge" style="text-align:left;margin-bottom:8px">Every purchase from these vendors is auto-marked. Remove one to stop.</div>
         <div id="biz-vendor-list"><div class="history-empty">None yet.</div></div>
       </div>
 
       <button class="gm-btn-primary" style="width:100%;margin-top:20px;min-height:48px" onclick="exportBusinessCSV()">Export Write-Offs CSV (this year)</button>
+    </div>
+  </div>
+
+  <!-- ── REIMBURSE TAB ── -->
+  <div class="tab-pane" id="tab-reimburse">
+    <div class="history-container">
+      <div class="gm-label" style="margin-top:0">Awaiting Reimbursement — <span id="reimb-owed">$0</span></div>
+      <div class="gm-card">
+        <div id="reimb-txn-list"><div class="history-empty">Nothing waiting — tap 🤝 on a purchase Sai owes you for.</div></div>
+        <div class="sync-badge" id="reimb-repaid-row" style="text-align:left;display:none"></div>
+        <div class="sync-badge" style="text-align:left">Tap 🤝 on any purchase in the Checklist tab — "just this one" or "every purchase from this vendor". ✓ marks it repaid when the money comes back.</div>
+      </div>
+
+      <div class="gm-label" style="margin-top:24px">Recurring Reimbursed Vendors</div>
+      <div class="gm-card">
+        <div class="sync-badge" style="text-align:left;margin-bottom:8px">Every purchase from these vendors auto-lands in "Awaiting Reimbursement". Remove one to stop.</div>
+        <div id="reimb-vendor-list"><div class="history-empty">None yet.</div></div>
+      </div>
     </div>
   </div>
 
@@ -675,6 +698,18 @@
     <input class="modal-input" type="text" id="add-note" placeholder="Any details…" />
 
     <button class="gm-btn-primary" style="width:100%;margin-top:20px;min-height:48px" onclick="submitAddExpense()">Add Expense</button>
+  </div>
+</div>
+
+<!-- ── ONE-TIME vs RECURRING CHOICE SHEET ── -->
+<div class="gm-modal-overlay" id="mark-modal" onclick="if(event.target===this)closeMarkSheet()">
+  <div class="add-modal">
+    <div class="modal-title">
+      <span id="mark-title"></span>
+      <button class="modal-close" onclick="closeMarkSheet()">✕</button>
+    </div>
+    <button class="gm-btn-primary" style="width:100%;margin-top:16px;min-height:48px" onclick="confirmMark(false)">Just this purchase</button>
+    <button class="gm-btn-primary" style="width:100%;margin-top:10px;min-height:48px" onclick="confirmMark(true)"><span id="mark-always-label"></span></button>
   </div>
 </div>
 
@@ -787,7 +822,8 @@ async function clearStore(name) {
 let BUDGETS = [...DEFAULT_BUDGETS];
 let OVERRIDES = {};          // {'2026-07': {catIndex: amount}}
 let TXN_CACHE = [];          // all transactions (kept in sync with IDB)
-let BUSINESS_VENDORS = [];   // normalized vendor names whose purchases auto-mark as write-offs
+let BUSINESS_VENDORS = [];   // vendors whose purchases auto-mark as write-offs (recurring)
+let REIMBURSE_VENDORS = [];  // vendors whose purchases auto-land in Awaiting Reimbursement (recurring)
 
 function currentMonth() {
   const d = new Date();
@@ -817,9 +853,19 @@ function num(id, fallback = 0) {
 function normVendor(v) {
   return String(v || '').toLowerCase().trim();
 }
-// Business write-off: an explicit per-txn flag wins; otherwise the vendor rule
-// list decides (business === false is a deliberate "keep this one personal")
+// Reimbursable status: explicit per-txn value wins ('none' = deliberately personal);
+// otherwise the recurring-vendor rule marks it 'open'. Returns 'open' | 'repaid' | null.
+function reimbStatus(t) {
+  if (t.reimburse === 'open' || t.reimburse === 'repaid') return t.reimburse;
+  if (t.reimburse === 'none') return null;
+  if (!t.kind && REIMBURSE_VENDORS.includes(normVendor(t.vendor))) return 'open';
+  return null;
+}
+function isReimbursable(t) { return reimbStatus(t) !== null; }
+// Business write-off: reimbursables are never write-offs (the money comes back, so
+// it's not an expense). Then the explicit per-txn flag wins; otherwise the vendor rule.
 function isBusiness(t) {
+  if (isReimbursable(t)) return false;
   if (t.business === true) return true;
   if (t.business === false) return false;
   return BUSINESS_VENDORS.includes(normVendor(t.vendor));
@@ -831,7 +877,7 @@ function catOf(t) {
 function autoSpentFor(catIndex) {
   const month = currentMonth();
   return TXN_CACHE
-    .filter(t => t.month === month && catOf(t) === CATEGORIES[catIndex] && !t.kind && !isBusiness(t))
+    .filter(t => t.month === month && catOf(t) === CATEGORIES[catIndex] && !t.kind && !isBusiness(t) && !isReimbursable(t))
     .reduce((s, t) => s + t.amount, 0);
 }
 function effectiveSpent(catIndex) {
@@ -1053,7 +1099,7 @@ function renderTxnList(i) {
   const toggle = document.getElementById('txn-toggle-' + i);
   const month = currentMonth();
   const txns = TXN_CACHE
-    .filter(t => t.month === month && catOf(t) === CATEGORIES[i] && !t.kind && !isBusiness(t))
+    .filter(t => t.month === month && catOf(t) === CATEGORIES[i] && !t.kind && !isBusiness(t) && !isReimbursable(t))
     .sort((a, b) => b.date.localeCompare(a.date));
 
   if (!txns.length) { toggle.style.display = 'none'; list.innerHTML = ''; list.classList.remove('open'); return; }
@@ -1065,7 +1111,7 @@ function renderTxnList(i) {
     const d = new Date(t.date + 'T12:00:00');
     const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const src = t.source === 'gmail' ? '<span class="txn-src">gmail</span>' : '';
-    return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}</span>${src}<span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-biz" onclick="markBusiness(${t.id})" title="Mark as business write-off">💼</button><button class="txn-delete" onclick="removeTxn(${t.id})" title="Delete">✕</button></div>`;
+    return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}</span>${src}<span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-biz" onclick="openMarkSheet(${t.id}, 'biz')" title="Business write-off">💼</button><button class="txn-reimb" onclick="openMarkSheet(${t.id}, 'reimb')" title="Sai reimburses this">🤝</button><button class="txn-delete" onclick="removeTxn(${t.id})" title="Delete">✕</button></div>`;
   }).join('');
 }
 
@@ -1104,11 +1150,14 @@ async function removeTxn(id) {
 }
 
 // ═══════════════════════════════════════════════
-// BUSINESS WRITE-OFFS
+// BUSINESS WRITE-OFFS + REIMBURSEMENTS
 // ═══════════════════════════════════════════════
 
 async function saveBusinessVendors() {
   await setSetting('business_vendors', [...BUSINESS_VENDORS]);
+}
+async function saveReimburseVendors() {
+  await setSetting('reimburse_vendors', [...REIMBURSE_VENDORS]);
 }
 
 async function persistTxnFlag(txn) {
@@ -1118,21 +1167,47 @@ async function persistTxnFlag(txn) {
   Sync.onLocalTxn(txn);
 }
 
-async function markBusiness(id) {
+// ── the one-time vs recurring choice sheet ──
+let MARK_SHEET = { id: null, mode: null };
+
+function openMarkSheet(id, mode) {
+  const txn = TXN_CACHE.find(t => t.id === id);
+  if (!txn) return;
+  MARK_SHEET = { id, mode };
+  document.getElementById('mark-title').textContent =
+    (mode === 'biz' ? '💼 Write-off — ' : '🤝 Reimbursed by Sai — ') + txn.vendor + ' ' + fmt2(txn.amount);
+  document.getElementById('mark-always-label').textContent = 'Every purchase from ' + txn.vendor;
+  document.getElementById('mark-modal').classList.add('open');
+}
+function closeMarkSheet() {
+  document.getElementById('mark-modal').classList.remove('open');
+  MARK_SHEET = { id: null, mode: null };
+}
+async function confirmMark(always) {
+  const { id, mode } = MARK_SHEET;
+  closeMarkSheet();
+  if (id == null) return;
+  if (mode === 'biz') await setWriteOff(id, always);
+  else await setReimb(id, always);
+}
+
+async function setWriteOff(id, always) {
   const txn = TXN_CACHE.find(t => t.id === id);
   if (!txn) return;
   txn.business = true;
+  // A write-off can't also be a reimbursable — pin 'none' so a vendor rule can't re-claim it
+  if (txn.reimburse) txn.reimburse = 'none';
+  else if (REIMBURSE_VENDORS.includes(normVendor(txn.vendor))) txn.reimburse = 'none';
   await persistTxnFlag(txn);
   const v = normVendor(txn.vendor);
-  if (v && !BUSINESS_VENDORS.includes(v)) {
+  if (always && v && !BUSINESS_VENDORS.includes(v)) {
     BUSINESS_VENDORS.push(v);
     await saveBusinessVendors();
-    showToast('💼 Write-off — future ' + txn.vendor + ' purchases auto-marked');
+    showToast('💼 Write-off — every ' + txn.vendor + ' purchase from now on');
   } else {
-    showToast('💼 Marked as write-off');
+    showToast('💼 Write-off — just this one');
   }
   refreshExpenseDisplays();
-  renderBusiness();
 }
 
 async function unmarkBusiness(id) {
@@ -1141,18 +1216,58 @@ async function unmarkBusiness(id) {
   // Explicit false survives the vendor rule — this one stays personal
   txn.business = false;
   await persistTxnFlag(txn);
-  const v = normVendor(txn.vendor);
-  if (BUSINESS_VENDORS.includes(v)) showToast('Back to personal (vendor rule still on — remove it below to stop)');
+  if (BUSINESS_VENDORS.includes(normVendor(txn.vendor))) showToast('Back to personal (vendor rule still on — remove it below to stop)');
   else showToast('Back to personal');
   refreshExpenseDisplays();
-  renderBusiness();
 }
 
 async function removeBusinessVendor(vendor) {
   BUSINESS_VENDORS = BUSINESS_VENDORS.filter(v => v !== vendor);
   await saveBusinessVendors();
   refreshExpenseDisplays();
-  renderBusiness();
+}
+
+async function setReimb(id, always) {
+  const txn = TXN_CACHE.find(t => t.id === id);
+  if (!txn) return;
+  txn.reimburse = 'open';
+  if (txn.business === true) txn.business = false;   // can't be both — the money comes back
+  await persistTxnFlag(txn);
+  const v = normVendor(txn.vendor);
+  if (always && v && !REIMBURSE_VENDORS.includes(v)) {
+    REIMBURSE_VENDORS.push(v);
+    await saveReimburseVendors();
+    showToast('🤝 Awaiting reimbursement — every ' + txn.vendor + ' purchase from now on');
+  } else {
+    showToast('🤝 Awaiting reimbursement — just this one');
+  }
+  refreshExpenseDisplays();
+}
+
+async function markRepaid(id) {
+  const txn = TXN_CACHE.find(t => t.id === id);
+  if (!txn) return;
+  txn.reimburse = 'repaid';
+  await persistTxnFlag(txn);
+  showToast('✓ Repaid');
+  refreshExpenseDisplays();
+}
+
+async function unmarkReimbursable(id) {
+  const txn = TXN_CACHE.find(t => t.id === id);
+  if (!txn) return;
+  // 'none' survives the vendor rule — this one stays personal
+  if (REIMBURSE_VENDORS.includes(normVendor(txn.vendor))) txn.reimburse = 'none';
+  else delete txn.reimburse;
+  await persistTxnFlag(txn);
+  showToast('Back to personal budget');
+  refreshExpenseDisplays();
+}
+
+async function removeReimburseVendor(vendor) {
+  REIMBURSE_VENDORS = REIMBURSE_VENDORS.filter(v => v !== vendor);
+  await saveReimburseVendors();
+  refreshExpenseDisplays();
 }
 
 function bizTxnsForYear() {
@@ -1162,7 +1277,13 @@ function bizTxnsForYear() {
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+function vendorRuleRow(v, removeFn) {
+  const esc = v.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  return `<div class="txn-item"><span>${escapeHtml(v)}</span><button class="txn-delete" onclick="${removeFn}('${esc}')" title="Stop auto-marking">✕</button></div>`;
+}
+
 function renderBusiness() {
+  // ── Write-Offs page ──
   const yearTxns = bizTxnsForYear();
   const month = currentMonth();
   const monthTxns = yearTxns.filter(t => t.month === month);
@@ -1182,13 +1303,37 @@ function renderBusiness() {
   }
 
   const vl = document.getElementById('biz-vendor-list');
-  if (!BUSINESS_VENDORS.length) {
-    vl.innerHTML = '<div class="history-empty">None yet.</div>';
+  vl.innerHTML = BUSINESS_VENDORS.length
+    ? BUSINESS_VENDORS.map(v => vendorRuleRow(v, 'removeBusinessVendor')).join('')
+    : '<div class="history-empty">None yet.</div>';
+
+  // ── Reimburse page (open items span months — visible until repaid) ──
+  const open = TXN_CACHE.filter(t => reimbStatus(t) === 'open').sort((a, b) => b.date.localeCompare(a.date));
+  const owed = open.reduce((s, t) => s + t.amount, 0);
+  document.getElementById('reimb-owed').textContent = fmt2(owed);
+  const rl = document.getElementById('reimb-txn-list');
+  if (!open.length) {
+    rl.innerHTML = '<div class="history-empty">Nothing waiting — tap 🤝 on a purchase Sai owes you for.</div>';
   } else {
-    vl.innerHTML = BUSINESS_VENDORS.map(v =>
-      `<div class="txn-item"><span>${escapeHtml(v)}</span><button class="txn-delete" onclick="removeBusinessVendor('${v.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}')" title="Stop auto-marking">✕</button></div>`
-    ).join('');
+    rl.innerHTML = open.map(t => {
+      const d = new Date(t.date + 'T12:00:00');
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+      const age = days >= 30 ? ` <span style="color:var(--color-red);font-size:9px">${days}d</span>` : '';
+      return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}${age}</span><span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-delete" onclick="markRepaid(${t.id})" title="Sai paid this back" style="color:var(--color-green)">✓</button><button class="txn-delete" onclick="unmarkReimbursable(${t.id})" title="Back to personal budget">↩</button></div>`;
+    }).join('');
   }
+  const repaidYtd = TXN_CACHE
+    .filter(t => reimbStatus(t) === 'repaid' && (t.date || '').startsWith(String(new Date().getFullYear())))
+    .reduce((s, t) => s + t.amount, 0);
+  const rr = document.getElementById('reimb-repaid-row');
+  if (repaidYtd > 0) { rr.style.display = 'block'; rr.textContent = 'Repaid this year: ' + fmt2(repaidYtd); }
+  else rr.style.display = 'none';
+
+  const rvl = document.getElementById('reimb-vendor-list');
+  rvl.innerHTML = REIMBURSE_VENDORS.length
+    ? REIMBURSE_VENDORS.map(v => vendorRuleRow(v, 'removeReimburseVendor')).join('')
+    : '<div class="history-empty">None yet.</div>';
 }
 
 function exportBusinessCSV() {
@@ -1383,15 +1528,15 @@ function csvEscape(s) {
 async function exportCSV() {
   const txns = (await getAllTransactions()).filter(t => !t.deleted);
   const history = await getAllHistory();
-  const settingsKeys = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors'];
+  const settingsKeys = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors', 'reimburse_vendors'];
   const settings = {};
   for (const k of settingsKeys) settings[k] = await getSetting(k);
 
   let csv = '# Payday Checklist backup v2 — ' + new Date().toISOString() + '\n';
   csv += '[TRANSACTIONS]\n';
-  csv += 'date,vendor,category,amount,source,email_id,note,kind,business\n';
+  csv += 'date,vendor,category,amount,source,email_id,note,kind,business,reimburse\n';
   for (const t of txns) {
-    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || ''), t.kind || '', t.business === true ? '1' : t.business === false ? '0' : ''].join(',') + '\n';
+    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || ''), t.kind || '', t.business === true ? '1' : t.business === false ? '0' : '', t.reimburse || ''].join(',') + '\n';
   }
   csv += '[SETTINGS]\n';
   csv += csvEscape(JSON.stringify(settings)) + '\n';
@@ -1464,6 +1609,7 @@ async function importCSV() {
             source: c[4] || 'manual', email_id: c[5] || undefined, note: c[6] || '',
             kind: c[7] || undefined,
             business: c[8] === '1' ? true : c[8] === '0' ? false : undefined,
+            reimburse: c[9] || undefined,
             month: (c[0] || '').slice(0, 7), createdAt: new Date().toISOString()
           });
         } else if (section === 'settings') {
@@ -1477,7 +1623,7 @@ async function importCSV() {
       await clearStore('transactions');
       await clearStore('history');
       await clearStore('settings');
-      for (const t of txns) { if (!t.email_id) delete t.email_id; if (!t.kind) delete t.kind; if (t.business === undefined) delete t.business; await addTransaction(t); }
+      for (const t of txns) { if (!t.email_id) delete t.email_id; if (!t.kind) delete t.kind; if (t.business === undefined) delete t.business; if (!t.reimburse) delete t.reimburse; await addTransaction(t); }
       if (settingsJson) {
         const settings = JSON.parse(settingsJson);
         for (const [k, v] of Object.entries(settings)) {
@@ -1568,7 +1714,7 @@ function switchTab(name) {
     if (b.textContent.toLowerCase().startsWith(name.substring(0, 4))) b.classList.add('active');
   });
   if (name === 'history') renderHistory();
-  if (name === 'business') renderBusiness();
+  if (name === 'writeoffs' || name === 'reimburse') renderBusiness();
 }
 
 // ═══════════════════════════════════════════════
@@ -1617,6 +1763,7 @@ async function init() {
   const notes = await getSetting('notes', '');
   OVERRIDES = await getSetting('overrides', {});
   BUSINESS_VENDORS = await getSetting('business_vendors', []);
+  REIMBURSE_VENDORS = await getSetting('reimburse_vendors', []);
 
   // One-time migration for the removed Investments category (index 4 of the old
   // 7-slot arrays): budgets drop the slot, override indexes above it shift down

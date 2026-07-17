@@ -190,7 +190,7 @@ with sync_playwright() as p:
     print("\n[10] History")
     page.click(".btn-row .gm-btn-primary")  # Save Month to History
     page.wait_for_timeout(300)
-    page.click(".gm-tabs .gm-tab-btn:nth-child(3)")  # History (tab 2 became Business 2026-07-17)
+    page.click(".gm-tabs .gm-tab-btn:nth-child(4)")  # History (tabs: Checklist/Write-Offs/Reimburse/History)
     page.wait_for_timeout(300)
     hist = page.text_content("#history-list")
     check("history entry rendered", "Total spent" in hist and "$7,000 month" in hist, hist[:150])
@@ -205,7 +205,7 @@ with sync_playwright() as p:
     page.click(".add-modal .gm-btn-primary")
     page.wait_for_timeout(300)
     before = page.evaluate("() => autoSpentFor(MISC_INDEX)")
-    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'B&H Photo'); return markBusiness(t.id); }")
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'B&H Photo'); return setWriteOff(t.id, true); }")
     page.wait_for_timeout(300)
     after = page.evaluate("() => autoSpentFor(MISC_INDEX)")
     check("write-off leaves personal budget", abs(before - after - 199.99) < 0.01, f"{before} -> {after}")
@@ -219,7 +219,7 @@ with sync_playwright() as p:
     page.wait_for_timeout(300)
     auto = page.evaluate("() => autoSpentFor(MISC_INDEX)")
     check("future vendor purchase auto-marked", abs(auto - after) < 0.01, f"{after} -> {auto}")
-    page.click(".gm-tabs .gm-tab-btn:nth-child(2)")  # Business tab
+    page.click(".gm-tabs .gm-tab-btn:nth-child(2)")  # Write-Offs tab
     page.wait_for_timeout(300)
     biz = page.text_content("#biz-txn-list") or ""
     check("business tab lists both write-offs", biz.count("B&H Photo") == 2, biz[:150])
@@ -233,11 +233,47 @@ with sync_playwright() as p:
     page.evaluate("() => removeBusinessVendor('b&h photo')")
     page.wait_for_timeout(300)
     check("rule removed -> explicit write-off stays", page.evaluate("() => TXN_CACHE.filter(t => isBusiness(t)).length") == 1)
+    # ── reimbursements ──
+    page.click(".fab")
+    page.fill("#add-vendor", "Home Depot")
+    page.fill("#add-amount", "30")
+    page.select_option("#add-category", "Misc")
+    page.click(".add-modal .gm-btn-primary")
+    page.wait_for_timeout(300)
+    before_r = page.evaluate("() => autoSpentFor(MISC_INDEX)")
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'Home Depot'); return setReimb(t.id, false); }")
+    page.wait_for_timeout(300)
+    check("one-time reimb leaves personal budget", abs(page.evaluate("() => autoSpentFor(MISC_INDEX)") - before_r + 30) < 0.01)
+    check("one-time reimb creates NO vendor rule", page.evaluate("() => REIMBURSE_VENDORS.length") == 0)
+    owed = page.text_content("#reimb-owed") or ""
+    check("awaiting total shows $30", "30.00" in owed, owed)
+    # recurring reimb vendor
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'Home Depot'); return setReimb(t.id, true); }")
+    page.wait_for_timeout(200)
+    check("recurring reimb learns vendor", page.evaluate("() => REIMBURSE_VENDORS.includes('home depot')"))
+    page.click(".fab")
+    page.fill("#add-vendor", "Home Depot")
+    page.fill("#add-amount", "12")
+    page.select_option("#add-category", "Misc")
+    page.click(".add-modal .gm-btn-primary")
+    page.wait_for_timeout(300)
+    check("future vendor purchase auto-opens", page.evaluate("() => TXN_CACHE.filter(t => reimbStatus(t) === 'open').length") == 2)
+    # repaid drops from awaiting but tracks YTD
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'Home Depot' && x.amount === 30); return markRepaid(t.id); }")
+    page.wait_for_timeout(300)
+    check("repaid leaves awaiting list", page.evaluate("() => TXN_CACHE.filter(t => reimbStatus(t) === 'open').length") == 1)
+    check("repaid stays out of personal budget", abs(page.evaluate("() => autoSpentFor(MISC_INDEX)") - before_r + 30) < 0.01)
+    # unmark with rule active pins 'none' (stays personal despite the rule)
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'Home Depot' && x.amount === 12); return unmarkReimbursable(t.id); }")
+    page.wait_for_timeout(300)
+    check("unmark beats the vendor rule", page.evaluate("() => TXN_CACHE.filter(t => reimbStatus(t) === 'open').length") == 0)
+    page.evaluate("() => removeReimburseVendor('home depot')")
+    page.wait_for_timeout(200)
     page.click(".gm-tabs .gm-tab-btn:nth-child(1)")
     page.wait_for_timeout(300)
     # clean up the test txns so later sections' math is unaffected
-    page.evaluate("() => Promise.all(TXN_CACHE.filter(t => t.vendor === 'B&H Photo').map(t => { t.deleted = true; t.updatedAt = Date.now(); if (!t.sid) t.sid = uuidSid(); return addTransaction(t); }))")
-    page.evaluate("() => { TXN_CACHE = TXN_CACHE.filter(t => t.vendor !== 'B&H Photo'); refreshExpenseDisplays(); }")
+    page.evaluate("() => Promise.all(TXN_CACHE.filter(t => ['B&H Photo','Home Depot'].includes(t.vendor)).map(t => { t.deleted = true; t.updatedAt = Date.now(); if (!t.sid) t.sid = uuidSid(); return addTransaction(t); }))")
+    page.evaluate("() => { TXN_CACHE = TXN_CACHE.filter(t => !['B&H Photo','Home Depot'].includes(t.vendor)); refreshExpenseDisplays(); }")
     page.wait_for_timeout(200)
 
     # ══ 11. CSV export → wipe → import round-trip ══
