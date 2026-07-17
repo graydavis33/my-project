@@ -55,7 +55,7 @@ with sync_playwright() as p:
     check("balance chain: after loans $1,650", "1,650" in page.text_content("#balance-2"))
     check("balance chain: after EF $1,250", "1,250" in page.text_content("#balance-3"))
     check("balance chain: budget pool $1,050", "1,050" in page.text_content("#balance-4"))
-    check("budget total $950", page.text_content("#expense-budget-total").strip() == "$950")
+    check("budget total $850", page.text_content("#expense-budget-total").strip() == "$850")
 
     # ══ 2. expenses.json retired (2026-07-15) — app must NOT fetch it ══
     # Expenses now arrive only via Firestore sync (Plaid + gmail written server-side).
@@ -190,11 +190,55 @@ with sync_playwright() as p:
     print("\n[10] History")
     page.click(".btn-row .gm-btn-primary")  # Save Month to History
     page.wait_for_timeout(300)
-    page.click(".gm-tabs .gm-tab-btn:nth-child(2)")
+    page.click(".gm-tabs .gm-tab-btn:nth-child(3)")  # History (tab 2 became Business 2026-07-17)
     page.wait_for_timeout(300)
     hist = page.text_content("#history-list")
     check("history entry rendered", "Total spent" in hist and "$7,000 month" in hist, hist[:150])
     page.click(".gm-tabs .gm-tab-btn:nth-child(1)")
+
+    # ══ 10.5 Business write-offs ══
+    print("\n[10.5] Business write-offs")
+    page.click(".fab")
+    page.fill("#add-vendor", "B&H Photo")
+    page.fill("#add-amount", "199.99")
+    page.select_option("#add-category", "Misc")
+    page.click(".add-modal .gm-btn-primary")
+    page.wait_for_timeout(300)
+    before = page.evaluate("() => autoSpentFor(MISC_INDEX)")
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'B&H Photo'); return markBusiness(t.id); }")
+    page.wait_for_timeout(300)
+    after = page.evaluate("() => autoSpentFor(MISC_INDEX)")
+    check("write-off leaves personal budget", abs(before - after - 199.99) < 0.01, f"{before} -> {after}")
+    check("vendor rule learned", page.evaluate("() => BUSINESS_VENDORS.includes('b&h photo')"))
+    # future purchase from the same vendor auto-marks
+    page.click(".fab")
+    page.fill("#add-vendor", "B&H Photo")
+    page.fill("#add-amount", "50")
+    page.select_option("#add-category", "Misc")
+    page.click(".add-modal .gm-btn-primary")
+    page.wait_for_timeout(300)
+    auto = page.evaluate("() => autoSpentFor(MISC_INDEX)")
+    check("future vendor purchase auto-marked", abs(auto - after) < 0.01, f"{after} -> {auto}")
+    page.click(".gm-tabs .gm-tab-btn:nth-child(2)")  # Business tab
+    page.wait_for_timeout(300)
+    biz = page.text_content("#biz-txn-list") or ""
+    check("business tab lists both write-offs", biz.count("B&H Photo") == 2, biz[:150])
+    total = page.text_content("#biz-month-total") or ""
+    check("business month total = $249.99", "249.99" in total, total)
+    # unmark one: explicit false beats the vendor rule
+    page.evaluate("() => { const t = TXN_CACHE.find(x => x.vendor === 'B&H Photo' && x.amount === 50); return unmarkBusiness(t.id); }")
+    page.wait_for_timeout(300)
+    check("unmarked txn back in personal budget", abs(page.evaluate("() => autoSpentFor(MISC_INDEX)") - auto - 50) < 0.01)
+    # removing the vendor rule releases the rest
+    page.evaluate("() => removeBusinessVendor('b&h photo')")
+    page.wait_for_timeout(300)
+    check("rule removed -> explicit write-off stays", page.evaluate("() => TXN_CACHE.filter(t => isBusiness(t)).length") == 1)
+    page.click(".gm-tabs .gm-tab-btn:nth-child(1)")
+    page.wait_for_timeout(300)
+    # clean up the test txns so later sections' math is unaffected
+    page.evaluate("() => Promise.all(TXN_CACHE.filter(t => t.vendor === 'B&H Photo').map(t => { t.deleted = true; t.updatedAt = Date.now(); if (!t.sid) t.sid = uuidSid(); return addTransaction(t); }))")
+    page.evaluate("() => { TXN_CACHE = TXN_CACHE.filter(t => t.vendor !== 'B&H Photo'); refreshExpenseDisplays(); }")
+    page.wait_for_timeout(200)
 
     # ══ 11. CSV export → wipe → import round-trip ══
     print("\n[11] CSV backup round-trip")
@@ -282,8 +326,8 @@ with sync_playwright() as p:
     check("tax step auto-checked by sole-prop transfer", "done" in page.get_attribute("#step-0", "class"))
     note = page.text_content("#ej-note") or ""
     check("EJ note shows sent amount", "3,000" in note, note)
-    # transfers must NOT touch budget rows (Investments spent stays empty)
-    check("transfers don't pollute budgets", spent_value(page, 4) == "", spent_value(page, 4))
+    # transfers must NOT touch budget rows (kind-tagged records skip every category incl. Misc)
+    check("transfers don't pollute budgets", page.evaluate("() => CATEGORIES.every((_, i) => autoSpentFor(i) < 3000)"), str(page.evaluate("() => CATEGORIES.map((_, i) => autoSpentFor(i))")))
 
     # ══ 14. Screenshots ══
     print("\n[14] Screenshots")

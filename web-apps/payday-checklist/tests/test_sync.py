@@ -93,18 +93,18 @@ with sync_playwright() as p:
     ctxB, B = new_device(browser)
     add_expense(A, "Zzyzx Trinket", 7.50)     # keyword-neutral → Misc (index 6)
     B.wait_for_timeout(1000)
-    got = B.text_content("#txn-list-6") or ""
+    got = B.text_content("#txn-list-5") or ""
     check("expense from A appears on B", "Zzyzx Trinket" in got, got[:120])
     check("B sync status shows synced", "synced" in (B.text_content("#cloud-sync-status") or ""),
           B.text_content("#cloud-sync-status"))
 
     # ══ 2. dismiss on B → vanishes on A ══
     print("\n[2] Cross-device delete (tombstone)")
-    B.click("#txn-toggle-6")
+    B.click("#txn-toggle-5")
     B.wait_for_timeout(200)
-    B.click("#txn-list-6 .txn-delete")
+    B.click("#txn-list-5 .txn-delete")
     A.wait_for_timeout(1200)
-    got = A.text_content("#txn-list-6") or ""
+    got = A.text_content("#txn-list-5") or ""
     check("deleted on B vanishes on A", "Zzyzx Trinket" not in got, got[:120])
     ctxA.close(); ctxB.close()
 
@@ -115,14 +115,14 @@ with sync_playwright() as p:
     ctxB, B = new_device(browser)
     ctxA.set_offline(True)
     add_expense(A, "Offline Widget", 4.25)
-    check("offline add shows locally on A", A.input_value("#spent-input-6") == "4.25",
-          A.input_value("#spent-input-6"))
+    check("offline add shows locally on A", A.input_value("#spent-input-5") == "4.25",
+          A.input_value("#spent-input-5"))
     B.wait_for_timeout(800)
-    check("B does NOT see it while A offline", "Offline Widget" not in (B.text_content("#txn-list-6") or ""))
+    check("B does NOT see it while A offline", "Offline Widget" not in (B.text_content("#txn-list-5") or ""))
     ctxA.set_offline(False)
     A.wait_for_timeout(700)    # A's outbox flushes on next poll tick
     B.wait_for_timeout(1000)
-    got = B.text_content("#txn-list-6") or ""
+    got = B.text_content("#txn-list-5") or ""
     check("after A reconnects, B sees the expense", "Offline Widget" in got, got[:120])
     ctxA.close(); ctxB.close()
 
@@ -149,7 +149,7 @@ with sync_playwright() as p:
     p2.wait_for_timeout(900)
     ctxB, B = new_device(browser)              # fresh second device
     B.wait_for_timeout(1200)
-    got = B.text_content("#txn-list-6") or ""
+    got = B.text_content("#txn-list-5") or ""
     check("fresh device receives migrated data", "Legacy Gadget" in got, got[:120])
     ctxA.close(); ctxB.close()
 
