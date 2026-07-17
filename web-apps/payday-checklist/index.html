@@ -232,6 +232,11 @@
       font-size: 13px; cursor: pointer; padding: 2px 5px; line-height: 1;
     }
     .txn-delete:hover { color: var(--color-red); }
+    .txn-biz {
+      background: none; border: none; cursor: pointer; padding: 2px 5px;
+      font-size: 12px; line-height: 1; opacity: 0.45; filter: grayscale(1);
+    }
+    .txn-biz:hover { opacity: 1; filter: none; }
     .txn-toggle {
       font-size: 10px; color: var(--color-gray-mid);
       cursor: pointer; background: none; border: none;
@@ -398,6 +403,7 @@
     </div>
     <div class="gm-tabs">
       <button class="gm-tab-btn active" onclick="switchTab('checklist')">Checklist</button>
+      <button class="gm-tab-btn" onclick="switchTab('business')">Business</button>
       <button class="gm-tab-btn" onclick="switchTab('history')">History</button>
     </div>
     <div class="topbar-paycheck">
@@ -604,6 +610,31 @@
     </div>
   </div>
 
+  <!-- ── BUSINESS TAB (write-offs live outside the personal budget) ── -->
+  <div class="tab-pane" id="tab-business">
+    <div class="history-container">
+      <div class="gm-label" style="margin-top:0">Business Write-Offs</div>
+      <div class="gm-card">
+        <div class="history-row" style="font-size:13px;padding:6px 0"><span>This month</span><span id="biz-month-total" style="font-weight:700">$0</span></div>
+        <div class="history-row" style="font-size:13px;padding:6px 0"><span id="biz-ytd-label">This year</span><span id="biz-ytd-total" style="font-weight:700">$0</span></div>
+        <div class="sync-badge" style="text-align:left">Tap the 💼 on any purchase in the Checklist tab to mark it as a write-off. It stops counting against your personal budget, and future purchases from that vendor mark themselves automatically.</div>
+      </div>
+
+      <div class="gm-label" style="margin-top:24px">This Month's Write-Offs</div>
+      <div class="gm-card">
+        <div id="biz-txn-list"><div class="history-empty">No write-offs yet this month.</div></div>
+      </div>
+
+      <div class="gm-label" style="margin-top:24px">Auto Write-Off Vendors</div>
+      <div class="gm-card">
+        <div class="sync-badge" style="text-align:left;margin-bottom:8px">Every purchase from these vendors is auto-marked as a write-off. Remove one to stop.</div>
+        <div id="biz-vendor-list"><div class="history-empty">None yet.</div></div>
+      </div>
+
+      <button class="gm-btn-primary" style="width:100%;margin-top:20px;min-height:48px" onclick="exportBusinessCSV()">Export Write-Offs CSV (this year)</button>
+    </div>
+  </div>
+
   <!-- ── HISTORY TAB ── -->
   <div class="tab-pane" id="tab-history">
     <div class="history-container">
@@ -657,9 +688,10 @@
 // ═══════════════════════════════════════════════
 
 const STEP_NAMES = ['Taxes → Edward Jones', 'Rent', 'Student Loans', 'Emergency Fund', 'Ring Fund'];
-const CATEGORIES = ['Groceries', 'Dining Out', 'Software & Tools', 'Utilities', 'Investments', 'BJJ & Kickboxing', 'Misc'];
-const DEFAULT_BUDGETS = [200, 150, 100, 60, 100, 200, 140];
-const MISC_INDEX = 6;
+const CATEGORIES = ['Groceries', 'Dining Out', 'Software & Tools', 'Utilities', 'BJJ & Kickboxing', 'Misc'];
+const DEFAULT_BUDGETS = [200, 150, 100, 60, 200, 140];
+const MISC_INDEX = 5;
+const REMOVED_CAT_INDEX = 4;  // 'Investments' — removed 2026-07-17; migrations below shift old data
 
 // Local keyword rules for auto-categorization (checked against lowercase vendor)
 const KEYWORD_RULES = [
@@ -667,7 +699,6 @@ const KEYWORD_RULES = [
   ['Dining Out', ['starbucks', 'chipotle', 'sweetgreen', 'cafe', 'coffee', 'restaurant', 'pizza', 'doordash', 'grubhub', 'uber eats', 'ubereats', 'seamless', 'deli', 'bagel', 'diner', 'burger', 'taco', 'sushi', 'chick-fil-a', 'mcdonald', 'dunkin', 'shake shack']],
   ['Software & Tools', ['adobe', 'notion', 'github', 'google', 'openai', 'anthropic', 'claude', 'sandcastles', 'figma', 'dropbox', 'canva', 'capcut', 'elevenlabs', 'frame.io', 'higgsfield', 'midjourney', 'envato', 'epidemic sound', 'artlist', 'musicbed', 'squarespace', 'hostinger', 'namecheap', 'domain']],
   ['Utilities', ['con ed', 'coned', 'con edison', 'verizon', 'spectrum', 'xfinity', 'optimum', 'at&t', 't-mobile', 'tmobile', 'electric', 'internet', 'wifi', 'national grid']],
-  ['Investments', ['robinhood', 'fidelity', 'vanguard', 'schwab', 'coinbase', 'wealthfront', 'betterment', 'acorns', 'e*trade', 'etrade']],
   ['BJJ & Kickboxing', ['bjj', 'jiu jitsu', 'jiu-jitsu', 'jiujitsu', 'kickbox', 'muay thai', 'mma', 'martial', 'dojo', 'grappling', 'renzo', 'gracie']]
 ];
 
@@ -756,6 +787,7 @@ async function clearStore(name) {
 let BUDGETS = [...DEFAULT_BUDGETS];
 let OVERRIDES = {};          // {'2026-07': {catIndex: amount}}
 let TXN_CACHE = [];          // all transactions (kept in sync with IDB)
+let BUSINESS_VENDORS = [];   // normalized vendor names whose purchases auto-mark as write-offs
 
 function currentMonth() {
   const d = new Date();
@@ -782,10 +814,24 @@ function num(id, fallback = 0) {
   const v = parseFloat(document.getElementById(id).value);
   return isNaN(v) ? fallback : v;
 }
+function normVendor(v) {
+  return String(v || '').toLowerCase().trim();
+}
+// Business write-off: an explicit per-txn flag wins; otherwise the vendor rule
+// list decides (business === false is a deliberate "keep this one personal")
+function isBusiness(t) {
+  if (t.business === true) return true;
+  if (t.business === false) return false;
+  return BUSINESS_VENDORS.includes(normVendor(t.vendor));
+}
+// Records categorized before a category was removed fold into Misc
+function catOf(t) {
+  return CATEGORIES.includes(t.category) ? t.category : 'Misc';
+}
 function autoSpentFor(catIndex) {
   const month = currentMonth();
   return TXN_CACHE
-    .filter(t => t.month === month && t.category === CATEGORIES[catIndex])
+    .filter(t => t.month === month && catOf(t) === CATEGORIES[catIndex] && !t.kind && !isBusiness(t))
     .reduce((s, t) => s + t.amount, 0);
 }
 function effectiveSpent(catIndex) {
@@ -963,6 +1009,7 @@ function refreshExpenseDisplays(setInputs = true) {
 
   CATEGORIES.forEach((_, i) => renderTxnList(i));
   updateEJCard();
+  renderBusiness();
 }
 
 // ═══════════════════════════════════════════════
@@ -1006,7 +1053,7 @@ function renderTxnList(i) {
   const toggle = document.getElementById('txn-toggle-' + i);
   const month = currentMonth();
   const txns = TXN_CACHE
-    .filter(t => t.month === month && t.category === CATEGORIES[i])
+    .filter(t => t.month === month && catOf(t) === CATEGORIES[i] && !t.kind && !isBusiness(t))
     .sort((a, b) => b.date.localeCompare(a.date));
 
   if (!txns.length) { toggle.style.display = 'none'; list.innerHTML = ''; list.classList.remove('open'); return; }
@@ -1018,7 +1065,7 @@ function renderTxnList(i) {
     const d = new Date(t.date + 'T12:00:00');
     const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
     const src = t.source === 'gmail' ? '<span class="txn-src">gmail</span>' : '';
-    return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}</span>${src}<span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-delete" onclick="removeTxn(${t.id})" title="Delete">✕</button></div>`;
+    return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}</span>${src}<span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-biz" onclick="markBusiness(${t.id})" title="Mark as business write-off">💼</button><button class="txn-delete" onclick="removeTxn(${t.id})" title="Delete">✕</button></div>`;
   }).join('');
 }
 
@@ -1057,6 +1104,112 @@ async function removeTxn(id) {
 }
 
 // ═══════════════════════════════════════════════
+// BUSINESS WRITE-OFFS
+// ═══════════════════════════════════════════════
+
+async function saveBusinessVendors() {
+  await setSetting('business_vendors', [...BUSINESS_VENDORS]);
+}
+
+async function persistTxnFlag(txn) {
+  txn.updatedAt = Date.now();
+  if (!txn.sid) txn.sid = txn.email_id || uuidSid();
+  await addTransaction(txn);
+  Sync.onLocalTxn(txn);
+}
+
+async function markBusiness(id) {
+  const txn = TXN_CACHE.find(t => t.id === id);
+  if (!txn) return;
+  txn.business = true;
+  await persistTxnFlag(txn);
+  const v = normVendor(txn.vendor);
+  if (v && !BUSINESS_VENDORS.includes(v)) {
+    BUSINESS_VENDORS.push(v);
+    await saveBusinessVendors();
+    showToast('💼 Write-off — future ' + txn.vendor + ' purchases auto-marked');
+  } else {
+    showToast('💼 Marked as write-off');
+  }
+  refreshExpenseDisplays();
+  renderBusiness();
+}
+
+async function unmarkBusiness(id) {
+  const txn = TXN_CACHE.find(t => t.id === id);
+  if (!txn) return;
+  // Explicit false survives the vendor rule — this one stays personal
+  txn.business = false;
+  await persistTxnFlag(txn);
+  const v = normVendor(txn.vendor);
+  if (BUSINESS_VENDORS.includes(v)) showToast('Back to personal (vendor rule still on — remove it below to stop)');
+  else showToast('Back to personal');
+  refreshExpenseDisplays();
+  renderBusiness();
+}
+
+async function removeBusinessVendor(vendor) {
+  BUSINESS_VENDORS = BUSINESS_VENDORS.filter(v => v !== vendor);
+  await saveBusinessVendors();
+  refreshExpenseDisplays();
+  renderBusiness();
+}
+
+function bizTxnsForYear() {
+  const year = String(new Date().getFullYear());
+  return TXN_CACHE
+    .filter(t => isBusiness(t) && !t.kind && (t.date || '').startsWith(year))
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+function renderBusiness() {
+  const yearTxns = bizTxnsForYear();
+  const month = currentMonth();
+  const monthTxns = yearTxns.filter(t => t.month === month);
+  document.getElementById('biz-month-total').textContent = fmt2(monthTxns.reduce((s, t) => s + t.amount, 0));
+  document.getElementById('biz-ytd-total').textContent = fmt2(yearTxns.reduce((s, t) => s + t.amount, 0));
+  document.getElementById('biz-ytd-label').textContent = new Date().getFullYear() + ' so far (' + yearTxns.length + ' write-off' + (yearTxns.length === 1 ? '' : 's') + ')';
+
+  const list = document.getElementById('biz-txn-list');
+  if (!monthTxns.length) {
+    list.innerHTML = '<div class="history-empty">No write-offs yet this month.</div>';
+  } else {
+    list.innerHTML = monthTxns.map(t => {
+      const d = new Date(t.date + 'T12:00:00');
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return `<div class="txn-item"><span>${dateStr} — ${escapeHtml(t.vendor)}</span><span class="txn-amount">${fmt2(t.amount)}</span><button class="txn-delete" onclick="unmarkBusiness(${t.id})" title="Move back to personal budget">↩</button></div>`;
+    }).join('');
+  }
+
+  const vl = document.getElementById('biz-vendor-list');
+  if (!BUSINESS_VENDORS.length) {
+    vl.innerHTML = '<div class="history-empty">None yet.</div>';
+  } else {
+    vl.innerHTML = BUSINESS_VENDORS.map(v =>
+      `<div class="txn-item"><span>${escapeHtml(v)}</span><button class="txn-delete" onclick="removeBusinessVendor('${v.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}')" title="Stop auto-marking">✕</button></div>`
+    ).join('');
+  }
+}
+
+function exportBusinessCSV() {
+  const txns = bizTxnsForYear().slice().sort((a, b) => a.date.localeCompare(b.date));
+  if (!txns.length) { showToast('No write-offs to export yet'); return; }
+  let csv = 'date,vendor,category,amount,note\n';
+  for (const t of txns) {
+    csv += [t.date, csvEscape(t.vendor), csvEscape(catOf(t)), t.amount.toFixed(2), csvEscape(t.note || '')].join(',') + '\n';
+  }
+  csv += ',,total,' + txns.reduce((s, t) => s + t.amount, 0).toFixed(2) + ',\n';
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'write-offs-' + new Date().getFullYear() + '.csv';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  showToast('✓ Write-offs exported');
+}
+
+// ═══════════════════════════════════════════════
 // ADD-EXPENSE MODAL + AUTO-CATEGORIZE
 // ═══════════════════════════════════════════════
 
@@ -1080,7 +1233,7 @@ function guessCategory(vendor) {
   const past = TXN_CACHE
     .filter(t => t.vendor.toLowerCase().trim() === v)
     .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-  if (past.length) return past[0].category;
+  if (past.length && CATEGORIES.includes(past[0].category)) return past[0].category;
   // 2. Keyword rules
   for (const [cat, words] of KEYWORD_RULES) {
     if (words.some(w => v.includes(w))) return cat;
@@ -1230,15 +1383,15 @@ function csvEscape(s) {
 async function exportCSV() {
   const txns = (await getAllTransactions()).filter(t => !t.deleted);
   const history = await getAllHistory();
-  const settingsKeys = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail'];
+  const settingsKeys = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors'];
   const settings = {};
   for (const k of settingsKeys) settings[k] = await getSetting(k);
 
   let csv = '# Payday Checklist backup v2 — ' + new Date().toISOString() + '\n';
   csv += '[TRANSACTIONS]\n';
-  csv += 'date,vendor,category,amount,source,email_id,note,kind\n';
+  csv += 'date,vendor,category,amount,source,email_id,note,kind,business\n';
   for (const t of txns) {
-    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || ''), t.kind || ''].join(',') + '\n';
+    csv += [t.date, csvEscape(t.vendor), csvEscape(t.category), t.amount, t.source || 'manual', t.email_id || '', csvEscape(t.note || ''), t.kind || '', t.business === true ? '1' : t.business === false ? '0' : ''].join(',') + '\n';
   }
   csv += '[SETTINGS]\n';
   csv += csvEscape(JSON.stringify(settings)) + '\n';
@@ -1310,6 +1463,7 @@ async function importCSV() {
             date: c[0], vendor: c[1], category: c[2], amount: parseFloat(c[3]) || 0,
             source: c[4] || 'manual', email_id: c[5] || undefined, note: c[6] || '',
             kind: c[7] || undefined,
+            business: c[8] === '1' ? true : c[8] === '0' ? false : undefined,
             month: (c[0] || '').slice(0, 7), createdAt: new Date().toISOString()
           });
         } else if (section === 'settings') {
@@ -1323,7 +1477,7 @@ async function importCSV() {
       await clearStore('transactions');
       await clearStore('history');
       await clearStore('settings');
-      for (const t of txns) { if (!t.email_id) delete t.email_id; if (!t.kind) delete t.kind; await addTransaction(t); }
+      for (const t of txns) { if (!t.email_id) delete t.email_id; if (!t.kind) delete t.kind; if (t.business === undefined) delete t.business; await addTransaction(t); }
       if (settingsJson) {
         const settings = JSON.parse(settingsJson);
         for (const [k, v] of Object.entries(settings)) {
@@ -1414,6 +1568,7 @@ function switchTab(name) {
     if (b.textContent.toLowerCase().startsWith(name.substring(0, 4))) b.classList.add('active');
   });
   if (name === 'history') renderHistory();
+  if (name === 'business') renderBusiness();
 }
 
 // ═══════════════════════════════════════════════
@@ -1461,6 +1616,31 @@ async function init() {
   const steps = await getSetting('steps', {});
   const notes = await getSetting('notes', '');
   OVERRIDES = await getSetting('overrides', {});
+  BUSINESS_VENDORS = await getSetting('business_vendors', []);
+
+  // One-time migration for the removed Investments category (index 4 of the old
+  // 7-slot arrays): budgets drop the slot, override indexes above it shift down
+  if (!(await getSetting('migrated_cats_v3', false))) {
+    if (budgets && budgets.length === CATEGORIES.length + 1) {
+      budgets.splice(REMOVED_CAT_INDEX, 1);
+      await setSetting('budgets', [...budgets]);
+    }
+    let ovChanged = false;
+    for (const m of Object.keys(OVERRIDES)) {
+      const old = OVERRIDES[m];
+      if (old[REMOVED_CAT_INDEX + 1] == null && old[REMOVED_CAT_INDEX + 2] == null && old[REMOVED_CAT_INDEX] == null) continue;
+      const moved = {};
+      for (const [k, v] of Object.entries(old)) {
+        const i = Number(k);
+        if (i === REMOVED_CAT_INDEX) continue;          // Investments override — dropped
+        moved[i > REMOVED_CAT_INDEX ? i - 1 : i] = v;
+      }
+      OVERRIDES[m] = moved;
+      ovChanged = true;
+    }
+    if (ovChanged) await setSetting('overrides', OVERRIDES);
+    await setSetting('migrated_cats_v3', true);
+  }
 
   document.getElementById('paycheck-amount').value = income.biweekly;
   document.getElementById('tax-percent').value = income.taxPct;
