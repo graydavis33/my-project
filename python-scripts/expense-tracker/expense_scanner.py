@@ -30,12 +30,11 @@ Given an email, extract:
 - date: the transaction date in YYYY-MM-DD format
 - vendor: the store, service, or person paid (e.g. "Netflix", "Adobe", "DoorDash", "Jack Perkins" for Venmo P2P)
 - amount: the total charged as a number only (e.g. 12.99) — no $ sign
-- category: one of EXACTLY these seven options:
+- category: one of EXACTLY these six options:
     Groceries         — grocery stores, Instacart, Whole Foods, bodegas, food labeled as grocery
     Dining Out        — restaurants, DoorDash, UberEats, Grubhub, coffee shops
     Software & Tools  — Adobe, software subscriptions, SaaS tools, productivity apps, Anthropic/AI tools, streaming services (Netflix, Spotify, Hulu)
     Utilities         — electricity, gas, internet, phone bill, Con Edison
-    Investments       — Robinhood, Fidelity, Vanguard, brokerage transfers, crypto purchases
     BJJ & Kickboxing  — gym, martial arts, BJJ, kickboxing, Muay Thai, training memberships
     Misc              — anything that doesn't clearly fit above: transport, parking, MTA, pharmacy, Amazon, clothing, ATM withdrawals, Venmo P2P payments with unclear purpose
 
@@ -52,7 +51,7 @@ Transfers to Gray's own accounts are NOT expenses:
 
 Money-app alert rules (sender is Rocket Money):
 - "Large transaction detected" / "Uncategorized transaction detected" → extract the merchant, amount, and date from the body. Body dates like "June 20" have no year — infer it from the email's received date. vendor = the merchant/payee shown (e.g. "Edward Jones Inve..." → "Edward Jones"), never "Rocket Money".
-- Investment/brokerage transactions (Edward Jones, Fidelity...) → category "Investments".
+- Investment/brokerage transactions (Robinhood, Fidelity, any brokerage) → SKIP (return null) — transfers to Gray's own investment accounts are not budget expenses.
 - Marketing, spending reports, budget summaries from money apps → SKIP (return null).
 
 Venmo / Zelle / PayPal P2P rules:

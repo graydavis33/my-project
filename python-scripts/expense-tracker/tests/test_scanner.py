@@ -17,8 +17,10 @@ def test_prompt_uses_new_categories():
     category_block = _SYSTEM_PROMPT.split("category: one of")[1].split("Venmo")[0]
     for old in ["Streaming ", "Transport ", "Health & Wellness", "Shopping "]:
         assert old not in category_block
-    for new in ["BJJ & Kickboxing", "Investments", "Misc"]:
+    for new in ["BJJ & Kickboxing", "Misc"]:
         assert new in _SYSTEM_PROMPT
+    # Investments category removed 2026-07-17 — brokerage txns are skipped, not budgeted
+    assert "Investments" not in category_block
 
 def test_prompt_has_bank_alert_rules():
     assert "bank" in _SYSTEM_PROMPT.lower() and "alert" in _SYSTEM_PROMPT.lower()
