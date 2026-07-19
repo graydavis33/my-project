@@ -97,10 +97,21 @@ Other notes:
 
 ---
 
+## PROTOCOL #2 — Lead (COVERED 2026-07-19)
+Status update from Gray: **paint is all PAINTED OVER / intact** (low risk — sealed paint doesn't shed) and he **drinks straight from the tap** now, filter "soon."
+
+Conclusion: with paint sealed, **WATER is his #1 lead route** → moved to front.
+- **Paint = monitor, don't disturb:** no sanding/scraping/drilling; small nails/command strips over drilling; watch friction spots (windows/door frames); report any future chips/cracks to landlord in writing (NYC landlords legally must remediate).
+- **Water (free, now):** run cold tap 30s–2min if it's been sitting; COLD tap only for drink/cook (hot leaches more lead); request FREE NYC water lead test (311 / NYC DEP).
+- **Filter — bump up priority, must be NSF/ANSI 53 lead-certified** (most Brita/PUR are NOT). Recs: ZeroWater pitcher (~$35, cheapest, filters clog faster) or Clearly Filtered pitcher (~$90, longer-lasting, removes most). Pitcher = right call for a renter. Note recurring filter-replacement cost.
+- **Blood lead level (BLL)** — add to next diabetes blood draw (ground truth; target <3.5 µg/dL, ideally ~0).
+- Diet already helps: adequate iron/calcium/vit C reduce lead absorption (his sardines/eggs/dairy cover this).
+- SCAMS to avoid: heavy-metal "detox" supplements, zeolite, chelation cleanses, cilantro/chlorella pills. Real chelation = prescription-only, high levels only, doctor-supervised. Fix = remove the source, not "detox."
+
+Net: paint sealed + fix the water ≈ ~90% of lead risk handled.
+
 ## NEXT UP (not yet covered)
-- **#2 Lead in the apartment** (test/mitigation plan — real toxin priority)
-- Water filtration (NYC tap reality + what filter actually matters)
-- Air quality / gas stove
+- Air quality / gas stove (#3)
 - Exercise program rebuild
 - Sleep consistency
 - Supplement stack (beyond creatine/whey)
