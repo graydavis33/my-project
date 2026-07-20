@@ -129,18 +129,22 @@ Framing: exercise = #1 longevity lever. Two best predictors of functional old ag
 
 4 pillars: (1) Strength, (2) Zone 2 aerobic base, (3) VO2max intervals [needle-mover], (4) stability/mobility.
 
-**T1D + exercise (safety, specific to Gray):**
-- Steady cardio LOWERS blood sugar (risk of low during/after).
-- Hard/heavy efforts (lifting, sprints, HIIT) can RAISE blood sugar temporarily (adrenaline/liver dump) — normal, not a dosing error.
-- DELAYED lows hours later incl. OVERNIGHT (glycogen refill), esp. evening workouts — watch Dexcom overnight (same mechanism as alcohol lows).
-- Rules: keep fast carbs within reach; check Dexcom before/during/after; top up if <~120 before cardio; ask endo about reducing insulin around workout meals. Post-meal walk/bodyweight set flattens spikes (ties to Protocol #1).
+**T1D + exercise — GRAY'S PATTERN IS THE REVERSE OF TEXTBOOK (per his endocrinologist + his Dexcom):**
+- **RUNNING SPIKES him** (likely adrenaline/cortisol / intensity). Don't panic if a run raises sugar — that's his normal.
+- **LIFTING LOWERS him** (glycogen drain) — keep fast carbs handy when LIFTING (his "goes low" activity).
+- General textbook rule is the opposite (cardio lowers / anaerobic raises) but individual T1D response varies — FOLLOW HIS ENDO + HIS OWN CGM DATA, not the average.
+- DELAYED lows hours later incl. OVERNIGHT (glycogen refill), esp. evening workouts + intense martial arts — watch Dexcom overnight (same mechanism as alcohol lows).
+- Rules: keep fast carbs within reach; Dexcom is the referee (check before/during/after); ask endo about insulin adjustments around workout meals. Post-meal walk/bodyweight set flattens spikes (ties to Protocol #1).
 
-**Weekly template (around his existing 3-4x/wk):**
-- 2x full-body strength (KB + DB + calisthenics; squat/hinge/push/pull/carry) ~40 min
-- 1x Zone 2 cardio 30-45 min (conversational / nose-breathe — easy on purpose)
-- 1x VO2max every 1-2 wks (e.g. 4x ~3-4 min hard / 3 min easy)
-- Daily: NYC walking w/ heavy backpack = legit rucking, keep it
-- 5-10 min mobility/stretch woven in
+**Martial arts (kickboxing/BJJ) ARE part of the plan** — excellent healthspan activity: BJJ = muscular endurance/mobility/stability/coordination; kickboxing = cardio/power; both = SKILL (keeps him doing it for decades) + SOCIAL CONNECTION (strong longevity predictor). Gap: they do NOT replace dedicated progressive-overload STRENGTH. T1D: intense/adrenaline → may spike during class then delayed low later; manage glucose in long classes.
+
+**Weekly template (built around martial arts):**
+- 2x BJJ/kickboxing = cardio + conditioning + skill + stress relief + community
+- 2x strength = the muscle-building piece martial arts misses (progressive overload)
+- Daily: NYC walking w/ heavy backpack = Zone 2 rucking, free
+- Mobility/stretch woven in
+
+**Equipment: Gray currently has NO equipment.** Strategy note: in a small NYC apt, a gym membership (or dojo weight area) often beats a full home setup for heavy lifting + space; recommend lean home kit + gym. Home kit ranked in shopping-list.md (adjustable dumbbells > kettlebell > pull-up bar > bands > mat > jump rope > optional bench).
 
 Principle: PROGRESSIVE OVERLOAD — slowly add weight/reps/rounds/time over weeks; log workouts. Restart mindset: he's 1 wk off — restart at ~80%, no make-up, consistency compounds.
 

@@ -4,7 +4,7 @@ A running list of products mentioned as we work through the health plan. Honest 
 
 Priority key: NOW = do soon, high impact. SOON = worth it, not urgent. LATER = optimization / nice-to-have. OPTIONAL = only if a test flags a need.
 
-Last updated: 2026-07-20 (exercise added)
+Last updated: 2026-07-20 (workout equipment added; martial arts folded into routine)
 
 ---
 
@@ -20,6 +20,20 @@ Last updated: 2026-07-20 (exercise added)
 | Carbon monoxide detector | LIFE-SAFETY with a gas stove. Confirm you have a working one near your bed FIRST — buy only if missing. Legally required in NYC. | NOW | $20–40 | Check first |
 | Portable induction burner | Cook most meals with ZERO gas combustion — removes your biggest indoor air source. No reno needed (renter-friendly). Needs magnetic-bottom pan (stainless/cast iron). | SOON | $60–100 | Not bought |
 | Air purifier (True HEPA + activated carbon) | Cleans cooking particles + NYC outdoor PM2.5. Run in the BEDROOM. Picks: Levoit Core 400S (~$130) or Coway AP-1512HH "Mighty" (~$160). Size to room. | SOON | $130–160 | Not bought |
+
+## Workout Equipment (you have none — space-smart home kit, ranked by value)
+Strategy first: in a small NYC apartment, a gym membership (or your dojo's weight area) often beats buying everything — you get barbells/racks/space you can't fit at home. Best play is usually a lean home kit + a gym for heavy lifting. The first 3 items get you ~80% of the way; you don't need all of it.
+
+| Product | What it covers | Priority | Rough cost |
+|---|---|---|---|
+| Adjustable dumbbells (pair) | Most versatile, space-saving buy — nearly every strength movement. The workhorse. | SOON | $150–350 |
+| Kettlebell (one, ~35 lb or adjustable) | Swings, squats, carries, conditioning. | SOON | $40–70 |
+| Doorway pull-up bar | All your pulling, cheap, no install damage. | SOON | ~$25 |
+| Resistance bands set | Versatile, travel-friendly, warm-ups + pulling. | SOON | $25–40 |
+| Exercise mat | Floor work, mobility, BJJ drilling at home. | SOON | $20–30 |
+| Jump rope | Elite cardio in zero space. | SOON | $10–15 |
+| Adjustable bench | Only if you want pressing variety later. | LATER | $100–150 |
+| Gym membership (alternative/supplement) | Heavy lifting, barbells, space. Often better value than a full home setup in a small apt. | Consider | ~$15–100/mo |
 
 ## Recurring (budget as income grows)
 | Item | Notes | Rough cost |
