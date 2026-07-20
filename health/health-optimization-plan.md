@@ -164,6 +164,17 @@ SKIP/caution: melatonin as a NIGHTLY aid (hormone, OTC doses 10-30x too high, on
 
 Experiment this week: lock wake time; AM sunlight; last coffee ~1pm; dim lights PM; dinner 2-3h before bed. Watch overnight + morning Dexcom.
 
+## PROTOCOL #6 — Supplements (COVERED 2026-07-20)
+Approach: TEST don't guess; FOOD first; keep list short + proven. 90% of supplement industry = marketing; some risky for a T1D.
+
+Bloodwork to piggyback on a diabetes draw: Vit D (25-OH, aim 40-60 ng/mL), ferritin+iron, B12+folate, omega-3 index, magnesium + full metabolic panel (kidney fxn — matters for T1D + creatine), plus usual A1c/lipids to trend.
+
+Actual stack (short): creatine 5g ✓ · whey ✓ · magnesium glycinate ✓ · Vit D3+K2 (~$15, PENDING his D test — dose to result; most run low) · Omega-3 EPA/DHA (MAYBE — he eats sardines/tuna already = high omega-3; only if omega-3 index low or fish intake drops).
+
+DIABETIC WARNING: avoid "blood sugar support" supplements (berberine, high-dose cinnamon, chromium) — they lower glucose → HYPO risk stacked on insulin. Only with endo + insulin adjustment, never solo.
+
+SKIP LIST: NMN/NR (hyped, thin human evidence, expensive), resveratrol (fizzled), greens powders/AG1 ($80-100/mo = overpriced multivitamin, eat veg), multivitamins (unneeded w/ good diet), test boosters / "detox" / anti-aging collagen (he's 24). Quality: buy only 3rd-party tested (NSF / Informed Sport / USP) — industry barely regulated.
+
 ## NEXT UP (not yet covered)
 - Supplement stack (beyond creatine/whey)
 - Products layer — shower filter, cotton, etc. (validated vs hype)

@@ -4,7 +4,7 @@ A running list of products mentioned as we work through the health plan. Honest 
 
 Priority key: NOW = do soon, high impact. SOON = worth it, not urgent. LATER = optimization / nice-to-have. OPTIONAL = only if a test flags a need.
 
-Last updated: 2026-07-20 (sleep products added)
+Last updated: 2026-07-20 (supplements added)
 
 ---
 
@@ -43,6 +43,15 @@ Strategy first: in a small NYC apartment, a gym membership (or your dojo's weigh
 | Earplugs | NYC noise. Cheap, effective. | SOON | ~$10 |
 | Magnesium glycinate (or threonate) | The one worth-it sleep supplement — calming, many run low, cheap + safe. NOT oxide (that's a laxative). | SOON | $15–20 |
 
+## Supplements (test first — buy only 3rd-party tested: NSF / Informed Sport / USP)
+| Product | What it's for | Priority | Rough cost |
+|---|---|---|---|
+| Vitamin D3 + K2 | Immune/bone/mood; most people run low (indoor/NYC/winter). K2 directs calcium to bone. DOSE TO YOUR BLOOD TEST. | SOON (after test) | ~$15 |
+| Omega-3 (EPA/DHA) | ONLY IF omega-3 index tests low or you cut back on fish. You already eat sardines/tuna = high omega-3, so may not need it. | OPTIONAL | $15–30 |
+| Ashwagandha (optional) | Stress/cortisol support if work stress spikes — cyclic use. Nice-to-have, not essential. | OPTIONAL | $10–15 |
+
+Bloodwork to request (free-ish via your doctor): Vit D (25-OH), ferritin+iron, B12+folate, omega-3 index, magnesium, full metabolic panel, A1c, lipids.
+
 ## Recurring (budget as income grows)
 | Item | Notes | Rough cost |
 |---|---|---|
@@ -75,3 +84,7 @@ These are things you've mentioned wanting or that fit upcoming topics. I'll conf
 - Dyson / Molekule purifiers — overpriced, worse filtration per dollar than the Levoit/Coway picks.
 - Melatonin as a NIGHTLY sleep aid — it's a hormone, OTC doses are 10–30x too high, only genuinely useful for jet lag. Skip as a habit.
 - Oura ring / 8Sleep / fancy sleep trackers — unnecessary, you already have a Dexcom. Only if you just want the toy.
+- "Blood sugar support" supplements (berberine, high-dose cinnamon, chromium) — HYPO RISK stacked on your insulin. Never solo; endo-coordinated only.
+- NMN / NR / resveratrol ("longevity" pills) — hyped, thin human evidence, expensive. Skip until science matures.
+- Greens powders (AG1 etc.) — $80–100/mo for a glorified multivitamin. Eat vegetables instead.
+- Multivitamins, test boosters, anti-aging collagen, any "detox" — unneeded for a healthy 24-yr-old with a good diet.
