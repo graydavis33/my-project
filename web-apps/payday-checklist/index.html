@@ -303,6 +303,28 @@
     .history-delete { background: none; border: none; color: rgba(255,255,255,0.18); font-size: 15px; cursor: pointer; padding: 0 4px; transition: color 0.15s; }
     .history-delete:hover { color: var(--color-red); }
 
+    /* ── Spending tab ── */
+    .spend-hero { text-align: center; padding: 4px 0 20px; }
+    .spend-hero-num { font-size: 42px; font-weight: 800; color: var(--color-yellow); letter-spacing: -1.5px; }
+    .spend-hero-sub { font-size: 11px; color: var(--color-gray-mid); margin-top: 5px; }
+    .spend-chart-wrap { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; justify-content: center; }
+    .spend-donut { position: relative; width: 160px; height: 160px; flex-shrink: 0; }
+    .spend-donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+    .spend-donut-center .amt { font-size: 22px; font-weight: 800; color: var(--color-white); letter-spacing: -0.5px; }
+    .spend-donut-center .lbl { font-size: 9px; color: var(--color-gray-mid); text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2px; }
+    .spend-legend { flex: 1; min-width: 190px; display: flex; flex-direction: column; gap: 8px; }
+    .spend-legend-row { display: flex; align-items: center; gap: 9px; font-size: 12px; }
+    .spend-legend-dot { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+    .spend-legend-name { color: var(--color-white); flex: 1; }
+    .spend-legend-amt { color: var(--color-gray-light); font-weight: 600; }
+    .spend-legend-pct { color: var(--color-gray-mid); font-size: 10px; width: 34px; text-align: right; }
+    .spend-trend-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+    .spend-trend-month { font-size: 11px; color: var(--color-gray-light); width: 62px; flex-shrink: 0; }
+    .spend-trend-track { flex: 1; height: 16px; background: rgba(255,255,255,0.05); border-radius: var(--radius-sm); overflow: hidden; }
+    .spend-trend-fill { height: 100%; border-radius: var(--radius-sm); background: var(--gradient-accent); transition: width 0.5s ease; }
+    .spend-trend-fill.now { box-shadow: var(--glow-yellow); }
+    .spend-trend-amt { font-size: 11px; color: var(--color-white); font-weight: 600; width: 62px; text-align: right; flex-shrink: 0; }
+
     /* ── Add-expense modal internals ── */
     .gm-modal-overlay { align-items: flex-end; }
     .add-modal {
@@ -409,6 +431,7 @@
       <button class="gm-tab-btn active" onclick="switchTab('checklist')">Checklist</button>
       <button class="gm-tab-btn" onclick="switchTab('writeoffs')">Write-Offs</button>
       <button class="gm-tab-btn" onclick="switchTab('reimburse')">Reimburse</button>
+      <button class="gm-tab-btn" onclick="switchTab('spending')">Spending</button>
       <button class="gm-tab-btn" onclick="switchTab('history')">History</button>
     </div>
     <div class="topbar-paycheck">
@@ -658,6 +681,28 @@
     </div>
   </div>
 
+  <!-- ── SPENDING TAB ── -->
+  <div class="tab-pane" id="tab-spending">
+    <div class="history-container">
+      <div class="gm-label" style="margin-top:0">This Month's Spending</div>
+      <div class="gm-card">
+        <div class="spend-hero">
+          <div class="spend-hero-num" id="spend-total">$0</div>
+          <div class="spend-hero-sub">Real money spent — reimbursements &amp; write-offs excluded</div>
+        </div>
+        <div class="spend-chart-wrap">
+          <div class="spend-donut" id="spend-donut"></div>
+          <div class="spend-legend" id="spend-legend"></div>
+        </div>
+      </div>
+
+      <div class="gm-label" style="margin-top:24px">Month to Month</div>
+      <div class="gm-card">
+        <div id="spend-trend"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── HISTORY TAB ── -->
   <div class="tab-pane" id="tab-history">
     <div class="history-container">
@@ -727,6 +772,10 @@
 const STEP_NAMES = ['Taxes → Edward Jones', 'Rent', 'Student Loans', 'Emergency Fund', 'Ring Fund'];
 const CATEGORIES = ['Groceries', 'Dining Out', 'Software & Tools', 'Utilities', 'BJJ & Kickboxing', 'Misc'];
 const DEFAULT_BUDGETS = [200, 150, 100, 60, 200, 140];
+// Per-category chart colors — colorblind-safe on the dark navy surface
+// (validated with the dataviz palette checker: all 6 checks pass, worst
+// adjacent CVD ΔE 8.4, backed up by slice gaps + direct labels)
+const SPEND_COLORS = ['#3987e5', '#008300', '#d55181', '#c98500', '#199e70', '#d95926'];
 const MISC_INDEX = 5;
 const REMOVED_CAT_INDEX = 4;  // 'Investments' — removed 2026-07-17; migrations below shift old data
 
@@ -1376,6 +1425,75 @@ function exportBusinessCSV() {
 }
 
 // ═══════════════════════════════════════════════
+// SPENDING TAB (headline + category donut + monthly trend)
+// ═══════════════════════════════════════════════
+
+function monthShort(ym) {
+  const [y, m] = ym.split('-').map(Number);
+  return new Date(y, m - 1, 1).toLocaleDateString('en-US', { month: 'short' });
+}
+
+async function renderSpending() {
+  // Per-category TRUE spend this month (effectiveSpent already strips out
+  // EJ transfers, write-offs, and reimbursed amounts)
+  const cats = CATEGORIES.map((name, i) => ({
+    name, spent: Math.round(effectiveSpent(i) * 100) / 100, color: SPEND_COLORS[i]
+  }));
+  const total = cats.reduce((s, c) => s + c.spent, 0);
+  document.getElementById('spend-total').textContent = fmt2(total);
+
+  const donut = document.getElementById('spend-donut');
+  const legend = document.getElementById('spend-legend');
+  const active = cats.filter(c => c.spent > 0).sort((a, b) => b.spent - a.spent);
+
+  if (total <= 0) {
+    donut.innerHTML = '';
+    legend.innerHTML = '<div class="history-empty" style="padding:24px 0">No spending logged this month yet.</div>';
+  } else {
+    const C = 2 * Math.PI * 60;   // donut radius 60
+    let offset = 0, segs = '';
+    for (const c of active) {
+      const segLen = (c.spent / total) * C;
+      // leave a small surface gap between slices (never eat a whole tiny slice)
+      const g = active.length > 1 ? Math.min(3, segLen * 0.4) : 0;
+      const dash = Math.max(0.5, segLen - g);
+      segs += `<circle cx="80" cy="80" r="60" fill="none" stroke="${c.color}" stroke-width="22" stroke-dasharray="${dash} ${C - dash}" stroke-dashoffset="${-offset}"></circle>`;
+      offset += segLen;
+    }
+    donut.innerHTML = `<svg viewBox="0 0 160 160" width="160" height="160" style="transform:rotate(-90deg)">${segs}</svg>` +
+      `<div class="spend-donut-center"><div class="amt">${active.length}</div><div class="lbl">categor${active.length === 1 ? 'y' : 'ies'}</div></div>`;
+    legend.innerHTML = active.map(c => {
+      const pct = Math.round((c.spent / total) * 100);
+      return `<div class="spend-legend-row"><span class="spend-legend-dot" style="background:${c.color}"></span><span class="spend-legend-name">${escapeHtml(c.name)}</span><span class="spend-legend-amt">${fmt2(c.spent)}</span><span class="spend-legend-pct">${pct}%</span></div>`;
+    }).join('');
+  }
+
+  // Month-to-month trend: latest saved total per month + the live current month
+  const history = await getAllHistory();
+  const byMonth = {};
+  for (const h of history) {
+    if (!h.month) continue;
+    const t = (h.expenses || []).reduce((s, e) => s + (e.spent || 0), 0);
+    if (!byMonth[h.month] || h.id > byMonth[h.month].id) byMonth[h.month] = { id: h.id, total: t };
+  }
+  const cur = currentMonth();
+  byMonth[cur] = { id: Infinity, total };   // live current month always wins
+  const months = Object.keys(byMonth).sort().slice(-6);
+  const max = Math.max(...months.map(m => byMonth[m].total), 1);
+  const trend = document.getElementById('spend-trend');
+  if (months.length <= 1 && total === 0) {
+    trend.innerHTML = '<div class="history-empty" style="padding:16px 0">Save a month to History to start the trend.</div>';
+  } else {
+    trend.innerHTML = months.map(m => {
+      const t = byMonth[m].total;
+      const w = Math.max(2, (t / max) * 100);
+      const isNow = m === cur;
+      return `<div class="spend-trend-row"><span class="spend-trend-month">${monthShort(m)}${isNow ? ' (now)' : ''}</span><div class="spend-trend-track"><div class="spend-trend-fill${isNow ? ' now' : ''}" style="width:${w}%"></div></div><span class="spend-trend-amt">${fmt(t)}</span></div>`;
+    }).join('');
+  }
+}
+
+// ═══════════════════════════════════════════════
 // ADD-EXPENSE MODAL + AUTO-CATEGORIZE
 // ═══════════════════════════════════════════════
 
@@ -1736,6 +1854,7 @@ function switchTab(name) {
     if (b.textContent.toLowerCase().startsWith(name.substring(0, 4))) b.classList.add('active');
   });
   if (name === 'history') renderHistory();
+  if (name === 'spending') renderSpending();
   if (name === 'writeoffs' || name === 'reimburse') renderBusiness();
 }
 

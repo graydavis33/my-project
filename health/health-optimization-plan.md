@@ -110,8 +110,25 @@ Conclusion: with paint sealed, **WATER is his #1 lead route** → moved to front
 
 Net: paint sealed + fix the water ≈ ~90% of lead risk handled.
 
+## PROTOCOL #3 — Air / Gas Stove (COVERED 2026-07-20)
+Old NYC apt, gas stove, no purifier. Gas combustion releases NO2, CO, ultrafine particles, benzene into indoor air; old tight apt traps it; NYC outdoor PM2.5 + smoke days stack on top.
+
+Ranked:
+1. CO DETECTOR — life-safety, do FIRST. Confirm a working one near sleeping area (legally required in NYC rentals). ~$20–40 if missing.
+2. Ventilate every time gas is on (free): run hood ONLY if it vents outside (many old NYC hoods recirculate = useless); else crack window + fan. Never heat apt with oven/stove (CO risk). Air out after cooking.
+3. Portable induction burner (~$60–100) — HIGH VALUE renter move: cook most meals (eggs/pancakes/tuna) with zero combustion, no reno/landlord permission. Removes his biggest indoor air source. Needs magnetic-bottom pan (stainless/cast iron).
+4. Air purifier True HEPA + activated carbon, run in BEDROOM (8hr exposure). Value picks: Levoit Core 400S (~$130) or Coway AP-1512HH Mighty (~$160). Size to room.
+5. Optional: cheap air quality monitor (~$40–100) — only if he'll act on the data.
+
+SKIP/scams: ozone generators + "ionic"/ionizer purifiers (emit ozone, lung irritant); Dyson/Molekule (overpriced, worse per-dollar filtration). Want HEPA+carbon.
+
+To-do: confirm working CO detector today; ventilate always; consider induction burner + bedroom HEPA.
+
 ## NEXT UP (not yet covered)
-- Air quality / gas stove (#3)
+- Exercise program rebuild (#4)
+- Sleep consistency
+- Supplement stack (beyond creatine/whey)
+- Products layer — shower filter, cotton, etc. (validated vs hype)
 - Exercise program rebuild
 - Sleep consistency
 - Supplement stack (beyond creatine/whey)
