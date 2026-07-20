@@ -124,9 +124,30 @@ SKIP/scams: ozone generators + "ionic"/ionizer purifiers (emit ozone, lung irrit
 
 To-do: confirm working CO detector today; ventilate always; consider induction burner + bedroom HEPA.
 
+## PROTOCOL #4 — Exercise Rebuild (COVERED 2026-07-20)
+Framing: exercise = #1 longevity lever. Two best predictors of functional old age: VO2max (cardio fitness) + muscle mass/strength (anti-sarcopenia). Train now for the "decathlon of being 90."
+
+4 pillars: (1) Strength, (2) Zone 2 aerobic base, (3) VO2max intervals [needle-mover], (4) stability/mobility.
+
+**T1D + exercise (safety, specific to Gray):**
+- Steady cardio LOWERS blood sugar (risk of low during/after).
+- Hard/heavy efforts (lifting, sprints, HIIT) can RAISE blood sugar temporarily (adrenaline/liver dump) — normal, not a dosing error.
+- DELAYED lows hours later incl. OVERNIGHT (glycogen refill), esp. evening workouts — watch Dexcom overnight (same mechanism as alcohol lows).
+- Rules: keep fast carbs within reach; check Dexcom before/during/after; top up if <~120 before cardio; ask endo about reducing insulin around workout meals. Post-meal walk/bodyweight set flattens spikes (ties to Protocol #1).
+
+**Weekly template (around his existing 3-4x/wk):**
+- 2x full-body strength (KB + DB + calisthenics; squat/hinge/push/pull/carry) ~40 min
+- 1x Zone 2 cardio 30-45 min (conversational / nose-breathe — easy on purpose)
+- 1x VO2max every 1-2 wks (e.g. 4x ~3-4 min hard / 3 min easy)
+- Daily: NYC walking w/ heavy backpack = legit rucking, keep it
+- 5-10 min mobility/stretch woven in
+
+Principle: PROGRESSIVE OVERLOAD — slowly add weight/reps/rounds/time over weeks; log workouts. Restart mindset: he's 1 wk off — restart at ~80%, no make-up, consistency compounds.
+
+Products: mostly already equipped. Optional cheap: chest-strap HR monitor (Polar H10 ~$50) for accurate Zone 2; resistance bands / pull-up bar (~$25-40). Creatine already covers the supplement side.
+
 ## NEXT UP (not yet covered)
-- Exercise program rebuild (#4)
-- Sleep consistency
+- Sleep consistency (#5)
 - Supplement stack (beyond creatine/whey)
 - Products layer — shower filter, cotton, etc. (validated vs hype)
 - Exercise program rebuild

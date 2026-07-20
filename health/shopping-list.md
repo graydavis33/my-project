@@ -4,7 +4,7 @@ A running list of products mentioned as we work through the health plan. Honest 
 
 Priority key: NOW = do soon, high impact. SOON = worth it, not urgent. LATER = optimization / nice-to-have. OPTIONAL = only if a test flags a need.
 
-Last updated: 2026-07-20
+Last updated: 2026-07-20 (exercise added)
 
 ---
 
@@ -26,11 +26,13 @@ Last updated: 2026-07-20
 |---|---|---|
 | Water filter replacements | ZeroWater clogs faster = more frequent; Clearly Filtered lasts longer. Factor this in when choosing. | varies |
 
-## Optional (only if a test flags it)
+## Optional (only if a test flags it / nice-to-have)
 | Product | Trigger to buy | Rough cost |
 |---|---|---|
 | HEPA vacuum | Only if paint chips OR a dust/lead test comes back high. Paint is sealed now → not needed yet. | $80–200 |
 | Air quality monitor (PM2.5) | Only if you'll act on the data — lets you SEE spikes from cooking/smoke days + confirm the purifier works. | $40–100 |
+| Chest-strap HR monitor (e.g. Polar H10) | Makes Zone 2 cardio accurate instead of guessing. Free alternative: the "can hold a conversation" test. | ~$50 |
+| Resistance bands / pull-up bar | Only if you want more pulling options at home. Your KB + dumbbells already cover a lot. | $25–40 |
 
 ## Coming up — to be validated before buying
 These are things you've mentioned wanting or that fit upcoming topics. I'll confirm which are legit vs. hype when we get to that step, then move them up.
