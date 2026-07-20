@@ -150,8 +150,21 @@ Principle: PROGRESSIVE OVERLOAD — slowly add weight/reps/rounds/time over week
 
 Products: mostly already equipped. Optional cheap: chest-strap HR monitor (Polar H10 ~$50) for accurate Zone 2; resistance bands / pull-up bar (~$25-40). Creatine already covers the supplement side.
 
+## PROTOCOL #5 — Sleep (COVERED 2026-07-20)
+Framing: top-tier longevity lever AND glucose lever — one bad night → next-day insulin resistance (visible on his Dexcom, needs more insulin). Two wins from one fix. He's already decent (6-8h, usually rested); stated gap = CONSISTENCY.
+
+#1 rule: CONSISTENT WAKE TIME (within ~30-60 min daily, weekends included) — anchors circadian clock, beats everything, softens the 2-4pm crash, stabilizes overnight glucose. Target 7.5-8h in bed.
+
+Huberman free protocol: (1) morning sunlight 5-10 min within 1h of waking (outside, pair w/ coffee) — biggest free lever; (2) caffeine cutoff ~10h before bed (last coffee ~1pm); (3) dim lights 1-2h before bed (brightness matters more than screens); (4) cool/dark/quiet room ~65-68°F; (5) no alcohol near bed (quality + delayed lows).
+
+T1D-specific: don't eat biggest carb meal right before bed (late pancakes → overnight spike/restless); finish dinner 2-3h before bed. Let Dexcom low-alarm guard the night (dial in w/ endo) → fewer nighttime lows/wakeups. He wakes mainly for lows or to pee = glucose-related.
+
+Products: blackout curtains (~$20-40, high value in NYC), eye mask (~$10-20), earplugs (~$10), magnesium glycinate/threonate (~$15-20, the one worth-it sleep supp — NOT oxide).
+SKIP/caution: melatonin as a NIGHTLY aid (hormone, OTC doses 10-30x too high, only good for jet lag, can blunt own production); Oura/8Sleep/fancy trackers (unnecessary, has Dexcom); mouth tape (only if snores).
+
+Experiment this week: lock wake time; AM sunlight; last coffee ~1pm; dim lights PM; dinner 2-3h before bed. Watch overnight + morning Dexcom.
+
 ## NEXT UP (not yet covered)
-- Sleep consistency (#5)
 - Supplement stack (beyond creatine/whey)
 - Products layer — shower filter, cotton, etc. (validated vs hype)
 - Exercise program rebuild

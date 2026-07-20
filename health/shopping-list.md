@@ -4,7 +4,7 @@ A running list of products mentioned as we work through the health plan. Honest 
 
 Priority key: NOW = do soon, high impact. SOON = worth it, not urgent. LATER = optimization / nice-to-have. OPTIONAL = only if a test flags a need.
 
-Last updated: 2026-07-20 (workout equipment added; martial arts folded into routine)
+Last updated: 2026-07-20 (sleep products added)
 
 ---
 
@@ -34,6 +34,14 @@ Strategy first: in a small NYC apartment, a gym membership (or your dojo's weigh
 | Jump rope | Elite cardio in zero space. | SOON | $10–15 |
 | Adjustable bench | Only if you want pressing variety later. | LATER | $100–150 |
 | Gym membership (alternative/supplement) | Heavy lifting, barbells, space. Often better value than a full home setup in a small apt. | Consider | ~$15–100/mo |
+
+## Sleep
+| Product | What it's for | Priority | Rough cost |
+|---|---|---|---|
+| Blackout curtains | Dark room = deeper sleep + better melatonin. High value in NYC (streetlights). | SOON | $20–40 |
+| Sleep eye mask | Cheaper alternative or add-on to curtains. | SOON | $10–20 |
+| Earplugs | NYC noise. Cheap, effective. | SOON | ~$10 |
+| Magnesium glycinate (or threonate) | The one worth-it sleep supplement — calming, many run low, cheap + safe. NOT oxide (that's a laxative). | SOON | $15–20 |
 
 ## Recurring (budget as income grows)
 | Item | Notes | Rough cost |
@@ -65,3 +73,5 @@ These are things you've mentioned wanting or that fit upcoming topics. I'll conf
 - Any water filter NOT specifically NSF 53 lead-certified if lead is your concern (taste filters ≠ lead filters).
 - Ozone generators + "ionic"/ionizer air purifiers — some emit ozone (lung irritant). Want HEPA + carbon only.
 - Dyson / Molekule purifiers — overpriced, worse filtration per dollar than the Levoit/Coway picks.
+- Melatonin as a NIGHTLY sleep aid — it's a hormone, OTC doses are 10–30x too high, only genuinely useful for jet lag. Skip as a habit.
+- Oura ring / 8Sleep / fancy sleep trackers — unnecessary, you already have a Dexcom. Only if you just want the toy.
