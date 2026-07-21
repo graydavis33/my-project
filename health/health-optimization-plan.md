@@ -178,6 +178,24 @@ DIABETIC WARNING: avoid "blood sugar support" supplements (berberine, high-dose 
 
 SKIP LIST: NMN/NR (hyped, thin human evidence, expensive), resveratrol (fizzled), greens powders/AG1 ($80-100/mo = overpriced multivitamin, eat veg), multivitamins (unneeded w/ good diet), test boosters / "detox" / anti-aging collagen (he's 24). Quality: buy only 3rd-party tested (NSF / Informed Sport / USP) — industry barely regulated.
 
+### CONSOLIDATED SUPPLEMENT PROTOCOL (Gray asked for full stack 2026-07-21)
+Everyday CORE = just 3: creatine + magnesium + D3/K2. Rest is test-gated/optional. ~$30-40/mo total.
+
+TIER 1 (core daily):
+- Creatine mono 5g/day, anytime (consistency>timing), w/ meal or whey. Strength/power/muscle + brain/cognition. **T1D flag: tell doctor he takes it — creatine mildly raises serum creatinine on labs; don't misread as kidney decline. Hydrate.**
+- Magnesium glycinate 200-400mg elemental, ~30-60 min before bed. Sleep + insulin sensitivity + replaces T1D urinary loss. NOT oxide.
+- Vitamin D3+K2 2000-4000 IU D3 + ~100mcg K2, with fatty meal (his 12-2 meal). START AFTER blood test confirms low; dose to level (aim 40-60 ng/mL). Immune/bone/mood + insulin sensitivity.
+
+TIER 2 (conditional):
+- Omega-3 EPA/DHA 1-2g w/ meal — ONLY if omega-3 index low / stops eating fish (already eats sardines+tuna).
+- Zinc 15-30mg w/ food, only if tests low, NOT same time as magnesium; short-term/cyclic + copper 1-2mg if regular. Copper-deficiency risk if megadosed.
+- Ashwagandha 300-600mg (KSM-66) evening, cycle 8wk on/off — optional for work stress/cortisol.
+
+Not-a-pill: whey ~25g to hit protein target (post-workout/meal); electrolytes (pinch salt+water or sugar-free mix) on hard training days (active T1D sweat loss).
+
+Daily schedule: first meal (12-2, fat) = D3+K2 (+omega-3/zinc if used); anytime = creatine; post-workout = whey; bedtime = magnesium (+ashwagandha if used).
+Rules: bloodwork FIRST to dose D/omega-3/zinc; 3rd-party tested brands only.
+
 ## NEXT UP (not yet covered)
 - Supplement stack (beyond creatine/whey)
 - Products layer — shower filter, cotton, etc. (validated vs hype)
