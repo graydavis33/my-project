@@ -171,6 +171,9 @@ Bloodwork to piggyback on a diabetes draw: Vit D (25-OH, aim 40-60 ng/mL), ferri
 
 Actual stack (short): creatine 5g ✓ · whey ✓ · magnesium glycinate ✓ · Vit D3+K2 (~$15, PENDING his D test — dose to result; most run low) · Omega-3 EPA/DHA (MAYBE — he eats sardines/tuna already = high omega-3; only if omega-3 index low or fish intake drops).
 
+MAGNESIUM (Gray asked 2026-07-21): STRONG yes for him — T1D-specific: high blood sugar → more urinary magnesium loss → diabetics commonly low + low Mg worsens insulin sensitivity (small loop). Plus training/sweat loss + sleep. Glycinate (or threonate for brain), NOT oxide. ~200-400mg elemental at night. Cramps/twitchy sleep = low-Mg sign.
+ZINC (Gray asked 2026-07-21): useful (immune/testosterone/wound healing/insulin storage) BUT catch = long-term high-dose zinc → COPPER deficiency (they compete). So: food first (red meat, oysters/shellfish, eggs, pumpkin seeds — he eats eggs/sardines); TEST level; only supplement modest (~15-30mg) + short-term/cyclic, pair ~1-2mg copper if regular. Don't megadose daily. ZMA combos usually underdosed — take Mg glycinate separately.
+
 DIABETIC WARNING: avoid "blood sugar support" supplements (berberine, high-dose cinnamon, chromium) — they lower glucose → HYPO risk stacked on insulin. Only with endo + insulin adjustment, never solo.
 
 SKIP LIST: NMN/NR (hyped, thin human evidence, expensive), resveratrol (fizzled), greens powders/AG1 ($80-100/mo = overpriced multivitamin, eat veg), multivitamins (unneeded w/ good diet), test boosters / "detox" / anti-aging collagen (he's 24). Quality: buy only 3rd-party tested (NSF / Informed Sport / USP) — industry barely regulated.
