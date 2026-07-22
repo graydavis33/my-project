@@ -97,5 +97,27 @@ Recurring monthly:
 Pantry (lasts 1-3 months — amortized, not every month): whey 5lb ($45 ÷ 2mo = ~$22/mo) · rice 10lb ($12) · GF oats ($6) · beans ($10) · potatoes ($10) · PB ($8) · olive oil ($10) · coffee ($12) · heavy cream ($6) · condiments/spices/salsa ($12).
 Rough monthly total ≈ $290-320. Trims to hit $300: lean harder on eggs + canned fish (cheapest quality protein), all frozen produce, skip pricier cuts, Costco/Aldi over regular grocery.
 
+## Trader Joe's Meal Plan (Gray's main store, added 2026-07-22)
+Store strategy: TJ's = main haul (best value/quality). Whole Foods = 365 store brand only (olive oil, specific meat) — skip non-365 premium tax. Morton Williams = convenience top-up only (pricey NYC chain). Whey NOT at TJ's — buy bulk online (Nutricost/NOW ~$45/5lb).
+
+LUNCH (batch Sunday, ~40-55g protein each, carbs last):
+- Homemade Chipotle bowl: TJ's chicken thighs + frozen brown rice (½) + black beans + frozen peppers + cheese + salsa + Greek yogurt. ~$2.50.
+- Tuna-sardine power salad: canned tuna + sardines + 2 eggs + bagged greens + olive oil + lemon. ~$3.
+- Chicken + rice prep bowls: batch thighs + rice + frozen veg + hot sauce. ~$2.50.
+- Beef taco bowls: ground beef + corn tortillas or over greens + cheese + salsa. ~$3.
+
+DINNER (2-3h before bed):
+- Frozen salmon + roasted frozen veg + sweet potato (sheet pan).
+- Chicken thighs + brussels/broccoli (one pan).
+- Ground beef stir-fry + frozen veg + rice.
+- Tuna+sardine+egg mashup (keep — cheap, omega-3).
+- TJ's frozen shrimp + veg + rice.
+
+SNACKS: Greek yogurt + berries · cottage cheese · hard-boiled eggs · TJ's turkey jerky · edamame · string cheese + apple · almonds · 85% dark chocolate + PB · roasted seaweed.
+
+WEEKLY RHYTHM: Sunday = roast a tray of thighs + pot of rice + dozen boiled eggs (lunch base). Weeknights rotate the 5 dinners (all 15-20 min). Keep snacks stocked so takeout never wins.
+
+TJ'S WEEKLY CART (~$75-85 → ~$300-340/mo + monthly whey): eggs 2dz $7 · chicken thighs 3lb $12 · ground beef 2lb $10 · frozen salmon $7 · tuna+sardines x6 $9 · Greek yogurt tub $5 · cottage cheese $4 · frozen veg x4 $8 · frozen berries $4 · bagged greens $4 · bananas+apples $4 · rice+beans $6 · cheese $4 · nuts/PB (biweekly) $5.
+
 ## Honest note
 $300/mo is TIGHT for your calorie + protein needs in NYC — realistic range is $300-380 depending on how bulk you buy and how disciplined the no-takeout is. Eggs, canned fish, chicken thighs, bulk whey, frozen veg, and rice/oats are your cost-per-nutrient MVPs. The takeout habit is the whole difference.
