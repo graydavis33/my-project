@@ -949,16 +949,15 @@ function isBusiness(t) {
 function catOf(t) {
   return CATEGORIES.includes(t.category) ? t.category : 'Misc';
 }
-function autoSpentFor(catIndex) {
-  const month = currentMonth();
+function autoSpentFor(catIndex, month = currentMonth()) {
   return TXN_CACHE
     .filter(t => t.month === month && catOf(t) === CATEGORIES[catIndex] && !t.kind && !isBusiness(t))
     .reduce((s, t) => s + (isReimbursable(t) ? Math.max(0, t.amount - reimbAmt(t)) : t.amount), 0);
 }
-function effectiveSpent(catIndex) {
-  const ov = OVERRIDES[currentMonth()];
+function effectiveSpent(catIndex, month = currentMonth()) {
+  const ov = OVERRIDES[month];
   if (ov && ov[catIndex] != null) return ov[catIndex];
-  return autoSpentFor(catIndex);
+  return autoSpentFor(catIndex, month);
 }
 
 // ═══════════════════════════════════════════════
@@ -1679,6 +1678,47 @@ async function submitPayday() {
   showToast('✓ Saved to history');
 }
 
+// Auto month rollover: the first time the app opens in a new calendar month,
+// archive the month that just ended to History and reset for the fresh month.
+// (A static web app can't run at midnight while closed — this fires on open.)
+async function checkMonthRollover() {
+  const cur = currentMonth();
+  const active = await getSetting('active_month', null);
+  if (active == null) { await setSetting('active_month', cur); return; }  // first run after update — just adopt
+  if (active === cur || cur < active) return;                            // same month (or clock skew) — nothing to do
+
+  // Build the finished month's summary from that month's own data
+  const expenses = CATEGORIES.map((name, i) => ({
+    name, budget: BUDGETS[i], spent: Math.round(effectiveSpent(i, active) * 100) / 100
+  }));
+  const [ey, em] = active.split('-').map(Number);
+  const entry = {
+    id: Date.now(),
+    date: new Date(ey, em - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+    month: active,
+    monthlyIncome: num('paycheck-amount', 3250) * 2,
+    steps: await getSetting('steps', {}),
+    fundBalance: num('fund-balance', 0),
+    ringBalance: num('ring-balance', 0),
+    expenses,
+    notes: document.getElementById('notes').value || '',
+    auto: true
+  };
+  const already = (await getAllHistory()).some(h => h.month === active && h.auto);
+  if (!already) { await putHistory(entry); Sync.onLocalHistory(entry); }
+
+  // Reset month-specific state for the new month. Running balances (emergency
+  // fund, ring) and all past transactions are kept — they aren't monthly.
+  await setSetting('steps', {});
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('done'));
+  await setSetting('notes', '');
+  document.getElementById('notes').value = '';
+  await setSetting('active_month', cur);
+
+  refreshExpenseDisplays();
+  showToast('✓ Saved ' + entry.date + ' to History — fresh start for ' + monthShort(cur));
+}
+
 async function renderHistory() {
   const history = (await getAllHistory()).sort((a, b) => b.id - a.id);
   const el = document.getElementById('history-list');
@@ -2024,6 +2064,11 @@ async function init() {
 
   // Cross-device sync (inert when firebase-config.js holds null)
   Sync.init();
+
+  // Auto-archive a finished month + reset for the new one (fires on open, and
+  // again if the app is reopened/refocused after the month has rolled over)
+  await checkMonthRollover();
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkMonthRollover(); });
 
   // Service worker for offline
   if ('serviceWorker' in navigator) {

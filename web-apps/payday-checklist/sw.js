@@ -1,4 +1,4 @@
-const CACHE_NAME = 'payday-checklist-v10';
+const CACHE_NAME = 'payday-checklist-v11';
 const PRECACHE = [
   './',
   './index.html',
