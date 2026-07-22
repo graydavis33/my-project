@@ -1,7 +1,14 @@
 # Odyssey Physique Plan — Gray Davis
 
 Goal: Matt Damon "Odyssey" look — lean, strong, athletic, warrior-functional. NOT bulky. Aesthetics + performance over scale number.
-Built: 2026-07-22. Block length: 12–16 weeks. Pace: slow & steady recomp (~0.5 lb/week).
+Built: 2026-07-22. Block length: 12–16 weeks.
+
+## UPDATED 2026-07-22 — GRAY WANTS TO KEEP HIS WEIGHT (~200 lb); fat coming off naturally is fine.
+→ This is a BODY RECOMPOSITION, not a cut. Build muscle + lose fat simultaneously, weight stays ~flat.
+→ Honest note: at 200 lb he will look "lean + STRONG/solid/dense," NOT lanky "could-use-a-meal" Damon (that look = the low weight itself). Same functional/defined goal, just more muscular. Most guys prefer it.
+→ Judge progress by MIRROR / PHOTOS / WAIST, not the scale. Scale may stay flat or dip slightly.
+→ T1D UPSIDE: eating at MAINTENANCE (not a deficit) = far less insulin disruption + lower hypo risk than a cut. Still get endo sign-off, but day-to-day is easier.
+→ Only Deliverable 1 numbers change (see below). Training/meals/supplements/tracker all stay the same; progressive overload drives the muscle gain that makes recomp work.
 
 ## ⚠️ READ FIRST — Type 1 Diabetes changes this
 A sustained calorie deficit + fat loss + fewer/slower carbs = your insulin needs will DROP. Same doses on less food = hypos (esp. overnight + around lifting).
@@ -10,20 +17,20 @@ A sustained calorie deficit + fat loss + fewer/slower carbs = your insulin needs
 - Gray's pattern (per endo): RUNNING spikes him, LIFTING lowers him → keep fast carbs handy when lifting.
 - Gluten-free + whole-food + modest deficit = basically Protocol #1 (glucose flattening) turned up. Works WITH the diabetes.
 
-## Target reframe
-Don't chase Damon's 167 lb (his 6'0" body). For Gray (5'10", 200 lb, ~18% BF): target the LOOK ≈ 175–182 lb at ~10–12% BF. Lose fat, keep/build muscle, get more defined. Mirror + performance > scale.
+## Target reframe [UPDATED — keep weight]
+Gray keeps ~200 lb. Goal = drop body fat from ~18% toward ~12% WHILE holding weight → fat replaced by muscle (recomp). Result: "lean + strong/solid," more muscular than lanky-Damon. Don't chase Damon's 167 lb scale number. Mirror + waist + performance > scale.
 
 ---
 
-## DELIVERABLE 1 — Calories, Protein, Water
+## DELIVERABLE 1 — Calories, Protein, Water  [RECOMP VERSION — keep weight]
 Estimates (Mifflin-St Jeor + activity). Tune to real-world trend after 2–3 weeks. SANITY-CHECK WITH DOCTOR.
-- Maintenance (TDEE): ~2,900 kcal/day (range 2,850–3,050; he's very active — 4x lifting + martial arts + daily NYC rucking)
-- Target intake: **~2,650 kcal/day** (~250 deficit = ~0.5 lb/week). Don't drop below ~2,200 without supervision.
-- Protein: **~190 g/day** (~2.1 g/kg, ~0.95 g/lb) — high, to protect muscle in the deficit + it's satiating + low glucose impact. HIT THIS DAILY, it's the priority macro.
-- Carbs: ~150–200 g/day, SLOW/whole sources, timed around training (Protocol #1 rules — veg first, carbs last, walk after).
-- Fat: ~90–115 g/day — fills the remaining calories (whole-food fats: olive oil, avocado, eggs, fish, nuts).
-- Water: **~3.5–4 L/day (~1 gallon)**, more on training days. Extra important: creatine + high protein + T1D (high sugar dehydrates you).
-Adjust rule: if not losing after ~3 wks, drop ~150–200 kcal. If losing too fast / energy & lifts crash / lows increase → add calories back.
+- Maintenance (TDEE): ~2,900 kcal/day (range 2,850–3,050; very active — 4x lifting + martial arts + daily NYC rucking)
+- Target intake: **~2,850–2,900 kcal/day (eat at MAINTENANCE)** — recomp, keep weight steady. Muscle gain + fat loss driven by protein + progressive overload, not a calorie gap.
+- Protein: **~190 g/day** (~2.1 g/kg, ~0.95 g/lb) — MORE critical in a recomp (raw material for new muscle). HIT THIS DAILY, priority macro.
+- Carbs: ~180–220 g/day — can go a bit higher than the cut version, especially AROUND TRAINING (fuels growth). Still slow/whole, carbs-last (Protocol #1).
+- Fat: ~90–110 g/day — fills the rest (whole-food fats: olive oil, avocado, eggs, fish, nuts).
+- Water: **~3.5–4 L/day (~1 gallon)**, more on training days. Extra important: creatine + high protein + T1D.
+Adjust rule: judge by WAIST + PHOTOS + mirror, not scale. If waist creeping up over weeks → trim ~150 kcal. If looking flat/soft with no strength gains → protein + training first, then small calorie nudge. Weight staying ~200 is the plan working, not a problem.
 
 ---
 
@@ -111,24 +118,25 @@ Copy this per week. Check the box each day.
 TRAINING (target 4):  [ ] Upper A  [ ] Lower A  [ ] Upper B  [ ] Lower B   (+ [ ] bonus day)
 Daily (tick per day, Mon–Sun):
 - Protein ~190g:      M T W T F S S
-- Calories ~2,650:    M T W T F S S
+- Calories ~2,850:    M T W T F S S
 - Water ~1 gal:       M T W T F S S
 - Zone 2 walk/ruck:   M T W T F S S
 - Sleep 7.5–8h:       M T W T F S S
 - Supplements (creatine/mag/D3):  M T W T F S S
-WEEKLY:
-- [ ] Weigh-in (same time, AM, fasted) → ____ lb
-- [ ] Progress photo (same lighting/pose)
+WEEKLY (recomp = waist + photos are PRIMARY, scale secondary):
+- [ ] Waist measurement (navel, same spot) → ____ in   ← primary progress marker
+- [ ] Progress photo (same lighting/pose)               ← primary progress marker
+- [ ] Weigh-in (secondary — expect ~flat/steady) → ____ lb
 - [ ] Dexcom time-in-range % this week → ____%
 - [ ] Any insulin adjustments (note w/ endo) → __________
 - [ ] Lifts logged / progressed?  [ ] Deload week?
-Trend check: losing ~0.5 lb/wk? energy & lifts holding? lows under control? → adjust calories only if off.
+Trend check (recomp): waist steady/shrinking? lifts going UP? photos leaner? weight ~flat = GOOD. Adjust calories only if waist creeps up over several weeks.
 
 ---
 
 ## DELIVERABLE 5 — Medical Sign-Off Callouts (do these)
-1. BEFORE starting: endocrinologist reviews the deficit + expected insulin reductions (basal + carb ratios). This is the big one for a T1D.
-2. Hypo watch: lifting lowers Gray + deficits raise low risk, esp. OVERNIGHT. Fast carbs always on hand; dial Dexcom low alarm.
+1. BEFORE starting: endocrinologist reviews the plan. RECOMP at maintenance = less insulin disruption than a cut, but training changes + fewer/slower carbs still shift needs. Get sign-off.
+2. Hypo watch: lifting lowers Gray, esp. OVERNIGHT. Fast carbs always on hand; dial Dexcom low alarm. (Lower risk than a deficit, but still real.)
 3. Creatine + kidney labs: tell doctor he takes creatine (mildly raises serum creatinine — don't misread as kidney decline). Check kidney function.
 4. Bloodwork baseline (piggyback): Vit D, ferritin/iron, B12, omega-3 index, magnesium, zinc, full metabolic panel, A1c, lipids, BP.
 5. Stop/reassess if: lows increase, energy/mood/recovery tanks, losing >1 lb/wk, or lifts collapse → likely deficit too big or insulin not adjusted.
