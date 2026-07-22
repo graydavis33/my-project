@@ -324,6 +324,16 @@
     .spend-trend-fill { height: 100%; border-radius: var(--radius-sm); background: var(--gradient-accent); transition: width 0.5s ease; }
     .spend-trend-fill.now { box-shadow: var(--glow-yellow); }
     .spend-trend-amt { font-size: 11px; color: var(--color-white); font-weight: 600; width: 62px; text-align: right; flex-shrink: 0; }
+    .spend-meter { max-width: 420px; margin: 0 auto 4px; }
+    .spend-meter .gm-progress-bg { height: 10px; margin-bottom: 6px; }
+    .spend-meter-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-gray-light); }
+    .spend-recent-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .spend-recent-row:last-child { border-bottom: none; }
+    .spend-recent-main { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+    .spend-recent-vendor { font-size: 13px; color: var(--color-white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .spend-recent-date { font-size: 10px; color: var(--color-gray-mid); }
+    .spend-recent-tag { font-size: 9px; padding: 2px 6px; border-radius: 6px; background: rgba(255,255,255,0.06); color: var(--color-gray-light); flex-shrink: 0; }
+    .spend-recent-amt { font-size: 13px; font-weight: 600; color: var(--color-gray-light); flex-shrink: 0; }
 
     /* ── Add-expense modal internals ── */
     .gm-modal-overlay { align-items: flex-end; }
@@ -690,10 +700,19 @@
           <div class="spend-hero-num" id="spend-total">$0</div>
           <div class="spend-hero-sub">Real money spent — reimbursements &amp; write-offs excluded</div>
         </div>
+        <div class="spend-meter">
+          <div class="gm-progress-bg"><div class="gm-progress-fill" id="spend-meter-bar" style="width:0%"></div></div>
+          <div class="spend-meter-labels"><span id="spend-meter-left">$0 of $0 budget</span><span id="spend-meter-rem"></span></div>
+        </div>
         <div class="spend-chart-wrap">
           <div class="spend-donut" id="spend-donut"></div>
           <div class="spend-legend" id="spend-legend"></div>
         </div>
+      </div>
+
+      <div class="gm-label" style="margin-top:24px">Recent Purchases</div>
+      <div class="gm-card">
+        <div id="spend-recent"></div>
       </div>
 
       <div class="gm-label" style="margin-top:24px">Month to Month</div>
@@ -1433,6 +1452,17 @@ function monthShort(ym) {
   return new Date(y, m - 1, 1).toLocaleDateString('en-US', { month: 'short' });
 }
 
+function animateCount(el, to, dur = 550) {
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min(1, (now - start) / dur);
+    const eased = 1 - Math.pow(1 - p, 3);   // ease-out
+    el.textContent = fmt2(to * eased);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 async function renderSpending() {
   // Per-category TRUE spend this month (effectiveSpent already strips out
   // EJ transfers, write-offs, and reimbursed amounts)
@@ -1440,7 +1470,38 @@ async function renderSpending() {
     name, spent: Math.round(effectiveSpent(i) * 100) / 100, color: SPEND_COLORS[i]
   }));
   const total = cats.reduce((s, c) => s + c.spent, 0);
-  document.getElementById('spend-total').textContent = fmt2(total);
+  animateCount(document.getElementById('spend-total'), total);
+
+  // ── Meter: spent vs total monthly budget ──
+  const totalBudget = BUDGETS.reduce((a, b) => a + b, 0);
+  const bar = document.getElementById('spend-meter-bar');
+  bar.style.width = (totalBudget > 0 ? Math.min(100, (total / totalBudget) * 100) : 0) + '%';
+  bar.style.background = total > totalBudget ? 'linear-gradient(135deg,#f87171,#ef4444)' : 'var(--gradient-accent)';
+  document.getElementById('spend-meter-left').textContent = fmt(total) + ' of ' + fmt(totalBudget) + ' budget';
+  const rem = totalBudget - total;
+  const remEl = document.getElementById('spend-meter-rem');
+  remEl.textContent = rem >= 0 ? fmt(rem) + ' left' : fmt(-rem) + ' over';
+  remEl.style.color = rem >= 0 ? 'var(--color-green)' : 'var(--color-red)';
+
+  // ── Recent purchases — newest first (excludes EJ transfers) ──
+  const recent = TXN_CACHE
+    .filter(t => !t.kind)
+    .sort((a, b) => (b.date || '').localeCompare(a.date || '') || (b.createdAt || '').localeCompare(a.createdAt || ''))
+    .slice(0, 12);
+  const recentEl = document.getElementById('spend-recent');
+  if (!recent.length) {
+    recentEl.innerHTML = '<div class="history-empty" style="padding:20px 0">No purchases logged yet.</div>';
+  } else {
+    recentEl.innerHTML = recent.map(t => {
+      const d = new Date(t.date + 'T12:00:00');
+      const ds = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const ci = CATEGORIES.indexOf(catOf(t));
+      const color = ci >= 0 ? SPEND_COLORS[ci] : 'var(--color-gray-mid)';
+      const tag = isBusiness(t) ? '<span class="spend-recent-tag">write-off</span>'
+        : isReimbursable(t) ? '<span class="spend-recent-tag">reimbursed</span>' : '';
+      return `<div class="spend-recent-row"><span class="spend-legend-dot" style="background:${color}"></span><span class="spend-recent-main"><span class="spend-recent-vendor">${escapeHtml(t.vendor)}</span><span class="spend-recent-date">${ds} · ${escapeHtml(catOf(t))}</span></span>${tag}<span class="spend-recent-amt">${fmt2(t.amount)}</span></div>`;
+    }).join('');
+  }
 
   const donut = document.getElementById('spend-donut');
   const legend = document.getElementById('spend-legend');
