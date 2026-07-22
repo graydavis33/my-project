@@ -4,7 +4,47 @@ A running list of products mentioned as we work through the health plan. Honest 
 
 Priority key: NOW = do soon, high impact. SOON = worth it, not urgent. LATER = optimization / nice-to-have. OPTIONAL = only if a test flags a need.
 
-Last updated: 2026-07-20 (supplements added)
+Last updated: 2026-07-22 (specific brand picks added)
+
+**On brands / bias:** No company pays me and no brand can pay to appear here. Picks are chosen on three unbiased criteria: (1) third-party tested (NSF / Informed Sport / USP), (2) clean simple ingredients, (3) best cost-per-unit value. Often the genuine best value is a store/bulk brand you don't see advertised — that's a good sign, not a bad one. Prices are ballpark (I can't pull live prices) — verify at checkout.
+
+---
+
+## SPECIFIC PRODUCT PICKS (genuine — nothing here is paid placement)
+
+### Supplements (all reputable + third-party tested)
+- Creatine: **BulkSupplements Creatine Monohydrate** or **Nutricost Creatine** — ~$20–25 for ~1kg (months' supply). Look for "**Creapure**" on the label = purest raw material. Amazon / iHerb. (Creatine is a commodity — do NOT overpay for HCL/"buffered.")
+- Magnesium glycinate: **NOW Foods Magnesium Glycinate** or **Doctor's Best High-Absorption Magnesium** — ~$14–16. iHerb (cheapest) / Amazon.
+- Vitamin D3+K2: **NOW Foods D3+K2** or **Sports Research D3+K2** — ~$15. iHerb / Amazon.
+- Whey (value): **Nutricost Whey** or **NOW Foods Whey** — ~$45 for 5 lb (~$0.75/serving). Premium-clean if you want it: **Legion Whey+** (fully third-party tested, pricier ~$40/2lb).
+- Omega-3 (only if tested low): **Kirkland Signature Fish Oil** (Costco) — genuinely great value ~$15, IFOS-grade. Premium: **Nordic Naturals**.
+- Zinc (only if tested low): **NOW Zinc Glycinate** or **Thorne Zinc Picolinate** — ~$8–12.
+- Ashwagandha (optional): any **KSM-66** standardized extract — NOW or Nutricost, ~$12.
+
+### Sweetener (for coffee + protein desserts — replaces honey)
+- **Pure monk fruit or pure stevia, no dextrose/maltodextrin.** Genuine picks: **NOW Better Stevia** (pure) or a **pure monk fruit** drops/powder. If you want to skip the erythritol debate, get one labeled erythritol-free. ~$10, lasts forever. iHerb / Whole Foods / Amazon.
+- Avoid: Truvia/Splenda-blends and anything listing dextrose or maltodextrin (those have carbs → nudge your glucose).
+
+### Water filter (NSF 53 lead-certified)
+- **ZeroWater pitcher** — ~$35, Target / Walmart / Amazon. Cheapest lead-certified start.
+- **Clearly Filtered pitcher** — ~$90, clearlyfiltered.com / Amazon. Longer-lasting filters.
+
+### Air
+- CO detector: **First Alert** or **Kidde** plug-in/battery — ~$20–40, Home Depot / Amazon. (Standard, reliable — don't overthink it.)
+- Air purifier: **Coway AP-1512HH "Mighty"** (~$160) or **Levoit Core 400S** (~$220) — Amazon. Independent lab testing (not marketing) consistently rates these top value; run in the bedroom.
+- Induction burner: **Duxtop 1800W Portable Induction** — ~$60, Amazon. Genuinely well-reviewed value pick.
+
+### Sleep
+- Earplugs: **Loop Quiet** (reusable, ~$25) or **Mack's** foam (~$10) — Amazon.
+- Eye mask: contoured (doesn't press your eyes) — **Manta** (~$25) or a generic contoured one (~$10).
+- Blackout curtains: any brand — Amazon / IKEA, ~$20–40.
+
+### Workout equipment — HONEST money tip: buy USED
+Iron doesn't wear out. **Facebook Marketplace / Craigslist** dumbbells, kettlebells, and benches go for ~40–60% off retail and are identical to new. Best value move by far in NYC.
+- Adjustable dumbbells (new): space-saving = **Bowflex/Nautilus SelectTech 552** (~$400/pair); cheaper = a plain cast-iron adjustable/spinlock set (~$150). Used = best value.
+- Kettlebell: any cast-iron (~$1–2/lb new, less used).
+- Doorway pull-up bar: any well-reviewed one — ~$25, Amazon.
+- Resistance bands: any set with a door anchor — ~$25.
 
 ---
 
