@@ -302,6 +302,12 @@
     .history-notes { margin-top: 9px; font-size: 11px; color: var(--color-gray-mid); font-style: italic; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 9px; }
     .history-delete { background: none; border: none; color: rgba(255,255,255,0.18); font-size: 15px; cursor: pointer; padding: 0 4px; transition: color 0.15s; }
     .history-delete:hover { color: var(--color-red); }
+    .history-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+    .history-edit { background: none; border: none; color: rgba(255,255,255,0.28); font-size: 14px; cursor: pointer; padding: 0 5px; transition: color 0.15s; }
+    .history-edit:hover { color: var(--color-yellow); }
+    .eh-row { display: flex; gap: 8px; }
+    .eh-row > div { flex: 1; }
+    .eh-field-lbl { font-size: 9px; color: var(--color-gray-mid); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin: 8px 0 3px; }
 
     /* ── Spending tab ── */
     .spend-hero { text-align: center; padding: 4px 0 20px; }
@@ -776,6 +782,18 @@
     <input class="modal-input" type="number" id="mark-amt" step="0.01" inputmode="decimal" style="display:none" />
     <button class="gm-btn-primary" style="width:100%;margin-top:16px;min-height:48px" onclick="confirmMark(false)">Just this purchase</button>
     <button class="gm-btn-primary" style="width:100%;margin-top:10px;min-height:48px" onclick="confirmMark(true)"><span id="mark-always-label"></span></button>
+  </div>
+</div>
+
+<!-- ── EDIT PAST MONTH MODAL ── -->
+<div class="gm-modal-overlay" id="edit-hist-modal" onclick="if(event.target===this)closeEditHist()">
+  <div class="add-modal">
+    <div class="modal-title">
+      <span id="edit-hist-title">Edit Month</span>
+      <button class="modal-close" onclick="closeEditHist()">✕</button>
+    </div>
+    <div id="edit-hist-body"></div>
+    <button class="gm-btn-primary" style="width:100%;margin-top:20px;min-height:48px" onclick="saveEditHist()">Save Changes</button>
   </div>
 </div>
 
@@ -1737,7 +1755,10 @@ async function renderHistory() {
     return `<div class="history-card">
       <div class="history-header">
         <div><div class="history-date">${entry.date}</div>${income}</div>
-        <button class="history-delete" onclick="removeHistoryEntry(${entry.id})" title="Delete">✕</button>
+        <div class="history-actions">
+          <button class="history-edit" onclick="openEditHist(${entry.id})" title="Edit this month">✎</button>
+          <button class="history-delete" onclick="removeHistoryEntry(${entry.id})" title="Delete">✕</button>
+        </div>
       </div>
       <div class="history-steps">${stepsHtml}</div>
       ${expensesHtml}
@@ -1754,6 +1775,58 @@ async function removeHistoryEntry(id) {
   await deleteHistory(id);
   Sync.onLocalHistoryDelete(id);
   renderHistory();
+}
+
+// ── Edit a past month ──
+let EDIT_HIST_ID = null;
+
+async function openEditHist(id) {
+  const entry = (await getAllHistory()).find(h => h.id === id);
+  if (!entry) return;
+  EDIT_HIST_ID = id;
+  document.getElementById('edit-hist-title').textContent = 'Edit — ' + entry.date;
+  const rows = (entry.expenses || []).map((e, i) => `
+    <div class="modal-section">${escapeHtml(e.name)}</div>
+    <div class="eh-row">
+      <div><label class="eh-field-lbl">Spent</label><input class="modal-input" type="number" inputmode="decimal" id="eh-spent-${i}" value="${e.spent}" /></div>
+      <div><label class="eh-field-lbl">Budget</label><input class="modal-input" type="number" inputmode="decimal" id="eh-budget-${i}" value="${e.budget}" /></div>
+    </div>`).join('');
+  document.getElementById('edit-hist-body').innerHTML = `
+    <div class="modal-section">Monthly income</div>
+    <input class="modal-input" type="number" inputmode="decimal" id="eh-income" value="${entry.monthlyIncome || 0}" />
+    ${rows}
+    <div class="modal-section">Emergency fund balance</div>
+    <input class="modal-input" type="number" inputmode="decimal" id="eh-fund" value="${entry.fundBalance || 0}" />
+    <div class="modal-section">Ring fund balance</div>
+    <input class="modal-input" type="number" inputmode="decimal" id="eh-ring" value="${entry.ringBalance || 0}" />
+    <div class="modal-section">Notes</div>
+    <textarea class="modal-input" id="eh-notes" style="min-height:70px;resize:none">${escapeHtml(entry.notes || '')}</textarea>`;
+  document.getElementById('edit-hist-modal').classList.add('open');
+}
+
+function closeEditHist() {
+  document.getElementById('edit-hist-modal').classList.remove('open');
+  EDIT_HIST_ID = null;
+}
+
+async function saveEditHist() {
+  const id = EDIT_HIST_ID;
+  if (id == null) return;
+  const entry = (await getAllHistory()).find(h => h.id === id);
+  if (!entry) { closeEditHist(); return; }
+  const g = elId => { const v = parseFloat(document.getElementById(elId).value); return isNaN(v) ? 0 : v; };
+  entry.monthlyIncome = g('eh-income');
+  entry.expenses = (entry.expenses || []).map((e, i) => ({
+    name: e.name, budget: g('eh-budget-' + i), spent: Math.round(g('eh-spent-' + i) * 100) / 100
+  }));
+  entry.fundBalance = g('eh-fund');
+  entry.ringBalance = g('eh-ring');
+  entry.notes = document.getElementById('eh-notes').value || '';
+  await putHistory(entry);
+  Sync.onLocalHistory(entry);
+  closeEditHist();
+  renderHistory();
+  showToast('✓ Month updated');
 }
 
 // ═══════════════════════════════════════════════
