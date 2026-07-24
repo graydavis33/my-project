@@ -196,6 +196,11 @@ Not-a-pill: whey ~25g to hit protein target (post-workout/meal); electrolytes (p
 Daily schedule: first meal (12-2, fat) = D3+K2 (+omega-3/zinc if used); anytime = creatine; post-workout = whey; bedtime = magnesium (+ashwagandha if used).
 Rules: bloodwork FIRST to dose D/omega-3/zinc; 3rd-party tested brands only.
 
+## FASTING (Gray asked about 1 day/week, 2026-07-24)
+T1D SAFETY FIRST: a full 24h fast on insulin = HIGH RISK (hypo from active insulin, or DKA if basal cut too far). NOT a solo experiment — requires endo insulin-adjustment plan (basal reduction, no bolus w/o food).
+Good news: he ALREADY does daily time-restricted eating (~12-2pm→evening window = 14-16h fast, handles it fine) = most of the metabolic/insulin-sensitivity benefit, low risk. Autophagy/longevity hype around long fasts is oversold in humans.
+RECOMMENDATION: keep/optimize the DAILY eating window instead of a weekly 24h fast. A fast day also makes his ~190g protein impossible + creates a deficit that fights muscle-building (recomp at maintenance). If he wants a longer fast, do it supervised w/ endo + Dexcom, not standing weekly.
+
 ## NEXT UP (not yet covered)
 - Supplement stack (beyond creatine/whey)
 - Products layer — shower filter, cotton, etc. (validated vs hype)

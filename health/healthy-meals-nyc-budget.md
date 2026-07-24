@@ -128,5 +128,11 @@ Fats/staples/snacks: EVOO (MUFA + oleocanthal polyphenols, anti-inflammatory, lo
 
 Q&A logged: TJ's HAS air-chilled chicken (breast reliably, thighs less so — less water weight, better sear, worth small premium). Daily EVOO shot = healthy (heart/longevity, zero glucose) if you count the calories + buy genuine fresh EVOO. Rolled oats uses = overnight oats (oats+milk/yogurt+whey+chia+berries+PB), stir into protein pancakes, hot oatmeal + whey + berries, bircher, smoothie thickener.
 
+## Cranberries (Gray asked to add Ocean Spray, 2026-07-24)
+HONEST FLAG: sweetened Craisins + cranberry juice cocktail = high added sugar (~25-30g/handful) = real glucose spike for a T1D. Healthy versions:
+- BEST: fresh/frozen UNSWEETENED cranberries (Ocean Spray sells fresh bags, seasonal) — tart, near-zero sugar, antioxidants + urinary/gut benefit.
+- MIDDLE: Ocean Spray Reduced Sugar Craisins (~50% less).
+- Regular Craisins: keep portion small, treat like candy, pre-bolus.
+
 ## Honest note
 $300/mo is TIGHT for your calorie + protein needs in NYC — realistic range is $300-380 depending on how bulk you buy and how disciplined the no-takeout is. Eggs, canned fish, chicken thighs, bulk whey, frozen veg, and rice/oats are your cost-per-nutrient MVPs. The takeout habit is the whole difference.
