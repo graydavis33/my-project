@@ -144,12 +144,16 @@ Oven option: banana + oats + PB + whey + dark choc chunks, bake 350F ~12 min = p
 
 ## TJ'S SHOPPING LIST BY CATEGORY (2026-07-24, dessert qtys added)
 MEAT & SEAFOOD: chicken (air-chilled breast or boneless skinless thighs) ~3.5 lb · ground beef 85/15 2 lb · albacore tuna 4 cans · sardines in olive oil 4 cans.
-DAIRY & EGGS: cage-free eggs 3 dozen · whole-milk Greek yogurt 2 tubs · low-fat cottage cheese 2 tubs (ice cream) · block cheese 1.
+DAIRY & EGGS: cage-free eggs 3 dozen · PLAIN Greek yogurt (unsweetened, whole or nonfat) 2 tubs · low-fat cottage cheese 2 tubs (ice cream) · block cheese 1.
 FROZEN: fire-roasted peppers & onions 1 · organic brown rice 3-pack 1 · frozen mixed berries 2 (desserts+shakes).
-PANTRY/CANNED/GRAINS: black beans 3 · corn tortillas 1 · GF rolled oats 1 · EVOO 1 · peanut butter (peanuts+salt) 1 · ground cinnamon 1 · Ocean Spray Reduced Sugar Craisins or fresh cranberries 1.
+PANTRY/CANNED/GRAINS: black beans 3 · corn tortillas 1 · GF rolled oats 1 · EVOO 1 · peanut butter (peanuts+salt) 1 · ground cinnamon 1 · Ocean Spray Reduced Sugar Craisins or fresh cranberries 1 · raw cashews (dessert texture) 1 · UNSWEETENED shredded coconut 1 · raw honey 1 (T1D FLAG: pure sugar/spike — tiny amounts + pre-bolus, or use stevia instead) · TJ's Sea Salt 1.
 PRODUCE: sweet potatoes 5 · bananas 7.
-SNACKS & TREATS: turkey jerky 1 (check sugar) · roasted seaweed 2 · 85% dark chocolate 2 bars.
-NOT AT TJ'S (buy elsewhere/online): whey — Nutricost or NOW 5lb ~$45 (Amazon/iHerb) · monk fruit/stevia — NOW Better Stevia or Lakanto (Whole Foods/Amazon) · parchment paper — any brand.
+SNACKS & TREATS: turkey jerky 1 (check sugar) · roasted seaweed 2 (iodine) · 85% dark chocolate 2 bars.
+NOT AT TJ'S (buy elsewhere/online): whey — Nutricost or NOW 5lb ~$45 (Amazon/iHerb) · monk fruit/stevia — NOW Better Stevia or Lakanto (Whole Foods/Amazon) · parchment paper — any brand · (optional premium salt) Redmond Real Salt (Whole Foods/Amazon).
+
+NUT NOTE: cashews = best for CREAMY dessert texture but NOT healthiest nut (higher carb, less fiber). Healthiest = walnuts (omega-3) / almonds (fiber) / macadamia (lowest carb). Use cashews for texture, modest portions.
+SALT NOTE: "trace mineral" hype on pink/fancy salt is oversold. What matters = iodine (covered by his seaweed + dairy/eggs) + not overdoing sodium. TJ's Sea Salt fine; Redmond Real Salt = premium option.
+COCONUT: unsweetened only (sweetened baking coconut = added sugar).
 
 ## Brown rice + glucose (Gray asked 2026-07-24)
 Better/slower than white (more fiber → GI ~50 vs ~70) BUT still a carb that raises sugar — dose for it, ~½ cup cooked serving. Flatten more: pair protein+fat, eat LAST, walk after. Hack: cooked-cooled-reheated (frozen TJ's brown rice) builds resistant starch = smaller hit. Watch Dexcom to learn personal response.
