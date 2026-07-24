@@ -134,5 +134,24 @@ HONEST FLAG: sweetened Craisins + cranberry juice cocktail = high added sugar (~
 - MIDDLE: Ocean Spray Reduced Sugar Craisins (~50% less).
 - Regular Craisins: keep portion small, treat like candy, pre-bolus.
 
+## Healthy Desserts (from Gray's list, 2026-07-24) — all T1D-friendly (protein/fat blunt sugar)
+1. Cottage cheese protein "ice cream": blend 1 cup cottage cheese + 1 scoop whey + frozen berries + sweetener, freeze 1-2h. ~35g protein, minimal sugar. BEST for him.
+2. Greek yogurt berry bark: spread whole-milk Greek yogurt ½" on parchment, press in berries + chopped 85% dark chocolate, freeze 2h, break up.
+3. Frozen dark-choc PB banana bites: banana slices + PB sandwiched + drizzled 85% dark chocolate, freeze. T1D WATCH: banana = highest-glucose here, few bites + pre-bolus.
+4. Sweet potato protein pudding: mash/blend 1 cooked+cooled sweet potato + 1 scoop whey + spoon Greek yogurt + cinnamon + optional sweetener/dark choc, chill. ~30g protein, slow carb. T1D: real carbs — portion + pre-bolus.
+Oven option: banana + oats + PB + whey + dark choc chunks, bake 350F ~12 min = protein cookies.
+
+## TJ'S SHOPPING LIST BY CATEGORY (2026-07-24, dessert qtys added)
+MEAT & SEAFOOD: chicken (air-chilled breast or boneless skinless thighs) ~3.5 lb · ground beef 85/15 2 lb · albacore tuna 4 cans · sardines in olive oil 4 cans.
+DAIRY & EGGS: cage-free eggs 3 dozen · whole-milk Greek yogurt 2 tubs · low-fat cottage cheese 2 tubs (ice cream) · block cheese 1.
+FROZEN: fire-roasted peppers & onions 1 · organic brown rice 3-pack 1 · frozen mixed berries 2 (desserts+shakes).
+PANTRY/CANNED/GRAINS: black beans 3 · corn tortillas 1 · GF rolled oats 1 · EVOO 1 · peanut butter (peanuts+salt) 1 · ground cinnamon 1 · Ocean Spray Reduced Sugar Craisins or fresh cranberries 1.
+PRODUCE: sweet potatoes 5 · bananas 7.
+SNACKS & TREATS: turkey jerky 1 (check sugar) · roasted seaweed 2 · 85% dark chocolate 2 bars.
+NOT AT TJ'S (buy elsewhere/online): whey — Nutricost or NOW 5lb ~$45 (Amazon/iHerb) · monk fruit/stevia — NOW Better Stevia or Lakanto (Whole Foods/Amazon) · parchment paper — any brand.
+
+## Brown rice + glucose (Gray asked 2026-07-24)
+Better/slower than white (more fiber → GI ~50 vs ~70) BUT still a carb that raises sugar — dose for it, ~½ cup cooked serving. Flatten more: pair protein+fat, eat LAST, walk after. Hack: cooked-cooled-reheated (frozen TJ's brown rice) builds resistant starch = smaller hit. Watch Dexcom to learn personal response.
+
 ## Honest note
 $300/mo is TIGHT for your calorie + protein needs in NYC — realistic range is $300-380 depending on how bulk you buy and how disciplined the no-takeout is. Eggs, canned fish, chicken thighs, bulk whey, frozen veg, and rice/oats are your cost-per-nutrient MVPs. The takeout habit is the whole difference.
