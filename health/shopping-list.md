@@ -108,10 +108,23 @@ Bloodwork to request (free-ish via your doctor): Vit D (25-OH), ferritin+iron, B
 | Chest-strap HR monitor (e.g. Polar H10) | Makes Zone 2 cardio accurate instead of guessing. Free alternative: the "can hold a conversation" test. | ~$50 |
 | Resistance bands / pull-up bar | Only if you want more pulling options at home. Your KB + dumbbells already cover a lot. | $25–40 |
 
-## Coming up — to be validated before buying
-These are things you've mentioned wanting or that fit upcoming topics. I'll confirm which are legit vs. hype when we get to that step, then move them up.
-- Filtered shower head (topic: products layer — real but modest benefit; validate model)
-- Cotton clothing swap (products layer — marginal, harmless)
+## Products Layer / Low-Tox (validated 2026-07-24)
+TOP 2 (do these — ~80% of the category's real benefit):
+| Product | Why | Priority | Rough cost |
+|---|---|---|---|
+| Cast iron + stainless pans | Replace old/scratched nonstick (sheds coating + fumes). Lasts forever. Lodge cast iron + Tramontina stainless. Induction-compatible. | NOW-ish | Lodge ~$25 / Tramontina ~$40 |
+| Glass food storage set | Never microwave plastic (leaches into food). Doubles as your work meal-prep kit. Pyrex or Glasslock. | NOW-ish | $25–30 |
+
+Also worth it:
+| Product | Why | Priority | Rough cost |
+|---|---|---|---|
+| Stainless/glass water bottle | Ditch plastic; supports hydration. Klean Kanteen / Hydro Flask / generic. | SOON | $20–30 |
+| Vitamin C shower filter | Modest skin/hair benefit. NYC = chloramine → VITAMIN C type (not plain carbon/KDF). Sonaki / Vitaclean. | LATER | $30–50 |
+
+Skip / don't overspend:
+- Scented candles, plug-ins, air fresheners — VOCs/phthalates; just ventilate.
+- Cotton "detox" wardrobe — comfort only, not a health lever; buy cotton when replacing clothes anyway.
+- "Clean" personal care premium — mostly fear-marketing. Aluminum deodorant→cancer is DEBUNKED. Only easy move: fragrance-free where convenient.
 
 ## Not a product, but do it
 - Blood lead level test — add to your next diabetes blood draw (free/cheap via your doctor).

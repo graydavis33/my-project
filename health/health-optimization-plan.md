@@ -201,6 +201,26 @@ T1D SAFETY FIRST: a full 24h fast on insulin = HIGH RISK (hypo from active insul
 Good news: he ALREADY does daily time-restricted eating (~12-2pm→evening window = 14-16h fast, handles it fine) = most of the metabolic/insulin-sensitivity benefit, low risk. Autophagy/longevity hype around long fasts is oversold in humans.
 RECOMMENDATION: keep/optimize the DAILY eating window instead of a weekly 24h fast. A fast day also makes his ~190g protein impossible + creates a deficit that fights muscle-building (recomp at maintenance). If he wants a longer fast, do it supervised w/ endo + Dexcom, not standing weekly.
 
+## PROTOCOL #7 — Products Layer / Low-Tox (COVERED 2026-07-24) — FINAL SECTION
+Honest reframe: the stuff he asked about first (shower filter, cotton) is LOW priority; cookware + food storage (touch food + heat daily) are the real levers. This category = most fear-marketing/wasted money.
+
+TIER 1 (worth it, real exposure):
+1. Cookware — ditch old/scratched nonstick (Teflon/PTFE sheds + fumes when scratched/overheated) → cast iron + stainless. Picks: Lodge cast iron (~$25), Tramontina stainless (~$40). Ties to his new daily cooking + induction burner.
+2. Glass food storage + NEVER microwave plastic (phthalates/BPA/microplastics leach with heat+fat). Big for him — he's meal-prepping for work. Picks: Pyrex/Glasslock glass set (~$25-30) = doubles as work meal-prep kit.
+3. Stainless/glass water bottle (Klean Kanteen/Hydro Flask ~$20-30) — supports hydration goal.
+
+TIER 2 (modest):
+4. Filtered shower head — chlorine/chloramine, helps dry skin/hair, modest. NYC = CHLORAMINE → get a VITAMIN C filter (Sonaki/Vitaclean ~$30-50), not plain carbon/KDF.
+5. Skip scented candles/plug-ins/air fresheners (VOCs/phthalates) — ventilate instead.
+
+TIER 3 (marginal/hype — don't overspend):
+6. Cotton clothing — comfort/breathability, NOT a real health lever. Buy when replacing anyway, don't "detox" the wardrobe.
+7. Personal care — ignore fear-marketing. Aluminum deodorant → cancer = DEBUNKED. Only reasonable move: fragrance-free where easy (added "fragrance/parfum" can hide phthalates). Don't pay premium for "natural" everything.
+
+TOP 2 IF NOTHING ELSE: replace scratched nonstick w/ cast iron/stainless + get glass meal-prep containers = ~80% of the category's real benefit.
+
+=== ALL 7 PROTOCOLS NOW COVERED (glucose, lead, air, exercise, sleep, supplements, products) + Odyssey recomp plan + full NYC meal system. ===
+
 ## NEXT UP (not yet covered)
 - Supplement stack (beyond creatine/whey)
 - Products layer — shower filter, cotton, etc. (validated vs hype)
