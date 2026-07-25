@@ -1,1 +1,9 @@
-[]
+[
+ {
+  "date": "2026-07-25",
+  "issue": 1,
+  "title": "What Claude Is Actually Doing When You Type a Prompt",
+  "category": "fundamentals",
+  "topic": "how-llms-actually-work"
+ }
+]

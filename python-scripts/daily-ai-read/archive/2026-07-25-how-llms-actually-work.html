@@ -1,0 +1,150 @@
+LLMs are trained on one deceptively simple objective: predict the next token given all the tokens before it. A context window is the total number of tokens a language model can process in a single request-response cycle — its entire working memory for a given conversation. At a high level, a transformer-based LLM is an autoregressive, next-token predictor — it takes a sequence of tokens as input and produces a probability distribution over what the next token should be. A large language model is a deep learning model trained on immense amounts of data, built on a transformer architecture, that works as a giant statistical prediction machine repeatedly predicting the next word. IBM notes that transformer models, introduced in 2017, are useful due to their self-attention mechanism, which allows them to pay attention to different tokens at different moments. Next-token prediction trains a large language model by turning ordinary text into a supervised learning problem where the label for each position is simply the token that comes next. During generation, the model predicts one next token, appends it to the context, and repeats. The context window is the maximum number of tokens a model can consider at once — its entire working memory for a single request. Tokens are the fundamental units the model reads and produces — roughly ¾ of a word in English. One of RLHF's most prominent applications has been to enhance the relevance, accuracy, and ethics of LLMs — particularly for their use as chatbots.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Claude is Actually Doing When You Type a Prompt</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+
+  <div style="max-width:600px;margin:0 auto;background-color:#ffffff;padding:32px 28px 40px 28px;">
+
+    <!-- Header -->
+    <p style="font-size:13px;color:#888888;margin:0 0 24px 0;letter-spacing:0.04em;text-transform:uppercase;">Daily AI Read &nbsp;·&nbsp; Issue #1 &nbsp;·&nbsp; July 25, 2026</p>
+
+    <!-- Title -->
+    <h1 style="font-size:26px;font-weight:700;color:#1a1a1a;margin:0 0 20px 0;line-height:1.25;">What Claude Is Actually Doing When You Type a Prompt</h1>
+
+    <!-- Hook -->
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 28px 0;">
+      Every time you send a message to Claude Code, you're not talking to something that "knows" things the way you do. You're firing up an extraordinarily powerful autocomplete engine&nbsp;— one trained on a chunk of the entire written internet — and the output can feel eerily intelligent. Here's what is actually happening under the hood.
+    </p>
+
+    <!-- TL;DR Box -->
+    <div style="background-color:#f2f2f2;border-radius:10px;padding:20px 24px;margin:0 0 36px 0;">
+      <p style="font-size:13px;font-weight:700;color:#555555;margin:0 0 10px 0;text-transform:uppercase;letter-spacing:0.06em;">The 2-minute version</p>
+      <ul style="font-size:15px;color:#1a1a1a;line-height:1.65;margin:0;padding-left:20px;">
+        <li style="margin-bottom:7px;"><strong>Tokens, not words.</strong> AI models don't read words — they read chunks called tokens, roughly &frac34; of a word each. Everything is measured, priced, and limited in tokens.</li>
+        <li style="margin-bottom:7px;"><strong>One job, done at massive scale.</strong> An LLM is trained on one objective: predict the next token given all the tokens before it. That's the whole trick.</li>
+        <li style="margin-bottom:7px;"><strong>Generation is a loop.</strong> When the model replies, it picks one token, adds it to the sequence, then picks the next one — thousands of times — until it decides to stop.</li>
+        <li style="margin-bottom:7px;"><strong>Context window = working memory.</strong> The model can only "see" a limited number of tokens at once. Overflow that limit and it starts forgetting the beginning of your conversation.</li>
+        <li style="margin-bottom:0;"><strong>RLHF turns autocomplete into an assistant.</strong> A second training stage uses human feedback to steer the raw model away from garbage output and toward helpful, honest replies.</li>
+      </ul>
+    </div>
+
+    <!-- Section 1: Tokens -->
+    <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin:0 0 12px 0;border-bottom:2px solid #f0f0f0;padding-bottom:8px;">Step 1: Everything gets chopped into tokens</h2>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      Before an AI model can read a single word you've written, it has to convert your text into a format it can process mathematically. The unit it uses is called a <strong>token</strong>.
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      A token is not exactly a word. It's a chunk of text — sometimes a full word, sometimes just part of one, sometimes punctuation. In English, one token corresponds to roughly <strong>three-quarters of a word</strong>, or about four characters of text. So the sentence "I edit videos in Premiere" might become five or six tokens: <em>"I"</em>, <em>"edit"</em>, <em>"vid"</em>, <em>"eos"</em>, <em>"in"</em>, <em>"Premiere"</em>. The model never sees letters — only these numbered chunks.
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 28px 0;">
+      Why does this matter to you? Because <strong>tokens are the unit of cost and capacity for every AI model you use</strong>. When an API bill says "$2 per million input tokens," that's how many chunks of text you fed in. When a model says it has a "200,000 token context window," that's how much text it can hold in memory at once — more on that in a moment.
+    </p>
+
+    <!-- Section 2: Training -->
+    <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin:0 0 12px 0;border-bottom:2px solid #f0f0f0;padding-bottom:8px;">Step 2: Training — reading the world, one prediction at a time</h2>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      Here is the part that surprises most people: every large language model (LLM — that's the technical name for a model like Claude, GPT, or Gemini) was trained on <em>one single objective</em>. The goal was: <strong>given all the tokens you've seen so far, predict the next token.</strong>
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      Think of it like a cloze test you might have taken in school — a sentence with the last word blanked out. The model's job was to fill in that blank. Now imagine doing that for hundreds of billions of sentences scraped from books, websites, code repositories, academic papers, and more. The model saw so much text, and made so many predictions, that it had to develop an internal representation of <em>how language works, how ideas connect, how code is structured, and what facts tend to be true</em> — not because anyone programmed those things in, but because they were the only way to get the prediction right.
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      This phase is called <strong>pretraining</strong>. The model underneath Claude or ChatGPT began as a raw pretraining result: extremely knowledgeable about how language works, but with no idea how to be a helpful assistant. It would just as happily continue a racist rant as write a Python script, because both patterns existed in the training data.
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 28px 0;">
+      The underlying system that makes next-token prediction work efficiently at scale is called a <strong>Transformer</strong> — a specific neural network architecture first published in a 2017 research paper. A <strong>neural network</strong> is a layered mathematical system loosely inspired by how neurons connect in a brain. What made the Transformer special was a trick called <strong>self-attention</strong>, which lets the model weigh how relevant every earlier token is to the one it's currently predicting. When the model is deciding what word follows "she picked up her," self-attention lets it look back and figure out who "she" refers to, even if that was 200 tokens ago.
+    </p>
+
+    <!-- Section 3: Generation -->
+    <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin:0 0 12px 0;border-bottom:2px solid #f0f0f0;padding-bottom:8px;">Step 3: Generating a response — one token at a time</h2>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      When you hit "send" on a prompt, the model doesn't draft the entire reply at once. Instead, it runs the same prediction loop over and over:
+    </p>
+    <ol style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;padding-left:24px;">
+      <li style="margin-bottom:8px;">It looks at your prompt (all its tokens).</li>
+      <li style="margin-bottom:8px;">It produces a <strong>probability distribution</strong> — a ranked list of every possible next token and how likely each one is.</li>
+      <li style="margin-bottom:8px;">It samples from that list and picks one token.</li>
+      <li style="margin-bottom:8px;">That token gets appended to the sequence.</li>
+      <li style="margin-bottom:8px;">Repeat from step 1, now with one more token in the input.</li>
+    </ol>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      This is why AI responses stream onto your screen word-by-word rather than appearing all at once — you're literally watching the loop run in real time.
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      The <strong>temperature</strong> setting you may have seen in API settings controls how adventurous that sampling step is. Low temperature = pick almost always the most likely token (predictable, consistent output). High temperature = pick from further down the probability list more often (more creative, occasionally more weird).
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 28px 0;">
+      This also explains why models <strong>hallucinate</strong> — a term for when they confidently state something false. The model is not lying. It doesn't have beliefs. It's producing whatever token is statistically likely to follow, and sometimes a confident-sounding false claim is more statistically probable than "I don't know."
+    </p>
+
+    <!-- Section 4: Context Window -->
+    <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin:0 0 12px 0;border-bottom:2px solid #f0f0f0;padding-bottom:8px;">Step 4: The context window — the model's working memory</h2>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      At every step of the generation loop, the model looks back at <em>all</em> previous tokens — but only up to a limit. That limit is called the <strong>context window</strong>. Think of it as the model's desk: it can only have so many papers spread out in front of it at once. Once you pile on more papers than the desk fits, the oldest ones fall off the back edge and the model can no longer reference them.
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      The context window holds everything: your system prompt, the conversation history, documents you paste in, and the model's own replies so far. Claude Sonnet 5, which launched June 30, 2026, has a 1,000,000-token context window — that's roughly 750,000 words, or about the length of eight average novels. A few years ago, most models topped out at 4,000 tokens.
+    </p>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 28px 0;">
+      But bigger context windows cost more to run. Every token in that window has to be processed during self-attention, and the compute grows fast as the window fills up. That's why API pricing is per token, not per message.
+    </p>
+
+    <!-- Section 5: RLHF -->
+    <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin:0 0 12px 0;border-bottom:2px solid #f0f0f0;padding-bottom:8px;">Step 5: RLHF — turning autocomplete into an assistant</h2>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      After pretraining, the raw model still doesn't behave like a good assistant. A second training stage called <strong>RLHF</strong> (Reinforcement Learning from Human Feedback) fixes that. Here's the simplified version of how it works:
+    </p>
+    <ol style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;padding-left:24px;">
+      <li style="margin-bottom:8px;"><strong>Supervised fine-tuning (SFT):</strong> Human writers demonstrate ideal conversations — here's a good prompt, here's a good answer. The model trains on these examples directly.</li>
+      <li style="margin-bottom:8px;"><strong>Reward modeling:</strong> Human raters compare pairs of model outputs and rank which one is better. Their preferences train a separate "reward model" — essentially a judge that scores responses.</li>
+      <li style="margin-bottom:8px;"><strong>Reinforcement learning:</strong> The main model is tuned to generate responses that score higher with the judge, without wandering too far from what it already knows.</li>
+    </ol>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 28px 0;">
+      RLHF is why Claude says "I'm not sure" instead of hallucinating more confidently, why it declines certain requests, and why it follows instructions in a natural conversation format rather than just continuing a text document. The raw pretraining data doesn't teach any of that — RLHF does.
+    </p>
+
+    <!-- Why This Matters For You -->
+    <h2 style="font-size:20px;font-weight:700;color:#1a1a1a;margin:0 0 12px 0;border-bottom:2px solid #f0f0f0;padding-bottom:8px;">Why this matters for your work</h2>
+    <p style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;">
+      Understanding this loop makes you a meaningfully better AI user right now:
+    </p>
+    <ul style="font-size:17px;color:#1a1a1a;line-height:1.6;margin:0 0 16px 0;padding-left:22px;">
+      <li style="margin-bottom:10px;"><strong>Longer context = more expensive.</strong> When you build an automation in Claude Code that dumps a 10,000-word document into every prompt, you're paying for every token of that document on every call. Trimming inputs isn't just good practice — it directly cuts your API bill.</li>
+      <li style="margin-bottom:10px;"><strong>Prompts are part of the input, not separate from it.</strong> Your instruction, the conversation history, and any examples you give are all tokens the model sees as one continuous stream. A 500-word system prompt costs real tokens every single request.</li>
+      <li style="margin-bottom:10px;"><strong>Hallucinations aren't bugs you can patch.</strong> They're a structural feature of next-token prediction. The fix is verification — build your automations to double-check factual outputs rather than trusting them blindly.</li>
+      <li style="margin-bottom:0;"><strong>Temperature is a creative dial you can turn.</strong> If you're building a tool that writes social captions, a slightly higher temperature gives more varied output. For a tool that parses invoice data, you want temperature near zero so results are consistent and predictable.</li>
+    </ul>
+
+    <!-- Try This Today -->
+    <div style="background-color:#f2f2f2;border-radius:10px;padding:20px 24px;margin:28px 0 36px 0;">
+      <p style="font-size:13px;font-weight:700;color:#555555;margin:0 0 10px 0;text-transform:uppercase;letter-spacing:0.06em;">Try this today (5 minutes)</p>
+      <p style="font-size:16px;color:#1a1a1a;line-height:1.6;margin:0;">
+        Open <a href="https://platform.openai.com/tokenizer" style="color:#1a56db;text-decoration:underline;">platform.openai.com/tokenizer</a> — it's free, no login needed — and paste in a caption you recently wrote for a client. See how many tokens it is. Then paste in your longest recent system prompt from Claude Code. Now you can put a real number on how much of your context window you're burning before the model even reads what the user said.
+      </p>
+    </div>
+
+    <!-- Sources -->
+    <h2 style="font-size:16px;font-weight:700;color:#1a1a1a;margin:0 0 10px 0;">Sources</h2>
+    <ol style="font-size:14px;color:#555555;line-height:1.7;margin:0;padding-left:20px;">
+      <li style="margin-bottom:6px;"><a href="https://sqmagazine.co.uk/what-are-large-language-models/" style="color:#1a56db;text-decoration:underline;">SQ Magazine — "Large Language Models Explained: How LLMs Actually Work"</a></li>
+      <li style="margin-bottom:6px;"><a href="https://letsdatascience.com/blog/how-large-language-models-actually-work" style="color:#1a56db;text-decoration:underline;">Let's Data Science — "How Large Language Models Actually Work Under the Hood"</a></li>
+      <li style="margin-bottom:6px;"><a href="https://devtk.ai/en/blog/llm-context-window-explained/" style="color:#1a56db;text-decoration:underline;">DevTk.AI — "LLM Context Windows Explained: 4K to 1M Tokens (2026)"</a></li>
+      <li style="margin-bottom:6px;"><a href="https://blog.mlq.ai/tokens-context-window-llms/" style="color:#1a56db;text-decoration:underline;">MLQ Guides — "Tokens and Context Windows in LLMs, Explained"</a></li>
+      <li style="margin-bottom:6px;"><a href="https://sebastianraschka.com/faq/docs/next-token-prediction.html" style="color:#1a56db;text-decoration:underline;">Sebastian Raschka — "How does next-token prediction train a large language model?"</a></li>
+      <li style="margin-bottom:6px;"><a href="https://www.lesswrong.com/posts/XGHf7EY3CK4KorBpw/understanding-llms-insights-from-mechanistic" style="color:#1a56db;text-decoration:underline;">LessWrong — "Understanding LLMs: Insights from Mechanistic Interpretability"</a></li>
+      <li style="margin-bottom:6px;"><a href="https://www.ibm.com/think/topics/rlhf" style="color:#1a56db;text-decoration:underline;">IBM Think — "What Is Reinforcement Learning From Human Feedback (RLHF)?"</a></li>
+      <li style="margin-bottom:6px;"><a href="https://nareshit.com/blogs/how-large-language-models-work-simple-guide" style="color:#1a56db;text-decoration:underline;">NareshIT — "How Large Language Models Work: Simple Guide 2026"</a></li>
+      <li style="margin-bottom:0;"><a href="https://www.anthropic.com/news/claude-sonnet-5" style="color:#1a56db;text-decoration:underline;">Anthropic — "Introducing Claude Sonnet 5" (context window and pricing facts)</a></li>
+    </ol>
+
+  </div>
+</body>
+</html>
+```
