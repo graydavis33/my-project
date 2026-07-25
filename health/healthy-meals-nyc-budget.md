@@ -147,7 +147,7 @@ MEAT & SEAFOOD: chicken (air-chilled breast or boneless skinless thighs) ~3.5 lb
 DAIRY & EGGS: cage-free eggs 3 dozen · PLAIN Greek yogurt (unsweetened, whole or nonfat) 2 tubs · low-fat cottage cheese 2 tubs (ice cream) · block cheese 1.
 FROZEN: fire-roasted peppers & onions 1 · organic brown rice 3-pack 1 · frozen mixed berries 2 (desserts+shakes).
 PANTRY/CANNED/GRAINS: black beans 3 · corn tortillas 1 · GF rolled oats 1 · EVOO 1 · peanut butter (peanuts+salt) 1 · ground cinnamon 1 · Ocean Spray Reduced Sugar Craisins or fresh cranberries 1 · raw cashews (dessert texture) 1 · UNSWEETENED shredded coconut 1 · raw honey 1 (T1D FLAG: pure sugar/spike — tiny amounts + pre-bolus, or use stevia instead) · TJ's Sea Salt 1.
-PRODUCE: sweet potatoes 5 · bananas 7.
+PRODUCE: sweet potatoes 5 · bananas 7 · beets 3-4 (blood-flow nitrates — dessert shakes/pudding + roasting) · leafy greens/arugula 1 bag (nitrates, add greens back).
 SNACKS & TREATS: turkey jerky 1 (check sugar) · roasted seaweed 2 (iodine) · 85% dark chocolate 2 bars.
 NOT AT TJ'S (buy elsewhere/online): whey — Nutricost or NOW 5lb ~$45 (Amazon/iHerb) · monk fruit/stevia — NOW Better Stevia or Lakanto (Whole Foods/Amazon) · parchment paper — any brand · (optional premium salt) Redmond Real Salt (Whole Foods/Amazon).
 

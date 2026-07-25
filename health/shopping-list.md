@@ -90,6 +90,7 @@ Strategy first: in a small NYC apartment, a gym membership (or your dojo's weigh
 | Omega-3 (EPA/DHA) | ONLY IF omega-3 index tests low or you cut back on fish. You already eat sardines/tuna = high omega-3, so may not need it. | OPTIONAL | $15–30 |
 | Ashwagandha (optional) | Stress/cortisol support if work stress spikes — cyclic use. Nice-to-have, not essential. | OPTIONAL | $10–15 |
 | Zinc (~15–30 mg) | Immune/testosterone/wound healing. ONLY if blood test shows low — food first (eggs, red meat, shellfish, pumpkin seeds). Don't megadose daily (causes copper deficiency); pair ~1–2mg copper if taken regularly. | OPTIONAL (test first) | $8–12 |
+| L-citrulline | Vascular/blood-flow (nitric oxide) — the one sexual-health supplement with real modest evidence. ~3–6g/day. Cheap, low-risk. Bulk brands (Nutricost/BulkSupplements). | OPTIONAL | $15–20 |
 
 Note on magnesium (already in Sleep section): extra-justified for you — T1D loses magnesium in urine when sugar runs high, so diabetics commonly run low + it aids insulin sensitivity. Glycinate, nightly. Take it.
 

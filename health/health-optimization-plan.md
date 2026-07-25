@@ -219,7 +219,18 @@ TIER 3 (marginal/hype — don't overspend):
 
 TOP 2 IF NOTHING ELSE: replace scratched nonstick w/ cast iron/stainless + get glass meal-prep containers = ~80% of the category's real benefit.
 
-=== ALL 7 PROTOCOLS NOW COVERED (glucose, lead, air, exercise, sleep, supplements, products) + Odyssey recomp plan + full NYC meal system. ===
+## PROTOCOL #8 — Sexual / Vascular Health (COVERED 2026-07-25)
+KEY INSIGHT: the penis is a vascular organ; an erection = a blood-flow event. So penis health = cardiovascular + hormonal + nerve health. His whole health kick IS the optimal ED-prevention protocol.
+T1D-CRITICAL: diabetes is a leading cause of ED (high glucose damages small vessels + nerves). So #1 penis-health move = glucose control (Protocol #1). Morning erections = a barometer; if they consistently vanish → see a doctor (early vascular/nerve signal, treatable).
+
+FOODS (nitric oxide + testosterone): leafy greens/beets/arugula (nitrates → NO → blood flow — reason to add greens back), 85% dark chocolate (flavanols), berries+citrus (flavonoids, lower ED risk), fatty fish/omega-3, watermelon/pistachios, healthy fat + zinc + vit D for testosterone. Avoid excess sugar/processed/seed oils (endothelial dysfunction), heavy alcohol.
+EXERCISE: aerobic/cardio (strongest evidence — endothelial function/blood flow; his rucking/Zone 2), strength (testosterone), KEGELS (pelvic floor — real evidence for rigidity + ejaculatory control; contract stop-pee muscle ~5s, sets daily). Minor: avoid prolonged hard bike-seat perineal pressure.
+HABITS: sleep (testosterone made in sleep), manage stress/cortisol, cut alcohol (done), no smoking/vaping (done — nicotine constricts vessels), stay lean (fat → aromatase → estrogen), morning sunlight. Porn-induced ED = debated, not settled; moderating heavy use reasonable if situational issues.
+SUPPLEMENTS/PRODUCTS: L-citrulline (the one with real modest evidence — → NO, blood flow; ~3-6g/day, cheap, low-risk). Vit D/mag/omega-3 already help. If actual ED: PDE5 inhibitors (Viagra/Cialis) safe + legit — doctor convo, good to have proactively as a diabetic.
+SCAMS: "male enhancement" pills (don't work + often illegally spiked with hidden ED drugs = dangerous), penis-enlargement pills/devices (nothing increases size), most "test boosters." Fix testosterone via sleep/training/lean/D+zinc, not pills.
+BOTTOM LINE: he's already doing ~90%. New adds only = daily Kegels + a few blood-flow foods (greens/beets) + optional L-citrulline. See a doctor early if erectile changes (treatable + a signal).
+
+=== ALL 8 PROTOCOLS NOW COVERED (glucose, lead, air, exercise, sleep, supplements, products, sexual/vascular) + Odyssey recomp plan + full NYC meal system. ===
 
 ## NEXT UP (not yet covered)
 - Supplement stack (beyond creatine/whey)
