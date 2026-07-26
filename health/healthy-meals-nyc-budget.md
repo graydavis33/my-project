@@ -140,6 +140,7 @@ HONEST FLAG: sweetened Craisins + cranberry juice cocktail = high added sugar (~
 3. Frozen dark-choc PB banana bites: banana slices + PB sandwiched + drizzled 85% dark chocolate, freeze. T1D WATCH: banana = highest-glucose here, few bites + pre-bolus.
 4. Sweet potato protein pudding: mash/blend 1 cooked+cooled sweet potato + 1 scoop whey + spoon Greek yogurt + cinnamon + optional sweetener/dark choc, chill. ~30g protein, slow carb. T1D: real carbs — portion + pre-bolus.
 5. Protein chocolate banana bites (Gray added): mix 1 scoop whey + 1-2 tbsp PB + splash water/milk into a paste, coat banana coins, drizzle melted 85% dark choc, freeze 1-2h. ~25g protein. T1D: banana = highest-glucose, few bites + pre-bolus.
+6. Chocolate beet shake (blood-flow nitrates): blend 1 small COOKED beet + frozen berries + 1 scoop whey + spoon Greek yogurt + dark chocolate or cocoa + splash milk/water + ice. Beet's earthiness hides behind the chocolate. ~30g protein + nitrates for circulation (ties to Protocol #8). T1D: beet = moderate natural sugar/low GI, pair w/ protein.
 Oven option: banana + oats + PB + whey + dark choc chunks, bake 350F ~12 min = protein cookies.
 
 ## TJ'S SHOPPING LIST BY CATEGORY (2026-07-24, dessert qtys added)
