@@ -5,5 +5,12 @@
   "title": "What Claude Is Actually Doing When You Type a Prompt",
   "category": "fundamentals",
   "topic": "how-llms-actually-work"
+ },
+ {
+  "date": "2026-07-26",
+  "issue": 2,
+  "title": "Claude Just Got a New Model \u2014 and It Affects How You Build",
+  "category": "news",
+  "topic": "claude-opus-5-launch"
  }
 ]

@@ -1,0 +1,136 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claude Just Got a New Model — and It Affects How You Build</title>
+</head>
+<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+
+  <div style="max-width:600px;margin:0 auto;padding:32px 24px;color:#1a1a1a;font-size:17px;line-height:1.6;">
+
+    <!-- Header -->
+    <p style="font-size:13px;color:#6b7280;margin:0 0 24px 0;text-transform:uppercase;letter-spacing:0.05em;">Daily AI Read &mdash; Issue #2 &mdash; July 26, 2026</p>
+
+    <!-- Hook -->
+    <p style="margin:0 0 24px 0;">Two days ago, Anthropic quietly shipped a new AI model called Claude Opus 5 &mdash; and if you use Claude Code to build anything, this one is directly about your tools changing under your feet. Here is exactly what changed, what it means, and one thing you can do about it today.</p>
+
+    <!-- TL;DR Box -->
+    <div style="background:#f3f4f6;border-radius:12px;padding:20px 24px;margin:0 0 36px 0;">
+      <p style="margin:0 0 12px 0;font-size:15px;font-weight:700;color:#1a1a1a;">The 2-minute version</p>
+      <ul style="margin:0;padding-left:20px;font-size:15px;color:#1a1a1a;">
+        <li style="margin-bottom:8px;">Anthropic released <strong>Claude Opus 5</strong> on July 24, 2026 &mdash; a new model that performs nearly as well as its most powerful widely available model (Fable 5) at <strong>half the price</strong>.</li>
+        <li style="margin-bottom:8px;">It is now the <strong>default model in Claude Max and the strongest model in Claude Pro</strong> &mdash; so if you opened Claude Code this weekend, you may already be using it.</li>
+        <li style="margin-bottom:8px;">The biggest new feature is an <strong>effort setting</strong> &mdash; a dial (low / medium / high / xhigh / max) that lets you control how hard the model works on any task, trading speed and cost against depth and accuracy.</li>
+        <li style="margin-bottom:8px;">On the industry's most important coding benchmark, Opus 5 <strong>more than doubled</strong> its predecessor's score and beat the flagship Fable 5 model outright.</li>
+        <li style="margin-bottom:0;">Pricing is <strong>unchanged from the previous Opus model</strong>: $5 per million input tokens, $25 per million output tokens on the API.</li>
+      </ul>
+    </div>
+
+    <!-- Section 1 -->
+    <h2 style="font-size:20px;font-weight:700;margin:0 0 12px 0;color:#1a1a1a;">First: the Claude family tree, explained simply</h2>
+    <p style="margin:0 0 16px 0;">Anthropic makes several different versions of Claude at once, each trading off intelligence, speed, and cost. Think of it like car trim levels. As of this week, the lineup from most to least powerful looks roughly like this:</p>
+
+    <table style="width:100%;border-collapse:collapse;font-size:15px;margin:0 0 24px 0;">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:10px 12px;background:#f3f4f6;border-radius:8px 0 0 0;font-weight:700;">Model</th>
+          <th style="text-align:left;padding:10px 12px;background:#f3f4f6;font-weight:700;">Analogy</th>
+          <th style="text-align:left;padding:10px 12px;background:#f3f4f6;border-radius:0 8px 0 0;font-weight:700;">API Cost (input / output)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;"><strong>Fable 5</strong></td>
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Formula 1 car</td>
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">$10 / $50 per M tokens</td>
+        </tr>
+        <tr style="background:#fef9c3;">
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;"><strong>Opus 5</strong> &larr; new</td>
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">High-performance sedan</td>
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">$5 / $25 per M tokens</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;"><strong>Sonnet 5</strong></td>
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">Everyday reliable car</td>
+          <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">$3 / $15 per M tokens</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 12px;"><strong>Haiku 4.5</strong></td>
+          <td style="padding:10px 12px;">Fuel-efficient compact</td>
+          <td style="padding:10px 12px;">$1 / $5 per M tokens</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin:0 0 16px 0;">A quick vocab note: <strong>tokens</strong> are the chunks that AI models read and write (roughly 3/4 of a word each). When you see prices like "$5 per million input tokens," that is how API users (developers calling Claude directly from code) get charged. If you are on a flat-rate Claude Pro or Max subscription, you do not pay per token &mdash; but the model still burns tokens, and that affects how fast you hit your usage limits.</p>
+
+    <p style="margin:0 0 24px 0;">Before Opus 5 arrived, the gap between Sonnet 5 and Fable 5 was wide. Opus 5 now slots in between them, offering near-flagship intelligence without the flagship price tag.</p>
+
+    <!-- Section 2 -->
+    <h2 style="font-size:20px;font-weight:700;margin:0 0 12px 0;color:#1a1a1a;">What actually changed with Opus 5</h2>
+
+    <p style="margin:0 0 16px 0;"><strong>1. It can beat the flagship on coding tasks.</strong> Anthropic uses a test suite called <a href="https://venturebeat.com/orchestration/anthropic-launches-claude-opus-5-a-cheaper-ai-model-for-coding-agents-and-enterprise-workflows" style="color:#1a56db;text-decoration:underline;">Frontier-Bench v0.1</a> to measure how well a model handles real software engineering work: multi-file changes, debugging, and building features from a spec. That is the benchmark that matters most if you are using Claude Code. Opus 5 scored 43.3% on this test &mdash; more than double the previous Opus model (18.7%) and ahead of Fable 5 (33.7%). On a second test measuring novel problem-solving (ARC-AGI-3), Opus 5 scored 30.2% &mdash; roughly four times higher than OpenAI's comparable model, GPT-5.6 Sol.</p>
+
+    <p style="margin:0 0 16px 0;"><strong>2. It checks its own work.</strong> Anthropic says Opus 5 can check and improve its own work through iteration, and build its own tools through code when it needs them. This is a meaningful step for <strong>agentic</strong> work &mdash; a term worth defining. An <em>agentic AI</em> is one that does not just answer a single question and stop. It takes a goal, breaks it into steps, executes those steps one after another (including running code, reading files, and calling other tools), checks the results, and adjusts &mdash; all without you having to babysit each move. Claude Code's whole value proposition is agentic work, so improvements here matter directly.</p>
+
+    <p style="margin:0 0 24px 0;"><strong>3. Pricing is flat.</strong> Anthropic kept API pricing equal to the previous Opus 4.8 version. Given the performance jump, this is a genuine improvement in value, not just a new model at a higher price.</p>
+
+    <!-- Section 3 -->
+    <h2 style="font-size:20px;font-weight:700;margin:0 0 12px 0;color:#1a1a1a;">The effort setting: the most practical new feature</h2>
+
+    <p style="margin:0 0 16px 0;">This is the part that has the biggest day-to-day impact. Opus 5 introduces a low/medium/high effort toggle &mdash; and in practice there are five levels: <strong>low, medium, high, xhigh, and max</strong>. The default is <strong>high</strong>.</p>
+
+    <p style="margin:0 0 12px 0;">Here is what these settings actually change &mdash; and this is important: it is not just "thinking time." Effort controls how many files the model reads, how much it verifies, and how far it pushes through a multi-step task before checking in with you.</p>
+
+    <p style="margin:0 0 16px 0;">Think of it like hiring a contractor. On <strong>low effort</strong>, they show up, do the obvious work, and hand it back fast. On <strong>max effort</strong>, they read every blueprint, double-check every measurement, and only stop when they are sure the work is right &mdash; but they also bill more hours. Effort changes the number of tokens the model uses, not the per-token price. Lower effort settings can cut token usage meaningfully at similar accuracy, so real cost per task varies even at a fixed price per million tokens.</p>
+
+    <p style="margin:0 0 16px 0;">Anthropic recommends starting with high (the default) and adjusting based on your results: step up to xhigh for demanding coding and agentic work, or to max when a task justifies unconstrained token spending, and use low and medium liberally as your primary control for token cost and response time wherever quality holds.</p>
+
+    <p style="margin:0 0 24px 0;">One important caveat from the docs: <strong>switching effort levels mid-conversation invalidates the prompt cache.</strong> A <em>prompt cache</em> is a saved copy of your conversation context that the model can reuse instead of reprocessing from scratch every time, which saves tokens and money. Changing effort or speed mid-conversation invalidates the prompt cache, which can cost more than the effort saving returns. Set it per workload, not per request.</p>
+
+    <!-- Section 4 -->
+    <h2 style="font-size:20px;font-weight:700;margin:0 0 12px 0;color:#1a1a1a;">How you actually access it</h2>
+    <p style="margin:0 0 16px 0;">Opus 5 serves as the default model on Claude Max and the top option on Claude Pro. So if you opened Claude Code this weekend, you may already be running it. In <strong>Claude Code</strong>, Anthropic defaults to high effort in both the API and the terminal tool.</p>
+    <p style="margin:0 0 24px 0;">In Claude Code's terminal interface, you can switch models by typing <code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-size:15px;">/model</code> and selecting from the list. You can also set effort by adjusting your configuration file or passing the effort parameter directly in your prompts when writing scripts that call the API.</p>
+
+    <!-- Why This Matters for You -->
+    <h2 style="font-size:20px;font-weight:700;margin:0 0 12px 0;color:#1a1a1a;">Why this matters for you</h2>
+    <p style="margin:0 0 16px 0;">You use Claude Code to build automation tools. Every session you have with it is exactly the kind of agentic, multi-step coding work that Opus 5 was built and benchmarked for. The jump in coding scores is not abstract &mdash; it means the model you are already using should now handle more complex tasks with fewer wrong turns.</p>
+    <p style="margin:0 0 16px 0;">The effort setting is your new budget lever. When you are in the early, exploratory part of a project &mdash; sketching out structure, asking "what should this automation even do?" &mdash; <strong>medium effort</strong> will move faster and cost fewer tokens. When you are in the hard part, debugging something broken across multiple files, <strong>xhigh effort</strong> is probably worth the extra tokens.</p>
+    <p style="margin:0 0 24px 0;">For your content and marketing work &mdash; drafting captions, writing scripts, brainstorming campaign angles &mdash; there is no reason to burn Opus 5 tokens on a short, structured task. Sonnet 5 (available on all plans) handles that tier of work fine. Knowing which model to reach for, and at what effort level, is now a skill that saves real time and money.</p>
+
+    <!-- Try This Today -->
+    <div style="background:#f0f7ff;border-left:4px solid #1a56db;border-radius:0 8px 8px 0;padding:20px 24px;margin:0 0 36px 0;">
+      <p style="margin:0 0 8px 0;font-size:15px;font-weight:700;color:#1a1a1a;">Try this today (5 minutes)</p>
+      <p style="margin:0;font-size:15px;color:#1a1a1a;">Open Claude Code and type <code style="background:#e0ecff;padding:2px 6px;border-radius:4px;">/model</code> to confirm you are on Opus 5. Then give it a real coding task from a current project &mdash; something you have been putting off because it felt complex. At the start of your prompt, add the phrase: <em>"Work at high effort, verify your own output before finishing."</em> Watch what the model does differently. You are teaching yourself what this model is capable of at its default setting, which makes every future session more intentional.</p>
+    </div>
+
+    <!-- Sources -->
+    <h2 style="font-size:16px;font-weight:700;margin:0 0 12px 0;color:#1a1a1a;">Sources</h2>
+    <ol style="margin:0;padding-left:20px;font-size:14px;color:#374151;line-height:1.7;">
+      <li style="margin-bottom:6px;"><a href="https://www.anthropic.com/news/claude-opus-5" style="color:#1a56db;text-decoration:underline;">Anthropic: Introducing Claude Opus 5 (official announcement, July 24, 2026)</a></li>
+      <li style="margin-bottom:6px;"><a href="https://platform.claude.com/docs/en/build-with-claude/effort" style="color:#1a56db;text-decoration:underline;">Anthropic Platform Docs: Effort settings reference</a></li>
+      <li style="margin-bottom:6px;"><a href="https://venturebeat.com/orchestration/anthropic-launches-claude-opus-5-a-cheaper-ai-model-for-coding-agents-and-enterprise-workflows" style="color:#1a56db;text-decoration:underline;">VentureBeat: Anthropic launches Claude Opus 5 (July 24, 2026)</a></li>
+      <li style="margin-bottom:6px;"><a href="https://www.macrumors.com/2026/07/24/anthropic-opus-5/" style="color:#1a56db;text-decoration:underline;">MacRumors: Anthropic's New Claude Opus 5 Nearly Matches Flagship Fable 5 at Half the Cost</a></li>
+      <li style="margin-bottom:6px;"><a href="https://fortune.com/2026/07/24/anthropic-debuts-claude-opus-5-with-feature-that-lets-users-toggle-between-cost-and-capability/" style="color:#1a56db;text-decoration:underline;">Fortune: Anthropic releases Claude Opus 5 (July 24, 2026)</a></li>
+      <li style="margin-bottom:6px;"><a href="https://the-decoder.com/anthropic-claims-its-new-claude-opus-5-delivers-near-fable-5-performance-at-half-the-token-price/" style="color:#1a56db;text-decoration:underline;">The Decoder: Claude Opus 5 delivers near-Fable 5 performance at half the token price</a></li>
+      <li style="margin-bottom:6px;"><a href="https://www.vellum.ai/blog/claude-opus-5-benchmarks-explained" style="color:#1a56db;text-decoration:underline;">Vellum: Claude Opus 5 Benchmarks Explained</a></li>
+      <li style="margin-bottom:6px;"><a href="https://hashnode.com/blog/claude-opus-5-effort-levels-cost" style="color:#1a56db;text-decoration:underline;">Hashnode: Claude Opus 5 effort levels and real cost</a></li>
+      <li style="margin-bottom:6px;"><a href="https://agiflow.io/blog/claude-code-opus-5-subscription-guide" style="color:#1a56db;text-decoration:underline;">AGIflow: Claude Code Opus 5 &mdash; Which Model, Effort, and Limits</a></li>
+      <li style="margin-bottom:0;"><a href="https://www.axios.com/2026/07/24/anthropic-releases-new-model-opus-5" style="color:#1a56db;text-decoration:underline;">Axios: Anthropic releases new model, Opus 5 (July 24, 2026)</a></li>
+    </ol>
+
+  </div>
+</body>
+</html>
+```
+
+---
+
+**Editorial notes for the log:**
+
+- **Why news this issue:** Claude Opus 5 dropped two days ago (July 24) and is a direct, concrete change to the exact tool Gray uses daily — Claude Code. This clears the "something big actually happened" bar.
+- **What I chose not to cover:** The simultaneous Grok STT 1.0 release and the broader mid-2026 model proliferation story — those are thinner and less personally relevant to Gray right now.
+- **Key craft choices:** Led with the model hierarchy table early so Gray has a permanent reference frame before diving into specifics. The effort setting got the most space because it's the actionable new behavior, not just a speed bump. The prompt-cache caveat is included because it's the kind of non-obvious gotcha that burns beginners silently. The "Try this today" task is concrete to *his* workflow (Claude Code + `/model` command), not a generic "go explore."
