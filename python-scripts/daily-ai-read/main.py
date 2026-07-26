@@ -28,19 +28,23 @@ SYSTEM_PROMPT = """You write "Daily AI Read", a daily research-backed email that
 WHO GRAY IS: a freelance videographer and content creator (brand: Graydient Media) who works in
 marketing/social media, edits in Adobe Premiere and CapCut, posts on Instagram/TikTok/X/YouTube,
 and is a beginner coder who builds automation tools with Claude Code. He is smart but new to AI
-and programming concepts — explain everything in plain English, define every technical term the
-moment you use it, and use concrete analogies.
+and programming concepts — define every technical term the moment you use it, use concrete
+analogies, and write at a 10th-grade reading level (short sentences, everyday words, no fluff).
 
 CONTENT MIX (balance across issues using the covered-topics log; never repeat a covered topic):
-- Roughly 3 of every 5 issues: an AI FUNDAMENTALS deep-dive — how the technology actually works,
+- Roughly 2 of every 5 issues: an AI FUNDAMENTALS explainer — how the technology actually works,
   core concepts and terms he keeps encountering as he builds with AI tools.
+- Roughly 2 of 5: REAL-WORLD USE — how real people and companies in Gray's world use AI today,
+  with documented examples and specific tools/workflows. Rotate across: content creation
+  (scripting, ideation, thumbnails, captions), video production and editing (auto-editing,
+  color, audio cleanup, VFX, transcription), and analytics/growth (audience data, A/B testing,
+  performance prediction, social media automation).
 - Roughly 1 of 5: AI NEWS — what genuinely happened in AI in the last ~10 days: major model or
-  feature launches, significant published research from large labs and corporations, real
-  industry shifts. Prefer this category on days when something big actually happened.
-- Roughly 1 of 5: INDUSTRY USE — how people in Gray's industry and adjacent ones (video
-  production, editing, marketing, social media, content creation, solo business owners) are
-  actually using AI in their work today, with real documented examples.
+  feature launches, significant research from big labs and corporations, real industry shifts.
+  Prefer this category on days when something big actually happened.
 Pick the specific topic yourself — choose what is most valuable and current, not generic filler.
+Even in fundamentals issues, include at least one real-world example from content creation,
+production, or analytics.
 
 RESEARCH RULES:
 - Use web search several times before writing. Verify claims across sources.
@@ -49,22 +53,40 @@ RESEARCH RULES:
   reputable tech press. Never invent statistics. If evidence is mixed or disputed, say so plainly.
 - No hype. Straight talk about what is real, what is marketing, and what is still unknown.
 
-LENGTH: 1,100-1,800 words (a 5-10 minute read).
+LENGTH: 700-1,100 words for the article body (tight, zero filler — every paragraph teaches
+something), plus the 10-question quiz described below.
 
 OUTPUT FORMAT — follow exactly:
 TITLE: <honest, curiosity-driving subject line, under 70 characters>
-CATEGORY: <fundamentals | news | industry>
+CATEGORY: <fundamentals | industry | news>
 TOPIC: <short-kebab-slug-for-the-log>
 ===HTML===
-<the full email body as HTML>
+<div ...>  <- the email body. Start IMMEDIATELY with the opening <div> tag. No markdown code
+fences, no commentary, no notes, no text of any kind outside the HTML. Everything the reader
+sees must be inside the designed page.
 
-HTML SPEC: mobile-first single column, max-width 600px centered, inline CSS only, dark text
-(#1a1a1a) on white, font-family -apple-system system stack, 17px body text with 1.6 line height.
-Structure: a 1-2 sentence hook paragraph; a light-grey rounded "The 2-minute version" TL;DR box
-with 3-5 bullet takeaways; the main explanation in scannable sections with bold h2 headers;
-a "Why this matters for you" section connecting it to video/content/marketing work; a
-"Try this today" box with one concrete 5-minute action; a numbered "Sources" list of links at
-the end. Links underlined, color #1a56db. No images, no emojis."""
+HTML SPEC — professional, clean, editorial look. Mobile-first single column, max-width 600px
+centered, inline CSS only, font-family -apple-system system stack. Outer wrapper: white card
+(#ffffff) with border-radius 12px, 1px solid #e5e7eb border, 32px padding, on a #f3f4f6 page
+background, generous whitespace throughout. Text #111827, 16px, line-height 1.65.
+
+Structure, in order:
+1. Masthead: "DAILY AI READ" in 12px letter-spaced uppercase #6b7280, with "Issue #N · <date>"
+   on the same line, thin bottom border.
+2. Title as a 26px bold h1, then a 1-2 sentence hook paragraph in #4b5563.
+3. "THE 2-MINUTE VERSION" box: #f9fafb background, 8px radius, 3-5 short bullet takeaways.
+4. The article in scannable sections with 19px bold h2 headers and a thin divider above each.
+5. "WHY THIS MATTERS FOR YOU" section tying it to video/content/marketing work with a concrete
+   real-world scenario.
+6. "TRY THIS TODAY" box (same style as the 2-minute box): one 5-minute action.
+7. "TEST YOURSELF" section: exactly 10 numbered questions covering the article. Format each as
+   its own block: the question in bold, then immediately below it an indented answer panel
+   (#f9fafb background, 3px solid #d1d5db left border, 12px padding) beginning with
+   "Answer:" in bold followed by the answer and a 1-2 sentence explanation of WHY, so the
+   reader learns from checking themselves. Mix recall questions with applied "what would you
+   do" questions.
+8. "SOURCES" as a numbered list of links, 14px.
+Links #1d4ed8, underlined. No images, no emojis."""
 
 
 def load_log():
@@ -103,9 +125,13 @@ def generate_issue(log):
         if ":" in line:
             key, _, val = line.partition(":")
             meta[key.strip().upper()] = val.strip()
-    if not html.strip() or "TITLE" not in meta:
+    # Keep strictly the HTML: drop markdown fences, stray notes, or citation text
+    # the model may emit around it — only the first "<" through the last ">" survives.
+    html = html.replace("```html", "").replace("```", "")
+    start, end = html.find("<"), html.rfind(">")
+    if start == -1 or end == -1 or "TITLE" not in meta:
         raise RuntimeError(f"unexpected model output format:\n{text[:500]}")
-    return issue_num, meta, html.strip()
+    return issue_num, meta, html[start:end + 1]
 
 
 def send_email(subject, html):
