@@ -151,13 +151,15 @@ def render(frame_img, title, accent=None, pos="top", bg="scrim", out="cover.png"
         pill = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         pd = ImageDraw.Draw(pill)
         line_h_p = round(size * LINE_SPACING)
-        pad_x, pad_y = 36, 14
+        pad_x, pad_y = 36, 16
+        ascent, descent = font.getmetrics()
         for i, line in enumerate(lines):
             lw = dummy.textlength(line, font=font)
             x0p = (W - lw) / 2 - pad_x
             y0p = y0 + i * line_h_p - pad_y
-            pd.rounded_rectangle([x0p, y0p, x0p + lw + 2 * pad_x, y0p + size + 2 * pad_y],
-                                 radius=26, fill=(20, 20, 20, 235))
+            pd.rounded_rectangle([x0p, y0p, x0p + lw + 2 * pad_x,
+                                  y0 + i * line_h_p + ascent + descent + pad_y],
+                                 radius=26, fill=(15, 15, 15, 255))
         base.alpha_composite(pill)
         base = base.convert("RGB")
 
