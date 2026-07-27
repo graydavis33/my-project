@@ -106,7 +106,7 @@ def wrap_lines(title, font, max_width, draw):
     return lines
 
 
-def render(frame_img, title, accent=None, pos="top", scrim=True, out="cover.png", cx=0.5):
+def render(frame_img, title, accent=None, pos="top", bg="scrim", out="cover.png", cx=0.5):
     base = fit_canvas(frame_img, cx)
     max_width = W - 2 * SAFE_MARGIN_X
 
@@ -132,7 +132,7 @@ def render(frame_img, title, accent=None, pos="top", scrim=True, out="cover.png"
     y0 = anchors[pos]
 
     # dark gradient band behind the text for legibility on any footage
-    if scrim:
+    if bg == "scrim":
         band = Image.new("L", (1, H), 0)
         pad = 80
         for y in range(H):
@@ -144,6 +144,22 @@ def render(frame_img, title, accent=None, pos="top", scrim=True, out="cover.png"
         band = band.resize((W, H))
         black = Image.new("RGB", (W, H), (10, 10, 10))
         base = Image.composite(black, base, band.point(lambda v: v))
+
+    # solid rounded label behind each line (like the "Growth Tactics" pill style)
+    if bg == "pill":
+        base = base.convert("RGBA")
+        pill = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        pd = ImageDraw.Draw(pill)
+        line_h_p = round(size * LINE_SPACING)
+        pad_x, pad_y = 36, 14
+        for i, line in enumerate(lines):
+            lw = dummy.textlength(line, font=font)
+            x0p = (W - lw) / 2 - pad_x
+            y0p = y0 + i * line_h_p - pad_y
+            pd.rounded_rectangle([x0p, y0p, x0p + lw + 2 * pad_x, y0p + size + 2 * pad_y],
+                                 radius=26, fill=(20, 20, 20, 235))
+        base.alpha_composite(pill)
+        base = base.convert("RGB")
 
     # shadow layer then text layer (sai-captions recipe)
     shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
@@ -157,13 +173,15 @@ def render(frame_img, title, accent=None, pos="top", scrim=True, out="cover.png"
         y = y0 + i * line_h
         x = (W - td.textlength(line, font=font)) // 2
         sd.text((x + SHADOW_OFFSET[0], y + SHADOW_OFFSET[1]), line, font=font, fill=(0, 0, 0, 220))
-        # word-by-word so accent words can be orange
-        cx = x
-        for word in line.split(" "):
+        # draw the full line once (exact centering), then overdraw accent words
+        td.text((x, y), line, font=font, fill=WHITE)
+        words = line.split(" ")
+        for j, word in enumerate(words):
             bare = re.sub(r"[^\w']", "", word).lower()
-            color = ORANGE if bare in accents else WHITE
-            td.text((cx, y), word, font=font, fill=color)
-            cx += td.textlength(word + " ", font=font)
+            if bare in accents:
+                prefix = " ".join(words[:j])
+                off = td.textlength(prefix + " ", font=font) if prefix else 0
+                td.text((x + off, y), word, font=font, fill=ORANGE)
 
     shadow = shadow.filter(ImageFilter.GaussianBlur(SHADOW_BLUR))
     base = base.convert("RGBA")
@@ -183,6 +201,7 @@ def main():
     p.add_argument("--accent", default=None, help="comma-separated words to color orange")
     p.add_argument("--pos", choices=["top", "center", "bottom"], default="top")
     p.add_argument("--no-scrim", action="store_true")
+    p.add_argument("--bg", choices=["scrim", "none", "pill"], default="scrim")
     p.add_argument("--cx", type=float, default=0.5, help="horizontal crop focus 0-1")
     p.add_argument("--out", default="cover.png")
     a = p.parse_args()
@@ -193,7 +212,8 @@ def main():
     else:
         img = Image.open(a.frame)
 
-    out = render(img, a.title, accent=a.accent, pos=a.pos, scrim=not a.no_scrim, out=a.out, cx=a.cx)
+    bg = "none" if a.no_scrim else a.bg
+    out = render(img, a.title, accent=a.accent, pos=a.pos, bg=bg, out=a.out, cx=a.cx)
     print(f"saved {out}")
 
 
