@@ -173,7 +173,7 @@ def render(frame_img, title, accent=None, pos="top", bg="scrim", out="cover.png"
     txt = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     td = ImageDraw.Draw(txt)
 
-    accents = {a.strip().lower() for a in (accent or "").split(",") if a.strip()}
+    accents = {re.sub(r"[^\w']", "", a).lower() for a in (accent or "").split(",") if a.strip()}
     line_h = round(size * LINE_SPACING)
     for i, line in enumerate(lines):
         y = y0 + i * line_h
