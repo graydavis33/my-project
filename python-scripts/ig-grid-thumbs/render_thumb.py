@@ -51,7 +51,8 @@ LINE_SPACING = 1.16
 # words kept capitalized despite lowercase styling (brand: lowercase except I/names)
 NAMES = {"i", "sai", "sharran", "srivatsaa", "trendify", "ai", "ceo", "cmo", "roi"}
 CAP = {"i": "I", "sai": "Sai", "sharran": "Sharran", "srivatsaa": "Srivatsaa",
-       "trendify": "Trendify", "ai": "AI", "ceo": "CEO", "cmo": "CMO", "roi": "ROI"}
+       "trendify": "Trendify", "ai": "AI", "ceo": "CEO", "cmo": "CMO", "roi": "ROI",
+       "nyc": "NYC"}
 
 
 def load_font(size):
