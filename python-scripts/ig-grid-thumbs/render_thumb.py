@@ -80,12 +80,12 @@ def grab_frame(video, seconds):
     return tmp
 
 
-def fit_canvas(img):
-    """Scale + center-crop any frame to 1080x1920."""
+def fit_canvas(img, cx=0.5):
+    """Scale + crop any frame to 1080x1920. cx = horizontal focus (0=left, 1=right)."""
     img = img.convert("RGB")
     scale = max(W / img.width, H / img.height)
     img = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
-    x = (img.width - W) // 2
+    x = min(max(round(img.width * cx - W / 2), 0), img.width - W)
     y = (img.height - H) // 2
     return img.crop((x, y, x + W, y + H))
 
@@ -106,8 +106,8 @@ def wrap_lines(title, font, max_width, draw):
     return lines
 
 
-def render(frame_img, title, accent=None, pos="top", scrim=True, out="cover.png"):
-    base = fit_canvas(frame_img)
+def render(frame_img, title, accent=None, pos="top", scrim=True, out="cover.png", cx=0.5):
+    base = fit_canvas(frame_img, cx)
     max_width = W - 2 * SAFE_MARGIN_X
 
     # pick a font size where no line overflows and the block fits the safe zone
@@ -183,6 +183,7 @@ def main():
     p.add_argument("--accent", default=None, help="comma-separated words to color orange")
     p.add_argument("--pos", choices=["top", "center", "bottom"], default="top")
     p.add_argument("--no-scrim", action="store_true")
+    p.add_argument("--cx", type=float, default=0.5, help="horizontal crop focus 0-1")
     p.add_argument("--out", default="cover.png")
     a = p.parse_args()
 
@@ -192,7 +193,7 @@ def main():
     else:
         img = Image.open(a.frame)
 
-    out = render(img, a.title, accent=a.accent, pos=a.pos, scrim=not a.no_scrim, out=a.out)
+    out = render(img, a.title, accent=a.accent, pos=a.pos, scrim=not a.no_scrim, out=a.out, cx=a.cx)
     print(f"saved {out}")
 
 
