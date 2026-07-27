@@ -107,7 +107,8 @@ def wrap_lines(title, font, max_width, draw):
     return lines
 
 
-def render(frame_img, title, accent=None, pos="top", bg="scrim", out="cover.png", cx=0.5):
+def render(frame_img, title, accent=None, pos="top", bg="scrim", out="cover.png", cx=0.5,
+           ypos=None):
     base = fit_canvas(frame_img, cx)
     max_width = W - 2 * SAFE_MARGIN_X
 
@@ -131,6 +132,8 @@ def render(frame_img, title, accent=None, pos="top", bg="scrim", out="cover.png"
         "bottom": GRID_BOTTOM - block_h - 110,
     }
     y0 = anchors[pos]
+    if ypos is not None:  # explicit placement (e.g. just below the chin)
+        y0 = min(max(round(ypos * H), GRID_TOP + 40), GRID_BOTTOM - block_h - 40)
 
     # dark gradient band behind the text for legibility on any footage
     if bg == "scrim":
@@ -206,6 +209,8 @@ def main():
     p.add_argument("--no-scrim", action="store_true")
     p.add_argument("--bg", choices=["scrim", "none", "pill"], default="scrim")
     p.add_argument("--cx", type=float, default=0.5, help="horizontal crop focus 0-1")
+    p.add_argument("--y", type=float, default=None, dest="ypos",
+                   help="title-block top as fraction of height (e.g. 0.42 = just below chin)")
     p.add_argument("--out", default="cover.png")
     a = p.parse_args()
 
@@ -216,7 +221,8 @@ def main():
         img = Image.open(a.frame)
 
     bg = "none" if a.no_scrim else a.bg
-    out = render(img, a.title, accent=a.accent, pos=a.pos, bg=bg, out=a.out, cx=a.cx)
+    out = render(img, a.title, accent=a.accent, pos=a.pos, bg=bg, out=a.out, cx=a.cx,
+                 ypos=a.ypos)
     print(f"saved {out}")
 
 
