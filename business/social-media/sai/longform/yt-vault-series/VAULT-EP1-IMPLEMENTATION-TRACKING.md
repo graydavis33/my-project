@@ -22,7 +22,7 @@ Every chosen change gets one card with exactly these 5 fields:
 1. THE CHANGE — one line
 2. WHO RAISED IT — which of the 5, and the anecdote that triggered it
 3. SHIP ACTION — the single observable act that counts as "shipped" (first new meeting happens / doc goes live / the send)
-4. PROOF — always a person, never a number: go back to whoever raised it and ask "real talk — better?" (the episode's own tactic, anecdotes over the dashboard, becomes the measurement method)
+4. PROOF — always a person, never a number: go back to whoever raised it and ask "real talk — better?" (the episode's own tactic, trust the people, not the numbers, becomes the measurement method)
 5. SHIP-BY — a date inside the two weeks
 
 Filling the cards IS the takeaways beat (Beat 11). Pinning them to OPEN closes the success-bar loop S2. How the 3 get chosen + Sai's on-camera script for that session: `VAULT-EP1-TAKEAWAYS-SCRIPT.md`.

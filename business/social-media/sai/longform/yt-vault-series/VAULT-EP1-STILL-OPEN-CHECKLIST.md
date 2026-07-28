@@ -7,7 +7,7 @@ Last updated: 2026-07-06
 ## Script — decisions still open
 
 - [x] Pick the twist line (3 options in VAULT-EP1-TWIST-LINE.txt) and fold it into the narration + outline — LOCKED: the recommended full-mirror version (2026-07-06)
-- [x] Confirm the exact Bezos tactic wording on the vault file — LOCKED to the short version: "#8 — ANECDOTES OVER THE DASHBOARD: When the data and the real stories disagree, the stories win." (2026-07-06)
+- [x] Confirm the exact Bezos tactic wording on the vault file — LOCKED to the short version: "#8 — TRUST THE PEOPLE, NOT THE NUMBERS: When the data and the real stories disagree, the stories win." (2026-07-06)
 - [x] Confirm the customers-to-team adaptation is the move (state a belief about the team, then go check it) — confirmed via the twist-line pick, which is built on it (2026-07-06)
 - [x] Lock the belief Sai states out loud in Beat 5 (his own "dashboard" assumption) — LOCKED inside the twist line: "everyone here loves this company exactly as much as I do — same vision, same energy, all on the same page" (2026-07-06)
 - [ ] Decide the vault roster — which 10 to 20 founders are on the faces wheel for v1
