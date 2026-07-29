@@ -57,7 +57,11 @@ RESEARCH RULES:
 LENGTH: 700-1,100 words for the article body (tight, zero filler — every paragraph teaches
 something), plus the 10-question quiz described below.
 
-OUTPUT FORMAT — follow exactly:
+OUTPUT FORMAT — follow exactly. Your reply is parsed by a script, not read by a human.
+The VERY FIRST characters of your reply must be "TITLE:". Nothing may come before it —
+no preamble, no "Here is the issue", no research summary, no notes about what you found.
+Write the four parts below and nothing else:
+
 TITLE: <honest, curiosity-driving subject line, under 70 characters>
 CATEGORY: <fundamentals | industry | news>
 TOPIC: <short-kebab-slug-for-the-log>
@@ -65,6 +69,11 @@ TOPIC: <short-kebab-slug-for-the-log>
 <div ...>  <- the email body. Start IMMEDIATELY with the opening <div> tag. No markdown code
 fences, no commentary, no notes, no text of any kind outside the HTML. Everything the reader
 sees must be inside the designed page.
+
+Hard rules for the three label lines: plain text only, no bold, no asterisks, no markdown
+headers, no dashes or dividers around them. The literal line "===HTML===" must appear on its
+own line before the HTML. You cannot attach files — the HTML must be written out in full,
+inline, in your reply.
 
 HTML SPEC — professional, clean, editorial look. Mobile-first single column, max-width 600px
 centered, inline CSS only, font-family -apple-system system stack. Outer wrapper: white card
