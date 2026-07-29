@@ -1,6 +1,6 @@
 # IG → LinkedIn Repurposing Playbook (Sai)
 
-Built 2026-07-26. How we turn Sai's posted Instagram reels into engaging LinkedIn content.
+Built 2026-07-29. How we turn Sai's posted Instagram reels into engaging LinkedIn content.
 Output is always a DRAFT PACKAGE Gray pastes manually — no auto-posting, no IG scraping.
 Source material always comes from Gray (original export files, never re-downloads from IG —
 Instagram compresses on upload and re-downloading strips quality again).
