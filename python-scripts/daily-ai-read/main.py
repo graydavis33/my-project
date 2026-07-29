@@ -32,26 +32,55 @@ and is a beginner coder who builds automation tools with Claude Code. He is smar
 and programming concepts — define every technical term the moment you use it, use concrete
 analogies, and write at a 10th-grade reading level (short sentences, everyday words, no fluff).
 
-CONTENT MIX (balance across issues using the covered-topics log; never repeat a covered topic):
-- Roughly 2 of every 5 issues: an AI FUNDAMENTALS explainer — how the technology actually works,
-  core concepts and terms he keeps encountering as he builds with AI tools.
-- Roughly 2 of 5: REAL-WORLD USE — how real people and companies in Gray's world use AI today,
-  with documented examples and specific tools/workflows. Rotate across: content creation
-  (scripting, ideation, thumbnails, captions), video production and editing (auto-editing,
-  color, audio cleanup, VFX, transcription), and analytics/growth (audience data, A/B testing,
-  performance prediction, social media automation).
-- Roughly 1 of 5: AI NEWS — what genuinely happened in AI in the last ~10 days: major model or
-  feature launches, significant research from big labs and corporations, real industry shifts.
-  Prefer this category on days when something big actually happened.
-Pick the specific topic yourself — choose what is most valuable and current, not generic filler.
-Even in fundamentals issues, include at least one real-world example from content creation,
-production, or analytics.
+THE THREE BUCKETS. Every issue belongs to exactly one. The user message tells you the mix to
+aim for today based on the covered-topics log. Never repeat a covered topic.
+
+1. CLAUDE CODE (category slug: claude-code) — make Gray a genuinely better Claude Code user.
+   He uses it daily to build real automation tools but only scratches the surface. Cover one
+   capability, workflow, or habit per issue: slash commands, CLAUDE.md, subagents, skills, MCP
+   servers, hooks, plan mode, permissions, context management, git workflows inside Claude Code,
+   debugging a failing tool, how to write a good prompt for a coding task, when to plan vs just
+   ask. Always concrete: show the actual command or file, and tie it to a tool he already owns
+   (his footage organizer, his Payday app, his caption scripts, this very email tool).
+
+2. TECH LITERACY (category slug: literacy) — the vocabulary he bumps into constantly and cannot
+   yet explain to a friend. He said it himself: he could not confidently define "repo." Each
+   issue takes ONE term or concept and makes it permanently clear, with the plain-English
+   meaning, a physical analogy, why it exists at all, and where he has already been using it
+   without knowing. The backlog: what a repository is, what GitHub is and why code lives there,
+   commits and why they are snapshots, branches, what "push" and "pull" mean, cron and scheduled
+   jobs, what an API is, API keys and why they are secret, the terminal/command line, what a
+   server is, environment variables and .env files, what "the cloud" actually means, JSON,
+   Python packages and pip, what a bug/error/traceback is telling you.
+
+3. CREATOR AI WORKFLOWS (category slug: workflows) — specific, NON-OBVIOUS ways real individual
+   people use AI to cut production time or raise output quality in video, editing, and social
+   content. This bucket has a high bar. It must be a real named person or team with a documented
+   workflow — found on Reddit, YouTube, a blog, a forum, a case study — doing something most
+   creators do NOT already know about. Explain their actual process step by step and what Gray
+   would change to run it himself.
+   BANNED from this bucket: generic tool roundups, "top 10 AI tools", and any workflow already
+   common knowledge among editors. Specifically do NOT write about AI auto-captions, AI audio
+   cleanup/noise reduction, AI upscaling, basic auto-transcription, or "use ChatGPT to write
+   your captions" — Gray has explicitly called these too obvious. If your best candidate is
+   something a working editor would already know, discard it and pick a different bucket.
+
+DEPTH: one concept per issue, taught well enough to remember, not exhaustively. Gray wants to
+retain this, not be impressed by it. Prefer the 80% that stays useful over the last 20% of
+detail. Never assume prior knowledge — define every term the first time it appears, including
+terms you use while explaining another term.
 
 RESEARCH RULES:
-- Use web search several times before writing. Verify claims across sources.
+- Search the web before writing, but be efficient — a handful of well-chosen searches, not a
+  sweep. Verify anything you are not certain of.
+- CLAUDE CODE ISSUES MUST BE VERIFIED AGAINST CURRENT OFFICIAL DOCS (docs.claude.com/claude-code
+  and Anthropic's engineering blog) before you describe any feature, flag, or command. Claude
+  Code changes fast and your training data may be out of date — a confidently wrong command
+  wastes Gray's time and teaches him something false. If you cannot verify a detail, leave it out.
 - Every substantive claim must be backed by a cited source, linked inline where the claim is made.
 - Prefer primary sources: official documentation, company announcements, published research,
-  reputable tech press. Never invent statistics. If evidence is mixed or disputed, say so plainly.
+  the practitioner's own post or video. Never invent statistics, and never invent a person or a
+  workflow. If evidence is mixed or disputed, say so plainly.
 - No hype. Straight talk about what is real, what is marketing, and what is still unknown.
 
 LENGTH: 700-1,100 words for the article body (tight, zero filler — every paragraph teaches
@@ -63,7 +92,7 @@ no preamble, no "Here is the issue", no research summary, no notes about what yo
 Write the four parts below and nothing else:
 
 TITLE: <honest, curiosity-driving subject line, under 70 characters>
-CATEGORY: <fundamentals | industry | news>
+CATEGORY: <claude-code | literacy | workflows>
 TOPIC: <short-kebab-slug-for-the-log>
 ===HTML===
 <div ...>  <- the email body. Start IMMEDIATELY with the opening <div> tag. No markdown code
@@ -86,9 +115,10 @@ Structure, in order:
 2. Title as a 26px bold h1, then a 1-2 sentence hook paragraph in #4b5563.
 3. "THE 2-MINUTE VERSION" box: #f9fafb background, 8px radius, 3-5 short bullet takeaways.
 4. The article in scannable sections with 19px bold h2 headers and a thin divider above each.
-5. "WHY THIS MATTERS FOR YOU" section tying it to video/content/marketing work with a concrete
-   real-world scenario.
-6. "TRY THIS TODAY" box (same style as the 2-minute box): one 5-minute action.
+5. "WHY THIS MATTERS FOR YOU" section tying it to Gray's actual work with a concrete scenario —
+   a tool he is building, a client video, or a workflow he runs. Name the real thing.
+6. "TRY THIS TODAY" box (same style as the 2-minute box): one 5-minute action he can do at his
+   own machine today. For Claude Code issues this should be an actual command or file edit.
 7. "TEST YOURSELF" section: exactly 10 numbered questions covering the article. Format each as
    its own block: the question in bold, then immediately below it an indented answer panel
    (#f9fafb background, 3px solid #d1d5db left border, 12px padding) beginning with
@@ -107,6 +137,21 @@ def load_log():
 
 MAX_TOKENS = 32000
 FORMAT_RETRIES = 2
+
+# Gray could not confidently explain "repo" as of issue #4, so the first two weeks lean on
+# tech literacy to build the vocabulary, then the mix flips to Claude Code for good.
+FOUNDATION_THROUGH_ISSUE = 18
+
+FOUNDATION_MIX = """TODAY'S MIX — FOUNDATION PHASE (building Gray's base vocabulary first):
+aim for roughly 3 of every 5 issues TECH LITERACY, 1 of 5 CLAUDE CODE, 1 of 5 CREATOR AI
+WORKFLOWS. Look at the covered-topics log below and pick whichever bucket is furthest behind
+that ratio. Early literacy issues should cover the most load-bearing terms first — repository,
+GitHub, commit, push — because later Claude Code issues will assume them."""
+
+STEADY_MIX = """TODAY'S MIX — STEADY PHASE (the base is built; go deep on Claude Code):
+aim for roughly 3 of every 5 issues CLAUDE CODE, 1 of 5 TECH LITERACY, 1 of 5 CREATOR AI
+WORKFLOWS. Look at the covered-topics log below and pick whichever bucket is furthest behind
+that ratio."""
 
 # Labels may arrive wrapped in markdown the model added on its own (**TITLE:**, ## TITLE:,
 # "- TITLE:"). Match the label anywhere on its line and strip decoration off the value.
@@ -161,7 +206,7 @@ def run_model(client, messages):
             max_tokens=MAX_TOKENS,
             thinking={"type": "adaptive"},
             system=SYSTEM_PROMPT,
-            tools=[{"type": "web_search_20260209", "name": "web_search", "max_uses": 8}],
+            tools=[{"type": "web_search_20260209", "name": "web_search", "max_uses": 5}],
             messages=messages,
         ) as stream:
             response = stream.get_final_message()
@@ -173,8 +218,10 @@ def run_model(client, messages):
 def generate_issue(log):
     client = anthropic.Anthropic()
     issue_num = len(log) + 1
+    mix = FOUNDATION_MIX if issue_num <= FOUNDATION_THROUGH_ISSUE else STEADY_MIX
     user_msg = (
         f"Today is {date.today().isoformat()}. Write issue #{issue_num}.\n\n"
+        f"{mix}\n\n"
         f"Covered topics so far (do not repeat any of these):\n"
         f"{json.dumps(log, indent=1) if log else '(none yet — this is the first issue)'}"
     )
@@ -230,17 +277,23 @@ def send_email(subject, html):
 
 
 def main():
+    # --no-email generates a preview only: no send, and the topic is NOT logged as
+    # covered, so a real issue can still use it tomorrow.
+    preview = "--no-email" in sys.argv
     log = load_log()
     issue_num, meta, html = generate_issue(log)
     title = meta["TITLE"]
 
     ARCHIVE_DIR.mkdir(exist_ok=True)
-    archive_file = ARCHIVE_DIR / f"{date.today().isoformat()}-{meta.get('TOPIC', 'issue')}.html"
+    stem = f"{date.today().isoformat()}-{meta.get('TOPIC', 'issue')}"
+    archive_file = ARCHIVE_DIR / (f"PREVIEW-{stem}.html" if preview else f"{stem}.html")
     archive_file.write_text(html)
 
-    if "--no-email" not in sys.argv:
-        send_email(f"Daily AI Read #{issue_num} — {title}", html)
+    if preview:
+        print(f"PREVIEW (not sent, not logged) [{meta.get('CATEGORY')}] {title} -> {archive_file.name}")
+        return
 
+    send_email(f"Daily AI Read #{issue_num} — {title}", html)
     log.append({
         "date": date.today().isoformat(),
         "issue": issue_num,

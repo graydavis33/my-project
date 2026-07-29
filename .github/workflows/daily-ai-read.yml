@@ -2,9 +2,19 @@ name: Daily AI Read
 
 on:
   schedule:
-    # 12:35 UTC = 8:35am EDT — GitHub's cron delay lands the email near 9:00am
-    - cron: "35 12 * * *"
+    # Target: email lands 9:00am ET. GitHub does not run scheduled jobs on time — measured
+    # delays on this repo were 96/139/147/171 min (mean ~138). 10:36 UTC + ~138 min delay +
+    # ~6 min runtime ≈ 13:00 UTC = 9:00am EDT. Expect drift within roughly 8:15–9:35am.
+    # Re-measure and adjust if it consistently misses; the delay is GitHub-side, not ours.
+    # DST: this is tuned for EDT (UTC-4). When EST starts in November, 9:00am ET is 14:00 UTC,
+    # so bump this cron to "36 11 * * *" or the email will arrive an hour early.
+    - cron: "36 10 * * *"
   workflow_dispatch:
+    inputs:
+      preview:
+        description: "Generate a preview only — no email sent, topic not logged"
+        type: boolean
+        default: false
 
 permissions:
   contents: write   # commits topics-log.json + archive back to the repo
@@ -35,7 +45,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GMAIL_SEND_TOKEN_JSON: ${{ secrets.GMAIL_SEND_TOKEN_JSON }}
-        run: cd python-scripts/daily-ai-read && python main.py
+        run: cd python-scripts/daily-ai-read && python main.py ${{ inputs.preview && '--no-email' || '' }}
 
       - name: Commit topic log and archive
         run: |
