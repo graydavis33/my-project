@@ -105,6 +105,71 @@ def load_log():
     return []
 
 
+MAX_TOKENS = 32000
+FORMAT_RETRIES = 2
+
+# Labels may arrive wrapped in markdown the model added on its own (**TITLE:**, ## TITLE:,
+# "- TITLE:"). Match the label anywhere on its line and strip decoration off the value.
+LABEL_RE = {
+    key: re.compile(rf"^[\s>#*\-]*\**\s*{key}\s*\**\s*:\s*(.+?)\s*$", re.IGNORECASE | re.MULTILINE)
+    for key in ("TITLE", "CATEGORY", "TOPIC")
+}
+
+
+def parse_issue(text):
+    """Pull the three labels + the HTML body out of the model's reply.
+
+    Tolerates the two ways the model has actually drifted in production: markdown-bolded
+    label lines, and a chatty preamble before (or instead of) the ===HTML=== marker.
+    Returns (meta, html) or raises ValueError describing what was missing.
+    """
+    head, marker, body = text.partition("===HTML===")
+    if not marker:
+        # No marker — the labels (if any) sit above the first HTML tag.
+        div = re.search(r"<div\b", text, re.IGNORECASE)
+        if not div:
+            raise ValueError("no ===HTML=== marker and no <div> in the reply")
+        head, body = text[:div.start()], text[div.start():]
+
+    meta = {}
+    for key, pattern in LABEL_RE.items():
+        match = pattern.search(head)
+        if match:
+            meta[key] = match.group(1).strip().strip("*").strip()
+
+    missing = [k for k in ("TITLE", "CATEGORY", "TOPIC") if not meta.get(k)]
+    if missing:
+        raise ValueError(f"missing label(s): {', '.join(missing)}")
+
+    # Keep strictly the HTML: drop markdown fences, stray notes, or citation text
+    # the model may emit around it — only the first "<" through the last ">" survives.
+    body = body.replace("```html", "").replace("```", "")
+    start, end = body.find("<"), body.rfind(">")
+    if start == -1 or end == -1:
+        raise ValueError("no HTML tags found after the labels")
+    html = body[start:end + 1]
+    if len(html) < 500:
+        raise ValueError(f"HTML body is only {len(html)} chars — looks truncated or empty")
+    return meta, html
+
+
+def run_model(client, messages):
+    """One full turn, following pause_turn hops for server-side web search."""
+    while True:
+        with client.messages.stream(
+            model=MODEL,
+            max_tokens=MAX_TOKENS,
+            thinking={"type": "adaptive"},
+            system=SYSTEM_PROMPT,
+            tools=[{"type": "web_search_20260209", "name": "web_search", "max_uses": 8}],
+            messages=messages,
+        ) as stream:
+            response = stream.get_final_message()
+        if response.stop_reason != "pause_turn":
+            return response
+        messages = messages + [{"role": "assistant", "content": response.content}]
+
+
 def generate_issue(log):
     client = anthropic.Anthropic()
     issue_num = len(log) + 1
@@ -114,34 +179,38 @@ def generate_issue(log):
         f"{json.dumps(log, indent=1) if log else '(none yet — this is the first issue)'}"
     )
     messages = [{"role": "user", "content": user_msg}]
-    while True:
-        with client.messages.stream(
-            model=MODEL,
-            max_tokens=24000,
-            thinking={"type": "adaptive"},
-            system=SYSTEM_PROMPT,
-            tools=[{"type": "web_search_20260209", "name": "web_search", "max_uses": 8}],
-            messages=messages,
-        ) as stream:
-            response = stream.get_final_message()
-        if response.stop_reason != "pause_turn":
-            break
-        messages = [{"role": "user", "content": user_msg},
-                    {"role": "assistant", "content": response.content}]
-    text = "".join(b.text for b in response.content if b.type == "text")
-    head, _, html = text.partition("===HTML===")
-    meta = {}
-    for line in head.strip().splitlines():
-        if ":" in line:
-            key, _, val = line.partition(":")
-            meta[key.strip().upper()] = val.strip()
-    # Keep strictly the HTML: drop markdown fences, stray notes, or citation text
-    # the model may emit around it — only the first "<" through the last ">" survives.
-    html = html.replace("```html", "").replace("```", "")
-    start, end = html.find("<"), html.rfind(">")
-    if start == -1 or end == -1 or "TITLE" not in meta:
-        raise RuntimeError(f"unexpected model output format:\n{text[:500]}")
-    return issue_num, meta, html[start:end + 1]
+
+    for attempt in range(FORMAT_RETRIES + 1):
+        response = run_model(client, messages)
+        text = "".join(b.text for b in response.content if b.type == "text")
+        try:
+            meta, html = parse_issue(text)
+            return issue_num, meta, html
+        except ValueError as err:
+            reason = str(err)
+            if response.stop_reason == "max_tokens":
+                reason += f" (the reply hit the {MAX_TOKENS}-token cap and was cut off)"
+            print(f"attempt {attempt + 1}: bad output format — {reason}", file=sys.stderr)
+            if attempt == FORMAT_RETRIES:
+                raise RuntimeError(
+                    f"model output format wrong after {FORMAT_RETRIES + 1} attempts — {reason}\n"
+                    f"--- first 1500 chars of the last reply ---\n{text[:1500]}"
+                ) from None
+            # Ask for a clean re-emit. Research is already done, so skip the searching
+            # and keep the retry short enough to fit inside the token cap.
+            messages = [
+                {"role": "user", "content": user_msg},
+                {"role": "assistant", "content": text[:200] or "(empty)"},
+                {"role": "user", "content": (
+                    f"That reply could not be parsed: {reason}. Do not search again — you "
+                    "already have the research. Re-send the SAME issue in the exact required "
+                    "format: the first characters of your reply must be 'TITLE:' with no "
+                    "preamble, then CATEGORY:, then TOPIC:, each as plain unformatted text "
+                    "with no asterisks or markdown, then a line containing exactly "
+                    "===HTML=== , then the full HTML body starting with <div. Write the "
+                    "complete HTML inline — you cannot attach files."
+                )},
+            ]
 
 
 def send_email(subject, html):
