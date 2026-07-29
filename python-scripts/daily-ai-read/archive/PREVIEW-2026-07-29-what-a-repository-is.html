@@ -1,0 +1,172 @@
+<div style="background-color:#f3f4f6;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;padding:32px;">
+
+    <!-- Masthead -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid #e5e7eb;margin-bottom:28px;">
+      <span style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;font-weight:600;">Daily AI Read</span>
+      <span style="font-size:12px;color:#6b7280;">Issue #5 &middot; July 29, 2026</span>
+    </div>
+
+    <!-- Title + Hook -->
+    <h1 style="font-size:26px;font-weight:700;color:#111827;margin:0 0 14px 0;line-height:1.3;">What a &ldquo;Repo&rdquo; Is &mdash; The One Concept That Unlocks Everything Else</h1>
+    <p style="font-size:16px;color:#4b5563;line-height:1.65;margin:0 0 28px 0;">You have already heard the word &ldquo;repository&rdquo; and probably just nodded along. It is the single most important piece of vocabulary in modern software. Once it clicks, GitHub, commits, branches, and half of Claude Code start making sense.</p>
+
+    <!-- 2-Minute Version -->
+    <div style="background:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#6b7280;margin:0 0 12px 0;">The 2-Minute Version</p>
+      <ul style="margin:0;padding-left:20px;color:#111827;font-size:15px;line-height:1.75;">
+        <li>A repository (repo) is a folder that remembers every single change ever made to the files inside it.</li>
+        <li>It does this using software called <strong>Git</strong>, which is separate from GitHub &mdash; Git is the tool, GitHub is a website that stores your Git repos online.</li>
+        <li>Every time you save a snapshot of your work, that is called a <strong>commit</strong>. Your repo is essentially a stack of those snapshots going back to day one.</li>
+        <li>Repos exist so you can undo anything, try risky changes safely, and share code with collaborators (or with Claude Code) without overwriting each other.</li>
+        <li>Your Payday app and caption scripts are almost certainly living in plain folders right now &mdash; today&rsquo;s issue shows you exactly what you are missing.</li>
+      </ul>
+    </div>
+
+    <!-- Section 1 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">Start With the Physical Analogy</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">Imagine you are editing a client video in Premiere. Good editors do not work in one giant file and pray. They duplicate the project before every big cut, so if something breaks they can roll back. Those duplicates pile up on your drive: <em>ClientVideo_v1</em>, <em>ClientVideo_v2_colorfix</em>, <em>ClientVideo_FINAL</em>, <em>ClientVideo_FINAL_actualfinal</em>.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">A repository does that same job &mdash; automatically, for every file in your project, with a label and timestamp on each version &mdash; without cluttering your drive with duplicate folders. You get the full history without the mess.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 0 0;">The software that powers this is called <strong>Git</strong>. Git is a version-control system &mdash; meaning it is a tool whose only job is to track changes over time. Git was created by Linus Torvalds in 2005 to manage development of the Linux kernel, but today it is used for virtually every serious software project on earth, from solo scripts to billion-dollar apps.</p>
+    </div>
+
+    <!-- Section 2 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">What Is Actually Inside a Repo</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">When you turn a folder into a Git repository, Git creates a hidden subfolder called <strong>.git</strong> inside it. That subfolder is the brain. It stores the complete history of every change &mdash; who changed what, when, and why. Your actual project files sit right alongside it, unchanged, as they always were.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">Each saved snapshot in that history is called a <strong>commit</strong>. Think of a commit like a labeled bookmark in your timeline. You write a short note when you make it &mdash; something like &ldquo;added invoice calculation&rdquo; or &ldquo;fixed the date bug&rdquo; &mdash; and Git records exactly which lines changed. Every commit stores a pointer to its parent commit, so the full project history is a chain of snapshots you can walk backward through at any time.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 0 0;">This means you can always answer the question: &ldquo;What did this file look like three weeks ago, before I broke it?&rdquo; With a plain folder, that answer is &ldquo;gone.&rdquo; With a repo, it is two commands away.</p>
+    </div>
+
+    <!-- Section 3 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">Git vs. GitHub: They Are Not the Same Thing</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">This trips up almost everyone. <strong>Git</strong> is the software that runs on your computer and does the tracking. <strong>GitHub</strong> is a website &mdash; owned by Microsoft &mdash; that stores copies of your Git repos online so they are backed up, shareable, and accessible from any machine.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">GitHub is a cloud-based hosting service that lets you manage Git repositories. You could use Git entirely offline and never touch GitHub. But in practice, almost everyone pushes their repos to GitHub because it acts as the single source of truth &mdash; especially when multiple people (or AI tools) are working on the same code.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 0 0;">When you <strong>push</strong>, you are uploading your latest commits from your computer to GitHub. When you <strong>pull</strong>, you are downloading commits someone else added. Those two words will come up constantly, and now you know what they mean.</p>
+    </div>
+
+    <!-- Section 4 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">Why Repos Exist: Three Real Problems They Solve</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;"><strong>1. The &ldquo;I broke everything&rdquo; problem.</strong> You change ten things at once and something stops working. Without a repo, you are guessing which change caused it. With a repo, you can look at the exact lines that changed since your last working commit and pin it down immediately.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;"><strong>2. The &ldquo;trying something risky&rdquo; problem.</strong> You want to rewrite a big chunk of your script but you are not sure it will work. In a repo, you create a <strong>branch</strong> &mdash; think of it as a parallel copy of your project where experiments live &mdash; and try it there. If it works, you merge it back in. If it fails, you delete the branch and nothing in your main code ever changed. (Branches get their own full issue later.)</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 0 0;"><strong>3. The &ldquo;Claude Code needs context&rdquo; problem.</strong> Claude Code works directly within your local development environment and can read your project files, edit code, and run commands. When your project lives in a proper repo, Claude Code can see the full file structure and history, make changes, and you can always verify or revert exactly what it did &mdash; commit by commit. Without a repo, if Claude Code edits a file and something goes wrong, that original version may simply be gone.</p>
+    </div>
+
+    <!-- Why This Matters For You -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">Why This Matters For You</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">Your Payday app is a real tool you use to manage your income. Your caption scripts run on real client projects. Right now they almost certainly live in plain folders on your machine &mdash; no history, no safety net. If Claude Code rewrites a function and it breaks, or your laptop dies, the previous version is gone.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 0 0;">Turning those folders into Git repos takes about 90 seconds per project and gives you a full undo history from that moment forward. It also makes every future Claude Code issue in this newsletter click faster, because terms like &ldquo;commit,&rdquo; &ldquo;push,&rdquo; and &ldquo;branch&rdquo; will already live in your vocabulary.</p>
+    </div>
+
+    <!-- Try This Today -->
+    <div style="background:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#6b7280;margin:0 0 12px 0;">Try This Today</p>
+      <p style="font-size:15px;color:#111827;line-height:1.65;margin:0 0 10px 0;">Open your terminal (the command-line app on your Mac or PC &mdash; search &ldquo;Terminal&rdquo; on Mac). Navigate into your Payday app folder with the <code style="background:#e5e7eb;padding:2px 5px;border-radius:4px;font-size:14px;">cd</code> command, then run these two lines:</p>
+      <pre style="background:#111827;color:#f9fafb;border-radius:8px;padding:16px;font-size:14px;overflow-x:auto;margin:0 0 10px 0;">git init
+git add .
+git commit -m "first snapshot of Payday app"</pre>
+      <p style="font-size:15px;color:#111827;line-height:1.65;margin:0;">That is it. Your folder is now a Git repository with one commit &mdash; a full snapshot of every file as it exists right now. From this moment forward, every change you make is trackable. (<code style="background:#e5e7eb;padding:2px 5px;border-radius:4px;font-size:14px;">git init</code> creates the repo; <code style="background:#e5e7eb;padding:2px 5px;border-radius:4px;font-size:14px;">git add .</code> stages all files; <code style="background:#e5e7eb;padding:2px 5px;border-radius:4px;font-size:14px;">git commit -m</code> saves the snapshot with a message.)</p>
+    </div>
+
+    <!-- Test Yourself -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:32px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 20px 0;">Test Yourself</h2>
+
+      <!-- Q1 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">1. In one sentence, what is a repository?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> A repository is a folder that uses Git to automatically track and store every change ever made to its files. This matters because it gives you a full undo history without managing duplicate folders manually.</p>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">2. What is Git, and who made it?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> Git is version-control software that runs on your computer and tracks changes to files over time. It was created by Linus Torvalds in 2005. It is the engine; GitHub is just a website that stores the repos Git creates.</p>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">3. What is a commit?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> A commit is a saved snapshot of your project at a specific moment, labeled with a short message you write. Think of it as a bookmark in your timeline. You can return to any commit at any point.</p>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">4. What is the difference between Git and GitHub?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> Git is the software on your computer that does the version tracking. GitHub is a website that stores your repos online for backup and sharing. You can use Git without GitHub, but GitHub requires Git.</p>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">5. What does &ldquo;push&rdquo; mean in Git?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> Push means uploading your latest commits from your local machine to a remote location like GitHub. It is how your work gets backed up online and made available to others (or to yourself on another device).</p>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">6. What is the hidden folder Git creates inside your project, and what does it do?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> It is called <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;">.git</code> and it is the entire brain of the repo &mdash; it stores the full change history. Your actual project files stay untouched; the .git folder is invisible by default so it does not clutter your workspace.</p>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">7. You ask Claude Code to refactor your Payday app&rsquo;s invoice function. It rewrites it, and the app crashes. Your project is NOT in a repo. What is your situation?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> The original file is likely overwritten and gone. You have no saved snapshot to return to. This is exactly the risk repos prevent &mdash; if you had committed before running Claude Code, you could restore the old version in seconds.</p>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">8. What is a branch, in simple terms?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> A branch is a parallel copy of your project where you can experiment without touching your main working code. If the experiment works, you merge it in. If it fails, you delete the branch &mdash; your main code never changed.</p>
+        </div>
+      </div>
+
+      <!-- Q9 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">9. What do the three commands <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;">git init</code>, <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;">git add .</code>, and <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;">git commit -m</code> each do?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;">git init</code> turns the current folder into a Git repo by creating the .git folder. <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;">git add .</code> stages (queues up) all files to be included in the next snapshot. <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;">git commit -m "message"</code> actually saves the snapshot with your label. All three are needed for the first commit.</p>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div style="margin-bottom:0;">
+        <p style="font-size:15px;font-weight:700;color:#111827;margin:0 0 8px 0;">10. Your friend says &ldquo;just save the file, that&rsquo;s the same as a commit.&rdquo; What is wrong with that?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 6px 6px 0;">
+          <p style="font-size:14px;color:#374151;margin:0;line-height:1.6;"><strong>Answer:</strong> Saving a file just overwrites the current version &mdash; the previous version is gone. A commit keeps the old version intact alongside the new one, labeled and timestamped, forever. Git stores the entire chain of every commit, so you can travel back to any point in the project&rsquo;s history.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sources -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:20px;">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:#6b7280;margin:0 0 10px 0;">Sources</p>
+      <ol style="font-size:14px;color:#374151;line-height:1.8;padding-left:20px;margin:0;">
+        <li><a href="https://git-scm.com/book/en/v2/Getting-Started-A-Short-History-of-Git" style="color:#1d4ed8;text-decoration:underline;">Git SCM &mdash; A Short History of Git (Official Git Documentation)</a></li>
+        <li><a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository" style="color:#1d4ed8;text-decoration:underline;">Git SCM &mdash; Git Basics: Recording Changes to the Repository</a></li>
+        <li><a href="https://docs.github.com/en/get-started/using-git/about-git" style="color:#1d4ed8;text-decoration:underline;">GitHub Docs &mdash; About Git</a></li>
+        <li><a href="https://docs.anthropic.com/en/docs/claude-code/overview" style="color:#1d4ed8;text-decoration:underline;">Anthropic &mdash; Claude Code Overview (Official Docs)</a></li>
+      </ol>
+    </div>
+
+  </div>
+</div>
