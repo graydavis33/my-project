@@ -7,6 +7,7 @@ topics-log.json so subjects never repeat; each issue is archived to archive/.
 import base64
 import json
 import os
+import re
 import sys
 from datetime import date
 from email.mime.text import MIMEText
