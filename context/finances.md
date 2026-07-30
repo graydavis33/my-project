@@ -11,15 +11,22 @@ All four are **federal Direct Unsubsidized** loans. Servicer: **MOHELA**
 (myaccount.mohela.studentaid.gov). Prior servicer reference to "Nelnet" in a Plaid test fixture
 is stale/wrong for these loans.
 
-| Loan | Balance | Interest rate | Due date shown |
-|---|---|---|---|
-| 1-01 Direct Loan - Unsubsidized | $6,097.02 | 3.730% | 08/28/2026 |
-| 1-02 Direct Loan - Unsubsidized | $7,443.82 | 4.990% | 08/28/2026 |
-| 1-03 Direct Loan - Unsubsidized | $8,630.47 | 5.500% | 08/28/2026 |
-| 1-04 Direct Loan - Unsubsidized | $8,369.41 | 6.530% | 08/28/2026 |
-| **Total** | **$30,540.72** | **~5.31% weighted avg** | |
+All four fully captured 2026-07-30. School: University of Georgia. Owner: US Dept of Education.
+Interest accrued through 07/30/2026 on all four. All fixed-rate. Due date shown: 08/28/2026.
 
-Roughly **$135/month** of interest accruing.
+| Loan | Principal | **Unpaid interest** | Balance | Rate |
+|---|---|---|---|---|
+| 1-01 Direct - Unsubsidized | $5,500.00 | $597.02 | $6,097.02 | 3.730% |
+| 1-02 Direct - Unsubsidized | $6,500.00 | $943.82 | $7,443.82 | 4.990% |
+| 1-03 Direct - Unsubsidized | $7,500.00 | $1,130.47 | $8,630.47 | 5.500% |
+| 1-04 Direct - Unsubsidized | $7,500.00 | $869.41 | $8,369.41 | 6.530% |
+| **Total** | **$27,000.00** | **$3,540.72** | **$30,540.72** | **~5.31% wtd avg** |
+
+Roughly **$135/month** of interest accruing. Borrowed $27,000; the other $3,540.72 is accrued
+deferment interest.
+
+**Required minimum once repayment starts: ~$330/mo** (Level, 10 yr, ~$30.5k at 5.31%). Gray's
+$1,000/mo plan is ~3x the minimum — big slack if income ever drops.
 
 **IMPORTANT — the old "20% interest" figure was WRONG.** It drove the original decision to rank
 loans above investing and to delete the Investments budget category. At ~5.3% that call is much
@@ -55,11 +62,33 @@ Gray is **NOT in a grace period.** Loan 1-04's detail page shows:
 typically **capitalizes** (folds into principal) when a deferment ends. Payments apply to accrued
 interest before principal, so every dollar sent before 9/11 reduces what capitalizes 1:1.
 
-Scale: if the other three loans carry a similar ratio (~10.4% of balance), total accrued interest
-is roughly **$3,000–3,200**, and capitalizing it costs roughly **$300 extra** over a ~3-year
-payoff. Worth capturing, NOT worth draining the emergency fund over.
+Exact exposure: **$3,540.72** capitalizes on 9/11/2026 if unpaid. Cost of letting all of it
+capitalize is roughly **$250–300** over a ~3-year payoff. Worth capturing, NOT worth draining the
+emergency fund over.
 
-At $1,000/mo the real payoff is ~2029, not 2036.
+At $1,000/mo the real payoff is ~mid-2029 (~33 months), not 2036. At $750/mo, ~45 months.
+
+### Pre-9/11 payment order (rate-first; payments hit accrued interest before principal)
+
+| Order | Target | Amount |
+|---|---|---|
+| 1 | 1-04 accrued interest (6.53%) | $869.41 |
+| 2 | 1-03 accrued interest (5.50%) | $1,130.47 |
+| 3 | 1-02 accrued interest (4.99%) | $943.82 |
+| 4 | 1-01 accrued interest (3.73%) | $597.02 |
+
+Steps 1+2 total **$1,999.88** — reachable from ~2 months of the normal $1,000 loan allocation
+with no savings touched. That clears capitalization on both high-rate loans. The remaining
+$1,540.84 sits on the two cheapest loans and costs only ~$70/yr if it capitalizes.
+
+Payment instruction to use every time: **"Apply to loan 1-04 until its accrued interest is paid,
+then loan 1-03. Do not advance my due date."**
+
+### DI01 autopay discount — ACTION REQUIRED
+Loan/Borrower Benefit "Interest Rate Reduction - DI01" status is **"Elig"** (eligible, not active).
+Fine print: 0.25% reduction for authorizing automatic debit, **suspended during deferment or
+forbearance** — which is why it is inactive now. **Set up autopay so it is live the day repayment
+begins.** Worth ~$70/yr.
 
 ### Open questions to confirm with MOHELA
 - **Does accrued interest capitalize when this deferment ends 9/11/2026?**
@@ -71,9 +100,11 @@ At $1,000/mo the real payoff is ~2029, not 2036.
 - Every extra payment must be directed: **"apply to accrued interest, then principal on loan
   1-04 — do not advance my due date."** Otherwise servicers commonly just push the due date.
 
-### TODO
-Pull Unpaid Principal vs Unpaid Interest for loans 1-01, 1-02, 1-03 (only 1-04 captured so far)
-to size the true pre-9/11 capitalization target.
+### Action list
+1. Set up **autopay** now (0.25% DI01 discount, live when repayment starts).
+2. Send **~$2,000 before 9/11/2026**, directed to 1-04 then 1-03 accrued interest.
+3. Call MOHELA: confirm capitalization on 9/11, and confirm the **unemployment deferment is still
+   valid** — Gray earns $6,500/mo and that deferment generally requires unemployment or <30 hrs/wk.
 
 ### Prepayment facts (confirmed 2026-07-30)
 - Federal student loans have **no prepayment penalty**.
