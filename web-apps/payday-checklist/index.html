@@ -518,7 +518,7 @@
           <div class="step-right">
             <div class="step-input-wrap">
               <span class="prefix">-$</span>
-              <input class="step-input" type="number" id="alloc-rent" value="1900" inputmode="decimal" onclick="event.stopPropagation()" oninput="updateAllocations()" />
+              <input class="step-input" type="number" id="alloc-rent" value="1800" inputmode="decimal" onclick="event.stopPropagation()" oninput="updateAllocations()" />
             </div>
             <div class="step-balance" id="balance-1">Remaining: $2,650</div>
           </div>
@@ -528,7 +528,7 @@
           <div class="checkbox"><span class="checkmark">✓</span></div>
           <div class="step-body">
             <div class="step-label">Pay student loans</div>
-            <div class="step-sub">Attack the 20% interest</div>
+            <div class="step-sub">MOHELA · ~5.3% avg · payoff ~2029</div>
           </div>
           <div class="step-right">
             <div class="step-input-wrap">
@@ -2089,7 +2089,7 @@ async function init() {
 
   // Load settings
   const income = await getSetting('income', { biweekly: 3250, taxPct: 30 });
-  const allocs = await getSetting('allocations', { rent: 1900, loans: 1000, ef: 400, ring: 200 });
+  const allocs = await getSetting('allocations', { rent: 1800, loans: 1000, ef: 400, ring: 200 });
   const budgets = await getSetting('budgets', null);
   const fund = await getSetting('fund', { balance: '', goal: 12000 });
   const ring = await getSetting('ring', { balance: '', goal: 10000 });

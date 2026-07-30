@@ -11,7 +11,7 @@
 - Auto-categorization is LOCAL (keyword rules + learns from your past vendors), NOT Haiku — a client-side API call on a public GitHub Pages site would expose the API key. The Gmail scanner still uses Haiku server-side in the daily Action.
 - Gmail receipts merge into the same transaction store (dedup by email_id; deleting one keeps it dismissed).
 - Old-category receipts (Streaming/Transport/Health & Wellness/Shopping) map to Misc.
-- Student loans moved from a budget row to checklist step 3 (-$1,000/mo, editable) per the 20%-interest priority call.
+- Student loans moved from a budget row to checklist step 3 (-$1,000/mo, editable). NOTE: this was originally justified by a "20% interest" figure that was WRONG — the real MOHELA blended rate is ~5.31%. The $1,000/mo allocation still stands (Gray's call 2026-07-30), but do not repeat the 20% number.
 - Test suite: scratchpad `test_payday.py` (rerunnable; serves web-apps/ locally + drives Chromium).
 
 ---
@@ -24,7 +24,7 @@
 **After-tax income:** ~$4,550
 
 **Fixed monthly allocations (editable $):**
-- Rent: $1,900
+- Rent: $1,800 (was $1,900; dropped 2026-07-30)
 - Emergency Fund transfer: $400
 - Student Loans payment: $1,000
 - Ring Fund transfer: $200

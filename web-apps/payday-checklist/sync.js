@@ -132,7 +132,7 @@ const Sync = (() => {
   // Re-read synced settings into the live UI (mirror of init()'s load block)
   async function reloadSettingsIntoUI() {
     const income = await getSetting('income', { biweekly: 3250, taxPct: 30 });
-    const allocs = await getSetting('allocations', { rent: 1900, loans: 1000, ef: 400, ring: 200 });
+    const allocs = await getSetting('allocations', { rent: 1800, loans: 1000, ef: 400, ring: 200 });
     const budgets = await getSetting('budgets', null);
     const fund = await getSetting('fund', { balance: '', goal: 12000 });
     const ring = await getSetting('ring', { balance: '', goal: 10000 });
