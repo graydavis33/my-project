@@ -34,13 +34,46 @@ softer. Do not repeat the 20% number. Stale copies of it still need scrubbing fr
 **Payoff order (avalanche):** extra dollars to **1-04 (6.53%)**, then 1-03 (5.50%),
 then 1-02 (4.99%). Minimum only on **1-01 (3.73%)** — it barely beats a high-yield savings rate.
 
+### STATUS: unemployment deferment ending 09/11/2026 (from loan 1-04 detail page)
+
+Gray is **NOT in a grace period.** Loan 1-04's detail page shows:
+
+| Field | Value |
+|---|---|
+| Loan Status | **Unemployment Deferment — Ends 09/11/2026** |
+| Repayment Start Date | 10/29/2025 (already passed) |
+| Repayment Plan | Level — Ends 08/28/2036 |
+| Estimated Payoff Date | 08/28/2036 (standard 10-yr at MINIMUM payments — not his plan) |
+| Unpaid Principal | $7,500.00 |
+| **Unpaid Interest** | **$869.41** |
+| Current Balance | $8,369.41 |
+| Interest Type | Fixed, 6.530% |
+| Interest Accrued Through | 07/30/2026 |
+| Loan/Borrower Benefits | Interest Rate Reduction – DI01 (likely the 0.25% autopay discount) |
+
+**THE DEADLINE IS 09/11/2026.** Unsubsidized interest accrued through the whole deferment and
+typically **capitalizes** (folds into principal) when a deferment ends. Payments apply to accrued
+interest before principal, so every dollar sent before 9/11 reduces what capitalizes 1:1.
+
+Scale: if the other three loans carry a similar ratio (~10.4% of balance), total accrued interest
+is roughly **$3,000–3,200**, and capitalizing it costs roughly **$300 extra** over a ~3-year
+payoff. Worth capturing, NOT worth draining the emergency fund over.
+
+At $1,000/mo the real payoff is ~2029, not 2036.
+
 ### Open questions to confirm with MOHELA
-- **Actual repayment start date.** Gray believes Oct 30 or Dec 30, 2026, but the portal shows a
-  due date of **08/28/2026** on all four loans. Resolve before assuming an October start.
-- **Does accrued interest capitalize at the end of the grace period?** If yes, paying accrued
-  interest down before that date is worth extra.
-- Every extra payment must be directed: **"apply to principal of loan 1-04, do not advance my
-  due date."** Otherwise servicers commonly just push the due date forward.
+- **Does accrued interest capitalize when this deferment ends 9/11/2026?**
+- **Is the DI01 autopay discount actually active?** If not, enrolling is a free 0.25%.
+- **What is the monthly payment once repayment begins?** (Portal also shows a due date of
+  08/28/2026 on all four loans — reconcile that against the 9/11 deferment end.)
+- **Is the unemployment deferment still valid?** Gray is earning $6,500/mo; unemployment
+  deferment generally requires being unemployed or working <30 hrs/week. Don't lean on it.
+- Every extra payment must be directed: **"apply to accrued interest, then principal on loan
+  1-04 — do not advance my due date."** Otherwise servicers commonly just push the due date.
+
+### TODO
+Pull Unpaid Principal vs Unpaid Interest for loans 1-01, 1-02, 1-03 (only 1-04 captured so far)
+to size the true pre-9/11 capitalization target.
 
 ### Prepayment facts (confirmed 2026-07-30)
 - Federal student loans have **no prepayment penalty**.
