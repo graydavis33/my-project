@@ -106,7 +106,10 @@ const Sync = (() => {
           if (!SETTING_KEYS.includes(id)) continue;
           const meta = await getSetting('_syncmeta_' + id, 0);
           if (meta >= (data.updated_at || 0)) continue;
-          await setSetting(id, data.value);            // applyingRemote guard stops re-mirroring
+          // A tombstoned setting clears locally so the app falls back to its
+          // own in-code default (that's what a reset is supposed to leave).
+          if (data.deleted) await deleteSetting(id);
+          else await setSetting(id, data.value);       // applyingRemote guard stops re-mirroring
           await setSetting('_syncmeta_' + id, data.updated_at || 0);
           settingsChanged = true;
         } else if (col === 'history') {
@@ -190,6 +193,19 @@ const Sync = (() => {
     await setSetting('_syncmeta_' + key, now);
     backend.set('settings/' + key, { value: value, updated_at: now }).catch(() => setStatus('⚠ sync error'));
   }
+  // Resets must tombstone the cloud copy too — clearing IndexedDB alone just
+  // means the next snapshot re-downloads everything you thought you deleted.
+  async function onLocalSettingDelete(key) {
+    if (!active || applyingRemote) return;
+    if (!SETTING_KEYS.includes(key)) return;
+    const now = Date.now();
+    await setSetting('_syncmeta_' + key, now);
+    backend.set('settings/' + key, { value: null, deleted: true, updated_at: now }).catch(() => setStatus('⚠ sync error'));
+  }
+  async function resetRemoteSettings() {
+    for (const key of SETTING_KEYS) await onLocalSettingDelete(key);
+  }
+
   function onLocalHistory(entry) {
     if (!active || applyingRemote) return;
     backend.set('history/' + entry.id, { entry: entry, deleted: false, updated_at: Date.now() }).catch(() => {});
@@ -263,7 +279,8 @@ const Sync = (() => {
   }
 
   return {
-    init, onLocalTxn, onLocalTxnDelete, onLocalSetting, onLocalHistory, onLocalHistoryDelete, withLock,
+    init, onLocalTxn, onLocalTxnDelete, onLocalSetting, onLocalSettingDelete, resetRemoteSettings,
+    onLocalHistory, onLocalHistoryDelete, withLock,
     signIn: () => backend && backend.signIn(),
     signOut: () => backend && backend.signOut(),
     toggle: () => (active ? Sync.signOut() : Sync.signIn())

@@ -870,9 +870,13 @@ async function getSetting(key, fallback = null) {
   const rec = await idbReq(tx.objectStore('settings').get(key));
   return rec ? rec.value : fallback;
 }
-async function deleteSetting(key) {
+async function deleteSetting(key, sync = true) {
   const tx = db.transaction('settings', 'readwrite');
-  return idbReq(tx.objectStore('settings').delete(key));
+  const result = await idbReq(tx.objectStore('settings').delete(key));
+  // Mirror the delete like setSetting mirrors a write — otherwise the cloud
+  // copy survives and the next snapshot puts the value straight back.
+  if (sync && !key.startsWith('_syncmeta_')) await Sync.onLocalSettingDelete(key);
+  return result;
 }
 async function addTransaction(txn) {
   const tx = db.transaction('transactions', 'readwrite');
@@ -2004,12 +2008,27 @@ async function resetExpenses() {
 }
 async function resetHistory() {
   if (!confirm('Delete ALL history entries? This cannot be undone.')) return;
+  for (const h of await getAllHistory()) Sync.onLocalHistoryDelete(h.id);
   await clearStore('history');
   renderHistory();
 }
 async function resetEverything() {
   if (!confirm('Reset everything? This clears all data: transactions, history, settings.')) return;
   if (!confirm('Are you sure? This cannot be undone. (Tip: Export a backup first.)')) return;
+
+  // Tombstone the cloud copy BEFORE clearing locally. Clearing IndexedDB alone
+  // only empties this device — the sync listener re-downloads everything the
+  // moment the page reloads, which reads as "the reset button does nothing".
+  const now = Date.now();
+  for (const t of await getAllTransactions()) {
+    if (!t.sid) t.sid = t.email_id || uuidSid();
+    t.deleted = true;
+    t.updatedAt = now;
+    Sync.onLocalTxnDelete(t);
+  }
+  for (const h of await getAllHistory()) Sync.onLocalHistoryDelete(h.id);
+  await Sync.resetRemoteSettings();
+
   await clearStore('transactions');
   await clearStore('history');
   await clearStore('settings');
