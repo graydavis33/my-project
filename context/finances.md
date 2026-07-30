@@ -84,15 +84,23 @@ $1,540.84 sits on the two cheapest loans and costs only ~$70/yr if it capitalize
 Payment instruction to use every time: **"Apply to loan 1-04 until its accrued interest is paid,
 then loan 1-03. Do not advance my due date."**
 
-### DI01 autopay discount — ACTION REQUIRED
+### DI01 autopay discount — timing matters
 Loan/Borrower Benefit "Interest Rate Reduction - DI01" status is **"Elig"** (eligible, not active).
-Fine print: 0.25% reduction for authorizing automatic debit, **suspended during deferment or
-forbearance** — which is why it is inactive now. **Set up autopay so it is live the day repayment
-begins.** Worth ~$70/yr.
+Fine print: 0.25% reduction for authorizing automatic debit, applies **during repayment only** and
+is **suspended during deferment or forbearance** — which is why it is inactive now.
+
+**It cannot be earned before 9/11/2026, and MOHELA may not even allow enrollment while the
+deferment is open.** Do NOT treat "set up autopay" as a today task. Instead ask MOHELA: *"When can
+I enroll in auto-debit so the DI01 discount is active on my first billed payment?"* Goal = active
+by the first real payment. Worth ~$70/yr.
+
+Note: the pre-9/11 voluntary payments get no discount either (manual, not auto-debited). Their
+value is killing accrued interest before capitalization — unrelated to DI01.
 
 ### Open questions to confirm with MOHELA
 - **Does accrued interest capitalize when this deferment ends 9/11/2026?**
-- **Is the DI01 autopay discount actually active?** If not, enrolling is a free 0.25%.
+- **When can auto-debit be enrolled?** DI01 is suspended during deferment by design; the question
+  is the earliest date enrollment can be set so it is live on the first billed payment.
 - **What is the monthly payment once repayment begins?** (Portal also shows a due date of
   08/28/2026 on all four loans — reconcile that against the 9/11 deferment end.)
 - **Is the unemployment deferment still valid?** Gray is earning $6,500/mo; unemployment
@@ -101,7 +109,8 @@ begins.** Worth ~$70/yr.
   1-04 — do not advance my due date."** Otherwise servicers commonly just push the due date.
 
 ### Action list
-1. Set up **autopay** now (0.25% DI01 discount, live when repayment starts).
+1. Ask MOHELA **when** auto-debit enrollment is possible so DI01 is active on the first billed
+   payment (it cannot apply during deferment — do not try to "turn it on" now).
 2. Send **~$2,000 before 9/11/2026**, directed to 1-04 then 1-03 accrued interest.
 3. Call MOHELA: confirm capitalization on 9/11, and confirm the **unemployment deferment is still
    valid** — Gray earns $6,500/mo and that deferment generally requires unemployment or <30 hrs/wk.
