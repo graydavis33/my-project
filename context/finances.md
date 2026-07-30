@@ -22,8 +22,23 @@ Interest accrued through 07/30/2026 on all four. All fixed-rate. Due date shown:
 | 1-04 Direct - Unsubsidized | $7,500.00 | $869.41 | $8,369.41 | 6.530% |
 | **Total** | **$27,000.00** | **$3,540.72** | **$30,540.72** | **~5.31% wtd avg** |
 
-Roughly **$135/month** of interest accruing. Borrowed $27,000; the other $3,540.72 is accrued
-deferment interest.
+Borrowed $27,000; the other $3,540.72 is accrued deferment interest.
+
+**How the interest actually works (do not describe it as compounding):** federal student loan
+interest accrues **daily simple interest on PRINCIPAL ONLY** — `principal x rate / 365`. Accrued
+interest sits in a separate bucket and **earns nothing on itself**. It only joins principal at a
+**capitalization event** (end of deferment/forbearance/grace, consolidation, default, leaving
+certain IDR plans) — never on a monthly or yearly cycle.
+
+Proof none has occurred yet: loan 1-03 disbursed 08/08/2023 with Original Principal $7,500.00 and
+its Unpaid Principal is still exactly $7,500.00 three years later.
+
+**Current bleed: ~$3.92/day, ~$119/month** (on $27,000 principal).
+**Post-capitalization: ~$4.44/day, ~$135/month** (on $30,540.72). So capitalizing the full
+$3,540.72 costs ~$16/month more, ~$190/yr at the start, ~$250 total over a ~3-yr payoff.
+
+For Gray, 9/11/2026 is the ONLY capitalization event on the horizon. Once in normal repayment
+there are no more — it is one-time, not recurring.
 
 **Required minimum once repayment starts: ~$330/mo** (Level, 10 yr, ~$30.5k at 5.31%). Gray's
 $1,000/mo plan is ~3x the minimum — big slack if income ever drops.
