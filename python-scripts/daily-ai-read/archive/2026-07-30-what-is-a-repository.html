@@ -1,0 +1,165 @@
+<div style="background-color: #f3f4f6; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; padding: 32px; color: #111827; font-size: 16px; line-height: 1.65;">
+
+    <div style="border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; margin-bottom: 24px;">
+      <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280;">DAILY AI READ &nbsp;&nbsp; Issue #5 · July 30, 2026</span>
+    </div>
+
+    <h1 style="font-size: 26px; font-weight: bold; margin: 0 0 12px 0; color: #111827;">What Is a "Repo"? The Folder That Never Forgets</h1>
+    <p style="color: #4b5563; margin: 0 0 28px 0;">You already own one. It holds every tool you have ever built. Today you will finally know exactly what that means — and why it has been quietly saving you this whole time.</p>
+
+    <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 32px;">
+      <p style="font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; margin: 0 0 12px 0;">THE 2-MINUTE VERSION</p>
+      <ul style="margin: 0; padding-left: 20px; color: #111827;">
+        <li style="margin-bottom: 8px;">A repository (repo) is a folder that also stores its complete history — every change, forever.</li>
+        <li style="margin-bottom: 8px;">That history is managed by a tool called Git. GitHub is just a website that stores Git repos online.</li>
+        <li style="margin-bottom: 8px;">You have two copies: a local one on your Mac, and a remote one on GitHub. They stay in sync via push and pull.</li>
+        <li style="margin-bottom: 8px;">Your repo is graydavis33/my-project — it already holds every tool you have built with Claude Code.</li>
+        <li style="margin-bottom: 0;">The auto-commit at the end of every Claude Code session is Git saving a dated snapshot into your repo automatically.</li>
+      </ul>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 28px;">
+      <h2 style="font-size: 19px; font-weight: bold; margin: 0 0 14px 0;">The Plain-English Answer</h2>
+      <p style="margin: 0 0 14px 0;">A <strong>repository</strong> — "repo" for short — is a project folder with one superpower: it remembers every version of every file inside it, forever.</p>
+      <p style="margin: 0 0 14px 0;">A normal folder only holds what is in it right now. Delete a line of code, save the file, and that line is gone. A repo is different. Every time you save a snapshot (called a <strong>commit</strong>), Git records what changed and when. You can scroll back to any moment in your project's life and see exactly what your code looked like.</p>
+      <p style="margin: 0 0 0 0;"><strong>Git</strong> is the free software that does this tracking. It runs invisibly on your computer, inside your project folder. You do not need to understand all of Git right now. Just know it is the engine underneath every repo.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 28px;">
+      <h2 style="font-size: 19px; font-weight: bold; margin: 0 0 14px 0;">The Analogy That Actually Sticks</h2>
+      <p style="margin: 0 0 14px 0;">Think of a repo like a Google Doc — but for code, and far more powerful.</p>
+      <p style="margin: 0 0 14px 0;">Google Docs has "Version History." You can click back and see how the document looked last Tuesday. A repo does the same thing, except you choose exactly when to save a version, and you attach a short message to each snapshot describing what you changed.</p>
+      <p style="margin: 0 0 0 0;">Real-world equivalent: imagine a contractor who photographs every room of a house at the end of each workday. The homeowner can always say "show me what it looked like Wednesday." Each photo is a commit. The full photo album is the repo.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 28px;">
+      <h2 style="font-size: 19px; font-weight: bold; margin: 0 0 14px 0;">Two Copies: Local and Remote</h2>
+      <p style="margin: 0 0 14px 0;">This is where GitHub enters. <strong>GitHub</strong> is a website — owned by Microsoft — that hosts repos online. Think of it as a Google Drive built specifically for Git repos.</p>
+      <p style="margin: 0 0 14px 0;">When you work with a repo, you typically have two copies at once:</p>
+      <ul style="margin: 0 0 14px 0; padding-left: 20px;">
+        <li style="margin-bottom: 8px;"><strong>Local repo</strong> — the copy on your Mac (or PC). This is where you actually write and edit code.</li>
+        <li style="margin-bottom: 8px;"><strong>Remote repo</strong> — the copy on GitHub's servers. This is your off-device backup, and how your Mac and PC share the same codebase.</li>
+      </ul>
+      <p style="margin: 0 0 0 0;">Sending changes from local up to remote is called a <strong>push</strong>. Grabbing changes from remote back down to local is called a <strong>pull</strong>. You will hear these two words constantly. They are just directions — outgoing vs. incoming.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 28px;">
+      <h2 style="font-size: 19px; font-weight: bold; margin: 0 0 14px 0;">Your Repo Already Exists</h2>
+      <p style="margin: 0 0 14px 0;">You are not learning this from scratch. You already have a repo and you have been using it for every tool you own.</p>
+      <p style="margin: 0 0 14px 0;">It lives at <a href="https://github.com/graydavis33/my-project" style="color: #1d4ed8;">github.com/graydavis33/my-project</a>. Inside it: your Payday budgeting app, your footage organizer, your caption scripts, your invoice tracker, your email agent, and the system that generates this very newsletter. All of them live in this one repo.</p>
+      <p style="margin: 0 0 14px 0;">At the end of every Claude Code session, your setup automatically saves a snapshot of every file that changed and pushes it to GitHub. You built this without necessarily knowing the name of what you built — but now you do. That process is auto-commit and auto-push.</p>
+      <p style="margin: 0 0 0 0;">Because of that system, every version of every tool you have ever built is retrievable. If you accidentally deleted your entire footage organizer today, you could restore it from yesterday's snapshot in under five minutes.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 28px;">
+      <h2 style="font-size: 19px; font-weight: bold; margin: 0 0 14px 0;">What Is Actually Inside a Repo Folder</h2>
+      <p style="margin: 0 0 14px 0;">If you open your project folder on your Mac, you will see your code files — JavaScript, Python, HTML, whatever the tools are made of. But there is also a hidden folder called <strong>.git</strong>. That is where Git stores the entire history database. Do not touch it. Do not delete it. It is the repo's memory.</p>
+      <p style="margin: 0 0 0 0;">You will also likely see a file called <strong>README.md</strong>. That is a plain-text description of the project — it displays as the front page of your repo on GitHub. Think of it as the label on the outside of the filing cabinet.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 28px;">
+      <h2 style="font-size: 19px; font-weight: bold; margin: 0 0 14px 0;">Why This Matters For You</h2>
+      <p style="margin: 0 0 14px 0;">Say Claude Code helps you upgrade your footage organizer — new feature, indexes faster. You test it, love it, and then realize three days later it broke the search function. Without a repo, you are stuck with the broken version. With a repo and auto-commits, you open GitHub, scroll back to three days ago, and restore exactly what was working. This takes minutes, not hours.</p>
+      <p style="margin: 0 0 14px 0;">This is also why your tools work on both your Mac and Windows PC without a USB drive or email chain. Your Mac pushes to GitHub. Your PC pulls from GitHub. The remote repo is the shared bridge between two machines that never talk directly to each other.</p>
+      <p style="margin: 0 0 0 0;">And because your repo is public on GitHub, it also functions as a portfolio — any developer you ever hire or collaborate with can read the code instantly, no file transfers needed.</p>
+    </div>
+
+    <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 32px;">
+      <p style="font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; margin: 0 0 12px 0;">TRY THIS TODAY</p>
+      <p style="margin: 0 0 10px 0;"><strong>Find your full commit history on GitHub — takes under 5 minutes.</strong></p>
+      <ol style="margin: 0; padding-left: 20px; color: #111827;">
+        <li style="margin-bottom: 8px;">Go to <a href="https://github.com/graydavis33/my-project" style="color: #1d4ed8;">github.com/graydavis33/my-project</a> in your browser.</li>
+        <li style="margin-bottom: 8px;">Near the top right of the file list, look for a clock icon that says something like "X commits." Click it.</li>
+        <li style="margin-bottom: 8px;">You are now looking at your full history — every auto-commit your Claude Code sessions ever made, with timestamps and messages.</li>
+        <li style="margin-bottom: 0;">Click any commit to see a <strong>diff</strong>: lines your session added show in green, lines removed show in red. That is exactly what changed in that session.</li>
+      </ol>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 24px; margin-bottom: 28px;">
+      <h2 style="font-size: 19px; font-weight: bold; margin: 0 0 20px 0;">Test Yourself</h2>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">1. In one sentence, what is a repository?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> A repository is a project folder that stores the complete history of every change ever made to the files inside it. This matters because it lets you recover any previous version of your work — something a normal folder cannot do.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">2. What is Git, and how is it different from GitHub?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> Git is free software that runs on your computer and tracks the history of your code. GitHub is a website that stores those Git repos online so they are backed up and accessible from anywhere. Git is the engine; GitHub is the parking garage.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">3. What is a "local" repo versus a "remote" repo?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> A local repo is the copy on your own machine — where you do your actual work. A remote repo is the copy hosted online on GitHub. They are the same project in two places, kept in sync by push and pull.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">4. What does "push" mean?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> Push means sending your latest changes from your local repo up to the remote repo on GitHub. Think of it as uploading — you are pushing your work outward, off your machine and onto the internet.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">5. What does "pull" mean?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> Pull means downloading the latest changes from the remote repo on GitHub down to your local machine. If you built something on your Mac, you would pull on your Windows PC before working there so it has the newest version.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">6. What is the hidden ".git" folder, and what happens if you delete it?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> The .git folder is where Git stores your entire project history. Deleting it would wipe out every snapshot ever made and turn your repo back into a plain, memoryless folder — you would lose all ability to roll back changes.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">7. Your caption script breaks after a Claude Code session. What does having a repo let you do that a plain folder would not?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> You can open your commit history on GitHub, find the last working version, and restore the script. With a plain folder, the broken version is all you have — there is no history to roll back to.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">8. Why does your code work on both your Mac and Windows PC without any manual file transfers?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> Your Mac pushes changes to the GitHub repo, and your PC pulls them down. The remote repo acts as the shared middle point. Without it, you would have to copy files by hand every time you switched machines.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">9. At the end of every Claude Code session, your setup auto-commits and auto-pushes. In plain English, what is happening in that moment?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> Git saves a labeled snapshot of every file that changed during the session — that is the commit. Then it sends that snapshot up to your repo on GitHub — that is the push. It is an automatic save-and-backup that runs without you thinking about it.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 0;">
+        <p style="font-weight: bold; margin: 0 0 8px 0;">10. What does a "diff" show you, and where do you find one?</p>
+        <div style="background: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px; border-radius: 0 4px 4px 0;">
+          <strong>Answer:</strong> A diff shows exactly what changed between two versions of a file — lines added appear in green, lines removed appear in red. You find one by clicking any commit in your commit history on GitHub. It is the fastest way to understand what a session actually changed.
+        </div>
+      </div>
+
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 20px;">
+      <p style="font-size: 14px; font-weight: bold; margin: 0 0 10px 0;">SOURCES</p>
+      <ol style="font-size: 14px; padding-left: 20px; margin: 0; color: #111827;">
+        <li style="margin-bottom: 6px;"><a href="https://docs.github.com/en/repositories/creating-and-managing-repositories/about-repositories" style="color: #1d4ed8;">GitHub Docs: About repositories</a></li>
+        <li style="margin-bottom: 6px;"><a href="https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F" style="color: #1d4ed8;">Pro Git Book: What is Git?</a></li>
+        <li style="margin-bottom: 6px;"><a href="https://docs.github.com/en/get-started/start-your-journey/hello-world" style="color: #1d4ed8;">GitHub Docs: Hello World — understanding repos and commits</a></li>
+        <li style="margin-bottom: 0;"><a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/viewing-and-comparing-commits/differences-between-commit-views" style="color: #1d4ed8;">GitHub Docs: Viewing commit diffs</a></li>
+      </ol>
+    </div>
+
+  </div>
+</div>
