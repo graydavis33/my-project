@@ -68,21 +68,31 @@ emergency fund over.
 
 At $1,000/mo the real payoff is ~mid-2029 (~33 months), not 2036. At $750/mo, ~45 months.
 
-### Pre-9/11 payment order (rate-first; payments hit accrued interest before principal)
+### Pre-9/11 payments — pure avalanche, ALL to 1-04
 
-| Order | Target | Amount |
+**Correction (Gray's catch):** "prevent capitalization" is NOT the goal and led to a worse split.
+Capitalization does not increase what is owed — it only moves accrued interest into principal so
+it starts earning. What matters is **the interest rate on the dollars eliminated.** Highest rate
+first, always. Accrued interest is inert until it capitalizes, so paying down 6.53% principal
+beats preventing capitalization on a 5.50% loan.
+
+Send the full **~$2,000 to loan 1-04**: clears its $869.41 accrued interest, then ~$1,130 off
+principal at 6.53%.
+
+| | All to 1-04 | Split 1-04 + 1-03 (rejected) |
 |---|---|---|
-| 1 | 1-04 accrued interest (6.53%) | $869.41 |
-| 2 | 1-03 accrued interest (5.50%) | $1,130.47 |
-| 3 | 1-02 accrued interest (4.99%) | $943.82 |
-| 4 | 1-01 accrued interest (3.73%) | $597.02 |
+| Annual interest after 9/11 | **~$1,489** | ~$1,501 |
 
-Steps 1+2 total **$1,999.88** — reachable from ~2 months of the normal $1,000 loan allocation
-with no savings touched. That clears capitalization on both high-rate loans. The remaining
-$1,540.84 sits on the two cheapest loans and costs only ~$70/yr if it capitalizes.
+All-to-1-04 wins ~$12/yr (~$25 over the payoff). Small, but it is the correct direction and the
+same logic governs every later payment.
 
-Payment instruction to use every time: **"Apply to loan 1-04 until its accrued interest is paid,
-then loan 1-03. Do not advance my due date."**
+**Order after 1-04 is dead:** 1-03 (5.50%) -> 1-02 (4.99%) -> 1-01 (3.73%). Ignore the
+interest-vs-principal split and the loan labels; just chase the highest rate.
+
+**Payment instruction (use verbatim):** *"Apply this entire payment to loan 1-04 only — accrued
+interest first, then principal. Do not spread it across my other loans, and do not advance my due
+date."* Default servicer behavior on a large payment with no bill due is to spread it
+proportionally across all four loans or park it as "paid ahead" — both waste the targeting.
 
 ### DI01 autopay discount — timing matters
 Loan/Borrower Benefit "Interest Rate Reduction - DI01" status is **"Elig"** (eligible, not active).
@@ -105,13 +115,13 @@ value is killing accrued interest before capitalization — unrelated to DI01.
   08/28/2026 on all four loans — reconcile that against the 9/11 deferment end.)
 - **Is the unemployment deferment still valid?** Gray is earning $6,500/mo; unemployment
   deferment generally requires being unemployed or working <30 hrs/week. Don't lean on it.
-- Every extra payment must be directed: **"apply to accrued interest, then principal on loan
-  1-04 — do not advance my due date."** Otherwise servicers commonly just push the due date.
+- Every extra payment must be directed to a single loan (see the verbatim instruction above),
+  otherwise servicers spread it proportionally or just push the due date forward.
 
 ### Action list
 1. Ask MOHELA **when** auto-debit enrollment is possible so DI01 is active on the first billed
    payment (it cannot apply during deferment — do not try to "turn it on" now).
-2. Send **~$2,000 before 9/11/2026**, directed to 1-04 then 1-03 accrued interest.
+2. Send **~$2,000 before 9/11/2026**, ALL to loan 1-04 (interest then principal).
 3. Call MOHELA: confirm capitalization on 9/11, and confirm the **unemployment deferment is still
    valid** — Gray earns $6,500/mo and that deferment generally requires unemployment or <30 hrs/wk.
 
