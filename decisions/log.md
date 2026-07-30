@@ -567,3 +567,26 @@ Two consecutive runs (7/27, 7/28) crashed and sent nothing. Root cause was not t
 Same session, Gray redirected the subject matter: the generic AI-tool explainers (auto-captions, noise reduction) are too obvious. Replaced the fundamentals/news/industry mix with three buckets — claude-code, literacy, workflows — and banned tool roundups outright. He flagged he cannot confidently explain what a repo is, so issues ≤18 lean ~3/5 tech literacy to build vocabulary before the mix flips to ~3/5 Claude Code (`FOUNDATION_THROUGH_ISSUE`). Claude Code issues must be doc-verified every time because training data goes stale and a wrong command teaches something false. He declined a spaced-repetition review block, reasoning the end-of-article quiz already covers it.
 
 Also: cron 12:35 → 10:36 UTC. GitHub delays scheduled runs on this repo by 96–171 min (measured), so the old time landed the email at ~10:15–11:30am instead of 9:00. Never set the cron to the time you want the email; needs a +1h bump when EST starts in November. Added a real preview mode (`--no-email` = no send, no topic logged, `PREVIEW-*.html` archive) exposed as a workflow_dispatch input, so prompt changes can be checked without emailing Gray twice or burning a topic. The first preview caught the model inventing that Gray's apps "are almost certainly living in plain folders" — SYSTEM_PROMPT now carries a facts block about his real setup.
+
+## 2026-07-30 — GitHub Pages serves the whole repo root publicly (repo is PUBLIC)
+
+**Finding:** verified unauthenticated that `github.com/graydavis33/my-project` and its API endpoint both
+return 200 — the repo is public, and GitHub Pages serves EVERY path in it, not just `web-apps/`.
+`context/*.md`, `CLAUDE.md`, and business docs were all fetchable by URL.
+
+**Note on the paid plan:** GitHub Pro lets you publish Pages *from* a private repo, but the published
+site is still public. Access-controlled private Pages is an Enterprise-tier feature. "Live but private"
+is not available at the Pro tier.
+
+**Not leaked:** no credentials. Only `.env.example` templates are tracked; `.gitignore` correctly covers
+`.env`, `token*.json`, `client_secret*.json`, `credentials.json`. Firebase web config is public by design
+and app data stays behind the email-locked Firestore rule.
+
+**Actions taken:** personal finance notes removed from the repo + gitignored (`context/finances.md`,
+local copy at `~/Documents/private-finances/`); verified the URL now 404s.
+
+**Rule going forward:** nothing personal or client-confidential goes in this repo while Pages serves the
+root. Deleting a file does NOT undo exposure while the repo is public — the commit history stays readable.
+
+**Pending Gray:** flip the repo to Private (Settings > General > Danger Zone). Then decide whether to move
+the Payday app to its own repo and turn Pages off here (changes the app URL — needs re-adding to his phone).
