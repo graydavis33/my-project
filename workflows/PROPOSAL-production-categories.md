@@ -1,8 +1,66 @@
 # PROPOSAL — Categorizing Production by Function, Not Topic
 
-Status: DRAFT / NOT ADOPTED. Awaiting a council review to decide whether this is worth building.
+Status: **KILLED 2026-07-31 by unanimous /council verdict.** Do not build. Kept as a record
+of the reasoning, and because one piece of it survived — see "What survived" below.
 Date: 2026-07-31
 Origin: Gray's idea, developed in conversation with Claude.
+
+---
+
+## VERDICT: KILL (all five seats negative, confidence high)
+
+Contrarian FALSE PREMISE · First Principles WRONG PROBLEM · Expansionist FLAT ·
+Outsider DOESN'T FOLLOW · Executor NEEDS SCOPING (capped at a doc, not a build)
+
+**Why.** All five categories already have working infrastructure behind them — 1a is
+`python-scripts/`, 1b is the batch pipeline plus subagents, 2 is the scriptwriter plus the
+story-arc playbook, 3 is content-researcher and footage-puller, 4 is `/council` itself, 5 is
+GitHub Actions. The framework would have renamed what exists and added a lookup step before
+work Gray already knows how to route. The only net-new artifact was the router, and a router
+that returns "use the batch pipeline SOP" competes with just saying "run the batch pipeline."
+
+**The load-bearing assumption was never verified:** that meaningful volume of work currently
+runs on expensive models when a script or cheap model could do it. Evidence in the codebase
+points the other way.
+
+**Four of five seats independently converged** (blind, without seeing each other) on one fact:
+the category 5 tools — Daily AI Read, Plaid sync, invoice scan — run on GitHub Actions and
+consume **zero** subscription tokens. That removes an entire fifth of the cost rationale.
+
+**The Outsider's question is the real finding**, and the chairman promoted it over the peer
+ranking: *if the scripts already exist, why aren't they being used — and would a classification
+system fix that, or is it a habit and awareness problem that no architecture addresses?*
+It is a habit problem. Architecture doesn't fix habits.
+
+**Precedent that decided it:** the `ship` footage watcher — built, 84/84 tests passing, correct,
+and parked by Gray's own call because it saved one command. This was that again with more
+surface area.
+
+## What survived
+
+Two things, now living in `~/CLAUDE.md` under "Before building or redoing anything":
+
+1. **The rule** — if a task has one correct output and zero judgment, it goes in code, never
+   a model. Plus the cheapest-tier-that-does-the-job corollary.
+2. **A flat index** of existing recipes with trigger phrases, so the "rebuilt from scratch"
+   problem is solved by *remembering the tool exists* rather than by a taxonomy.
+
+No router. No five-category vocabulary. No per-category SOPs. No fourth maintenance surface.
+
+## The measurement that could reopen it
+
+`context/limit-log.md` — one line each time a usage limit is hit, for four weeks
+(review ~2026-08-28). If 4+ entries are work a cheaper model or existing script could have
+done, the routing question reopens with real data. If they are scripts, hooks, batch docs,
+or judgment calls, it stays closed.
+
+**Caveat the chairman flagged that no seat caught:** four seats endorsed "audit what consumes
+the limit," but a Claude subscription gives no per-task itemization — there is no report to
+pull. Hence a manual tally, not an audit.
+
+---
+
+## Original proposal follows (for the record)
 
 ---
 

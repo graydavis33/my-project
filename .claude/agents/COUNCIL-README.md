@@ -1,62 +1,81 @@
-# The Council
+# The LLM Council
 
-Six agents that stress-test an idea before Gray spends real time on it.
+Six agents that put an idea through independent review, anonymous peer review, and a final call.
 
 Built 2026-07-31. Run it with `/council <your idea>`.
 
+## Provenance — what's borrowed and what isn't
+
+The three-stage structure comes from **Andrej Karpathy's [llm-council](https://github.com/karpathy/llm-council)** (23k stars, Nov 2025). His design:
+
+1. **First opinions** — the query goes to every council member independently
+2. **Peer review** — each member reads all responses *anonymized* ("Response A, B, C") and ranks them
+3. **Chairman** — one model synthesizes everything into the final answer
+
+Two things to keep straight:
+
+- **Karpathy's council is four different companies' models** — GPT 5.1, Gemini 3.0 Pro, Claude Sonnet 4.5, Grok 4, chaired by Gemini, routed through OpenRouter. The independence comes from different *models*. Ours comes from five Claude agents with different *mandates*. That's an adaptation, not the original.
+- **Karpathy disclaims it.** His README calls it *"99% vibe coded as a fun Saturday hack"* and says he won't support or improve it. There's no license file. It's a pattern to borrow, not a product to depend on.
+
+Karpathy co-founded OpenAI, ran AI at Tesla, founded Eureka Labs, and joined **Anthropic** in May 2026 to lead a pre-training research team. He did not found Anthropic.
+
 ## Why it exists
 
-Gray's diagnosis, in his words: language models are yes-men. They are too agreeable and too biased toward whoever is talking to them. Ask Claude "should I build X?" while Claude is already helping you build X, and you get a biased answer — not because it's lying, but because agreement is the path of least resistance in a conversation.
+Cheng et al., published in *Science*: across 11 leading chatbots and ~12,000 prompts, LLMs validated the user **49% more than another human would** (72% vs 22% on advice queries), and avoided challenging the user's framing 88% of the time versus 60% for people.
 
-The council fixes that structurally, not with prompting alone.
+The study measured *personal and social* advice, not business decisions — but the mechanism is the same one that makes "is this a good idea?" a bad question to ask a single model.
 
 ## The five seats
 
-| Seat | Judges | Verdicts |
+| Seat | Mandate | Verdicts |
 |---|---|---|
-| **Investor** | Money, time, opportunity cost | FUND / FUND SMALL / DEFER / PASS |
-| **Expansionist** | Does it compound, is there a product here | COMPOUNDS / PLATFORM / FLAT / DEAD END |
-| **Instructor** | Can Gray run, fix, and maintain it | HE CAN RUN IT / NEEDS GUARDRAILS / TOO FRAGILE / ALREADY SOLVED |
-| **Creator** | Craft, brand fit, does the work get better | RAISES THE WORK / NEUTRAL, FASTER / QUALITY RISK / OFF-BRAND |
-| **Skeptic** | Pure red team, fact-checks the premise | FALSE PREMISE / FAILS ON EXECUTION / SURVIVES, WITH SCARS / SURVIVES |
+| **Contrarian** | Only how it fails. Assumes death, works backwards | FALSE PREMISE / FAILS ON EXECUTION / SURVIVES, WITH SCARS / SURVIVES |
+| **First Principles** | Strips assumptions, rebuilds from what must be true | SOUND FOUNDATION / RIGHT GOAL, WRONG SHAPE / WRONG PROBLEM / LOAD-BEARING ASSUMPTION UNTESTED |
+| **Expansionist** | The upside being missed; does it compound | COMPOUNDS / PLATFORM / FLAT / DEAD END |
+| **Outsider** | Knows nothing about the industry; tests plain logic | MAKES SENSE COLD / NEEDS INSIDER CONTEXT / DOESN'T FOLLOW / SOLVING A SYMPTOM |
+| **Executor** | What happens Monday morning | START MONDAY / NEEDS SCOPING / NEEDS GUARDRAILS / WON'T SURVIVE CONTACT |
 
-Plus the **Supervisor**, who chairs: reads all five, resolves the split, issues one verdict and one next action.
+Plus the **Chairman**, who reads all five opinions *and* all five blind rankings, then issues one verdict and one next action.
 
-## The four things that make it not-a-yes-man
+## What makes it not-a-yes-man
 
-Role labels alone don't stop sycophancy — an agent told "you are the skeptic" will still find a way to agree. These do the actual work:
+Role labels alone don't stop sycophancy — an agent told "you are the skeptic" still finds ways to agree. These do the work:
 
-1. **Blind parallel voting.** All five seats launch in one message and cannot see each other. No bandwagon, no deference to whoever answered first. This is the single most important mechanism.
+1. **Blind parallel opinions.** All five launch in one message and cannot see each other. No bandwagon, no deference to whoever answered first.
+2. **Anonymized peer review** (Karpathy's contribution, and the reason this beats five parallel prompts). Each seat re-reads all five answers with authorship stripped — including its own, unmarked — ranks them, and states whether its view changed. Agreement reached without knowing whose argument you're conceding to is worth far more than agreement reached independently.
+3. **Forced-choice verdicts.** "It depends" is banned. Hedging is how a model agrees without appearing to.
+4. **Mandatory adversarial fields.** Every seat produces a `STRONGEST OBJECTION` and a `KILL CONDITION` — even the ones that like the idea.
+5. **The rubber-stamp check.** If four or five seats come back positive, the Chairman must stop and ask whether they actually tested it. Generic objections count as council failure and downgrade confidence. Unanimous approval is treated as a warning sign.
 
-2. **Forced-choice verdicts.** Every seat must land on one of four named options. "It depends" is banned. Hedging is how a model agrees without appearing to — removing the hedge forces a real position.
+## The Outsider seat — do not "fix" it
 
-3. **Mandatory adversarial fields.** Every seat must produce a `STRONGEST OBJECTION` and a `KILL CONDITION` — the observable signal that means stop. A seat that likes the idea still has to name how it dies. This is what stops "great idea, minor caveats."
-
-4. **The rubber-stamp check.** If four or five seats come back positive, the Supervisor must stop and ask whether they actually tested the idea or just pattern-matched on something that sounds good. Generic objections ("scope might creep") are treated as evidence the council failed, and confidence gets downgraded. Unanimous approval is a warning sign.
-
-Supporting rules in every seat file: no opening validation, no praise language, attack the idea and never Gray, label speculation as speculation, and if you land positive spend most of the answer on what has to go right.
+It has only a `Read` tool and is explicitly forbidden from reading `CLAUDE.md`, memory files, or project background. That looks like a bug. It isn't. The moment it absorbs context it becomes a fifth insider and the seat is wasted. Its list of undefined terms is a map of the assumed knowledge holding an idea together.
 
 ## Cost
 
-Six agent runs, roughly 30–60k tokens for a normal review. Worth it for "should I build this thing that takes a week." Overkill for small calls.
+Eleven agent runs — five opinions, five reviews, one chairman — roughly 60-100k tokens. Real money against the usage limit. Worth it for "should I spend a week on this"; overkill for small calls.
 
-**Cheap version:** run just the Skeptic (`Agent` → `council-skeptic`). One agent, and it catches most bad ideas on its own.
+Seats run on `claude-sonnet-4-6`; the chairman on `claude-opus-5` (one call, and it's the actual product). Downgrade the chairman in `council-chairman.md` if limits get tight.
 
-All seats run on `claude-sonnet-4-6` to keep the cost down. If a decision is big enough to want the best synthesis, change `model:` in `council-supervisor.md` to `claude-opus-5` — that one upgrade improves the final report most per token.
+**Cheap version:** run `council-contrarian` alone via the Agent tool. One run, catches most bad ideas by itself.
 
 ## Where the files live
 
-Canonical copies are in this repo (`.claude/agents/council-*.md`, `.claude/commands/council.md`) so they sync between Mac and Windows.
+Canonical in this repo (`.claude/agents/council-*.md`, `.claude/commands/council.md`) so they sync Mac ↔ Windows. **Symlinked** into `~/.claude/agents/` and `~/.claude/commands/` so `/council` loads in every session from any folder — editing either location edits both, no drift.
 
-They are **symlinked** into `~/.claude/agents/` and `~/.claude/commands/` so the council loads in every session from any folder — not just when working inside the project.
+**On Windows:** symlinks don't survive git. After pulling, either copy the files into `%USERPROFILE%\.claude\agents\` and `\commands\`, or run `/council` from inside the project folder where the project-level files load natively.
 
-Because they're symlinks, editing either location edits both. There is no drift. (This is different from the claude-voice setup, where the repo copy is a dead backup.)
+## Going multi-provider later
 
-**On Windows:** symlinks don't carry through git. After pulling, either copy the files into `%USERPROFILE%\.claude\agents\` and `\commands\`, or just run `/council` from inside the project folder, where the project-level files load natively.
+To make it faithful to Karpathy's original, replace the five Claude seats with real models from different companies. That needs an OpenRouter account, an API key, and pay-per-token billing on top of the subscription. The three-stage command structure doesn't change — only who occupies the seats. The persona instructions become system prompts for the outside models.
 
-## Tuning it
+## Tuning
 
-- A seat is too soft → strengthen its `Rules that make you worth having` section and add a required field to its output block.
-- A seat is being contrarian for sport → the Skeptic file already warns against this; tighten "a weak objection you can't defend is worse than no objection."
-- Want a new seat (a Client seat? a Legal seat?) → copy any seat file, change the judging criteria and verdicts, add it to Step 2 of `commands/council.md`.
-- The Creator seat enforces Gray's standing brand rules (no disparaging others, Sai-is-not-the-expert, no IG automation, plain text for copy-paste). Update that list when the rules change.
+- A seat is too soft → strengthen its Rules section and add a required output field.
+- A seat is contrarian for sport → the Contrarian file already warns against this; tighten "a weak objection you can't defend is worse than none."
+- New seat → copy any seat file, change the criteria and verdicts, add it to Stage 1 and Stage 2 of `commands/council.md`, and update the Chairman's vote line.
+- **Never remove Stage 2.** Without the blind peer review this is just five prompts in a trench coat.
+
+## Superseded
+
+An earlier six-seat council (Investor / Expansionist / Instructor / Creator / Skeptic / Supervisor) was built and removed on the same day in favour of this one. It's in git history at commit `d5486d5` if anything there is worth reclaiming.
