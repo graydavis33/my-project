@@ -1,0 +1,173 @@
+<div style="background-color:#f3f4f6;padding:24px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;padding:32px;">
+
+    <!-- Masthead -->
+    <div style="border-bottom:1px solid #e5e7eb;padding-bottom:14px;margin-bottom:24px;">
+      <span style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;font-weight:500;">Daily AI Read &nbsp;&nbsp;|&nbsp;&nbsp; Issue #6 &middot; July 31, 2026</span>
+    </div>
+
+    <!-- Title + Hook -->
+    <h1 style="font-size:26px;font-weight:700;color:#111827;margin:0 0 12px 0;line-height:1.3;">Git vs. GitHub &mdash; Two Different Things Everyone Confuses</h1>
+    <p style="font-size:16px;color:#4b5563;line-height:1.65;margin:0 0 28px 0;">Your code lives at <strong>github.com/graydavis33/my-project</strong>. But "Git" and "GitHub" are not the same thing &mdash; one is a tool on your computer, the other is a website in the cloud. Knowing the difference will make every future conversation about your code make sense.</p>
+
+    <!-- 2-Minute Version -->
+    <div style="background:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;font-weight:600;margin:0 0 12px 0;">The 2-Minute Version</p>
+      <ul style="margin:0;padding-left:20px;color:#111827;font-size:15px;line-height:1.8;">
+        <li><strong>Git</strong> is software. It runs on your computer and tracks every change you ever make to your code files.</li>
+        <li><strong>GitHub</strong> is a website. It stores a copy of your Git repository online so it is backed up and reachable from anywhere.</li>
+        <li>You can use Git without GitHub. You cannot use GitHub without Git.</li>
+        <li><strong>Push</strong> means sending your local changes up to GitHub. <strong>Pull</strong> means bringing changes from GitHub down to your machine.</li>
+        <li>You already use both every day &mdash; your Claude Code sessions auto-push to <strong>graydavis33/my-project</strong> at the end of each session.</li>
+      </ul>
+    </div>
+
+    <!-- Section 1 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Git: The Tool That Lives on Your Computer</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;"><strong>Git</strong> is version-control software. "Version control" means it watches a folder and takes a snapshot every time you tell it to. Those snapshots are called <strong>commits</strong> (you learned about these in Issue #5). Each commit records exactly what changed, when, and &mdash; if you write a message &mdash; why.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">Git was created in 2005 by Linus Torvalds, the same person who created the Linux operating system. He needed a way to manage thousands of contributors making changes to the same codebase without overwriting each other. Git solved that. <a href="https://git-scm.com/book/en/v2/Getting-Started-A-Short-History-of-Git" style="color:#1d4ed8;">git-scm.com</a> is the official home of Git documentation &mdash; the "scm" stands for Source Code Management, another name for version control.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0;">Think of Git like a very powerful Undo button that never expires. Normal Undo in Premiere goes away when you close the project. Git keeps every single save point forever, and you can jump back to any one of them.</p>
+    </div>
+
+    <!-- Section 2 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">GitHub: The Website That Hosts Your Git Repos</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;"><strong>GitHub</strong> is a company and a website. Its job is to store Git repositories on its own servers so you can access them from any computer, collaborate with others, and keep a backup that is not on your hard drive.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">The physical analogy: Git is your camera. It takes the pictures. GitHub is iCloud. It stores and syncs those pictures so they are safe and reachable from your phone, your laptop, or your PC. Your camera works fine without iCloud &mdash; you just lose the backup and the sync.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0;">GitHub was founded in 2008 and acquired by Microsoft in 2018 for $7.5 billion. Today it hosts over 100 million developers and more than 420 million repositories. <a href="https://github.com/about" style="color:#1d4ed8;">github.com/about</a> has the current numbers. There are alternatives &mdash; GitLab, Bitbucket &mdash; but GitHub is by far the most widely used.</p>
+    </div>
+
+    <!-- Section 3 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Push and Pull: The Two Directions of Sync</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">Once your repo exists on both your computer (called the <strong>local</strong> copy) and on GitHub (called the <strong>remote</strong> copy), you need a way to sync them. There are two directions:</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;"><strong>Push</strong> &mdash; You did work on your Mac. Your local copy is ahead. You push your commits up to GitHub to update the remote. "Push" always means <em>local to remote</em>.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;"><strong>Pull</strong> &mdash; You switched to your Windows PC. GitHub has commits that your PC does not. You pull from GitHub to bring those commits down. "Pull" always means <em>remote to local</em>.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0;">That is the entire sync loop. Push when you are done on one machine. Pull before you start on another. Right now, Claude Code handles both for you automatically at the end of each session &mdash; but knowing these terms means you will understand what it is doing and can run them yourself if something breaks.</p>
+    </div>
+
+    <!-- Section 4 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Why Public Repos Are Useful (and What to Watch Out For)</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">Your repo <strong>graydavis33/my-project</strong> is public, which means anyone on the internet can view the code. This is fine and common &mdash; most open-source software in the world lives on public GitHub repos. It is how other developers and tools (including Claude Code itself) can read your code to help you improve it.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">One rule you must never break: <strong>do not put secrets in a public repo</strong>. A secret is anything like a password, an API key (a private code that lets you access a paid service), or your bank login. If a secret ends up in a file that gets pushed to GitHub, anyone searching the internet can find it within minutes, and automated bots scan GitHub constantly looking for exactly this. <a href="https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning" style="color:#1d4ed8;">GitHub docs on secret scanning</a> explains the risk. You will learn about API keys and how to store them safely in a future issue.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0;">Everything else &mdash; your footage organizer logic, your Payday app code, your caption scripts &mdash; is fine to live publicly.</p>
+    </div>
+
+    <!-- Why This Matters for You -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Why This Matters for You</h2>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 14px 0;">You already live inside this system. Every Claude Code session ends by committing your work and pushing it to <strong>graydavis33/my-project</strong>. Your GitHub Actions &mdash; the automations that run your tools in the cloud &mdash; are triggered by those pushes. When you push, GitHub sees the new commit and fires the action. That is the entire chain.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0;">When you sit down at your Windows PC and open a project you worked on yesterday on your Mac, the move to make is: <strong>pull first</strong>. That one habit prevents your two machines from getting out of sync and creating the painful situation where you have two different "latest" versions of the same file.</p>
+    </div>
+
+    <!-- Try This Today -->
+    <div style="background:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;font-weight:600;margin:0 0 12px 0;">Try This Today</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 10px 0;">Open your browser and go to <a href="https://github.com/graydavis33/my-project" style="color:#1d4ed8;">github.com/graydavis33/my-project</a>.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0 0 10px 0;">You will see a list of files. Click any file to read the code. Then click the clock icon labeled "History" or "commits" at the top right of the file view. You are looking at every commit ever made to that file &mdash; every snapshot Git took. Click one. GitHub will show you exactly what changed: red lines were deleted, green lines were added.</p>
+      <p style="font-size:16px;color:#111827;line-height:1.65;margin:0;">That is Git and GitHub working together, live, in your actual project. Five minutes, no new software needed.</p>
+    </div>
+
+    <!-- Test Yourself -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:32px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 20px 0;">Test Yourself</h2>
+
+      <!-- Q1 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">1. What is Git, in one sentence?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">Git is version-control software that runs on your computer and takes snapshots (commits) of your code every time you tell it to. It exists because without it, every file edit is permanent and irreversible &mdash; Git gives you an infinite, named Undo history.</span>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">2. What is GitHub, and how is it different from Git?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">GitHub is a website that stores Git repositories online. Git is the tool that creates and manages those repos on your local machine. GitHub provides the cloud backup and sync layer &mdash; without it, your repo exists only on one computer.</span>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">3. Can you use Git without GitHub?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">Yes. Git runs entirely on your local machine and will track commits without any connection to the internet or GitHub. You just lose the backup, remote access, and automation features that GitHub adds.</span>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">4. What does "push" mean?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">Push means sending your local commits from your computer up to GitHub. Think of it as uploading your latest snapshots to the cloud. Your Claude Code sessions do this automatically at the end of each session.</span>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">5. What does "pull" mean?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">Pull means downloading commits from GitHub onto your local machine. You need to do this whenever GitHub has newer commits than your local copy &mdash; for example, when you switch from your Mac to your Windows PC.</span>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">6. You finish a Claude Code session on your Mac on Monday. Tuesday you sit down at your Windows PC to keep working. What should you do before writing a single line of code?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">Pull from GitHub first. Your Mac session auto-pushed Monday's commits, but your PC does not have them yet. If you skip the pull and start writing, you create two conflicting "latest" versions that Git has to reconcile &mdash; which causes merge conflicts and extra work.</span>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">7. What is a "local" copy of a repo vs. a "remote" copy?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">Local is the copy on your computer's hard drive. Remote is the copy hosted on GitHub's servers. They are the same repo, just stored in two places. Push and pull are the actions that keep them in sync.</span>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">8. Your repo is public. Why is that fine for your code, but dangerous if you add a file containing an API key?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">Code logic is safe to share publicly &mdash; there is nothing harmful about someone reading how your footage organizer works. But an API key is like a password that grants access to a paid service on your behalf. If it is in a public repo, automated bots will find it within minutes and can use it to run up charges or steal data in your name.</span>
+        </div>
+      </div>
+
+      <!-- Q9 -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">9. Who created Git, and what problem was it originally solving?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">Linus Torvalds created Git in 2005. He needed a way for thousands of contributors to make changes to the Linux operating system without overwriting each other's work. Git tracks who changed what and when, so conflicts can be detected and resolved.</span>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div style="margin-bottom:0;">
+        <p style="font-size:16px;color:#111827;font-weight:700;margin:0 0 8px 0;">10. How does GitHub connect to the GitHub Actions automations already running your tools in the cloud?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:4px;">
+          <span style="font-weight:700;color:#111827;">Answer:</span> <span style="color:#374151;">GitHub Actions listens for events on your repo &mdash; the most common one is a new push. When Claude Code auto-pushes at the end of your session, GitHub detects the new commit and triggers whatever action you have configured. That is why your cloud tools update automatically without you manually deploying anything.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sources -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:20px;">
+      <p style="font-size:14px;font-weight:700;color:#111827;margin:0 0 10px 0;">Sources</p>
+      <ol style="font-size:14px;color:#374151;line-height:1.8;padding-left:20px;margin:0;">
+        <li><a href="https://git-scm.com/book/en/v2/Getting-Started-A-Short-History-of-Git" style="color:#1d4ed8;">git-scm.com &mdash; A Short History of Git (official Git documentation)</a></li>
+        <li><a href="https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control" style="color:#1d4ed8;">git-scm.com &mdash; About Version Control (official Git documentation)</a></li>
+        <li><a href="https://github.com/about" style="color:#1d4ed8;">github.com/about &mdash; GitHub company overview</a></li>
+        <li><a href="https://docs.github.com/en/get-started/start-your-journey/about-github-and-git" style="color:#1d4ed8;">docs.github.com &mdash; About GitHub and Git</a></li>
+        <li><a href="https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning" style="color:#1d4ed8;">docs.github.com &mdash; About Secret Scanning</a></li>
+        <li><a href="https://docs.github.com/en/actions/about-github-actions/understanding-github-actions" style="color:#1d4ed8;">docs.github.com &mdash; Understanding GitHub Actions</a></li>
+      </ol>
+    </div>
+
+  </div>
+</div>
