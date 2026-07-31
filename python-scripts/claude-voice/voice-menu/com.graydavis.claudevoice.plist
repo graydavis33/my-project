@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.graydavis.claudevoice</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/graydavis28/.claude/voice-menu/venv/bin/python</string>
+        <string>/Users/graydavis28/.claude/voice-menu/menubar.py</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <false/>
+    <key>StandardErrorPath</key>
+    <string>/tmp/claude-voice-menu.log</string>
+</dict>
+</plist>

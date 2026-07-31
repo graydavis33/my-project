@@ -34,6 +34,24 @@ HOME = os.path.expanduser("~")
 OFF_SWITCH = os.path.join(HOME, ".claude", "voice-off")
 MODE_FILE = os.path.join(HOME, ".claude", "voice-mode")
 VOICE_CACHE = os.path.join(HOME, ".claude", ".voice-cache")
+# what the menu bar speaker icon replays on demand
+SUMMARY_FILE = os.path.join(HOME, ".claude", "last-response.txt")
+FULL_FILE = os.path.join(HOME, ".claude", "last-response-full.txt")
+
+
+def trim(text: str, limit: int) -> str:
+    if len(text) <= limit:
+        return text
+    cut = text.rfind(".", 0, limit)
+    return text[: cut + 1 if cut > 200 else limit]
+
+
+def stash(path: str, text: str) -> None:
+    try:
+        with open(path, "w") as f:
+            f.write(text)
+    except OSError:
+        pass
 
 # Claude aims the voice by writing a line that starts with this marker.
 # Only that line gets read aloud in summary mode.
@@ -171,10 +189,6 @@ def last_assistant_text(transcript_path: str) -> str:
 
 
 def main() -> None:
-    mode = read_mode()
-    if mode == "off" or os.path.exists(OFF_SWITCH):
-        return
-
     try:
         payload = json.load(sys.stdin)
     except Exception:
@@ -184,20 +198,21 @@ def main() -> None:
     if not raw.strip():
         return
 
-    if mode == "summary":
-        source = aimed_line(raw) or tail_paragraph(raw)
-        limit = SUMMARY_CHARS
-    else:
-        source = raw
-        limit = MAX_CHARS
+    summary = trim(clean(aimed_line(raw) or tail_paragraph(raw)), SUMMARY_CHARS)
+    full = trim(clean(raw), MAX_CHARS)
 
-    text = clean(source)
-    if not text:
+    # Always stash both, even when auto-speak is off — the menu bar speaker
+    # icon reads these files when Gray clicks it on demand.
+    stash(SUMMARY_FILE, summary)
+    stash(FULL_FILE, full)
+
+    mode = read_mode()
+    if mode == "off" or os.path.exists(OFF_SWITCH):
         return
 
-    if len(text) > limit:
-        cut = text.rfind(".", 0, limit)
-        text = text[: cut + 1 if cut > 200 else limit]
+    text = summary if mode == "summary" else full
+    if not text:
+        return
 
     # stop any speech still playing from the previous turn
     subprocess.run(["pkill", "-f", "^/usr/bin/say"], capture_output=True)
