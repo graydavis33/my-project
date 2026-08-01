@@ -1,0 +1,163 @@
+<div style="background-color:#f3f4f6;padding:32px 16px;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;padding:32px;">
+
+    <div style="padding-bottom:16px;border-bottom:1px solid #e5e7eb;margin-bottom:28px;">
+      <span style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#6b7280;font-weight:600;">DAILY AI READ &nbsp;&nbsp;&nbsp; Issue #7 &nbsp;·&nbsp; August 1, 2026</span>
+    </div>
+
+    <h1 style="font-size:26px;font-weight:700;color:#111827;margin:0 0 12px 0;line-height:1.3;">What Is a Commit? The Snapshot That Saves Your Work</h1>
+    <p style="color:#4b5563;font-size:16px;line-height:1.65;margin:0 0 28px 0;">You have heard the word "commit" dozens of times. Here is what it actually is — and why it is the single habit that separates people who can recover from mistakes from people who start over from scratch.</p>
+
+    <div style="background:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;font-weight:600;margin:0 0 12px 0;">THE 2-MINUTE VERSION</p>
+      <ul style="margin:0;padding-left:20px;color:#111827;font-size:15px;line-height:1.9;">
+        <li>A commit is a permanent saved snapshot of every file in your project at one specific moment.</li>
+        <li>Each commit gets a unique ID (called a hash) and a short message you write describing what changed.</li>
+        <li>Commits chain together in order — that chain is your full project history, and you can rewind to any point in it.</li>
+        <li>Two commands make it happen: <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git add</code> stages the files, then <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git commit</code> seals the snapshot.</li>
+        <li>Your repo already auto-commits at the end of every Claude Code session — you have a history right now and may not know it.</li>
+      </ul>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">The Camera Analogy</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">Picture your project folder as a film set. Every file in it — your Python scripts, your HTML pages, your config files — is a prop sitting in a specific position. A commit is a photograph of the entire set at one moment. Every prop, every position, captured exactly as it is right now.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0;">That photo gets stored permanently in your repository (the special folder that tracks history, covered in Issue #5). Next week, if something breaks and you cannot figure out why, you flip back through the photo album and find the exact moment everything still worked. That is the whole point.</p>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">What Is Actually Inside a Commit</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">Every commit contains three things:</p>
+      <ul style="margin:0 0 14px 0;padding-left:20px;color:#111827;font-size:16px;line-height:1.9;">
+        <li><strong>A snapshot</strong> — the full state of every file Git is tracking at that moment.</li>
+        <li><strong>A message</strong> — a short note you write, like "Fixed invoice export bug." This is the caption on the photo.</li>
+        <li><strong>A hash</strong> — a unique ID that Git (the version-control software introduced in Issue #6) generates automatically. It looks like <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">a3f4b2c</code>. No two commits in the history of your project will ever share the same hash.</li>
+      </ul>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0;">You never write a hash yourself — Git does that. But knowing what one is stops phrases like "revert to commit a3f4b2c" from sounding like a foreign language. It just means: "Put everything back to that exact photograph."</p>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">How Commits Chain Together</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">Commits do not exist in isolation. Each one points back to the commit before it — like links in a chain. That chain IS your project history. The newest commit is at the front; the very first one you ever made is at the far end.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0;">When you run <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git log</code> in your terminal (the text-based interface on your Mac where you type commands), Git walks that chain backward and prints every snapshot: its short hash, the author, the date, and the message. It is a timestamped diary of every meaningful change ever made to your project.</p>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">The Two Commands That Make a Commit</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 16px 0;">Making a commit is a two-step process. Think of it like packing a box and then sealing it:</p>
+      <div style="background:#f9fafb;border-radius:6px;border:1px solid #e5e7eb;padding:14px 18px;margin-bottom:16px;">
+        <code style="font-size:14px;color:#111827;display:block;line-height:2.0;">git add .&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Step 1: Pack all changed files into the box<br>git commit -m "Your message"&nbsp;&nbsp;# Step 2: Seal the box and label it</code>
+      </div>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;"><strong><code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git add .</code></strong> — The dot means "all changed files in this folder." This step is called <em>staging</em>. You are telling Git which files to include in the next snapshot. Git does not automatically include every changed file — you have to declare what matters. The dot is the lazy shortcut for "include everything."</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0;"><strong><code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git commit -m "message"</code></strong> — The <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">-m</code> flag stands for "message." Whatever you put in the quotes becomes the caption on your snapshot. Good messages say what changed and why — "Added client name field to invoice form" beats "update" every single time.</p>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Saving a File vs. Committing — They Are Not the Same Thing</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">This trips up almost every beginner. When you hit Cmd+S in a code editor, you save the file to your hard drive. That is just writing bytes to disk. Git has no idea it happened.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0;">A commit is something you do on top of saving. You save the file first, then you stage it with <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git add</code>, then you commit. Only then does Git record a permanent snapshot. A saved-but-not-committed file is like a note on a sticky pad: it is there right now, but it is not in the archive. If you delete the file or accidentally overwrite it before committing, Git cannot help you get it back.</p>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Why This Matters for You</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">Your footage organizer, your Payday app, and your caption scripts all live in <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">graydavis33/my-project</code>. Every time Claude Code finishes a session, it runs <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git add</code> and <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git commit</code> on your behalf. You already have a stack of snapshots — you just did not know what to call them.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0;">Here is where this pays off in a real situation: Claude rewrites your invoice tracker and the export feature stops working. Before commits, you would be digging through memory trying to recall what changed. With commits, you open the terminal, run <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">git log --oneline</code>, find the last snapshot where export worked, and look at exactly what was different. No guessing. No rebuilding from scratch.</p>
+    </div>
+
+    <div style="background:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;font-weight:600;margin:0 0 12px 0;">TRY THIS TODAY</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">Open your terminal on your Mac, navigate to your project folder, and run this:</p>
+      <div style="background:#e5e7eb;border-radius:6px;padding:12px 16px;margin-bottom:14px;">
+        <code style="font-size:14px;color:#111827;display:block;line-height:2.0;">git log --oneline</code>
+      </div>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 10px 0;">You will see a list: one commit per line, each with a short hash and the message Claude wrote when it auto-committed. That is your project's photo album. Count the entries — every line is a version of your tools you could return to if something broke.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0;">Tip: if you are not sure how to navigate to the folder in the terminal, open the terminal, type <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:13px;">cd </code> (with a space after it), then drag your project folder from Finder onto the terminal window. It will fill in the path for you. Then press Enter.</p>
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 20px 0;">Test Yourself</h2>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">1. In one sentence, what is a commit?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> A commit is a permanent, labeled snapshot of every tracked file in your project at one specific moment in time. This is the core definition — everything else about version control is just different ways of working with these snapshots.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">2. What three things does every commit contain?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> A snapshot of all tracked files, a message describing what changed, and a unique hash (ID). Together these let you identify, understand, and restore any point in your project's history.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">3. What is a commit hash, and do you have to write it yourself?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> A hash is a unique auto-generated ID (like <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;font-size:13px;">a3f4b2c</code>) that Git creates for each commit — you never write it yourself. It guarantees no two commits can ever be confused with each other, even across different projects or machines.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">4. What does <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git add .</code> do, and why is the dot significant?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> It stages all changed files — it tells Git to include everything in the current folder in the next snapshot. The dot is shorthand for "this folder and everything inside it." Without this step, <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;font-size:13px;">git commit</code> has nothing to snapshot and will not do anything useful.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">5. What does the <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">-m</code> flag stand for, and what makes a commit message good?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> It stands for "message." A good message describes what changed and why — something like "Fixed invoice total rounding error" instead of just "fix." Your history is only as useful as its labels; vague messages force you to open files to figure out what a snapshot even contains.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">6. What is the difference between saving a file and committing it?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> Saving writes the file to your hard drive — Git is not involved and does not notice. Committing tells Git to permanently record a snapshot. A saved-but-not-committed file is invisible to your history; if you accidentally delete or overwrite it, Git cannot recover it for you.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">7. How are commits connected to each other?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> Each commit points back to the one before it, forming a chain. The newest commit is at the front and the very first commit is at the end. That chain is your complete project history — Git uses it to show you what changed between any two points in time.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">8. What command shows your full commit history, and what does the <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">--oneline</code> flag add?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;font-size:13px;">git log --oneline</code>. Without the flag, <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;font-size:13px;">git log</code> prints the full hash, author, date, and message for every commit — useful but verbose. The <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;font-size:13px;">--oneline</code> flag compresses each commit to a single line so you can scan the whole history at a glance.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">9. Does Gray need to run <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git commit</code> manually after each Claude Code session? Why or why not?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> No. His repo is configured to auto-commit and auto-push at the end of every Claude Code session, meaning Claude runs those commands on his behalf. He already has a full commit history building up automatically, even if he has never typed <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;font-size:13px;">git commit</code> himself.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:8px;">
+        <p style="font-weight:700;color:#111827;font-size:16px;margin:0 0 8px 0;">10. Claude edits your caption scripts and suddenly they stop working. You have 20 commits in your history. What is the very first thing you do to investigate?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px 16px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;font-size:15px;color:#111827;line-height:1.65;"><strong>Answer:</strong> Run <code style="background:#e5e7eb;padding:1px 4px;border-radius:3px;font-size:13px;">git log --oneline</code> to see all 20 commits with their messages and hashes. Scan the messages to find the last session where the scripts were still working, then look at what changed in the commit after that. Commits give you a time machine — this is exactly the moment you use it.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="border-top:1px solid #e5e7eb;padding-top:20px;">
+      <p style="font-size:14px;font-weight:700;color:#111827;margin:0 0 10px 0;">Sources</p>
+      <ol style="font-size:14px;color:#111827;padding-left:20px;margin:0;line-height:2.0;">
+        <li><a href="https://git-scm.com/docs/git-commit" style="color:#1d4ed8;text-decoration:underline;">Git Official Documentation: git-commit</a></li>
+        <li><a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits" style="color:#1d4ed8;text-decoration:underline;">GitHub Docs: About commits</a></li>
+        <li><a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository" style="color:#1d4ed8;text-decoration:underline;">Pro Git Book (free, official): Recording Changes to the Repository</a></li>
+        <li><a href="https://git-scm.com/docs/git-log" style="color:#1d4ed8;text-decoration:underline;">Git Official Documentation: git-log</a></li>
+      </ol>
+    </div>
+
+  </div>
+</div>
