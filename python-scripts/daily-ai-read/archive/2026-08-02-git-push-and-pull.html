@@ -1,0 +1,201 @@
+<div style="background-color:#f3f4f6;padding:32px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;padding:32px;">
+
+    <!-- Masthead -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid #e5e7eb;margin-bottom:28px;">
+      <span style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;font-weight:600;">Daily AI Read</span>
+      <span style="font-size:12px;color:#6b7280;">Issue #8 &middot; August 2, 2026</span>
+    </div>
+
+    <!-- Title + Hook -->
+    <h1 style="font-size:26px;font-weight:700;color:#111827;margin:0 0 14px 0;line-height:1.3;">Push and Pull: How Your Code Actually Gets to GitHub</h1>
+    <p style="color:#4b5563;font-size:16px;line-height:1.65;margin:0 0 28px 0;">You've been making commits — local snapshots of your work. But a commit by itself never leaves your computer. Push and pull are the two moves that actually sync your code with the world.</p>
+
+    <!-- 2-Minute Version -->
+    <div style="background:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;margin:0 0 12px 0;">The 2-Minute Version</p>
+      <ul style="margin:0;padding-left:20px;color:#111827;font-size:15px;line-height:1.8;">
+        <li>Your repo exists in two places: your computer (local) and GitHub (remote).</li>
+        <li><strong>Push</strong> uploads your local commits to GitHub. Nothing reaches GitHub until you push.</li>
+        <li><strong>Pull</strong> downloads commits from GitHub onto your machine. Do this before starting work on a second computer.</li>
+        <li>In the command <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git push origin main</code>, "origin" is just GitHub's nickname and "main" is the branch name.</li>
+        <li>Gray's Claude Code already auto-pushes at the end of every session — so he's been doing this without realizing it.</li>
+      </ul>
+    </div>
+
+    <!-- Section 1 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Your Repo Lives in Two Places</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">Every time you work in your repo, you're working in the <strong>local</strong> copy — the one sitting on your Mac's hard drive (or your Windows PC). GitHub holds the <strong>remote</strong> copy — an identical version stored on GitHub's servers, accessible from any device with a browser.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">These two copies do not talk to each other on their own. They stay in sync only when you explicitly tell Git to send or receive changes. That's what push and pull do.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;">Think of it like a Google Doc you also save as a Word file on your desktop. Editing the desktop file doesn't update the Google Doc. You have to manually upload it. Git is the same idea, just more precise about what gets sent.</p>
+    </div>
+
+    <!-- Section 2 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Push: Sending Your Commits Up</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;"><strong>Push</strong> takes the commits you've made locally and uploads them to GitHub. Until you push, those commits exist only on your machine. GitHub has never seen them.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">The command is:</p>
+      <div style="background:#111827;border-radius:6px;padding:14px 18px;margin-bottom:16px;">
+        <code style="color:#f9fafb;font-size:14px;font-family:'Courier New',Courier,monospace;">git push origin main</code>
+      </div>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">Break it down word by word:</p>
+      <ul style="margin:0 0 16px 0;padding-left:20px;color:#111827;font-size:16px;line-height:1.8;">
+        <li><strong>git</strong> — the version-control tool you've been using all along.</li>
+        <li><strong>push</strong> — the command meaning "send my commits outward."</li>
+        <li><strong>origin</strong> — a nickname (alias) for the GitHub URL where your repo lives. When you first connect a local repo to GitHub, Git automatically names that remote address "origin." You could rename it to anything, but nobody does — "origin" is the universal default.</li>
+        <li><strong>main</strong> — the name of the branch you're pushing. A <em>branch</em> is a named line of commits inside the repo. Your default branch is called "main." (You'll learn branches in detail in a future issue.)</li>
+      </ul>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;">After this command runs, anyone who opens your GitHub repo in a browser will see every commit you just pushed.</p>
+    </div>
+
+    <!-- Section 3 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Pull: Bringing New Commits Down</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;"><strong>Pull</strong> is the reverse. It downloads commits that exist on GitHub but haven't reached your local machine yet, then merges them into your current files.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">The command is:</p>
+      <div style="background:#111827;border-radius:6px;padding:14px 18px;margin-bottom:16px;">
+        <code style="color:#f9fafb;font-size:14px;font-family:'Courier New',Courier,monospace;">git pull origin main</code>
+      </div>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">Same structure — just the word "pull" instead of "push." Git downloads whatever is on GitHub that your local machine doesn't have yet, and applies it to your files.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;"><strong>When do you need this?</strong> Every time you switch computers. You push from your Mac. The next morning you sit down at your Windows PC. Your Windows copy of the repo is still where it was yesterday — it doesn't know about what you pushed from the Mac. Running <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git pull</code> syncs it instantly.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;"><strong>The one rule:</strong> always pull before you start working on a machine that might be behind. If you skip this and make new commits on top of an old version, you'll create a conflict — two histories that don't agree on what happened. Conflicts are solvable, but a quick pull prevents them entirely.</p>
+    </div>
+
+    <!-- Section 4 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">The Full Cycle</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">When you're on one machine, the pattern is:</p>
+      <div style="background:#f9fafb;border-radius:6px;padding:14px 20px;margin-bottom:16px;border-left:3px solid #d1d5db;">
+        <code style="font-size:14px;font-family:'Courier New',Courier,monospace;color:#111827;">edit files &rarr; commit &rarr; push</code>
+      </div>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 12px 0;">When you switch to a second machine, the pattern becomes:</p>
+      <div style="background:#f9fafb;border-radius:6px;padding:14px 20px;margin-bottom:16px;border-left:3px solid #d1d5db;">
+        <code style="font-size:14px;font-family:'Courier New',Courier,monospace;color:#111827;">pull &rarr; edit files &rarr; commit &rarr; push</code>
+      </div>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;">Pull first, always. Then you're safe to work. This is the same rhythm used by professional teams with dozens of developers — it scales from one person on two laptops to 50 engineers on one codebase.</p>
+    </div>
+
+    <!-- Section 5 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Commit vs. Push: The Sharp Line</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">These two words are easy to blur together. Here's the clear difference:</p>
+      <ul style="margin:0;padding-left:20px;color:#111827;font-size:16px;line-height:1.8;">
+        <li>A <strong>commit</strong> saves a snapshot to your local repo's history. Nothing leaves your machine.</li>
+        <li>A <strong>push</strong> ships one or more commits from your local history to GitHub's history.</li>
+      </ul>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:14px 0 0 0;">You can make 20 commits in one afternoon, then push them all to GitHub in a single push command. The push bundles them up and sends the whole stack at once.</p>
+    </div>
+
+    <!-- Why This Matters -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:24px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 12px 0;">Why This Matters for You</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">Two concrete places push and pull are already running in your life:</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;"><strong>1. Your Claude Code auto-push.</strong> Every time a Claude Code session ends, your setup runs <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git push</code> automatically. That's why your work in <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">graydavis33/my-project</code> on GitHub always reflects your latest session — Claude Code committed the changes, then pushed them. You've been benefiting from push this whole time without writing the command yourself.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;"><strong>2. Switching between Mac and Windows.</strong> Say you spent Tuesday on your Mac building a new feature in your footage organizer. Wednesday you sit down at your Windows PC. If you open the project and start editing without pulling first, Windows is working from Tuesday's version — it missed everything you committed after that. One <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git pull origin main</code> brings it current in seconds.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;"><strong>3. Your GitHub Actions workflows.</strong> Those cloud automations — including the one that generates this very email — are triggered when a push arrives at GitHub. No push, no trigger. This is why push is the "start signal" for so much of your automated stack.</p>
+    </div>
+
+    <!-- Try This Today -->
+    <div style="background:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;margin:0 0 12px 0;">Try This Today</p>
+      <p style="color:#111827;font-size:15px;line-height:1.65;margin:0 0 12px 0;">Open your terminal, navigate to your project folder, and run:</p>
+      <div style="background:#111827;border-radius:6px;padding:14px 18px;margin-bottom:12px;">
+        <code style="color:#f9fafb;font-size:14px;font-family:'Courier New',Courier,monospace;white-space:pre;">git log --oneline -5</code>
+      </div>
+      <p style="color:#111827;font-size:15px;line-height:1.65;margin:0 0 12px 0;">This shows your five most recent local commits. Then open your <a href="https://github.com/graydavis33/my-project" style="color:#1d4ed8;">GitHub repo in a browser</a> and compare. If they match, you're fully in sync. If GitHub shows commits your terminal doesn't, run:</p>
+      <div style="background:#111827;border-radius:6px;padding:14px 18px;">
+        <code style="color:#f9fafb;font-size:14px;font-family:'Courier New',Courier,monospace;white-space:pre;">git pull origin main</code>
+      </div>
+    </div>
+
+    <!-- Test Yourself -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 20px 0;">Test Yourself</h2>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">1. What are the two "copies" of a repository, and where does each one live?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> The <strong>local</strong> copy lives on your computer's hard drive. The <strong>remote</strong> copy lives on GitHub's servers. They are completely separate — changes in one do not automatically appear in the other. You have to use push or pull to sync them.
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">2. You made three commits on your Mac. Do those commits exist on GitHub yet?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> No — not until you run <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git push</code>. Commits are local snapshots only. Push is the separate step that sends them to GitHub.
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">3. What does <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git pull origin main</code> actually do to your files?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> It downloads any commits that exist on GitHub but are missing from your local machine, then applies them to your files. Your local copy catches up to whatever GitHub currently shows.
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">4. In <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git push origin main</code>, what does "origin" refer to?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> "Origin" is a nickname (alias) for the remote GitHub URL where your repo lives. Git sets this nickname automatically when you connect a repo to GitHub. It's a convention everyone follows — not a technical requirement — but you'll see it in every Git project.
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">5. What does "main" mean in that same command?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> "Main" is the name of the branch being pushed. A branch is a named line of commits inside the repo. Your default branch is called "main," so you're telling Git: push commits from my local "main" branch up to GitHub's "main" branch.
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">6. You worked on your footage organizer all afternoon and made 5 commits. What is the correct final step to end your session?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> Run <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git push origin main</code>. That sends all 5 commits to GitHub at once. In your case, Claude Code's auto-push does this automatically at the end of every session — but now you know what it's actually doing.
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">7. You sit down at your Windows PC the next day. What is the very first Git command you should run before touching any code?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> <code style="background:#e5e7eb;padding:1px 5px;border-radius:3px;font-size:14px;">git pull origin main</code>. Your Windows copy hasn't seen yesterday's push from the Mac. Pulling first brings it up to date so you're working on the latest version — not an outdated one that will cause a conflict later.
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">8. What is the key difference between a commit and a push?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> A commit saves a snapshot to your local repo — nothing leaves your machine. A push ships those commits to GitHub. You can commit many times and push once to send them all. You cannot push without first committing — there's nothing to send.
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">9. Your GitHub Actions workflow — the one that generates this Daily AI Read email — only fires when new code arrives at GitHub. What action directly triggers it?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> A push. GitHub Actions watches for incoming pushes to the repository and uses that event as the start signal. Without a push, GitHub never knows new commits exist, and the workflow never runs.
+        </div>
+      </div>
+
+      <div style="margin-bottom:4px;">
+        <p style="font-size:16px;font-weight:700;color:#111827;margin:0 0 8px 0;">10. What could go wrong if you work on your Windows PC without pulling first, make new commits, then try to push?</p>
+        <div style="background:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <span style="font-weight:700;">Answer:</span> You'd likely get a conflict — your Windows history and GitHub's history have diverged, so Git doesn't know how to combine them automatically. Git will block the push and ask you to resolve it. A quick pull before you start prevents this entirely.
+        </div>
+      </div>
+    </div>
+
+    <!-- Sources -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:20px;">
+      <p style="font-size:14px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;margin:0 0 10px 0;">Sources</p>
+      <ol style="font-size:14px;color:#111827;padding-left:20px;line-height:1.9;margin:0;">
+        <li><a href="https://www.atlassian.com/git/tutorials/syncing/git-push" style="color:#1d4ed8;text-decoration:underline;">Atlassian Git Tutorial: git push</a></li>
+        <li><a href="https://www.atlassian.com/git/tutorials/syncing/git-pull" style="color:#1d4ed8;text-decoration:underline;">Atlassian Git Tutorial: git pull</a></li>
+        <li><a href="https://git-scm.com/docs/gittutorial" style="color:#1d4ed8;text-decoration:underline;">Official Git Documentation: gittutorial</a></li>
+        <li><a href="https://www.boot.dev/blog/devops/git-push-u-origin-main" style="color:#1d4ed8;text-decoration:underline;">Boot.dev: What Does git push -u origin main Do?</a></li>
+        <li><a href="https://dev.to/sharon_m/understanding-git-version-control-track-changes-commit-push-pull-beginner-guide-48jp" style="color:#1d4ed8;text-decoration:underline;">DEV Community: Understanding Git Push and Pull (Beginner Guide)</a></li>
+        <li><a href="https://www.datacamp.com/tutorial/git-push-pull" style="color:#1d4ed8;text-decoration:underline;">DataCamp: Git Push and Pull Tutorial</a></li>
+      </ol>
+    </div>
+
+  </div>
+</div>
