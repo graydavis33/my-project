@@ -1,0 +1,181 @@
+<div style="background-color: #f3f4f6; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; padding: 32px;">
+
+    <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; margin-bottom: 28px;">
+      <span style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280;">DAILY AI READ &nbsp;&nbsp;|&nbsp;&nbsp; Issue #9 &middot; August 3, 2026</span>
+    </div>
+
+    <h1 style="font-size: 26px; font-weight: 700; color: #111827; margin: 0 0 14px 0; line-height: 1.3;">The File That Teaches Claude About Your Project</h1>
+    <p style="color: #4b5563; margin: 0 0 28px 0; line-height: 1.65; font-size: 16px;">Every Claude Code session starts with a blank slate. One small file called CLAUDE.md changes that permanently. Here is exactly what it is, where it lives, and what to put in it.</p>
+
+    <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px 24px; margin-bottom: 36px;">
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6b7280; margin: 0 0 12px 0;">THE 2-MINUTE VERSION</p>
+      <ul style="margin: 0; padding-left: 20px; color: #111827; line-height: 1.85; font-size: 16px;">
+        <li>Claude Code forgets everything when you close a session. CLAUDE.md is the fix.</li>
+        <li>It is a plain text file in your project folder that Claude reads automatically at the start of every session — before you type a single thing.</li>
+        <li>You write it once. It loads every time, forever, with no extra effort.</li>
+        <li>Run <code style="background: #e5e7eb; padding: 2px 6px; border-radius: 3px; font-size: 14px;">/init</code> inside Claude Code and it writes a first draft for you.</li>
+        <li>Keep it under 200 lines — every line costs space Claude needs for your actual code.</li>
+      </ul>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 26px; margin-bottom: 26px;">
+      <h2 style="font-size: 19px; font-weight: 700; color: #111827; margin: 0 0 14px 0;">Why Claude Keeps Forgetting You</h2>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">Every Claude Code session starts with a fresh context window. Context window just means the working memory Claude has right now — everything it can "see" during a single conversation. When you close the session, that memory is gone completely.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">That means Claude wakes up tomorrow with no idea that your footage organizer uses a specific folder structure, that your Payday app is written in Python, or that you always want short functions with comments. You have to re-explain all of it, every time you start a new session.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0; font-size: 16px;">This is not a bug. It is how large language models — the AI technology powering Claude — work by design. But <a href="https://code.claude.com/docs/en/memory" style="color: #1d4ed8; text-decoration: underline;">Claude Code's official memory system</a> has a built-in fix.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 26px; margin-bottom: 26px;">
+      <h2 style="font-size: 19px; font-weight: 700; color: #111827; margin: 0 0 14px 0;">What CLAUDE.md Is</h2>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">CLAUDE.md is a plain text file — written in Markdown, the simple formatting language that uses <code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px; font-size: 14px;">#</code> for headings and <code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px; font-size: 14px;">-</code> for bullet points — that you place in the root folder of your project. Root folder just means the main folder, not a subfolder inside it.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">Claude Code finds it automatically and reads it before anything you type. Think of it like a sticky note taped to the front of a filing cabinet. Every time a new employee (Claude) opens that cabinet, they read the note first. They instantly know your preferences without being told.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0; font-size: 16px;">The <a href="https://code.claude.com/docs/en/overview" style="color: #1d4ed8; text-decoration: underline;">official Claude Code overview</a> puts it plainly: CLAUDE.md is where you store "project-specific instructions, conventions, and context that Claude should know every session."</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 26px; margin-bottom: 26px;">
+      <h2 style="font-size: 19px; font-weight: 700; color: #111827; margin: 0 0 14px 0;">Two Memory Systems: One You Write, One Claude Writes</h2>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">Claude Code actually has two ways of carrying knowledge across sessions:</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 10px 0; font-size: 16px;"><strong>1. CLAUDE.md files</strong> — instructions you write yourself. You control what goes in, and it loads every session automatically.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;"><strong>2. Auto memory</strong> — notes Claude writes for itself as you work together. If you correct Claude mid-session ("do not use that function, use this one instead"), it can save that correction automatically and remember it next time. These notes live in a separate hidden folder on your computer, not inside CLAUDE.md.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0; font-size: 16px;">Both are loaded at the start of every conversation. One important distinction the official docs make: Claude treats both systems as instructions to follow, not locked-in rules it enforces. Think of it like a style guide a developer reads on their first day — not a padlocked setting. If you need to truly block an action, Claude Code uses a different feature called hooks. But for everything you need day to day, CLAUDE.md is the right tool.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 26px; margin-bottom: 26px;">
+      <h2 style="font-size: 19px; font-weight: 700; color: #111827; margin: 0 0 14px 0;">What to Actually Put In It</h2>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">The <a href="https://claude.com/blog/using-claude-md-files" style="color: #1d4ed8; text-decoration: underline;">official Anthropic blog on CLAUDE.md</a> says to include: build commands, code style preferences, architecture decisions, testing instructions, and project-specific warnings. No required format exists. Keep it short and human-readable.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">Here is a concrete example of what a CLAUDE.md for your footage organizer might look like:</p>
+      <div style="background-color: #f9fafb; border-radius: 6px; border: 1px solid #e5e7eb; padding: 16px 20px; font-family: 'Courier New', Courier, monospace; font-size: 13px; line-height: 1.75; color: #111827; margin-bottom: 16px; white-space: pre-wrap;"># Footage Organizer — Project Context
+
+## What This Does
+Indexes video files from an external SSD and
+organizes them by date and client.
+
+## Tech Stack
+Python 3. Uses os and pathlib only. No frameworks.
+
+## Style Rules
+- Short functions, one job each
+- Add a one-line comment above every function
+- Print progress to the terminal so I can watch it run
+
+## Do Not
+- Do not rename files without asking me first
+- Do not touch anything outside the /footage folder</div>
+      <p style="color: #111827; line-height: 1.65; margin: 0; font-size: 16px;">That is it. Twenty lines that save five minutes of re-explaining every session. The rule, backed by the official docs: be specific and concrete. "Use 2-space indentation" works. "Format code nicely" does not — Claude cannot verify what "nice" means, so it guesses.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 26px; margin-bottom: 26px;">
+      <h2 style="font-size: 19px; font-weight: 700; color: #111827; margin: 0 0 14px 0;">How to Create One in Under a Minute</h2>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">You do not have to write CLAUDE.md from scratch. Claude Code has a slash command — a shortcut that starts with <code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px; font-size: 14px;">/</code> — called <code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px; font-size: 14px;">/init</code>. Type it inside Claude Code while you are in your project folder. Claude analyzes your codebase and writes a first draft of CLAUDE.md for you — including build commands and conventions it finds on its own.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">After it generates the file, read every line and remove anything inaccurate or unnecessary. The official docs warn: files over 200 lines consume more of the context window and Claude follows them less reliably. Every line costs space. Trim it the way you trim a caption — cut everything that does not need to be there.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0; font-size: 16px;">One more detail worth knowing: CLAUDE.md has a live file watcher. If you edit the file while a session is already open, Claude picks up the changes immediately. You do not need to restart.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 26px; margin-bottom: 26px;">
+      <h2 style="font-size: 19px; font-weight: 700; color: #111827; margin: 0 0 14px 0;">Where CLAUDE.md Lives and How It Connects to Your Repo</h2>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">Your CLAUDE.md file sits in your project's root folder — the same place as the rest of your project files in graydavis33/my-project. Because it is a regular file in the repo, it gets committed and pushed to GitHub along with your code. That is a feature, not an accident: the instructions travel with the project. This is why the last four issues — commits, push, pull — matter. You now have the mechanics to actually ship a CLAUDE.md.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">There is also a companion file called <strong>CLAUDE.local.md</strong>. This one holds personal preferences you do not want to share — like a note about your SSD's mount path or a local test command. You add CLAUDE.local.md to your .gitignore file (.gitignore is a list that tells git which files to skip when committing) so it stays on your machine only and never goes to GitHub.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0; font-size: 16px;">If you have preferences that should apply across every project — not just one — you can create a global CLAUDE.md at <code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px; font-size: 14px;">~/.claude/CLAUDE.md</code>. The tilde (<code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px; font-size: 14px;">~</code>) is Mac shorthand for your home directory. That file loads in every session, across every project, on your machine.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 26px; margin-bottom: 28px;">
+      <h2 style="font-size: 19px; font-weight: 700; color: #111827; margin: 0 0 14px 0;">Why This Matters for You</h2>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 14px 0; font-size: 16px;">You have at least six tools living in graydavis33/my-project: the Payday budgeting app, the footage organizer, caption scripts, the invoice tracker, the email agent, and this Daily AI Read email. Right now, every time you open Claude Code to work on one of them, Claude starts from zero. It does not know what the tool does, what language it is in, or what your rules are.</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0; font-size: 16px;">A CLAUDE.md for each tool — even ten to fifteen lines each — means Claude walks in on day two already briefed on the project. That is the difference between a contractor who read the brief and one who showed up cold and spent the first hour asking basic questions. The time you spend writing these files once pays back every single session going forward.</p>
+    </div>
+
+    <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px 24px; margin-bottom: 36px;">
+      <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6b7280; margin: 0 0 12px 0;">TRY THIS TODAY</p>
+      <p style="color: #111827; line-height: 1.65; margin: 0 0 12px 0; font-size: 16px;">Open Claude Code inside your project folder and type this at the prompt:</p>
+      <div style="background-color: #111827; color: #f9fafb; padding: 12px 18px; border-radius: 6px; font-family: 'Courier New', Courier, monospace; font-size: 15px; margin-bottom: 14px; letter-spacing: 0.02em;">/init</div>
+      <p style="color: #111827; line-height: 1.65; margin: 0; font-size: 16px;">Claude will scan your project and generate a draft CLAUDE.md. Read it line by line — remove anything wrong, vague, or unnecessary. Then commit the file. It is now part of your repo and will load automatically in every future Claude Code session. Five minutes of setup that pays back every day.</p>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 26px; margin-bottom: 32px;">
+      <h2 style="font-size: 19px; font-weight: 700; color: #111827; margin: 0 0 22px 0;">TEST YOURSELF</h2>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">1. What happens to Claude's memory when you close a Claude Code session?</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> It is completely wiped. Each session starts with a fresh context window. This is how large language models work by design — they do not retain anything between separate conversations unless a persistence system like CLAUDE.md explicitly reloads it.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">2. In plain terms, what is a context window?</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> The working memory Claude has available during a single session — everything it can "see" at once, including your prompts, its responses, and any files it has read. When the session closes, that window is cleared.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">3. What is CLAUDE.md, and where does it sit in your project?</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> CLAUDE.md is a plain Markdown text file in the root (main) folder of your project. Claude Code reads it automatically at the start of every session, before you type anything. It holds your persistent instructions for that project.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">4. What slash command generates a first draft of CLAUDE.md from your existing codebase?</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> <code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px;">/init</code>. You type it inside Claude Code while in your project folder. Claude analyzes the codebase and writes a starting file. You still need to review and trim what it produces.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">5. Name the two memory systems Claude Code uses across sessions and describe the key difference between them.</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> (1) CLAUDE.md — instructions you write and control. (2) Auto memory — notes Claude writes for itself based on corrections you make during sessions. You write one intentionally; the other builds up automatically. Both load at the start of every conversation.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">6. Why should you keep CLAUDE.md under 200 lines?</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> Every line the file takes up is space inside the context window that could be used for your actual code and conversation. The official docs note that files over 200 lines consume more context and Claude follows them less reliably — longer is not better here.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">7. What is the difference between CLAUDE.md and CLAUDE.local.md?</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> CLAUDE.md gets committed to your repo and pushed to GitHub — it travels with the project and is shared. CLAUDE.local.md holds personal preferences that stay on your machine only. You add it to .gitignore so git skips it and it never leaves your computer.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">8. You are mid-session in Claude Code and realize you forgot to add an important rule to CLAUDE.md. Do you need to restart the session?</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> No. CLAUDE.md has a live file watcher. If you edit and save the file while a session is already open, Claude Code detects the change and picks up the new content immediately — no restart needed.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 22px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">9. You want one instruction — "always respond in plain English, no jargon" — to apply in every Claude Code project you ever open, not just one. Where do you put it?</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> In a global CLAUDE.md at <code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px;">~/.claude/CLAUDE.md</code> on your Mac. The <code style="background: #e5e7eb; padding: 2px 5px; border-radius: 3px;">~</code> is shorthand for your home directory. This file loads for every Claude Code session on your machine, regardless of which project you are in.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 8px;">
+        <p style="font-weight: 700; color: #111827; margin: 0 0 8px 0; font-size: 16px;">10. Which of these is a better CLAUDE.md instruction — and why? (A) "Write clean, readable code." (B) "Add a one-line comment above every function explaining what it does."</p>
+        <div style="background-color: #f9fafb; border-left: 3px solid #d1d5db; padding: 12px 14px; border-radius: 0 4px 4px 0; font-size: 15px; line-height: 1.65; color: #111827;">
+          <strong>Answer:</strong> (B). It is specific and verifiable — Claude can look at its own output and check whether every function has a one-line comment above it. Option (A) is abstract; "clean" and "readable" mean different things to different people, so Claude ends up guessing. The official docs say instructions should be "concrete enough to verify."
+        </div>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid #e5e7eb; padding-top: 20px;">
+      <p style="font-size: 14px; font-weight: 700; color: #111827; margin: 0 0 10px 0;">SOURCES</p>
+      <ol style="font-size: 14px; color: #111827; padding-left: 20px; line-height: 2; margin: 0;">
+        <li><a href="https://code.claude.com/docs/en/memory" style="color: #1d4ed8; text-decoration: underline;">How Claude remembers your project — Claude Code Official Docs</a></li>
+        <li><a href="https://code.claude.com/docs/en/overview" style="color: #1d4ed8; text-decoration: underline;">Overview — Claude Code Official Docs</a></li>
+        <li><a href="https://code.claude.com/docs/en/how-claude-code-works" style="color: #1d4ed8; text-decoration: underline;">How Claude Code works — Claude Code Official Docs</a></li>
+        <li><a href="https://claude.com/blog/using-claude-md-files" style="color: #1d4ed8; text-decoration: underline;">Using CLAUDE.md files — Anthropic Official Blog</a></li>
+        <li><a href="https://www.jdhodges.com/blog/claude-code-claudemd-project-instructions/" style="color: #1d4ed8; text-decoration: underline;">Claude Code CLAUDE.md Guide: Project Instructions That Work — J.D. Hodges</a></li>
+      </ol>
+    </div>
+
+  </div>
+</div>

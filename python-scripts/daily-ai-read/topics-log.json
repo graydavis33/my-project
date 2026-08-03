@@ -54,5 +54,12 @@
   "title": "Push and Pull: How Your Code Actually Gets to GitHub",
   "category": "literacy",
   "topic": "git-push-and-pull"
+ },
+ {
+  "date": "2026-08-03",
+  "issue": 9,
+  "title": "The File That Teaches Claude About Your Project",
+  "category": "claude-code",
+  "topic": "claude-md-project-memory"
  }
 ]
