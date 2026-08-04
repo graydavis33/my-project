@@ -11,7 +11,14 @@ and backed by cited sources. Lands in graydavis33@gmail.com around 9:00 AM ET.
 2. `main.py` reads `topics-log.json` (every topic already covered), asks Claude
    (claude-sonnet-4-6 + web search) to pick a fresh topic and write the issue, then
    sends it via the Gmail API and archives the HTML to `archive/`.
-3. The workflow commits the updated log + archive back to the repo.
+3. Each issue also ships with an attached **MP3 narration** (added 2026-08-04) so Gray
+   can listen instead of read. `build_audio_script()` flattens the HTML to spoken text
+   (sources section dropped — URLs sound broken aloud) and edge-tts renders it with a
+   free Microsoft neural voice (`TTS_VOICE`/`TTS_RATE` in `main.py`, ~11 min per issue,
+   ~4MB). No API key, no cost. If TTS fails, the email still sends without the MP3 —
+   look for `audio narration failed` in the Action log. MP3s go to `.tmp/` (gitignored),
+   never committed.
+4. The workflow commits the updated log + archive back to the repo.
 
 ## Content buckets (set 2026-07-29)
 
