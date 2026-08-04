@@ -4,13 +4,17 @@ Runs daily via .github/workflows/daily-ai-read.yml. Topic history lives in
 topics-log.json so subjects never repeat; each issue is archived to archive/.
 """
 
+import asyncio
 import base64
 import json
 import os
 import re
 import sys
 from datetime import date
+from email.mime.audio import MIMEAudio
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from html.parser import HTMLParser
 from pathlib import Path
 
 import anthropic
@@ -273,7 +277,67 @@ def generate_issue(log):
             ]
 
 
-def send_email(subject, html):
+# --- Audio narration -------------------------------------------------------
+# Each issue also ships as an attached MP3 so Gray can listen instead of read.
+# edge-tts = Microsoft's free neural voices (no API key, no cost).
+
+TTS_VOICE = "en-US-AndrewMultilingualNeural"
+TTS_RATE = "+8%"
+
+_BLOCK_TAGS = {"p", "h1", "h2", "h3", "li", "div"}
+
+
+class _TextExtractor(HTMLParser):
+    """Flattens the issue HTML into spoken-word paragraphs, stopping at SOURCES
+    (reading URLs aloud sounds broken)."""
+
+    def __init__(self):
+        super().__init__()
+        self.blocks = []
+        self._buf = []
+        self._done = False
+
+    def handle_data(self, data):
+        if not self._done:
+            self._buf.append(data)
+
+    def _flush(self):
+        text = re.sub(r"\s+", " ", "".join(self._buf)).strip()
+        self._buf = []
+        if not text or self._done:
+            return
+        if text.upper().rstrip(":") == "SOURCES":
+            self._done = True
+            return
+        self.blocks.append(text)
+
+    def handle_starttag(self, tag, attrs):
+        if tag in _BLOCK_TAGS:
+            self._flush()
+
+    def handle_endtag(self, tag):
+        if tag in _BLOCK_TAGS:
+            self._flush()
+
+
+def build_audio_script(html):
+    extractor = _TextExtractor()
+    extractor.feed(html)
+    extractor._flush()
+    script = "\n\n".join(extractor.blocks)
+    # Masthead separators ("|", "·") read as garbage — turn them into pauses.
+    return re.sub(r"\s*[|·]\s*", ". ", script)
+
+
+def generate_audio(html, out_path):
+    import edge_tts
+
+    script = build_audio_script(html)
+    communicate = edge_tts.Communicate(script, TTS_VOICE, rate=TTS_RATE)
+    asyncio.run(communicate.save(str(out_path)))
+
+
+def send_email(subject, html, mp3_path=None):
     raw = os.environ.get("GMAIL_SEND_TOKEN_JSON")
     if raw:
         creds = Credentials.from_authorized_user_info(json.loads(raw))
@@ -282,7 +346,14 @@ def send_email(subject, html):
     if not creds.valid:
         creds.refresh(Request())
     service = build("gmail", "v1", credentials=creds)
-    msg = MIMEText(html, "html")
+    if mp3_path:
+        msg = MIMEMultipart("mixed")
+        msg.attach(MIMEText(html, "html"))
+        audio = MIMEAudio(Path(mp3_path).read_bytes(), "mpeg")
+        audio.add_header("Content-Disposition", "attachment", filename=Path(mp3_path).name)
+        msg.attach(audio)
+    else:
+        msg = MIMEText(html, "html")
     msg["to"] = TO_ADDRESS
     msg["subject"] = subject
     body = {"raw": base64.urlsafe_b64encode(msg.as_bytes()).decode()}
@@ -302,11 +373,23 @@ def main():
     archive_file = ARCHIVE_DIR / (f"PREVIEW-{stem}.html" if preview else f"{stem}.html")
     archive_file.write_text(html)
 
+    # Narrated MP3 goes to .tmp/ (never committed — the workflow only adds
+    # topics-log.json + archive/). If TTS fails, the email still goes out.
+    tmp_dir = DIR / ".tmp"
+    tmp_dir.mkdir(exist_ok=True)
+    mp3_path = tmp_dir / f"Daily-AI-Read-{issue_num}.mp3"
+    try:
+        generate_audio(html, mp3_path)
+    except Exception as err:
+        print(f"audio narration failed ({err}) — sending without it", file=sys.stderr)
+        mp3_path = None
+
     if preview:
-        print(f"PREVIEW (not sent, not logged) [{meta.get('CATEGORY')}] {title} -> {archive_file.name}")
+        print(f"PREVIEW (not sent, not logged) [{meta.get('CATEGORY')}] {title} -> {archive_file.name}"
+              + (f" + {mp3_path.name}" if mp3_path else ""))
         return
 
-    send_email(f"Daily AI Read #{issue_num} — {title}", html)
+    send_email(f"Daily AI Read #{issue_num} — {title}", html, mp3_path)
     log.append({
         "date": date.today().isoformat(),
         "issue": issue_num,
