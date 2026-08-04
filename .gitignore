@@ -131,3 +131,4 @@ web-apps/payday-checklist/expenses.json
 
 # Personal finance notes — MUST NOT be committed (repo is served publicly via GitHub Pages)
 context/finances.md
+python-scripts/daily-ai-read/.tmp/
