@@ -61,5 +61,12 @@
   "title": "The File That Teaches Claude About Your Project",
   "category": "claude-code",
   "topic": "claude-md-project-memory"
+ },
+ {
+  "date": "2026-08-04",
+  "issue": 10,
+  "title": "What Is a Server? The Computer That Never Sleeps",
+  "category": "literacy",
+  "topic": "what-is-a-server"
  }
 ]

@@ -1,0 +1,176 @@
+<div style="background-color:#f3f4f6;padding:24px 16px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background-color:#ffffff;border-radius:12px;border:1px solid #e5e7eb;padding:32px;">
+
+    <!-- Masthead -->
+    <div style="padding-bottom:16px;margin-bottom:24px;border-bottom:1px solid #e5e7eb;">
+      <span style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#6b7280;font-weight:500;">DAILY AI READ &nbsp;&nbsp;|&nbsp;&nbsp; Issue #10 &middot; August 4, 2026</span>
+    </div>
+
+    <!-- Title + Hook -->
+    <h1 style="font-size:26px;font-weight:700;color:#111827;margin:0 0 12px 0;line-height:1.3;">What Is a Server? The Computer That Never Sleeps</h1>
+    <p style="color:#4b5563;font-size:16px;line-height:1.65;margin:0 0 28px 0;">Your email agent is running right now. Your laptop is closed, your phone is in your pocket, and you are asleep. Yet the agent is still checking your inbox and responding to messages. That is only possible because it is not running on your computer. It is running on a server.</p>
+
+    <!-- 2-Minute Version -->
+    <div style="background-color:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6b7280;margin:0 0 12px 0;">THE 2-MINUTE VERSION</p>
+      <ul style="margin:0;padding-left:20px;color:#111827;font-size:15px;line-height:1.8;">
+        <li>A server is just a regular computer — always on, always connected to the internet, sitting in a warehouse somewhere far from you.</li>
+        <li>You control it remotely (no screen, no keyboard in front of you) through a terminal connection.</li>
+        <li>"The cloud" is not a magical place. It is just other people's servers that you rent over the internet.</li>
+        <li>You already use multiple servers every day: your rented one for the email agent, GitHub's servers for your code, and GitHub Actions' servers to run your automated workflows.</li>
+        <li>When something stops working, knowing whether it is a code problem or a server problem cuts your debugging time in half.</li>
+      </ul>
+    </div>
+
+    <!-- Section 1 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">What a Server Actually Is</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">Forget the word "server" for a second and just think: computer. A server is a computer. It has a processor, memory, storage, and an internet connection — same as your laptop. The only differences are behavioral. Your laptop sleeps, has a screen, and lives on your desk. A server runs 24 hours a day, seven days a week, usually has no screen attached to it at all, and lives in a temperature-controlled building full of other servers.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">The name comes from what it does: it <em>serves</em> things to other computers. When you visit a website, your browser sends a request — "give me this page" — and a server somewhere receives that request, grabs the right file, and sends it back. Your browser is the client. The computer that responded is the server.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;">Your email agent works the same way. It runs a loop: wake up, check your inbox, take action if needed, sleep for a few minutes, repeat. For that loop to run without you, it needs a computer that is always on. That computer is a server.</p>
+    </div>
+
+    <!-- Section 2 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">Where Servers Actually Live</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">Servers live in data centers — buildings that look like warehouses but are full of computers stacked in metal racks, with industrial cooling systems, backup power generators, and multiple internet connections so nothing ever goes offline. Companies like Amazon, Google, and Microsoft own enormous ones with hundreds of thousands of machines. Smaller providers rent space inside those same buildings.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">When you "rent a server," you are renting access to one physical computer (or a guaranteed slice of one) inside one of these buildings. You pay monthly, just like a storage unit. The building provides electricity and internet; you provide the software and the purpose.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;"><strong>The analogy:</strong> Imagine a storage facility that is staffed 24 hours a day, has its own generator, and your unit is always accessible from the outside by anyone who knows the address. Your stuff is in there doing its job even when you are home sleeping. That is a rented server.</p>
+    </div>
+
+    <!-- Section 3 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">"The Cloud" Is Just Servers You Rent</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">This phrase gets thrown around so much that it sounds like something entirely different from servers. It is not. "The cloud" means: a computer (or many computers) in a data center that you access over the internet, usually rented by the hour or month instead of bought outright.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">AWS (Amazon Web Services) is just Amazon's data centers available for rent. Google Cloud is Google's. GitHub runs on Microsoft's infrastructure. "Deploy to the cloud" means "copy your code to a rented server and run it there."</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;">The only thing "cloudy" about it is that you do not know exactly which physical machine you are on, and you do not need to. You just care that it is on, connected, and running your code.</p>
+    </div>
+
+    <!-- Section 4 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">Where You Are Already Using Servers</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">You interact with multiple servers every single day. Here is the map:</p>
+      <ul style="margin:0 0 14px 0;padding-left:20px;color:#111827;font-size:16px;line-height:1.9;">
+        <li><strong>GitHub</strong> — your repo, including all of graydavis33/my-project, is stored on GitHub's servers. When you push a commit, your code travels from your Mac to their servers.</li>
+        <li><strong>GitHub Actions</strong> — every time an automated workflow runs (your auto-commit push, your Daily AI Read email), GitHub spins up a fresh temporary server called a "runner," runs your code on it, then deletes it. The runner is a real computer, just disposable.</li>
+        <li><strong>Your rented server</strong> — this is where your email agent lives. It is a real machine in a real building, running continuously.</li>
+        <li><strong>Every website you visit</strong> — Instagram, TikTok, your bank — all of these are code running on servers that respond to your browser's requests.</li>
+      </ul>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;">You have been using servers from the moment you started building. You just did not have a name for them.</p>
+    </div>
+
+    <!-- Section 5 -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">Why This Matters When Things Break</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">When a tool stops working, there are two completely different categories of problem: your code has a bug, or the server it runs on has a problem. Before you knew what a server was, these two things looked the same — "it stopped working." Now you can split them apart immediately.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">Server problems look like: nothing happened at all, no logs, no error messages, the process just never ran. Code problems look like: the process ran, hit an error, and logged a specific failure message. When your email agent goes quiet, the first question is not "what is wrong with my code?" — it is "is the server running?"</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;">Most server providers give you a dashboard or a web console where you can see whether the machine is on, what is running, and how much memory and CPU is being used. That is your first stop whenever something running in "the cloud" goes silent.</p>
+    </div>
+
+    <!-- Why This Matters For You -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:28px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 14px 0;">Why This Matters for You</h2>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 14px 0;">Your email agent lives on a rented server. Every time it has gone silent — no responses, no logs — the real question was always "is the server up?" not "is my code broken?" Now that you have the mental model, you can answer that in 30 seconds by opening your server provider's dashboard instead of spending an hour re-reading code that was never the problem.</p>
+      <p style="color:#111827;font-size:16px;line-height:1.65;margin:0 0 0 0;">This also shapes every tool you will build next. Any automation you want to run on a schedule — something that does not require you to be at your desk — needs a server. GitHub Actions works for short jobs that trigger on a schedule or an event. Your rented server works for persistent processes that need to run continuously. Knowing which is which saves you from deploying the wrong tool to the wrong place.</p>
+    </div>
+
+    <!-- Try This Today -->
+    <div style="background-color:#f9fafb;border-radius:8px;padding:20px 24px;margin-bottom:32px;">
+      <p style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6b7280;margin:0 0 12px 0;">TRY THIS TODAY</p>
+      <p style="color:#111827;font-size:15px;line-height:1.65;margin:0 0 10px 0;">Draw your server map. Open a notes app and list every automation or tool in your project. For each one, write next to it where it actually runs:</p>
+      <ul style="margin:0 0 10px 0;padding-left:20px;color:#111827;font-size:15px;line-height:1.9;">
+        <li><strong>My Mac or PC</strong> — runs only when I open it</li>
+        <li><strong>GitHub Actions runner</strong> — runs on GitHub's servers, triggered by a schedule or a push</li>
+        <li><strong>My rented server</strong> — runs 24/7, always on</li>
+      </ul>
+      <p style="color:#111827;font-size:15px;line-height:1.65;margin:0 0 0 0;">If anything on your list surprises you — you are not sure where it runs — that is the gap to close next. Understanding your own infrastructure is the foundation of debugging it.</p>
+    </div>
+
+    <!-- Test Yourself -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:24px;margin-bottom:32px;">
+      <h2 style="font-size:19px;font-weight:700;color:#111827;margin:0 0 20px 0;">Test Yourself</h2>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">1. In plain English, what is a server?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> A server is a computer that is always on and always connected to the internet, designed to receive requests from other computers and respond to them. The only practical difference from your laptop is that a server never sleeps and you control it remotely — there is no screen or keyboard sitting in front of it.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">2. Where do rented servers physically live?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> In data centers — large buildings full of server racks with industrial cooling, backup power, and multiple internet connections. When you rent a server, you are renting access to a real physical machine in one of these buildings. This is true even for providers that use the word "cloud."</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">3. What does "the cloud" actually mean in plain terms?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> "The cloud" means servers you access over the internet that you rent rather than own. AWS, Google Cloud, and GitHub are all just large data centers those companies make available for rent. The word "cloud" implies you do not know or care which exact machine you are on — you just care that it is on and running your code.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">4. Why does your email agent need a server instead of just running on your laptop?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> Because your laptop sleeps, closes, and is not always connected to the internet. The email agent needs to run continuously — checking your inbox around the clock, including when you are asleep. A server stays on and connected constantly, which is the only way to make that possible without leaving your own computer running 24/7.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">5. What is a GitHub Actions "runner"?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> A runner is a temporary server that GitHub creates specifically to execute one of your automated workflows. When your Daily AI Read email sends or your auto-commit fires, GitHub spins up a fresh computer, runs your code on it, and then deletes that machine when the job is done. It is a real computer — just disposable and managed entirely by GitHub.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">6. Your email agent has not responded to anything in eight hours. What is the first thing you check, and why?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> Check your server provider's dashboard to see if the server is actually running — before looking at your code at all. If the server is off or the process has crashed at the OS level, no code fix will help until the machine is back up. Complete silence with no log entries is a classic sign of a server-level problem, not a code bug.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">7. How do you tell a server problem apart from a code problem?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> A server problem means the process never ran at all — no logs, no error output, complete silence. A code problem means the process ran, hit something it could not handle, and produced an error message explaining what went wrong. If you see a specific error message, it is probably your code. If you see absolutely nothing, suspect the server first.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">8. When you push a commit to graydavis33/my-project, where does your code actually go?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> It travels from your Mac over the internet to GitHub's servers, where it is stored as the authoritative copy of your repo. From there, any GitHub Actions workflows triggered by that push will spin up a runner — a temporary server — and execute your code on GitHub's infrastructure, not on your machine.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">9. You want to build a tool that checks a client's website every hour and texts you if a price changes. Should it run on GitHub Actions or on your rented server? Why?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> GitHub Actions is the better fit here. It supports cron schedules (every hour), the job runs for only a few seconds, and GitHub handles the server at no extra cost. Your rented server is better suited for processes that run continuously without stopping — like the email agent, which is always listening. Short scheduled jobs belong on GitHub Actions; persistent always-on processes belong on a dedicated server.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom:0;">
+        <p style="font-weight:700;color:#111827;font-size:15px;margin:0 0 8px 0;">10. A friend says "I'm hosting my portfolio on the cloud." What does that actually mean?</p>
+        <div style="background-color:#f9fafb;border-left:3px solid #d1d5db;padding:12px;border-radius:0 4px 4px 0;">
+          <p style="margin:0;color:#111827;font-size:14px;line-height:1.65;"><strong>Answer:</strong> Their portfolio's files are stored on a rented server in a data center, and that server is connected to the internet with a public address so any browser can request and receive the website. There is nothing abstract about it — a physical computer somewhere is holding those files and responding to visitors around the clock. "The cloud" is just a friendlier name for that arrangement.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sources -->
+    <div style="border-top:1px solid #e5e7eb;padding-top:20px;">
+      <p style="font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6b7280;margin:0 0 10px 0;">SOURCES</p>
+      <ol style="margin:0;padding-left:20px;font-size:14px;line-height:2.0;color:#111827;">
+        <li><a href="https://en.wikipedia.org/wiki/Server_(computing)" style="color:#1d4ed8;text-decoration:underline;">Wikipedia — Server (computing)</a></li>
+        <li><a href="https://aws.amazon.com/what-is/server/" style="color:#1d4ed8;text-decoration:underline;">Amazon Web Services — What Is a Server?</a></li>
+        <li><a href="https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners" style="color:#1d4ed8;text-decoration:underline;">GitHub Docs — About GitHub-hosted runners</a></li>
+        <li><a href="https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-a-data-center" style="color:#1d4ed8;text-decoration:underline;">Microsoft Azure — What Is a Data Center?</a></li>
+      </ol>
+    </div>
+
+  </div>
+</div>
