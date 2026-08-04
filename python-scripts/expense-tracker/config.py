@@ -72,6 +72,10 @@ TRANSFER_SENDERS = [
 SOFTWARE_VENDORS = [
     "adobe", "github", "google", "anthropic", "openai", "notion",
     "sandcastles", "epidemic sound", "wispr", "figma", "vercel", "cursor",
+    # Streaming/media subscriptions count as Software per Gray (2026-08-03).
+    # Plaid buckets these ENTERTAINMENT -> would land in Misc without this.
+    "prime video", "amazon prime", "netflix", "hulu", "spotify", "disney",
+    "paramount", "peacock", "apple tv", "youtube premium", "crunchyroll", "max.com",
 ]
 for _v in SOFTWARE_VENDORS:
     CATEGORY_OVERRIDES.setdefault(_v, "Software & Tools")
