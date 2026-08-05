@@ -9,7 +9,7 @@
 const Sync = (() => {
   const ROOT = 'households/gray';
   const ALLOWED_EMAIL = 'graydavis33@gmail.com';
-  const SETTING_KEYS = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors', 'reimburse_vendors'];
+  const SETTING_KEYS = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors', 'reimburse_vendors', 'subscriptions'];
 
   let backend = null;
   let active = false;         // signed in + subscribed
@@ -157,6 +157,7 @@ const Sync = (() => {
     OVERRIDES = await getSetting('overrides', {});
     BUSINESS_VENDORS = await getSetting('business_vendors', []);
     REIMBURSE_VENDORS = await getSetting('reimburse_vendors', []);
+    SUBSCRIPTIONS = await getSetting('subscriptions', []);
     if (typeof renderBusiness === 'function') renderBusiness();
     for (let i = 0; i < STEP_NAMES.length; i++)
       document.getElementById('step-' + i).classList.toggle('done', !!steps[i]);

@@ -675,6 +675,19 @@
         <div id="biz-vendor-list"><div class="history-empty">None yet.</div></div>
       </div>
 
+      <div class="gm-label" style="margin-top:24px">Subscriptions</div>
+      <div class="gm-card">
+        <div class="history-row" style="font-size:13px;padding:6px 0"><span>Monthly total</span><span id="sub-month-total" style="font-weight:700">$0</span></div>
+        <div class="history-row" style="font-size:13px;padding:6px 0"><span>Cost per year</span><span id="sub-year-total" style="font-weight:700">$0</span></div>
+        <div id="sub-list"><div class="history-empty">No subscriptions yet.</div></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <input class="modal-input" type="text" id="sub-name" placeholder="Vendor — e.g. Adobe" style="flex:2;min-width:0" />
+          <input class="modal-input" type="number" id="sub-amount" placeholder="$/mo" step="0.01" inputmode="decimal" style="flex:1;min-width:0" />
+          <button class="gm-btn-primary" style="min-height:44px;padding:0 16px" onclick="addSubscription()">Add</button>
+        </div>
+        <div class="sync-badge" style="text-align:left;margin-top:8px">Business subscriptions you pay every month. Adding one also adds the vendor rule above, so every charge auto-marks as a write-off. ✓ = billed this month, ● = not billed yet.</div>
+      </div>
+
       <button class="gm-btn-primary" style="width:100%;margin-top:20px;min-height:48px" onclick="exportBusinessCSV()">Export Write-Offs CSV (this year)</button>
     </div>
   </div>
@@ -916,6 +929,7 @@ let OVERRIDES = {};          // {'2026-07': {catIndex: amount}}
 let TXN_CACHE = [];          // all transactions (kept in sync with IDB)
 let BUSINESS_VENDORS = [];   // vendors whose purchases auto-mark as write-offs (recurring)
 let REIMBURSE_VENDORS = [];  // vendors whose purchases auto-land in Awaiting Reimbursement (recurring)
+let SUBSCRIPTIONS = [];      // recurring business subscriptions [{name, amount}] — always write-offs
 
 function currentMonth() {
   const d = new Date();
@@ -1258,6 +1272,35 @@ async function saveBusinessVendors() {
 async function saveReimburseVendors() {
   await setSetting('reimburse_vendors', [...REIMBURSE_VENDORS]);
 }
+async function saveSubscriptions() {
+  await setSetting('subscriptions', [...SUBSCRIPTIONS]);
+}
+
+async function addSubscription() {
+  const name = document.getElementById('sub-name').value.trim();
+  const amount = parseFloat(document.getElementById('sub-amount').value);
+  if (!name || isNaN(amount) || amount <= 0) { showToast('Need a vendor name and a monthly amount'); return; }
+  if (SUBSCRIPTIONS.some(s => normVendor(s.name) === normVendor(name))) { showToast('Already tracking ' + name); return; }
+  SUBSCRIPTIONS.push({ name, amount });
+  await saveSubscriptions();
+  const v = normVendor(name);
+  if (!BUSINESS_VENDORS.includes(v)) {
+    BUSINESS_VENDORS.push(v);
+    await saveBusinessVendors();
+  }
+  document.getElementById('sub-name').value = '';
+  document.getElementById('sub-amount').value = '';
+  renderBusiness();
+  refreshExpenseDisplays();
+  showToast('✓ ' + name + ' tracked — charges auto-mark as write-offs');
+}
+
+async function removeSubscription(name) {
+  SUBSCRIPTIONS = SUBSCRIPTIONS.filter(s => s.name !== name);
+  await saveSubscriptions();
+  renderBusiness();
+  showToast('Removed ' + name + ' (vendor rule above still on — remove it to stop auto-marking)');
+}
 
 async function persistTxnFlag(txn) {
   txn.updatedAt = Date.now();
@@ -1415,6 +1458,22 @@ function renderBusiness() {
   vl.innerHTML = BUSINESS_VENDORS.length
     ? BUSINESS_VENDORS.map(v => vendorRuleRow(v, 'removeBusinessVendor')).join('')
     : '<div class="history-empty">None yet.</div>';
+
+  // ── Subscriptions ──
+  const subMonthly = SUBSCRIPTIONS.reduce((s, x) => s + x.amount, 0);
+  document.getElementById('sub-month-total').textContent = fmt2(subMonthly);
+  document.getElementById('sub-year-total').textContent = fmt2(subMonthly * 12);
+  const sl = document.getElementById('sub-list');
+  sl.innerHTML = SUBSCRIPTIONS.length
+    ? SUBSCRIPTIONS.map(s => {
+        const billed = TXN_CACHE.some(t => t.month === month && !t.kind && normVendor(t.vendor) === normVendor(s.name));
+        const dot = billed
+          ? '<span style="color:var(--color-green);font-size:10px">✓ billed</span>'
+          : '<span style="opacity:0.5;font-size:10px">● not yet</span>';
+        const esc = s.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        return `<div class="txn-item"><span>${escapeHtml(s.name)} ${dot}</span><span class="txn-amount">${fmt2(s.amount)}/mo</span><button class="txn-delete" onclick="removeSubscription('${esc}')" title="Stop tracking">✕</button></div>`;
+      }).join('')
+    : '<div class="history-empty">No subscriptions yet.</div>';
 
   // ── Reimburse page (open items span months — visible until repaid) ──
   const open = TXN_CACHE.filter(t => reimbStatus(t) === 'open').sort((a, b) => b.date.localeCompare(a.date));
@@ -1845,7 +1904,7 @@ function csvEscape(s) {
 async function exportCSV() {
   const txns = (await getAllTransactions()).filter(t => !t.deleted);
   const history = await getAllHistory();
-  const settingsKeys = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors', 'reimburse_vendors'];
+  const settingsKeys = ['income', 'allocations', 'budgets', 'fund', 'ring', 'steps', 'notes', 'overrides', 'dismissed_gmail', 'business_vendors', 'reimburse_vendors', 'subscriptions'];
   const settings = {};
   for (const k of settingsKeys) settings[k] = await getSetting(k);
 
@@ -2098,6 +2157,7 @@ async function init() {
   OVERRIDES = await getSetting('overrides', {});
   BUSINESS_VENDORS = await getSetting('business_vendors', []);
   REIMBURSE_VENDORS = await getSetting('reimburse_vendors', []);
+  SUBSCRIPTIONS = await getSetting('subscriptions', []);
 
   // One-time migration for the removed Investments category (index 4 of the old
   // 7-slot arrays): budgets drop the slot, override indexes above it shift down

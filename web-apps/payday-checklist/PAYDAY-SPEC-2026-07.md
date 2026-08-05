@@ -13,6 +13,7 @@
 - Old-category receipts (Streaming/Transport/Health & Wellness/Shopping) map to Misc.
 - Student loans moved from a budget row to checklist step 3 (-$1,000/mo, editable). NOTE: this was originally justified by a "20% interest" figure that was WRONG — the real MOHELA blended rate is ~5.31%. The $1,000/mo allocation still stands (Gray's call 2026-07-30), but do not repeat the 20% number.
 - Test suite: scratchpad `test_payday.py` (rerunnable; serves web-apps/ locally + drives Chromium).
+- **Subscriptions tracker (added 2026-08-06):** Write-Offs tab section for recurring business subscriptions (vendor + $/mo). Adding one auto-adds the vendor to `business_vendors` so every charge marks as a write-off; rows show billed/not-billed for the current month plus monthly + yearly totals. Stored under new `subscriptions` setting key (synced via Firebase like the others, included in CSV backup). Tested on an isolated FIREBASE_CONFIG=null copy per the hard rule.
 
 ---
 

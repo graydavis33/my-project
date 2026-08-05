@@ -1,0 +1,9 @@
+POST: #15 "my mentor employs 800 people"
+LANE: 2 (text post + still image)
+STATUS: DRAFT caption written 2026-08-06 (bench pick from ROUTING-MAP). Not yet reviewed by Gray/Sai.
+
+IMAGE: still needed — pull a raw candid frame (ffmpeg JPG, not the edited reel) once the footage drive is mounted.
+
+WHY THIS POST: Lunch story with a clean North Star lesson. Story posts are the volume lane.
+
+CAPTION NOTES: transcript-faithful, no invented details, ends on the realization (no question CTA — story post, not framework).

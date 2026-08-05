@@ -1,0 +1,9 @@
+POST: #28 "almost a millionaire at 17" (NFT story, text version)
+LANE: 2 (text post + still image) — routing map's alt route; the VFX reel itself stays a Lane 3 candidate.
+STATUS: DRAFT caption written 2026-08-06 (bench pick from ROUTING-MAP). Not yet reviewed by Gray/Sai.
+
+IMAGE: still needed — raw candid frame via ffmpeg once footage drive is mounted.
+
+WHY THIS POST: Identity/failure story, top-3 strength per routing map. High-vulnerability shape LinkedIn rewards.
+
+CAPTION NOTES: transcript-faithful ("the NFT market had to last" in the Whisper transcript read as "collapsed" — verify against the video if unsure). Ends on the punchline, no CTA.
