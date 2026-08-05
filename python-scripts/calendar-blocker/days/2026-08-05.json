@@ -1,7 +1,7 @@
 {
   "date": "2026-08-05",
   "blocks": [
-    {"start": "05:45", "end": "07:15", "title": "🎓 Class + 15-min walk each way", "desc": "6:00–7:00 class. Done.", "color": 3},
+    {"start": "07:45", "end": "09:15", "title": "🎓 Class + 15-min walk each way", "desc": "8:00–9:00 class. Done.", "color": 3},
     {"start": "12:15", "end": "12:45", "title": "🍽 Lunch", "desc": "Real break, off-screen.", "color": 5},
     {"start": "12:45", "end": "13:15", "title": "💻 Finish Short-Form Founder Story Script", "desc": "Priority #1 — almost done, close it out.", "color": 9},
     {"start": "13:15", "end": "15:15", "title": "💻 YouTube Long-Form Script — deep work", "desc": "Priority #2 — main push, get the bulk done.", "color": 9},
