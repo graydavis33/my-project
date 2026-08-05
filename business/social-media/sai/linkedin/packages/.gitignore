@@ -1,0 +1,4 @@
+# Working scratch + regenerable build products (rebuild via .build_*.py; published as artifacts)
+*/frames/
+PREVIEW.html
+COMPARE.html

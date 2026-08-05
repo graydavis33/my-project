@@ -32,8 +32,8 @@ posts = [
          window="Tue-Thu, 8-10am ET"),
     dict(id="11", tag="Raw / gear", lane="Lane 2 — text + still",
          cap=(BASE/"11-3-purchases/caption.txt").read_text(encoding="utf-8"),
-         img=b64_img(BASE/"11-3-purchases/LINKEDIN-IMAGE.jpg"),
-         src="Raw clip C2782 (productivity shoot) — no captions, no graphics",
+         img=b64_img(BASE/"11-3-purchases/LINKEDIN-IMAGE-pen.jpg", w=1280),
+         src="Pen insert — full horizontal frame (1920x1080) from raw footage C2790, no crop, no motion blur, no graphics",
          window="Weekday, 8-11am ET"),
 ]
 
