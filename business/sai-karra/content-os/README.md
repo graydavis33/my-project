@@ -31,7 +31,7 @@ This folder is the workspace-side mirror — for SOPs that need to live next to 
 | Paid Ads (Trendify) | HIGH | Per need | Gray + Editor team |
 | LinkedIn | LOW (outsourced) | Daily | 3rd-party AI interviews Sai + drafts → Gray adds images + reviews |
 
-**Rule:** Each platform has its own strategy. Strategies do NOT cross-pollinate.
+**Rule (updated 2026-08-05):** Repurpose your own content to LinkedIn. Each platform keeps its own native strategy, but posted reels feed LinkedIn — transcript → Sai-voice text post + curated still. (Was: "Strategies do NOT cross-pollinate" — reversed by Gray for the high-production/low-volume era.)
 
 ---
 
@@ -55,7 +55,7 @@ This folder is the workspace-side mirror — for SOPs that need to live next to 
 ## The hard rules
 
 1. **No virality-as-goal.** No vanity metrics.
-2. **No IG → LinkedIn repurpose.** LinkedIn is business-focused, custom.
+2. **Repurpose your own content to LinkedIn.** (REVERSED 2026-08-05 — was "No IG → LinkedIn repurpose." Time + volume constraints; playbook: `business/social-media/sai/linkedin/IG-TO-LINKEDIN-PLAYBOOK.md`.)
 3. **No B-roll, no music, no HyperFrames assets on daily UGC shorts.** Strip-down editing only.
 4. **5/03 "Day X of building Trendify" cinematic daily diary is DEAD.** Do not propose it.
 5. **Every post passes the pre-post checklist or it doesn't ship.**
@@ -104,5 +104,6 @@ _Our `python-scripts/sai-linkedin` tool is superseded for LinkedIn drafting by t
 - **New rule:** A/B/C trial-reel hooks must differ VISUALLY, not just verbally.
 - **New tooling:** `story-arc-board`, two reusable editable-HTML review generators (batch + interview), Sandcastles-cross-merge scripting.
 - **2026-06-15:** LinkedIn is now **outsourced** (3rd-party AI interviews Sai + drafts; Gray adds images + reviews; daily). **Founder Series is retired.** Long-form cadence is bi-weekly.
+- **2026-08-05:** Hard rule #2 REVERSED by Gray — IG → LinkedIn repurposing is ON. Production model shifted to **high-production / high-quality / low-volume**: ~2-3 shorts per week per platform (TikTok + IG + YT), heavier scripts + pre-production, no more daily-post cadence. Repurpose lane: reel transcript → Sai-voice LinkedIn caption (sai-linkedin engine) + one engaging still (reel frame or footage-drive pull via find_visuals.py). Carousels deferred for now.
 
 Full review + backlog: `business/social-media/sai/reviews/2026-06-14-production-system-review.md` + `SYSTEM-BACKLOG.md`.

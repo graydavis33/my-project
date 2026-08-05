@@ -1,6 +1,10 @@
 # IG → LinkedIn Repurposing Playbook (Sai)
 
 Built 2026-07-29. How we turn Sai's posted Instagram reels into engaging LinkedIn content.
+AUTHORIZED 2026-08-05: Content OS hard rule #2 reversed by Gray ("Repurpose your own content
+to LinkedIn" — see content-os/README.md + decisions/log.md). Current mode: Lane 2 (text post +
+still) is the primary lane; carousels (Lane 1) deferred. Production context: ~2-3 high-production
+shorts/week per platform now, not daily volume — every shipped reel is a LinkedIn candidate.
 Output is always a DRAFT PACKAGE Gray pastes manually — no auto-posting, no IG scraping.
 Source material always comes from Gray (original export files, never re-downloads from IG —
 Instagram compresses on upload and re-downloading strips quality again).
