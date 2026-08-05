@@ -12,6 +12,8 @@
     {"start": "18:00", "end": "18:45", "title": "🍽 Dinner", "desc": "", "color": 5},
     {"start": "18:45", "end": "20:00", "title": "💻 LinkedIn repurposing pipeline + IG grid thumbnails", "desc": "Smaller projects — LinkedIn demo posts ready to send; finish IG profile-grid thumbnails.", "color": 9},
     {"start": "20:00", "end": "20:15", "title": "☕ Break", "desc": "", "color": 8},
-    {"start": "20:15", "end": "21:15", "title": "💻 Analytical research system", "desc": "Build the analytical researcher from posts. Jot faster-shorts-process ideas as you go.", "color": 9}
+    {"start": "20:15", "end": "21:15", "title": "💻 Analytical research system", "desc": "Build the analytical researcher from posts. Jot faster-shorts-process ideas as you go.", "color": 9},
+    {"start": "21:30", "end": "22:15", "title": "💻 Makeup — deep work / priorities catch-up", "desc": "Overflow: finish anything left from today's priorities or deep-work blocks.", "color": 9},
+    {"start": "22:30", "end": "23:00", "title": "🛏 In bed by 10:30", "desc": "Wind down — in bed by 10:30.", "color": 1}
   ]
 }
