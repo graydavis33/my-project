@@ -1,0 +1,16 @@
+POST: #11 "3 purchases that changed everything"
+LANE: 2 (text post + still image)
+
+IMAGE: LINKEDIN-IMAGE.jpg (landscape 1200x628)
+  - Source: raw clip C2782 (Productivity Purchases shoot, 01_ORGANIZED), t=3s. NOT the edited reel.
+  - Zero burned captions, zero graphics — raw footage. Nothing removed, no AI.
+  - Candid founder-in-his-room shot. Alt frames in frames/ (C2783 = eye-mask-on-bed, more playful) if you want a different vibe.
+
+WHY THIS POST: Light humanizer between heavier business posts. Low-stakes, relatable, gear talk.
+
+POSTING:
+  - Best window: any weekday, 8-11am ET. Fine as a lighter mid-week post.
+  - Reply to early comments in the first 15-60 min.
+  - Closing question is fine here (invites people to share their own pick).
+
+CAPTION: caption.txt (paste-ready, no em-dashes, voice-checked)

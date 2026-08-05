@@ -1,0 +1,17 @@
+POST: #36 "I dropped out of college"
+LANE: 2 (text post + still image)
+
+IMAGE: LINKEDIN-IMAGE.jpg (landscape 1200x628)
+  - Source: raw clip C2208 (Central Park, W02_Apr-20-26), t=45s. NOT the edited reel.
+  - Zero burned captions, zero graphics — raw footage, no AI edit. Nothing removed.
+  - Portrait alt: LINKEDIN-IMAGE-portrait.jpg (1080x1350, punched in on Sai) if you want more feed height.
+
+WHY THIS POST: Contrarian education take ("I would NOT do it again") drives comments/debate.
+LinkedIn loves the honest-founder-reflection shape.
+
+POSTING:
+  - Best window: Tue-Thu, 8-10am ET.
+  - Reply to the first comments within the first 15-60 min — that reply window is part of the format.
+  - No hashtag spam. Post is in Sai's voice; the closing question is intentional (long/framework-shaped post).
+
+CAPTION: caption.txt (paste-ready, no em-dashes, voice-checked)
