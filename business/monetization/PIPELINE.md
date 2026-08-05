@@ -4,7 +4,7 @@ _Maintained by the `monetization-strategist` subagent (spec: `docs/superpowers/s
 
 **Rules for this file:** no dollar figures, revenue numbers, or client terms (public repo) — pitches and scores only. KILLED is append-only. One candidate max in NOW.
 
-_Last strategist run: 2026-08-05_
+_Last strategist run: 2026-08-06_
 _Backfill: pending (runs on Gray's explicit go — see spec)_
 
 ---
@@ -31,6 +31,9 @@ Evidence links: [generic Notion repurposing templates](https://www.notion.com/te
 - **AI usage-limit / token-efficiency system for creator-operators** — the pain that drove the whole 2026-07-31 session: Gray hits subscription usage limits regularly and wants a system for spending tokens deliberately (cheapest tier that works, code instead of a model for zero-judgment tasks, an index of existing scripts so work doesn't get re-done by an expensive model). Recurring problem for anyone running a one-person business on an AI subscription, and it gets worse as agent workflows spread. `context/limit-log.md` is now collecting real evidence (review ~2026-08-28) — if that log fills up, Gray has both a validated personal system AND first-hand proof of the pain, which is the honest order of operations for a product here. Note the chairman's caveat: a Claude subscription gives no per-task itemization, so the log is a manual tally, not an audit. Unscored, no research yet. (2026-07-31)
 - **Founder photo harvest script kit** — DDGS image search + Playwright scraping + OpenCV face-detection + auto 9:16 crop + contact-sheet identity verification; built in scratchpad for Vault EP1; identity-verification step (impostor problem is real) is the genuine differentiator vs manual search; target buyer = short-form video editors doing entrepreneur/founder content; technical bar (Playwright + OpenCV) is high for non-coders. No research yet. (2026-07-16)
 - **Analytical research system from own posted content** — Gray named this as a side-project 2026-08-05: a system built from his own social posts, not third-party aggregated data. Distinct from the Social Media Analytics tool (multi-platform dashboarding) — this is personal content intelligence from his own track record (what hooks landed, which formats retained, patterns across his own post history). If the build-out produces a replicable methodology, it could be packaged as a template or short guide for solo creators who want to learn from their own catalog rather than chasing external benchmarks. Too early to score — no detail yet on what the system actually does. (2026-08-05)
+
+- **"AI operator runs my handwritten task list" as showcase content** — 2026-08-06: Gray handed Claude his notebook sub-priority list and it executed the whole sweep autonomously (LinkedIn draft packages, a shipped app feature, email triage, status audits). The delegate-everything pattern itself is the asset — it's live proof for the case-study/lead-magnet angle already sitting inside the Licensed content-OS RADAR entry, and a natural build-in-public video for Gray's AI-workflow brand. Content, not a product, but it compounds the positioning. Unscored, no research. (2026-08-06)
+- **Freelancer subscription tracker for business write-offs** — 2026-08-06: shipped as a Payday feature (vendor + monthly cost, billed-this-month indicator, auto write-off rules). The underlying job — "which subscriptions am I paying for and which are deductible" — is a feature freelancers/creators commonly pay bookkeeping SaaS for. Distinct from the KILLED Payday PWA starter kit (that was the whole-app template; this is one narrow job). Standalone SaaS shape likely fails the side-doable gate, but a lightweight template/spreadsheet version might not. Unscored, no research. (2026-08-06)
 
 ## KILLED
 
