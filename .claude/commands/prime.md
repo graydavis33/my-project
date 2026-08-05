@@ -55,6 +55,63 @@ If the pipeline is empty and backfill is pending, say so in one line.
 **Top 3 MCP servers to add:**
 Based on what's being worked on this session and Gray's current toolset, recommend the 3 most useful MCP servers he doesn't already have connected. For each: server name, what it does, and why it's relevant right now.
 
+Then go straight into **Step 4** — the daily schedule check-in.
+
+---
+
+## Step 4: Daily Schedule Check-In → Work Calendar
+
+Every morning, after the briefing, ask Gray a short set of questions about **today**, then turn his answers into time blocks on his **gray@karramedia.com** Work calendar (the "Work — Gray (Schedule)" calendar he shares with Sai). This saves him from entering it by hand. The cadence is different every day, so ask fresh every time — never assume yesterday's schedule.
+
+### Ask this (one compact list, he answers inline)
+
+Present it as a single block so he can rip through it fast. Tell him rough is fine ("10–12", "after class ~2pm", "skip") and that you'll read the blocks back after.
+
+1. **Headline** — the one main thing today is about?
+2. **Top priorities / finishing** — the 1–3 things that have to move today?
+3. 🎓 **Class** — start–end time? (or none)
+4. 🎬 **Filming** — time + who/what? (or none)
+5. 💻 **Editing / content work** — which time blocks?
+6. 🏋️ **Workout** — time?
+7. 🍽 **Meals** — lunch time? (and dinner if it's fixed)
+8. 📞 **Anything else on a set time** — meetings, calls, appointments, errands?
+
+Adapt the list to what's going on — drop questions that clearly don't apply, add one if the briefing surfaced something time-bound. Keep it to a quick-answer list, not a back-and-forth.
+
+### Turn answers into blocks
+
+- Map each timed answer to a block. If he gives a start only, infer a sensible duration (workout ~1h, lunch ~45m, meals/calls as stated) — but if something's genuinely ambiguous, ask one quick clarifier rather than guess wildly.
+- Times are **NYC / America/New_York** (already set in the tool's config).
+- Skip any item he answered "none" / "skip". If there are **no** timed items at all, don't write to the calendar — just note his priorities and move on.
+- Use a consistent color per block type so his calendar reads at a glance:
+
+| Block | Emoji | colorId |
+|---|---|---|
+| Filming | 🎬 | 11 (Tomato) |
+| Editing / deep work / long-form | 💻 | 9 (Blueberry) |
+| Class | 🎓 | 3 (Grape) |
+| Workout | 🏋️ | 10 (Basil) |
+| Meals (lunch/dinner) | 🍽 | 5 (Banana) |
+| Meetings / calls | 📞 | 7 (Peacock) |
+| Post / deliverable | 📌 | 6 (Tangerine) |
+
+### Write it (calendar-blocker tool)
+
+Build today's block file, then clear-today-and-block so re-runs never duplicate:
+
+```
+# Write python-scripts/calendar-blocker/days/YYYY-MM-DD.json:
+# { "date": "YYYY-MM-DD", "blocks": [
+#     {"start": "HH:MM", "end": "HH:MM", "title": "🎬 Filming — ...", "desc": "...", "color": 11}, ... ] }
+
+python python-scripts/calendar-blocker/gcal.py clear YYYY-MM-DD
+python python-scripts/calendar-blocker/gcal.py block python-scripts/calendar-blocker/days/YYYY-MM-DD.json
+```
+
+Then read the blocks back to Gray (time – time – title) and confirm they landed.
+
+**Guardrail:** in this check-in, `clear`/`block` only ever touch **today's** date. Never clear a past day or any other day — see `feedback-calendar-never-clear-past-days`. The clear is scoped to today's Work-calendar blocks (it's a dedicated calendar), so it's safe to re-run when he re-answers.
+
 **Ready to work.** Confirm and ask: "What do you want to tackle?"
 
 ---
