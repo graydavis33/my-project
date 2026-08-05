@@ -55,11 +55,21 @@ If the pipeline is empty and backfill is pending, say so in one line.
 **Top 3 MCP servers to add:**
 Based on what's being worked on this session and Gray's current toolset, recommend the 3 most useful MCP servers he doesn't already have connected. For each: server name, what it does, and why it's relevant right now.
 
-Then go straight into **Step 4** — the daily schedule check-in.
+Then go to **Step 4** — the daily schedule check-in (but read its ONCE-PER-DAY gate first; most later-in-the-day sessions skip it).
 
 ---
 
 ## Step 4: Daily Schedule Check-In → Work Calendar
+
+### ⛔ ONCE PER DAY — check this BEFORE asking anything
+
+The check-in runs **at most once per calendar day**, not once per session. Gray often runs several sessions a day and does not want to be re-asked.
+
+**Gate:** if `python-scripts/calendar-blocker/days/<today>.json` already exists, today is already blocked out → **do NOT ask the questions.** Say one line ("today's already blocked out — skipping the check-in") and go straight to "What do you want to tackle?".
+
+Only run the check-in when that file is missing. If Gray explicitly asks to redo or change today's schedule, re-run it on request — write the updated file, then `clear` + `block` today (idempotent).
+
+---
 
 Every morning, after the briefing, ask Gray a short set of questions about **today**, then turn his answers into time blocks on his **gray@karramedia.com** Work calendar (the "Work — Gray (Schedule)" calendar he shares with Sai). This saves him from entering it by hand. The cadence is different every day, so ask fresh every time — never assume yesterday's schedule.
 
