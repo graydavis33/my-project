@@ -21,7 +21,7 @@ Clips land in `out/` as `shot5-ref.mp4`.
 
 ---
 
-## The five decisions behind it
+## The decisions behind it
 
 ### 1. Model: Seedance 2.0 Mini at 480p, audio off
 
@@ -47,7 +47,21 @@ the entire point, Mini wins. Keep Veo Lite in reserve for higher-resolution one-
 **The saving that matters:** 5 credits instead of 45. A 16-shot list costs ~80 credits
 instead of ~720 — the difference between 3 percent of the balance and two thirds of it.
 
-### 2. Only generate the shots where motion is the point
+### 2. Never point this at a shot that ships
+
+This pipeline makes **disposable references** — something a crew glances at to understand a
+camera move, then throws away. 480p and a 5-credit model are chosen on that assumption.
+
+If a row says the shot is fully AI-generated and nothing gets filmed, that clip **is the
+final asset**, not a reference. It needs a premium model, real prompt iteration, and full
+resolution. Sending it through here produces something that looks cheap, because it is.
+
+Learned the hard way on Founder Story row 1 (the black-void showdown), 2026-08-06: the cheap
+model rendered a literal stage ceiling into what was supposed to be an empty void, and the
+result was rightly rejected. Check the How to Film cell before generating — "fully
+AI-generated, nothing filmed" means route it elsewhere.
+
+### 3. Only generate the shots where motion is the point
 
 The biggest credit saver isn't the model, it's not generating. Skip:
 
@@ -58,7 +72,7 @@ The biggest credit saver isn't the model, it's not generating. Skip:
 
 On the Founder Story list this cut 16 rows down to 7 worth generating.
 
-### 3. Prompt only the motion, never the scene
+### 4. Prompt only the motion, never the scene
 
 The start image already carries the look. Re-describing the room or the subject invites the
 model to redraw it and drift off the reference you approved.
@@ -74,13 +88,13 @@ Known behavior: the model adds small subject motion you didn't ask for (a person
 shifts position). Fine for a camera-move reference. Tell the crew the clip demonstrates the
 **move**, not the blocking.
 
-### 4. Six jobs at a time — the plan's hard ceiling
+### 5. Six jobs at a time — the plan's hard ceiling
 
 Higgsfield Plus rejects a 7th concurrent job outright (`rate_limit_reached`). The script
 holds exactly six in flight and starts the next one the moment a slot frees, so a long list
 just takes more rounds instead of failing halfway.
 
-### 5. Never wait on a single clip
+### 6. Never wait on a single clip
 
 `submit` returns in seconds. Nothing in the workflow blocks on one render.
 
