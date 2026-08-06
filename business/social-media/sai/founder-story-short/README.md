@@ -34,6 +34,8 @@ Columns: Section · Shot # · Frame Visual · Voiceover Script · Visuals · How
 
 - **2026-08-06** — Shot 3 How to Edit: appended glow and venetian-blinds recipes for the archival videos inside the pinned photo (the effects Gray had already named in Visuals). **After Effects only** at Gray's call: build the shot in AE and Dynamic Link the comp into Premiere. Two things do NOT work in Premiere and were cut on purpose: Venetian Blinds is a clip-to-clip transition there, not a holdable effect, and there are no expressions for luminance-driven glow (hand-keyframe the opacity bump instead). Gray's original five bullets untouched. **Standing rule from this session: script and shot-list edits are additive only, never delete or rewrite Gray's text** (memory `feedback-scripts-add-never-delete`).
 
+- **2026-08-06** (later) — **Props column filled on all 15 shots.** Board shots (2, 3, 7-10, 12-15) carry the board kit; 4-6 carry Phone; 14 adds Laptop; 1 and 11 are `None` (shot 1 is fully AI, shot 11 is archival b-roll). Props are repeated on every shot that needs them rather than listed once, per Gray. Shot 3's How to Edit condensed 2756 -> 1261 chars so its row height matches the rest of the table.
+
 ## Open
 
 - Shot 14 (hiring beat) has **no Voiceover Script and no Location** — needs Gray's script. Rig also unset.
