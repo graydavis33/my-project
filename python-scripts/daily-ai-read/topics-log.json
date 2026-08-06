@@ -75,5 +75,12 @@
   "title": "What Is an API? The Messenger Every App Uses",
   "category": "literacy",
   "topic": "what-is-an-api"
+ },
+ {
+  "date": "2026-08-06",
+  "issue": 12,
+  "title": "API Keys Are Passwords for Your Code \u2014 Keep Them Secret",
+  "category": "literacy",
+  "topic": "api-keys-and-secrets"
  }
 ]
