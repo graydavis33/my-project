@@ -63,6 +63,14 @@ AI-generated, nothing filmed" means route it elsewhere.
 
 ### 3. Only generate the shots where motion is the point
 
+**OVERRIDDEN for the Founder Story Short (2026-08-06): Sai wants a reference video on
+EVERY shot**, so the skip-list below does not apply to Sai deliverables — generate all rows.
+Status: 13 of 15 done, links live in the shot list's new `Reference Video` URL column
+(Higgsfield CDN; local backups in `out/`; shot 1's link is the premium Seedance test, not a
+Mini clip). Shots 11 + 14 pending — their frames are real-Sai archival, Notion-only
+attachments with sources on the footage SSD. The skip discipline still applies to
+internal/Gray-only shotlists.
+
 The biggest credit saver isn't the model, it's not generating. Skip:
 
 - **Locked-off frames.** No move to show. The still already said it.
