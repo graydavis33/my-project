@@ -4,7 +4,7 @@ _Maintained by the `monetization-strategist` subagent (spec: `docs/superpowers/s
 
 **Rules for this file:** no dollar figures, revenue numbers, or client terms (public repo) — pitches and scores only. KILLED is append-only. One candidate max in NOW.
 
-_Last strategist run: 2026-08-06_
+_Last strategist run: 2026-08-05_
 _Backfill: pending (runs on Gray's explicit go — see spec)_
 
 ---
@@ -34,6 +34,7 @@ Evidence links: [generic Notion repurposing templates](https://www.notion.com/te
 
 - **"AI operator runs my handwritten task list" as showcase content** — 2026-08-06: Gray handed Claude his notebook sub-priority list and it executed the whole sweep autonomously (LinkedIn draft packages, a shipped app feature, email triage, status audits). The delegate-everything pattern itself is the asset — it's live proof for the case-study/lead-magnet angle already sitting inside the Licensed content-OS RADAR entry, and a natural build-in-public video for Gray's AI-workflow brand. Content, not a product, but it compounds the positioning. Unscored, no research. (2026-08-06)
 - **Freelancer subscription tracker for business write-offs** — 2026-08-06: shipped as a Payday feature (vendor + monthly cost, billed-this-month indicator, auto write-off rules). The underlying job — "which subscriptions am I paying for and which are deductible" — is a feature freelancers/creators commonly pay bookkeeping SaaS for. Distinct from the KILLED Payday PWA starter kit (that was the whole-app template; this is one narrow job). Standalone SaaS shape likely fails the side-doable gate, but a lightweight template/spreadsheet version might not. Unscored, no research. (2026-08-06)
+- **Footage retrieval methodology for unlabeled clip libraries** — 2026-08-05: the ad-hoc "find clip of X" stack built for the Founder Story Short shot list (ffmpeg one-frame-per-clip contact sheets + Vision-tag SQL against existing index emotion/action/location/objects columns + HSV color prefilter over raw frames) located a specific blue-suit clip in 1,122 swept frames where eyeballing would not have. Currently throwaway scratchpad scripts. Distinct from the Footage Organizer RADAR entry (that is catalog/structure; this is retrieval from an already-organized-but-content-unlabeled drive). Overlaps the footage-puller subagent. Target buyer: videographers and editors with large existing archives who need AI-assisted clip retrieval without rebuilding their whole library. Unscored, no research yet. (2026-08-05)
 
 ## KILLED
 
