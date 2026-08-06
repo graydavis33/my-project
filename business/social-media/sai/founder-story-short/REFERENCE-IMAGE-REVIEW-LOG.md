@@ -139,3 +139,16 @@ camera-side question needs Gray's eye on it with the person implied. Hands enter
 leaving is a motion beat — it belongs in the reference VIDEO built from this pair as
 start_image/end_image, not in the stills.
 
+
+---
+
+## STANDING RULE (Gray, 2026-08-06 evening) — applies to EVERY whiteboard shot
+
+The board in all generated frames is Gray's REAL whiteboard: a free-standing rolling
+whiteboard (white surface, black frame, black X-base stand on casters), standing in the
+MIDDLE of the room — never a wall-mounted board. Magnets are the pushpin-style ball
+magnets (colored plastic, pin-shaped). Gray supplied reference photos of both; keep them
+at ~/Documents/founder-story-refs/ (real apartment photos — NOT in the public repo).
+
+Shot 2 status: young-Sai party photo APPROVED (composite v2). Frames A+B must be
+regenerated on the real standing board per this rule.
