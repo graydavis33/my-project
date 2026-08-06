@@ -36,6 +36,8 @@ Columns: Section · Shot # · Frame Visual · Voiceover Script · Visuals · How
 
 - **2026-08-06** (later) — **Props filled on all 15 shots, and the column converted multi-select -> rich text** at Gray's call so notes can carry quantities and per-shot usage (tags could not). The old multi-select options, including the never-placed "Blue suit", are gone with the type change. Notes now specify counts (~8-12 4x6 prints, 1 roll red yarn, ~25-30 push pins, 3-4 magnets) and shot-specific calls: same print size on shot 8 or the match cuts break, matte print on shot 15 because the Light column flags glare, overhead rig on shot 5 that the Rig column does not cover. Board shots carry a standing "CORK/BULLETIN BOARD REQUIRED" flag from shot 7 on. Shot 3's How to Edit condensed 2756 -> 1261 chars so its row height matches the rest of the table.
 
+- **2026-08-06** (later still) — **AFTER EFFECTS blocks appended to the 9 VFX shots**: 1 (glitch/RGB split), 2 (bloom + party overlays), 4 (wall composite), 5 (3D floating photos + light wrap), 6 (reuse shot 5's rig), 8 (match-cut stabilize), 9 (Echo), 11 (whip transition), 13 (freeze-into-motion). Shots 7, 10, 12, 14, 15 deliberately skipped as plain A-roll (14 explicitly says "no effects"). Every append was additive and verified. **Shot 9's unnamed effect identified: it is Echo** (Effect > Time > Echo), with Posterize Time and Pixel Motion Blur given as the lighter alternatives.
+
 ## Open
 
 - Shot 14 (hiring beat) has **no Voiceover Script and no Location** — needs Gray's script. Rig also unset.
