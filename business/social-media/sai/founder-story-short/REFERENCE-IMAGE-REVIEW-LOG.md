@@ -26,6 +26,46 @@ available, and it is the kind of thing a script can enforce.
 
 ---
 
+## THE BIG TECHNIQUE (learned on row 2, applies everywhere)
+
+**Never generate a matched pair of frames independently. Chain the second one off the first.**
+
+Shot 2 needs a first frame (bare board) and a last frame (photo placed). Generating both from
+scratch produced two different boards, different walls, different framing — useless as a pair,
+and the exact same failure already sitting on row 1 (young Sai vs current Sai don't register).
+
+What works: generate ONE frame until it's right, then produce the variant by passing the
+approved frame as `--image` and prompting only the *change*:
+
+> "Remove the photograph and the magnet so the board is bare. Keep absolutely everything else
+> identical: same board, same frame, same wall texture, same warm lamp light and reflections,
+> same camera angle, same framing, same depth of field, same background."
+
+Result registered perfectly on the first try. This is the same principle as the motion-prompt
+rule in the video SOP — **describe only what changes, never re-describe the scene** — and it is
+probably the single most important habit for this whole workflow.
+
+**Corollary for row 1:** its two selves should be regenerated the same way. Generate current
+Sai in the void, approve it, then chain young Sai off it with "same void, same beam, same
+framing, same head position, only the person changes." That fixes colour temp, registration
+and void quality in one move instead of three.
+
+## Model notes (measured 2026-08-06)
+
+| Model | Credits | Use |
+|---|---|---|
+| Nano Banana 2 | 1.5 | cheapest drafts |
+| **Nano Banana Pro** | **2** | default; handles image-reference chaining well |
+| Seedream 5.0 Pro | 3 | |
+| GPT Image 2 | 7 | text-heavy work, rarely needed here |
+
+Stills are cheap enough to iterate freely. Iterate rather than settle.
+
+**Prompt calibration:** "the board FILLS the entire frame" overshoots badly — Nano Banana Pro
+returned a featureless white rectangle with no board edges and no context. "Board fills most of
+the frame" with a named slight angle behaves. Ask for macro by describing what stays *visible*
+at the edges, not by demanding the subject fill everything.
+
 ## Row-by-row
 
 ### Row 1 — AI "next opponent is you" showdown
@@ -72,3 +112,30 @@ Why:
 Action taken:
 
 ---
+
+### Row 2 — Macro: magnet places first photo on the board
+Status: v2 PAIR GENERATED, awaiting Gray's call on framing
+
+**Gray's brief (2026-08-06, verbatim intent):**
+- Magnets on a WHITEBOARD (settles the board question for this shot)
+- This is the FIRST photo on the board, nothing else on it
+- FIRST frame: empty board, no hands
+- LAST frame: hands appear, place the photo with a magnet, hands leave frame
+- Camera on the RIGHT side of the person, not the left as in the old reference
+
+**What was wrong with the original reference (shot2-magnet-macro-ai.png):**
+board was packed with photos when How to Film says it must be nearly empty; the pinned image
+was a stock woman's portrait, not young Sai's party/money shot; no visible magnet mechanic;
+camera on the wrong side.
+
+**Delivered:**
+- `shot2-v2-frameA-board-empty.png` — first frame, bare board
+- `shot2-v2-frameB-photo-placed.png` — last frame, one photo held by one magnet, no hands
+- Registered pair (A derived from B by chaining), so they cut together.
+- Cost: 4 generations, ~8 credits including the two discarded attempts.
+
+**Still open:** the pair reads as a medium of the board rather than a true MACRO, and the
+camera-side question needs Gray's eye on it with the person implied. Hands entering and
+leaving is a motion beat — it belongs in the reference VIDEO built from this pair as
+start_image/end_image, not in the stills.
+
