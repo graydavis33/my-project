@@ -32,6 +32,8 @@ Columns: Section · Shot # · Frame Visual · Voiceover Script · Visuals · How
 - **2026-08-05** (later) — Conclusion renumbered +1 (duplicate shot 10); "PENDING RE-EDIT" stripped from the last four shots; Rig column added.
 - **2026-08-05** (evening) — shot 12 rewritten as an explicit OTS-with-person (the reference frame was a board-only stock photo that contradicted the text) with a new generated frame. Shot 17 restructured from the photo-swap into a subtle close-up push-in on the team photo as the final image. **Old shot 15 (photos-come-alive effect pan) deleted** — it had no VO line, duplicated shot 13's pan, and was the most expensive shot to build; the effect was folded into shot 13 as a 1–2 photo moment playing under that shot's existing line. Shots 16→15 and 17→16 renumbered. Stale cross-references fixed (shot 3 → 13, shot 6 self-ref → 5, shot 13 Light → 12, shot 15 How to Film → 2).
 
+- **2026-08-06** — Shot 3 How to Edit: appended glow and venetian-blinds recipes for the archival videos inside the pinned photo (the effects Gray had already named in Visuals). Existing five bullets left untouched. **Standing rule from this session: script and shot-list edits are additive only, never delete or rewrite Gray's text** (memory `feedback-scripts-add-never-delete`).
+
 ## Open
 
 - Shot 14 (hiring beat) has **no Voiceover Script and no Location** — needs Gray's script. Rig also unset.
