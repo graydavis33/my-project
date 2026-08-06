@@ -43,6 +43,10 @@ EXCLUDED_VENDORS = [
 # because the memo is ambiguous). Matched case-insensitively as vendor substring.
 CATEGORY_OVERRIDES = {
     "Garrett ODell": "Dining Out",
+    # Gym billing runs through Wodify (gym-management platform) so the merchant
+    # string is "Wodify Sintonia JI" — no BJJ keyword in it. Plaid buckets it
+    # GENERAL_SERVICES -> Misc without this.
+    "wodify": "BJJ & Kickboxing",
 }
 
 # Bank/money-app transaction alert emails (spend with no vendor receipt email).

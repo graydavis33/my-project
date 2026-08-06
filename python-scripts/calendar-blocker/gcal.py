@@ -177,6 +177,32 @@ def cmd_block(file_path):
     print(f"\nDone — {made} blocks added for {date}.")
 
 
+def _local_date(event):
+    """The event's own calendar date.
+
+    Google returns dateTime with the event's UTC offset baked in
+    ("2026-08-05T07:45:00-04:00"), so the first 10 chars are already the
+    local date — no tz database needed.
+    """
+    start = event["start"]
+    return start.get("dateTime", start.get("date", ""))[:10]
+
+
+def _fetch_day(svc, cal_id, date):
+    """Events actually ON `date`.
+
+    The API window stays deliberately wide (+14:00/-12:00) so no timezone can
+    hide an event, then every result is filtered to `date`. The old code used
+    that window as the answer — it spans ~50 hours, which is how
+    `clear 2026-08-06` deleted 2026-08-05's blocks.
+    """
+    events = svc.events().list(
+        calendarId=cal_id, timeMin=f"{date}T00:00:00+14:00",
+        timeMax=f"{date}T23:59:59-12:00", singleEvents=True, orderBy="startTime",
+    ).execute().get("items", [])
+    return [e for e in events if _local_date(e) == date]
+
+
 def cmd_list(date):
     svc = get_service()
     cfg = load_config()
@@ -184,13 +210,7 @@ def cmd_list(date):
     if not cal_id:
         print("Run `python gcal.py setup` first.")
         return
-    tmin = f"{date}T00:00:00Z"
-    tmax = f"{date}T23:59:59Z"
-    # widen window a bit for timezone offset safety
-    events = svc.events().list(
-        calendarId=cal_id, timeMin=f"{date}T00:00:00+14:00",
-        timeMax=f"{date}T23:59:59-12:00", singleEvents=True, orderBy="startTime",
-    ).execute().get("items", [])
+    events = _fetch_day(svc, cal_id, date)
     if not events:
         print(f"No blocks on {date}.")
         return
@@ -207,12 +227,8 @@ def cmd_clear(date):
     if not cal_id:
         print("Run `python gcal.py setup` first.")
         return
-    events = svc.events().list(
-        calendarId=cal_id, timeMin=f"{date}T00:00:00+14:00",
-        timeMax=f"{date}T23:59:59-12:00", singleEvents=True,
-    ).execute().get("items", [])
     n = 0
-    for e in events:
+    for e in _fetch_day(svc, cal_id, date):
         svc.events().delete(calendarId=cal_id, eventId=e["id"]).execute()
         n += 1
     print(f"Cleared {n} blocks on {date}.")

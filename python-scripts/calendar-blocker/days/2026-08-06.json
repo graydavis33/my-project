@@ -1,0 +1,16 @@
+{
+  "date": "2026-08-06",
+  "blocks": [
+    {"start": "11:00", "end": "11:30", "title": "📞 Sai — catch-up + align", "desc": "First time back in 2-3 weeks. Reconnect, get on the same page for the week's work.", "color": 7},
+    {"start": "11:30", "end": "12:30", "title": "💻 Short-form — source images", "desc": "Founder Story Short: find/pick images. Props column still empty on all 15 rows.", "color": 9},
+    {"start": "12:30", "end": "13:15", "title": "🍽 Lunch", "desc": "Real break, off-screen.", "color": 5},
+    {"start": "13:15", "end": "15:15", "title": "💻 Long-form — finish", "desc": "Main deep-work push. Get it closed out.", "color": 9},
+    {"start": "15:15", "end": "15:30", "title": "☕ Break", "desc": "", "color": 8},
+    {"start": "15:30", "end": "16:30", "title": "💻 IG grid profile — finish", "desc": "Close out the profile grid.", "color": 9},
+    {"start": "16:30", "end": "17:00", "title": "📌 Show Sai the LinkedIn drafts", "desc": "The 2 demo packages (#36 dropout, #11 3 purchases). Get his reaction before any go-live drafting.", "color": 6},
+    {"start": "17:00", "end": "18:15", "title": "💻 PLACEHOLDER — open work block", "desc": "Rename me. Overflow from earlier blocks, or whatever comes out of the 11am with Sai.", "color": 9},
+    {"start": "18:15", "end": "18:45", "title": "🍽 Dinner", "desc": "", "color": 5},
+    {"start": "18:45", "end": "20:15", "title": "🎓 Class (only if work's done)", "desc": "6:45pm start. Conditional — skip if the day ran long.", "color": 3},
+    {"start": "20:30", "end": "21:00", "title": "🏋️ Stretching", "desc": "Moved off 7pm so it doesn't collide with class. If you skip class, pull this back to 7pm.", "color": 10}
+  ]
+}
