@@ -42,6 +42,11 @@ RESOLUTION = "480p"
 ASPECT = "9:16"
 SECONDS = 5
 
+# Higgsfield Plus allows 6 jobs in flight at once; a 7th is rejected outright
+# (rate_limit_reached). We keep the pipe full at exactly this many and refill as
+# slots free, so a 16-shot list costs three rounds of ~2 min instead of failing.
+MAX_INFLIGHT = 6
+
 
 def run(args, timeout=600):
     """Run the higgsfield CLI and return parsed JSON (or raise with the real error)."""
@@ -110,27 +115,67 @@ def cmd_plan(args):
 
 
 def cmd_submit(args):
+    """Register every shot, then push as many into flight as the plan allows."""
     shots = parse_manifest(args.manifest)
     state = load_state()
-    print(f"submitting {len(shots)} jobs (not waiting for any of them)\n")
+    added = 0
     for s in shots:
         sid = s["shot_id"]
-        if sid in state["jobs"] and state["jobs"][sid].get("status") == "completed" and not args.force:
-            print(f"  {sid:<12} already done — skipping (use reroll to redo)")
-            continue
-        upload_id = upload_once(state, s["image"])
-        job = run(["higgsfield", "generate", "create", MODEL, "--prompt", s["prompt"]]
-                  + gen_flags(s["seconds"]) + ["--start-image", upload_id, "--json"])
-        job_id = job[0] if isinstance(job, list) else job.get("id")
+        existing = state["jobs"].get(sid)
+        if existing and not args.force:
+            if existing.get("status") == "completed":
+                print(f"  {sid:<12} already done — skipping (use reroll to redo)")
+                continue
+            if existing.get("status") == "pending":
+                print(f"  {sid:<12} already rendering — leaving it alone")
+                continue
         state["jobs"][sid] = {
-            "job_id": job_id, "status": "pending", "prompt": s["prompt"],
+            "job_id": None, "status": "backlog", "prompt": s["prompt"],
             "image": s["image"], "seconds": s["seconds"],
         }
-        save_state(state)
-        print(f"  {sid:<12} queued  {job_id}")
+        added += 1
     save_state(state)
-    print("\nAll queued. Go do something else — clips take ~2 min each and run in parallel.")
-    print("Come back and run:  ./shotvid.py collect")
+    print(f"{added} shot(s) registered\n")
+    fill_slots(state)
+    print("\nWalk away — each round of 6 takes about 2 minutes.")
+    print("Then run:  ./shotvid.py collect      (or ./shotvid.py run to finish it hands-off)")
+
+
+def inflight(state):
+    return [k for k, v in state["jobs"].items() if v.get("status") == "pending"]
+
+
+def backlog(state):
+    return [k for k, v in state["jobs"].items() if v.get("status") == "backlog"]
+
+
+def fill_slots(state):
+    """Top the in-flight queue back up to MAX_INFLIGHT from the local backlog."""
+    free = MAX_INFLIGHT - len(inflight(state))
+    if free <= 0:
+        return 0
+    launched = 0
+    for sid in backlog(state)[:free]:
+        job = state["jobs"][sid]
+        upload_id = upload_once(state, job["image"])
+        try:
+            res = run(["higgsfield", "generate", "create", MODEL, "--prompt", job["prompt"]]
+                      + gen_flags(job["seconds"]) + ["--start-image", upload_id, "--json"])
+        except RuntimeError as e:
+            if "rate_limit_reached" in str(e):
+                print(f"  {sid:<12} plan is full — stays in backlog")
+                break
+            raise
+        job["job_id"] = res[0] if isinstance(res, list) else res.get("id")
+        job["status"] = "pending"
+        save_state(state)
+        launched += 1
+        print(f"  {sid:<12} rendering  {job['job_id']}")
+    save_state(state)
+    waiting = len(backlog(state))
+    if waiting:
+        print(f"  ({waiting} waiting for a free slot — collect will start them automatically)")
+    return launched
 
 
 def upload_once(state, image_path):
@@ -149,13 +194,22 @@ def upload_once(state, image_path):
 def cmd_collect(args):
     state = load_state()
     OUT_DIR.mkdir(exist_ok=True)
-    pending = [k for k, v in state["jobs"].items() if v.get("status") != "completed"]
-    if not pending:
+    if not inflight(state) and not backlog(state):
         print("nothing pending — everything already collected")
         return
-    print(f"checking {len(pending)} job(s)\n")
+    still_going = sweep(state)
+    fill_slots(state)
+    remaining = len(inflight(state)) + len(backlog(state))
+    if remaining:
+        print(f"\n{remaining} to go. Run collect again in a minute.")
+    else:
+        print(f"\nAll done. Clips are in {OUT_DIR}")
+
+
+def sweep(state):
+    """Check every in-flight job once; download the finished ones."""
     still_going = []
-    for sid in pending:
+    for sid in inflight(state):
         job = state["jobs"][sid]
         info = run(["higgsfield", "generate", "get", job["job_id"], "--json"])
         status = info.get("status")
@@ -170,13 +224,22 @@ def cmd_collect(args):
             print(f"  {sid:<12} {status.upper()} — reroll it")
         else:
             still_going.append(sid)
-            print(f"  {sid:<12} still rendering")
         save_state(state)
     save_state(state)
-    if still_going:
-        print(f"\n{len(still_going)} still rendering. Run collect again in a minute.")
-    else:
-        print(f"\nAll done. Clips are in {OUT_DIR}")
+    return still_going
+
+
+def cmd_run(args):
+    """Hands-off: keep the queue full and download until the whole list is finished."""
+    state = load_state()
+    OUT_DIR.mkdir(exist_ok=True)
+    fill_slots(state)
+    while inflight(state) or backlog(state):
+        time.sleep(args.interval)
+        state = load_state()
+        sweep(state)
+        fill_slots(state)
+    print(f"\nAll done. Clips are in {OUT_DIR}")
 
 
 def cmd_status(args):
@@ -216,8 +279,12 @@ def main():
     sp.add_argument("--force", action="store_true", help="resubmit even if already completed")
     sp.set_defaults(func=cmd_submit)
 
-    sp = sub.add_parser("collect", help="download finished clips")
+    sp = sub.add_parser("collect", help="download finished clips, start any that were waiting")
     sp.set_defaults(func=cmd_collect)
+
+    sp = sub.add_parser("run", help="hands-off: keep queue full and download until finished")
+    sp.add_argument("--interval", type=int, default=20, help="seconds between checks")
+    sp.set_defaults(func=cmd_run)
 
     sp = sub.add_parser("status", help="show job states")
     sp.set_defaults(func=cmd_status)

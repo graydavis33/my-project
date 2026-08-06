@@ -1,0 +1,19 @@
+# Founder Story Short — shot reference videos
+# shot_id <TAB> image_path <TAB> motion_prompt <TAB> seconds(optional, default 5)
+#
+# Prompt rule: describe ONLY the motion. The start image already carries the look.
+# Naming a subject or a room again invites the model to redraw it and drift.
+# Formula: [camera move] + [speed] + [what holds still] + "single continuous take, no cuts"
+#
+# Shots deliberately NOT here (a still already says everything, so no credits spent):
+#   shot1-flicker-effect, shot9-overlay-demo-flash, shot9-overlay-demo-echo
+#     -> these are EFFECT references, not camera moves. ffmpeg demos already cover them.
+#   shot13-hiring, shot11-board-wide -> locked-off frames, no move to communicate.
+
+shot2	~/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot2-magnet-macro-ai.png	Slow macro push-in, very shallow focus, gentle handheld float, background stays soft and still, single continuous take, no cuts
+shot3	~/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot3-photo-close-yarn-ai.png	Slow lateral dolly left to right, rack focus from foreground string to the photo behind it, single continuous take, no cuts
+shot5	~/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot5-birdseye-bed-ai.png	Slow straight-down crane descent toward the bed, no rotation, steady, single continuous take, no cuts
+shot7	~/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot7-floating-memories-ai.png	Slow parallax drift sideways so the floating layers separate in depth, camera steady, single continuous take, no cuts
+shot9	~/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot9-ots-lean-ai.png	Slow over-the-shoulder push-in with subtle handheld sway, gradual settle, single continuous take, no cuts
+shot12	~/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot12-faces-pan-ai.png	Slow horizontal pan across the wall, constant speed, no push, single continuous take, no cuts
+shot16	~/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot16-team-photo-pushin-ai.png	Slow steady dolly push-in, shallow depth of field, faint handheld drift, single continuous take, no cuts
