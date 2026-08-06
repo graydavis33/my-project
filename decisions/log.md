@@ -622,3 +622,40 @@ emergency+ring · EJ MM #2 = taxes · EJ invest $100/mo. Source of truth: contex
 [2026-08-05] DECISION: No em dashes in Gray's shot lists or scripts. | REASONING: Gray's direct instruction mid-session. Em dashes read as AI-written, which undercuts documents Sai and the external editor read. | CONTEXT: Applies to Notion shot-list fields (Description / Visuals / How to Film / How to Edit / Voiceover Script), batch docs, and narration. Use commas, colons, periods, or line breaks. Saved as memory feedback-no-em-dashes-in-scripts; pairs with the existing plain-text-for-copy-paste rule.
 
 [2026-08-05] DECISION: Added a Props column (multi-select) to the shot-list DB rather than leaving props buried inside the How to Film prose. | REASONING: Gray asked for it directly. Props drive a shopping list and a film-day prep pass, so they need to be filterable and scannable across all 15 rows, not re-read out of paragraphs. Multi-select matches the existing Rig / Shot / Tags columns and lets prop names get reused across shots. | CONTEXT: Seeded with Whiteboard / Magnets / Printed photo / Blue suit / Red yarn / Push pins. Live but empty on every row, awaiting Gray's per-shot assignment.
+
+## 2026-08-06 — Disabled 3 dead Windows Scheduled Tasks (invoice daily scan + both social-analytics jobs)
+
+**Decision:** Disabled (not deleted) `GrayInvoiceDailyScan`, `SocialMediaAnalytics`, and
+`Social Media Analytics - Weekly Update` in Windows Task Scheduler. Killed the hung
+invoice `cmd.exe` (PID 26356) that had been running since 08:00.
+
+**Trigger:** Gray asked why empty `cmd.exe` windows keep appearing at logon. 29 cmd
+processes were open; 28 were Claude Code's own MCP servers (harmless, windowless, 2 per
+open session). The 1 visible window was the invoice task.
+
+**Audit findings:**
+- `invoice-system/run_daily.bat` is an infinite `:LOOP` that re-runs every 10s forever, so
+  the task never exits and holds a console open. Console looked EMPTY because all output is
+  redirected to `invoice_scan.log`.
+- That scan has run successfully **exactly once, on 2026-03-23**. It broke 4 days later on
+  2026-03-27 and has crash-looped ever since: **8,308 `PermissionError` crashes**, an 8 MB
+  log of stack traces, zero work done. Root cause: the `.bat` holds `invoice_scan.log` open
+  via `>>` while `main.py` line 49 opens the SAME file with `logging.FileHandler`. Windows
+  file lock, so it dies during logging setup before touching Gmail or Sheets. This is why
+  Gray never saw invoices land in a spreadsheet.
+- `social-media-analytics/run_daily.bat` ends with `pause`, which waits for a keypress
+  forever under Task Scheduler. Second source of permanent empty windows.
+- The `SocialMediaAnalytics` task pointed at `C:\Users\Gray Davis\social-media-analytics\`,
+  a March-era copy OUTSIDE the repo with its own `.env` / `client_secret.json` / `token.json`.
+  Its log ends in `RefreshError: invalid_client` — dead OAuth.
+
+**Rationale:** Gray does not use any of the three. Analytics is deprioritized ("not needed
+until we resurface it later"). Disable preserves config for revival; delete would not.
+
+**Still enabled, flagged to Gray, NOT changed:** `GrayEmailAgent` and `GrayPersonalAssistant`
+both fire at every logon using the same infinite-loop `.bat` pattern. email-agent also runs
+on the VPS as a systemd daemon with its own internal 7am-8pm schedule, so the Windows task is
+a duplicate scheduler, which `CLAUDE.md` explicitly forbids. Awaiting Gray's call.
+
+**Follow-up:** invoice-system also runs on the VPS via cron at 9am. Since Gray reports seeing
+no invoice data anywhere, the VPS copy needs verifying too, it may be equally dead.
