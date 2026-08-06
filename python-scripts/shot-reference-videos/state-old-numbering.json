@@ -1,0 +1,76 @@
+{
+  "uploads": {
+    "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot2-magnet-macro-ai.png": "692c9058-6a8c-4baa-9ddf-ae97c8a5a889",
+    "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot3-photo-close-yarn-ai.png": "652ae010-e318-4f25-b11e-139dab60ccbd",
+    "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot5-birdseye-bed-ai.png": "e6dcd625-daed-4c9b-ac2b-14878ae29320",
+    "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot7-floating-memories-ai.png": "96657d33-af73-434a-894a-8fca70de7c9e",
+    "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot9-ots-lean-ai.png": "660308d7-e1f3-4973-820a-06753e471f28",
+    "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot12-faces-pan-ai.png": "59bc9aac-5d83-4ba6-9a16-cd837898d099",
+    "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot16-team-photo-pushin-ai.png": "92fe065a-582e-44ad-81de-8d710cd91393"
+  },
+  "jobs": {
+    "shot2": {
+      "job_id": "ee6cf2c7-42f4-468f-91bf-078ae8f26a5f",
+      "status": "completed",
+      "prompt": "Slow macro push-in, very shallow focus, gentle handheld float, background stays soft and still, single continuous take, no cuts",
+      "image": "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot2-magnet-macro-ai.png",
+      "seconds": 5,
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38Aq5hBlUQaXmBYdbqh89maFhJA/hf_20260806_162350_ee6cf2c7-42f4-468f-91bf-078ae8f26a5f.mp4",
+      "file": "/Users/graydavis28/Desktop/my-project/python-scripts/shot-reference-videos/out/shot2-ref.mp4"
+    },
+    "shot3": {
+      "job_id": "f01abfb3-6474-4306-83a5-81f17f6b3861",
+      "status": "completed",
+      "prompt": "Slow lateral dolly left to right, rack focus from foreground string to the photo behind it, single continuous take, no cuts",
+      "image": "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot3-photo-close-yarn-ai.png",
+      "seconds": 5,
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38Aq5hBlUQaXmBYdbqh89maFhJA/hf_20260806_162353_f01abfb3-6474-4306-83a5-81f17f6b3861.mp4",
+      "file": "/Users/graydavis28/Desktop/my-project/python-scripts/shot-reference-videos/out/shot3-ref.mp4"
+    },
+    "shot5": {
+      "job_id": "2ec83ed2-6a88-4277-beb1-0d8020e2d919",
+      "status": "completed",
+      "prompt": "Slow straight-down crane descent toward the bed, no rotation, steady, single continuous take, no cuts",
+      "image": "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot5-birdseye-bed-ai.png",
+      "seconds": 5,
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38Aq5hBlUQaXmBYdbqh89maFhJA/hf_20260806_162356_2ec83ed2-6a88-4277-beb1-0d8020e2d919.mp4",
+      "file": "/Users/graydavis28/Desktop/my-project/python-scripts/shot-reference-videos/out/shot5-ref.mp4"
+    },
+    "shot7": {
+      "job_id": "8020f096-7f65-4434-8fa6-584f8c3e561c",
+      "status": "completed",
+      "prompt": "Slow parallax drift sideways so the floating layers separate in depth, camera steady, single continuous take, no cuts",
+      "image": "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot7-floating-memories-ai.png",
+      "seconds": 5,
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38Aq5hBlUQaXmBYdbqh89maFhJA/hf_20260806_162402_8020f096-7f65-4434-8fa6-584f8c3e561c.mp4",
+      "file": "/Users/graydavis28/Desktop/my-project/python-scripts/shot-reference-videos/out/shot7-ref.mp4"
+    },
+    "shot9": {
+      "job_id": "366025a0-db11-4751-b661-e6b4cd920a65",
+      "status": "completed",
+      "prompt": "Slow over-the-shoulder push-in with subtle handheld sway, gradual settle, single continuous take, no cuts",
+      "image": "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot9-ots-lean-ai.png",
+      "seconds": 5,
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38Aq5hBlUQaXmBYdbqh89maFhJA/hf_20260806_162407_366025a0-db11-4751-b661-e6b4cd920a65.mp4",
+      "file": "/Users/graydavis28/Desktop/my-project/python-scripts/shot-reference-videos/out/shot9-ref.mp4"
+    },
+    "shot12": {
+      "job_id": "5136886f-c76b-4bc1-8b15-51458f369125",
+      "status": "completed",
+      "prompt": "Slow horizontal pan across the wall, constant speed, no push, single continuous take, no cuts",
+      "image": "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot12-faces-pan-ai.png",
+      "seconds": 5,
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38Aq5hBlUQaXmBYdbqh89maFhJA/hf_20260806_162412_5136886f-c76b-4bc1-8b15-51458f369125.mp4",
+      "file": "/Users/graydavis28/Desktop/my-project/python-scripts/shot-reference-videos/out/shot12-ref.mp4"
+    },
+    "shot16": {
+      "job_id": "b1ecea4f-2dfd-4330-8341-aeb2aed1673c",
+      "status": "completed",
+      "prompt": "Slow steady dolly push-in, shallow depth of field, faint handheld drift, single continuous take, no cuts",
+      "image": "/Users/graydavis28/Desktop/my-project/business/social-media/sai/founder-story-short/reference-frames/shot16-team-photo-pushin-ai.png",
+      "seconds": 5,
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_38Aq5hBlUQaXmBYdbqh89maFhJA/hf_20260806_162552_b1ecea4f-2dfd-4330-8341-aeb2aed1673c.mp4",
+      "file": "/Users/graydavis28/Desktop/my-project/python-scripts/shot-reference-videos/out/shot16-ref.mp4"
+    }
+  }
+}
