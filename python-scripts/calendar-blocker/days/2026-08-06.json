@@ -11,6 +11,7 @@
     {"start": "17:00", "end": "18:15", "title": "💻 PLACEHOLDER — open work block", "desc": "Rename me. Overflow from earlier blocks, or whatever comes out of the 11am with Sai.", "color": 9},
     {"start": "18:15", "end": "18:45", "title": "🍽 Dinner", "desc": "", "color": 5},
     {"start": "18:45", "end": "20:15", "title": "🎓 Class (only if work's done)", "desc": "6:45pm start. Conditional — skip if the day ran long.", "color": 3},
-    {"start": "20:30", "end": "21:00", "title": "🏋️ Stretching", "desc": "Moved off 7pm so it doesn't collide with class. If you skip class, pull this back to 7pm.", "color": 10}
+    {"start": "20:30", "end": "21:00", "title": "🏋️ Stretching", "desc": "Moved off 7pm so it doesn't collide with class. If you skip class, pull this back to 7pm.", "color": 10},
+    {"start": "21:00", "end": "22:15", "title": "💻 Evening work — or stretching", "desc": "Flexible: overflow from the day, or just stretch if everything's closed out. If you skip class, 6:45–8:15 opens up as a second work block too.", "color": 9}
   ]
 }
