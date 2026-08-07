@@ -350,3 +350,70 @@ Status: TWO FIXES NEEDED (exposure, framing)
 Next move for 4 and 5: get 4's wardrobe right, then **chain 5 off the approved 4** so face and
 wardrobe match between two shots that cut directly together. Generating them independently is the
 same mistake row 1 already documents.
+
+---
+
+## Session 2026-08-07 (evening, Mac) — shots 2, 3, 4 regenerated under the new rules
+
+Three chained generations on `nano_banana_pro`, 6 credits total, **842.29 left**. Every one
+prompted ONLY the change. Registration held on all three. All saved `-PENDING`, nothing
+overwritten, nothing attached to Notion.
+
+**Mac tooling constraint discovered:** the Mac `higgsfield` CLI (v1.1.20) has **no `element`
+command** — only `soul-id`. The Elements built on Windows (`Current Sai` 25938a11 etc.) cannot be
+created, listed or managed from the Mac CLI. This does not block chained shots, because chaining
+carries the face from the source image and needs no element at all. It only blocks **shot 1**,
+which needs both Sais in one frame. **Shot 1 stays a Windows job.**
+
+Corollary: the Current Sai identity model was NOT rebuilt on the new photos this session. It would
+cost 50 credits and improve zero chained shots. The 15 fresh neutral-light refs sit on disk at
+`~/Documents/soul-training/current-sai-v2/` for a Windows rebuild when shot 1 comes up.
+
+### ❌ Venetian blinds are DEAD (Gray, 2026-08-07 evening)
+
+> "ignore the venetian blinds, that an effect i will add in after effects, it was thought off to
+> make the videos look more like a video screen. but since its inside a picture, prob not the best
+> way to go."
+
+Two reasons this matters beyond shot 3: the effect was **always an After Effects job, never
+something a reference frame should show**, and the idea it was serving (make the archival footage
+read as a video screen) is defeated by that footage living inside a printed photo. **Do not put
+blinds, scan lines or bars in any frame.** The "blinds 20-35%" spec in shot 3's row is superseded —
+flag it there, do not delete it.
+
+### Row 2 — RESOLVED, borderless
+`shot2-cork-MACRO-v2-borderless-PENDING.png` — chained off v1a, prompted only the removal of the
+print's white paper border. Now edge to edge like a real drugstore 4x6. Cork grain, wooden pin,
+paper curl, macro framing, warm falloff and the wood frame edge all carried through unchanged.
+**Minor open note:** the print now reads slightly GLOSSY (visible specular sheen). Props calls for
+matte and the Light column flags glare. Cosmetic on a reference frame, but if the real prints come
+back glossy it is a live problem on the day.
+
+### Row 3 — glow good, one honest flaw
+`shot3-cork-glow-v3-noblinds-PENDING.png` — chained off the approved shot 2, per the row's
+locked-plate rule (do NOT touch the board or camera between 2 and 3). Warm light now spills from
+the print onto the cork and falls off within a few inches. No blinds. Registration perfect.
+
+**The flaw:** the glow reads as a halo coming from BEHIND the print, like it is backlit, rather
+than the print's own face emitting light. The print surface itself is no brighter than it was in
+shot 2. For "archival video playing inside the print" the paper itself should be luminous. Fixable
+in one more chained pass that raises only the print's internal brightness.
+
+### Row 4 — RESOLVED, wardrobe fixed
+`shot4-bed-scroll-v3-tee-PENDING.png` — chained off v2, prompted only the clothing. Plain dark
+charcoal tee and dark sweatpants; suit, dress shirt and orange tie gone. **The whole light design
+survived the chain**, which was the point of fixing it this way instead of regenerating: cool
+phone-screen key on the face, blue lamp raking from the window side, empty wall behind him two
+stops down, straight-on medium-wide from the foot of the bed.
+
+Confirms the split diagnosed earlier: v1 had the right wardrobe and wrong light, v2 had the right
+light and wrong wardrobe. **General rule: chain off the version holding the property that is
+harder to rebuild (the lighting) and prompt away the easy one (the clothes).**
+
+**Still true of 4 and 5: the room is not Gray's room.** Generic grey bedding and a plain dark
+headboard, against a real bedroom with navy sheets, a cream fluted boucle headboard, and round book
+shelves plus hexagon shelves on the wall above the bed. Now fixable — 9 room plates are on disk at
+`~/Documents/founder-story-refs/room/`. Not done this session; it is a separate change and the
+one-at-a-time rule applies.
+
+**Next:** Gray's verdict on these three, then chain shot 5 off the approved shot 4.
