@@ -1,0 +1,33 @@
+# Founder Story Short — Archival Picks (locked with Gray 2026-08-07)
+
+Source archive: `/Volumes/Footage/Sai/06_ASSETS/All Broll/`
+Edit-day copies: `/Volumes/Footage/Sai/07_QUERY_PULLS/founder-story-archival/`
+
+## Shot 2 + 11 — the money-and-fame photo (one clip, two shots)
+- **on boat.MOV** (2160x3840, 6.6s) — LOCKED
+  - Print still: t=4.8s (sharpest camera-facing frame)
+  - Repo files: `prints/shot2-onboat-t4.8-FULL.png` + `prints/shot2-onboat-4x6-PRINT-1200x1800.png` (2:3 crop, 4x6 @200dpi)
+  - Shot 11 b-roll: same clip, use ~2.5s-6.6s (first second is shaky)
+  - Note: faint knee of another passenger lower-right of the print crop; flagged, Gray ok so far
+
+## Shot 3 — archival playing inside the pinned photo (channel-flip)
+LOCKED, four clips:
+1. desk work.MOV (2160x3840)
+2. notebook on desk.MP4 (2160x3840)
+3. talking in dorm.MP4 (2160x3840, Apr 2022)
+4. in dorm.MP4 (3840x2160 horizontal, Jun 2022 — social clip, Gray chose to include)
+- mic in dorm.mov = passed
+- science class.MOV = not picked (era note: dorm reads college vs VO "high school online" — Gray's call)
+- Resolution is irrelevant here: clips play inside the photo's small rectangle
+
+## Facts that matter
+- Print at 4x6 / 200dpi = 800x1200 minimum; 123/143 archive clips qualify (Tier A)
+- Young-Sai era clips are all 720p or lower (older phone) — Real-ESRGAN 1.7x lift if any becomes a print
+- File dates on half the archive are bulk-export stamps (2025-01-04 cluster) — not capture dates
+- "money gun.MOV" contains no money gun (podcast set); "helicopter.mov" unusable (540px night)
+
+## Still open (next shots)
+- Shot 4: success graphics — candidates: highlighting 5.1 million, 86000, buying 11k domain, mark cuban joining my newsletter, customers people more customers
+- Shot 5/6: sad in casino (reserved — the "didn't feel complete" face), miami high rise (cities), suitcase/airport set
+- Shot 8: match-cut print run — highlighting 5.1 million reserved here, white board, teaching on white board, flexing in mirror, youtube video
+- Shots 13/14/15: still blocked on Sai (team photo + real people photos)
