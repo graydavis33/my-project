@@ -1,8 +1,20 @@
 # Founder Story Short (Sai)
 
-Theme: the money and fame dream → the emptiness → the culture mission. 16-shot vertical short told through a red-yarn photo board + a dark-stage face-off between young Sai and current Sai.
+Theme: the money and fame dream → the emptiness → the culture mission. **15-shot** vertical short told through a red-yarn photo board + a dark-stage face-off between young Sai and current Sai.
 
-**Sections:** Hook 1–2 · Body 3–10 · Conclusion 11–16.
+**Sections:** Hook 1–2 · Body 3–10 · Conclusion 11–15.
+
+_(Corrected 2026-08-06 from "16-shot / Conclusion 11–16" — verified against the live DB, which returns 15 rows. The header had not been updated after the 2026-08-05 deletion + renumber.)_
+
+## Shoot schedule
+
+Film **Tue 2026-08-11** (one day, ~13 shots filmed — shot 1 is fully AI, shot 11 is archival).
+Edit 08-12 → 08-15, review 08-16, **post Mon 2026-08-17**.
+
+Dedicated Google Calendar **"Founder Story Short — Shoot"** on gray@karramedia.com, built by
+`.make_shoot_calendar.py` (idempotent — it finds the calendar by name and rebuilds the events,
+so changing the dates in the script and re-running is safe). Gray shares it with Sai by hand.
+Film day is grouped by SETUP, not shot order: board during the day, bedroom after dark.
 
 ## Canonical shot list — READ THIS BEFORE WRITING
 
