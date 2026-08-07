@@ -50,9 +50,22 @@ Columns: Section · Shot # · Frame Visual · Voiceover Script · Visuals · How
 
 - **2026-08-06** (later still) — **AFTER EFFECTS blocks appended to the 9 VFX shots**: 1 (glitch/RGB split), 2 (bloom + party overlays), 4 (wall composite), 5 (3D floating photos + light wrap), 6 (reuse shot 5's rig), 8 (match-cut stabilize), 9 (Echo), 11 (whip transition), 13 (freeze-into-motion). Shots 7, 10, 12, 14, 15 deliberately skipped as plain A-roll (14 explicitly says "no effects"). Every append was additive and verified. **Shot 9's unnamed effect identified: it is Echo** (Effect > Time > Echo), with Posterize Time and Pixel Motion Blur given as the lighter alternatives.
 
+- **2026-08-07** — **BOARD LOCKED: cork, wall-hung, vertical, wooden push pins.** Reverses the 2026-08-06 standing rule (free-standing rolling whiteboard + ball magnets) on every axis. Appended an additive, guarded `BOARD LOCKED 2026-08-07` block to 16 fields across shots 2, 3, 7, 8, 9, 10, 12, 13, 14, 15 (Props on all ten; Location on 2; Light on 2, 7, 9, 10, 12). Every write was guarded on the field's existing opening text and nothing was deleted or rewritten. Resolved shot 7's internal contradiction (its own row said yarn between MAGNETS above and push pins below: it is push pins). Lighting notes updated because matte cork has no gloss to fight but absorbs roughly a stop more than white. **Model conflict resolved and it was already solved:** both Sais exist as Higgsfield **Elements** (`Current Sai` 25938a11, `Young Sai` f44a14f8), which run natively on Nano Banana Pro and accept multiple `<<<uuid>>>` placeholders per prompt, so frame-chaining works and shot 1 can hold both selves. Soul V2 is not needed; no test credits were spent.
+
 ## Open
 
+- ⚠️ **Shots 9 and 10 are geometrically broken by wall-mounting.** Both are written as board-POV from behind the board's dark edge. Impossible on a wall-hung board. Proposed fix logged in both rows and in the review log: shoot from beside the board, edge as a dark foreground frame. **Awaiting Gray. Do not regenerate these two frames until confirmed.**
+- ⚠️ **Which wall does the board go on?** A hung board cannot be rotated per shot, so this one choice locks the geometry of all 10 board shots and decides whether "every board shot on the right side of Sai, facing the bathroom" survives.
+- ⚠️ **All board reference frames are stale** (they show the whiteboard). Shots 2, 3, 7, 8, 9, 10, 12, 13, 14, 15 need regenerating against the cork board.
 - Shot 14 (hiring beat) has **no Voiceover Script and no Location** — needs Gray's script. Rig also unset.
 - Shots 10 and 11 have **no How to Edit**.
 - The photo-swap payoff (unpin money-and-fame, pin the team in the same spot — the mirror of shot 2) was removed with the shot 17 rewrite and has no home.
 - The dead duplicate DB is still live and still able to cause confusion.
+
+### Frame Visual hygiene (found 2026-08-07 in the live DB)
+
+- **Shot 2 still shows REJECTED frames.** The v2 pair (`shot2-v2-frameA-board-empty.png`, `shot2-v2-frameB-photo-placed.png`) and the corkboard test exist on disk but were never attached; the DB still carries the frames the review log rejected (packed board, stock woman's portrait, no magnet mechanic, wrong camera side).
+- **Frame Visual mixes two jobs with no marking** — frame references (what the shot should look like) vs generator inputs (raw photos fed into the AI). Shot 1 = 2 + 6, shot 2 = 2 + 4, shot 8 = 3 AI + 5 archival. Nobody films from a generator input. The review log calls this the biggest structural fix available.
+- **Filenames disagree with shot numbers in BOTH directions**, and it starts at shot 4, not shot 11 as previously documented: shot 4 holds `shot5-*`, shot 6 holds `shot7-*`, shot 7 holds `shot8-*`, but shot 13 holds `shot12-*`.
+- **Two frames are named `image.png`** (shots 5 and 14).
+- **Shots 4 and 6 carry only one frame each**, against the multi-frame-per-shot plan.

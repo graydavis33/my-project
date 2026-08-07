@@ -142,13 +142,55 @@ start_image/end_image, not in the stills.
 
 ---
 
-## STANDING RULE (Gray, 2026-08-06 evening) — applies to EVERY whiteboard shot
+## ~~STANDING RULE (Gray, 2026-08-06 evening)~~ — SUPERSEDED 2026-08-07
 
-The board in all generated frames is Gray's REAL whiteboard: a free-standing rolling
-whiteboard (white surface, black frame, black X-base stand on casters), standing in the
-MIDDLE of the room — never a wall-mounted board. Magnets are the pushpin-style ball
-magnets (colored plastic, pin-shaped). Gray supplied reference photos of both; keep them
-at ~/Documents/founder-story-refs/ (real apartment photos — NOT in the public repo).
+> **This rule is dead. Kept for history only. See the BOARD LOCK below.**
+>
+> ~~The board in all generated frames is Gray's REAL whiteboard: a free-standing rolling
+> whiteboard (white surface, black frame, black X-base stand on casters), standing in the
+> MIDDLE of the room — never a wall-mounted board. Magnets are the pushpin-style ball
+> magnets (colored plastic, pin-shaped). Gray supplied reference photos of both; keep them
+> at ~/Documents/founder-story-refs/ (real apartment photos — NOT in the public repo).~~
 
-Shot 2 status: young-Sai party photo APPROVED (composite v2). Frames A+B must be
-regenerated on the real standing board per this rule.
+Note: those reference photos live on a Mac path and are **not present on the Windows box**.
+Moot now that the board changed, but the same trap applies to any future "keep them at
+~/Documents/..." instruction — this repo is used from two machines.
+
+---
+
+## ⭐ BOARD LOCK (Gray, 2026-08-07) — applies to EVERY board shot
+
+Gray bought the board. It reverses the previous rule on every axis:
+
+| | Old rule (dead) | **LOCKED** |
+|---|---|---|
+| Surface | whiteboard, white | **cork, matte dark brown** |
+| Mounting | free-standing on casters | **hung flat on the wall** |
+| Position | middle of the room | **against a wall (which wall: OPEN)** |
+| Orientation | landscape | **VERTICAL, 36 tall by 24 wide** |
+| Fastener | pin-style ball magnets | **wooden push pins** |
+| Frame | black | **wood** |
+
+Also on order: 1 skein red yarn, 40 wooden push pins (board ships with 15 more),
+Command 15 lb strips for hanging.
+
+**Consequences that are not cosmetic:**
+
+1. **Every board reference frame generated so far is invalid.** All of them show the
+   whiteboard. Shots 2, 3, 7, 8, 9, 10, 12, 13, 14, 15 need regenerating.
+2. **Lighting gets simpler.** Most board Light notes were written to fight whiteboard
+   gloss ("45° off so the gloss doesn't flare", "feather so no hot spot"). Matte cork has
+   no specular flare. But cork *absorbs* where white *bounced*, so expect about a stop more
+   light, and the 4x6 prints now read as the brightest thing in frame instead of competing
+   with a white surface. That is an improvement for the photo-board look.
+3. **Shots 9 and 10 break geometrically.** Both are written as board-POV from BEHIND the
+   board's dark edge facing Sai. That framing needs a free-standing board. Flat on a wall
+   the camera would have to be inside the wall. Proposed fix (NOT yet approved): shoot from
+   BESIDE the board, tight to the wall, board edge running down the foreground as a dark
+   vertical frame with Sai past it. **Do not regenerate 9 or 10 until Gray confirms.**
+4. **The wall choice locks all 10 board shots at once.** A rolling board could be rotated
+   per shot; a hung board cannot. Whichever wall it goes on decides whether Gray's note
+   "every bulletin board shot on the right side of Sai, facing the bathroom" survives.
+
+Shot 2 status: young-Sai party photo APPROVED (composite v2). Frames A+B are now doubly
+stale (wrong board AND wrong fastener) and get regenerated against the cork board.
