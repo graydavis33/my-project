@@ -166,7 +166,7 @@ Gray bought the board. It reverses the previous rule on every axis:
 |---|---|---|
 | Surface | whiteboard, white | **cork, matte dark brown** |
 | Mounting | free-standing on casters | **hung flat on the wall** |
-| Position | middle of the room | **against a wall (which wall: OPEN)** |
+| Position | middle of the room | **against a wall (WALL LOCKED 08-07 eve, see below)** |
 | Orientation | landscape | **VERTICAL, 36 tall by 24 wide** |
 | Fastener | pin-style ball magnets | **wooden push pins** |
 | Frame | black | **wood** |
@@ -194,6 +194,46 @@ Command 15 lb strips for hanging.
 
 Shot 2 status: young-Sai party photo APPROVED (composite v2). Frames A+B are now doubly
 stale (wrong board AND wrong fastener) and get regenerated against the cork board.
+
+---
+
+## ⭐⭐ WALL LOCK (Gray, 2026-08-07 evening) — closes open item 4 above
+
+**The board hangs on the wall beside the BATHROOM DOOR** — the segment between the black
+floor lamp and the bathroom door frame, dog bed on the floor beneath it, closet return on the
+far side. This is where the rolling whiteboard currently parks. Board hangs VERTICAL (36 tall
+x 24 wide) on Command 15 lb strips.
+
+Gray's reasons, both verified against his own room photos (supplied this session, saved to
+`~/Documents/founder-story-refs/room/`, NOT in this public repo):
+
+1. **Plenty of floor to work with.** The camera sits on the window side and shoots across the
+   room's full depth. This is the LONGEST throw available in the apartment.
+2. **Away from the window.** Most board shots put the window BEHIND camera, so daylight
+   arrives as soft frontal fill on the cork and no window ever appears in frame to blow out.
+
+**Correction to an earlier claim in this session:** the door wall was initially assessed as
+short on camera pullback. That was measured across the room's narrow axis and is wrong.
+Shooting from the window side, this wall has MORE pullback than the triptych wall, not less.
+Gray's pick is the better one and the wides on 9, 10 and 12 are not constrained.
+
+**Consequences now settled:**
+
+- Gray's standing note "every bulletin board shot on the right side of Sai, facing the
+  bathroom" SURVIVES — the board is literally beside the bathroom door.
+- The triptych wall stays as-is. The three abstract panels do not come down.
+- Cork is now lit by cool window daylight arriving over the camera's shoulder. The Light
+  columns still call for a 3200K key. Expect to either gel the window, pull the blinds, or
+  accept a mixed-temperature look. **Flagged, not resolved — needs a call on film day.**
+
+**Two physical checks before hanging (Gray, this weekend):**
+
+- The outlet at the baseboard where the floor lamp is plugged in — make sure the board's
+  bottom edge clears it and the lamp cord is not in frame.
+- Whether the bathroom door swings into the room far enough to clip a 24-inch-wide board.
+
+**Shots 9 and 10 are still frozen** pending Gray's confirm on the shoot-from-beside fix
+(open item 3 above). The wall is answered; the framing is not.
 
 ---
 
