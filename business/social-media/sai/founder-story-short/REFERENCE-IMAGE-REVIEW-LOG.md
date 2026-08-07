@@ -604,3 +604,29 @@ relights) — reads as handheld drift; fixable per-frame if Gray objects.
 retyping. Also: a `curl` for a wrong URL still writes a file — check size before trusting it.
 
 23 generations tonight, 52 credits, **~796 left** (v7 relights + crop = free after generation).
+
+---
+
+## Session 2026-08-07 (evening, Mac, round 6) — approvals + shot 5 first pass
+
+**✅ APPROVED by Gray: shot 2 (v7 TIGHT sequence, 3 frames) and shot 3 (v4 soft-blue series,
+3 frames).** With shot 4 that is 7 frames approved and cleared to attach.
+
+**⚠️ Notion attach still blocked from this Mac** — connector absent from the session, karramedia
+token nowhere on this machine (verified: no .env, no shell rc, no env var). Gray has been given
+both unblock paths: `/mcp` reconnect as gray@karramedia.com, or export NOTION_KARRAMEDIA_TOKEN in
+his own terminal (never pasted in chat, per [[feedback_secrets_handling]]).
+**`.attach_frames.py` written and ready** (this folder): additive-only, re-sends existing Frame
+Visual entries before appending, targets the REAL data source `d589d846-…`, has `--dry-run`.
+Run: `NOTION_KARRAMEDIA_TOKEN=... python3 .attach_frames.py`. NOT yet run.
+
+**Shot 5 first pass: `shot5-v3-bev-realroom-PENDING.png`** — chained off approved shot 4 + room
+plate IMG_9357: true perpendicular bird's-eye, on TOP of the navy bedding fully dressed (the beat
+v1 missed), arms flung, phone screen-down beside his hand, eyes open at camera, blue-lamp wash
+from the window side, exposure lifted a stop from the rejected v2, framed tight on the bed.
+Awaiting Gray.
+
+Next shots in line after 5: shot 6 (bedroom, reuses 5's rig) then the remaining board shots
+7, 8, 12, 13, 15 under the soft-blue lighting lock, and 9, 10 as the new window-side expression
+setup (desk/closet background — see the UNFROZEN block above). Shot 1 remains a Windows job
+(needs Elements).
