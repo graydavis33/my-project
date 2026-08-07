@@ -712,6 +712,14 @@ shot 4 (he sat on the foot of the bed, falls back ALONG the mattress). Delivered
   friends, city, dorm, laptop) glowing around his head and shoulders
 Gray goes ONE AT A TIME for the rest of the speed-run frames (7-15), 5/6 excepted.
 
+**✅ SHOTS 5 + 6 APPROVED AND ATTACHED (round 9 continued).** Gray approved the versions pictured
+in his screenshot of the speed-run page: `shot5-v4-bev-vertical` (body vertical, head top) and
+`shot6-floating-memories`. Note the sequence: he first asked for the along-bed rotation (v5/v6-
+window-pinned were generated), then approved the ORIGINAL vertical pair from the screenshot — the
+rotated variants stay on disk unattached if he changes his mind. Attached via the full proven
+pipeline: fetch row → fresh JPEG upload → additive column write preserving existing entries →
+verified by count (shot 5 = 4 files, shot 6 = 2 files).
+
 **🐛 COLUMN ATTACHMENT BUG FOUND AND FIXED (Gray saw broken previews on shot 2):** a
 file_upload id already consumed by a page-body embed CANNOT be reused in the Frame Visual files
 property — Notion binds the file's permission record to its first attach point, so the property
