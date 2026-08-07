@@ -37,6 +37,13 @@ LOCKED, four clips:
   - TikTok profile-grid screen recording (capture fresh on phone — slow scroll, 15-20s, account is @bizuser NOT @saikarra)
   - Additional TikToks Gray will identify later — ask Sai for original exports (TikTok downloads = watermark + compression)
   - Channel: youtube.com/@saikarra22 (channel_id UCoSYag0KxChG-NOqrizQsFg; RSS feed works when scraping is blocked)
-- Shot 5/6: sad in casino (reserved — the "didn't feel complete" face), miami high rise (cities), suitcase/airport set
+- Shot 5/6: **LOCKED by Gray 2026-08-07** (copied to `07_QUERY_PULLS/founder-story-archival/shot5-6-floating-memories/`):
+  1. sad in casino.MOV (4K vert, 38s — the "didn't feel complete" face)
+  2. graduation from high school 2 years ago.mov (720p — fine as floating video)
+  3. Suitcase in airport.MOV (4K vert)
+  4. walking through airport.MOV (4K vert)
+  5. sitting on suitcase.MOV (4K vert)
+  - Not picked: miami high rise
+  - NOTE: shot 6's Visuals say the floating images are the SAME photos later pinned on the board — these five picks should feed the shot 7/8 print set
 - Shot 8: match-cut print run — highlighting 5.1 million reserved here, white board, teaching on white board, flexing in mirror, youtube video
 - Shots 13/14/15: still blocked on Sai (team photo + real people photos)
