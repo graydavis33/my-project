@@ -562,3 +562,45 @@ on which convention the real prints will use — **this is the same decision as 
 print-size question and should be made together before Saturday's print run.**
 
 17 generations tonight, 40 credits, **808.29 left.**
+
+---
+
+## Session 2026-08-07 (evening, Mac, round 5) — the soft-blue lighting lock
+
+Gray: shot 3 lighting SOFTER with a very faint blue lamp pouring in from frame-left; shot 2
+tighter so Sai's face is out of frame, and its lighting must MATCH shot 3; "have to keep lighting
+consistent." Everything else called excellent.
+
+**⭐ LIGHTING LOCK for the board world:** soft diffused warm lamp (no harsh contrast, smooth
+falloff) + a very faint cool blue lamp glow from FRAME-LEFT, always weaker than the warm. This
+also ties the board world to the bedroom world — the blue lamp is the same practical that rakes
+shot 4/5. `shot3-v4-A-medium-softblue-PENDING.png` is the lighting MASTER; every subsequent board
+frame passed it as a lighting reference.
+
+### Row 3 v4 — relit A/B/C
+`shot3-v4-A-medium-softblue` / `-B-fullboard-softblue` / `-C-wide-softblue` — lighting-only chains
+off the v3 frames, geometry untouched. Blue reads strongest in the wide (left wall), faintest in
+the medium, correct hierarchy.
+
+### Row 2 — one FAILED approach, then the fix
+**v6 REJECTED (3 frames, renamed `-REJECTED`):** asking the model to "reframe tighter" made it
+INFLATE the print to half the board instead of moving the camera — wrecking the true-scale rule —
+and the print's content drifted to a galaxy background. Trap logged: **the model treats "tighter
+on the subject" as "make the subject bigger," not as a camera move.**
+
+**v7 method (kept):** relight the good v5 geometry (lighting-only chains, nothing moves), then do
+the tighter framing as a **deterministic PIL crop** — identical window on all three frames
+(left 27% cut, 9:16 kept). A crop cannot lie about scale, and it removes the face by geometry
+instead of by prompt. Zero-judgment task moved into code, per the standing rule.
+- `shot2-v7-still1-relit-TIGHT-PENDING.png` — left hand places, face out of frame
+- `shot2-v7-still2-relit-TIGHT-PENDING.png` — right hand pins
+- `shot2-v7-endstate-relit-TIGHT-PENDING.png` — pinned, hands gone
+Un-cropped relit masters also saved (`-relit-PENDING`) in case Gray wants a different window.
+Honest flag: the print wanders slightly across the three beats (drift inherited from the v5
+relights) — reads as handheld drift; fixable per-frame if Gray objects.
+
+**⚠️ Fal.ai URL trap:** hand-retyping a CloudFront URL corrupted one download (`a0ff` → `a0ef`,
+111-byte error file). Recover the exact URL with `higgsfield generate list --json` instead of
+retyping. Also: a `curl` for a wrong URL still writes a file — check size before trusting it.
+
+23 generations tonight, 52 credits, **~796 left** (v7 relights + crop = free after generation).
