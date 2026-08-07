@@ -27,7 +27,13 @@ LOCKED, four clips:
 - "money gun.MOV" contains no money gun (podcast set); "helicopter.mov" unusable (540px night)
 
 ## Still open (next shots)
-- Shot 4: success graphics — candidates: highlighting 5.1 million, 86000, buying 11k domain, mark cuban joining my newsletter, customers people more customers
+- Shot 4: **REDIRECTED by Gray 2026-08-07 — archive candidates rejected, source from Sai's TIKTOK era instead.** Wishlist:
+  1. Screen recording scrolling his profile grid (must be captured fresh — phone screen-record, slow scroll, TikTok is @bizuser NOT @saikarra)
+  2. Walking onto helicopter (drive has `helicopter.mov` 540p dark — verify vs the posted TikTok version)
+  3. Meeting Alex Hormozi (drive has `hormozi.mov` 720p — verify)
+  4. The YouTube video we made (drive has `youtube video.MP4` 4K — verify)
+  5. Others TBD by Gray
+  - Prefer Sai's original exports over TikTok downloads (watermark + double compression); add to the Sai ask text
 - Shot 5/6: sad in casino (reserved — the "didn't feel complete" face), miami high rise (cities), suitcase/airport set
 - Shot 8: match-cut print run — highlighting 5.1 million reserved here, white board, teaching on white board, flexing in mirror, youtube video
 - Shots 13/14/15: still blocked on Sai (team photo + real people photos)
