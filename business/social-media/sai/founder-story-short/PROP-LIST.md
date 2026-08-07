@@ -7,7 +7,7 @@ Source of truth for per-shot usage: Notion Props column (15-row shot list, karra
 
 | # | Item | Spec | Qty | Status | Arrives | Notes |
 |---|------|------|-----|--------|---------|-------|
-| 1 | Cork bulletin board | 24x36, wood frame, hung VERTICAL (36 tall) | 1 | ⚠️ AMAZON DATE FAILS — Board2by listing shows Wed 08-12, day AFTER shoot | — | **BUY IN PERSON THIS WEEKEND**: Staples 1755 Broadway (56th) or Target Columbus Circle. 10 of 15 shots resolve on this board. Ships with 15 push pins. |
+| 1 | Cork bulletin board | 24x36, wood frame, hung VERTICAL (36 tall) | 1 | 🔶 ORDER NOW — Amazon Prime lands SUN 08-09 | Sun 08-09 | **Pick: DAHAPYBOO 36x24 oak, $34.99, amazon.com/dp/B0CZNPZKRT** (alt: ORIENTOOLS B07KCRVYDT $35.99). Oak frame matches the approved shot 2/3 reference frames. In-person backup killed: Staples only had a $109 Ghent, Target Columbus Circle stocks nothing 24x36 wood-frame in store (checked 08-07). **CANCEL the Board2by Wed 08-12 order if it was placed.** 10 of 15 shots resolve on this board. |
 | 2 | Wooden push pins | wooden, natural | 40 (+15 with board) | ✅ Ordered (Amazon) | overnight, 4-8 AM | Budget was 25-30 — covered with margin. |
 | 3 | Red yarn | 1 skein, cotton (Lion Brand red) | 1 | ✅ Ordered (Amazon) | Fri 08-08 | Strung pin-to-pin on board shots 7/8/12/13/15. |
 | 4 | Command strips | 15 lb, large | 1 pack | ✅ Ordered (Amazon) | overnight, 4-8 AM | Board hangs on the wall beside the bathroom door (WALL LOCKED 08-07). |
