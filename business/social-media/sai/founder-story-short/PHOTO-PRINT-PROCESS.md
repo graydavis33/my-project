@@ -70,7 +70,7 @@ Why the strict 4x6 rule: Shot 8 is a match cut between photos on the board. If o
 Two paths. Path A is recommended — no printer needed and matte is a checkbox.
 
 ### Path A — Drugstore prints (recommended)
-- [ ] 1. Go to the CVS Photo or Walgreens Photo website or app.
+- [ ] 1. Go to the **Walgreens** Photo website or app. (NOT CVS — verified 2026-08-07: CVS same-day 4x6 is glossy-only; matte there is mail-delivery. Walgreens does same-day matte 4x6.)
 - [ ] 2. Upload everything in your `final/` folder.
 - [ ] 3. Size: 4x6. Finish: **MATTE** — this is the important one. Gloss reflects the key light on camera; matte does not.
 - [ ] 4. Quantity: **2 copies of every photo** (macro shots crease prints fast — spares save the shoot).
