@@ -696,3 +696,27 @@ Skipped by design: shot 1 (Windows, needs both-Sai Elements), shot 11 (pure arch
 Review page: https://claude.ai/code/artifact/ef077f89-4833-4e77-9de9-0f1dc896c25f
 Session total ~84 credits, **764.29 left**. Nothing attached to Notion — awaiting kill/keep per
 frame, then the keepers go into the Frame Visual columns with the proven additive recipe.
+
+---
+
+## Session 2026-08-07 (evening, Mac, round 9) — 5/6 rotated, 3A+3C approved, column bug fixed
+
+**✅ APPROVED: shot 3 v5 A and C** (vertical prints). Attached to the column alongside B (v4).
+
+**Shots 5 + 6 rebriefed:** Gray called the visuals "incredible" but wants body, floating videos
+and camera ROTATED 90° right so head and feet sit at opposite ends of the BED — continuity with
+shot 4 (he sat on the foot of the bed, falls back ALONG the mattress). Delivered:
+- `shot5-v5-along-bed-PENDING.png` — fluted headboard at top of frame, body along the bed, head
+  toward headboard, phone beside his hand
+- `shot6-v2-floating-alongbed-PENDING.png` — chained off it, six floating memory stills (college,
+  friends, city, dorm, laptop) glowing around his head and shoulders
+Gray goes ONE AT A TIME for the rest of the speed-run frames (7-15), 5/6 excepted.
+
+**🐛 COLUMN ATTACHMENT BUG FOUND AND FIXED (Gray saw broken previews on shot 2):** a
+file_upload id already consumed by a page-body embed CANNOT be reused in the Frame Visual files
+property — Notion binds the file's permission record to its first attach point, so the property
+copy renders broken. **Correction to the round-8 recipe: every attach point needs its OWN fresh
+file upload.** Fixed by uploading fresh JPEGs (`col-shot2-place/pin/pinned`, `col-shot3-A/B/C`,
+`col-shot4`) and rewriting the three properties: old entries preserved verbatim, broken entries
+replaced, shot 3's column now carries the approved v5-A / v4-B / v5-C set. Body embeds were
+always fine and stay untouched.
