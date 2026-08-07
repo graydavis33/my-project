@@ -54,4 +54,5 @@ LOCKED, four clips:
   - "More success" → stage video does NOT exist on drive (only still: `Thumbnails/15-21/16(4).PNG` BUILTGEN) — may also become a recreation
   - Passed: highlighting 5.1 million (still available for board filler), white board set, flexing in mirror.MOV
   - NOTE: new prop implied by the recreation — money gun + prop bills for film day
+  - **DEADLINE (Gray 2026-08-07): money gun + bills must arrive NO LATER THAN Fri 08-08.** Amazon only if the date literally says tomorrow — otherwise in-person today/tomorrow: Party City / Spirit Halloween / Five Below (~$10-15). Gun needs 3 AA batteries, get 2+ stacks of bills
 - Shots 13/14/15: still blocked on Sai (team photo + real people photos)
