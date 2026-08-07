@@ -630,3 +630,31 @@ Next shots in line after 5: shot 6 (bedroom, reuses 5's rig) then the remaining 
 7, 8, 12, 13, 15 under the soft-blue lighting lock, and 9, 10 as the new window-side expression
 setup (desk/closet background — see the UNFROZEN block above). Shot 1 remains a Windows job
 (needs Elements).
+
+---
+
+## Session 2026-08-07 (evening, Mac, round 7) — ✅ ALL 7 APPROVED FRAMES ATTACHED TO NOTION
+
+Gray reconnected the Notion MCP mid-session. Workspace verified as **Gray Davis's Space /
+gray@karramedia.com** via fetch self before any write (per [[notion-karramedia-account]]).
+
+**Method that worked on the MCP connector (differs from the Windows raw-API path):**
+`notion-create-file-upload` (returns a signed upload URL + bearer) → `curl -F file=@...` to that
+URL → `update-page insert_content` appending an image block per frame under a
+`## Reference Frames — APPROVED 2026-08-07` heading at each row's page end. Same pattern as the
+08-06 reference-video embeds, so each row now reads: Reference Video → Reference Frames.
+**Trap: MCP uploads cap at 5 MiB** (free-plan URL-download limit applies to uploads too) — the 2k
+PNGs are 1.4-7.8 MiB, so each was re-encoded to JPEG q92 (0.3-1.2 MiB) before upload. PNG
+originals stay canonical in this repo folder.
+
+Attached: shot 2 (place / pin / end state), shot 3 (A medium / B full board / C wide),
+shot 4 (real-room). Verified by re-fetching shot 2's page — all three images render.
+
+**Still open, needs Gray's call:** the **Frame Visual COLUMN** on shots 2/3/4 still holds the old
+pre-board-lock frames, including shot 2's two REJECTED references (`shot2-magnet-macro-ai`,
+`shot2-pin-photo-ai`). The new frames are in the page BODY, not the column, because the MCP
+cannot rewrite a files property without risking a wipe of existing entries. Removing the dead
+ones is a DELETE, so it is not done without his word — fastest path is Gray dragging them out in
+the Notion UI, or the Windows raw-API session. `.attach_frames.py` (the token-based fallback
+script) is now superseded for attachment but keeps the additive files-property recipe if the
+column route is ever wanted.
