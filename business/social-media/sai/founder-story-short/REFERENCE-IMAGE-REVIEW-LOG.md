@@ -738,6 +738,33 @@ Shot 2 = 9 entries, shot 3 = 7, shot 4 = 2, shot 5 = 4, shot 6 = 2.
 **Rule for the future tool: Frame Visual gets external raw-GitHub URLs, never MCP file uploads.**
 File uploads remain fine for page-BODY image blocks (those render), not for the files property.
 
+---
+
+## Round 11 — FULL SHOTLIST TRANSFER COMPLETE + the final trap measured
+
+Gray approved everything wholesale ("sai needs references now"). All rows 2-15 filled.
+
+**⚠️ TRAP #3 (the one that ate the round-10 entries): on a files-property rewrite, Notion
+asynchronously RE-DOWNLOADS every entry and silently drops what it cannot fetch** — re-sent
+`attachment:` references AND external files over the free plan's **5 MiB** cap. The round-10
+full-size PNGs (5-9 MiB) survived the write, passed the count check, then fell out during
+revalidation. Count-checks lie twice over.
+
+**Final architecture (verified):** `reference-frames/web/` in the repo holds a **≤5 MiB JPEG
+(q90)** of every column frame; every Frame Visual entry is an encoded external raw-GitHub URL to
+one of those. 30 JPEGs pushed, every URL curl-200-verified, all 13 rows rewritten, counts match
+intent: 2=3, 3=4, 4=2, 5=3, 6=2, 7=3, 8=1, 9=6, 10=1, 12=2, 13=3, 14=3, 15=2. Old still-valid
+AI references restored as JPEGs where they'd been dropped (shot 3 board-center, shot 4 wall-
+graphics ref, shot 5 old BEV pair, shot 6 old floating ref, shot 9 all five, shot 12 old OTS).
+Real-frame attachments (s13/s14) preserved verbatim where they survived.
+
+**LOST from the columns, restorable only from Windows** (files are real photos, banned from the
+public repo, local copies not on the Mac): shot 2's four real-photo REFs (yacht-moneyfame,
+sunglasses-car, feetup-mall, casino) and shot 3's three s3-archival young-Sai photos. The
+Windows raw-API File-Upload path stamped working attachment entries before — **restore them from
+the Windows session**, or Gray drags them in by hand from the drive. Body-embed "Reference
+Frames — APPROVED" sections on shots 2/3/4 still hold their images and were never touched.
+
 **~~🐛 COLUMN ATTACHMENT BUG FOUND AND FIXED~~ (superseded by the above — kept for history):** a
 file_upload id already consumed by a page-body embed CANNOT be reused in the Frame Visual files
 property — Notion binds the file's permission record to its first attach point, so the property
