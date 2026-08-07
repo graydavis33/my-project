@@ -650,11 +650,49 @@ originals stay canonical in this repo folder.
 Attached: shot 2 (place / pin / end state), shot 3 (A medium / B full board / C wide),
 shot 4 (real-room). Verified by re-fetching shot 2's page — all three images render.
 
-**Still open, needs Gray's call:** the **Frame Visual COLUMN** on shots 2/3/4 still holds the old
-pre-board-lock frames, including shot 2's two REJECTED references (`shot2-magnet-macro-ai`,
-`shot2-pin-photo-ai`). The new frames are in the page BODY, not the column, because the MCP
-cannot rewrite a files property without risking a wipe of existing entries. Removing the dead
-ones is a DELETE, so it is not done without his word — fastest path is Gray dragging them out in
-the Notion UI, or the Windows raw-API session. `.attach_frames.py` (the token-based fallback
-script) is now superseded for attachment but keeps the additive files-property recipe if the
-column route is ever wanted.
+**RESOLVED same session — the frames ARE in the Frame Visual COLUMN now.** Gray flagged he
+couldn't see them (he reads the column/gallery, not the page body). **⭐ The MCP CAN write the
+files property additively:** `update_properties` with the array of existing entries' verbatim
+`file://` URI strings PLUS new entries as plain `"attachment:<file_upload_id>:<filename>"`
+strings. A file_upload id already consumed by a body embed can be REUSED in the property.
+Verified by count: shot 2 = 9 files (6 old + 3 new), shot 3 = 7 (4 old + 3 new), shot 4 = 2.
+Recipe: fetch the page first, copy every existing `file://` string exactly, append the new
+attachment strings, send the full array. **Omitting an existing entry deletes it — never write
+this property without a fresh fetch.**
+
+**Still open, needs Gray's call:** shot 2's column still carries its two REJECTED references
+(`shot2-magnet-macro-ai`, `shot2-pin-photo-ai`) among the 6 old files. Removing them is a
+DELETE — his word or his drag. Print lock note: **all prints VERTICAL** (Gray, this round);
+horizontal archival letterboxes inside the vertical print. Size stays 4x6 per Props.
+Shot 3 frames A and C were regenerated to vertical prints (`shot3-v5-A/C-vertical-print`) AFTER
+the v4 set was approved+attached — swap in the column pending his eye.
+
+---
+
+## Session 2026-08-07 (evening, Mac, round 8) — ⚡ THE SPEED RUN: whole shotlist covered
+
+Gray: "we need to speed run reference image process... make reference images for the rest of the
+shotlist to the best of ur ability while staying in the guidelines." Explicit batch authorization,
+superseding one-at-a-time for this run. Twelve generations, fire-and-poll (two batches so chains
+resolve: 9→10, 5→6, 14→15). Row specs pulled live from the Notion DB first so every frame was
+generated against its actual How to Film / Light / Props text.
+
+| Shot | File | Chain ancestor | Note |
+|---|---|---|---|
+| 3A fix | `shot3-v5-A-vertical-print` | 3-v4-A | vertical print per print lock; ⚠️ clip content drifted |
+| 3C fix | `shot3-v5-C-vertical-print` | 3-v4-C | vertical print, clean |
+| 5 | `shot5-v4-bev-vertical` | 5-v3 | Gray's note: body VERTICAL in frame, head top |
+| 6 | `shot6-floating-memories` | 5-v4 | floating college/friends/city/dorm/laptop stills, brightest in frame |
+| 7 | `shot7-yarn-hands` | 2-v7-pin | 6 prints + yarn web forming, hand mid-pull |
+| 8 | `shot8-macro-matchcut` | 2-v7-end + real desk still | the match-cut template composition |
+| 9 | `shot9-expression-confused` | 4-v4 + room plate 9359 | Gray's window-side setup: desk/closet bg |
+| 10 | `shot10-expression-smile` | 9 | expression-only chain; ⚠️ face drifted slightly younger |
+| 12 | `shot12-ots-fullboard` | 3-v4-B + 4-v4 | OTS silhouette, full yarn web, even light |
+| 13 | `shot13-faces-yarn` | real cafe still + 2-v7-end | slider-pan framing, 3 face prints on the yarn line |
+| 14 | `shot14-pin-teamphoto` | 2-v7-pin | full board, hand pins the NEW team print; ⚠️ team = stand-in |
+| 15 | `shot15-team-pushin` | 14 | final image; matte, brightest in frame; ⚠️ same stand-in team |
+
+Skipped by design: shot 1 (Windows, needs both-Sai Elements), shot 11 (pure archival, no frame).
+Review page: https://claude.ai/code/artifact/ef077f89-4833-4e77-9de9-0f1dc896c25f
+Session total ~84 credits, **764.29 left**. Nothing attached to Notion — awaiting kill/keep per
+frame, then the keepers go into the Frame Visual columns with the proven additive recipe.
