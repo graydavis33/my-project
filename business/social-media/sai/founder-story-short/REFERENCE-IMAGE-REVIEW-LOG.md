@@ -720,7 +720,25 @@ rotated variants stay on disk unattached if he changes his mind. Attached via th
 pipeline: fetch row → fresh JPEG upload → additive column write preserving existing entries →
 verified by count (shot 5 = 4 files, shot 6 = 2 files).
 
-**🐛 COLUMN ATTACHMENT BUG FOUND AND FIXED (Gray saw broken previews on shot 2):** a
+**🐛🐛 ROUND 10 — THE REAL FIX. The round-9 "fix" was ALSO broken and Gray caught it live.**
+The invented `attachment:<file_upload_id>:<filename>` property format is a dead end entirely:
+the API accepts it and echoes it back on fetch (which is why count-verification lied), but the
+UI cannot render it — fresh upload or not. **Verifying by count is NOT verifying; the entry
+must be a format the UI provably renders.**
+
+**The method that actually works — and was the project's own documented recipe all along**
+([[feedback-reference-image-sourcing]]: host via public-repo raw URLs): commit the frames to the
+public repo (auto-push had already done it), verify every raw.githubusercontent URL returns 200
+with curl, then write the Frame Visual array using the SAME encoded `file://{"source":"<raw
+url>","permissionRecord":{...page id...}}` entry format the original 75 working references use.
+All five columns rewritten this way: every pre-existing GOOD entry preserved verbatim, every
+broken `attachment:` entry from rounds 8-9 dropped, approved frames in as raw-URL externals.
+Shot 2 = 9 entries, shot 3 = 7, shot 4 = 2, shot 5 = 4, shot 6 = 2.
+
+**Rule for the future tool: Frame Visual gets external raw-GitHub URLs, never MCP file uploads.**
+File uploads remain fine for page-BODY image blocks (those render), not for the files property.
+
+**~~🐛 COLUMN ATTACHMENT BUG FOUND AND FIXED~~ (superseded by the above — kept for history):** a
 file_upload id already consumed by a page-body embed CANNOT be reused in the Frame Visual files
 property — Notion binds the file's permission record to its first attach point, so the property
 copy renders broken. **Correction to the round-8 recipe: every attach point needs its OWN fresh
