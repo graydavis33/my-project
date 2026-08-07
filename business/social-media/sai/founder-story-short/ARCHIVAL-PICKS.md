@@ -27,13 +27,16 @@ LOCKED, four clips:
 - "money gun.MOV" contains no money gun (podcast set); "helicopter.mov" unusable (540px night)
 
 ## Still open (next shots)
-- Shot 4: **REDIRECTED by Gray 2026-08-07 — archive candidates rejected, source from Sai's TIKTOK era instead.** Wishlist:
-  1. Screen recording scrolling his profile grid (must be captured fresh — phone screen-record, slow scroll, TikTok is @bizuser NOT @saikarra)
-  2. Walking onto helicopter (drive has `helicopter.mov` 540p dark — verify vs the posted TikTok version)
-  3. Meeting Alex Hormozi (drive has `hormozi.mov` 720p — verify)
-  4. The YouTube video we made (drive has `youtube video.MP4` 4K — verify)
-  5. Others TBD by Gray
-  - Prefer Sai's original exports over TikTok downloads (watermark + double compression); add to the Sai ask text
+- Shot 4: **REDIRECTED by Gray 2026-08-07 — archive candidates rejected, sourcing from Sai's TikTok/YouTube era.**
+  LOCKED so far (copied to `07_QUERY_PULLS/founder-story-archival/shot4-success-wall/`):
+  1. `hormozi.mov` — meeting Alex Hormozi (confirmed by Gray)
+  2. `helicopter.mov` — walking onto helicopter (confirmed; 540p, fine as background graphic)
+  3. `yt1-POV-21yo-CEO-NYC-MASTER.mp4` — YouTube long-form #1 ("POV: you're a 21 y/o CEO in NYC", = Ep 1 Longform Doc Windows Final, 947MB master)
+  4. `yt2-Build-Truthfully-1080p.mp4` — YouTube long-form #2 ("Build Truthfully"; NO local master exists, pulled 1080p from the channel + transcoded H.264)
+  STILL PENDING:
+  - TikTok profile-grid screen recording (capture fresh on phone — slow scroll, 15-20s, account is @bizuser NOT @saikarra)
+  - Additional TikToks Gray will identify later — ask Sai for original exports (TikTok downloads = watermark + compression)
+  - Channel: youtube.com/@saikarra22 (channel_id UCoSYag0KxChG-NOqrizQsFg; RSS feed works when scraping is blocked)
 - Shot 5/6: sad in casino (reserved — the "didn't feel complete" face), miami high rise (cities), suitcase/airport set
 - Shot 8: match-cut print run — highlighting 5.1 million reserved here, white board, teaching on white board, flexing in mirror, youtube video
 - Shots 13/14/15: still blocked on Sai (team photo + real people photos)
