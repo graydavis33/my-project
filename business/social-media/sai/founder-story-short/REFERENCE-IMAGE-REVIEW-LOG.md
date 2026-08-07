@@ -222,9 +222,13 @@ Gray's pick is the better one and the wides on 9, 10 and 12 are not constrained.
 - Gray's standing note "every bulletin board shot on the right side of Sai, facing the
   bathroom" SURVIVES — the board is literally beside the bathroom door.
 - The triptych wall stays as-is. The three abstract panels do not come down.
-- Cork is now lit by cool window daylight arriving over the camera's shoulder. The Light
-  columns still call for a 3200K key. Expect to either gel the window, pull the blinds, or
-  accept a mixed-temperature look. **Flagged, not resolved — needs a call on film day.**
+- ~~Cork is now lit by cool window daylight arriving over the camera's shoulder, against a
+  3200K key. Mixed temperature, needs a call on film day.~~ **RESOLVED same evening: Gray has
+  BLACKOUT CURTAINS and will kill all daylight.** Every board shot is therefore 100% lamp-lit
+  and fully controlled, exactly as the Light columns are already written. No gels, no
+  mixed-temperature grade, and the board shots are no longer time-of-day dependent — which
+  also means the film-day schedule's "board during the day, bedroom after dark" grouping is a
+  convenience, not a constraint.
 
 **Two physical checks before hanging (Gray, this weekend):**
 
@@ -232,8 +236,31 @@ Gray's pick is the better one and the wides on 9, 10 and 12 are not constrained.
   bottom edge clears it and the lamp cord is not in frame.
 - Whether the bathroom door swings into the room far enough to clip a 24-inch-wide board.
 
-**Shots 9 and 10 are still frozen** pending Gray's confirm on the shoot-from-beside fix
-(open item 3 above). The wall is answered; the framing is not.
+## SHOTS 9 + 10 — UNFROZEN (Gray, 2026-08-07 evening)
+
+Gray rejected the shoot-from-beside proposal and gave a simpler fix that removes the geometry
+problem instead of working around it:
+
+> "expression shots will be to the side. window side of room, and camera will point at Sai's
+> face. behind him, u will most likely see his desk and closet."
+
+**What this means:** the expression/reaction coverage moves to its own setup. Camera sits on
+the WINDOW side of the room pointing back at Sai's face; Sai's background is the DESK and
+CLOSET. The board is off-camera behind the lens, so Sai's eyeline past the lens still reads as
+"looking at the board" and the cut works.
+
+**Consequences:**
+
+1. **The dark board-edge foreground element is gone from 9 and 10.** Both rows are written
+   around it. Their How to Film text needs an additive note, not a rewrite
+   ([[feedback-scripts-add-never-delete]] / [[feedback-surgical-edits-only]]).
+2. **These two stop being board shots.** They no longer depend on the board being built, so
+   they can be filmed in any block on the schedule rather than only in the board window.
+3. **Background continuity matters now.** Desk and closet appear behind him, so whatever is on
+   that desk on film day is in the shot. Worth a dress pass. See the room plates at
+   `~/Documents/founder-story-refs/room/` (IMG_9359, IMG_9363 show the desk/closet wall).
+4. Reference frames for 9 and 10 can now be generated. Chain them off a real room plate so the
+   desk and closet match the actual location.
 
 ---
 
