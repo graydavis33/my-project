@@ -519,3 +519,46 @@ exiting 0, trap logged.
 extract to PNG instead; use `-update` semantics or PNG for single frames.
 
 11 generations tonight, 28 credits total, **820.29 left.**
+
+---
+
+## Session 2026-08-07 (evening, Mac, round 4) — cinematic shot 2, reference-matched shot 3
+
+Gray's round-3 notes, plus a phone photo he supplied as the composition reference for shot 3's
+final frame (a huge wall-mounted white board with ONE tiny photo pinned at center, shot straight
+on and symmetric, doorway visible frame-right — saved nowhere yet, it lives in chat).
+
+**✅ Shot 4 → he said attach it to the shotlist.** BLOCKED this session: the Notion MCP is not
+connected on this Mac session (hosted connector absent from the session's server list; the
+karramedia API token is Windows-only, not in any Mac .env). **Queued: attach
+`shot4-bed-scroll-v4-realroom-PENDING.png` to shot 4's Frame Visual the moment Notion reconnects
+— re-send existing attachments by type or they get wiped.**
+
+### Row 2 v5 — CINEMATIC + staged entrance (supersedes the v4 sequence)
+Gray: Sai comes from the LEFT side of frame, places and holds the photo with his LEFT hand, pins
+with his RIGHT hand; make the lighting more cinematic.
+1. `shot2-v5-cine-endstate-PENDING.png` — lighting-only chain off v4: low-key raking 3200K from
+   upper right, deep falloff, haze in the beam, vignette, no daylight.
+2. `shot2-v5-cine-still1-place-PENDING.png` — Sai enters frame-left, LEFT palm presses the print
+   to the cork, no pin yet.
+3. `shot2-v5-cine-still2-pin-PENDING.png` — left hand still holding, RIGHT hand presses the
+   wooden pin, both hands in frame.
+Minor drift: the print sits slightly left-of-center in stills 1-2 vs the end state.
+
+### Row 3 v3 — smaller prints, medium open, reference-matched wide close
+Gray: photos smaller; first frame is a MEDIUM not a close-up; last frame matches his reference
+photo. Chained A→B→C:
+- `shot3-v3-A-medium-dorm-PENDING.png` — medium, board mostly in frame, dorm clip at true-ish
+  scale, curled-flap artifact cleaned.
+- `shot3-v3-B-fullboard-desk-PENDING.png` — full board, desk clip, print small.
+- `shot3-v3-C-wide-cafe-PENDING.png` — the reference composition: symmetric environmental wide,
+  doorway frame-right (reads as the bathroom door per the WALL LOCK), tiny glowing print centered.
+
+**Honest flag:** print orientation/border drifted across the series — A renders the horizontal
+dorm clip as a LANDSCAPE print with a white border, B near-vertical with border, C squarish with
+border, where round 3 used a vertical borderless 4x6 with letterboxing. Arguably A's landscape
+print is what a real horizontal frame printed at the drugstore would look like; needs Gray's call
+on which convention the real prints will use — **this is the same decision as the 4x6-vs-5x7
+print-size question and should be made together before Saturday's print run.**
+
+17 generations tonight, 40 credits, **808.29 left.**
