@@ -194,3 +194,92 @@ Command 15 lb strips for hanging.
 
 Shot 2 status: young-Sai party photo APPROVED (composite v2). Frames A+B are now doubly
 stale (wrong board AND wrong fastener) and get regenerated against the cork board.
+
+---
+
+## Session 2026-08-07 — rows 2 to 5 regenerated against the cork board
+
+### ⭐ MODEL BEHAVIOUR (measured, not assumed) — the tool must encode all three
+
+| Behaviour | Nano Banana 2 | Nano Banana Pro |
+|---|---|---|
+| `<<<element_id>>>` placeholder | **ignored outright** | registers |
+| Image-reference chaining | holds registration | holds registration |
+
+Three traps, and every one of them fails SILENTLY:
+
+1. **The model strings are inverted from the docs.** `nano_banana_2` returns Nano Banana **2**.
+   You must pass `nano_banana_pro` to get Pro. A whole batch ran a tier low with no error.
+   The tool must pin the string AND assert the returned `model` matches what it asked for.
+2. **Elements only register on Pro.** On Nano Banana 2 the placeholder is dropped and you get a
+   generic face, with no warning. Shots 4 and 5 came back as two different strangers.
+   The tool must never route a shot containing Sai to the cheap tier.
+3. **Pro inherits the WARDROBE from the element reference, not just the face.** Shot 4 came back
+   in the blue suit and orange tie because that is what Current Sai's reference photo wears.
+   Any shot where Sai is not dressed like his reference needs an explicit clothing override.
+
+Corollary: the cheap tier is still correct for pure plate variants with no person in them.
+
+Elements live in the workspace (not committed): Current Sai `25938a11-…`, Young Sai `f44a14f8-…`,
+and a better-documented **Young Sai 15** `f5945d72-…` built 08-07 with 3 refs.
+
+### Row 2 — Macro: first photo pinned to the board
+Status: **RESOLVED — v1a is the pick, pending attach**
+
+Gray's call: **TRUE MACRO**, over the medium framing every prior frame used.
+
+What the earlier frames missed: all of them, including the 08-06 corkboard test, were mediums of
+the whole board sitting in a room. The row's How to Film always said "MACRO lens, board fills the
+frame."
+
+Why it matters beyond framing: **a macro makes shot 2 wall-independent.** It shows almost no room,
+so it is the only board shot that does not wait on the open "which wall" question that locks the
+geometry of the other nine at once. It can be approved while the rest stay frozen.
+
+Action: chained off the 08-06 corkboard test so the approved young-Sai print, the cork and the warm
+practical light all carried over, and prompted only the reframe plus the fastener and mounting
+changes. Delivered `shot2-cork-MACRO-v1a-PENDING.png` (pick) and `-v1b-PENDING.png` (wider alt).
+2 generations on Pro.
+
+Open: the generated print carries a white border; a drugstore 4x6 is usually borderless.
+
+### ⚠️ Row 2 hygiene — still live, nothing fixed this session
+The live DB still holds the **rejected** frame references (`shot2-magnet-macro-ai.png`,
+`shot2-pin-photo-ai.png`) among its 6 attachments. The v2 pair, the 08-06 corkboard test, and now
+both macros all sit on disk **unattached**. The crew is currently reading frames the log threw out.
+
+### Row 3 — Photo-as-screen, archival plays inside the print
+Status: v2 GOOD, needs a blinds level from Gray
+
+This is a **locked plate** off row 2 ("do NOT touch the board or the camera between shots 2 and 3"),
+so it was chained rather than generated fresh. **The chain registered perfectly** — identical cork
+grain, print position and size, wooden pin, camera angle and wood frame edge. Further proof the
+chain-only-the-change technique is the load-bearing habit of this workflow.
+
+- v1 (Nano Banana 2): ran the venetian blinds at roughly 90% against a row that calls for 20-35%,
+  and rendered them cool blue-white against a warm 3200K scene. Rejected.
+- v2 (Pro): glow now spills warm from the print onto the cork and falls off correctly.
+  **Blinds are now arguably too subtle** — this is a dial-up from here, and needs Gray's level.
+
+### Row 4 — Sai at the foot of the bed, doomscrolling
+Status: ONE FIX NEEDED (wardrobe)
+
+Board lock does not touch this row. Right: wall empty and two stops under with no hot spots (it has
+to stay a clean surface for the composited success graphics), phone as the dominant cool 6500K key,
+blue RGB window lamp raking the mattress camera-left, straight-on medium-wide from the foot of the bed.
+
+Wrong: **he is in the blue suit and orange tie.** See model trap 3 — the Element brought its
+reference wardrobe with it. Needs "plain dark tee, casual" stated explicitly.
+
+### Row 5 — Bird's-eye, fallen back on the bed
+Status: TWO FIXES NEEDED (exposure, framing)
+
+- v1: had him **tucked under a duvet**, which reads as bedtime rather than collapse. The row's beat
+  is that he falls backwards onto the bed straight out of shot 4. Rejected.
+- v2: on top of the bedding, fully dressed, arms flung where they landed, phone screen-down beside
+  him, true perpendicular top-down. Right on the beat. **About a stop underexposed**, and pulled
+  wider than v1 so floor and nightstand are now in frame.
+
+Next move for 4 and 5: get 4's wardrobe right, then **chain 5 off the approved 4** so face and
+wardrobe match between two shots that cut directly together. Generating them independently is the
+same mistake row 1 already documents.
