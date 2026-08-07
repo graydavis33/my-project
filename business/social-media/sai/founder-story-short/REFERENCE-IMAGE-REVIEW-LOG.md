@@ -417,3 +417,55 @@ shelves plus hexagon shelves on the wall above the bed. Now fixable — 9 room p
 one-at-a-time rule applies.
 
 **Next:** Gray's verdict on these three, then chain shot 5 off the approved shot 4.
+
+---
+
+## Session 2026-08-07 (evening, Mac, round 2) — Gray's revisions applied to 2, 3, 4
+
+Gray reviewed round 1 live and rebriefed all three rows. Five more chained generations on
+`nano_banana_pro`, 10 credits, **832.29 left**. All `-PENDING`, nothing attached.
+
+### Row 2 — REBRIEFED and rebuilt: `shot2-cork-v3-oppside-centered-PENDING.png`
+Gray's four notes, all applied in one chained pass off the borderless macro:
+1. **Camera on the opposite side** — angle mirrored.
+2. **Photo at the exact center of the board.**
+3. **Board on the white wall** — full board now visible, hung flat.
+4. **Dimensions double-checked:** board 24w x 36h vertical with wood frame, print 4x6 vertical —
+   the print is exactly **one sixth of the board's width**, and the frame now shows that true
+   scale (earlier macros made the print read far too big).
+Lighting checked against the real rig: blackout curtains = no daylight anywhere; warm 3200K
+lamp-only with soft frame shadow on the wall. **Note: this supersedes the TRUE MACRO framing from
+round 1** — the row now reads as a full-board composition on the wall.
+
+### Row 3 — REBRIEFED: it is a head-on PULLBACK SERIES, and the money photo is NOT in it
+Gray: camera head-on, close-up to medium, moving BACKWARDS; the young-Sai club photo is not this
+shot — the print is where OTHER videos of Sai play, inside the real photo's border. Three frames
+delivered, each chained off the previous so the pin, cork, paper curl and light never drift:
+
+| Frame | File | Camera | Video inside the print |
+|---|---|---|---|
+| A | `shot3-pullback-A-closeup-dorm-PENDING.png` | close-up | young Sai talking in his dorm |
+| B | `shot3-pullback-B-mid-laptop-PENDING.png` | one step back | Sai working at a laptop at night |
+| C | `shot3-pullback-C-medium-team-PENDING.png` | full board | Sai with his team in an office |
+
+**Happy accident kept:** the horizontal videos LETTERBOX inside the vertical 4x6 with black bars
+top and bottom — exactly what real horizontal archival will do when comped into the print in AE.
+Reads as intentional; left in unless Gray objects.
+The round-1 glow flaw (backlit halo) is moot — in this series the print's own face is the screen.
+
+### Row 4 — REBRIEFED and rebuilt: `shot4-bed-scroll-v4-realroom-PENDING.png`
+Gray's three notes: book shelves over the bed, bed further from the window, videos displayed on
+the wall behind his head like the shotlist reference (the projected-feed frame, previously saved
+as `shot5-bed-graphics-ai.png` under old numbering). Built by chaining the approved v3-tee frame
+(face, wardrobe, phone-key light) **plus room plate `IMG_9360.JPG` as a second image reference** —
+first use of a REAL room photo as a generation reference, and it landed: navy bedding, cream
+fluted boucle headboard, round black-metal book shelves camera-left, wood hexagon shelves
+camera-right, window pushed to the far left edge with the blue lamp spill, and 4 glowing
+social-feed projections (people / party / money clips) on the wall behind his head. Phone stays
+the key on his face.
+
+**Technique note for the future tool:** two-reference chaining (approved frame for person+light,
+real room plate for the set) is now proven. This is how 5 and 6 should get their room match.
+
+**Next:** Gray's verdicts on v3 (shot 2), the A/B/C series (shot 3), v4 (shot 4). Then shot 5
+chains off the approved shot 4 with the same two-reference method.
