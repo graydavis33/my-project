@@ -469,3 +469,53 @@ real room plate for the set) is now proven. This is how 5 and 6 should get their
 
 **Next:** Gray's verdicts on v3 (shot 2), the A/B/C series (shot 3), v4 (shot 4). Then shot 5
 chains off the approved shot 4 with the same two-reference method.
+
+---
+
+## Session 2026-08-07 (evening, Mac, round 3) — Gray's round-2 verdicts applied
+
+**✅ SHOT 4 v4 APPROVED — Gray: "shot 4 is perfect."** First locked frame of the new process.
+Shot 5 chains off it next.
+
+### The dimensions question (Gray asked; answered with math)
+Gray asked whether the board/photo scale in the frames is accurate, and if so whether he needs
+smaller photos or a bigger board. Answer: **yes, accurate** — 4x6 on 24x36 = exactly 1/6 of board
+width; his 8-12 prints cover only ~20-33% of the cork. Recommendation given: **do NOT buy a bigger
+board** (photos read even smaller); if anything print **5x7** (~30% bigger, still drugstore
+standard); or keep 4x6 and let the wide/macro shot alternation do the work, which the shot list
+already does. Awaiting his pick — **this decides the print order size, so it must resolve before
+the drugstore run (~Sat 08-09).**
+
+### Row 2 — now a 3-STILL SEQUENCE at 45° on the other side
+Gray: angle 45° on the other side of the photo; add 2 stills of Sai placing then pinning the
+photo; everything else good.
+1. `shot2-cork-v4-still1-placing-PENDING.png` — both hands press the print to the cork, NO pin yet
+2. `shot2-cork-v4-still2-pinning-PENDING.png` — thumb pushes the wooden pin at the print's top edge
+3. `shot2-cork-v4-45deg-PENDING.png` — end state, pinned, hands gone
+Chained end-state → placing → pinning so the board, angle and light never drift. Hands enter from
+frame right with a dark tee sleeve (Sai mostly out of frame, per the original hands-only brief).
+Minor: the print's position shifts a touch between stills; the club-photo face inside the print
+drifted slightly at this distance — both cosmetic at reference scale.
+
+### Row 3 — REAL b-roll now plays inside the prints
+Gray: accurate board/photo dimensions + REAL frames from our b-roll, any photos or videos.
+**The SSD was mounted**, and a prior session had already pulled the exact archival:
+`07_QUERY_PULLS/founder-story-archival/shot3-photo-screen/` (dorm, desk work, notebook clips).
+Stills extracted with ffmpeg and fed as a SECOND image reference per frame:
+
+| Frame | Generated file | Real source (saved as `source-real-*`) | Fit |
+|---|---|---|---|
+| A close-up | `shot3-real-A-closeup-dorm-PENDING.png` | `talking in dorm.MP4` @4s (2022) | horizontal → letterboxed |
+| B one step back | `shot3-real-B-mid-desk-PENDING.png` | `desk work.MOV` @1s | vertical → fills the print |
+| C full board | `shot3-real-C-fullboard-cafe-PENDING.png` | `06_ASSETS/LinkedIn Photos/DSC01332.JPG` | horizontal → letterboxed |
+
+Honest flags: **B and C still render the print oversized** (~1/4 to 1/3 of board width vs the true
+1/6) — the model resists making the glowing print tiny; one more pass each can push it, or accept
+since the wide "true scale" answer already exists in shot 2 v3/v4. A has a small curled-flap paper
+artifact top-left. `desk work.MOV` is only 2.7s long — a -ss past the end writes nothing while
+exiting 0, trap logged.
+
+**ffmpeg traps (Mac):** JPEG writes from this clip hit "Non full-range YUV is non-standard" —
+extract to PNG instead; use `-update` semantics or PNG for single frames.
+
+11 generations tonight, 28 credits total, **820.29 left.**
