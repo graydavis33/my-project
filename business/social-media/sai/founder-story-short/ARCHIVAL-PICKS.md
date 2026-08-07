@@ -45,11 +45,13 @@ LOCKED, four clips:
   5. sitting on suitcase.MOV (4K vert)
   - Not picked: miami high rise
   - NOTE: shot 6's Visuals say the floating images are the SAME photos later pinned on the board — these five picks should feed the shot 7/8 print set
-- Shot 8: **Gray's direction 2026-08-07 (first candidate pass rejected):**
-  - "I loved building" → customers, people, more customers (placeholder "for now")
-  - "Building for me" → a DIFFERENT flexing-mirror video (not flexing in mirror.MOV — choosing from flexing.mov / shoulder flex / flexing tricepts / walking tank top / in gym after lifting)
-  - "More money" → MONEY GUN, long version. Drive only has the 2.2s cut (`money gun.MOV` — podcast set, bills flying in back half). LONG VERSION = TikTok original, ask Sai
-  - "More followers" → the blue-suit-outside video with videos playing on the building behind him. Drive has the RAW (`FINAL.MOV`, subway + street, 4K) — the building-projection version is the posted EDIT, ask Sai for the export
-  - "More success" → Sai talking on stage, VIDEO version — does NOT exist on the drive (re-confirmed; only still is `Thumbnails/15-21/16(4).PNG`, BUILTGEN event). Ask Sai if any stage video exists
-  - Conference Ad.mp4 (04_ARCHIVE/Paid Ads) checked — blue suit on snowy bench, an ad, no stage
+- Shot 8: **LOCKED by Gray 2026-08-07 v2** (copies in `07_QUERY_PULLS/founder-story-archival/shot8-prints/`):
+  - "I loved building" → customers, people, more customers.MP4 (placeholder "for now")
+  - "Building for me" → **flexing tricepts.mov** (1080p vert)
+  - Another success/building piece → **walking with tank top.mov** (720p vert)
+  - "More followers" → **blue suit, Conference Ad.mp4 seconds 21-30** — extracted as `blue-suit-conference-ad-21-30s.mp4` (Central Park bench in snow, gestures, ends closer with building behind)
+  - "More money" → **FILMING OUR OWN money-gun version** (Gray's call — no archival hunt; recreations likely for other shots too)
+  - "More success" → stage video does NOT exist on drive (only still: `Thumbnails/15-21/16(4).PNG` BUILTGEN) — may also become a recreation
+  - Passed: highlighting 5.1 million (still available for board filler), white board set, flexing in mirror.MOV
+  - NOTE: new prop implied by the recreation — money gun + prop bills for film day
 - Shots 13/14/15: still blocked on Sai (team photo + real people photos)
