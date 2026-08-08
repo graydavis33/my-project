@@ -82,5 +82,12 @@
   "title": "API Keys Are Passwords for Your Code \u2014 Keep Them Secret",
   "category": "literacy",
   "topic": "api-keys-and-secrets"
+ },
+ {
+  "date": "2026-08-08",
+  "issue": 13,
+  "title": "The .env File: How Your Code Reads Secrets Without Storing Them",
+  "category": "literacy",
+  "topic": "environment-variables-and-env-files"
  }
 ]
