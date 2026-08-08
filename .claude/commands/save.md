@@ -39,8 +39,10 @@ If no meaningful decisions were made, skip this step.
 Using the **Write tool** (not MCP — the obsidian MCP server is not loading reliably), save a session note to:
 
 ```
-C:/Users/Gray Davis/Documents/Obsidian/Graydient Media/Sessions/YYYY-MM-DD-session.md
+C:/Users/Gray Davis/My Drive/Obsidian/Graydient Media/Sessions/YYYY-MM-DD-session.md
 ```
+
+**This path is load-bearing — do not change it to `Documents/Obsidian`.** That was a second, local-only vault that never synced to the Mac. It was merged into the Drive vault and decommissioned on 2026-08-08; writing there again re-forks the notes. The Drive vault is the only canonical one (Google Drive account `graydavis33@gmail.com`).
 
 Use today's date (UTC) for the filename. If a file already exists for today, read it first and append a new section dated with the current time, instead of overwriting.
 

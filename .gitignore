@@ -132,3 +132,6 @@ web-apps/payday-checklist/expenses.json
 # Personal finance notes — MUST NOT be committed (repo is served publicly via GitHub Pages)
 context/finances.md
 python-scripts/daily-ai-read/.tmp/
+
+# Real team members from internal Google Meet calls - never publish to the public repo
+business/social-media/sai/founder-story-short/removed-frame-visuals/
